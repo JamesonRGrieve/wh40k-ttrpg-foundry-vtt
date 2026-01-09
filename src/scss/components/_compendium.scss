@@ -114,3 +114,56 @@
     border-left: 3px solid var(--folder-color, #8b0000);
   }
 }
+
+/* Weapon Quality Display in Browser */
+.item-stats--quality {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+  
+  .stat-badge--level {
+    background: rgba(75, 192, 115, 0.15);
+    border: 1px solid rgba(75, 192, 115, 0.3);
+    color: #4bc073;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    align-self: flex-start;
+    
+    i {
+      font-size: 10px;
+      margin-right: 4px;
+    }
+  }
+  
+  .quality-description {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--rt-text-muted);
+    font-style: italic;
+    
+    // Truncate to 3 lines max
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// Dark theme support
+body.theme-dark {
+  .item-stats--quality {
+    .stat-badge--level {
+      background: rgba(75, 192, 115, 0.25);
+      border-color: rgba(75, 192, 115, 0.4);
+      color: #5dd68c;
+    }
+    
+    .quality-description {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  }
+}

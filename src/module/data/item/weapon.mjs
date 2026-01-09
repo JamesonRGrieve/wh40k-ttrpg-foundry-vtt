@@ -130,6 +130,85 @@ export default class WeaponData extends ItemDataModel.mixin(
   }
 
   /**
+   * Get effective qualities (base + craftsmanship-derived).
+   * @type {Set<string>}
+   */
+  get effectiveSpecial() {
+    const qualities = new Set(this.special || []);
+    
+    // Add craftsmanship-derived qualities for ranged weapons
+    if (!this.melee && !this.isMeleeWeapon) {
+      switch(this.craftsmanship) {
+        case 'poor':
+          qualities.add('unreliable-2');
+          break;
+        case 'cheap':
+          qualities.add('unreliable');
+          break;
+        case 'good':
+          qualities.add('reliable');
+          qualities.delete('unreliable');
+          qualities.delete('unreliable-2');
+          break;
+        case 'best':
+        case 'master-crafted':
+          qualities.add('never-jam');
+          qualities.delete('unreliable');
+          qualities.delete('unreliable-2');
+          qualities.delete('overheats');
+          break;
+      }
+    }
+    
+    return qualities;
+  }
+
+  /**
+   * Get craftsmanship-derived stat modifiers.
+   * @type {object}
+   */
+  get craftsmanshipModifiers() {
+    const mods = {
+      toHit: 0,      // WS/BS modifier
+      damage: 0,     // Damage bonus
+      weight: 1.0    // Weight multiplier
+    };
+    
+    if (this.melee || this.isMeleeWeapon) {
+      // Melee WS modifiers
+      switch(this.craftsmanship) {
+        case 'poor': mods.toHit = -15; break;
+        case 'cheap': mods.toHit = -10; break;
+        case 'good': mods.toHit = 5; break;
+        case 'best': 
+          mods.toHit = 10;
+          mods.damage = 1;
+          break;
+        case 'master-crafted':
+          mods.toHit = 20;
+          mods.damage = 2;
+          break;
+      }
+    } else {
+      // Ranged BS modifiers
+      if (this.craftsmanship === 'master-crafted') {
+        mods.toHit = 10;
+      }
+    }
+    
+    return mods;
+  }
+
+  /**
+   * Check if weapon has any craftsmanship-derived qualities.
+   * @type {boolean}
+   */
+  get hasCraftsmanshipQualities() {
+    if (this.melee || this.isMeleeWeapon) return false;
+    return ['poor', 'cheap', 'good', 'best', 'master-crafted'].includes(this.craftsmanship);
+  }
+
+  /**
    * Get the reload time label.
    * @type {string}
    */
@@ -180,8 +259,18 @@ export default class WeaponData extends ItemDataModel.mixin(
       props.push(`Reload: ${this.reloadLabel}`);
     }
     
-    if ( this.special?.size ) {
-      props.push(`Qualities: ${Array.from(this.special).join(", ")}`);
+    // Show effective qualities (including craftsmanship)
+    if ( this.effectiveSpecial?.size ) {
+      props.push(`Qualities: ${Array.from(this.effectiveSpecial).join(", ")}`);
+    }
+    
+    // Show craftsmanship modifiers if any
+    const craftMods = this.craftsmanshipModifiers;
+    if (craftMods.toHit !== 0 || craftMods.damage !== 0) {
+      const modParts = [];
+      if (craftMods.toHit !== 0) modParts.push(`${craftMods.toHit > 0 ? '+' : ''}${craftMods.toHit} Hit`);
+      if (craftMods.damage !== 0) modParts.push(`+${craftMods.damage} Dmg`);
+      props.push(`Craftsmanship: ${modParts.join(', ')}`);
     }
     
     return props;

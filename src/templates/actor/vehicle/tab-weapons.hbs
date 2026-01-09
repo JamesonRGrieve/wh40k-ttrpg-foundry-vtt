@@ -1,4 +1,6 @@
 {{!-- Vehicle Weapons Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    {{> systems/rogue-trader/templates/actor/panel/weapon-panel.hbs}}
+    <div class="rt-grid rt-grid-6-col">
+        {{> systems/rogue-trader/templates/actor/panel/vehicle-weapons-panel.hbs}}
+    </div>
 </section>

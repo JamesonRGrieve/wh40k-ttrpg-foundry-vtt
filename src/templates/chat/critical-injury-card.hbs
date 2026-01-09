@@ -1,0 +1,56 @@
+{{!-- Critical Injury Chat Card --}}
+<div class="rt-chat-card rt-injury-card rt-injury-card--{{damageType}}">
+  <header class="rt-card-header">
+    <img src="{{img}}" alt="{{name}}" class="rt-card-icon" />
+    <div class="rt-card-title-area">
+      <h3 class="rt-card-title">{{name}}</h3>
+      <div class="rt-card-badges">
+        <span class="rt-badge rt-badge--{{severityClass}}">
+          <i class="fas fa-chart-line"></i> {{severityLabel}}
+        </span>
+        {{#if permanent}}
+        <span class="rt-badge rt-badge--permanent">
+          <i class="fas fa-infinity"></i> Permanent
+        </span>
+        {{/if}}
+      </div>
+    </div>
+  </header>
+  
+  <div class="rt-card-body">
+    <div class="rt-injury-meta">
+      <span class="rt-meta-item">
+        <i class="fas {{damageTypeIcon}}"></i>
+        {{damageTypeLabel}}
+      </span>
+      <span class="rt-meta-item">
+        <i class="fas {{bodyPartIcon}}"></i>
+        {{bodyPartLabel}}
+      </span>
+    </div>
+    
+    <div class="rt-injury-effect">
+      {{{effect}}}
+    </div>
+    
+    {{#if notes}}
+    <div class="rt-injury-notes">
+      <strong>Notes:</strong> {{notes}}
+    </div>
+    {{/if}}
+    
+    {{#if description}}
+    <div class="rt-injury-description">
+      {{{description}}}
+    </div>
+    {{/if}}
+  </div>
+  
+  {{#if sourceReference}}
+  <footer class="rt-card-footer">
+    <span class="rt-source-ref">
+      <i class="fas fa-book"></i> {{sourceReference}}
+    </span>
+  </footer>
+  {{/if}}
+</div>

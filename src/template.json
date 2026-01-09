@@ -1001,6 +1001,7 @@
       "armourModification",
       "attackSpecial",
       "backpack",
+      "condition",
       "consumable",
       "criticalInjury",
       "cybernetic",
@@ -1147,6 +1148,23 @@
       "severity": 1,
       "effect": "",
       "permanent": false,
+      "notes": ""
+    },
+    "condition": {
+      "templates": [
+        "itemDescription"
+      ],
+      "identifier": "",
+      "nature": "harmful",
+      "effect": "",
+      "removal": "",
+      "stackable": false,
+      "stacks": 1,
+      "appliesTo": "self",
+      "duration": {
+        "value": 0,
+        "units": "permanent"
+      },
       "notes": ""
     },
     "cybernetic": {

@@ -104,6 +104,19 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/prompt/force-field-prompt.hbs',
             'systems/rogue-trader/templates/prompt/assign-damage-prompt.hbs',
 
+            // Item sheet templates (base + common types)
+            'systems/rogue-trader/templates/item/item-sheet-modern.hbs',
+            'systems/rogue-trader/templates/item/item-weapon-sheet-modern.hbs',
+            'systems/rogue-trader/templates/item/item-armour-sheet-modern.hbs',
+            'systems/rogue-trader/templates/item/item-gear-sheet-modern.hbs',
+            'systems/rogue-trader/templates/item/item-talent-sheet-modern.hbs',
+            'systems/rogue-trader/templates/item/item-trait-sheet-modern.hbs',
+            'systems/rogue-trader/templates/item/item-skill-sheet-modern.hbs',
+            'systems/rogue-trader/templates/item/item-psychic-power-sheet-modern.hbs',
+            'systems/rogue-trader/templates/item/ship-component-sheet.hbs',
+            'systems/rogue-trader/templates/item/ship-weapon-sheet.hbs',
+            'systems/rogue-trader/templates/item/ship-upgrade-sheet.hbs',
+
             // Item panels (used in item sheets)
             'systems/rogue-trader/templates/item/panel/active-effects-panel.hbs',
         ];
@@ -132,6 +145,7 @@ export class HandlebarManager {
             skills: [
                 'systems/rogue-trader/templates/actor/acolyte/tab-skills.hbs',
                 'systems/rogue-trader/templates/actor/panel/skills-panel.hbs',
+                'systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs',
             ],
             talents: [
                 'systems/rogue-trader/templates/actor/acolyte/tab-talents.hbs',

@@ -808,3 +808,67 @@
   font-weight: 600;
   font-style: italic;
 }
+
+// ============================================
+// Weapon Qualities Display
+// ============================================
+
+.rt-roll-card__qualities {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(75, 192, 115, 0.08) 0%, rgba(75, 192, 115, 0.03) 100%);
+  border-left: 3px solid rgba(75, 192, 115, 0.5);
+  border-radius: 4px;
+}
+
+.rt-roll-card__qualities-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.rt-roll-card__qualities-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--rt-card-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rt-roll-card__qualities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rt-quality-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(75, 192, 115, 0.15);
+  border: 1px solid rgba(75, 192, 115, 0.3);
+  border-radius: 4px;
+  color: #4bc073;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: help;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(75, 192, 115, 0.25);
+    border-color: rgba(75, 192, 115, 0.5);
+    transform: translateY(-1px);
+  }
+  
+  // Dark theme support
+  body.theme-dark & {
+    background: rgba(75, 192, 115, 0.2);
+    border-color: rgba(75, 192, 115, 0.4);
+    color: #5dd68c;
+    
+    &:hover {
+      background: rgba(75, 192, 115, 0.3);
+      border-color: rgba(75, 192, 115, 0.6);
+    }
+  }
+}

@@ -1,37 +1,149 @@
+{{!-- Traits Panel with Category Grouping --}}
 <div class="rt-panel rt-panel-traits-list">
     <div class="rt-panel-header">
-        <span class="rt-panel-title"><i class="fas fa-shield-alt"></i> Traits</span>
+        <span class="rt-panel-title">
+            <i class="fas fa-shield-alt"></i> Traits
+            {{#if traitsCount}}
+            <span class="rt-count-badge">{{traitsCount}}</span>
+            {{/if}}
+        </span>
     </div>
+    
     <div class="rt-panel-body">
+        {{!-- Filter Bar --}}
         {{#if traitsCount}}
-        <div class="rt-traits-list" data-drop-zone="traits" data-accepts="trait">
-            {{#each actor.items as |item|}}
-                {{#if item.isTrait}}
-                <div class="rt-trait-card item-drag" data-item-id="{{item.id}}" draggable="true">
-                    <div class="rt-card-header">
-                        <img class="rt-card-icon" src="{{item.img}}" alt="{{item.name}}" />
-                        <div class="rt-card-info">
-                            <span class="rt-card-name" data-action="itemEdit" data-item-id="{{item.id}}">
-                                {{item.name}}{{#if item.system.level}} ({{item.system.level}}){{/if}}
-                            </span>
-                            {{#if item.system.type}}
-                            <span class="rt-card-meta">{{item.system.type}}</span>
+        <form class="rt-traits-filters rt-filter-bar">
+            <div class="rt-filter-row">
+                <div class="rt-filter-group">
+                    <input type="text" 
+                           name="traits-search" 
+                           placeholder="Search traits..." 
+                           value="{{filter.search}}"
+                           data-action="filterTraits" />
+                </div>
+                <div class="rt-filter-group">
+                    <select name="traits-category" data-action="filterTraits">
+                        <option value="">All Categories</option>
+                        {{#each categories as |cat|}}
+                        <option value="{{cat.value}}" {{#if (eq ../filter.category cat.value)}}selected{{/if}}>
+                            {{cat.label}}
+                        </option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="rt-filter-group rt-filter-checkbox">
+                    <label>
+                        <input type="checkbox" 
+                               name="traits-has-level" 
+                               {{#if filter.hasLevel}}checked{{/if}}
+                               data-action="filterTraits" />
+                        Has Level
+                    </label>
+                </div>
+                {{#if (or filter.search filter.category filter.hasLevel)}}
+                <button type="button" 
+                        class="rt-btn rt-btn-sm rt-btn-clear" 
+                        data-action="clearTraitsFilter"
+                        title="Clear Filters">
+                    <i class="fas fa-times"></i>
+                </button>
+                {{/if}}
+            </div>
+        </form>
+        {{/if}}
+        
+        {{!-- Grouped Trait List --}}
+        {{#if traits.length}}
+        <div class="rt-traits-grouped">
+            {{#each groupedByCategory as |group|}}
+            <div class="rt-trait-group">
+                <div class="rt-group-header {{traitCategoryColor group.category}}">
+                    <i class="fas {{traitIcon group.category}}"></i>
+                    <span class="rt-group-title">{{group.categoryLabel}}</span>
+                    <span class="rt-count-badge">{{group.traits.length}}</span>
+                </div>
+                
+                <div class="rt-traits-list">
+                    {{#each group.traits as |trait|}}
+                    <div class="rt-trait-card {{trait.categoryColor}} item-drag" 
+                         data-item-id="{{trait.id}}" 
+                         draggable="true">
+                        <div class="rt-card-header">
+                            <i class="fas {{trait.categoryIcon}} rt-card-icon"></i>
+                            <div class="rt-card-info">
+                                <span class="rt-card-name" 
+                                      data-action="itemEdit" 
+                                      data-item-id="{{trait.id}}">
+                                    {{trait.fullName}}
+                                </span>
+                                <span class="rt-card-meta">{{trait.categoryLabel}}</span>
+                            </div>
+                            
+                            {{!-- Level Stepper for variable traits --}}
+                            {{#if trait.hasLevel}}
+                            <div class="rt-level-stepper">
+                                <button type="button" 
+                                        class="rt-stepper-btn" 
+                                        data-action="adjustTraitLevel" 
+                                        data-item-id="{{trait.id}}" 
+                                        data-delta="-1"
+                                        title="Decrease Level">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="rt-level-display">{{trait.system.level}}</span>
+                                <button type="button" 
+                                        class="rt-stepper-btn" 
+                                        data-action="adjustTraitLevel" 
+                                        data-item-id="{{trait.id}}" 
+                                        data-delta="1"
+                                        title="Increase Level">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
                             {{/if}}
                         </div>
+                        
+                        {{!-- Requirements (if present) --}}
+                        {{#if trait.system.requirements}}
+                        <div class="rt-card-requirements">
+                            <i class="fas fa-lock"></i> {{trait.system.requirements}}
+                        </div>
+                        {{/if}}
+                        
+                        {{!-- Actions --}}
+                        <div class="rt-card-actions">
+                            <button type="button" 
+                                    class="rt-card-btn" 
+                                    data-action="itemVocalize" 
+                                    data-item-id="{{trait.id}}" 
+                                    title="Send to Chat">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button type="button" 
+                                    class="rt-card-btn rt-btn-danger" 
+                                    data-action="itemDelete" 
+                                    data-item-id="{{trait.id}}" 
+                                    title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="rt-card-actions">
-                        <button type="button" class="rt-card-btn" data-action="itemVocalize" data-item-id="{{item.id}}" title="Send to Chat">
-                            <i class="fas fa-comment"></i>
-                        </button>
-                        <button type="button" class="rt-card-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
+                    {{/each}}
                 </div>
-                {{/if}}
+            </div>
             {{/each}}
         </div>
+        {{else}}
+        <div class="rt-empty-state">
+            <i class="fas fa-shield-alt rt-empty-icon"></i>
+            <p class="rt-empty-text">No traits {{#if (or filter.search filter.category filter.hasLevel)}}match your filters{{else}}yet{{/if}}</p>
+            {{#unless (or filter.search filter.category filter.hasLevel)}}
+            <p class="rt-empty-hint">Drop a trait from the compendium or click below to create</p>
+            {{/unless}}
+        </div>
         {{/if}}
+        
+        {{!-- Dropzone --}}
         <div class="rt-dropzone" data-action="itemCreate" data-type="trait">
             <i class="fas fa-shield-alt rt-dropzone-icon"></i>
             <span class="rt-dropzone-text">Drop Trait or Click to Create</span>

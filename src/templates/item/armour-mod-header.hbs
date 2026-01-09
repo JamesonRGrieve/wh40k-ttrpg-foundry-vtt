@@ -1,0 +1,42 @@
+{{!-- Armour Modification Sheet Header --}}
+<header class="rt-item-sheet__header rt-armour-mod-header">
+    <div class="rt-item-sheet__portrait">
+        <img class="rt-item-sheet__portrait-img" 
+             src="{{item.img}}" 
+             data-action="editImage"
+             alt="{{item.name}}" 
+             title="{{item.name}}" />
+        <div class="rt-item-sheet__portrait-icon">
+            <i class="fas {{icon}}"></i>
+        </div>
+    </div>
+    
+    <div class="rt-item-sheet__header-info">
+        <input class="rt-item-sheet__name-input" 
+               name="name" 
+               type="text" 
+               value="{{item.name}}" 
+               placeholder="{{localize 'RT.Modification.NamePlaceholder'}}" />
+        
+        <div class="rt-item-sheet__type-badge">
+            <i class="fas fa-wrench"></i>
+            <span>{{localize "TYPES.Item.armourModification"}}</span>
+        </div>
+        
+        <div class="rt-armour-mod-summary">
+            {{#if restrictionsSummary}}
+                <div class="rt-summary-badge rt-summary-badge--restrictions">
+                    <i class="fas fa-filter"></i>
+                    <span>{{restrictionsSummary}}</span>
+                </div>
+            {{/if}}
+            
+            {{#if modifiersSummary}}
+                <div class="rt-summary-badge rt-summary-badge--modifiers">
+                    <i class="fas fa-chart-line"></i>
+                    <span>{{modifiersSummary}}</span>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</header>

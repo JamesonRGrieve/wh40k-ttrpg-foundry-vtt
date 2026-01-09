@@ -2,16 +2,46 @@
 {{!-- This part renders the Talents/Specialties tab content --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    {{!-- Two Column Layout: 60% Specialist Skills / 40% Talents & Traits --}}
+    {{!-- Filter Controls --}}
+    <div class="rt-talents-filters">
+        <div class="rt-filter-row">
+            <input type="text" name="talents-search" placeholder="Search talents..." 
+                   value="{{filter.search}}" 
+                   data-action="filterTalents" />
+            
+            <select name="talents-category" data-action="filterTalents">
+                <option value="">All Categories</option>
+                {{#each categories as |cat|}}
+                <option value="{{cat}}" {{#if (eq ../filter.category cat)}}selected{{/if}}>
+                    {{capitalize cat}}
+                </option>
+                {{/each}}
+            </select>
+            
+            <select name="talents-tier" data-action="filterTalents">
+                <option value="">All Tiers</option>
+                <option value="1" {{#if (eq filter.tier "1")}}selected{{/if}}>Tier 1</option>
+                <option value="2" {{#if (eq filter.tier "2")}}selected{{/if}}>Tier 2</option>
+                <option value="3" {{#if (eq filter.tier "3")}}selected{{/if}}>Tier 3</option>
+            </select>
+            
+            {{#if (or filter.search filter.category filter.tier)}}
+            <button type="button" class="rt-btn rt-btn-clear" data-action="clearTalentsFilter" title="Clear Filters">
+                <i class="fas fa-times"></i> Clear
+            </button>
+            {{/if}}
+        </div>
+    </div>
+    
+    {{!-- Two Column Layout: 60% Talents / 40% Traits --}}
     <div class="rt-talents-grid">
-        {{!-- Left Column (60%) - Specialist Skills --}}
+        {{!-- Left Column (60%) - Talents --}}
         <div class="rt-talents-col rt-talents-col-left">
-            {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
+            {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
         </div>
         
-        {{!-- Right Column (40%) - Talents & Traits --}}
+        {{!-- Right Column (40%) - Traits --}}
         <div class="rt-talents-col rt-talents-col-right">
-            {{> systems/rogue-trader/templates/actor/panel/talent-panel.hbs}}
             {{> systems/rogue-trader/templates/actor/panel/trait-panel.hbs}}
         </div>
     </div>

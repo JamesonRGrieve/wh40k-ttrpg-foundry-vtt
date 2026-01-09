@@ -1,0 +1,118 @@
+{{!-- Armour Modification Modifiers Tab --}}
+<div class="rt-tab-content rt-armour-mod-modifiers" data-tab="modifiers">
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3>
+                <i class="fas fa-chart-line"></i>
+                {{localize "RT.Modification.Modifiers"}}
+            </h3>
+        </header>
+        
+        <div class="rt-panel-body">
+            {{!-- Armour Points --}}
+            <div class="rt-modifier-stat">
+                <div class="rt-stat-icon">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <div class="rt-stat-info">
+                    <label class="rt-stat-label">{{localize "RT.Modification.APLabel"}}</label>
+                    <p class="rt-stat-help">Bonus or penalty to Armour Points</p>
+                </div>
+                <div class="rt-stat-controls">
+                    <button type="button" 
+                            class="rt-stat-button rt-stat-button--minus" 
+                            data-action="adjustModifier" 
+                            data-field="modifiers.armourPoints" 
+                            data-delta="-1"
+                            {{disabled (not isEditable)}}>
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    
+                    <div class="rt-stat-value {{#if (gt modifiers.armourPoints 0)}}positive{{else if (lt modifiers.armourPoints 0)}}negative{{/if}}">
+                        {{#if (gte modifiers.armourPoints 0)}}+{{/if}}{{modifiers.armourPoints}}
+                    </div>
+                    
+                    <button type="button" 
+                            class="rt-stat-button rt-stat-button--plus" 
+                            data-action="adjustModifier" 
+                            data-field="modifiers.armourPoints" 
+                            data-delta="1"
+                            {{disabled (not isEditable)}}>
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            
+            {{!-- Max Agility --}}
+            <div class="rt-modifier-stat">
+                <div class="rt-stat-icon">
+                    <i class="fas fa-running"></i>
+                </div>
+                <div class="rt-stat-info">
+                    <label class="rt-stat-label">{{localize "RT.Modification.AgilityLabel"}}</label>
+                    <p class="rt-stat-help">Bonus or penalty to maximum Agility</p>
+                </div>
+                <div class="rt-stat-controls">
+                    <button type="button" 
+                            class="rt-stat-button rt-stat-button--minus" 
+                            data-action="adjustModifier" 
+                            data-field="modifiers.maxAgility" 
+                            data-delta="-5"
+                            {{disabled (not isEditable)}}>
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    
+                    <div class="rt-stat-value {{#if (gt modifiers.maxAgility 0)}}positive{{else if (lt modifiers.maxAgility 0)}}negative{{/if}}">
+                        {{#if (gte modifiers.maxAgility 0)}}+{{/if}}{{modifiers.maxAgility}}
+                    </div>
+                    
+                    <button type="button" 
+                            class="rt-stat-button rt-stat-button--plus" 
+                            data-action="adjustModifier" 
+                            data-field="modifiers.maxAgility" 
+                            data-delta="5"
+                            {{disabled (not isEditable)}}>
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            
+            {{!-- Weight --}}
+            <div class="rt-modifier-stat">
+                <div class="rt-stat-icon">
+                    <i class="fas fa-weight-hanging"></i>
+                </div>
+                <div class="rt-stat-info">
+                    <label class="rt-stat-label">{{localize "RT.Modification.WeightLabel"}}</label>
+                    <p class="rt-stat-help">Weight change in kilograms</p>
+                </div>
+                <div class="rt-stat-controls">
+                    <button type="button" 
+                            class="rt-stat-button rt-stat-button--minus" 
+                            data-action="adjustModifier" 
+                            data-field="modifiers.weight" 
+                            data-delta="-0.5"
+                            {{disabled (not isEditable)}}>
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    
+                    <input type="number" 
+                           name="system.modifiers.weight" 
+                           value="{{modifiers.weight}}" 
+                           step="0.5"
+                           class="rt-stat-input"
+                           {{disabled (not isEditable)}}>
+                    
+                    <button type="button" 
+                            class="rt-stat-button rt-stat-button--plus" 
+                            data-action="adjustModifier" 
+                            data-field="modifiers.weight" 
+                            data-delta="0.5"
+                            {{disabled (not isEditable)}}>
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

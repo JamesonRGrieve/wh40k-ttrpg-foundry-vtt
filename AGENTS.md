@@ -485,6 +485,144 @@ item.system.modifiers = {
 
 Modifiers are tracked in `system.modifierSources` for transparency/tooltips.
 
+## Weapon Qualities & Craftsmanship System
+
+### Overview
+
+Weapon qualities are modular attributes that modify weapon behavior (e.g., "Tearing", "Blast (3)", "Reliable"). The system uses a **computed properties pattern** where qualities from base weapon design are combined with craftsmanship-derived qualities dynamically.
+
+### Architecture
+
+```javascript
+// WeaponData getters (src/module/data/item/weapon.mjs)
+weapon.special                    // Set<string> - Base qualities from pack data
+weapon.effectiveSpecial           // Set<string> - Base + craftsmanship-derived (computed)
+weapon.craftsmanshipModifiers     // {toHit, damage, weight} - Stat bonuses
+weapon.hasCraftsmanshipQualities  // boolean - Has auto-applied qualities
+```
+
+### Quality Identifier Format
+
+- **Base**: `"tearing"`, `"razor-sharp"`, `"balanced"`
+- **Parametric**: `"blast-3"`, `"crippling-2"` (base + "-" + level)
+- **Variable**: `"blast-x"` (level determined at use)
+
+### CONFIG Definitions
+
+All qualities defined in `CONFIG.ROGUE_TRADER.weaponQualities`:
+
+```javascript
+weaponQualities: {
+  'tearing': {
+    label: "RT.WeaponQuality.Tearing",          // i18n key
+    description: "RT.WeaponQuality.TearingDesc", // i18n key
+    hasLevel: false
+  },
+  'blast': {
+    label: "RT.WeaponQuality.Blast",
+    description: "RT.WeaponQuality.BlastDesc",
+    hasLevel: true  // Supports level suffix (e.g., "blast-3")
+  }
+  // ... 70+ qualities total
+}
+```
+
+### Craftsmanship Integration
+
+Craftsmanship levels automatically add/remove qualities and apply stat modifiers:
+
+**Ranged Weapons** (quality changes):
+- **Poor** → adds `unreliable-2` (jams on 90+)
+- **Cheap** → adds `unreliable` (jams on 96+)
+- **Common** → no change
+- **Good** → adds `reliable` (jams on 95+), removes unreliable variants
+- **Best/Master** → adds `never-jam`, removes unreliable/overheats
+- **Master** → also +10 BS
+
+**Melee Weapons** (stat modifiers only):
+- **Poor** → -15 WS
+- **Cheap** → -10 WS
+- **Good** → +5 WS
+- **Best** → +10 WS, +1 Damage
+- **Master** → +20 WS, +2 Damage
+
+### Handlebars Helpers
+
+Five helpers convert quality identifiers to rich display objects:
+
+```handlebars
+{{!-- Convert Set of identifiers to quality objects --}}
+{{#each (specialQualities item.system.special) as |quality|}}
+  {{quality.label}} {{!-- "Tearing" --}}
+  {{quality.description}} {{!-- "Reroll 1s and 2s on damage" --}}
+  {{quality.level}} {{!-- 3 (for "blast-3") --}}
+{{/each}}
+
+{{!-- Get craftsmanship-derived qualities --}}
+{{#each (craftsmanshipQualities item.system) as |quality|}}
+  {{quality.label}} {{!-- "Reliable" for good craftsmanship --}}
+{{/each}}
+
+{{!-- Conditional checks --}}
+{{#if (hasCraftsmanshipQualities item.system)}}
+  <div>Shows orange panel for auto-applied qualities</div>
+{{/if}}
+
+{{#if (hasEmbeddedQualities items)}}
+  <div>Shows purple panel for custom AttackSpecial items</div>
+{{/if}}
+
+{{!-- Single quality lookup --}}
+{{qualityLookup "tearing"}} {{!-- Returns rich object --}}
+```
+
+### Template Structure (5-Panel System)
+
+Weapon sheet qualities tab uses color-coded panels:
+
+1. **Craftsmanship Banner** (gold #d4af37) - Shows level + stat modifiers
+2. **Base Qualities Panel** (blue #4a9eff) - From weapon design (circle icons)
+3. **Craftsmanship Qualities Panel** (orange #ff9f40) - Auto-applied (cog icons, conditional)
+4. **Effective Qualities Panel** (green #4bc073) - Combined view (check icons, emphasized)
+5. **Custom Qualities Panel** (purple #c084fc) - User-added AttackSpecial items (sparkle icons, conditional)
+
+### Helper Functions (config.mjs)
+
+```javascript
+CONFIG.ROGUE_TRADER.getQualityDefinition(identifier)  // Get definition object
+CONFIG.ROGUE_TRADER.getQualityLabel(identifier)       // Get localized label
+CONFIG.ROGUE_TRADER.getQualityDescription(identifier) // Get localized description
+CONFIG.ROGUE_TRADER.getJamThreshold(weapon)           // Calculate jam threshold (94-100, 91-100, etc.)
+```
+
+### Key Implementation Files
+
+| File | Purpose |
+|------|---------|
+| `src/module/config.mjs` (lines 632-1029) | 70+ quality definitions + helper functions |
+| `src/module/data/item/weapon.mjs` (lines 133-209) | effectiveSpecial, craftsmanshipModifiers, hasCraftsmanshipQualities getters |
+| `src/module/handlebars/handlebars-helpers.mjs` (lines 641-778) | 5 quality display helpers |
+| `src/templates/item/item-weapon-sheet-modern.hbs` (lines 280-459) | 5-panel qualities tab |
+| `src/lang/en.json` (lines 554-740) | Localization for craftsmanship + 70+ qualities |
+
+### Status: 90% Complete
+
+**Completed**:
+- ✅ CONFIG definitions (70+ qualities)
+- ✅ DataModel computed properties
+- ✅ Handlebars helpers (5 helpers)
+- ✅ Template 5-panel display
+- ✅ Localization (all common qualities)
+- ✅ Chat integration (qualities in attack messages)
+- ✅ Pack cleanup (verified no duplicates)
+- ✅ Compendium browser (quality item display)
+
+**Pending**:
+- ⏳ Pack data migration (109 quality items - optional)
+- ⏳ Testing & validation
+
+See `WEAPON_QUALITIES_TODO.md` for detailed checklist.
+
 ## Recent Changes (January 2026)
 
 ### Major Refactors
@@ -580,13 +718,31 @@ Modifiers are tracked in `system.modifierSources` for transparency/tooltips.
     - Starship initiative roller (1d10 + Detection Bonus)
     - Power/space status indicators with shortage warnings
 
+### Weapon System
+
+13. **Weapon Qualities & Craftsmanship Refactor** (Jan 2026)
+    - Fixed `[object Object]` display issues (109 weapon quality items had legacy data)
+    - Added CONFIG.ROGUE_TRADER.weaponQualities with 70+ quality definitions
+    - Implemented computed `effectiveSpecial` getter (base + craftsmanship-derived)
+    - Added `craftsmanshipModifiers` getter for stat bonuses
+    - Created 5 Handlebars helpers for quality display
+    - Completely rewrote weapon sheet qualities tab with 5-panel visual hierarchy
+    - Integrated craftsmanship rules: Poor/Cheap add unreliable, Good adds reliable, Best/Master add never-jam
+    - Added comprehensive localization for all qualities
+    - **Chat integration**: Weapon attack messages now show active qualities in green-themed section
+    - **Pack cleanup**: Created cleanup script, verified no duplicate qualities in pack data
+    - **Compendium browser**: Quality items now show descriptions instead of page numbers
+    - Status: 90% complete, fully testable
+
 ### Localization
 
-13. **i18n Additions** (Dec 2025)
+14. **i18n Additions** (Dec 2025 - Jan 2026)
     - NPC types (`RT.NPCType.*`)
     - Threat levels (`RT.Threat.*`)
     - Starship UI strings
     - Tab labels (`RT.Tabs.*`)
+    - Craftsmanship levels (`RT.Craftsmanship.*`)
+    - Weapon qualities (`RT.WeaponQuality.*` - 70+ entries)
 
 ### Technical Improvements
 

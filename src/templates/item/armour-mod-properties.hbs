@@ -1,0 +1,132 @@
+{{!-- Armour Modification Properties Tab --}}
+<div class="rt-tab-content rt-armour-mod-properties" data-tab="properties">
+    <div class="rt-properties-grid">
+        {{!-- Added Properties Column --}}
+        <div class="rt-properties-column rt-properties-column--added">
+            <header class="rt-properties-header">
+                <h3>
+                    <i class="fas fa-plus-circle"></i>
+                    {{localize "RT.Modification.AddedProperties"}}
+                </h3>
+            </header>
+            
+            <div class="rt-properties-list">
+                {{#each addedPropertiesArray}}
+                    <div class="rt-property-tag rt-property-tag--added">
+                        <div class="rt-property-info">
+                            <span class="rt-property-label">{{label}}</span>
+                            {{#if description}}
+                                <span class="rt-property-desc">{{description}}</span>
+                            {{/if}}
+                        </div>
+                        <button type="button" 
+                                class="rt-property-remove" 
+                                data-action="removeProperty" 
+                                data-property="{{key}}" 
+                                data-list="added"
+                                data-tooltip="Remove property"
+                                {{disabled (not ../isEditable)}}>
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {{else}}
+                    <p class="rt-empty-state">
+                        <i class="fas fa-info-circle"></i>
+                        No properties added
+                    </p>
+                {{/each}}
+            </div>
+            
+            {{#if isEditable}}
+                <div class="rt-property-add">
+                    <label class="rt-field-label">Add Property</label>
+                    <select class="rt-property-select" data-add-list="added">
+                        <option value="">-- Select Property --</option>
+                        {{#each availablePropertiesArray}}
+                            <option value="{{key}}">{{label}}</option>
+                        {{/each}}
+                    </select>
+                    <button type="button" 
+                            class="rt-property-add-button" 
+                            data-action="addProperty" 
+                            data-property=""
+                            data-list="added">
+                        <i class="fas fa-plus"></i>
+                        Add
+                    </button>
+                </div>
+            {{/if}}
+        </div>
+        
+        {{!-- Removed Properties Column --}}
+        <div class="rt-properties-column rt-properties-column--removed">
+            <header class="rt-properties-header">
+                <h3>
+                    <i class="fas fa-minus-circle"></i>
+                    {{localize "RT.Modification.RemovedProperties"}}
+                </h3>
+            </header>
+            
+            <div class="rt-properties-list">
+                {{#each removedPropertiesArray}}
+                    <div class="rt-property-tag rt-property-tag--removed">
+                        <div class="rt-property-info">
+                            <span class="rt-property-label">{{label}}</span>
+                            {{#if description}}
+                                <span class="rt-property-desc">{{description}}</span>
+                            {{/if}}
+                        </div>
+                        <button type="button" 
+                                class="rt-property-remove" 
+                                data-action="removeProperty" 
+                                data-property="{{key}}" 
+                                data-list="removed"
+                                data-tooltip="Remove property"
+                                {{disabled (not ../isEditable)}}>
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {{else}}
+                    <p class="rt-empty-state">
+                        <i class="fas fa-info-circle"></i>
+                        No properties removed
+                    </p>
+                {{/each}}
+            </div>
+            
+            {{#if isEditable}}
+                <div class="rt-property-add">
+                    <label class="rt-field-label">Remove Property</label>
+                    <select class="rt-property-select" data-add-list="removed">
+                        <option value="">-- Select Property --</option>
+                        {{#each availablePropertiesArray}}
+                            <option value="{{key}}">{{label}}</option>
+                        {{/each}}
+                    </select>
+                    <button type="button" 
+                            class="rt-property-add-button" 
+                            data-action="addProperty" 
+                            data-property=""
+                            data-list="removed">
+                        <i class="fas fa-minus"></i>
+                        Remove
+                    </button>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>
+
+<script>
+// Wire up the select dropdowns to the add buttons
+document.querySelectorAll('.rt-property-select').forEach(select => {
+    select.addEventListener('change', (e) => {
+        const list = e.target.dataset.addList;
+        const button = e.target.parentElement.querySelector(`[data-list="${list}"]`);
+        if (button) {
+            button.dataset.property = e.target.value;
+            button.disabled = !e.target.value;
+        }
+    });
+});
+</script>

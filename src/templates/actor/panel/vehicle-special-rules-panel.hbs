@@ -1,0 +1,13 @@
+{{!-- Vehicle Special Rules Panel --}}
+<div class="rt-panel spacer rt-grid-col-6">
+    <h1 class="rt-panel-header">
+        <i class="fas fa-scroll"></i>
+        {{localize "RT.Vehicle.SpecialRules"}}
+    </h1>
+    <div class="rt-special-rules-section">
+        <div class="rt-editor">
+            {{editor actor.system.specialRules target="system.specialRules" button=true owner=owner editable=editable}}
+        </div>
+        <small class="rt-field__hint">{{localize "RT.Vehicle.SpecialRules.Hint"}}</small>
+    </div>
+</div>

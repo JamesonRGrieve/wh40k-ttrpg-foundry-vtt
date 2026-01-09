@@ -1,0 +1,160 @@
+<div class="rt-item-sheet ship-weapon">
+    <form autocomplete="off">
+        <!-- Item Header -->
+        <header class="rt-item-header">
+            <div class="rt-item-image" data-action="editImage">
+                <img src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" />
+            </div>
+            
+            <div class="rt-item-title">
+                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Weapon Name" />
+                <div class="rt-item-title__type">
+                    <i class="fas fa-crosshairs"></i>
+                    <span>{{localize "RT.ShipWeapon"}}</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="rt-tabs" data-group="primary">
+            <a class="rt-tab active" data-tab="details" data-group="primary">
+                <i class="fas fa-info-circle"></i> {{localize "RT.Item.Tabs.Details"}}
+            </a>
+            <a class="rt-tab" data-tab="effects" data-group="primary">
+                <i class="fas fa-magic"></i> {{localize "RT.Item.Tabs.Effects"}}
+            </a>
+        </nav>
+
+        <!-- Tab Content -->
+        <section class="rt-tab-content">
+            <!-- Details Tab -->
+            <div class="tab active" data-tab="details" data-group="primary">
+                <!-- Weapon Properties -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-crosshairs"></i> Weapon Properties</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="form-group">
+                            <label>{{localize "RT.ShipWeapon.Type"}}</label>
+                            <select name="system.weaponType">
+                                {{selectOptions weaponTypes selected=system.weaponType}}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>{{localize "RT.ShipLocation"}}</label>
+                            <select name="system.location">
+                                {{selectOptions locations selected=system.location}}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>{{localize "RT.HullType"}}</label>
+                            <select name="system.hullType" multiple>
+                                {{selectOptions hullTypes selected=system.hullType}}
+                            </select>
+                            <p class="hint">Hold Ctrl/Cmd to select multiple hull types</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>{{localize "RT.Availability"}}</label>
+                            <select name="system.availability">
+                                {{selectOptions availabilities selected=system.availability}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weapon Stats -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-dice-d20"></i> Weapon Statistics</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Strength</label>
+                                <input type="number" name="system.strength" value="{{system.strength}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Damage</label>
+                                <input type="text" name="system.damage" value="{{system.damage}}" placeholder="1d10+2" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Crit Rating</label>
+                                <input type="number" name="system.crit" value="{{system.crit}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Range (VU)</label>
+                                <input type="number" name="system.range" value="{{system.range}}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resource Requirements -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-battery-half"></i> Resource Requirements</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Power</label>
+                                <input type="number" name="system.power" value="{{system.power}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Space</label>
+                                <input type="number" name="system.space" value="{{system.space}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Ship Points</label>
+                                <input type="number" name="system.shipPoints" value="{{system.shipPoints}}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Qualities -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-star"></i> Special Qualities</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <p class="hint">Enter special qualities as comma-separated values (e.g., "guided, accurate")</p>
+                        <input type="text" name="system.special" value="{{join system.special ','}}" placeholder="guided, accurate, etc." />
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-sticky-note"></i> Notes</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <textarea name="system.notes" rows="4">{{system.notes}}</textarea>
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-scroll"></i> Description</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        {{editor system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Effects Tab -->
+            <div class="tab" data-tab="effects" data-group="primary">
+                {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+            </div>
+        </section>
+    </form>
+</div>

@@ -1,0 +1,161 @@
+<div class="rt-item-sheet ship-upgrade">
+    <form autocomplete="off">
+        <!-- Item Header -->
+        <header class="rt-item-header">
+            <div class="rt-item-image" data-action="editImage">
+                <img src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" />
+            </div>
+            
+            <div class="rt-item-title">
+                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Upgrade Name" />
+                <div class="rt-item-title__type">
+                    <i class="fas fa-level-up-alt"></i>
+                    <span>{{localize "RT.ShipUpgrade"}}</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="rt-tabs" data-group="primary">
+            <a class="rt-tab active" data-tab="details" data-group="primary">
+                <i class="fas fa-info-circle"></i> {{localize "RT.Item.Tabs.Details"}}
+            </a>
+            <a class="rt-tab" data-tab="effects" data-group="primary">
+                <i class="fas fa-magic"></i> {{localize "RT.Item.Tabs.Effects"}}
+            </a>
+        </nav>
+
+        <!-- Tab Content -->
+        <section class="rt-tab-content">
+            <!-- Details Tab -->
+            <div class="tab active" data-tab="details" data-group="primary">
+                <!-- Basic Properties -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-level-up-alt"></i> Upgrade Properties</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="form-group">
+                            <label>{{localize "RT.Availability"}}</label>
+                            <select name="system.availability">
+                                {{selectOptions availabilities selected=system.availability}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resource Requirements -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-battery-half"></i> Resource Requirements</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Power</label>
+                                <input type="number" name="system.power" value="{{system.power}}" />
+                                <p class="hint">Negative values = generates power</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Space</label>
+                                <input type="number" name="system.space" value="{{system.space}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Ship Points</label>
+                                <input type="number" name="system.shipPoints" value="{{system.shipPoints}}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat Modifiers -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-chart-line"></i> Stat Modifiers</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Speed</label>
+                                <input type="number" name="system.modifiers.speed" value="{{system.modifiers.speed}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Manoeuvrability</label>
+                                <input type="number" name="system.modifiers.manoeuvrability" value="{{system.modifiers.manoeuvrability}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Detection</label>
+                                <input type="number" name="system.modifiers.detection" value="{{system.modifiers.detection}}" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Armour</label>
+                                <input type="number" name="system.modifiers.armour" value="{{system.modifiers.armour}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Hull Integrity</label>
+                                <input type="number" name="system.modifiers.hullIntegrity" value="{{system.modifiers.hullIntegrity}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Turret Rating</label>
+                                <input type="number" name="system.modifiers.turretRating" value="{{system.modifiers.turretRating}}" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Void Shields</label>
+                                <input type="number" name="system.modifiers.voidShields" value="{{system.modifiers.voidShields}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Morale</label>
+                                <input type="number" name="system.modifiers.morale" value="{{system.modifiers.morale}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Crew Rating</label>
+                                <input type="number" name="system.modifiers.crewRating" value="{{system.modifiers.crewRating}}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Effect -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-magic"></i> Effect</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        {{editor system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-sticky-note"></i> Notes</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <textarea name="system.notes" rows="3">{{system.notes}}</textarea>
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-scroll"></i> Description</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        {{editor system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Effects Tab -->
+            <div class="tab" data-tab="effects" data-group="primary">
+                {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+            </div>
+        </section>
+    </form>
+</div>

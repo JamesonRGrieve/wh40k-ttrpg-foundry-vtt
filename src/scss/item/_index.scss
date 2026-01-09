@@ -16,5 +16,8 @@
 @import 'actor-styles';  // Modern actor sheet integration
 @import 'talents';       // Talent/trait specific styles
 @import 'armour';        // Armour-specific styles (coverage, properties)
+@import 'armour-modification'; // Armour modification sheet styles
+@import 'critical-injury'; // Critical injury sheet & chat card styles
+@import 'condition';     // Condition sheet & chat card styles
 @import 'misc';          // Prose fields, compendium browser
 @import 'sheets';        // New RT item sheet design system

@@ -42,8 +42,70 @@
                         {{/each}}
                     </select>
                 </div>
+                
+                {{#if hasArmourFilters}}
+                <div class="filter-divider"></div>
+                <h4 class="filter-subheader"><i class="fas fa-shield"></i> Armour Filters</h4>
+                
+                <div class="filter-group">
+                    <label for="filter-armour-type">Armour Type</label>
+                    <select class="filter-armour-type">
+                        <option value="all">All Types</option>
+                        {{#each armourTypes as |type key|}}
+                        <option value="{{key}}" {{#if (eq ../filters.armourType key)}}selected{{/if}}>
+                            {{localize type.label}}
+                        </option>
+                        {{/each}}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="filter-min-ap">Minimum AP</label>
+                    <input type="number" class="filter-min-ap" min="0" max="20" value="{{filters.minAP}}" placeholder="Any">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="filter-coverage">Coverage</label>
+                    <select class="filter-coverage">
+                        <option value="all" {{#if (eq filters.coverage "all")}}selected{{/if}}>All Coverage</option>
+                        <option value="full" {{#if (eq filters.coverage "full")}}selected{{/if}}>Full Body</option>
+                        <option value="partial" {{#if (eq filters.coverage "partial")}}selected{{/if}}>Partial</option>
+                    </select>
+                </div>
+                {{/if}}
 
-                <button type="button" class="clear-filters">
+                {{#if hasArmourModFilters}}
+                <div class="filter-divider"></div>
+                <h4 class="filter-subheader"><i class="fas fa-wrench"></i> Armour Modification Filters</h4>
+                
+                <div class="filter-group">
+                    <label for="filter-mod-type">Applies To</label>
+                    <select class="filter-mod-type">
+                        <option value="all">All Armour Types</option>
+                        {{#each armourTypesForMods as |type key|}}
+                        <option value="{{key}}" {{#if (eq ../filters.modType key)}}selected{{/if}}>
+                            {{localize type.label}}
+                        </option>
+                        {{/each}}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>
+                        <input type="checkbox" class="filter-has-modifiers" {{#if filters.hasModifiers}}checked{{/if}}>
+                        Has Stat Modifiers
+                    </label>
+                </div>
+                
+                <div class="filter-group">
+                    <label>
+                        <input type="checkbox" class="filter-has-properties" {{#if filters.hasProperties}}checked{{/if}}>
+                        Adds/Removes Properties
+                    </label>
+                </div>
+                {{/if}}
+
+                <button type="button" class="clear-filters" data-action="clearFilters">
                     <i class="fas fa-times"></i> Clear Filters
                 </button>
             </div>
@@ -63,10 +125,65 @@
                             <span class="results-group-count">{{items.length}}</span>
                         </div>
                         {{#each items}}
-                        <div class="compendium-item" data-uuid="{{uuid}}" draggable="true">
+                        <div class="compendium-item compendium-item--{{type}}" data-uuid="{{uuid}}" draggable="true">
                             <img src="{{img}}" alt="{{name}}" class="item-image" />
                             <div class="item-details">
                                 <h4 class="item-name">{{name}}</h4>
+                                
+                                {{!-- Armour-specific metadata --}}
+                                {{#if armourData}}
+                                <div class="item-stats item-stats--armour">
+                                    <span class="stat-badge stat-badge--type stat-badge--{{armourData.type}}">
+                                        <i class="fas fa-shield"></i> {{armourData.typeLabel}}
+                                    </span>
+                                    <span class="stat-badge stat-badge--ap">
+                                        <i class="fas fa-shield-halved"></i> {{armourData.apSummary}}
+                                    </span>
+                                    <span class="stat-badge stat-badge--coverage" title="Coverage: {{armourData.coverageIcons}}">
+                                        <i class="fas fa-person"></i> {{armourData.coverageIcons}}
+                                    </span>
+                                    {{#if armourData.maxAgility}}
+                                    <span class="stat-badge stat-badge--agility">
+                                        <i class="fas fa-person-running"></i> Max {{armourData.maxAgility}}
+                                    </span>
+                                    {{/if}}
+                                </div>
+                                {{/if}}
+                                
+                                {{!-- Armour modification metadata --}}
+                                {{#if armourModData}}
+                                <div class="item-stats item-stats--armour-mod">
+                                    <span class="stat-badge stat-badge--restrictions">
+                                        <i class="fas fa-filter"></i> {{armourModData.restrictionLabel}}
+                                    </span>
+                                    
+                                    {{#each armourModData.modifierBadges}}
+                                    <span class="stat-badge stat-badge--modifier {{#unless positive}}stat-badge--negative{{/unless}}">
+                                        <i class="fas fa-{{#if positive}}arrow-up{{else}}arrow-down{{/if}}"></i>
+                                        {{label}}
+                                    </span>
+                                    {{/each}}
+                                    
+                                    {{#if armourModData.hasProperties}}
+                                    <span class="stat-badge stat-badge--properties">
+                                        <i class="fas fa-tags"></i> {{armourModData.propertiesSummary}}
+                                    </span>
+                                    {{/if}}
+                                </div>
+                                {{/if}}
+                                
+                                {{!-- Weapon quality metadata --}}
+                                {{#if qualityData}}
+                                <div class="item-stats item-stats--quality">
+                                    {{#if qualityData.hasLevel}}
+                                    <span class="stat-badge stat-badge--level">
+                                        <i class="fas fa-layer-group"></i> Has Level{{#if qualityData.level}} ({{qualityData.level}}){{/if}}
+                                    </span>
+                                    {{/if}}
+                                    <p class="quality-description">{{qualityData.description}}</p>
+                                </div>
+                                {{/if}}
+                                
                                 <div class="item-meta">
                                     <span class="item-type">{{type}}</span>
                                 {{#if sourceLabel}}

@@ -8,6 +8,7 @@ import { DHBasicActionManager } from "../../actions/basic-action-manager.mjs";
 import { DHTargetedActionManager } from "../../actions/targeted-action-manager.mjs";
 import { Hit } from "../../rolls/damage-data.mjs";
 import { AssignDamageData } from "../../rolls/assign-damage-data.mjs";
+import ROGUE_TRADER from "../../config.mjs";
 import { prepareAssignDamageRoll } from "../prompts/assign-damage-dialog.mjs";
 import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
 import LoadoutPresetDialog from "../dialogs/loadout-preset-dialog.mjs";
@@ -51,6 +52,13 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Skills actions
             filterSkills: AcolyteSheet.#filterSkills,
             clearSkillsSearch: AcolyteSheet.#clearSkillsSearch,
+            
+            // Talents actions
+            filterTalents: AcolyteSheet.#filterTalents,
+            clearTalentsFilter: AcolyteSheet.#clearTalentsFilter,
+            filterTraits: AcolyteSheet.#filterTraits,
+            clearTraitsFilter: AcolyteSheet.#clearTraitsFilter,
+            adjustTraitLevel: AcolyteSheet.#adjustTraitLevel,
 
             // Acquisition actions
             addAcquisition: AcolyteSheet.#addAcquisition,
@@ -309,7 +317,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const context = await super._prepareContext(options);
         
         // RT-specific configuration
-        context.dh = CONFIG.rt;
+        context.dh = CONFIG.rt || ROGUE_TRADER;
 
         // Prepare characteristic HUD data
         this._prepareCharacteristicHUD(context);
@@ -415,6 +423,20 @@ export default class AcolyteSheet extends BaseActorSheet {
                 active: this.tabGroups[tabConfig.group] === tabConfig.tab
             };
         }
+        
+        // Add filter state for skills tab
+        if (partId === "skills") {
+            context.skillsFilter = this._skillsFilter;
+        }
+        
+        // Add talents context for talents tab
+        if (partId === "talents") {
+            const talentsData = this._prepareTalentsContext();
+            Object.assign(context, talentsData);
+            const traitsData = this._prepareTraitsContext(context);
+            Object.assign(context, traitsData);
+        }
+        
         return context;
     }
 
@@ -1726,80 +1748,121 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static #filterSkills(event, target) {
-        const skillsPanel = this.element.querySelector('.rt-skills-columns');
-        if (!skillsPanel) return;
-
-        const searchInput = this.element.querySelector('.rt-skills-search');
-        const charFilter = this.element.querySelector('.rt-skills-char-filter');
-        const trainingFilter = this.element.querySelector('.rt-skills-training-filter');
-
-        const searchTerm = searchInput?.value.toLowerCase() || '';
-        const charValue = charFilter?.value || '';
-        const trainingValue = trainingFilter?.value || '';
-
-        // Store filter state for persistence
-        this._skillsFilter = {
-            search: searchInput?.value || '',
-            characteristic: charValue,
-            training: trainingValue
-        };
-
-        const skillRows = skillsPanel.querySelectorAll('.rt-skill-row');
-        let visibleCount = 0;
-
-        skillRows.forEach(row => {
-            const skillName = row.getAttribute('data-skill-name')?.toLowerCase() || '';
-            const skillChar = row.getAttribute('data-characteristic') || '';
-            const skillTraining = row.getAttribute('data-training-level') || '0';
-
-            const matchesSearch = !searchTerm || skillName.includes(searchTerm);
-            const matchesChar = !charValue || skillChar === charValue;
-            const matchesTraining = !trainingValue || skillTraining === trainingValue;
-
-            if (matchesSearch && matchesChar && matchesTraining) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        // Toggle clear button visibility
-        const clearBtn = this.element.querySelector('.rt-skills-controls .rt-search-clear');
-        if (clearBtn) {
-            clearBtn.style.display = searchTerm ? 'flex' : 'none';
-        }
-
-        // Show "no results" message if needed
-        const existingMsg = skillsPanel.querySelector('.rt-no-results');
-        if (existingMsg) existingMsg.remove();
-
-        if (visibleCount === 0 && skillRows.length > 0) {
-            const noResults = document.createElement('div');
-            noResults.className = 'rt-no-results';
-            noResults.innerHTML = '<i class="fas fa-search"></i><span>No skills match your filters</span>';
-            skillsPanel.appendChild(noResults);
-        }
+    static async #filterSkills(event, target) {
+        const input = event.currentTarget;
+        const name = input.name || 'search';
+        const value = input.value || '';
+        
+        // Update filter state
+        this._skillsFilter[name] = value;
+        
+        // Re-render skills tab only
+        await this.render({ parts: ['skills'] });
     }
 
     /* -------------------------------------------- */
 
     /**
-     * Handle clearing the skills search input.
+     * Clear all skill filters.
      * @this {AcolyteSheet}
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static #clearSkillsSearch(event, target) {
-        const searchInput = this.element.querySelector('.rt-skills-search');
-        if (searchInput) {
-            searchInput.value = '';
-            // Clear stored filter state
-            this._skillsFilter = { search: '', characteristic: '', training: '' };
-            // Trigger filter update
-            this.constructor.#filterSkills.call(this, event, searchInput);
-        }
+    static async #clearSkillsSearch(event, target) {
+        // Reset all filters
+        this._skillsFilter = { search: '', characteristic: '', training: '' };
+        
+        // Re-render skills tab
+        await this.render({ parts: ['skills'] });
+    }
+
+    /* -------------------------------------------- */
+    /*  Talents Actions                             */
+    /* -------------------------------------------- */
+
+    /**
+     * Filter talents by search, category, and tier.
+     * @param {Event} event     Triggering event.
+     * @param {HTMLElement} target  The input/select element.
+     * @this {AcolyteSheet}
+     */
+    static async #filterTalents(event, target) {
+        const form = target.closest(".rt-talents-filters");
+        if (!form) return;
+        
+        const search = form.querySelector("[name=talents-search]")?.value || "";
+        const category = form.querySelector("[name=talents-category]")?.value || "";
+        const tier = form.querySelector("[name=talents-tier]")?.value || "";
+        
+        this._talentsFilter = { search, category, tier };
+        await this.render({ parts: ["talents"] });
+    }
+
+    /**
+     * Clear talents filter.
+     * @param {Event} event     Triggering event.
+     * @param {HTMLElement} target  The button clicked.
+     * @this {AcolyteSheet}
+     */
+    static async #clearTalentsFilter(event, target) {
+        this._talentsFilter = { search: '', category: '', tier: '' };
+        await this.render({ parts: ["talents"] });
+    }
+
+    /* -------------------------------------------- */
+    /*  Event Handlers - Traits                     */
+    /* -------------------------------------------- */
+
+    /**
+     * Filter traits list.
+     * @param {Event} event  Triggering event
+     * @param {HTMLElement} target  The input/select element
+     * @this {AcolyteSheet}
+     * @private
+     */
+    static async #filterTraits(event, target) {
+        const form = target.closest(".rt-traits-filters");
+        if (!form) return;
+        
+        const search = form.querySelector("[name=traits-search]")?.value || "";
+        const category = form.querySelector("[name=traits-category]")?.value || "";
+        const hasLevel = form.querySelector("[name=traits-has-level]")?.checked || false;
+        
+        this._traitsFilter = { search, category, hasLevel };
+        await this.render({ parts: ["talents"] }); // Talents tab contains trait panel
+    }
+
+    /**
+     * Clear traits filter.
+     * @param {Event} event  Triggering event
+     * @param {HTMLElement} target  The button clicked
+     * @this {AcolyteSheet}
+     * @private
+     */
+    static async #clearTraitsFilter(event, target) {
+        this._traitsFilter = { search: '', category: '', hasLevel: false };
+        await this.render({ parts: ["talents"] }); // Talents tab contains trait panel
+    }
+
+    /**
+     * Adjust trait level.
+     * @param {Event} event  Triggering event
+     * @param {HTMLElement} target  The button clicked
+     * @this {AcolyteSheet}
+     * @private
+     */
+    static async #adjustTraitLevel(event, target) {
+        const itemId = target.dataset.itemId;
+        const delta = parseInt(target.dataset.delta) || 0;
+        
+        const item = this.actor.items.get(itemId);
+        if (!item) return;
+        
+        const newLevel = Math.max(0, (item.system.level || 0) + delta);
+        await item.update({ "system.level": newLevel });
+        
+        // Provide visual feedback
+        ui.notifications.info(`${item.name} level ${delta > 0 ? 'increased' : 'decreased'} to ${newLevel}`);
     }
 
     /* -------------------------------------------- */

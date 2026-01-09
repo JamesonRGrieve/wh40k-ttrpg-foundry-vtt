@@ -14,6 +14,25 @@
         {{!-- Body --}}
         <div class="rt-roll-card__body">
             {{#with rollData}}
+                {{!-- Weapon Qualities --}}
+                {{#if weapon}}
+                    {{#if weapon.system.effectiveSpecial.size}}
+                        <div class="rt-roll-card__qualities">
+                            <div class="rt-roll-card__qualities-header">
+                                <i class="fas fa-star" style="color: #4bc073; font-size: 0.85rem;"></i>
+                                <span class="rt-roll-card__qualities-title">Active Qualities</span>
+                            </div>
+                            <div class="rt-roll-card__qualities-list">
+                                {{#each (specialQualities weapon.system.effectiveSpecial) as |quality|}}
+                                    <span class="rt-quality-tag" data-tooltip="{{quality.description}}" title="{{quality.description}}">
+                                        {{quality.label}}{{#if quality.level}} ({{quality.level}}){{/if}}
+                                    </span>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/if}}
+                {{/if}}
+                
                 {{#unless ignoreModifiers}}
                     {{!-- Modifiers Breakdown --}}
                     <div class="rt-roll-card__row">

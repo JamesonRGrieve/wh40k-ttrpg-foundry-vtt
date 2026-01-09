@@ -1,0 +1,55 @@
+{{!-- Vehicle Weapons Panel --}}
+<div class="rt-panel spacer rt-grid-col-6">
+    <h1 class="rt-panel-header">
+        <i class="fas fa-crosshairs"></i>
+        {{localize "RT.Vehicle.Weapons"}}
+    </h1>
+    <div class="rt-vehicle-weapons-section">
+        {{#if weapons}}
+        <div class="rt-table--border">
+            <div class="table-row--head">
+                <div class="table-cell--span2">{{localize "RT.Weapon.Name"}}</div>
+                <div class="table-cell">{{localize "RT.Weapon.Class"}}</div>
+                <div class="table-cell">{{localize "RT.Weapon.Range"}}</div>
+                <div class="table-cell">{{localize "RT.Weapon.Damage"}}</div>
+                <div class="table-cell--last">{{localize "RT.Actions"}}</div>
+            </div>
+            {{#each weapons as |weapon|}}
+            <div class="table-row">
+                <div class="table-cell--span2">
+                    <button class="item-name rt-item-button" data-item-id="{{weapon.id}}" type="button">
+                        <img class="rt-item-img" src="{{weapon.img}}" alt="{{weapon.name}}" />
+                        {{weapon.name}}
+                    </button>
+                </div>
+                <div class="table-cell">{{weapon.system.class}}</div>
+                <div class="table-cell">{{weapon.system.range}}</div>
+                <div class="table-cell">{{weapon.system.damage}}</div>
+                <div class="table-cell--last">
+                    <button class="rt-control-button" data-action="rollWeapon" data-item-id="{{weapon.id}}" title="Roll Attack">
+                        <i class="fas fa-dice-d20"></i>
+                    </button>
+                    <button class="rt-control-button item-delete" data-item-id="{{weapon.id}}" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+        
+        <div class="rt-weapons-description">
+            <label class="rt-field__header">{{localize "RT.Vehicle.Weapons.Description"}}</label>
+            <div class="rt-editor">
+                {{editor actor.system.weapons target="system.weapons" button=true owner=owner editable=editable}}
+            </div>
+            <small class="rt-field__hint">{{localize "RT.Vehicle.Weapons.Hint"}}</small>
+        </div>
+        
+        <div class="rt-item-controls">
+            <button class="rt-control-button item-create" data-type="weapon">
+                <i class="fas fa-plus"></i> {{localize "RT.Vehicle.Weapons.Add"}}
+            </button>
+        </div>
+    </div>
+</div>

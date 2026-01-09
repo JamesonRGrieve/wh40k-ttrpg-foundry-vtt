@@ -8,10 +8,22 @@
         <!-- Group Header -->
         <div class="rt-specialist-header">
             <span class="rt-specialist-name">{{entry.[1].label}}</span>
-            <span class="rt-specialist-char">{{entry.[1].characteristic}}</span>
-            <button type="button" class="rt-specialist-add add-skill" data-action="addSpecialistSkill" data-skill="{{entry.[0]}}" title="Add {{entry.[1].label}} specialization">
+            <span class="rt-specialist-char">({{entry.[1].charShort}})</span>
+            
+            {{#if entry.[1].suggestedSpecializations.length}}
+            <!-- Dropdown for predefined specializations -->
+            <select class="rt-specialist-select" data-action="addSpecialistSkill" data-skill="{{entry.[0]}}" title="Add a specialization">
+                <option value="">-- Add Specialization --</option>
+                {{#each entry.[1].suggestedSpecializations as |spec|}}
+                <option value="{{spec}}">{{spec}}</option>
+                {{/each}}
+            </select>
+            {{else}}
+            <!-- Freeform button if no suggestions -->
+            <button type="button" class="rt-specialist-add" data-action="addSpecialistSkill" data-skill="{{entry.[0]}}" title="Add {{entry.[1].label}} specialization">
                 <i class="fas fa-plus"></i>
             </button>
+            {{/if}}
         </div>
         
         <!-- Entries -->
@@ -27,25 +39,32 @@
                     </div>
                     <div class="rt-spec-training">
                         <button type="button" class="rt-train-btn {{#if spec.trained}}active{{/if}}" 
-                                data-field="system.skills.{{../entry.[0]}}.entries.{{idx}}.trained"
-                                data-value="{{spec.trained}}"
-                                title="Trained (+10)">T</button>
+                                data-action="toggleTraining"
+                                data-skill="{{../entry.[0]}}"
+                                data-index="{{idx}}"
+                                data-level="1"
+                                title="Trained (+0)">T</button>
                         <button type="button" class="rt-train-btn {{#if spec.plus10}}active{{/if}}"
-                                data-field="system.skills.{{../entry.[0]}}.entries.{{idx}}.plus10"
-                                data-value="{{spec.plus10}}"
-                                title="+10 (+20)">+10</button>
+                                data-action="toggleTraining"
+                                data-skill="{{../entry.[0]}}"
+                                data-index="{{idx}}"
+                                data-level="2"
+                                title="+10 (+10)">+10</button>
                         <button type="button" class="rt-train-btn {{#if spec.plus20}}active{{/if}}"
-                                data-field="system.skills.{{../entry.[0]}}.entries.{{idx}}.plus20"
-                                data-value="{{spec.plus20}}"
-                                title="+20 (+30)">+20</button>
+                                data-action="toggleTraining"
+                                data-skill="{{../entry.[0]}}"
+                                data-index="{{idx}}"
+                                data-level="3"
+                                title="+20 (+20)">+20</button>
                     </div>
                     <div class="rt-spec-bonus">
                         <input type="number" 
                                name="system.skills.{{../entry.[0]}}.entries.{{idx}}.bonus" 
                                value="{{spec.bonus}}" 
-                               data-dtype="Number" />
+                               data-dtype="Number"
+                               title="Bonus modifier" />
                     </div>
-                    <div class="rt-spec-total">{{spec.current}}</div>
+                    <div class="rt-spec-total" title="{{spec.breakdown}}">{{spec.current}}</div>
                     <div class="rt-spec-actions">
                         <button type="button" class="rt-spec-roll roll-skill" 
                                 data-action="roll" data-roll-type="skill"
@@ -66,7 +85,7 @@
                 {{/each}}
             {{else}}
                 <div class="rt-specialist-empty">
-                    <span>No specializations yet</span>
+                    <span>No specializations yet. {{#if entry.[1].suggestedSpecializations.length}}Select from the dropdown above to add one.{{else}}Click the + button to add one.{{/if}}</span>
                 </div>
             {{/if}}
         </div>

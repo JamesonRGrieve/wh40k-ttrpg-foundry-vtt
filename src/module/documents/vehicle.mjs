@@ -31,14 +31,17 @@ export class RogueTraderVehicle extends RogueTraderBaseActor {
     get threatLevel() {
         return this.system.threatLevel;
     }
+    get armour() {
+        return this.system.armour;
+    }
     get front() {
-        return this.system.front;
+        return this.system.armour.front.value;
     }
     get side() {
-        return this.system.side;
+        return this.system.armour.side.value;
     }
     get rear() {
-        return this.system.rear;
+        return this.system.armour.rear.value;
     }
     get availability() {
         return this.system.availability;
@@ -57,6 +60,12 @@ export class RogueTraderVehicle extends RogueTraderBaseActor {
     }
     get crew() {
         return this.system.crew;
+    }
+    get vehicleClass() {
+        return this.system.vehicleClass;
+    }
+    get size() {
+        return this.system.size;
     }
 
     async rollItem(itemId) {

@@ -1,0 +1,67 @@
+{{!-- Armour Modification Restrictions Tab --}}
+<div class="rt-tab-content rt-armour-mod-restrictions" data-tab="restrictions">
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3>
+                <i class="fas fa-filter"></i>
+                {{localize "RT.Modification.Restrictions"}}
+            </h3>
+        </header>
+        
+        <div class="rt-panel-body">
+            <p class="rt-help-text">
+                {{localize "RT.Modification.RestrictionsHelp"}}
+            </p>
+            
+            <div class="rt-restriction-grid">
+                {{#each armourTypesArray}}
+                    <label class="rt-restriction-item {{#if selected}}selected{{/if}}">
+                        <input type="checkbox" 
+                               data-action="toggleArmourType" 
+                               data-type="{{key}}"
+                               {{checked selected}}
+                               {{disabled (eq key "any")}}>
+                        <span class="rt-restriction-label">{{label}}</span>
+                        <i class="fas fa-check rt-restriction-check"></i>
+                    </label>
+                {{/each}}
+            </div>
+            
+            {{#if (eq armourTypesArray.length 0)}}
+                <p class="rt-empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    No armour types configured
+                </p>
+            {{/if}}
+        </div>
+    </div>
+    
+    <div class="rt-panel rt-panel--source">
+        <header class="rt-panel-header">
+            <h3>
+                <i class="fas fa-book"></i>
+                {{localize "RT.Source.Book"}}
+            </h3>
+        </header>
+        
+        <div class="rt-panel-body">
+            <div class="rt-field-row">
+                <div class="rt-field">
+                    <label class="rt-field-label">{{localize "RT.Availability.Label"}}</label>
+                    <select name="system.availability" class="rt-field-select">
+                        {{selectOptions dh.availabilities selected=system.availability labelAttr="label" blank=""}}
+                    </select>
+                </div>
+                
+                <div class="rt-field">
+                    <label class="rt-field-label">{{localize "RT.Source.Book"}}</label>
+                    <input type="text" 
+                           name="system.source" 
+                           value="{{system.source}}" 
+                           class="rt-field-input"
+                           placeholder="Core Rulebook, p. 123">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

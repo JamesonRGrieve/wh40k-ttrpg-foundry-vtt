@@ -52,6 +52,84 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(
   }
 
   /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate legacy pack data to V13 schema.
+   * @param {object} source  Candidate source data
+   * @returns {object}       Migrated data
+   */
+  static migrateData(source) {
+    const migrated = super.migrateData?.(source) ?? source;
+    
+    // Rename spCost → shipPoints
+    if ('spCost' in migrated && migrated.shipPoints === undefined) {
+      migrated.shipPoints = migrated.spCost;
+      delete migrated.spCost;
+    }
+    
+    // Rename effects → effect
+    if ('effects' in migrated && !migrated.effect) {
+      migrated.effect = migrated.effects;
+      delete migrated.effects;
+    }
+    
+    // Parse shipAvailability → hullType (for future use if needed)
+    if ('shipAvailability' in migrated) {
+      // Preserve in notes for reference, but ship upgrades don't have hullType restriction
+      if (!migrated.notes) {
+        migrated.notes = `Ship Availability: ${migrated.shipAvailability}`;
+      }
+      delete migrated.shipAvailability;
+    }
+    
+    // Add missing modifiers fields
+    if (migrated.modifiers && typeof migrated.modifiers === 'object') {
+      const defaults = {
+        speed: 0,
+        manoeuvrability: 0,
+        detection: 0,
+        armour: 0,
+        hullIntegrity: 0,
+        turretRating: 0,
+        voidShields: 0,
+        morale: 0,
+        crewRating: 0
+      };
+      migrated.modifiers = { ...defaults, ...migrated.modifiers };
+    }
+    
+    // Initialize missing fields with defaults
+    if (migrated.power === undefined) migrated.power = 0;
+    if (migrated.space === undefined) migrated.space = 0;
+    if (migrated.availability === undefined) migrated.availability = 'common';
+    if (migrated.notes === undefined) migrated.notes = '';
+    
+    return migrated;
+  }
+
+  /**
+   * Clean data to ensure proper types.
+   * @param {object} source  Candidate source data
+   * @param {object} options Cleaning options
+   * @returns {object}       Cleaned data
+   */
+  static cleanData(source, options) {
+    // Ensure power is a number
+    if (typeof source.power === 'string') {
+      source.power = parseInt(source.power) || 0;
+    }
+    
+    // Ensure space is a number
+    if (typeof source.space === 'string') {
+      source.space = parseInt(source.space) || 0;
+    }
+    
+    return super.cleanData?.(source, options) ?? source;
+  }
+
+  /* -------------------------------------------- */
   /*  Properties                                  */
   /* -------------------------------------------- */
 

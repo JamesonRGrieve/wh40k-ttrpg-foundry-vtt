@@ -16,7 +16,7 @@ Successfully completed refactor of **22 ship role items**, fixing all `[object O
 
 ### Phase 1: Pack Data Migration ✅ COMPLETE
 
-- ✅ **22 ship roles migrated** (100% success)
+- ✅ **22 ship roles migrated** (100% success) (100% success)
 - ✅ Field transformations:
   - `careerPreferences`: STRING → ARRAY (all 22 items)
   - `subordinates`: STRING → ARRAY (all 22 items)
@@ -239,12 +239,35 @@ a39f6b15 refactor(ship-roles): Migrate ship role pack data to V13 array schema
 
 ## 📋 Phases Remaining
 
-### Phase 3: Template Updates ⏳ NEXT
-- [ ] Modernize `ship-role-panel.hbs` with collapsible cards
-- [ ] Add compendium browser metadata for ship roles
-- [ ] Display structured abilities with bonuses
-- [ ] Show ship bonus badges
-- [ ] Add empty state handling
+### Phase 3: Template Updates ✅ COMPLETE
+
+- ✅ Modernized `ship-role-panel.hbs`:
+  - Card-based design (replaced legacy table)
+  - Collapsible panel header with count badge
+  - All new fields displayed:
+    - Career preferences with context note
+    - Subordinates as comma-separated list
+    - Important skills with specializations
+    - Structured abilities with bonus badges
+    - Ship bonuses as colored badges
+  - Empty state with add button
+  - Modern data-action handlers
+  - Fallback to legacy effect field
+
+- ✅ Enhanced `_ship.scss`:
+  - Modern card layout with gradients/shadows
+  - Golden rank badges (R1, R2, etc.)
+  - Color-coded bonus badges (green positive, red negative)
+  - Hover effects and transitions
+  - Empty state styling
+  - Kept legacy styles for compatibility
+
+- ✅ Updated localization (`en.json`):
+  - Added 7 new keys for ship roles
+  - CareerPreferences, Subordinates, ImportantSkills
+  - Abilities, ShipBonuses, AddRole, NoRoles
+
+- ✅ **Build successful**: All templates compiled
 
 ### Phase 4: Testing & Refinement ⏳ PENDING
 - [ ] Test in running Foundry instance

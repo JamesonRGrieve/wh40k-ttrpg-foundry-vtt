@@ -106,10 +106,36 @@ export default class ShipWeaponData extends ItemDataModel.mixin(
       delete migrated.critRating;
     }
     
-    // Handle legacy type field
-    if ('type' in migrated && !migrated.weaponType) {
-      migrated.weaponType = migrated.type.toLowerCase().replace(/\s+/g, '-');
+    // Handle legacy type field (remove if weaponType exists)
+    if ('type' in migrated) {
+      if (!migrated.weaponType) {
+        // Map common type names to weaponType enum
+        const typeMap = {
+          'macrocannon': 'macrobattery',
+          'macrobattery': 'macrobattery',
+          'lance': 'lance',
+          'torpedo': 'torpedo',
+          'topedo warhead': 'torpedo',  // Handle typo in pack data
+          'nova cannon': 'nova-cannon',
+          'bombardment cannon': 'bombardment-cannon',
+          'landing bay': 'landing-bay',
+          'attack craft': 'attack-craft'
+        };
+        const normalized = migrated.type.toLowerCase();
+        migrated.weaponType = typeMap[normalized] || 'macrobattery';
+      }
       delete migrated.type;
+    }
+    
+    // Handle "-" string values in numeric fields (convert to 0)
+    const numericFields = ['power', 'space', 'shipPoints', 'crit', 'strength'];
+    for (const field of numericFields) {
+      if (migrated[field] === '-' || migrated[field] === null || migrated[field] === undefined) {
+        migrated[field] = 0;
+      } else if (typeof migrated[field] === 'string') {
+        const parsed = parseInt(migrated[field]);
+        migrated[field] = isNaN(parsed) ? 0 : parsed;
+      }
     }
     
     // Parse hullType string to array
@@ -120,6 +146,11 @@ export default class ShipWeaponData extends ItemDataModel.mixin(
         .map(s => s.trim().replace(/\s+/g, '-'))
         .filter(Boolean);
       migrated.hullType = types.length ? types : ['all'];
+    }
+    
+    // Initialize special if missing
+    if (!migrated.special) {
+      migrated.special = [];
     }
     
     return migrated;
