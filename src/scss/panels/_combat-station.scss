@@ -139,7 +139,7 @@
 }
 
 .rt-vital-fate {
-  --vital-color: #{$rt-accent-gold};
+  --vital-color: #3498db;
 }
 
 // Warning states
@@ -182,6 +182,30 @@
   align-items: center;
   justify-content: space-between;
   gap: $rt-space-sm;
+  
+  // When clickable, add pointer cursor and hover effect
+  &.rt-panel-header--clickable {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    padding: $rt-space-xs;
+    margin: -#{$rt-space-xs};
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.05);
+    }
+    
+    .rt-panel-chevron {
+      margin-left: $rt-space-xs;
+      transition: transform 0.2s ease;
+      color: var(--vital-color, $rt-text-muted);
+      font-size: 0.7rem;
+      
+      &.rt-panel-chevron--open {
+        transform: rotate(180deg);
+      }
+    }
+  }
 }
 
 .rt-vital-label {
@@ -227,7 +251,7 @@
 // Add RGB versions for rgba usage
 .rt-vital-wounds { --vital-color-rgb: 168, 32, 32; }
 .rt-vital-fatigue { --vital-color-rgb: 192, 128, 32; }
-.rt-vital-fate { --vital-color-rgb: 212, 175, 55; }
+.rt-vital-fate { --vital-color-rgb: 52, 152, 219; }
 
 // ============================================
 // STAT BODY
@@ -435,6 +459,157 @@
 }
 
 // ============================================
+// VITAL EDIT SECTIONS (Expandable)
+// ============================================
+
+.rt-vital-edit-section {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm;
+  margin-top: $rt-space-sm;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+}
+
+// ============================================
+// CRITICAL DAMAGE PIPS (Compact for Combat Tab)
+// ============================================
+
+.rt-vital-critical-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  margin-top: 4px;
+  background: rgba($rt-accent-combat, 0.08);
+  border-left: 2px solid $rt-accent-combat;
+  border-radius: 0 4px 4px 0;
+}
+
+.rt-crit-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $rt-accent-combat;
+  white-space: nowrap;
+  
+  i {
+    font-size: 0.7rem;
+  }
+}
+
+.rt-critical-pips-compact {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+}
+
+.rt-crit-pip-mini {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  background: rgba($rt-accent-combat, 0.15);
+  border: 1px solid rgba($rt-accent-combat, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: rgba($rt-accent-combat, 0.3);
+    border-color: $rt-accent-combat;
+    transform: scale(1.15);
+  }
+  
+  &.rt-crit-pip-mini--filled {
+    background: linear-gradient(135deg, 
+      $rt-accent-combat 0%, 
+      darken($rt-accent-combat, 10%) 100%);
+    border-color: darken($rt-accent-combat, 5%);
+    box-shadow: 0 0 4px rgba($rt-accent-combat, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    
+    &:hover {
+      box-shadow: 0 0 6px rgba($rt-accent-combat, 0.6),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transform: scale(1.2);
+    }
+  }
+}
+
+// ============================================
+// VITAL EDIT FIELDS
+// ============================================
+
+.rt-vital-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rt-vital-edit-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $rt-text-secondary;
+}
+
+.rt-vital-edit-input {
+  width: 100%;
+  padding: 6px 8px;
+  background: $rt-bg-paper;
+  border: 1px solid $rt-border-light;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $rt-text-primary;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--vital-color, $rt-accent-gold);
+    box-shadow: 0 0 0 2px rgba(var(--vital-color-rgb, 212, 175, 55), 0.15);
+  }
+  
+  &:disabled,
+  &[readonly] {
+    background: rgba(0, 0, 0, 0.03);
+    color: $rt-text-muted;
+    cursor: not-allowed;
+  }
+}
+
+.rt-vital-info-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: rgba($rt-accent-gold, 0.08);
+  border-left: 2px solid $rt-accent-gold;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.65rem;
+  color: $rt-text-secondary;
+  line-height: 1.3;
+  
+  i {
+    font-size: 0.75rem;
+    color: $rt-accent-gold;
+    flex-shrink: 0;
+  }
+  
+  span {
+    flex: 1;
+  }
+}
+
+// ============================================
 // PANEL ICON COLORS
 // ============================================
 
@@ -490,6 +665,194 @@
   font-size: $rt-font-size-base;
   font-weight: 700;
   color: $rt-accent-skills;
+}
+
+// ============================================
+// COMBAT ACTIONS PANEL
+// ============================================
+
+.rt-combat-actions-panel {
+  margin-top: $rt-space-sm;
+}
+
+// Compact view (collapsed)
+.rt-actions-compact {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-xs;
+}
+
+// Action groups
+.rt-actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+  margin-bottom: $rt-space-md;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rt-actions-group-header {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  padding: 6px $rt-space-sm;
+  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.08) 0%, rgba($rt-accent-gold, 0.03) 100%);
+  border-left: 3px solid $rt-accent-gold;
+  border-radius: 0 4px 4px 0;
+}
+
+.rt-group-icon {
+  font-size: 0.85rem;
+  color: $rt-accent-gold;
+}
+
+.rt-actions-group-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $rt-text-secondary;
+}
+
+// Action button grid
+.rt-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.rt-actions-grid-2col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.rt-actions-row {
+  display: flex;
+  gap: $rt-space-xs;
+}
+
+// Action button
+.rt-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: $rt-space-sm;
+  background: $rt-bg-paper;
+  border: 1px solid $rt-border-light;
+  border-radius: $rt-radius-md;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 60px;
+  position: relative;
+  overflow: hidden;
+  
+  // Accent strip
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--action-color, $rt-border-medium);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  i {
+    font-size: 1.1rem;
+    color: var(--action-color, $rt-text-secondary);
+    transition: all 0.2s ease;
+  }
+  
+  &:hover {
+    border-color: var(--action-color, $rt-border-medium);
+    background: rgba(var(--action-color-rgb, 0, 0, 0), 0.04);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    
+    &::before {
+      opacity: 1;
+    }
+    
+    i {
+      transform: scale(1.15);
+      color: var(--action-color, $rt-text-primary);
+    }
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.rt-action-name {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+  color: $rt-text-primary;
+}
+
+.rt-action-type {
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--action-color, $rt-text-muted);
+  opacity: 0.8;
+}
+
+// Action type colors
+.rt-action-attack {
+  --action-color: #{$rt-accent-combat};
+  --action-color-rgb: 168, 32, 32;
+}
+
+.rt-action-movement {
+  --action-color: #{$rt-accent-equipment};
+  --action-color-rgb: 58, 95, 95;
+}
+
+.rt-action-reaction {
+  --action-color: #{$rt-accent-skills};
+  --action-color-rgb: 42, 122, 154;
+}
+
+.rt-action-utility {
+  --action-color: #{$rt-accent-talents};
+  --action-color-rgb: 160, 120, 24;
+}
+
+// Info box
+.rt-actions-info {
+  display: flex;
+  align-items: flex-start;
+  gap: $rt-space-xs;
+  padding: $rt-space-sm;
+  margin-top: $rt-space-md;
+  background: rgba($rt-accent-gold, 0.06);
+  border: 1px solid rgba($rt-accent-gold, 0.15);
+  border-radius: $rt-radius-md;
+  font-size: 0.65rem;
+  line-height: 1.4;
+  color: $rt-text-secondary;
+  
+  i {
+    font-size: 0.75rem;
+    color: $rt-accent-gold;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  strong {
+    color: $rt-text-primary;
+    font-weight: 700;
+  }
 }
 
 // ============================================

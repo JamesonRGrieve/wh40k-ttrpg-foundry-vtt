@@ -1,0 +1,1108 @@
+// ============================================
+// Rogue Trader Weapon Sheet & Card Styles
+// ============================================
+// Modern, information-dense weapon display system
+// Uses theme-aware CSS custom properties
+
+// ============================================
+// WEAPON SHEET BASE
+// ============================================
+
+.rt-weapon-sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--rt-sheet-bg);
+  color: var(--rt-text-dark);
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  overflow: hidden;
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.rt-weapon-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--rt-combat-bg) 0%, transparent 100%);
+  border-bottom: 2px solid var(--rt-combat-border);
+  
+  &__image {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border: 2px solid var(--rt-bronze);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px var(--rt-shadow-medium);
+      
+      .rt-weapon-header__image-overlay {
+        opacity: 1;
+      }
+    }
+  }
+  
+  &__image-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    
+    i {
+      color: white;
+      font-size: 1.2rem;
+    }
+  }
+  
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  &__name {
+    width: 100%;
+    padding: 4px 8px;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    transition: border-color 0.2s ease;
+    
+    &:hover,
+    &:focus {
+      border-bottom-color: var(--rt-gold);
+      outline: none;
+    }
+  }
+  
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+    padding-left: 8px;
+  }
+  
+  &__equipped {
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// WEAPON BADGES
+// ============================================
+
+.rt-weapon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  
+  &--class {
+    background: var(--rt-combat-bg);
+    border: 1px solid var(--rt-combat-border);
+    color: var(--rt-combat-primary);
+  }
+  
+  &--type {
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    color: var(--rt-text-medium);
+  }
+  
+  &--craft {
+    border: 1px solid;
+    
+    &.rt-weapon-badge--poor {
+      background: rgba(139, 0, 0, 0.1);
+      border-color: rgba(139, 0, 0, 0.4);
+      color: var(--rt-red);
+    }
+    
+    &.rt-weapon-badge--common {
+      background: var(--rt-panel-bg-translucent);
+      border-color: var(--rt-border-color-light);
+      color: var(--rt-text-muted);
+    }
+    
+    &.rt-weapon-badge--good {
+      background: rgba(45, 90, 45, 0.1);
+      border-color: rgba(45, 90, 45, 0.4);
+      color: var(--rt-green);
+    }
+    
+    &.rt-weapon-badge--best,
+    &.rt-weapon-badge--master-crafted {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: rgba(212, 175, 55, 0.5);
+      color: var(--rt-gold);
+    }
+  }
+  
+  &--hands {
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    color: var(--rt-text-muted);
+  }
+}
+
+// ============================================
+// EQUIPPED TOGGLE
+// ============================================
+
+.rt-toggle-equipped {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  input {
+    display: none;
+  }
+  
+  &__indicator {
+    font-size: 1.1rem;
+    color: var(--rt-text-muted);
+    transition: color 0.2s ease;
+  }
+  
+  &__label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+    transition: color 0.2s ease;
+  }
+  
+  &:hover {
+    background: var(--rt-btn-bg-hover);
+  }
+  
+  input:checked ~ .rt-toggle-equipped__indicator {
+    color: var(--rt-green-bright);
+  }
+  
+  input:checked ~ .rt-toggle-equipped__label {
+    color: var(--rt-green-bright);
+  }
+}
+
+// ============================================
+// STAT BAR
+// ============================================
+
+.rt-weapon-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 8px;
+  background: var(--rt-panel-bg-solid);
+  border-bottom: 1px solid var(--rt-border-color-light);
+}
+
+.rt-weapon-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 60px;
+  padding: 8px 6px;
+  background: var(--rt-panel-bg);
+  border-radius: 4px;
+  border: 1px solid var(--rt-border-color-light);
+  
+  &__icon {
+    font-size: 1rem;
+    color: var(--rt-bronze);
+    margin-bottom: 4px;
+  }
+  
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  &__label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+  }
+  
+  &__value {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--rt-text-dark);
+  }
+  
+  &__bar {
+    width: 100%;
+    height: 4px;
+    margin-top: 4px;
+    background: var(--rt-panel-bg-translucent);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  
+  &__bar-fill {
+    height: 100%;
+    background: var(--rt-green-bright);
+    transition: width 0.3s ease;
+  }
+  
+  // Stat variants
+  &--damage {
+    .rt-weapon-stat__icon { color: var(--rt-red-bright); }
+    .rt-weapon-stat__value { color: var(--rt-red-bright); }
+  }
+  
+  &--pen {
+    .rt-weapon-stat__icon { color: var(--rt-gold); }
+  }
+  
+  &--ammo-critical {
+    border-color: var(--rt-red);
+    .rt-weapon-stat__bar-fill { background: var(--rt-red-bright); }
+    .rt-weapon-stat__value { color: var(--rt-red-bright); }
+  }
+  
+  &--ammo-low {
+    .rt-weapon-stat__bar-fill { background: var(--rt-warning-primary); }
+  }
+  
+  &--ammo-empty {
+    border-color: var(--rt-red);
+    background: var(--rt-danger-bg);
+    .rt-weapon-stat__value { color: var(--rt-red-bright); }
+  }
+}
+
+// ============================================
+// QUALITIES BAR
+// ============================================
+
+.rt-weapon-qualities {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, var(--rt-talents-bg) 0%, transparent 100%);
+  border-bottom: 1px solid var(--rt-border-color-light);
+  
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-talents-primary);
+    flex-shrink: 0;
+  }
+  
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
+
+.rt-quality-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-talents-border);
+  color: var(--rt-talents-primary);
+  cursor: help;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--rt-talents-bg);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px var(--rt-shadow-soft);
+  }
+}
+
+// ============================================
+// TAB NAVIGATION
+// ============================================
+
+.rt-weapon-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 12px;
+  background: var(--rt-panel-bg-solid);
+  border-bottom: 1px solid var(--rt-border-color);
+}
+
+.rt-weapon-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--rt-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 0.9rem;
+  }
+  
+  &:hover {
+    color: var(--rt-text-dark);
+    background: var(--rt-panel-bg-translucent);
+  }
+  
+  &.active {
+    color: var(--rt-combat-primary);
+    border-bottom-color: var(--rt-combat-primary);
+    background: var(--rt-combat-bg);
+  }
+}
+
+// ============================================
+// TAB CONTENT
+// ============================================
+
+.rt-weapon-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--rt-panel-bg);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--rt-border-color);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--rt-gold-dark);
+    }
+  }
+}
+
+.rt-weapon-panel {
+  display: none;
+  
+  &.active {
+    display: block;
+  }
+}
+
+// ============================================
+// SECTIONS
+// ============================================
+
+.rt-weapon-section {
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
+    border-bottom: 1px solid var(--rt-border-color-light);
+    
+    i {
+      font-size: 0.9rem;
+      color: var(--rt-bronze);
+    }
+    
+    h3 {
+      flex: 1;
+      margin: 0;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--rt-text-dark);
+    }
+  }
+  
+  &__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: var(--rt-talents-bg);
+    border: 1px solid var(--rt-talents-border);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--rt-talents-primary);
+  }
+  
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    
+    &--warning {
+      background: var(--rt-warning-bg);
+      border: 1px solid var(--rt-warning-primary);
+      color: var(--rt-warning-primary);
+    }
+  }
+  
+  &__body {
+    padding: 12px;
+  }
+  
+  &--full .rt-weapon-section__body {
+    padding: 0;
+  }
+  
+  &--craftsmanship {
+    border-color: var(--rt-gold);
+    
+    .rt-weapon-section__header {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+      border-bottom-color: var(--rt-gold);
+      
+      h3 { color: var(--rt-gold); }
+      i { color: var(--rt-gold); }
+    }
+  }
+}
+
+// ============================================
+// FORM FIELDS
+// ============================================
+
+.rt-field-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  &--checkboxes {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
+
+.rt-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  &--small {
+    flex: 0 0 70px;
+  }
+  
+  label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--rt-text-muted);
+  }
+  
+  input,
+  select,
+  textarea {
+    padding: 6px 10px;
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--rt-text-dark);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: var(--rt-gold);
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+    }
+  }
+  
+  input[type="number"] {
+    text-align: center;
+  }
+  
+  select {
+    cursor: pointer;
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+}
+
+.rt-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--rt-gold);
+  }
+  
+  span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    color: var(--rt-text-medium);
+    
+    i {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+// ============================================
+// AMMO DISPLAY
+// ============================================
+
+.rt-ammo-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  
+  &__bar {
+    flex: 1;
+    position: relative;
+    height: 28px;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  &__fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    transition: width 0.3s ease;
+    
+    &--good {
+      background: linear-gradient(90deg, var(--rt-green) 0%, var(--rt-green-bright) 100%);
+    }
+    
+    &--low {
+      background: linear-gradient(90deg, var(--rt-warning-primary) 0%, var(--rt-warning-secondary) 100%);
+    }
+    
+    &--critical {
+      background: linear-gradient(90deg, var(--rt-red) 0%, var(--rt-red-bright) 100%);
+    }
+    
+    &--empty {
+      background: var(--rt-red);
+    }
+  }
+  
+  &__text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--rt-text-dark);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  }
+  
+  &__controls {
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// CRAFTSMANSHIP EFFECTS
+// ============================================
+
+.rt-craftsmanship-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rt-craftsmanship-effect {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-gold);
+  border-radius: 4px;
+  
+  &__label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--rt-text-muted);
+  }
+  
+  &__value {
+    font-size: 1rem;
+    font-weight: 700;
+    
+    &--positive { color: var(--rt-green-bright); }
+    &--negative { color: var(--rt-red-bright); }
+  }
+  
+  &--quality {
+    .rt-craftsmanship-effect__value {
+      color: var(--rt-gold);
+    }
+  }
+}
+
+// ============================================
+// QUALITIES GRID
+// ============================================
+
+.rt-qualities-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rt-quality-card {
+  padding: 10px 12px;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 4px;
+  
+  &__header {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  
+  &__name {
+    font-weight: 600;
+    color: var(--rt-talents-primary);
+  }
+  
+  &__level {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--rt-gold);
+  }
+  
+  &__description {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--rt-text-medium);
+  }
+}
+
+// ============================================
+// MODIFICATIONS LIST
+// ============================================
+
+.rt-mods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-mod-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 4px;
+  
+  &__name {
+    font-weight: 500;
+    color: var(--rt-text-dark);
+  }
+  
+  &__actions {
+    display: flex;
+    gap: 4px;
+  }
+}
+
+// ============================================
+// PROSE EDITOR
+// ============================================
+
+.rt-prose-editor {
+  .prosemirror {
+    min-height: 120px;
+    padding: 12px;
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+  }
+}
+
+// ============================================
+// EMPTY MESSAGE
+// ============================================
+
+.rt-empty-message {
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+  font-style: italic;
+  color: var(--rt-text-muted);
+}
+
+// ============================================
+// BUTTONS
+// ============================================
+
+.rt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--rt-btn-bg);
+  border: 1px solid var(--rt-border-color);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--rt-text-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--rt-btn-bg-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px var(--rt-shadow-soft);
+  }
+  
+  &--small {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+  }
+  
+  &--icon {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+  }
+  
+  &--ghost {
+    background: transparent;
+    border-color: transparent;
+    
+    &:hover {
+      background: var(--rt-panel-bg-translucent);
+    }
+  }
+  
+  &--danger {
+    color: var(--rt-red);
+    
+    &:hover {
+      background: var(--rt-danger-bg);
+      border-color: var(--rt-red);
+    }
+  }
+}
+
+// ============================================
+// WEAPON CHAT CARD
+// ============================================
+
+.rt-weapon-card {
+  background: var(--rt-panel-bg-solid);
+  border: 2px solid var(--rt-combat-border);
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, var(--rt-combat-bg) 0%, transparent 100%);
+    border-bottom: 1px solid var(--rt-border-color-light);
+  }
+  
+  &__image {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--rt-bronze);
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  
+  &__title {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  &__name {
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--rt-bronze);
+    line-height: 1.2;
+  }
+  
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+    font-size: 0.75rem;
+    color: var(--rt-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  
+  &__divider {
+    color: var(--rt-border-color);
+  }
+  
+  &__craft {
+    font-weight: 600;
+    
+    &--poor { color: var(--rt-red); }
+    &--good { color: var(--rt-green); }
+    &--best,
+    &--master-crafted { color: var(--rt-gold); }
+  }
+  
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    padding: 1px;
+    background: var(--rt-border-color-light);
+  }
+  
+  &__stat {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--rt-panel-bg);
+    
+    &-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--rt-text-muted);
+    }
+    
+    &-value {
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--rt-text-dark);
+    }
+    
+    &--damage .rt-weapon-card__stat-value { color: var(--rt-red-bright); }
+    &--pen .rt-weapon-card__stat-value { color: var(--rt-gold); }
+  }
+  
+  &__craft-mods {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(212, 175, 55, 0.1);
+    border-bottom: 1px solid var(--rt-border-color-light);
+    font-size: 0.8rem;
+    
+    i {
+      color: var(--rt-gold);
+    }
+  }
+  
+  &__mod {
+    font-weight: 600;
+    
+    &--positive { color: var(--rt-green-bright); }
+    &--negative { color: var(--rt-red-bright); }
+  }
+  
+  &__qualities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--rt-border-color-light);
+  }
+  
+  &__quality {
+    padding: 2px 6px;
+    background: var(--rt-talents-bg);
+    border: 1px solid var(--rt-talents-border);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--rt-talents-primary);
+  }
+  
+  &__description {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--rt-text-medium);
+    border-bottom: 1px solid var(--rt-border-color-light);
+    
+    p {
+      margin: 0 0 6px;
+      &:last-child { margin-bottom: 0; }
+    }
+  }
+  
+  &__actions {
+    display: flex;
+    gap: 6px;
+    padding: 10px 12px;
+    justify-content: center;
+  }
+  
+  &__btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border: 1px solid;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &--attack {
+      background: linear-gradient(135deg, var(--rt-red) 0%, var(--rt-red-dark) 100%);
+      border-color: var(--rt-red-dark);
+      color: white;
+      
+      &:hover {
+        background: linear-gradient(135deg, var(--rt-red-bright) 0%, var(--rt-red) 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(139, 0, 0, 0.4);
+      }
+    }
+    
+    &--damage {
+      background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-dark) 100%);
+      border-color: var(--rt-gold-dark);
+      color: white;
+      
+      &:hover {
+        background: linear-gradient(135deg, var(--rt-gold-bright) 0%, var(--rt-gold) 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(212, 175, 55, 0.4);
+      }
+    }
+    
+    &--reload {
+      background: var(--rt-btn-bg);
+      border-color: var(--rt-border-color);
+      color: var(--rt-text-dark);
+      
+      &:hover {
+        background: var(--rt-btn-bg-hover);
+        transform: translateY(-1px);
+      }
+    }
+  }
+  
+  &__footer {
+    padding: 6px 12px;
+    border-top: 1px solid var(--rt-border-color-light);
+    text-align: right;
+  }
+  
+  &__source {
+    font-size: 0.7rem;
+    font-style: italic;
+    color: var(--rt-text-muted);
+  }
+}

@@ -599,54 +599,6 @@ export function registerHandlebarsHelpers() {
     });
 
     /**
-     * Get skill icon path by skill key
-     * Usage: {{skillIcon "acrobatics"}}
-     * Falls back to default book icon if no custom icon found
-     */
-    Handlebars.registerHelper('skillIcon', function(skillKey) {
-        // Map of skill keys to custom icons
-        const customIcons = {
-            // Combat skills
-            dodge: 'icons/svg/combat.svg',
-            parry: 'icons/svg/sword.svg',
-            
-            // Movement skills
-            acrobatics: 'icons/svg/direction.svg',
-            athletics: 'icons/svg/muscle.svg',
-            climb: 'icons/svg/mountain.svg',
-            swim: 'icons/svg/water.svg',
-            
-            // Social skills
-            charm: 'icons/svg/angel.svg',
-            command: 'icons/svg/horn-call.svg',
-            deceive: 'icons/svg/mystery-man.svg',
-            intimidate: 'icons/svg/terror.svg',
-            
-            // Perception skills
-            awareness: 'icons/svg/eye.svg',
-            scrutiny: 'icons/svg/eye.svg',
-            search: 'icons/svg/ruins.svg',
-            
-            // Technical skills
-            techUse: 'icons/svg/upgrade.svg',
-            medicae: 'icons/svg/heal.svg',
-            security: 'icons/svg/padlock.svg',
-            
-            // Lore skills (use book icon)
-            commonLore: 'icons/svg/book.svg',
-            forbiddenLore: 'icons/svg/book.svg',
-            scholasticLore: 'icons/svg/book.svg',
-            
-            // Psychic
-            psyniscience: 'icons/svg/unconscious.svg',
-            invocation: 'icons/svg/daze.svg'
-        };
-        
-        // Return custom icon or fallback
-        return customIcons[skillKey] || 'icons/svg/book.svg';
-    });
-    
-    /**
      * Get icon for talent category.
      * Usage: {{talentIcon category}}
      * @param {string} category - Talent category

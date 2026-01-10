@@ -582,6 +582,178 @@ export default class ArmourData extends ItemDataModel.mixin(
   }
 
   /* -------------------------------------------- */
+  /*  Display Properties                          */
+  /* -------------------------------------------- */
+
+  /**
+   * Get icon class for armour type.
+   * @type {string}
+   */
+  get typeIcon() {
+    const icons = {
+      flak: "fa-shield",
+      mesh: "fa-vest",
+      carapace: "fa-shield-halved",
+      power: "fa-robot",
+      "light-power": "fa-shield-virus",
+      "storm-trooper": "fa-helmet-battle",
+      "feudal-world": "fa-chess-knight",
+      primitive: "fa-shirt",
+      xenos: "fa-alien",
+      void: "fa-helmet-safety",
+      enforcer: "fa-user-shield",
+      "hostile-environment": "fa-mask-ventilator"
+    };
+    return icons[this.type] ?? "fa-shield-halved";
+  }
+
+  /**
+   * Get protection level category for styling.
+   * @type {string}
+   */
+  get protectionLevel() {
+    const avgAP = this.averageAP;
+    if (avgAP === 0) return "none";
+    if (avgAP <= 2) return "light";
+    if (avgAP <= 5) return "medium";
+    if (avgAP <= 8) return "heavy";
+    return "power";
+  }
+
+  /**
+   * Get average armour points across all covered locations.
+   * @type {number}
+   */
+  get averageAP() {
+    const coverage = this._getEffectiveCoverage();
+    const locations = ["head", "body", "leftArm", "rightArm", "leftLeg", "rightLeg"];
+    const coveredLocs = coverage.has("all") ? locations : locations.filter(loc => coverage.has(loc));
+    
+    if (coveredLocs.length === 0) return 0;
+    
+    const total = coveredLocs.reduce((sum, loc) => sum + this.getAPForLocation(loc), 0);
+    return Math.round(total / coveredLocs.length);
+  }
+
+  /**
+   * Get max armour points across all locations.
+   * @type {number}
+   */
+  get maxAP() {
+    const locations = ["head", "body", "leftArm", "rightArm", "leftLeg", "rightLeg"];
+    return Math.max(...locations.map(loc => this.getAPForLocation(loc)));
+  }
+
+  /**
+   * Get armour points as an array of location objects for visual display.
+   * @type {Array<{location: string, label: string, abbr: string, ap: number, covered: boolean, icon: string}>}
+   */
+  get locationArray() {
+    const locations = [
+      { location: "head", label: "Head", abbr: "H", icon: "fa-head-side" },
+      { location: "body", label: "Body", abbr: "B", icon: "fa-person" },
+      { location: "leftArm", label: "Left Arm", abbr: "LA", icon: "fa-hand" },
+      { location: "rightArm", label: "Right Arm", abbr: "RA", icon: "fa-hand" },
+      { location: "leftLeg", label: "Left Leg", abbr: "LL", icon: "fa-socks" },
+      { location: "rightLeg", label: "Right Leg", abbr: "RL", icon: "fa-socks" }
+    ];
+    
+    const coverage = this._getEffectiveCoverage();
+    const coversAll = coverage.has("all");
+    
+    return locations.map(loc => ({
+      ...loc,
+      ap: this.getAPForLocation(loc.location),
+      covered: coversAll || coverage.has(loc.location)
+    }));
+  }
+
+  /**
+   * Get properties as array of objects with labels and descriptions.
+   * @type {Array<{id: string, label: string, description: string}>}
+   */
+  get propertiesArray() {
+    const props = [];
+    const config = CONFIG.ROGUE_TRADER?.armourProperties ?? {};
+    
+    for (const propId of this.properties) {
+      // Convert kebab-case to PascalCase for i18n lookup
+      const pascalCase = propId.split("-").map(s => s.charAt(0).toUpperCase() + s.slice(1)).join("");
+      
+      props.push({
+        id: propId,
+        label: config[propId]?.label 
+          ? game.i18n.localize(config[propId].label) 
+          : game.i18n.localize(`RT.ArmourProperty.${pascalCase}`) || propId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        description: config[propId]?.description 
+          ? game.i18n.localize(config[propId].description) 
+          : game.i18n.localize(`RT.ArmourProperty.${pascalCase}Desc`) || ""
+      });
+    }
+    
+    return props;
+  }
+
+  /**
+   * Get a compact summary string for compendium/list display.
+   * @type {string}
+   */
+  get compendiumSummary() {
+    const parts = [];
+    parts.push(`AP ${this.maxAP}`);
+    parts.push(this.coverageLabel);
+    if (this.maxAgility !== null) parts.push(`Max Ag ${this.maxAgility}`);
+    return parts.join(" • ");
+  }
+
+  /**
+   * Get full stat line for display.
+   * @type {string}
+   */
+  get statLine() {
+    const parts = [];
+    parts.push(this.typeLabel);
+    parts.push(`AP: ${this.apSummary}`);
+    parts.push(`Coverage: ${this.coverageLabel}`);
+    if (this.maxAgility !== null) parts.push(`Max Ag: ${this.maxAgility}`);
+    if (this.properties.size) parts.push(`Props: ${this.properties.size}`);
+    return parts.join(" | ");
+  }
+
+  /**
+   * Get craftsmanship label.
+   * @type {string}
+   */
+  get craftsmanshipLabel() {
+    const craft = this.craftsmanship ?? "common";
+    return game.i18n.localize(`RT.Craftsmanship.${craft.charAt(0).toUpperCase() + craft.slice(1)}`);
+  }
+
+  /**
+   * Check if this armour has any special properties.
+   * @type {boolean}
+   */
+  get hasProperties() {
+    return this.properties.size > 0;
+  }
+
+  /**
+   * Check if armour is currently equipped.
+   * @type {boolean}
+   */
+  get isWorn() {
+    return this.equipped === true;
+  }
+
+  /**
+   * Get weight display string.
+   * @type {string}
+   */
+  get weightLabel() {
+    return this.weight ? `${this.weight} kg` : "-";
+  }
+
+  /* -------------------------------------------- */
   /*  Chat Properties                             */
   /* -------------------------------------------- */
 

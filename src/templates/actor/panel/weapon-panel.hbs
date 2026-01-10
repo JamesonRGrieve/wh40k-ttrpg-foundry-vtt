@@ -10,7 +10,7 @@
             <div class="table-cell">Type</div>
             <div class="table-cell">Equipped</div>
             <div class="table-cell--last">
-                <label class="rt-control-button item-create" data-type="weapon">
+                <label class="rt-control-button" data-action="itemCreate" data-type="weapon">
                     <span class="rt-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
                 </label>
             </div>
@@ -51,23 +51,19 @@
                         <div class="rt-settings">
                             <div class="rt-field__wrapper">
                                 <span class="rt-field__header">Damage</span>
-                                <span class="rt-field__span">{{item.system.damage}}</span>
-                            </div>
-                            <div class="rt-field__wrapper">
-                                <span class="rt-field__header">Type</span>
-                                <span class="rt-field__span">{{item.system.damageType}}</span>
+                                <span class="rt-field__span">{{item.system.damageLabel}}</span>
                             </div>
                             <div class="rt-field__wrapper">
                                 <span class="rt-field__header">Pen</span>
-                                <span class="rt-field__span">{{item.system.penetration}}</span>
+                                <span class="rt-field__span">{{item.system.damage.penetration}}</span>
                             </div>
                             <div class="rt-field__wrapper">
                                 <span class="rt-field__header">Range</span>
-                                <span class="rt-field__span">{{item.system.range}}</span>
+                                <span class="rt-field__span">{{item.system.rangeLabel}}</span>
                             </div>
                             <div class="rt-field__wrapper">
                                 <span class="rt-field__header">ROF (S/B/F)</span>
-                                <span class="rt-field__span">{{rateOfFireDisplay item.system.rateOfFire}}</span>
+                                <span class="rt-field__span">{{item.system.rateOfFireLabel}}</span>
                             </div>
                             <div class="rt-field__wrapper">
                                 <span class="rt-field__header">Clip</span>

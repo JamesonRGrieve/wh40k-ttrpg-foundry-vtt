@@ -22,6 +22,27 @@ export default class TraitData extends ItemDataModel.mixin(
       
       identifier: new IdentifierField({ required: true, blank: true }),
       
+      // Category/type of trait
+      category: new fields.StringField({
+        required: false,
+        initial: "general",
+        blank: true
+      }),
+      
+      // Requirements (text description)
+      requirements: new fields.StringField({
+        required: false,
+        initial: "",
+        blank: true
+      }),
+      
+      // Benefit/effect description (HTML)
+      benefit: new fields.HTMLField({
+        required: false,
+        initial: "",
+        blank: true
+      }),
+      
       // Level/rating (matching template.json)
       level: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
       
@@ -103,30 +124,6 @@ export default class TraitData extends ItemDataModel.mixin(
   get isVariable() {
     const name = this.parent?.name ?? "";
     return name.includes("(X)") || name.includes("(x)");
-  }
-
-  /**
-   * Get the category field value.
-   * @type {string}
-   */
-  get category() {
-    return foundry.utils.getProperty(this, "category") || "general";
-  }
-
-  /**
-   * Get the requirements field value.
-   * @type {string}
-   */
-  get requirements() {
-    return foundry.utils.getProperty(this, "requirements") || "";
-  }
-
-  /**
-   * Get the benefit field value (HTML).
-   * @type {string}
-   */
-  get benefit() {
-    return foundry.utils.getProperty(this, "benefit") || "";
   }
 
   /* -------------------------------------------- */

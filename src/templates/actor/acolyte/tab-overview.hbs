@@ -3,7 +3,7 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
     <div class="rt-dashboard">
-        {{!-- Row 1: Vitals | Characteristics | Key Skills --}}
+        {{!-- Row 1: Vitals | Key Skills --}}
         <div class="rt-dashboard-row rt-dashboard-row--top">
             
             {{!-- Zone 1: Vitals (Top-Left) --}}
@@ -111,128 +111,39 @@
                 </div>
             </div>
             
-            {{!-- Zone 2: Characteristics (Top-Center) --}}
-            <div class="rt-dashboard-zone rt-zone-characteristics">
-                <div class="rt-zone-header">
-                    <i class="fas fa-user"></i>
-                    <span>Characteristics</span>
-                </div>
-                <div class="rt-zone-content">
-                    <div class="rt-char-grid-compact">
-                        {{#each actor.characteristics as |char name|}}
-                            {{#unless (eq name "influence")}}
-                            <div class="rt-char-row-compact">
-                                <button type="button" 
-                                        class="rt-char-name-compact roll-characteristic"
-                                        data-action="roll"
-                                        data-roll-type="characteristic"
-                                        data-roll-target="{{name}}"
-                                        title="Roll {{char.label}}">
-                                    {{char.short}}
-                                </button>
-                                <span class="rt-char-total-compact">{{char.total}}</span>
-                                <span class="rt-char-bonus-compact">({{char.bonus}})</span>
-                                <button type="button" 
-                                        class="rt-char-roll-btn"
-                                        data-action="roll"
-                                        data-roll-type="characteristic"
-                                        data-roll-target="{{name}}"
-                                        title="Roll {{char.label}}">
-                                    <i class="fas fa-dice"></i>
-                                </button>
-                            </div>
-                            {{/unless}}
-                        {{/each}}
-                    </div>
-                </div>
-            </div>
-            
-            {{!-- Zone 3: Key Skills (Top-Right) --}}
+            {{!-- Zone 2: Favorite Skills (Top-Right) --}}
             <div class="rt-dashboard-zone rt-zone-skills">
                 <div class="rt-zone-header">
                     <i class="fas fa-star"></i>
-                    <span>Key Skills</span>
+                    <span>Favorite Skills</span>
                 </div>
                 <div class="rt-zone-content">
                     <div class="rt-skill-list-compact">
-                        {{!-- Awareness --}}
-                        <div class="rt-skill-row-compact">
-                            <span class="rt-skill-name-compact">Awareness</span>
-                            <span class="rt-skill-value-compact">{{actor.skills.awareness.current}}</span>
-                            <button type="button" 
-                                    class="rt-skill-roll-btn"
-                                    data-action="roll"
-                                    data-roll-type="skill"
-                                    data-roll-target="awareness"
-                                    title="Roll Awareness">
-                                <i class="fas fa-dice"></i>
-                            </button>
-                        </div>
-                        {{!-- Dodge --}}
-                        <div class="rt-skill-row-compact">
-                            <span class="rt-skill-name-compact">Dodge</span>
-                            <span class="rt-skill-value-compact">{{actor.skills.dodge.current}}</span>
-                            <button type="button" 
-                                    class="rt-skill-roll-btn"
-                                    data-action="roll"
-                                    data-roll-type="skill"
-                                    data-roll-target="dodge"
-                                    title="Roll Dodge">
-                                <i class="fas fa-dice"></i>
-                            </button>
-                        </div>
-                        {{!-- Parry --}}
-                        <div class="rt-skill-row-compact">
-                            <span class="rt-skill-name-compact">Parry</span>
-                            <span class="rt-skill-value-compact">{{actor.skills.parry.current}}</span>
-                            <button type="button" 
-                                    class="rt-skill-roll-btn"
-                                    data-action="roll"
-                                    data-roll-type="skill"
-                                    data-roll-target="parry"
-                                    title="Roll Parry">
-                                <i class="fas fa-dice"></i>
-                            </button>
-                        </div>
-                        {{!-- Command --}}
-                        <div class="rt-skill-row-compact">
-                            <span class="rt-skill-name-compact">Command</span>
-                            <span class="rt-skill-value-compact">{{actor.skills.command.current}}</span>
-                            <button type="button" 
-                                    class="rt-skill-roll-btn"
-                                    data-action="roll"
-                                    data-roll-type="skill"
-                                    data-roll-target="command"
-                                    title="Roll Command">
-                                <i class="fas fa-dice"></i>
-                            </button>
-                        </div>
-                        {{!-- Commerce --}}
-                        <div class="rt-skill-row-compact">
-                            <span class="rt-skill-name-compact">Commerce</span>
-                            <span class="rt-skill-value-compact">{{actor.skills.commerce.current}}</span>
-                            <button type="button" 
-                                    class="rt-skill-roll-btn"
-                                    data-action="roll"
-                                    data-roll-type="skill"
-                                    data-roll-target="commerce"
-                                    title="Roll Commerce">
-                                <i class="fas fa-dice"></i>
-                            </button>
-                        </div>
-                        {{!-- Scrutiny --}}
-                        <div class="rt-skill-row-compact">
-                            <span class="rt-skill-name-compact">Scrutiny</span>
-                            <span class="rt-skill-value-compact">{{actor.skills.scrutiny.current}}</span>
-                            <button type="button" 
-                                    class="rt-skill-roll-btn"
-                                    data-action="roll"
-                                    data-roll-type="skill"
-                                    data-roll-target="scrutiny"
-                                    title="Roll Scrutiny">
-                                <i class="fas fa-dice"></i>
-                            </button>
-                        </div>
+                        {{#if favoriteSkills}}
+                            {{#each favoriteSkills as |skill|}}
+                            <div class="rt-skill-row-compact" data-tooltip 
+                                 aria-label="{{skill.label}}: {{skill.current}}"
+                                 data-rt-tooltip="skill" 
+                                 data-rt-tooltip-data="{{skill.tooltipData}}">
+                                <span class="rt-skill-name-compact">{{skill.label}}</span>
+                                <span class="rt-skill-value-compact">{{skill.current}}</span>
+                                <button type="button" 
+                                        class="rt-skill-roll-btn"
+                                        data-action="roll"
+                                        data-roll-type="skill"
+                                        data-roll-target="{{skill.key}}"
+                                        title="Roll {{skill.label}}">
+                                    <i class="fas fa-dice"></i>
+                                </button>
+                            </div>
+                            {{/each}}
+                        {{else}}
+                            <div class="rt-no-favorites">
+                                <i class="far fa-star"></i>
+                                <p>No favorite skills selected</p>
+                                <p class="rt-hint">Star skills in the Skills tab to add them here</p>
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
             </div>

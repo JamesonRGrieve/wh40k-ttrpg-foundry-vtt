@@ -25,8 +25,11 @@ export default class AcolyteSheet extends BaseActorSheet {
     static DEFAULT_OPTIONS = {
         actions: {
             // Combat actions
-            combatAction: AcolyteSheet.#combatAction,
-            rollInitiative: AcolyteSheet.#rollInitiative,
+            attack: AcolyteSheet.#attack,
+            dodge: AcolyteSheet.#dodge,
+            parry: AcolyteSheet.#parry,
+            initiative: AcolyteSheet.#rollInitiative,
+            "assign-damage": AcolyteSheet.#assignDamage,
             
             // Stat adjustment actions
             adjustStat: AcolyteSheet.#adjustStat,
@@ -52,6 +55,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Skills actions
             filterSkills: AcolyteSheet.#filterSkills,
             clearSkillsSearch: AcolyteSheet.#clearSkillsSearch,
+            toggleSkillFavorite: AcolyteSheet.#toggleSkillFavorite,
             
             // Talents actions
             filterTalents: AcolyteSheet.#filterTalents,
@@ -924,7 +928,86 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Ensure characteristics data is available in the format expected by dashboard
         // This is already prepared in _prepareContext
         
+        // Prepare favorite skills for dashboard
+        context.favoriteSkills = this._prepareFavoriteSkills();
+        
         return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare favorite skills for overview dashboard display.
+     * @returns {Array<object>} Array of favorite skill display objects
+     * @protected
+     */
+    _prepareFavoriteSkills() {
+        const favorites = this.actor.getFlag("rogue-trader", "favoriteSkills") || [];
+        const skills = this.actor.skills ?? {};
+        const characteristics = this.actor.characteristics ?? {};
+        
+        // Map favorite skill keys to full skill objects
+        return favorites
+            .map(key => {
+                const skill = skills[key];
+                if (!skill) return null;
+                
+                // Get characteristic data
+                const charKey = skill.characteristic || 'strength';
+                const char = characteristics[charKey];
+                
+                return {
+                    key,
+                    label: skill.label || key,
+                    current: skill.current ?? 0,
+                    characteristic: charKey,
+                    charShort: char?.short || charKey,
+                    breakdown: this._getSkillBreakdown(skill, char),
+                    tooltipData: JSON.stringify({
+                        name: skill.label || key,
+                        value: skill.current ?? 0,
+                        breakdown: this._getSkillBreakdown(skill, char)
+                    })
+                };
+            })
+            .filter(skill => skill !== null); // Remove any invalid skills
+    }
+    
+    /**
+     * Generate skill breakdown string for tooltips.
+     * @param {object} skill  Skill data
+     * @param {object} char   Characteristic data
+     * @returns {string}     Formatted breakdown string
+     * @private
+     */
+    _getSkillBreakdown(skill, char) {
+        const parts = [];
+        const charValue = char?.total ?? 0;
+        const trained = skill.trained ?? false;
+        const plus10 = skill.plus10 ?? false;
+        const plus20 = skill.plus20 ?? false;
+        const bonus = skill.bonus ?? 0;
+        
+        // Base characteristic
+        parts.push(`${char?.label || 'Characteristic'} ${charValue}`);
+        
+        // Training modifier
+        if (!trained) {
+            parts.push('Untrained (÷2)');
+        } else if (plus20) {
+            parts.push('Training +20');
+        } else if (plus10) {
+            parts.push('Training +10');
+        } else {
+            parts.push('Trained');
+        }
+        
+        // Bonus from items/effects
+        if (bonus !== 0) {
+            parts.push(`Bonus ${bonus > 0 ? '+' : ''}${bonus}`);
+        }
+        
+        return parts.join(' | ');
     }
 
     /* -------------------------------------------- */
@@ -1000,36 +1083,72 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Handle combat control actions.
+     * Handle weapon attack action.
      * @this {AcolyteSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #combatAction(event, target) {
+    static async #attack(event, target) {
         try {
-            const action = target.dataset.combatAction;
-
-            switch (action) {
-                case "attack":
-                    await DHTargetedActionManager.performWeaponAttack(this.actor);
-                    break;
-                case "assign-damage":
-                    const hitData = new Hit();
-                    const assignData = new AssignDamageData(this.actor, hitData);
-                    await prepareAssignDamageRoll(assignData);
-                    break;
-                case "dodge":
-                    await this.actor.rollSkill?.("dodge");
-                    break;
-                case "parry":
-                    await this.actor.rollSkill?.("parry");
-                    break;
-            }
+            await DHTargetedActionManager.performWeaponAttack(this.actor);
         } catch (error) {
-            this._notify("error", `Combat action failed: ${error.message}`, {
+            this._notify("error", `Attack failed: ${error.message}`, {
                 duration: 5000
             });
-            console.error("Combat action error:", error);
+            console.error("Attack error:", error);
+        }
+    }
+
+    /**
+     * Handle dodge action.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #dodge(event, target) {
+        try {
+            await this.actor.rollSkill?.("dodge");
+        } catch (error) {
+            this._notify("error", `Dodge roll failed: ${error.message}`, {
+                duration: 5000
+            });
+            console.error("Dodge error:", error);
+        }
+    }
+
+    /**
+     * Handle parry action.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #parry(event, target) {
+        try {
+            await this.actor.rollSkill?.("parry");
+        } catch (error) {
+            this._notify("error", `Parry roll failed: ${error.message}`, {
+                duration: 5000
+            });
+            console.error("Parry error:", error);
+        }
+    }
+
+    /**
+     * Handle assign damage action.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #assignDamage(event, target) {
+        try {
+            const hitData = new Hit();
+            const assignData = new AssignDamageData(this.actor, hitData);
+            await prepareAssignDamageRoll(assignData);
+        } catch (error) {
+            this._notify("error", `Assign damage failed: ${error.message}`, {
+                duration: 5000
+            });
+            console.error("Assign damage error:", error);
         }
     }
 
@@ -1773,6 +1892,32 @@ export default class AcolyteSheet extends BaseActorSheet {
         this._skillsFilter = { search: '', characteristic: '', training: '' };
         
         // Re-render skills tab
+        await this.render({ parts: ['skills'] });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle skill favorite status.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering event.
+     * @param {HTMLElement} target  Element that triggered the event.
+     */
+    static async #toggleSkillFavorite(event, target) {
+        const skill = target.dataset.skill;
+        if (!skill) return;
+        
+        const favorites = this.actor.getFlag("rogue-trader", "favoriteSkills") || [];
+        
+        if (favorites.includes(skill)) {
+            // Remove from favorites
+            await this.actor.setFlag("rogue-trader", "favoriteSkills", favorites.filter(s => s !== skill));
+        } else {
+            // Add to favorites
+            await this.actor.setFlag("rogue-trader", "favoriteSkills", [...favorites, skill]);
+        }
+        
+        // Re-render skills tab only
         await this.render({ parts: ['skills'] });
     }
 

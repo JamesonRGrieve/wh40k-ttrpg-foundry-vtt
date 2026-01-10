@@ -5,6 +5,11 @@
             {{#each skillLists.standardColumns.[0] as |entry|}}
             <div class="rt-skill-row" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="rt-skill-info">
+                    <button type="button" class="rt-favorite-btn {{#if entry.[1].isFavorite}}rt-favorite--active{{/if}}"
+                            data-action="toggleSkillFavorite" data-skill="{{entry.[0]}}"
+                            title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                        <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                    </button>
                     <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <button type="button" class="rt-skill-name roll-skill" 
                             data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
@@ -32,6 +37,11 @@
             {{#each skillLists.standardColumns.[1] as |entry|}}
             <div class="rt-skill-row" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="rt-skill-info">
+                    <button type="button" class="rt-favorite-btn {{#if entry.[1].isFavorite}}rt-favorite--active{{/if}}"
+                            data-action="toggleSkillFavorite" data-skill="{{entry.[0]}}"
+                            title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                        <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                    </button>
                     <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <button type="button" class="rt-skill-name roll-skill" 
                             data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"

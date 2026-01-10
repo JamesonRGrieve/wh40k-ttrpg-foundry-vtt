@@ -1,60 +1,91 @@
-{{!-- Talents Panel - Modern Grouped Display --}}
-<div class="rt-panel rt-panel-talents-list">
+{{!-- Talents Panel - Compact Table View --}}
+<div class="rt-panel rt-panel-talents-table">
     <div class="rt-panel-header">
-        <span class="rt-panel-title"><i class="fas fa-star"></i> Talents ({{talentsCount}})</span>
+        <span class="rt-panel-title">
+            <i class="fas fa-star"></i> Talents
+        </span>
     </div>
     <div class="rt-panel-body">
         {{#if talentsCount}}
-        {{!-- Group talents by tier --}}
-        {{#each groupedByTier as |group|}}
-        <div class="rt-talent-group" data-tier="{{group.tier}}">
-            <h4 class="rt-group-header {{tierColor group.tier}}">
-                <i class="fas fa-layer-group"></i> {{group.tierLabel}} ({{group.talents.length}})
-            </h4>
-            
-            <div class="rt-talents-list" data-drop-zone="talents" data-accepts="talent">
-                {{#each group.talents as |talent|}}
-                <div class="rt-talent-card item-drag" data-item-id="{{talent.id}}" draggable="true">
-                    <div class="rt-card-main">
-                        <img class="rt-card-icon" src="{{talent.img}}" alt="{{talent.name}}" />
+        <div class="rt-talents-table" data-drop-zone="talents" data-accepts="talent">
+            {{#each talents as |talent|}}
+            <div class="rt-talent-row item-drag" data-item-id="{{talent.id}}" draggable="true">
+                {{!-- Compact View --}}
+                <div class="rt-row-compact">
+                    <img class="rt-row-icon" src="{{talent.img}}" alt="{{talent.name}}" />
+                    
+                    <div class="rt-row-main">
+                        <span class="rt-row-name" data-action="itemEdit" data-item-id="{{talent.id}}" title="{{talent.fullName}}">
+                            {{talent.fullName}}
+                        </span>
                         
-                        <div class="rt-card-info">
-                            <span class="rt-card-name" data-action="itemEdit" data-item-id="{{talent.id}}">
-                                {{talent.fullName}}
-                            </span>
-                            <span class="rt-card-meta">
+                        <div class="rt-row-meta">
+                            <span class="rt-meta-item">
                                 <i class="fas {{talentIcon talent.system.category}}"></i> {{talent.categoryLabel}}
                             </span>
-                            
-                            {{#if talent.system.aptitudes.length}}
-                            <div class="rt-card-aptitudes">
-                                {{#each talent.system.aptitudes as |apt|}}
-                                <span class="rt-badge rt-badge-aptitude">{{apt}}</span>
-                                {{/each}}
-                            </div>
+                            {{#if talent.system.tier}}
+                            <span class="rt-meta-item">
+                                Tier {{talent.system.tier}}
+                            </span>
                             {{/if}}
-                            
-                            {{#if talent.hasPrerequisites}}
-                            <div class="rt-card-prerequisites">
-                                <i class="fas fa-tasks"></i> {{talent.prerequisitesLabel}}
-                            </div>
+                            {{#if talent.system.stackable}}
+                            <span class="rt-meta-item rt-meta-rank">
+                                Rank {{talent.system.rank}}
+                            </span>
                             {{/if}}
                         </div>
                     </div>
                     
-                    <div class="rt-card-actions">
-                        <button type="button" class="rt-card-btn" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Send to Chat">
+                    <div class="rt-row-actions">
+                        <button type="button" class="rt-action-btn rt-btn-expand" data-action="toggleTalentExpand" data-item-id="{{talent.id}}" title="Show Details">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <button type="button" class="rt-action-btn" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Send to Chat">
                             <i class="fas fa-comment"></i>
                         </button>
-                        <button type="button" class="rt-card-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
+                        <button type="button" class="rt-action-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
-                {{/each}}
+                
+                {{!-- Expanded Details --}}
+                <div class="rt-row-expanded" style="display: none;">
+                    {{#if talent.system.specialization}}
+                    <div class="rt-detail-row">
+                        <span class="rt-detail-label">Specialization:</span>
+                        <span class="rt-detail-value">{{talent.system.specialization}}</span>
+                    </div>
+                    {{/if}}
+                    
+                    {{#if talent.system.aptitudes.length}}
+                    <div class="rt-detail-row">
+                        <span class="rt-detail-label">Aptitudes:</span>
+                        <div class="rt-detail-badges">
+                            {{#each talent.system.aptitudes as |apt|}}
+                            <span class="rt-badge rt-badge-aptitude">{{apt}}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    
+                    {{#if talent.hasPrerequisites}}
+                    <div class="rt-detail-row">
+                        <span class="rt-detail-label">Prerequisites:</span>
+                        <span class="rt-detail-value">{{talent.prerequisitesLabel}}</span>
+                    </div>
+                    {{/if}}
+                    
+                    {{#if talent.system.benefit}}
+                    <div class="rt-detail-row rt-detail-benefit">
+                        <span class="rt-detail-label">Benefit:</span>
+                        <div class="rt-detail-content">{{{talent.system.benefit}}}</div>
+                    </div>
+                    {{/if}}
+                </div>
             </div>
+            {{/each}}
         </div>
-        {{/each}}
         {{else}}
         <div class="rt-empty-state">
             <i class="fas fa-star"></i>

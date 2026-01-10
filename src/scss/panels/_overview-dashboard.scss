@@ -488,6 +488,36 @@
   }
 }
 
+.rt-no-favorites {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $rt-space-lg $rt-space-md;
+  gap: $rt-space-xs;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  min-height: 120px;
+  
+  i {
+    font-size: 2rem;
+    opacity: 0.4;
+    margin-bottom: $rt-space-xs;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    
+    &.rt-hint {
+      font-size: 0.7rem;
+      font-style: italic;
+      opacity: 0.8;
+    }
+  }
+}
+
 // ============================================
 // Zone 4: Movement & Load
 // ============================================

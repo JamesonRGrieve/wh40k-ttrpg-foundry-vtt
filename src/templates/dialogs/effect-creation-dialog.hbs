@@ -1,0 +1,254 @@
+{{!-- Effect Creation Dialog Template --}}
+<form class="rt-effect-form">
+    
+    {{!-- Category Selection Tabs --}}
+    <div class="rt-effect-categories">
+        <button type="button" 
+                class="rt-category-btn {{#if (eq selectedCategory 'condition')}}active{{/if}}"
+                data-action="selectCategory"
+                data-category="condition">
+            <i class="fas fa-person-circle-exclamation"></i>
+            <span>Conditions</span>
+        </button>
+        <button type="button" 
+                class="rt-category-btn {{#if (eq selectedCategory 'characteristic')}}active{{/if}}"
+                data-action="selectCategory"
+                data-category="characteristic">
+            <i class="fas fa-shield-halved"></i>
+            <span>Characteristics</span>
+        </button>
+        <button type="button" 
+                class="rt-category-btn {{#if (eq selectedCategory 'skill')}}active{{/if}}"
+                data-action="selectCategory"
+                data-category="skill">
+            <i class="fas fa-users-gear"></i>
+            <span>Skills</span>
+        </button>
+        <button type="button" 
+                class="rt-category-btn {{#if (eq selectedCategory 'combat')}}active{{/if}}"
+                data-action="selectCategory"
+                data-category="combat">
+            <i class="fas fa-swords"></i>
+            <span>Combat</span>
+        </button>
+        <button type="button" 
+                class="rt-category-btn {{#if (eq selectedCategory 'custom')}}active{{/if}}"
+                data-action="selectCategory"
+                data-category="custom">
+            <i class="fas fa-wand-sparkles"></i>
+            <span>Custom</span>
+        </button>
+    </div>
+
+    {{!-- Hidden field to track effect type --}}
+    <input type="hidden" name="effectType" value="{{selectedCategory}}" />
+
+    {{!-- Condition Selection Grid --}}
+    {{#if (eq selectedCategory 'condition')}}
+        <div class="rt-effect-section rt-conditions-grid">
+            <div class="rt-section-header">
+                <i class="fas fa-bolt"></i>
+                <span>Quick Apply Condition</span>
+            </div>
+            <div class="rt-condition-cards">
+                {{#each conditions as |condition|}}
+                    <div class="rt-condition-card rt-condition-{{condition.nature}}"
+                         data-action="selectCondition"
+                         data-condition-id="{{condition.id}}">
+                        <i class="{{condition.icon}} rt-condition-icon"></i>
+                        <span class="rt-condition-name">{{condition.name}}</span>
+                    </div>
+                {{/each}}
+            </div>
+            <input type="hidden" name="conditionId" />
+            
+            {{!-- Optional duration for conditions --}}
+            <div class="rt-duration-field">
+                <label>
+                    <i class="far fa-clock"></i> Duration (Rounds)
+                </label>
+                <input type="number" 
+                       name="duration.rounds" 
+                       min="0" 
+                       placeholder="Leave blank for permanent"
+                       class="rt-input" />
+                <span class="rt-field-hint">Leave blank for permanent effect</span>
+            </div>
+        </div>
+    {{/if}}
+
+    {{!-- Characteristic Modifier --}}
+    {{#if (eq selectedCategory 'characteristic')}}
+        <div class="rt-effect-section">
+            <div class="rt-section-header">
+                <i class="fas fa-chart-line"></i>
+                <span>Modify Characteristic</span>
+            </div>
+            
+            <div class="rt-form-group">
+                <label for="characteristic">Characteristic</label>
+                <select name="characteristic" id="characteristic" class="rt-select">
+                    <option value="">-- Select Characteristic --</option>
+                    {{#each characteristics as |char|}}
+                        <option value="{{char.id}}">{{char.label}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="rt-form-group">
+                <label for="modifierValue">Modifier</label>
+                <div class="rt-input-group">
+                    <input type="number" 
+                           name="modifierValue" 
+                           id="modifierValue" 
+                           class="rt-input" 
+                           placeholder="+10 or -20"
+                           step="5" />
+                    <span class="rt-input-suffix">
+                        <i class="fas fa-plus-minus"></i>
+                    </span>
+                </div>
+                <span class="rt-field-hint">Positive for bonus, negative for penalty</span>
+            </div>
+
+            <div class="rt-form-group">
+                <label for="charDuration">Duration (Rounds)</label>
+                <input type="number" 
+                       name="duration.rounds" 
+                       id="charDuration" 
+                       min="0" 
+                       placeholder="Leave blank for permanent"
+                       class="rt-input" />
+            </div>
+        </div>
+    {{/if}}
+
+    {{!-- Skill Modifier --}}
+    {{#if (eq selectedCategory 'skill')}}
+        <div class="rt-effect-section">
+            <div class="rt-section-header">
+                <i class="fas fa-user-graduate"></i>
+                <span>Modify Skill</span>
+            </div>
+            
+            <div class="rt-form-group">
+                <label for="skill">Skill</label>
+                <select name="skill" id="skill" class="rt-select">
+                    <option value="">-- Select Skill --</option>
+                    {{#each skills as |skill|}}
+                        <option value="{{skill.id}}">{{skill.label}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="rt-form-group">
+                <label for="skillModifier">Modifier</label>
+                <div class="rt-input-group">
+                    <input type="number" 
+                           name="modifierValue" 
+                           id="skillModifier" 
+                           class="rt-input" 
+                           placeholder="+10 or -20"
+                           step="5" />
+                    <span class="rt-input-suffix">
+                        <i class="fas fa-plus-minus"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="rt-form-group">
+                <label for="skillDuration">Duration (Rounds)</label>
+                <input type="number" 
+                       name="duration.rounds" 
+                       id="skillDuration" 
+                       min="0" 
+                       placeholder="Leave blank for permanent"
+                       class="rt-input" />
+            </div>
+        </div>
+    {{/if}}
+
+    {{!-- Combat Modifier --}}
+    {{#if (eq selectedCategory 'combat')}}
+        <div class="rt-effect-section">
+            <div class="rt-section-header">
+                <i class="fas fa-crosshairs"></i>
+                <span>Modify Combat Stats</span>
+            </div>
+            
+            <div class="rt-form-group">
+                <label for="combatType">Combat Stat</label>
+                <select name="combatType" id="combatType" class="rt-select">
+                    <option value="">-- Select Combat Stat --</option>
+                    {{#each combatTypes as |type|}}
+                        <option value="{{type.id}}">{{type.label}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="rt-form-group">
+                <label for="combatModifier">Modifier</label>
+                <div class="rt-input-group">
+                    <input type="number" 
+                           name="modifierValue" 
+                           id="combatModifier" 
+                           class="rt-input" 
+                           placeholder="+5 or -10"
+                           step="5" />
+                    <span class="rt-input-suffix">
+                        <i class="fas fa-plus-minus"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="rt-form-group">
+                <label for="combatDuration">Duration (Rounds)</label>
+                <input type="number" 
+                       name="duration.rounds" 
+                       id="combatDuration" 
+                       min="0" 
+                       placeholder="Leave blank for permanent"
+                       class="rt-input" />
+            </div>
+        </div>
+    {{/if}}
+
+    {{!-- Custom Effect --}}
+    {{#if (eq selectedCategory 'custom')}}
+        <div class="rt-effect-section">
+            <div class="rt-section-header">
+                <i class="fas fa-pen-fancy"></i>
+                <span>Create Custom Effect</span>
+            </div>
+            
+            <div class="rt-form-group">
+                <label for="customName">Effect Name</label>
+                <input type="text" 
+                       name="customName" 
+                       id="customName" 
+                       class="rt-input" 
+                       placeholder="Enter effect name..."
+                       required />
+                <span class="rt-field-hint">A blank effect sheet will open for advanced configuration</span>
+            </div>
+
+            <div class="rt-info-box">
+                <i class="fas fa-info-circle"></i>
+                <p>This will create an empty effect that you can configure manually. Use the effect sheet to add changes, duration, and other properties.</p>
+            </div>
+        </div>
+    {{/if}}
+
+    {{!-- Dialog Buttons --}}
+    <footer class="rt-dialog-footer">
+        <button type="submit" class="rt-btn rt-btn-primary">
+            <i class="fas fa-check"></i>
+            Create Effect
+        </button>
+        <button type="button" class="rt-btn rt-btn-secondary" data-action="close">
+            <i class="fas fa-times"></i>
+            Cancel
+        </button>
+    </footer>
+
+</form>

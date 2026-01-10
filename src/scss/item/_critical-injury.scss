@@ -6,19 +6,76 @@
 
 .rt-injury-sheet {
   .rt-item-sheet__header {
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: $rt-space-md;
+    padding: $rt-space-md;
     background: linear-gradient(135deg, 
                 rgba($rt-accent-red, 0.1) 0%, 
                 rgba($rt-accent-red, 0.05) 100%);
+    border-bottom: 2px solid rgba($rt-accent-red, 0.2);
+  }
+  
+  .rt-item-sheet__image-wrapper {
+    position: relative;
+    flex-shrink: 0;
+  }
+  
+  .rt-item-sheet__image {
+    width: 64px;
+    height: 64px;
+    border: 2px solid rgba($rt-accent-red, 0.3);
+    border-radius: 8px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba($rt-accent-red, 0.3);
+    }
   }
   
   .rt-damage-icon {
     position: absolute;
     bottom: 4px;
     right: 4px;
-    font-size: 20px;
+    font-size: 16px;
     color: $rt-accent-red;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+  }
+  
+  .rt-item-sheet__title-area {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .rt-item-sheet__name-input {
+    width: 100%;
+    padding: $rt-space-xs $rt-space-sm;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    background: transparent;
+    color: #2c2417;
+    
+    &:focus {
+      outline: none;
+      border-color: $rt-accent-gold;
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.2);
+    }
+  }
+  
+  .rt-item-sheet__panel {
+    padding: $rt-space-md;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    
+    &:last-child {
+      border-bottom: none;
+    }
   }
   
   .rt-injury-badges {

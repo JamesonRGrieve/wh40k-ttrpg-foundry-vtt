@@ -76,21 +76,11 @@
                     </div>
                 {{/each}}
             </div>
-        {{else}}
-            <div class="rt-empty-state">
-                <i class="fas fa-sparkles"></i>
-                <p>No active effects</p>
-            </div>
         {{/if}}
-
-        {{!-- Create Button --}}
-        <div class="rt-panel-footer">
-            <button type="button" 
-                    class="rt-btn-create-effect" 
-                    data-action="effectCreate"
-                    title="Create New Effect">
-                <i class="fas fa-plus"></i> Create Effect
-            </button>
+        
+        <div class="rt-dropzone effect-create" data-action="effectCreate">
+            <i class="fas fa-sparkles rt-dropzone-icon"></i>
+            <span class="rt-dropzone-text">Drop effects here or click to create</span>
         </div>
     </div>
 </div>

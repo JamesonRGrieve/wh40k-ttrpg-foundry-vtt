@@ -350,7 +350,15 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             ...options
         };
 
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/item-card-chat.hbs', cardData);
+        // Use type-specific templates
+        let template = 'systems/rogue-trader/templates/chat/item-card-chat.hbs';
+        if (this.isWeapon) {
+            template = 'systems/rogue-trader/templates/chat/weapon-card-chat.hbs';
+        } else if (this.type === 'armour') {
+            template = 'systems/rogue-trader/templates/chat/armour-card-chat.hbs';
+        }
+
+        const html = await renderTemplate(template, cardData);
         
         const chatData = {
             user: game.user.id,
