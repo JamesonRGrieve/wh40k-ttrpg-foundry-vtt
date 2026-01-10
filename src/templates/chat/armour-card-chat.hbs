@@ -1,0 +1,83 @@
+{{!--
+  Rogue Trader Armour Chat Card - Modern Compact Design
+  For vocalizing armour items to chat with coverage and protection info.
+--}}
+<div class="rt-chat">
+  <div class="rt-armour-card" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
+    
+    {{!-- Header --}}
+    <div class="rt-armour-card__header">
+      <img class="rt-armour-card__image" src="{{item.img}}" alt="{{item.name}}" />
+      <div class="rt-armour-card__title">
+        <h2 class="rt-armour-card__name">{{item.name}}</h2>
+        <div class="rt-armour-card__meta">
+          <span class="rt-armour-card__type">{{item.system.typeLabel}}</span>
+          {{#if (ne item.system.craftsmanship "common")}}
+          <span class="rt-armour-card__divider">•</span>
+          <span class="rt-armour-card__craft rt-armour-card__craft--{{item.system.craftsmanship}}">{{item.system.craftsmanshipLabel}}</span>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    
+    {{!-- Coverage Visual --}}
+    <div class="rt-armour-card__coverage">
+      {{#each item.system.locationArray as |loc|}}
+      <div class="rt-armour-card__location {{#if loc.covered}}rt-armour-card__location--covered{{/if}}">
+        <span class="rt-armour-card__location-label">{{loc.abbr}}</span>
+        <span class="rt-armour-card__location-ap">{{loc.ap}}</span>
+      </div>
+      {{/each}}
+    </div>
+    
+    {{!-- Stats --}}
+    <div class="rt-armour-card__stats">
+      <div class="rt-armour-card__stat">
+        <span class="rt-armour-card__stat-label">Coverage</span>
+        <span class="rt-armour-card__stat-value">{{item.system.coverageLabel}}</span>
+      </div>
+      <div class="rt-armour-card__stat">
+        <span class="rt-armour-card__stat-label">Max AP</span>
+        <span class="rt-armour-card__stat-value">{{item.system.maxAP}}</span>
+      </div>
+      {{#if item.system.maxAgility}}
+      <div class="rt-armour-card__stat">
+        <span class="rt-armour-card__stat-label">Max Ag</span>
+        <span class="rt-armour-card__stat-value">{{item.system.maxAgility}}</span>
+      </div>
+      {{/if}}
+      {{#if item.system.weight}}
+      <div class="rt-armour-card__stat">
+        <span class="rt-armour-card__stat-label">Weight</span>
+        <span class="rt-armour-card__stat-value">{{item.system.weightLabel}}</span>
+      </div>
+      {{/if}}
+    </div>
+    
+    {{!-- Properties --}}
+    {{#if item.system.hasProperties}}
+    <div class="rt-armour-card__properties">
+      {{#each item.system.propertiesArray as |prop|}}
+      <span class="rt-armour-card__property" data-tooltip="{{prop.description}}">
+        {{prop.label}}
+      </span>
+      {{/each}}
+    </div>
+    {{/if}}
+    
+    {{!-- Description (if exists) --}}
+    {{#if item.system.description.value}}
+    <div class="rt-armour-card__description">
+      {{{item.system.description.value}}}
+    </div>
+    {{/if}}
+    
+    {{!-- Footer --}}
+    {{#if item.system.source}}
+    <div class="rt-armour-card__footer">
+      <span class="rt-armour-card__source">{{item.system.source}}</span>
+    </div>
+    {{/if}}
+    
+  </div>
+</div>

@@ -12,13 +12,16 @@ export default class ArmourSheet extends ContainerItemSheet {
     static DEFAULT_OPTIONS = {
         classes: ["armour"],
         position: {
-            width: 520,
-            height: 480
+            width: 560,
+            height: 580
         },
         actions: {
             toggleCoverage: ArmourSheet.#toggleCoverage,
             addProperty: ArmourSheet.#addProperty,
-            removeProperty: ArmourSheet.#removeProperty
+            removeProperty: ArmourSheet.#removeProperty,
+            addModification: ArmourSheet.#addModification,
+            editMod: ArmourSheet.#editMod,
+            removeMod: ArmourSheet.#removeMod
         }
     };
 
@@ -28,7 +31,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     static PARTS = {
         sheet: {
             template: "systems/rogue-trader/templates/item/item-armour-sheet-modern.hbs",
-            scrollable: [".rt-tab-content"]
+            scrollable: [".rt-armour-content"]
         }
     };
 
@@ -37,6 +40,8 @@ export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
     static TABS = [
         { tab: "protection", group: "primary", label: "Protection" },
+        { tab: "properties", group: "primary", label: "Properties" },
+        { tab: "mods", group: "primary", label: "Modifications" },
         { tab: "description", group: "primary", label: "Description" },
         { tab: "effects", group: "primary", label: "Effects" }
     ];
@@ -49,6 +54,48 @@ export default class ArmourSheet extends ContainerItemSheet {
     };
 
     /* -------------------------------------------- */
+    /*  Rendering                                   */
+    /* -------------------------------------------- */
+
+    /** @override */
+    _onRender(context, options) {
+        super._onRender(context, options);
+        this._setupArmourTabs();
+    }
+
+    /**
+     * Set up custom tab handling for armour sheet.
+     * @private
+     */
+    _setupArmourTabs() {
+        const tabs = this.element.querySelectorAll(".rt-armour-tab");
+        const panels = this.element.querySelectorAll(".rt-armour-panel");
+        
+        tabs.forEach(tab => {
+            tab.addEventListener("click", (event) => {
+                event.preventDefault();
+                const targetTab = tab.dataset.tab;
+                
+                // Update tab active states
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                
+                // Update panel visibility
+                panels.forEach(panel => {
+                    if (panel.dataset.tab === targetTab) {
+                        panel.classList.add("active");
+                    } else {
+                        panel.classList.remove("active");
+                    }
+                });
+                
+                // Store active tab
+                this.tabGroups.primary = targetTab;
+            });
+        });
+    }
+
+    /* -------------------------------------------- */
     /*  Context Preparation                         */
     /* -------------------------------------------- */
 
@@ -59,7 +106,7 @@ export default class ArmourSheet extends ContainerItemSheet {
         // Add armour-specific context
         context.armourTypes = CONFIG.ROGUE_TRADER?.armourTypes || {};
         context.bodyLocations = CONFIG.ROGUE_TRADER?.bodyLocations || {};
-        context.availableProperties = CONFIG.ROGUE_TRADER?.armourProperties || {};
+        context.availableProperties = this._getAvailableProperties();
         context.apSummary = this.item.system.apSummary;
         context.coverageLabel = this.item.system.coverageLabel;
         context.coverageIcons = this.item.system.coverageIcons;
@@ -69,6 +116,31 @@ export default class ArmourSheet extends ContainerItemSheet {
         context.coverageArray = Array.from(this.item.system.coverage || []);
         
         return context;
+    }
+
+    /**
+     * Get available properties with localized labels.
+     * @returns {Object}
+     * @private
+     */
+    _getAvailableProperties() {
+        const props = {};
+        const available = [
+            "sealed", "auto-stabilized", "hexagrammic", "blessed",
+            "camouflage", "lightweight", "reinforced", "agility-bonus", "strength-bonus"
+        ];
+        
+        for (const id of available) {
+            // Skip already-added properties
+            if (this.item.system.properties.has(id)) continue;
+            
+            const pascalCase = id.split("-").map(s => s.charAt(0).toUpperCase() + s.slice(1)).join("");
+            props[id] = {
+                label: game.i18n.localize(`RT.ArmourProperty.${pascalCase}`)
+            };
+        }
+        
+        return props;
     }
 
     /* -------------------------------------------- */
@@ -151,5 +223,52 @@ export default class ArmourSheet extends ContainerItemSheet {
         properties.delete(property);
         
         await this.item.update({ "system.properties": Array.from(properties) });
+    }
+
+    /**
+     * Add a modification to the armour.
+     * @param {Event} event   The triggering event
+     * @param {HTMLElement} target The target element
+     */
+    static async #addModification(event, target) {
+        // Check if slots available
+        if (this.item.system.availableModSlots <= 0) {
+            ui.notifications.warn(game.i18n.localize("RT.Armour.NoSlotsAvailable"));
+            return;
+        }
+        
+        // Open compendium browser or item picker
+        ui.notifications.info(game.i18n.localize("RT.Armour.DragModification"));
+    }
+
+    /**
+     * Edit a modification.
+     * @param {Event} event   The triggering event
+     * @param {HTMLElement} target The target element
+     */
+    static async #editMod(event, target) {
+        const index = parseInt(target.dataset.modIndex);
+        const mod = this.item.system.modifications[index];
+        if (!mod?.uuid) return;
+        
+        try {
+            const item = await fromUuid(mod.uuid);
+            if (item) item.sheet.render(true);
+        } catch (err) {
+            console.error("Failed to open modification:", err);
+        }
+    }
+
+    /**
+     * Remove a modification from the armour.
+     * @param {Event} event   The triggering event
+     * @param {HTMLElement} target The target element
+     */
+    static async #removeMod(event, target) {
+        const index = parseInt(target.dataset.modIndex);
+        const modifications = [...this.item.system.modifications];
+        modifications.splice(index, 1);
+        
+        await this.item.update({ "system.modifications": modifications });
     }
 }

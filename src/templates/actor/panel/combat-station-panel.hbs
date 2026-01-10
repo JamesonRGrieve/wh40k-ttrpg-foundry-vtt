@@ -15,7 +15,9 @@
                 
                 {{!-- Wounds Status --}}
                 <div class="rt-vital-stat rt-vital-wounds {{#if (eq system.wounds.value 0)}}rt-vital-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}rt-vital-warning{{/if}}">
-                    <div class="rt-vital-stat-header">
+                    <div class="rt-vital-stat-header rt-panel-header--clickable sheet-control__hide-control"
+                         data-toggle="combat_wounds_details"
+                         title="Click to {{#if (isExpanded 'combat_wounds_details' actor)}}collapse{{else}}expand{{/if}}">
                         <div class="rt-vital-label">
                             <i class="fas fa-heart"></i>
                             <span>WOUNDS</span>
@@ -28,6 +30,7 @@
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
+                        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'combat_wounds_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
                     </div>
                     <div class="rt-vital-stat-body">
                         <div class="rt-vital-readout">
@@ -47,11 +50,71 @@
                         <span>CRITICAL DAMAGE: {{system.wounds.critical}}</span>
                     </div>
                     {{/if}}
+
+                    {{!-- Critical Damage Pips (inline compact) --}}
+                    {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
+                    <div class="rt-vital-critical-inline">
+                        <span class="rt-crit-label"><i class="fas fa-skull"></i> CRIT</span>
+                        <div class="rt-critical-pips-compact">
+                            {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
+                                <button type="button"
+                                        class="rt-crit-pip-mini {{#if (lte level ../system.wounds.critical)}}rt-crit-pip-mini--filled{{/if}}"
+                                        data-action="setCriticalPip"
+                                        data-crit-level="{{level}}"
+                                        title="Critical Level {{level}} - Click to toggle">
+                                </button>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    {{!-- Expandable Details --}}
+                    <div class="rt-panel-details combat_wounds_details" {{hideIfNot (isExpanded 'combat_wounds_details' actor)}}>
+                        <div class="rt-vital-edit-section">
+                            <label class="rt-vital-edit-field">
+                                <span class="rt-vital-edit-label">Max Wounds</span>
+                                <input type="number"
+                                       data-dtype="Number"
+                                       class="rt-vital-edit-input"
+                                       name="system.wounds.max"
+                                       value="{{system.wounds.max}}"
+                                       min="1"
+                                       placeholder="Max"
+                                       {{#unless (isExpanded 'combat_wounds_details' actor)}}disabled{{/unless}} />
+                            </label>
+                            <label class="rt-vital-edit-field">
+                                <span class="rt-vital-edit-label">Current Wounds</span>
+                                <input type="number"
+                                       data-dtype="Number"
+                                       class="rt-vital-edit-input"
+                                       name="system.wounds.value"
+                                       value="{{system.wounds.value}}"
+                                       min="0"
+                                       max="{{system.wounds.max}}"
+                                       placeholder="Current"
+                                       {{#unless (isExpanded 'combat_wounds_details' actor)}}disabled{{/unless}} />
+                            </label>
+                            <label class="rt-vital-edit-field">
+                                <span class="rt-vital-edit-label">Critical Damage</span>
+                                <input type="number"
+                                       data-dtype="Number"
+                                       class="rt-vital-edit-input"
+                                       name="system.wounds.critical"
+                                       value="{{system.wounds.critical}}"
+                                       min="0"
+                                       max="10"
+                                       placeholder="Critical"
+                                       {{#unless (isExpanded 'combat_wounds_details' actor)}}disabled{{/unless}} />
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 {{!-- Fatigue Status --}}
                 <div class="rt-vital-stat rt-vital-fatigue {{#if (gt system.fatigue.value system.fatigue.max)}}rt-vital-critical{{else if (gt system.fatigue.value 0)}}rt-vital-warning{{/if}}">
-                    <div class="rt-vital-stat-header">
+                    <div class="rt-vital-stat-header rt-panel-header--clickable sheet-control__hide-control"
+                         data-toggle="combat_fatigue_details"
+                         title="Click to {{#if (isExpanded 'combat_fatigue_details' actor)}}collapse{{else}}expand{{/if}}">
                         <div class="rt-vital-label">
                             <i class="fas fa-bolt"></i>
                             <span>FATIGUE</span>
@@ -64,6 +127,7 @@
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
+                        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'combat_fatigue_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
                     </div>
                     <div class="rt-vital-stat-body">
                         <div class="rt-vital-readout">
@@ -83,11 +147,46 @@
                         <span>{{#if (gt system.fatigue.value system.fatigue.max)}}UNCONSCIOUS{{else}}−10 ALL TESTS{{/if}}</span>
                     </div>
                     {{/if}}
+
+                    {{!-- Expandable Details --}}
+                    <div class="rt-panel-details combat_fatigue_details" {{hideIfNot (isExpanded 'combat_fatigue_details' actor)}}>
+                        <div class="rt-vital-edit-section">
+                            <label class="rt-vital-edit-field">
+                                <span class="rt-vital-edit-label">Threshold (TB)</span>
+                                <input type="number"
+                                       data-dtype="Number"
+                                       class="rt-vital-edit-input"
+                                       name="system.fatigue.max"
+                                       value="{{system.fatigue.max}}"
+                                       min="0"
+                                       readonly
+                                       placeholder="Threshold"
+                                       {{#unless (isExpanded 'combat_fatigue_details' actor)}}disabled{{/unless}} />
+                            </label>
+                            <label class="rt-vital-edit-field">
+                                <span class="rt-vital-edit-label">Current Fatigue</span>
+                                <input type="number"
+                                       data-dtype="Number"
+                                       class="rt-vital-edit-input"
+                                       name="system.fatigue.value"
+                                       value="{{system.fatigue.value}}"
+                                       min="0"
+                                       placeholder="Current"
+                                       {{#unless (isExpanded 'combat_fatigue_details' actor)}}disabled{{/unless}} />
+                            </label>
+                        </div>
+                        <div class="rt-vital-info-text">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Any fatigue: –10 all tests. Exceeds TB: Unconscious.</span>
+                        </div>
+                    </div>
                 </div>
 
                 {{!-- Fate Points Status --}}
                 <div class="rt-vital-stat rt-vital-fate">
-                    <div class="rt-vital-stat-header">
+                    <div class="rt-vital-stat-header rt-panel-header--clickable sheet-control__hide-control"
+                         data-toggle="combat_fate_details"
+                         title="Click to {{#if (isExpanded 'combat_fate_details' actor)}}collapse{{else}}expand{{/if}}">
                         <div class="rt-vital-label">
                             <i class="fas fa-star"></i>
                             <span>FATE</span>
@@ -100,6 +199,7 @@
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
+                        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'combat_fate_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
                     </div>
                     <div class="rt-vital-stat-body">
                         <div class="rt-fate-stars">
@@ -114,29 +214,44 @@
                             <span class="rt-fate-total">/ {{system.fate.max}}</span>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {{!-- Reactions Panel --}}
-            <div class="rt-panel rt-panel-reactions">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-running"></i> Reactions</span>
-                </div>
-                <div class="rt-panel-body">
-                    <div class="rt-reactions-row">
-                        <button type="button" class="rt-reaction-btn combat-control" data-action="dodge" title="Roll Dodge">
-                            <i class="fas fa-running"></i>
-                            <span class="rt-reaction-label">Dodge</span>
-                            <span class="rt-reaction-target">{{dodgeTarget}}%</span>
-                        </button>
-                        <button type="button" class="rt-reaction-btn combat-control" data-action="parry" title="Roll Parry">
-                            <i class="fas fa-shield-alt"></i>
-                            <span class="rt-reaction-label">Parry</span>
-                            <span class="rt-reaction-target">{{parryTarget}}%</span>
-                        </button>
+                    {{!-- Expandable Details --}}
+                    <div class="rt-panel-details combat_fate_details" {{hideIfNot (isExpanded 'combat_fate_details' actor)}}>
+                        <div class="rt-vital-edit-section">
+                            <label class="rt-vital-edit-field">
+                                <span class="rt-vital-edit-label">Max Fate Points</span>
+                                <input type="number"
+                                       data-dtype="Number"
+                                       class="rt-vital-edit-input"
+                                       name="system.fate.max"
+                                       value="{{system.fate.max}}"
+                                       min="0"
+                                       placeholder="Max"
+                                       {{#unless (isExpanded 'combat_fate_details' actor)}}disabled{{/unless}} />
+                            </label>
+                            <label class="rt-vital-edit-field">
+                                <span class="rt-vital-edit-label">Current Fate</span>
+                                <input type="number"
+                                       data-dtype="Number"
+                                       class="rt-vital-edit-input"
+                                       name="system.fate.value"
+                                       value="{{system.fate.value}}"
+                                       min="0"
+                                       max="{{system.fate.max}}"
+                                       placeholder="Current"
+                                       {{#unless (isExpanded 'combat_fate_details' actor)}}disabled{{/unless}} />
+                            </label>
+                        </div>
+                        <div class="rt-vital-info-text">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Spend Fate to reroll tests or avoid death.</span>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            {{!-- Combat Actions Panel --}}
+            {{> systems/rogue-trader/templates/actor/panel/combat-actions-panel.hbs}}
         </div>
 
         {{!-- CENTER COLUMN: Armour (using existing panel directly) --}}
@@ -220,7 +335,7 @@
                         {{/each}}
                     </div>
                     {{/if}}
-                    <div class="rt-dropzone item-create" data-type="criticalInjury">
+                    <div class="rt-dropzone" data-action="itemCreate" data-type="criticalInjury">
                         <i class="fas fa-band-aid rt-dropzone-icon"></i>
                         <span class="rt-dropzone-text">Drop injuries here or click to create</span>
                     </div>
@@ -259,8 +374,8 @@
                         </span>
                     </div>
                     <div class="table-cell">{{item.system.class}}</div>
-                    <div class="table-cell">{{item.system.damage}} {{item.system.damageType}}</div>
-                    <div class="table-cell">{{#if item.system.range}}{{item.system.range}}m{{else}}—{{/if}}</div>
+                    <div class="table-cell">{{item.system.damageLabel}}</div>
+                    <div class="table-cell">{{item.system.rangeLabel}}</div>
                     <div class="table-cell--last">
                         <label class="rt-control-button item-roll" data-item-id="{{item.id}}" title="Attack Roll">
                             <i class="fas fa-dice-d20"></i>
@@ -277,7 +392,7 @@
                 {{/each}}
             </div>
             {{/if}}
-            <div class="rt-dropzone item-create" data-type="weapon">
+            <div class="rt-dropzone" data-action="itemCreate" data-type="weapon">
                 <i class="fas fa-fist-raised rt-dropzone-icon"></i>
                 <span class="rt-dropzone-text">Drop weapons here or click to create</span>
             </div>

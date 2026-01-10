@@ -1,0 +1,346 @@
+/**
+ * Effect Creation Dialog Styles
+ * Thematic, streamlined active effect creation
+ */
+
+.rt-effect-creation-dialog {
+    .window-content {
+        background: linear-gradient(135deg, #1a1612 0%, #2c2417 100%);
+        border: 2px solid $rt-accent-gold;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.rt-effect-form {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-lg;
+    padding: $rt-space-md;
+}
+
+/* Category Tabs */
+.rt-effect-categories {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: $rt-space-xs;
+    padding: $rt-space-sm;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba($rt-accent-gold, 0.2);
+}
+
+.rt-category-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: $rt-space-sm;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    i {
+        font-size: 1.25rem;
+    }
+
+    span {
+        line-height: 1;
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba($rt-accent-gold, 0.5);
+        color: $rt-accent-gold;
+        transform: translateY(-2px);
+    }
+
+    &.active {
+        background: linear-gradient(135deg, rgba($rt-accent-gold, 0.3) 0%, rgba($rt-accent-gold, 0.2) 100%);
+        border-color: $rt-accent-gold;
+        color: $rt-accent-gold;
+        box-shadow: 0 0 12px rgba($rt-accent-gold, 0.4);
+    }
+}
+
+/* Effect Section */
+.rt-effect-section {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-md;
+    padding: $rt-space-md;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.rt-section-header {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding-bottom: $rt-space-sm;
+    border-bottom: 2px solid rgba($rt-accent-gold, 0.3);
+    color: $rt-accent-gold;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+
+    i {
+        font-size: 1.1rem;
+    }
+}
+
+/* Condition Cards Grid */
+.rt-conditions-grid {
+    .rt-condition-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: $rt-space-sm;
+        margin-top: $rt-space-sm;
+    }
+}
+
+.rt-condition-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $rt-space-xs;
+    padding: $rt-space-md;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.rt-condition-harmful {
+        border-color: rgba(231, 76, 60, 0.3);
+
+        .rt-condition-icon {
+            color: #e74c3c;
+        }
+
+        &:hover {
+            background: rgba(231, 76, 60, 0.15);
+            border-color: #e74c3c;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
+        }
+    }
+
+    &.rt-condition-beneficial {
+        border-color: rgba(46, 204, 113, 0.3);
+
+        .rt-condition-icon {
+            color: #2ecc71;
+        }
+
+        &:hover {
+            background: rgba(46, 204, 113, 0.15);
+            border-color: #2ecc71;
+            box-shadow: 0 4px 16px rgba(46, 204, 113, 0.3);
+        }
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+}
+
+.rt-condition-icon {
+    font-size: 2rem;
+}
+
+.rt-condition-name {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Form Groups */
+.rt-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-xs;
+
+    label {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+}
+
+.rt-input,
+.rt-select {
+    padding: $rt-space-sm;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: $rt-accent-gold;
+        box-shadow: 0 0 8px rgba($rt-accent-gold, 0.3);
+    }
+
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+}
+
+.rt-input-group {
+    display: flex;
+    align-items: stretch;
+
+    .rt-input {
+        flex: 1;
+        border-right: none;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .rt-input-suffix {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 $rt-space-md;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-left: none;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        color: $rt-accent-gold;
+    }
+}
+
+.rt-field-hint {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+    font-style: italic;
+    margin-top: 2px;
+}
+
+/* Duration Field */
+.rt-duration-field {
+    margin-top: $rt-space-md;
+    padding-top: $rt-space-md;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-xs;
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: $rt-space-xs;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.85rem;
+        font-weight: 600;
+
+        i {
+            color: $rt-accent-gold;
+        }
+    }
+}
+
+/* Info Box */
+.rt-info-box {
+    display: flex;
+    gap: $rt-space-sm;
+    padding: $rt-space-md;
+    background: rgba(52, 152, 219, 0.1);
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    border-left: 3px solid #3498db;
+    border-radius: 6px;
+
+    i {
+        flex-shrink: 0;
+        color: #3498db;
+        font-size: 1.1rem;
+        margin-top: 2px;
+    }
+
+    p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+}
+
+/* Dialog Footer Buttons */
+.rt-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: $rt-space-sm;
+    padding: $rt-space-md;
+    margin-top: $rt-space-lg;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba($rt-accent-gold, 0.3);
+    border-radius: 0 0 8px 8px;
+}
+
+.rt-btn {
+    padding: $rt-space-sm $rt-space-lg;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+
+    i {
+        font-size: 0.9rem;
+    }
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+}
+
+.rt-btn-primary {
+    background: linear-gradient(135deg, $rt-accent-gold 0%, darken($rt-accent-gold, 10%) 100%);
+    color: #0a0a0f;
+    border: 1px solid $rt-accent-gold;
+
+    &:hover {
+        background: linear-gradient(135deg, lighten($rt-accent-gold, 10%) 0%, $rt-accent-gold 100%);
+        box-shadow: 0 4px 12px rgba($rt-accent-gold, 0.6);
+    }
+}
+
+.rt-btn-secondary {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+
+    &:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Dialog specific overrides */
+.rt-effect-creation-dialog {
+    .dialog-buttons {
+        display: none; // Hide default Foundry dialog buttons
+    }
+}

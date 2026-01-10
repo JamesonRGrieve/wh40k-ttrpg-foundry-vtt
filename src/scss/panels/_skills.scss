@@ -54,6 +54,31 @@
   gap: 6px;
 }
 
+.rt-favorite-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    color: $rt-accent-gold;
+    transform: scale(1.1);
+  }
+  
+  &.rt-favorite--active {
+    color: $rt-accent-gold;
+  }
+  
+  i {
+    font-size: 14px;
+  }
+}
+
 .rt-skill-name {
   background: none;
   border: none;

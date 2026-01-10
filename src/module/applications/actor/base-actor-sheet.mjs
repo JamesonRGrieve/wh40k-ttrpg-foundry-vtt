@@ -13,6 +13,7 @@ import ContextMenuMixin from "../api/context-menu-mixin.mjs";
 import EnhancedDragDropMixin from "../api/drag-drop-visual-mixin.mjs";
 import WhatIfMixin from "../api/what-if-mixin.mjs";
 import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
+import EffectCreationDialog from "../prompts/effect-creation-dialog.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -45,6 +46,8 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             effectToggle: BaseActorSheet.#effectToggle,
             toggleSection: BaseActorSheet.#toggleSection,
             toggleTraining: BaseActorSheet.#toggleTraining,
+            toggleTalentExpand: BaseActorSheet.#toggleTalentExpand,
+            toggleTraitExpand: BaseActorSheet.#toggleTraitExpand,
             addSpecialistSkill: BaseActorSheet.#addSpecialistSkill,
             deleteSpecialization: BaseActorSheet.#deleteSpecialization,
             togglePanel: BaseActorSheet._onTogglePanel,
@@ -512,6 +515,10 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         
         // Breakdown string for tooltip/title
         data.breakdown = this._getSkillBreakdown(data, char);
+        
+        // Check if skill is favorited
+        const favorites = this.actor.getFlag("rogue-trader", "favoriteSkills") || [];
+        data.isFavorite = favorites.includes(key);
         
         // Tooltip data (JSON string)
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
@@ -1013,11 +1020,15 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             for (const entry of entries) {
                 const width = entry.contentRect.width;
                 const columns = width < 700 ? 1 : width < 900 ? 2 : 3;
-                this.element.style.setProperty("--rt-columns", columns);
+                if (this.element) {
+                    this.element.style.setProperty("--rt-columns", columns);
+                }
             }
         });
 
-        this._resizeObserver.observe(this.element);
+        if (this.element) {
+            this._resizeObserver.observe(this.element);
+        }
     }
 
     /* -------------------------------------------- */
@@ -1265,9 +1276,22 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      */
     static async #itemVocalize(event, target) {
         const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+        if (!itemId) {
+            console.warn("RT | itemVocalize: No item ID found");
+            return;
+        }
+        
         const item = this.actor.items.get(itemId);
-        if (item) {
-            await item.displayCard();
+        if (!item) {
+            console.warn(`RT | itemVocalize: Item ${itemId} not found on actor`);
+            return;
+        }
+        
+        try {
+            await item.sendToChat();
+        } catch (err) {
+            console.error("RT | Error sending item to chat:", err);
+            ui.notifications.error(`Failed to send ${item.name} to chat`);
         }
     }
 
@@ -1292,17 +1316,16 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
 
     /**
      * Handle creating an effect.
+     * Opens a streamlined, thematic effect creation dialog.
      * @this {BaseActorSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectCreate(event, target) {
-        await this.actor.createEmbeddedDocuments("ActiveEffect", [{
-            name: "New Effect",
-            icon: "icons/svg/aura.svg",
-            origin: this.actor.uuid,
-            disabled: true
-        }], { renderSheet: true });
+        const effect = await EffectCreationDialog.show(this.actor);
+        if (effect) {
+            ui.notifications.info(`Created effect: ${effect.name}`);
+        }
     }
 
     /* -------------------------------------------- */
@@ -1429,6 +1452,68 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             };
 
             await this.actor.update(updateData);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle expanded details for a talent row.
+     * @this {BaseActorSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #toggleTalentExpand(event, target) {
+        event.stopPropagation();
+        const itemId = target.dataset.itemId;
+        if (!itemId) return;
+
+        // Find the talent row
+        const row = this.element.querySelector(`.rt-talent-row[data-item-id="${itemId}"]`);
+        if (!row) return;
+
+        // Toggle expanded view
+        const expandedView = row.querySelector('.rt-row-expanded');
+        if (!expandedView) return;
+
+        const isExpanded = expandedView.style.display !== 'none';
+        expandedView.style.display = isExpanded ? 'none' : 'block';
+
+        // Toggle button icon
+        const icon = target.querySelector('i');
+        if (icon) {
+            target.classList.toggle('expanded', !isExpanded);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle expanded details for a trait row.
+     * @this {BaseActorSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #toggleTraitExpand(event, target) {
+        event.stopPropagation();
+        const itemId = target.dataset.itemId;
+        if (!itemId) return;
+
+        // Find the trait row
+        const row = this.element.querySelector(`.rt-trait-row[data-item-id="${itemId}"]`);
+        if (!row) return;
+
+        // Toggle expanded view
+        const expandedView = row.querySelector('.rt-row-expanded');
+        if (!expandedView) return;
+
+        const isExpanded = expandedView.style.display !== 'none';
+        expandedView.style.display = isExpanded ? 'none' : 'block';
+
+        // Toggle button icon
+        const icon = target.querySelector('i');
+        if (icon) {
+            target.classList.toggle('expanded', !isExpanded);
         }
     }
 

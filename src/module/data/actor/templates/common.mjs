@@ -98,6 +98,28 @@ export default class CommonTemplate extends ActorDataModel {
 
   /** @override */
   static migrateData(source) {
+    // Migrate size from string to integer if needed
+    if (source.size !== undefined && typeof source.size === 'string') {
+      const sizeMap = {
+        'miniscule': 1,
+        'puny': 2,
+        'scrawny': 3,
+        'average': 4,
+        'hulking': 5,
+        'enormous': 6,
+        'massive': 7,
+        'immense': 8
+      };
+      source.size = sizeMap[source.size.toLowerCase()] || 4; // Default to average
+    }
+    // Ensure size is an integer
+    if (source.size !== undefined) {
+      source.size = this._toInt(source.size);
+      // Clamp to valid range (1-10, though only 1-8 are used)
+      if (source.size < 1) source.size = 1;
+      if (source.size > 10) source.size = 10;
+    }
+    
     // Ensure wounds values are integers - only modify if the property exists
     if (source.wounds) {
       if (source.wounds.max !== undefined) {
@@ -137,6 +159,31 @@ export default class CommonTemplate extends ActorDataModel {
 
   /** @override */
   static cleanData(source, options = {}) {
+    // Clean size field - ensure it's an integer
+    if (source?.size !== undefined) {
+      if (source.size === "" || source.size === null) {
+        delete source.size;  // Use schema default
+      } else if (typeof source.size === 'string') {
+        // Handle legacy string values during form submission
+        const sizeMap = {
+          'miniscule': 1,
+          'puny': 2,
+          'scrawny': 3,
+          'average': 4,
+          'hulking': 5,
+          'enormous': 6,
+          'massive': 7,
+          'immense': 8
+        };
+        source.size = sizeMap[source.size.toLowerCase()] || 4;
+      } else {
+        source.size = this._toInt(source.size);
+        // Clamp to valid range
+        if (source.size < 1) source.size = 1;
+        if (source.size > 10) source.size = 10;
+      }
+    }
+    
     // Clean integer fields before validation
     // IMPORTANT: Delete empty/null values to prevent overwriting existing data
     if (source?.wounds) {

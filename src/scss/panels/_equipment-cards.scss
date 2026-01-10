@@ -1,7 +1,250 @@
 // ============================================
-// MODERN EQUIPMENT CARDS
+// MODERN EQUIPMENT TABLE (INLINE/DENSE)
 // ============================================
-// Card-based design for equipment items (Armour, Gear, etc.)
+// Sleek, modern, single-line layout for equipment items
+
+// Equipment Table Container
+.rt-equipment-table {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: $rt-space-sm;
+}
+
+// Equipment Row (Single Line)
+.rt-equip-row {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-xs $rt-space-sm;
+  background: var(--rt-panel-bg-solid);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  cursor: grab;
+  min-height: 36px;
+  
+  &:hover {
+    background: var(--rt-panel-bg);
+    border-color: var(--rt-border-color);
+    transform: translateX(2px);
+    box-shadow: -2px 0 0 var(--rt-gold);
+  }
+  
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+// Row State Variants
+.rt-equip-equipped {
+  border-left: 3px solid var(--rt-success-primary);
+  background: var(--rt-success-bg);
+}
+
+.rt-equip-active {
+  border-left: 3px solid var(--rt-fate-primary);
+  background: var(--rt-fate-bg);
+  
+  .rt-equip-icon {
+    box-shadow: 0 0 8px var(--rt-fate-primary);
+  }
+}
+
+.rt-equip-overloaded {
+  border-left: 3px solid var(--rt-danger-primary);
+  background: var(--rt-danger-bg);
+  opacity: 0.8;
+}
+
+.rt-equip-stowed {
+  opacity: 0.65;
+  border-left: 3px solid var(--rt-text-subtle);
+}
+
+// Icon (Small)
+.rt-equip-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid var(--rt-border-color-light);
+  flex-shrink: 0;
+}
+
+// Name Button
+.rt-equip-name {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--rt-text-dark);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: var(--rt-gold);
+  }
+}
+
+// Meta Info (Type, Location, etc.)
+.rt-equip-meta {
+  font-size: 0.7rem;
+  color: var(--rt-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+// Status Badge (Active, Offline, etc.)
+.rt-equip-status {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--rt-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  
+  i {
+    font-size: 0.85em;
+  }
+  
+  .rt-status-active {
+    color: var(--rt-fate-primary);
+  }
+  
+  .rt-status-danger {
+    color: var(--rt-danger-primary);
+  }
+  
+  .rt-status-offline {
+    color: var(--rt-text-subtle);
+  }
+}
+
+// Stat Display (AP, Weight, etc.)
+.rt-equip-stat {
+  font-size: 0.75rem;
+  color: var(--rt-text-dark);
+  flex-shrink: 0;
+  
+  .rt-stat-l {
+    color: var(--rt-text-muted);
+    font-weight: 500;
+    margin-right: 2px;
+  }
+  
+  strong {
+    color: var(--rt-gold);
+    font-weight: 700;
+  }
+}
+
+// Actions Container
+.rt-equip-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+// Action Buttons (Small & Stylistic)
+.rt-equip-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--rt-btn-bg);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: var(--rt-text-muted);
+  
+  i {
+    font-size: 0.75rem;
+  }
+  
+  &:hover {
+    background: var(--rt-btn-bg-hover);
+    border-color: var(--rt-border-color);
+    color: var(--rt-text-dark);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Toggle Button (Equip/Activate)
+.rt-equip-toggle {
+  .fa-check-circle {
+    color: var(--rt-success-primary);
+  }
+  
+  .fa-bolt {
+    color: var(--rt-fate-primary);
+  }
+  
+  .fa-power-off {
+    color: var(--rt-text-subtle);
+  }
+}
+
+// Danger Button
+.rt-equip-danger {
+  color: var(--rt-danger-primary);
+  
+  &:hover {
+    background: var(--rt-danger-bg);
+    border-color: var(--rt-danger-primary);
+  }
+}
+
+// Add Item Button (Compact)
+.rt-add-item-btn {
+  width: 100%;
+  padding: $rt-space-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-xs;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px dashed var(--rt-border-color-light);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--rt-text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  
+  i {
+    font-size: 0.9em;
+    color: var(--rt-success-primary);
+  }
+  
+  &:hover {
+    background: var(--rt-panel-bg);
+    border-color: var(--rt-border-color);
+    border-style: solid;
+    color: var(--rt-text-dark);
+  }
+}
+
+// ============================================
+// EQUIPMENT CARDS (LEGACY - KEEP FOR CARDS VIEW)
+// ============================================
 
 // Item Count Badge in Header
 .rt-item-count {
@@ -30,17 +273,17 @@
 
 // Equipment Card
 .rt-equipment-card {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(120, 46, 34, 0.25);
+  background: var(--rt-panel-bg-solid);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: 8px;
   padding: $rt-space-sm;
   transition: all 0.2s ease;
   cursor: grab;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(120, 46, 34, 0.4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: var(--rt-panel-bg);
+    border-color: var(--rt-border-color);
+    box-shadow: 0 2px 8px var(--rt-shadow-medium);
     transform: translateY(-1px);
   }
   
@@ -51,40 +294,43 @@
 
 // Card States
 .rt-card-equipped {
-  border-left: 4px solid #4a8f5c;
-  background: rgba(74, 143, 92, 0.08);
+  border-left: 4px solid var(--rt-success-primary);
+  background: var(--rt-success-bg);
   
   &:hover {
-    background: rgba(74, 143, 92, 0.12);
+    background: var(--rt-success-bg);
+    opacity: 0.95;
   }
 }
 
 .rt-card-active {
-  border-left: 4px solid #3c8cd0;
-  background: rgba(60, 140, 208, 0.08);
+  border-left: 4px solid var(--rt-fate-primary);
+  background: var(--rt-fate-bg);
   
   &:hover {
-    background: rgba(60, 140, 208, 0.12);
+    background: var(--rt-fate-bg);
+    opacity: 0.95;
   }
   
   .rt-card-icon {
-    box-shadow: 0 0 8px rgba(60, 140, 208, 0.5);
+    box-shadow: 0 0 8px var(--rt-fate-primary);
   }
 }
 
 .rt-card-overloaded {
-  border-left: 4px solid #b63a2b;
-  background: rgba(182, 58, 43, 0.08);
+  border-left: 4px solid var(--rt-danger-primary);
+  background: var(--rt-danger-bg);
   opacity: 0.7;
   
   &:hover {
-    background: rgba(182, 58, 43, 0.12);
+    background: var(--rt-danger-bg);
+    opacity: 0.85;
   }
 }
 
 .rt-card-stowed {
   opacity: 0.7;
-  border-left: 4px solid #8b7355;
+  border-left: 4px solid var(--rt-text-muted);
   
   &:hover {
     opacity: 0.85;
@@ -104,7 +350,7 @@
   height: 40px;
   border-radius: 6px;
   object-fit: cover;
-  border: 1px solid rgba(120, 46, 34, 0.2);
+  border: 1px solid var(--rt-border-color-light);
   flex-shrink: 0;
 }
 
@@ -119,20 +365,20 @@
 .rt-card-name {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #2a1a0a;
+  color: var(--rt-text-dark);
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   
   &:hover {
-    color: #c4871d;
+    color: var(--rt-gold);
   }
 }
 
 .rt-card-meta {
   font-size: 0.7rem;
-  color: #6a5a43;
+  color: var(--rt-text-muted);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -150,12 +396,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(120, 46, 34, 0.3);
+  background: var(--rt-btn-bg);
+  border: 1px solid var(--rt-border-color);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: #6a5a43;
+  color: var(--rt-text-muted);
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
@@ -180,8 +426,8 @@
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 1);
-    border-color: rgba(120, 46, 34, 0.5);
+    background: var(--rt-btn-bg-hover);
+    border-color: var(--rt-border-color-strong);
     transform: scale(1.05);
   }
 
@@ -192,13 +438,13 @@
 
   &.rt-action-equip {
     .fa-check-circle {
-      color: #4a8f5c;
+      color: var(--rt-success-primary);
     }
   }
 
   &.rt-action-activate {
     .fa-bolt {
-      color: #3c8cd0;
+      color: var(--rt-fate-primary);
     }
   }
 
@@ -220,8 +466,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: rgba(106, 90, 67, 0.15);
-  color: #6a5a43;
+  background: var(--rt-panel-bg-translucent);
+  color: var(--rt-text-muted);
   
   i {
     font-size: 0.9em;
@@ -229,23 +475,23 @@
 }
 
 .rt-status-active {
-  background: rgba(60, 140, 208, 0.15);
-  color: #3c8cd0;
+  background: var(--rt-fate-bg);
+  color: var(--rt-fate-primary);
 }
 
 .rt-status-overloaded {
-  background: rgba(182, 58, 43, 0.15);
-  color: #b63a2b;
+  background: var(--rt-danger-bg);
+  color: var(--rt-danger-primary);
 }
 
 // Card Description
 .rt-card-description {
   font-size: 0.75rem;
-  color: #4a3728;
+  color: var(--rt-text-medium);
   line-height: 1.4;
   margin-bottom: $rt-space-xs;
   padding: $rt-space-xs;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--rt-panel-bg-translucent);
   border-radius: 4px;
   font-style: italic;
 }
@@ -263,40 +509,40 @@
   align-items: center;
   gap: 4px;
   padding: 4px 8px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(120, 46, 34, 0.2);
+  background: var(--rt-btn-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: 4px;
   font-size: 0.7rem;
 }
 
 .rt-stat-label {
-  color: #6a5a43;
+  color: var(--rt-text-muted);
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.05em;
 }
 
 .rt-stat-value {
-  color: #2a1a0a;
+  color: var(--rt-text-dark);
   font-weight: 700;
 }
 
 // Special stat badges
 .rt-badge-ap {
-  border-color: rgba(182, 58, 43, 0.3);
-  background: rgba(182, 58, 43, 0.08);
+  border-color: var(--rt-danger-border);
+  background: var(--rt-danger-bg);
   
   .rt-stat-value {
-    color: #b63a2b;
+    color: var(--rt-danger-primary);
   }
 }
 
 .rt-badge-rating {
-  border-color: rgba(60, 140, 208, 0.3);
-  background: rgba(60, 140, 208, 0.08);
+  border-color: var(--rt-fate-border);
+  background: var(--rt-fate-bg);
   
   .rt-stat-value {
-    color: #3c8cd0;
+    color: var(--rt-fate-primary);
   }
 }
 
@@ -305,7 +551,7 @@
   display: flex;
   gap: 4px;
   padding-top: $rt-space-xs;
-  border-top: 1px solid rgba(120, 46, 34, 0.15);
+  border-top: 1px solid var(--rt-border-color-light);
 }
 
 .rt-card-btn {
@@ -315,12 +561,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(120, 46, 34, 0.25);
+  background: var(--rt-btn-bg);
+  border: 1px solid var(--rt-border-color-light);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: #4a3728;
+  color: var(--rt-text-medium);
   font-size: 0.85rem;
   position: relative;
   overflow: hidden;
@@ -355,8 +601,8 @@
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: rgba(120, 46, 34, 0.4);
+    background: var(--rt-btn-bg-hover);
+    border-color: var(--rt-border-color);
     transform: translateY(-1px);
   }
   
@@ -366,11 +612,11 @@
 }
 
 .rt-btn-danger {
-  color: #b63a2b;
+  color: var(--rt-danger-primary);
   
   &:hover {
-    background: rgba(182, 58, 43, 0.1);
-    border-color: rgba(182, 58, 43, 0.4);
+    background: var(--rt-danger-bg);
+    border-color: var(--rt-danger-primary);
   }
 }
 
@@ -382,25 +628,25 @@
   align-items: center;
   justify-content: center;
   gap: $rt-space-xs;
-  background: rgba(255, 255, 255, 0.5);
-  border: 2px dashed rgba(120, 46, 34, 0.25);
+  background: var(--rt-panel-bg-translucent);
+  border: 2px dashed var(--rt-border-color-light);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #6a5a43;
+  color: var(--rt-text-muted);
   font-size: 0.85rem;
   font-weight: 600;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(120, 46, 34, 0.4);
-    color: #4a3728;
+    background: var(--rt-panel-bg);
+    border-color: var(--rt-border-color);
+    color: var(--rt-text-dark);
     transform: translateY(-1px);
   }
   
   i {
     font-size: 1.1em;
-    color: #4a8f5c;
+    color: var(--rt-success-primary);
   }
 }
 
@@ -414,7 +660,7 @@
 }
 
 .rt-equipment-list.drag-over {
-  background: rgba(196, 135, 29, 0.08);
+  background: var(--rt-accent-overlay);
   border-radius: 8px;
 }
 

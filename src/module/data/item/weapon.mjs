@@ -89,6 +89,22 @@ export default class WeaponData extends ItemDataModel.mixin(
   }
 
   /* -------------------------------------------- */
+  /*  Data Preparation                            */
+  /* -------------------------------------------- */
+
+  /** @inheritdoc */
+  static migrateData(source) {
+    super.migrateData(source);
+    
+    // Ensure special is an array for SetField compatibility
+    if (source.special === undefined || source.special === null) {
+      source.special = [];
+    }
+    
+    return source;
+  }
+
+  /* -------------------------------------------- */
   /*  Properties                                  */
   /* -------------------------------------------- */
 
@@ -290,6 +306,166 @@ export default class WeaponData extends ItemDataModel.mixin(
       range: this.rangeLabel,
       rof: this.rateOfFireLabel
     };
+  }
+
+  /* -------------------------------------------- */
+  /*  Display Properties                          */
+  /* -------------------------------------------- */
+
+  /**
+   * Get icon class for weapon class.
+   * @type {string}
+   */
+  get classIcon() {
+    const icons = {
+      melee: "fa-sword",
+      pistol: "fa-gun",
+      basic: "fa-crosshairs",
+      heavy: "fa-bullseye",
+      thrown: "fa-hand",
+      exotic: "fa-atom",
+      chain: "fa-link",
+      power: "fa-bolt",
+      shock: "fa-bolt",
+      force: "fa-wand-sparkles"
+    };
+    return icons[this.class] ?? "fa-crosshairs";
+  }
+
+  /**
+   * Get icon class for weapon type.
+   * @type {string}
+   */
+  get typeIcon() {
+    const icons = {
+      primitive: "fa-axe",
+      las: "fa-laser-pointer",
+      "solid-projectile": "fa-crosshairs",
+      bolt: "fa-meteor",
+      melta: "fa-fire-flame-curved",
+      plasma: "fa-sun",
+      flame: "fa-fire",
+      launcher: "fa-rocket",
+      explosive: "fa-bomb",
+      power: "fa-bolt-lightning",
+      chain: "fa-link-slash",
+      shock: "fa-bolt",
+      force: "fa-wand-magic-sparkles",
+      exotic: "fa-alien",
+      xenos: "fa-alien"
+    };
+    return icons[this.type] ?? "fa-crosshairs";
+  }
+
+  /**
+   * Get ammunition percentage for visual display.
+   * @type {number}
+   */
+  get ammoPercentage() {
+    if (!this.usesAmmo || this.clip.max === 0) return 100;
+    return Math.round((this.clip.value / this.clip.max) * 100);
+  }
+
+  /**
+   * Get ammunition status class for styling.
+   * @type {string}
+   */
+  get ammoStatus() {
+    const pct = this.ammoPercentage;
+    if (pct === 0) return "empty";
+    if (pct <= 25) return "critical";
+    if (pct <= 50) return "low";
+    return "good";
+  }
+
+  /**
+   * Get jam threshold for ranged weapons.
+   * @type {number|null}
+   */
+  get jamThreshold() {
+    if (this.isMeleeWeapon) return null;
+    
+    const qualities = this.effectiveSpecial;
+    if (qualities.has("never-jam")) return null;
+    if (qualities.has("reliable")) return 100; // Only jams on natural 100
+    if (qualities.has("unreliable-2")) return 91; // Jams on 91+
+    if (qualities.has("unreliable")) return 96; // Jams on 96+
+    if (qualities.has("overheats")) return 91; // Overheats on 91+
+    return 96; // Default jam on 96+
+  }
+
+  /**
+   * Get a compact summary string for compendium/list display.
+   * @type {string}
+   */
+  get compendiumSummary() {
+    const parts = [];
+    parts.push(this.damageLabel || "-");
+    if (this.damage.penetration > 0) parts.push(`Pen ${this.damage.penetration}`);
+    if (this.isRangedWeapon && this.rangeLabel !== "-") parts.push(this.rangeLabel);
+    return parts.join(" • ");
+  }
+
+  /**
+   * Get full stat line for display.
+   * @type {string}
+   */
+  get statLine() {
+    const parts = [];
+    parts.push(`${this.classLabel}`);
+    if (this.isRangedWeapon) {
+      parts.push(`${this.rangeLabel}`);
+      parts.push(`RoF: ${this.rateOfFireLabel}`);
+    }
+    parts.push(`${this.damageLabel}`);
+    parts.push(`Pen: ${this.damage.penetration}`);
+    if (this.usesAmmo) parts.push(`Clip: ${this.clip.max}`);
+    return parts.join(" | ");
+  }
+
+  /**
+   * Get qualities as array of objects with labels and descriptions.
+   * @type {Array<{id: string, label: string, description: string, level: number|null}>}
+   */
+  get qualitiesArray() {
+    const qualities = [];
+    const config = CONFIG.ROGUE_TRADER?.weaponQualities ?? {};
+    
+    for (const qualityId of this.effectiveSpecial) {
+      // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
+      const match = qualityId.match(/^(.+?)-(\d+)$/);
+      const baseId = match ? match[1] : qualityId;
+      const level = match ? parseInt(match[2]) : null;
+      
+      const definition = config[baseId] || config[qualityId];
+      
+      qualities.push({
+        id: qualityId,
+        baseId: baseId,
+        label: definition?.label ? game.i18n.localize(definition.label) : qualityId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        description: definition?.description ? game.i18n.localize(definition.description) : "",
+        level: level,
+        hasLevel: definition?.hasLevel ?? false
+      });
+    }
+    
+    return qualities;
+  }
+
+  /**
+   * Check if weapon is two-handed.
+   * @type {boolean}
+   */
+  get isTwoHanded() {
+    return this.twoHanded || this.class === "heavy";
+  }
+
+  /**
+   * Get hands required string.
+   * @type {string}
+   */
+  get handsLabel() {
+    return this.isTwoHanded ? game.i18n.localize("RT.Weapon.TwoHanded") : game.i18n.localize("RT.Weapon.OneHanded");
   }
 
   /* -------------------------------------------- */

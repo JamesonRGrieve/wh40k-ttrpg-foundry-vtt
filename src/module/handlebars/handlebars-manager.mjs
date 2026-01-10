@@ -140,6 +140,7 @@ export class HandlebarManager {
                 'systems/rogue-trader/templates/actor/panel/weapon-panel.hbs',
                 'systems/rogue-trader/templates/actor/panel/armour-display-panel.hbs',
                 'systems/rogue-trader/templates/actor/panel/combat-controls-panel.hbs',
+                'systems/rogue-trader/templates/actor/panel/combat-actions-panel.hbs',
                 'systems/rogue-trader/templates/actor/panel/movement-panel-compact.hbs',
             ],
             skills: [

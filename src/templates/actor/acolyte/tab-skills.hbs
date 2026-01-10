@@ -5,53 +5,9 @@
     <div class="rt-panel">
         <div class="rt-panel-header">
             <span class="rt-panel-title"><i class="fas fa-book"></i> Skills</span>
-            
-            {{!-- Filter Controls --}}
-            <div class="rt-panel-actions">
-                <input type="text" class="rt-search-input" 
-                       placeholder="Search skills..." 
-                       data-action="filterSkills" 
-                       name="search"
-                       value="{{skillsFilter.search}}" />
-                
-                <select class="rt-filter-select" data-action="filterSkills" name="characteristic">
-                    <option value="">All Characteristics</option>
-                    <option value="weaponSkill" {{#if (eq skillsFilter.characteristic "weaponSkill")}}selected{{/if}}>WS</option>
-                    <option value="ballisticSkill" {{#if (eq skillsFilter.characteristic "ballisticSkill")}}selected{{/if}}>BS</option>
-                    <option value="strength" {{#if (eq skillsFilter.characteristic "strength")}}selected{{/if}}>S</option>
-                    <option value="toughness" {{#if (eq skillsFilter.characteristic "toughness")}}selected{{/if}}>T</option>
-                    <option value="agility" {{#if (eq skillsFilter.characteristic "agility")}}selected{{/if}}>Ag</option>
-                    <option value="intelligence" {{#if (eq skillsFilter.characteristic "intelligence")}}selected{{/if}}>Int</option>
-                    <option value="perception" {{#if (eq skillsFilter.characteristic "perception")}}selected{{/if}}>Per</option>
-                    <option value="willpower" {{#if (eq skillsFilter.characteristic "willpower")}}selected{{/if}}>WP</option>
-                    <option value="fellowship" {{#if (eq skillsFilter.characteristic "fellowship")}}selected{{/if}}>Fel</option>
-                </select>
-                
-                <select class="rt-filter-select" data-action="filterSkills" name="training">
-                    <option value="">All Training</option>
-                    <option value="trained" {{#if (eq skillsFilter.training "trained")}}selected{{/if}}>Trained Only</option>
-                    <option value="untrained" {{#if (eq skillsFilter.training "untrained")}}selected{{/if}}>Untrained Only</option>
-                </select>
-                
-                {{#if (or skillsFilter.search skillsFilter.characteristic skillsFilter.training)}}
-                <button type="button" class="rt-btn-clear" data-action="clearSkillsSearch" title="Clear all filters">
-                    <i class="fas fa-times"></i>
-                </button>
-                {{/if}}
-            </div>
         </div>
         <div class="rt-panel-body">
             {{> systems/rogue-trader/templates/actor/panel/skills-panel.hbs}}
-        </div>
-    </div>
-    
-    {{!-- Specialist Skills Panel --}}
-    <div class="rt-panel">
-        <div class="rt-panel-header">
-            <span class="rt-panel-title"><i class="fas fa-graduation-cap"></i> Specialist Skills</span>
-        </div>
-        <div class="rt-panel-body">
-            {{> systems/rogue-trader/templates/actor/panel/skills-specialist-panel.hbs}}
         </div>
     </div>
 </section>

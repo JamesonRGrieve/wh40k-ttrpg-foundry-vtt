@@ -5,6 +5,18 @@
     "Delete": "Delete",
     "Yes": "Yes",
     "No": "No",
+    "ActiveEffect": {
+      "CreateEffect": "Create Active Effect",
+      "UnknownSource": "Unknown Source",
+      "InvalidData": "Invalid effect data provided",
+      "Categories": {
+        "Condition": "Conditions",
+        "Characteristic": "Characteristics",
+        "Skill": "Skills",
+        "Combat": "Combat",
+        "Custom": "Custom"
+      }
+    },
     "Character": {
       "Name": "Name",
       "Player": "Player",
@@ -650,6 +662,26 @@
       "StrengthBonus": "Strength Bonus",
       "StrengthBonusDesc": "Power assistance provides Strength bonus"
     },
+    "Armour": {
+      "Sheet": "Armour Sheet",
+      "Protection": "Protection",
+      "Properties": "Properties",
+      "Modifications": "Modifications",
+      "Coverage": "Coverage",
+      "ArmourPoints": "Armour Points",
+      "MaxAgility": "Max Agility",
+      "NoSlotsAvailable": "No modification slots available",
+      "DragModification": "Drag an armour modification here to install it",
+      "Worn": "Worn",
+      "Stowed": "Stowed",
+      "ProtectionLevel": {
+        "None": "No Protection",
+        "Light": "Light Protection",
+        "Medium": "Medium Protection",
+        "Heavy": "Heavy Protection",
+        "Power": "Power Protection"
+      }
+    },
     "Coverage": {
       "All": "All Locations",
       "None": "No Coverage",
@@ -900,6 +932,55 @@
     }
   },
   
+  "RT.Weapon": {
+    "TwoHanded": "Two-Handed",
+    "OneHanded": "One-Handed",
+    "CanMelee": "Can Melee",
+    "Equipped": "Equipped",
+    "Stowed": "Stowed",
+    "Jams": "Jams",
+    "NeverJams": "Never Jams"
+  },
+  
+  "RT.Reload": {
+    "Free": "Free",
+    "Half": "Half",
+    "Full": "Full",
+    "2Full": "2 Full",
+    "3Full": "3 Full"
+  },
+  
+  "RT.WeaponClass": {
+    "Melee": "Melee",
+    "Pistol": "Pistol",
+    "Basic": "Basic",
+    "Heavy": "Heavy",
+    "Thrown": "Thrown",
+    "Exotic": "Exotic",
+    "Chain": "Chain",
+    "Power": "Power",
+    "Shock": "Shock",
+    "Force": "Force"
+  },
+  
+  "RT.WeaponType": {
+    "Primitive": "Primitive",
+    "Las": "Las",
+    "SolidProjectile": "SP",
+    "Bolt": "Bolt",
+    "Melta": "Melta",
+    "Plasma": "Plasma",
+    "Flame": "Flame",
+    "Launcher": "Launcher",
+    "Explosive": "Explosive",
+    "Power": "Power",
+    "Chain": "Chain",
+    "Shock": "Shock",
+    "Force": "Force",
+    "Exotic": "Exotic",
+    "Xenos": "Xenos"
+  },
+  
   "RT.Vehicle": {
     "Name": "Vehicle Name",
     "Type": "Vehicle Type",
@@ -951,5 +1032,66 @@
     "AllowedVehicles": "Allowed Vehicles",
     "Difficulty": "Installation Difficulty",
     "InstallCost": "Installation Cost"
+  },
+  
+  "RT.Combat.Action": {
+    "StandardAttack": "Standard Attack",
+    "StandardAttackDesc": "Make one melee or ranged attack.",
+    "CalledShot": "Called Shot",
+    "CalledShotDesc": "Attack a specific location on your target with a –20 to WS or BS.",
+    "AllOutAttack": "All Out Attack",
+    "AllOutAttackDesc": "+20 to WS, cannot Dodge or Parry.",
+    "GuardedAttack": "Guarded Attack",
+    "GuardedAttackDesc": "–10 WS, +10 to Parry and Dodge.",
+    "Charge": "Charge",
+    "ChargeDesc": "Must move 4 metres, +10 to WS.",
+    "SemiAutoBurst": "Semi-Auto Burst",
+    "SemiAutoBurstDesc": "+10 to BS, additional hit for every two degrees of success.",
+    "FullAutoBurst": "Full Auto Burst",
+    "FullAutoBurstDesc": "+20 to BS, additional hit for every degree of success.",
+    "SuppressingFire": "Suppressing Fire",
+    "SuppressingFireDesc": "Force opponents to take cover, –20 to BS.",
+    "Overwatch": "Overwatch",
+    "OverwatchDesc": "Shoot targets coming into a set kill zone, –20 to BS.",
+    "MultipleAttacks": "Multiple Attacks",
+    "MultipleAttacksDesc": "Attack more than once in the same round—requires two weapons or a talent.",
+    "Move": "Move",
+    "MoveDesc": "Move up to your movement as a Half Action or twice your movement as a Full Action.",
+    "Run": "Run",
+    "RunDesc": "Move triple, enemies –20 BS and +20 WS.",
+    "Disengage": "Disengage",
+    "DisengageDesc": "Break off from melee and move.",
+    "JumpLeap": "Jump/Leap",
+    "JumpLeapDesc": "Jump vertically or leap horizontally.",
+    "TacticalAdvance": "Tactical Advance",
+    "TacticalAdvanceDesc": "Move from cover to cover.",
+    "StandMount": "Stand/Mount",
+    "StandMountDesc": "Stand up or mount a riding animal.",
+    "Dodge": "Dodge",
+    "DodgeDesc": "Test Dodge to negate a hit.",
+    "Parry": "Parry",
+    "ParryDesc": "Test Weapon Skill to negate a hit.",
+    "Aim": "Aim",
+    "AimDesc": "+10 bonus to hit as a Half Action or +20 to hit as a Full Action on your next attack.",
+    "Ready": "Ready",
+    "ReadyDesc": "Ready a weapon or item.",
+    "Reload": "Reload",
+    "ReloadDesc": "Reload a ranged weapon.",
+    "Delay": "Delay",
+    "DelayDesc": "Before your next Turn take any Half Action.",
+    "Feint": "Feint",
+    "FeintDesc": "Opposed WS Test, if you win, your next attack cannot be Dodged or Parried.",
+    "Grapple": "Grapple",
+    "GrappleDesc": "Affect a Grappled opponent or escape from a Grapple.",
+    "DefensiveStance": "Defensive Stance",
+    "DefensiveStanceDesc": "Gain an additional Reaction, opponents suffer –20 to WS.",
+    "BraceHeavy": "Brace Heavy Weapon",
+    "BraceHeavyDesc": "Prepare to fire a heavy weapon.",
+    "KnockDown": "Knock Down",
+    "KnockDownDesc": "Try and knock an opponent to the ground.",
+    "Stun": "Stun",
+    "StunDesc": "Try to Stun an opponent.",
+    "Manoeuvre": "Manoeuvre",
+    "ManoeuvreDesc": "Opposed WS Test, if you win, move enemy 1 metre."
   }
 }

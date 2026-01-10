@@ -1,125 +1,128 @@
 {{!-- Acolyte Sheet Biography Tab --}}
 {{!-- This part renders the Biography tab content with identity, origin path, and notes --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    <div class="rt-bio-grid">
-        {{!-- Left Column: Identity & Origin --}}
-        <div class="rt-bio-col">
-            {{!-- Identity Panel --}}
-            <div class="rt-panel">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-user"></i> Identity</span>
-                </div>
-                <div class="rt-panel-body">
-                    <div class="rt-identity-grid">
-                        <div class="rt-field-row">
-                            <label class="rt-field-label">Gender</label>
-                            <input type="text" class="rt-field-input" name="system.bio.gender" value="{{system.bio.gender}}" />
-                        </div>
-                        <div class="rt-field-row">
-                            <label class="rt-field-label">Age</label>
-                            <input type="text" class="rt-field-input" name="system.bio.age" value="{{system.bio.age}}" />
-                        </div>
-                        <div class="rt-field-row">
-                            <label class="rt-field-label">Build</label>
-                            <input type="text" class="rt-field-input" name="system.bio.build" value="{{system.bio.build}}" />
-                        </div>
-                        <div class="rt-field-row">
-                            <label class="rt-field-label">Complexion</label>
-                            <input type="text" class="rt-field-input" name="system.bio.complexion" value="{{system.bio.complexion}}" />
-                        </div>
-                        <div class="rt-field-row">
-                            <label class="rt-field-label">Hair</label>
-                            <input type="text" class="rt-field-input" name="system.bio.hair" value="{{system.bio.hair}}" />
-                        </div>
-                        <div class="rt-field-row">
-                            <label class="rt-field-label">Eyes</label>
-                            <input type="text" class="rt-field-input" name="system.bio.eyes" value="{{system.bio.eyes}}" />
-                        </div>
-                    </div>
-                </div>
+<div class="rt-bio-grid">
+    {{!-- Left Column: Identity & Origin --}}
+    <div class="rt-bio-col">
+        {{!-- Identity Panel --}}
+        <div class="rt-panel">
+            <div class="rt-panel-header">
+                <span class="rt-panel-title"><i class="fas fa-user"></i> Identity</span>
             </div>
-            
-            {{!-- Origin Path Panel --}}
-            <div class="rt-panel">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-route"></i> Origin Path</span>
-                </div>
-                <div class="rt-panel-body">
-                    <div class="rt-origin-path">
-                        {{#each originPathSteps as |step|}}
-                        <div class="rt-origin-step {{#if step.item}}rt-filled{{/if}}" data-step="{{step.key}}">
-                            <span class="rt-origin-label">{{step.label}}</span>
-                            {{#if step.item}}
-                            <div class="rt-origin-choice" data-item-id="{{step.item._id}}">
-                                <img src="{{step.item.img}}" alt="" class="rt-origin-img" />
-                                <div class="rt-origin-info">
-                                    <span class="rt-origin-name" data-action="itemEdit" data-item-id="{{step.item._id}}">{{step.item.name}}</span>
-                                    {{#if step.item.system.description}}
-                                        <span class="rt-origin-summary">{{removeMarkup step.item.system.description}}</span>
-                                    {{else if step.item.system.benefit}}
-                                        <span class="rt-origin-summary">{{removeMarkup step.item.system.benefit}}</span>
-                                    {{/if}}
-                                </div>
-                                <button type="button" class="rt-origin-remove" data-action="itemDelete" data-item-id="{{step.item._id}}"><i class="fas fa-times"></i></button>
-                            </div>
-                            {{else}}
-                            <div class="rt-origin-empty">
-                                <span class="rt-origin-empty-title">Awaiting Destiny</span>
-                                <span class="rt-origin-empty-sub">Drop an origin here</span>
-                            </div>
-                            {{/if}}
-                        </div>
-                        {{/each}}
+            <div class="rt-panel-body">
+                <div class="rt-identity-grid">
+                    <div class="rt-field-row">
+                        <label class="rt-field-label">Gender</label>
+                        <input type="text" class="rt-field-input" name="system.bio.gender" value="{{system.bio.gender}}" />
                     </div>
-                </div>
-            </div>
-            
-            {{!-- Connections Panel --}}
-            <div class="rt-panel">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-users"></i> Connections</span>
-                </div>
-                <div class="rt-panel-body">
-                    <div class="rt-connections-section">
-                        <div class="rt-affliction-header">
-                            <span>Peers</span>
-                            <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="peer"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <div class="rt-affliction-list">
-                            {{#each actor.items as |item|}}
-                                {{#if item.isPeer}}
-                                <div class="rt-affliction-row" data-item-id="{{item.id}}">
-                                    <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                    <span class="rt-connection-bonus">+{{item.system.modifier}}</span>
-                                    <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
-                                </div>
-                                {{/if}}
-                            {{/each}}
-                        </div>
+                    <div class="rt-field-row">
+                        <label class="rt-field-label">Age</label>
+                        <input type="text" class="rt-field-input" name="system.bio.age" value="{{system.bio.age}}" />
                     </div>
-                    <div class="rt-connections-section">
-                        <div class="rt-affliction-header">
-                            <span>Enemies</span>
-                            <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="enemy"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <div class="rt-affliction-list">
-                            {{#each actor.items as |item|}}
-                                {{#if item.isEnemy}}
-                                <div class="rt-affliction-row" data-item-id="{{item.id}}">
-                                    <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                    <span class="rt-connection-penalty">{{item.system.modifier}}</span>
-                                    <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
-                                </div>
-                                {{/if}}
-                            {{/each}}
-                        </div>
+                    <div class="rt-field-row">
+                        <label class="rt-field-label">Build</label>
+                        <input type="text" class="rt-field-input" name="system.bio.build" value="{{system.bio.build}}" />
+                    </div>
+                    <div class="rt-field-row">
+                        <label class="rt-field-label">Complexion</label>
+                        <input type="text" class="rt-field-input" name="system.bio.complexion" value="{{system.bio.complexion}}" />
+                    </div>
+                    <div class="rt-field-row">
+                        <label class="rt-field-label">Hair</label>
+                        <input type="text" class="rt-field-input" name="system.bio.hair" value="{{system.bio.hair}}" />
+                    </div>
+                    <div class="rt-field-row">
+                        <label class="rt-field-label">Eyes</label>
+                        <input type="text" class="rt-field-input" name="system.bio.eyes" value="{{system.bio.eyes}}" />
                     </div>
                 </div>
             </div>
         </div>
         
+        {{!-- Origin Path Panel --}}
+        <div class="rt-panel">
+            <div class="rt-panel-header">
+                <span class="rt-panel-title"><i class="fas fa-route"></i> Origin Path</span>
+            </div>
+            <div class="rt-panel-body">
+                <div class="rt-origin-path">
+                    {{#each originPathSteps as |step|}}
+                    <div class="rt-origin-step {{#if step.item}}rt-filled{{/if}}" data-step="{{step.key}}">
+                        <span class="rt-origin-label">{{step.label}}</span>
+                        {{#if step.item}}
+                        <div class="rt-origin-choice" data-item-id="{{step.item._id}}">
+                            <img src="{{step.item.img}}" alt="" class="rt-origin-img" />
+                            <div class="rt-origin-info">
+                                <span class="rt-origin-name" data-action="itemEdit" data-item-id="{{step.item._id}}">{{step.item.name}}</span>
+                                {{#if step.item.system.description.summary}}
+                                    <span class="rt-origin-summary">{{step.item.system.description.summary}}</span>
+                                {{else if step.item.system.description.value}}
+                                    <span class="rt-origin-summary">{{removeMarkup step.item.system.description.value}}</span>
+                                {{/if}}
+                            </div>
+                            <button type="button" class="rt-origin-remove" data-action="itemDelete" data-item-id="{{step.item._id}}"><i class="fas fa-times"></i></button>
+                        </div>
+                        {{else}}
+                        <div class="rt-origin-empty">
+                            <span class="rt-origin-empty-title">Awaiting Destiny</span>
+                            <span class="rt-origin-empty-sub">Drop an origin here</span>
+                        </div>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        
+        {{!-- Connections Panel --}}
+        <div class="rt-panel">
+            <div class="rt-panel-header">
+                <span class="rt-panel-title"><i class="fas fa-users"></i> Connections</span>
+            </div>
+            <div class="rt-panel-body">
+                <div class="rt-connections-section">
+                    <div class="rt-affliction-header">
+                        <span>Peers</span>
+                        <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="peer"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <div class="rt-affliction-list">
+                        {{#each actor.items as |item|}}
+                            {{#if item.isPeer}}
+                            <div class="rt-affliction-row" data-item-id="{{item.id}}">
+                                <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                <span class="rt-connection-bonus">+{{item.system.modifier}}</span>
+                                <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
+                            </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="rt-connections-section">
+                    <div class="rt-affliction-header">
+                        <span>Enemies</span>
+                        <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="enemy"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <div class="rt-affliction-list">
+                        {{#each actor.items as |item|}}
+                            {{#if item.isEnemy}}
+                            <div class="rt-affliction-row" data-item-id="{{item.id}}">
+                                <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                <span class="rt-connection-penalty">{{item.system.modifier}}</span>
+                                <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
+                            </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
         {{!-- Right Column: Journal/Notes --}}
         <div class="rt-bio-col">
+            {{!-- Experience Panel --}}
+            {{> systems/rogue-trader/templates/actor/panel/experience-panel-v2.hbs}}
+            
             {{!-- Character Notes / Journal --}}
             <div class="rt-panel rt-panel-journal">
                 <div class="rt-panel-header">
@@ -159,4 +162,5 @@
             </div>
         </div>
     </div>
+</div>
 </section>

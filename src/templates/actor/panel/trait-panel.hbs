@@ -1,58 +1,13 @@
-{{!-- Traits Panel with Category Grouping --}}
-<div class="rt-panel rt-panel-traits-list">
+{{!-- Traits Panel - Compact Table View with Grouping --}}
+<div class="rt-panel rt-panel-traits-table">
     <div class="rt-panel-header">
         <span class="rt-panel-title">
             <i class="fas fa-shield-alt"></i> Traits
-            {{#if traitsCount}}
-            <span class="rt-count-badge">{{traitsCount}}</span>
-            {{/if}}
         </span>
     </div>
     
     <div class="rt-panel-body">
-        {{!-- Filter Bar --}}
-        {{#if traitsCount}}
-        <form class="rt-traits-filters rt-filter-bar">
-            <div class="rt-filter-row">
-                <div class="rt-filter-group">
-                    <input type="text" 
-                           name="traits-search" 
-                           placeholder="Search traits..." 
-                           value="{{filter.search}}"
-                           data-action="filterTraits" />
-                </div>
-                <div class="rt-filter-group">
-                    <select name="traits-category" data-action="filterTraits">
-                        <option value="">All Categories</option>
-                        {{#each categories as |cat|}}
-                        <option value="{{cat.value}}" {{#if (eq ../filter.category cat.value)}}selected{{/if}}>
-                            {{cat.label}}
-                        </option>
-                        {{/each}}
-                    </select>
-                </div>
-                <div class="rt-filter-group rt-filter-checkbox">
-                    <label>
-                        <input type="checkbox" 
-                               name="traits-has-level" 
-                               {{#if filter.hasLevel}}checked{{/if}}
-                               data-action="filterTraits" />
-                        Has Level
-                    </label>
-                </div>
-                {{#if (or filter.search filter.category filter.hasLevel)}}
-                <button type="button" 
-                        class="rt-btn rt-btn-sm rt-btn-clear" 
-                        data-action="clearTraitsFilter"
-                        title="Clear Filters">
-                    <i class="fas fa-times"></i>
-                </button>
-                {{/if}}
-            </div>
-        </form>
-        {{/if}}
-        
-        {{!-- Grouped Trait List --}}
+        {{!-- Grouped Trait Table --}}
         {{#if traits.length}}
         <div class="rt-traits-grouped">
             {{#each groupedByCategory as |group|}}
@@ -63,20 +18,30 @@
                     <span class="rt-count-badge">{{group.traits.length}}</span>
                 </div>
                 
-                <div class="rt-traits-list">
+                <div class="rt-traits-table" data-category="{{group.category}}">
                     {{#each group.traits as |trait|}}
-                    <div class="rt-trait-card {{trait.categoryColor}} item-drag" 
+                    <div class="rt-trait-row item-drag" 
                          data-item-id="{{trait.id}}" 
                          draggable="true">
-                        <div class="rt-card-header">
-                            <i class="fas {{trait.categoryIcon}} rt-card-icon"></i>
-                            <div class="rt-card-info">
-                                <span class="rt-card-name" 
+                        {{!-- Compact View --}}
+                        <div class="rt-row-compact">
+                            <i class="fas {{trait.categoryIcon}} rt-row-icon-inline"></i>
+                            
+                            <div class="rt-row-main">
+                                <span class="rt-row-name" 
                                       data-action="itemEdit" 
-                                      data-item-id="{{trait.id}}">
-                                    {{trait.fullName}}
+                                      data-item-id="{{trait.id}}" 
+                                      title="{{trait.fullName}}">
+                                    {{trait.name}}
                                 </span>
-                                <span class="rt-card-meta">{{trait.categoryLabel}}</span>
+                                
+                                {{#if trait.system.requirements}}
+                                <div class="rt-row-meta">
+                                    <span class="rt-meta-item">
+                                        <i class="fas fa-lock"></i> {{trait.system.requirements}}
+                                    </span>
+                                </div>
+                                {{/if}}
                             </div>
                             
                             {{!-- Level Stepper for variable traits --}}
@@ -101,45 +66,49 @@
                                 </button>
                             </div>
                             {{/if}}
+                            
+                            <div class="rt-row-actions">
+                                <button type="button" class="rt-action-btn rt-btn-expand" data-action="toggleTraitExpand" data-item-id="{{trait.id}}" title="Show Details">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <button type="button" 
+                                        class="rt-action-btn" 
+                                        data-action="itemVocalize" 
+                                        data-item-id="{{trait.id}}" 
+                                        title="Send to Chat">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                                <button type="button" 
+                                        class="rt-action-btn rt-btn-danger" 
+                                        data-action="itemDelete" 
+                                        data-item-id="{{trait.id}}" 
+                                        title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
                         
-                        {{!-- Requirements (if present) --}}
-                        {{#if trait.system.requirements}}
-                        <div class="rt-card-requirements">
-                            <i class="fas fa-lock"></i> {{trait.system.requirements}}
-                        </div>
-                        {{/if}}
-                        
-                        {{!-- Actions --}}
-                        <div class="rt-card-actions">
-                            <button type="button" 
-                                    class="rt-card-btn" 
-                                    data-action="itemVocalize" 
-                                    data-item-id="{{trait.id}}" 
-                                    title="Send to Chat">
-                                <i class="fas fa-comment"></i>
-                            </button>
-                            <button type="button" 
-                                    class="rt-card-btn rt-btn-danger" 
-                                    data-action="itemDelete" 
-                                    data-item-id="{{trait.id}}" 
-                                    title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                        {{!-- Expanded Details --}}
+                        <div class="rt-row-expanded" style="display: none;">
+                            {{#if trait.system.benefit}}
+                            <div class="rt-detail-row rt-detail-benefit">
+                                <span class="rt-detail-label">Benefit:</span>
+                                <div class="rt-detail-content">{{{trait.system.benefit}}}</div>
+                            </div>
+                            {{/if}}
+                            
+                            {{#if trait.system.notes}}
+                            <div class="rt-detail-row">
+                                <span class="rt-detail-label">Notes:</span>
+                                <span class="rt-detail-value">{{trait.system.notes}}</span>
+                            </div>
+                            {{/if}}
                         </div>
                     </div>
                     {{/each}}
                 </div>
             </div>
             {{/each}}
-        </div>
-        {{else}}
-        <div class="rt-empty-state">
-            <i class="fas fa-shield-alt rt-empty-icon"></i>
-            <p class="rt-empty-text">No traits {{#if (or filter.search filter.category filter.hasLevel)}}match your filters{{else}}yet{{/if}}</p>
-            {{#unless (or filter.search filter.category filter.hasLevel)}}
-            <p class="rt-empty-hint">Drop a trait from the compendium or click below to create</p>
-            {{/unless}}
         </div>
         {{/if}}
         

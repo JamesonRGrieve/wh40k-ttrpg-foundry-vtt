@@ -1,0 +1,514 @@
+<div class="rt-item-sheet">
+    <form autocomplete="off">
+        <!-- Item Header -->
+        <header class="rt-item-header">
+            <div class="rt-item-image" data-edit="img">
+                <img src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" />
+            </div>
+            
+            <div class="rt-item-title">
+                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Weapon Name" />
+                <div class="rt-item-title__type">
+                    <i class="fas fa-crosshairs"></i>
+                    <span>{{item.system.class}} {{item.system.type}} Weapon</span>
+                </div>
+                <div class="rt-item-meta">
+                    {{#if item.system.craftsmanship}}
+                    <span class="rt-meta-badge rt-meta-badge--craft">
+                        <i class="fas fa-hammer"></i> {{item.system.craftsmanship}}
+                    </span>
+                    {{/if}}
+                    {{#if item.system.availability}}
+                    <span class="rt-meta-badge rt-meta-badge--availability">
+                        <i class="fas fa-store"></i> {{item.system.availability}}
+                    </span>
+                    {{/if}}
+                    {{#if item.system.source}}
+                    <span class="rt-meta-badge rt-meta-badge--source">
+                        <i class="fas fa-book"></i> {{item.system.source}}
+                    </span>
+                    {{/if}}
+                </div>
+            </div>
+        </header>
+
+        <!-- Quick Stats Bar -->
+        <div class="rt-quick-stats">
+            {{#if item.system.damage.formula}}
+            <div class="rt-stat-badge rt-stat-badge--damage">
+                <span class="rt-stat-badge__icon"><i class="fas fa-burst"></i></span>
+                <span class="rt-stat-badge__label">DMG</span>
+                <span class="rt-stat-badge__value">{{item.system.damageLabel}}</span>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.damage.penetration}}
+            <div class="rt-stat-badge">
+                <span class="rt-stat-badge__icon"><i class="fas fa-bullseye"></i></span>
+                <span class="rt-stat-badge__label">PEN</span>
+                <span class="rt-stat-badge__value">{{item.system.damage.penetration}}</span>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.rangeLabel}}
+            <div class="rt-stat-badge">
+                <span class="rt-stat-badge__icon"><i class="fas fa-arrows-left-right"></i></span>
+                <span class="rt-stat-badge__label">RNG</span>
+                <span class="rt-stat-badge__value">{{item.system.rangeLabel}}</span>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.clip.max}}
+            <div class="rt-stat-badge">
+                <span class="rt-stat-badge__icon"><i class="fas fa-database"></i></span>
+                <span class="rt-stat-badge__label">CLIP</span>
+                <span class="rt-stat-badge__value">{{item.system.clip.value}}/{{item.system.clip.max}}</span>
+            </div>
+            {{/if}}
+            
+            <div class="rt-stat-badge">
+                <span class="rt-stat-badge__icon"><i class="fas fa-weight-hanging"></i></span>
+                <span class="rt-stat-badge__label">WT</span>
+                <span class="rt-stat-badge__value">{{item.system.weight}}kg</span>
+            </div>
+            
+            {{#if item.system.equipped}}
+            <div class="rt-stat-badge rt-stat-badge--equipped">
+                <span class="rt-stat-badge__icon"><i class="fas fa-hand-fist"></i></span>
+                <span class="rt-stat-badge__value">EQUIPPED</span>
+            </div>
+            {{/if}}
+        </div>
+
+        <!-- Tab Navigation -->
+        <nav class="rt-tabs" data-group="primary">
+            <a class="rt-tab active" data-tab="stats" data-group="primary">
+                <i class="fas fa-chart-bar"></i> Stats
+            </a>
+            <a class="rt-tab" data-tab="qualities" data-group="primary">
+                <i class="fas fa-star"></i> Qualities
+            </a>
+            <a class="rt-tab" data-tab="description" data-group="primary">
+                <i class="fas fa-scroll"></i> Description
+            </a>
+            <a class="rt-tab" data-tab="effects" data-group="primary">
+                <i class="fas fa-magic"></i> Effects
+            </a>
+        </nav>
+
+        <!-- Tab Content -->
+        <section class="rt-tab-content">
+            <!-- Stats Tab -->
+            <div class="tab active" data-tab="stats" data-group="primary">
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-swords"></i> Combat Statistics</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-field-grid rt-field-grid--3">
+                            <div class="rt-field">
+                                <label class="rt-field__label">Damage Formula</label>
+                                <input type="text" class="rt-field__input" name="system.damage.formula" value="{{item.system.damage.formula}}" placeholder="2d10" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Damage Bonus</label>
+                                <input type="number" class="rt-field__input" name="system.damage.bonus" value="{{item.system.damage.bonus}}" placeholder="+0" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Penetration</label>
+                                <input type="number" class="rt-field__input" name="system.damage.penetration" value="{{item.system.damage.penetration}}" placeholder="0" />
+                            </div>
+                        </div>
+                        
+                        <div class="rt-field-grid rt-field-grid--2" style="margin-top: 1rem;">
+                            <div class="rt-field">
+                                <label class="rt-field__label">Damage Type</label>
+                                <select class="rt-field__select" name="system.damage.type">
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.damageTypes) selected=item.system.damage.type}}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="rt-field-grid rt-field-grid--2" style="margin-top: 1rem;">
+                            <div class="rt-field">
+                                <label class="rt-field__label">Weapon Class</label>
+                                <select class="rt-field__select" name="system.class">
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.weaponClasses) selected=item.system.class}}
+                                </select>
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Weapon Type</label>
+                                <select class="rt-field__select" name="system.type">
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.weaponTypes) selected=item.system.type}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {{#if item.system.isRangedWeapon}}
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-crosshairs"></i> Ranged Attack</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-field-grid rt-field-grid--4">
+                            <div class="rt-field">
+                                <label class="rt-field__label">Range (m)</label>
+                                <input type="number" class="rt-field__input" name="system.attack.range.value" value="{{item.system.attack.range.value}}" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Range Special</label>
+                                <input type="text" class="rt-field__input" name="system.attack.range.special" value="{{item.system.attack.range.special}}" placeholder="SBx3" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Single Shot</label>
+                                <input type="checkbox" name="system.attack.rateOfFire.single" {{checked item.system.attack.rateOfFire.single}} />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Semi-Auto</label>
+                                <input type="number" class="rt-field__input" name="system.attack.rateOfFire.semi" value="{{item.system.attack.rateOfFire.semi}}" placeholder="0" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Full-Auto</label>
+                                <input type="number" class="rt-field__input" name="system.attack.rateOfFire.full" value="{{item.system.attack.rateOfFire.full}}" placeholder="0" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-database"></i> Ammunition</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-field-grid rt-field-grid--3">
+                            <div class="rt-field">
+                                <label class="rt-field__label">Current</label>
+                                <input type="number" class="rt-field__input" name="system.clip.value" value="{{item.system.clip.value}}" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Maximum</label>
+                                <input type="number" class="rt-field__input" name="system.clip.max" value="{{item.system.clip.max}}" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Reload Time</label>
+                                <select class="rt-field__select" name="system.reload">
+                                    <option value="-" {{#if (eq item.system.reload "-")}}selected{{/if}}>-</option>
+                                    <option value="free" {{#if (eq item.system.reload "free")}}selected{{/if}}>Free Action</option>
+                                    <option value="half" {{#if (eq item.system.reload "half")}}selected{{/if}}>Half Action</option>
+                                    <option value="full" {{#if (eq item.system.reload "full")}}selected{{/if}}>Full Action</option>
+                                    <option value="2-full" {{#if (eq item.system.reload "2-full")}}selected{{/if}}>2 Full Actions</option>
+                                    <option value="3-full" {{#if (eq item.system.reload "3-full")}}selected{{/if}}>3 Full Actions</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        {{#if item.items.length}}
+                        <h4 style="margin-top: 1rem; color: var(--rt-color-gold, #c9a227);">Loaded Ammunition</h4>
+                        <table class="rt-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Damage Mod</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each item.items as |embedded|}}
+                                {{#if embedded.isAmmunition}}
+                                <tr>
+                                    <td>{{embedded.name}}</td>
+                                    <td>{{embedded.system.damage}}</td>
+                                    <td>
+                                        <button type="button" class="rt-btn rt-btn--icon-only rt-btn--danger item-delete" data-item-id="{{embedded.id}}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {{/if}}
+                                {{/each}}
+                            </tbody>
+                        </table>
+                        {{/if}}
+                    </div>
+                </div>
+                {{/if}}
+                
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-coins"></i> Acquisition</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-field-grid rt-field-grid--4">
+                            <div class="rt-field">
+                                <label class="rt-field__label">Availability</label>
+                                <select class="rt-field__select" name="system.availability">
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.availabilities) selected=item.system.availability}}
+                                </select>
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Craftsmanship</label>
+                                <select class="rt-field__select" name="system.craftsmanship">
+                                    {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.craftsmanships) selected=item.system.craftsmanship}}
+                                </select>
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Weight (kg)</label>
+                                <input type="number" class="rt-field__input" name="system.weight" value="{{item.system.weight}}" step="0.1" />
+                            </div>
+                            <div class="rt-field">
+                                <label class="rt-field__label">Source</label>
+                                <input type="text" class="rt-field__input" name="system.source" value="{{item.system.source}}" placeholder="Rogue Trader: Core" />
+                            </div>
+                        </div>
+                        
+                        <div class="rt-field-grid rt-field-grid--2" style="margin-top: 1rem;">
+                            <label class="rt-field__checkbox">
+                                <input type="checkbox" name="system.equipped" {{checked item.system.equipped}} />
+                                <span>Equipped</span>
+                            </label>
+                            <label class="rt-field__checkbox">
+                                <input type="checkbox" name="system.backpack.inBackpack" {{checked item.system.backpack.inBackpack}} />
+                                <span>In Backpack</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qualities Tab -->
+            <div class="tab" data-tab="qualities" data-group="primary">
+                <!-- Craftsmanship Banner -->
+                {{#if item.system.craftsmanship}}
+                {{#if (ne item.system.craftsmanship "common")}}
+                <div class="rt-panel rt-panel--craftsmanship" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%); border-left: 4px solid #d4af37; margin-bottom: 1rem;">
+                    <div class="rt-panel__content" style="padding: 0.75rem 1rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-hammer" style="color: #d4af37; font-size: 1.2rem;"></i>
+                                <strong style="font-size: 1.1rem;">{{item.system.craftsmanshipLabel}}</strong>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                {{#if item.system.craftsmanshipModifiers.toHit}}
+                                <span class="rt-badge" style="background: rgba(212, 175, 55, 0.2); color: #d4af37; padding: 0.25rem 0.5rem; border-radius: 4px;">
+                                    {{#if (gt item.system.craftsmanshipModifiers.toHit 0)}}+{{/if}}{{item.system.craftsmanshipModifiers.toHit}} {{#if item.system.melee}}WS{{else}}BS{{/if}}
+                                </span>
+                                {{/if}}
+                                {{#if item.system.craftsmanshipModifiers.damage}}
+                                <span class="rt-badge" style="background: rgba(212, 175, 55, 0.2); color: #d4af37; padding: 0.25rem 0.5rem; border-radius: 4px;">
+                                    +{{item.system.craftsmanshipModifiers.damage}} Damage
+                                </span>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                {{/if}}
+                
+                <!-- Base Qualities Panel -->
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-star" style="color: #4a9eff;"></i>
+                            <h3 style="margin: 0;">Base Qualities</h3>
+                            <span style="color: #71797E; font-size: 0.85rem; font-weight: normal;">(From weapon design)</span>
+                        </div>
+                    </div>
+                    <div class="rt-panel__content">
+                        {{#if item.system.special.size}}
+                        <div class="rt-tags" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            {{#each (specialQualities item.system.special) as |quality|}}
+                            <span class="rt-tag rt-tag--quality rt-tag--base" 
+                                  data-quality-id="{{quality.identifier}}"
+                                  data-tooltip="{{quality.description}}"
+                                  style="background: rgba(74, 158, 255, 0.15); border: 1px solid rgba(74, 158, 255, 0.3); color: #4a9eff; padding: 0.35rem 0.75rem; border-radius: 4px; display: flex; align-items: center; gap: 0.35rem; cursor: help;">
+                                <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
+                                <span>{{quality.label}}</span>
+                                {{#if quality.level}}
+                                <span style="background: rgba(74, 158, 255, 0.3); padding: 0.15rem 0.4rem; border-radius: 3px; font-weight: bold; font-size: 0.85rem;">{{quality.level}}</span>
+                                {{/if}}
+                            </span>
+                            {{/each}}
+                        </div>
+                        {{else}}
+                        <p style="color: #71797E; font-style: italic; margin: 0;">No base qualities</p>
+                        {{/if}}
+                    </div>
+                </div>
+                
+                <!-- Craftsmanship-Derived Qualities Panel -->
+                {{#if (hasCraftsmanshipQualities item.system)}}
+                <div class="rt-panel" style="margin-top: 1rem;">
+                    <div class="rt-panel__header">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-hammer" style="color: #ff9f40;"></i>
+                            <h3 style="margin: 0;">Craftsmanship Qualities</h3>
+                            <span style="color: #71797E; font-size: 0.85rem; font-weight: normal;">(Auto-applied from {{item.system.craftsmanshipLabel}})</span>
+                        </div>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-tags" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            {{#each (craftsmanshipQualities item.system) as |quality|}}
+                            <span class="rt-tag rt-tag--quality rt-tag--craftsmanship" 
+                                  data-quality-id="{{quality.identifier}}"
+                                  data-tooltip="{{quality.description}}"
+                                  style="background: rgba(255, 159, 64, 0.15); border: 1px solid rgba(255, 159, 64, 0.3); color: #ff9f40; padding: 0.35rem 0.75rem; border-radius: 4px; display: flex; align-items: center; gap: 0.35rem; cursor: help;">
+                                <i class="fas fa-cog" style="font-size: 0.75rem;"></i>
+                                <span>{{quality.label}}</span>
+                            </span>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                
+                <!-- Effective (Combined) Qualities Panel -->
+                <div class="rt-panel" style="margin-top: 1rem; border: 2px solid rgba(75, 192, 115, 0.3);">
+                    <div class="rt-panel__header" style="background: linear-gradient(135deg, rgba(75, 192, 115, 0.1) 0%, rgba(75, 192, 115, 0.05) 100%);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-layer-group" style="color: #4bc073;"></i>
+                            <h3 style="margin: 0;">Effective Qualities</h3>
+                            <span style="color: #71797E; font-size: 0.85rem; font-weight: normal;">(All active qualities)</span>
+                        </div>
+                    </div>
+                    <div class="rt-panel__content">
+                        {{#if item.system.effectiveSpecial.size}}
+                        <div class="rt-tags" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            {{#each (specialQualities item.system.effectiveSpecial) as |quality|}}
+                            <span class="rt-tag rt-tag--quality rt-tag--effective" 
+                                  data-quality-id="{{quality.identifier}}"
+                                  data-tooltip="{{quality.description}}"
+                                  style="background: rgba(75, 192, 115, 0.15); border: 1px solid rgba(75, 192, 115, 0.3); color: #4bc073; padding: 0.35rem 0.75rem; border-radius: 4px; display: flex; align-items: center; gap: 0.35rem; font-weight: 500; cursor: help;">
+                                <i class="fas fa-check-circle" style="font-size: 0.75rem;"></i>
+                                <span>{{quality.label}}</span>
+                                {{#if quality.level}}
+                                <span style="background: rgba(75, 192, 115, 0.3); padding: 0.15rem 0.4rem; border-radius: 3px; font-weight: bold; font-size: 0.85rem;">{{quality.level}}</span>
+                                {{/if}}
+                            </span>
+                            {{/each}}
+                        </div>
+                        {{else}}
+                        <p style="color: #71797E; font-style: italic; margin: 0;">No effective qualities</p>
+                        {{/if}}
+                    </div>
+                </div>
+                
+                <!-- Custom/User-Added Qualities Panel -->
+                {{#if (hasEmbeddedQualities item.items)}}
+                <div class="rt-panel" style="margin-top: 1rem;">
+                    <div class="rt-panel__header">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-sparkles" style="color: #c084fc;"></i>
+                            <h3 style="margin: 0;">Custom Qualities</h3>
+                            <span style="color: #71797E; font-size: 0.85rem; font-weight: normal;">(User-added)</span>
+                        </div>
+                        <div class="rt-panel__actions">
+                            <button type="button" class="rt-btn rt-btn--primary" data-action="addQuality">
+                                <i class="fas fa-plus"></i> Add Quality
+                            </button>
+                        </div>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            {{#each item.items as |embedded|}}
+                            {{#if embedded.isAttackSpecial}}
+                            <div class="rt-quality-card" style="background: rgba(192, 132, 252, 0.05); border: 1px solid rgba(192, 132, 252, 0.2); border-radius: 6px; padding: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div style="flex: 1;">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <i class="fas fa-sparkles" style="color: #c084fc;"></i>
+                                            <strong style="font-size: 1.05rem;">{{embedded.name}}</strong>
+                                            {{#if embedded.system.level}}
+                                            <span style="background: rgba(192, 132, 252, 0.3); color: #c084fc; padding: 0.15rem 0.5rem; border-radius: 3px; font-weight: bold; font-size: 0.85rem;">{{embedded.system.level}}</span>
+                                            {{/if}}
+                                        </div>
+                                        {{#if embedded.system.effect}}
+                                        <div style="color: #a0a0a0; font-size: 0.9rem; margin-top: 0.5rem;">
+                                            {{{embedded.system.effect}}}
+                                        </div>
+                                        {{/if}}
+                                    </div>
+                                    <div style="display: flex; gap: 0.25rem; margin-left: 0.5rem;">
+                                        <button type="button" class="rt-btn rt-btn--icon-only" 
+                                                data-action="itemEdit" 
+                                                data-item-id="{{embedded.id}}"
+                                                title="Edit Quality">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="rt-btn rt-btn--icon-only rt-btn--danger" 
+                                                data-action="itemDelete" 
+                                                data-item-id="{{embedded.id}}"
+                                                title="Remove Quality">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <!-- Add Quality Button (no custom qualities yet) -->
+                <div class="rt-panel" style="margin-top: 1rem;">
+                    <div class="rt-panel__content" style="text-align: center; padding: 1.5rem;">
+                        <p style="color: #71797E; margin-bottom: 1rem;">No custom qualities added</p>
+                        <button type="button" class="rt-btn rt-btn--primary" data-action="addQuality">
+                            <i class="fas fa-plus"></i> Add Custom Quality
+                        </button>
+                    </div>
+                </div>
+                {{/if}}
+                
+                <!-- Weapon Modifications Panel -->
+                <div class="rt-panel" style="margin-top: 1rem;">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-wrench"></i> Weapon Modifications</h3>
+                        <div class="rt-panel__actions">
+                            <button type="button" class="rt-btn" data-action="addModification">
+                                <i class="fas fa-plus"></i> Add Mod
+                            </button>
+                        </div>
+                    </div>
+                    <div class="rt-panel__content">
+                        {{#each item.items as |embedded|}}
+                        {{#if embedded.isWeaponModification}}
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <div>
+                                <strong>{{embedded.name}}</strong>
+                                <span style="color: #71797E; font-size: 0.8rem; margin-left: 0.5rem;">{{embedded.system.craftsmanship}}</span>
+                            </div>
+                            <button type="button" class="rt-btn rt-btn--icon-only rt-btn--danger" data-action="itemDelete" data-item-id="{{embedded.id}}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        {{/if}}
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description Tab -->
+            <div class="tab" data-tab="description" data-group="primary">
+                <div class="rt-panel">
+                    <div class="rt-panel__header">
+                        <h3><i class="fas fa-scroll"></i> Description</h3>
+                    </div>
+                    <div class="rt-panel__content">
+                        <div class="rt-description">
+                            {{editor item.system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Effects Tab -->
+            <div class="tab" data-tab="effects" data-group="primary">
+                {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+            </div>
+        </section>
+    </form>
+</div>

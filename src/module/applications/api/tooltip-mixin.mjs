@@ -45,7 +45,8 @@ export default function TooltipMixin(Base) {
          * @returns {string}  JSON string for data-rt-tooltip-data attribute.
          */
         prepareSkillTooltip(key, skill, characteristics) {
-            return prepareSkillTooltipData(key, skill, characteristics);
+            const actorUuid = this.document?.uuid || null;
+            return prepareSkillTooltipData(key, skill, characteristics, actorUuid);
         }
 
         /* -------------------------------------------- */

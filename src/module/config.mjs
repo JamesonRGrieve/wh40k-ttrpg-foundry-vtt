@@ -1123,6 +1123,260 @@ ROGUE_TRADER.getJamThreshold = function(weapon) {
 };
 
 /* -------------------------------------------- */
+/*  Combat Actions                              */
+/* -------------------------------------------- */
+
+/**
+ * Combat actions organized by category.
+ * @type {Object<string, Array<{key: string, label: string, type: string, description: string, icon: string, subtypes: string[]}>>}
+ */
+ROGUE_TRADER.combatActions = {
+  attacks: [
+    {
+      key: "standardAttack",
+      label: "RT.Combat.Action.StandardAttack",
+      type: "half",
+      description: "RT.Combat.Action.StandardAttackDesc",
+      icon: "fa-crosshairs",
+      subtypes: ["Attack", "Melee or Ranged"]
+    },
+    {
+      key: "calledShot",
+      label: "RT.Combat.Action.CalledShot",
+      type: "full",
+      description: "RT.Combat.Action.CalledShotDesc",
+      icon: "fa-bullseye",
+      subtypes: ["Attack", "Concentration", "Melee or Ranged"]
+    },
+    {
+      key: "allOutAttack",
+      label: "RT.Combat.Action.AllOutAttack",
+      type: "full",
+      description: "RT.Combat.Action.AllOutAttackDesc",
+      icon: "fa-bolt",
+      subtypes: ["Attack", "Melee"]
+    },
+    {
+      key: "guardedAttack",
+      label: "RT.Combat.Action.GuardedAttack",
+      type: "full",
+      description: "RT.Combat.Action.GuardedAttackDesc",
+      icon: "fa-shield-alt",
+      subtypes: ["Attack", "Concentration", "Melee"]
+    },
+    {
+      key: "charge",
+      label: "RT.Combat.Action.Charge",
+      type: "full",
+      description: "RT.Combat.Action.ChargeDesc",
+      icon: "fa-running",
+      subtypes: ["Attack", "Melee", "Movement"]
+    },
+    {
+      key: "semiAutoBurst",
+      label: "RT.Combat.Action.SemiAutoBurst",
+      type: "full",
+      description: "RT.Combat.Action.SemiAutoBurstDesc",
+      icon: "fa-stream",
+      subtypes: ["Attack", "Ranged"]
+    },
+    {
+      key: "fullAutoBurst",
+      label: "RT.Combat.Action.FullAutoBurst",
+      type: "full",
+      description: "RT.Combat.Action.FullAutoBurstDesc",
+      icon: "fa-wind",
+      subtypes: ["Attack", "Ranged"]
+    },
+    {
+      key: "suppressingFire",
+      label: "RT.Combat.Action.SuppressingFire",
+      type: "full",
+      description: "RT.Combat.Action.SuppressingFireDesc",
+      icon: "fa-times-circle",
+      subtypes: ["Attack", "Ranged"]
+    },
+    {
+      key: "overwatch",
+      label: "RT.Combat.Action.Overwatch",
+      type: "full",
+      description: "RT.Combat.Action.OverwatchDesc",
+      icon: "fa-eye",
+      subtypes: ["Attack", "Concentration", "Ranged"]
+    },
+    {
+      key: "multipleAttacks",
+      label: "RT.Combat.Action.MultipleAttacks",
+      type: "full",
+      description: "RT.Combat.Action.MultipleAttacksDesc",
+      icon: "fa-hands",
+      subtypes: ["Attack", "Melee or Ranged"]
+    }
+  ],
+  
+  movement: [
+    {
+      key: "move",
+      label: "RT.Combat.Action.Move",
+      type: "half-full",
+      description: "RT.Combat.Action.MoveDesc",
+      icon: "fa-walking",
+      subtypes: ["Movement"]
+    },
+    {
+      key: "run",
+      label: "RT.Combat.Action.Run",
+      type: "full",
+      description: "RT.Combat.Action.RunDesc",
+      icon: "fa-running",
+      subtypes: ["Movement"]
+    },
+    {
+      key: "disengage",
+      label: "RT.Combat.Action.Disengage",
+      type: "full",
+      description: "RT.Combat.Action.DisengageDesc",
+      icon: "fa-undo",
+      subtypes: ["Movement"]
+    },
+    {
+      key: "jumpLeap",
+      label: "RT.Combat.Action.JumpLeap",
+      type: "full",
+      description: "RT.Combat.Action.JumpLeapDesc",
+      icon: "fa-arrow-up",
+      subtypes: ["Movement"]
+    },
+    {
+      key: "tacticalAdvance",
+      label: "RT.Combat.Action.TacticalAdvance",
+      type: "full",
+      description: "RT.Combat.Action.TacticalAdvanceDesc",
+      icon: "fa-chess-knight",
+      subtypes: ["Concentration", "Movement"]
+    },
+    {
+      key: "standMount",
+      label: "RT.Combat.Action.StandMount",
+      type: "half",
+      description: "RT.Combat.Action.StandMountDesc",
+      icon: "fa-arrow-circle-up",
+      subtypes: ["Movement"]
+    }
+  ],
+  
+  reactions: [
+    {
+      key: "dodge",
+      label: "RT.Combat.Action.Dodge",
+      type: "reaction",
+      description: "RT.Combat.Action.DodgeDesc",
+      icon: "fa-running",
+      subtypes: ["Movement"]
+    },
+    {
+      key: "parry",
+      label: "RT.Combat.Action.Parry",
+      type: "reaction",
+      description: "RT.Combat.Action.ParryDesc",
+      icon: "fa-shield-alt",
+      subtypes: ["Defence", "Melee"]
+    }
+  ],
+  
+  utility: [
+    {
+      key: "aim",
+      label: "RT.Combat.Action.Aim",
+      type: "half-full",
+      description: "RT.Combat.Action.AimDesc",
+      icon: "fa-dot-circle",
+      subtypes: ["Concentration"]
+    },
+    {
+      key: "ready",
+      label: "RT.Combat.Action.Ready",
+      type: "half",
+      description: "RT.Combat.Action.ReadyDesc",
+      icon: "fa-hand-paper",
+      subtypes: ["Miscellaneous"]
+    },
+    {
+      key: "reload",
+      label: "RT.Combat.Action.Reload",
+      type: "varies",
+      description: "RT.Combat.Action.ReloadDesc",
+      icon: "fa-sync",
+      subtypes: ["Miscellaneous"]
+    },
+    {
+      key: "delay",
+      label: "RT.Combat.Action.Delay",
+      type: "half",
+      description: "RT.Combat.Action.DelayDesc",
+      icon: "fa-pause-circle",
+      subtypes: ["Miscellaneous"]
+    },
+    {
+      key: "feint",
+      label: "RT.Combat.Action.Feint",
+      type: "half",
+      description: "RT.Combat.Action.FeintDesc",
+      icon: "fa-mask",
+      subtypes: ["Attack", "Melee"]
+    },
+    {
+      key: "grapple",
+      label: "RT.Combat.Action.Grapple",
+      type: "half-full",
+      description: "RT.Combat.Action.GrappleDesc",
+      icon: "fa-hand-rock",
+      subtypes: ["Attack", "Melee"]
+    },
+    {
+      key: "defensiveStance",
+      label: "RT.Combat.Action.DefensiveStance",
+      type: "full",
+      description: "RT.Combat.Action.DefensiveStanceDesc",
+      icon: "fa-user-shield",
+      subtypes: ["Concentration", "Melee"]
+    },
+    {
+      key: "braceHeavy",
+      label: "RT.Combat.Action.BraceHeavy",
+      type: "half",
+      description: "RT.Combat.Action.BraceHeavyDesc",
+      icon: "fa-level-down-alt",
+      subtypes: ["Miscellaneous"]
+    },
+    {
+      key: "knockDown",
+      label: "RT.Combat.Action.KnockDown",
+      type: "half",
+      description: "RT.Combat.Action.KnockDownDesc",
+      icon: "fa-arrow-down",
+      subtypes: ["Attack", "Melee"]
+    },
+    {
+      key: "stun",
+      label: "RT.Combat.Action.Stun",
+      type: "full",
+      description: "RT.Combat.Action.StunDesc",
+      icon: "fa-star-half-alt",
+      subtypes: ["Attack", "Melee"]
+    },
+    {
+      key: "manoeuvre",
+      label: "RT.Combat.Action.Manoeuvre",
+      type: "half",
+      description: "RT.Combat.Action.ManoeuvreDesc",
+      icon: "fa-arrows-alt",
+      subtypes: ["Attack", "Melee", "Movement"]
+    }
+  ]
+};
+
+/* -------------------------------------------- */
 /*  Export                                      */
 /* -------------------------------------------- */
 

@@ -1,0 +1,125 @@
+{{!--
+  Rogue Trader Weapon Chat Card - Modern Compact Design
+  For vocalizing weapon items to chat with full stats and action buttons.
+--}}
+<div class="rt-chat">
+  <div class="rt-weapon-card" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
+    
+    {{!-- Header --}}
+    <div class="rt-weapon-card__header">
+      <img class="rt-weapon-card__image" src="{{item.img}}" alt="{{item.name}}" />
+      <div class="rt-weapon-card__title">
+        <h2 class="rt-weapon-card__name">{{item.name}}</h2>
+        <div class="rt-weapon-card__meta">
+          <span class="rt-weapon-card__class">{{item.system.classLabel}}</span>
+          <span class="rt-weapon-card__divider">•</span>
+          <span class="rt-weapon-card__type">{{item.system.typeLabel}}</span>
+          {{#if (ne item.system.craftsmanship "common")}}
+          <span class="rt-weapon-card__divider">•</span>
+          <span class="rt-weapon-card__craft rt-weapon-card__craft--{{item.system.craftsmanship}}">{{item.system.craftsmanshipLabel}}</span>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    
+    {{!-- Stats Grid --}}
+    <div class="rt-weapon-card__stats">
+      {{!-- Row 1: Damage & Pen --}}
+      <div class="rt-weapon-card__stat rt-weapon-card__stat--damage">
+        <span class="rt-weapon-card__stat-label">Damage</span>
+        <span class="rt-weapon-card__stat-value">{{item.system.damageLabel}}</span>
+      </div>
+      <div class="rt-weapon-card__stat rt-weapon-card__stat--pen">
+        <span class="rt-weapon-card__stat-label">Pen</span>
+        <span class="rt-weapon-card__stat-value">{{item.system.damage.penetration}}</span>
+      </div>
+      
+      {{!-- Row 2: Range & RoF (ranged only) --}}
+      {{#if item.system.isRangedWeapon}}
+      <div class="rt-weapon-card__stat rt-weapon-card__stat--range">
+        <span class="rt-weapon-card__stat-label">Range</span>
+        <span class="rt-weapon-card__stat-value">{{item.system.rangeLabel}}</span>
+      </div>
+      <div class="rt-weapon-card__stat rt-weapon-card__stat--rof">
+        <span class="rt-weapon-card__stat-label">RoF</span>
+        <span class="rt-weapon-card__stat-value">{{item.system.rateOfFireLabel}}</span>
+      </div>
+      {{/if}}
+      
+      {{!-- Clip (if uses ammo) --}}
+      {{#if item.system.usesAmmo}}
+      <div class="rt-weapon-card__stat rt-weapon-card__stat--clip">
+        <span class="rt-weapon-card__stat-label">Clip</span>
+        <span class="rt-weapon-card__stat-value">{{item.system.clip.value}}/{{item.system.clip.max}}</span>
+      </div>
+      <div class="rt-weapon-card__stat rt-weapon-card__stat--reload">
+        <span class="rt-weapon-card__stat-label">Reload</span>
+        <span class="rt-weapon-card__stat-value">{{item.system.reloadLabel}}</span>
+      </div>
+      {{/if}}
+    </div>
+    
+    {{!-- Craftsmanship Modifiers --}}
+    {{#if (or item.system.craftsmanshipModifiers.toHit item.system.craftsmanshipModifiers.damage)}}
+    <div class="rt-weapon-card__craft-mods">
+      <i class="fas fa-hammer"></i>
+      {{#if item.system.craftsmanshipModifiers.toHit}}
+      <span class="rt-weapon-card__mod {{#if (gt item.system.craftsmanshipModifiers.toHit 0)}}rt-weapon-card__mod--positive{{else}}rt-weapon-card__mod--negative{{/if}}">
+        {{#if (gt item.system.craftsmanshipModifiers.toHit 0)}}+{{/if}}{{item.system.craftsmanshipModifiers.toHit}} to Hit
+      </span>
+      {{/if}}
+      {{#if item.system.craftsmanshipModifiers.damage}}
+      <span class="rt-weapon-card__mod rt-weapon-card__mod--positive">
+        +{{item.system.craftsmanshipModifiers.damage}} Damage
+      </span>
+      {{/if}}
+    </div>
+    {{/if}}
+    
+    {{!-- Qualities --}}
+    {{#if item.system.effectiveSpecial.size}}
+    <div class="rt-weapon-card__qualities">
+      {{#each item.system.qualitiesArray as |quality|}}
+      <span class="rt-weapon-card__quality" data-tooltip="{{quality.description}}">
+        {{quality.label}}{{#if quality.level}} ({{quality.level}}){{/if}}
+      </span>
+      {{/each}}
+    </div>
+    {{/if}}
+    
+    {{!-- Description (if exists) --}}
+    {{#if item.system.description.value}}
+    <div class="rt-weapon-card__description">
+      {{{item.system.description.value}}}
+    </div>
+    {{/if}}
+    
+    {{!-- Action Buttons --}}
+    {{#if hasActions}}
+    <div class="rt-weapon-card__actions">
+      <button type="button" class="rt-weapon-card__btn rt-weapon-card__btn--attack" data-action="attack" data-item-uuid="{{item.uuid}}">
+        <i class="fas fa-crosshairs"></i>
+        Attack
+      </button>
+      <button type="button" class="rt-weapon-card__btn rt-weapon-card__btn--damage" data-action="rollDamage" data-item-uuid="{{item.uuid}}">
+        <i class="fas fa-burst"></i>
+        Damage
+      </button>
+      {{#if item.system.usesAmmo}}
+      <button type="button" class="rt-weapon-card__btn rt-weapon-card__btn--reload" data-action="reload" data-item-uuid="{{item.uuid}}">
+        <i class="fas fa-rotate-right"></i>
+        Reload
+      </button>
+      {{/if}}
+    </div>
+    {{/if}}
+    
+    {{!-- Footer --}}
+    {{#if item.system.source}}
+    <div class="rt-weapon-card__footer">
+      <span class="rt-weapon-card__source">{{item.system.source}}</span>
+    </div>
+    {{/if}}
+    
+  </div>
+</div>

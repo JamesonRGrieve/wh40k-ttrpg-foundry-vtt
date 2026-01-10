@@ -170,7 +170,7 @@ export class TooltipsRT {
         if (tooltipType && tooltipDataAttr) {
             try {
                 const data = JSON.parse(tooltipDataAttr);
-                const content = this._buildTooltipContent(data, tooltipType);
+                const content = await this._buildTooltipContent(data, tooltipType);
                 if (content) {
                     this.#tooltip.innerHTML = content;
                     this.#tooltip.classList.add("rt-tooltip", `rt-tooltip--${tooltipType}`);
@@ -226,15 +226,15 @@ export class TooltipsRT {
      * Build tooltip HTML content based on type.
      * @param {object} data  Tooltip data.
      * @param {string} type  Tooltip type.
-     * @returns {string}     HTML content.
+     * @returns {Promise<string>}     HTML content.
      * @protected
      */
-    _buildTooltipContent(data, type) {
+    async _buildTooltipContent(data, type) {
         switch (type) {
             case "characteristic":
                 return this._buildCharacteristicTooltip(data);
             case "skill":
-                return this._buildSkillTooltip(data);
+                return await this._buildSkillTooltip(data);
             case "armor":
             case "armour":
                 return this._buildArmorTooltip(data);
@@ -335,8 +335,8 @@ export class TooltipsRT {
      * @returns {string}     HTML content.
      * @protected
      */
-    _buildSkillTooltip(data) {
-        const {
+    async _buildSkillTooltip(data) {
+        let {
             name,
             label,
             characteristic,
@@ -348,8 +348,30 @@ export class TooltipsRT {
             current = 0,
             basic = false,
             trainingBonus: dataTB,
-            bonus: dataBonus
+            bonus: dataBonus,
+            actorUuid
         } = data;
+
+        // If actorUuid is provided, fetch live data from actor
+        if (actorUuid) {
+            const actor = await fromUuid(actorUuid);
+            if (actor) {
+                const skill = actor.system.skills?.[name];
+                const charKey = skill?.characteristic || characteristic;
+                const char = actor.system.characteristics?.[charKey];
+                
+                if (skill && char) {
+                    // Update with live values
+                    trained = skill.trained || false;
+                    plus10 = skill.plus10 || false;
+                    plus20 = skill.plus20 || false;
+                    current = skill.current || 0;
+                    charValue = char.total || 0;
+                    characteristic = char.label || characteristic;
+                    dataBonus = skill.bonus || 0;
+                }
+            }
+        }
 
         // Determine training level
         const level = plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
@@ -713,9 +735,10 @@ export function prepareCharacteristicTooltipData(key, characteristic, modifierSo
  * @param {string} key            Skill key.
  * @param {object} skill          Skill data object.
  * @param {object} characteristics  Actor characteristics.
+ * @param {string} [actorUuid]    Optional actor UUID for dynamic updates.
  * @returns {string}  JSON string for data-rt-tooltip-data attribute.
  */
-export function prepareSkillTooltipData(key, skill, characteristics = {}) {
+export function prepareSkillTooltipData(key, skill, characteristics = {}, actorUuid = null) {
     const charKey = skill.characteristic || skill.char || "strength";
     const char = characteristics[charKey] || {};
     const charTotal = char.total || 0;
@@ -743,7 +766,8 @@ export function prepareSkillTooltipData(key, skill, characteristics = {}) {
         current: skill.current || 0,
         basic: basic,
         trainingBonus: trainingBonus,
-        bonus: bonus
+        bonus: bonus,
+        actorUuid: actorUuid  // Include actor UUID for dynamic updates
     };
     
     return JSON.stringify(data);

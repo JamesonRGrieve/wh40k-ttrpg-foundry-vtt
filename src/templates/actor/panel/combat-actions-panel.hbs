@@ -1,0 +1,140 @@
+{{!-- Combat Actions Panel - Comprehensive Quick Reference --}}
+<div class="rt-panel rt-combat-actions-panel">
+    <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
+         data-toggle="combat_actions_details"
+         title="Click to {{#if (isExpanded 'combat_actions_details' actor)}}collapse{{else}}expand{{/if}}">
+        <span class="rt-panel-title">
+            <i class="fas fa-fist-raised"></i> Combat Actions
+        </span>
+        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'combat_actions_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
+    </div>
+
+    <div class="rt-panel-body">
+        {{!-- Compact View (Collapsed) - Just Reactions --}}
+        {{#unless (isExpanded 'combat_actions_details' actor)}}
+        <div class="rt-actions-compact">
+            <div class="rt-actions-group">
+                <span class="rt-actions-group-label">Quick Actions</span>
+                <div class="rt-actions-row">
+                    <button type="button" 
+                            class="rt-action-btn rt-action-reaction"
+                            data-action="dodge"
+                            data-tooltip
+                            aria-label="Dodge: {{localize 'RT.Combat.Action.DodgeDesc'}}"
+                            title="Dodge">
+                        <i class="fas fa-running"></i>
+                        <span>Dodge</span>
+                    </button>
+                    <button type="button" 
+                            class="rt-action-btn rt-action-reaction"
+                            data-action="parry"
+                            data-tooltip
+                            aria-label="Parry: {{localize 'RT.Combat.Action.ParryDesc'}}"
+                            title="Parry">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Parry</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {{/unless}}
+
+        {{!-- Expanded View - All Actions --}}
+        <div class="rt-panel-details combat_actions_details" {{hideIfNot (isExpanded 'combat_actions_details' actor)}}>
+            
+            {{!-- ATTACK ACTIONS --}}
+            <div class="rt-actions-group">
+                <div class="rt-actions-group-header">
+                    <i class="fas fa-crosshairs rt-group-icon"></i>
+                    <span class="rt-actions-group-label">Attack Actions</span>
+                </div>
+                <div class="rt-actions-grid">
+                    {{#each dh.combatActions.attacks as |action|}}
+                    <button type="button"
+                            class="rt-action-btn rt-action-attack"
+                            data-action-key="{{action.key}}"
+                            data-tooltip
+                            aria-label="{{localize action.label}}: {{localize action.description}}"
+                            title="{{localize action.label}}">
+                        <i class="fas {{action.icon}}"></i>
+                        <span class="rt-action-name">{{localize action.label}}</span>
+                        <span class="rt-action-type">{{action.type}}</span>
+                    </button>
+                    {{/each}}
+                </div>
+            </div>
+
+            {{!-- MOVEMENT ACTIONS --}}
+            <div class="rt-actions-group">
+                <div class="rt-actions-group-header">
+                    <i class="fas fa-walking rt-group-icon"></i>
+                    <span class="rt-actions-group-label">Movement Actions</span>
+                </div>
+                <div class="rt-actions-grid">
+                    {{#each dh.combatActions.movement as |action|}}
+                    <button type="button"
+                            class="rt-action-btn rt-action-movement"
+                            data-action-key="{{action.key}}"
+                            data-tooltip
+                            aria-label="{{localize action.label}}: {{localize action.description}}"
+                            title="{{localize action.label}}">
+                        <i class="fas {{action.icon}}"></i>
+                        <span class="rt-action-name">{{localize action.label}}</span>
+                        <span class="rt-action-type">{{action.type}}</span>
+                    </button>
+                    {{/each}}
+                </div>
+            </div>
+
+            {{!-- REACTION ACTIONS --}}
+            <div class="rt-actions-group">
+                <div class="rt-actions-group-header">
+                    <i class="fas fa-bolt rt-group-icon"></i>
+                    <span class="rt-actions-group-label">Reactions</span>
+                </div>
+                <div class="rt-actions-grid rt-actions-grid-2col">
+                    {{#each dh.combatActions.reactions as |action|}}
+                    <button type="button"
+                            class="rt-action-btn rt-action-reaction"
+                            data-action="{{action.key}}"
+                            data-tooltip
+                            aria-label="{{localize action.label}}: {{localize action.description}}"
+                            title="{{localize action.label}}">
+                        <i class="fas {{action.icon}}"></i>
+                        <span class="rt-action-name">{{localize action.label}}</span>
+                        <span class="rt-action-type">{{action.type}}</span>
+                    </button>
+                    {{/each}}
+                </div>
+            </div>
+
+            {{!-- UTILITY ACTIONS --}}
+            <div class="rt-actions-group">
+                <div class="rt-actions-group-header">
+                    <i class="fas fa-tools rt-group-icon"></i>
+                    <span class="rt-actions-group-label">Utility Actions</span>
+                </div>
+                <div class="rt-actions-grid">
+                    {{#each dh.combatActions.utility as |action|}}
+                    <button type="button"
+                            class="rt-action-btn rt-action-utility"
+                            data-action-key="{{action.key}}"
+                            data-tooltip
+                            aria-label="{{localize action.label}}: {{localize action.description}}"
+                            title="{{localize action.label}}">
+                        <i class="fas {{action.icon}}"></i>
+                        <span class="rt-action-name">{{localize action.label}}</span>
+                        <span class="rt-action-type">{{action.type}}</span>
+                    </button>
+                    {{/each}}
+                </div>
+            </div>
+
+            {{!-- Info Note --}}
+            <div class="rt-actions-info">
+                <i class="fas fa-info-circle"></i>
+                <span>Click any action for a detailed description. Action types: <strong>Half</strong> (½ turn), <strong>Full</strong> (full turn), <strong>Reaction</strong> (out of turn).</span>
+            </div>
+        </div>
+    </div>
+</div>
