@@ -1,0 +1,51 @@
+{
+  "name": "Void Accustomed (Void Born)",
+  "type": "talent",
+  "img": "icons/svg/sun.svg",
+  "system": {
+    "identifier": "void-accustomed-void-born",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "23"
+    },
+    "description": {
+      "value": "<p><strong>Void Accustomed:</strong> Due to their strange and unnatural childhood, the void born are used to the vagaries of changing gravity.</p><p>They are immune to space travel sickness. In addition, zero- or low-gravity environments are not considered Difficult Terrain for void born characters.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You are immune to space travel sickness. Zero- or low-gravity environments are not Difficult Terrain for you.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Void Born Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Immune to space sickness, no difficult terrain in zero/low-G"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VB00000000000004"
+}

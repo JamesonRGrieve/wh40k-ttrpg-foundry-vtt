@@ -1,0 +1,58 @@
+{
+  "name": "Blessed Ignorance (Imperial World)",
+  "type": "talent",
+  "img": "icons/svg/circle.svg",
+  "system": {
+    "identifier": "blessed-ignorance-imperial-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "26"
+    },
+    "description": {
+      "value": "<p><strong>Blessed Ignorance:</strong> Imperial citizens know that the proper ways of living are those tried and tested by the generations that have gone before. Horror, pain, and death are the just rewards of curiosity, for those that look too deeply into the mysteries of the universe are all too likely to find malefic beings looking back at them.</p><p>Their wise blindness imposes a −5 penalty on Forbidden Lore (Int) Tests.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You suffer a −5 penalty on all Forbidden Lore Tests.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Imperial World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "forbiddenLore",
+            "value": -5,
+            "condition": "All Forbidden Lore Tests",
+            "icon": "fa-skull"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "-5 to all Forbidden Lore Tests"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IW00000000000001"
+}

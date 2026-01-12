@@ -1,0 +1,51 @@
+{
+  "name": "Fit For Purpose (Forge World)",
+  "type": "talent",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "identifier": "fit-for-purpose-forge-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "24"
+    },
+    "description": {
+      "value": "<p><strong>Fit For Purpose:</strong> A forge world inhabitant is tested, indoctrinated, and trained from birth for his chosen station and role in life. Weakness is not tolerated, and failure brings painful incentives to do better. Even those who follow an errant path must strive to be better than their peers to survive.</p><p>Because of this, a starting forge world character may increase a Characteristic of his choice by +3.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Increase one Characteristic of your choice by +3.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Forge World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Player chooses one characteristic to increase by +3 during character creation"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FW00000000000002"
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Accustomed to Crowds (Hive World)",
+  "type": "talent",
+  "img": "icons/svg/crowd.svg",
+  "system": {
+    "identifier": "accustomed-to-crowds-hive-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "25"
+    },
+    "description": {
+      "value": "<p><strong>Accustomed to Crowds:</strong> Hivers grow up surrounded by crowds. They are used to weaving through even the densest mobs with ease.</p><p>Crowds do not count as Difficult Terrain for hivers, and when Running or Charging through a dense crowd, hivers take no penalty to the Agility Test to keep their feet.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Crowds are not Difficult Terrain for you. When Running or Charging through crowds, you take no penalty to Agility Tests.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Hive World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Crowds not Difficult Terrain, no penalty when Running/Charging through crowds"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HW00000000000001"
+}

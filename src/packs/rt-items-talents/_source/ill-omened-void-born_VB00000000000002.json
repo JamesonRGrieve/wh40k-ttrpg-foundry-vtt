@@ -1,0 +1,58 @@
+{
+  "name": "Ill-Omened (Void Born)",
+  "type": "talent",
+  "img": "icons/svg/horror.svg",
+  "system": {
+    "identifier": "ill-omened-void-born",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "23"
+    },
+    "description": {
+      "value": "<p><strong>Ill-Omened:</strong> Whether because of their strange looks, clannish ways, or unwholesome air, the void born are shunned and mistrusted by most. In addition, the void born are most likely to attract any negative attention that the party of Explorers creates—accusations of deceit in trade, disgruntled negotiators, mobs armed with stones, and so on.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You suffer a −5 penalty on all Fellowship Tests made to interact with non-void born humans.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Void Born Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": -5,
+            "condition": "When interacting with non-void born",
+            "icon": "fa-users"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "-5 Fellowship with non-void born humans"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VB00000000000002"
+}

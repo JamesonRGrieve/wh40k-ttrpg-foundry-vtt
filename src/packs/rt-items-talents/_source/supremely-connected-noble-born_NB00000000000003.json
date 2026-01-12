@@ -1,0 +1,51 @@
+{
+  "name": "Supremely Connected (Noble Born)",
+  "type": "talent",
+  "img": "icons/svg/network.svg",
+  "system": {
+    "identifier": "supremely-connected-noble-born",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "27"
+    },
+    "description": {
+      "value": "<p><strong>Supremely Connected:</strong> Nobles have extensive connections, and they know that dropping the \"right\" names into a conversation can open more doors than a fistful of Thrones.</p><p>A starting noble born character begins play with the Peer (Nobility) Talent. Also, to reflect his family's powerbase, he also gains one additional Peer from the following list: Academics, Adeptus Mechanicus, Administratum, Astropaths, Ecclesiarchy, Government, Mercantile, Military, or Underworld.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain Peer (Nobility) and one additional Peer talent of your choice from: Academics, Adeptus Mechanicus, Administratum, Astropaths, Ecclesiarchy, Government, Mercantile, Military, or Underworld.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Noble Born Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Peer (Nobility) plus one additional Peer talent of choice"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NB00000000000003"
+}

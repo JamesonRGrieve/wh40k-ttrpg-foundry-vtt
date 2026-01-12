@@ -1,13 +1,13 @@
 {
   "name": "Death World",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/rogue-trader/icons/origins/death-world.webp",
   "system": {
     "identifier": "death-world",
     "step": "homeWorld",
     "stepIndex": 1,
     "description": {
-      "value": "<p>+5 Strength, +5 Toughness, -5 Willpower, -5 Fellowship. Gain Survival Skill, Melee Weapon Training (Primitive) and either Jaded or Resistance(Poisons) Talent. -10 to all Interaction Skills in Formal Surroundings, +10 to resist Pinning and Shock.</p>"
+      "value": "<h2>Death World</h2><blockquote><p><em>\"Death worlds are teeming with threats to survival, meaning that those who thrive on such planets are unlike anyone else. Peril and violence have always been a part of your life, and you are stronger because of it. You are aggressive and inured to hardship, proficient at staying alive where others cannot, and aloof from your fellow man.\"</em></p></blockquote><p>Upon death worlds, the plants, beasts, and sometimes even the environment itself takes aggressive and destructive forms inimical to human life. Whilst exceptionally difficult to colonise, many death worlds possess valuable resources that require an outpost or other human presence upon the planet's surface to harvest. Death worlders often band together in tribes, clans, gangs, or other social groups in order to survive. An upbringing in such a harsh environment breeds very hardy and resilient examples of the human race—those tested and found wanting die young.</p><h3>Life on a Death World</h3><p>Death worlds, whilst not common within the Imperium, can be found in every segmentum. From the depths of the jungle hell of Catachan to the predator-filled deserts of Luther McIntyre, death worlds have a well-earned reputation as some of the most dangerous planets in the galaxy. The inhabitants of these worlds are determined, tenacious people, highly valued for their strength and stamina, and are often drawn upon as recruits for both the Imperial Guard and some Space Marine Chapters.</p><p>For most death worlders, their survival is the only export their world provides. Death worlds vary widely in appearance and environment; some are rich and verdant, stalked by ambulatory, carnivorous plants, whilst others are empty deserts scoured by ionic storms. Each death world presents a thousand new and different ways to die.</p><p>Those unlucky enough to be raised on a death world are naturally pragmatic and fatalistic. Death is a constant companion, and only by accepting that can a death worlder hope to reach maturity with his sanity intact. Usually, the greatest achievement a death worlder can strive for is to achieve some truly impressive feat before his death, so he will be remembered by his descendants.</p>"
     },
     "requirements": {
       "text": "Origin Path: Home World",
@@ -15,39 +15,43 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 5,
-          "toughness": 5,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": -5,
-          "fellowship": -5
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "2xTB+1d5+2",
+      "wounds": 0,
+      "fateFormula": "(1-5|=2),(6-10|=3)",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
           "name": "Survival",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         }
       ],
       "talents": [
-        "Melee Weapon Training (Primitive)",
-        "Death World (Paranoid), Death World (Survivor)"
+        {
+          "name": "If It Bleeds, I Can Kill It (Death World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.DW00000000000002"
+        },
+        {
+          "name": "Paranoid (Death World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.DW00000000000003"
+        },
+        {
+          "name": "Survivor (Death World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.DW00000000000004"
+        }
       ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": [
         {
           "type": "talent",
-          "label": "Hardened: Choose from Jaded, Resistance (Poisons) Talent",
+          "label": "Hardened: Choose one",
           "options": [
             "Jaded",
             "Resistance (Poisons)"
@@ -56,8 +60,35 @@
         }
       ]
     },
-    "effectText": "+5 Strength, +5 Toughness, -5 Willpower, -5 Fellowship. Gain Survival Skill, Melee Weapon Training (Primitive) and either Jaded or Resistance(Poisons) Talent. -10 to all Interaction Skills in Formal Surroundings, +10 to resist Pinning and Shock.",
+    "modifiers": {
+      "characteristics": {
+        "strength": 5,
+        "toughness": 5,
+        "willpower": -5,
+        "fellowship": -5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Characteristic Modifiers:</strong> +5 Strength, +5 Toughness, −5 Willpower, −5 Fellowship</p><p><strong>Starting Wounds:</strong> Death world characters double their starting Toughness Bonus and add 1d5+2 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–5, begin with 2 Fate Points; on a 6-10, begin with 3 Fate Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "21",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

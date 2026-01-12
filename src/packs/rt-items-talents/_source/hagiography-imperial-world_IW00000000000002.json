@@ -1,0 +1,51 @@
+{
+  "name": "Hagiography (Imperial World)",
+  "type": "talent",
+  "img": "icons/svg/holy-symbol.svg",
+  "system": {
+    "identifier": "hagiography-imperial-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "26-27"
+    },
+    "description": {
+      "value": "<p><strong>Hagiography:</strong> Widespread scriptures describing the lives—and, more importantly, the deaths—of the Emperor's blessed saints and warmasters, and the sequence of epochal wars, crusades, and terrors that make up history, grant Imperial citizens a comparatively wide knowledge of the Imperium of Man.</p><p>Imperial worlders gain Common Lore (Imperial Creed) (Int), Common Lore (Imperium) (Int), and Common Lore (War) (Int) as untrained Basic Skills.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Common Lore (Imperial Creed), Common Lore (Imperium), and Common Lore (War) are treated as untrained Basic Skills.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Imperial World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Common Lore (Imperial Creed), (Imperium), and (War) become untrained Basic Skills"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IW00000000000002"
+}

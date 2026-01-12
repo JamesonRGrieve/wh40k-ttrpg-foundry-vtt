@@ -1,0 +1,58 @@
+{
+  "name": "Legacy of Wealth (Noble Born)",
+  "type": "talent",
+  "img": "icons/svg/coins.svg",
+  "system": {
+    "identifier": "legacy-of-wealth-noble-born",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "27"
+    },
+    "description": {
+      "value": "<p><strong>Legacy of Wealth:</strong> To be born an Imperial noble is to inherit a legacy of staggering wealth. Even a scorned scion enjoys access to resources beyond the wildest dreams of the toiling masses.</p><p>This adds +1 to the group's starting Profit Factor.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Add +1 to the group's starting Profit Factor.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Noble Born Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "profitFactor",
+          "label": "Starting Profit Factor",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "+1 to group's starting Profit Factor"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NB00000000000002"
+}

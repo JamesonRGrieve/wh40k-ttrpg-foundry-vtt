@@ -1,0 +1,53 @@
+{
+  "name": "Wary (Hive World)",
+  "type": "talent",
+  "img": "icons/svg/lightning.svg",
+  "system": {
+    "identifier": "wary-hive-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "25"
+    },
+    "description": {
+      "value": "<p><strong>Wary:</strong> Hivers are constantly alert for the first hint of trouble, be it a gang shoot-out, hab riot, or hivequake.</p><p>All hivers gain a +1 bonus to Initiative rolls.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain a +1 bonus to Initiative rolls.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Hive World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "initiative": 1
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "+1 Initiative"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HW00000000000004"
+}

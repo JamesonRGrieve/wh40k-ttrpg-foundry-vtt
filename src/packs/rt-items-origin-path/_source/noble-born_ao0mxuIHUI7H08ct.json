@@ -1,13 +1,13 @@
 {
   "name": "Noble Born",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/rogue-trader/icons/origins/noble-born.webp",
   "system": {
     "identifier": "noble-born",
     "step": "homeWorld",
     "stepIndex": 1,
     "description": {
-      "value": "<p>-5 Willpower, +5 Fellowship. Gain Literacy, Speak Language (High Gothic), Speak Language (Low Gothic) as untrained Basic Skills. Gain +10 to Interaction Skill Tests when dealing with high authority and formal situations. Add +1 to group&#x27;s Starting Profit Factor. Gain Peer(Nobility) Talent, and one other Peer talent from Noted List. However also gain some kind of powerful enemy that may make moves against you. Noted List: Academics, Adeptus Mechanicus, Administratum, Astropaths, Ecclesiarchy, Government, Mercantile, Military, or Underworld</p>"
+      "value": "<h2>Noble Born</h2><blockquote><p><em>\"Some things can be taught, others acquired by force or trade. But they are all inconsequential. The only thing that truly matters is the lineage of your blood, the noble worth that flowed in your veins from the very day you were born.\"</em></p></blockquote><p>The high nobility of the Imperium are an enormously wealthy and powerful elite, a breed apart from the common masses they rule. Many noble houses span the stars in an intricate web of kinship, arranged marriages, and political alliances that ensure power and influence will ever continue, even if the fortunes of a single world fail.</p><p>The products of centuries—or even millennia—of tech-assisted breeding and cultured refinement, these noble lineages hold the history of the Imperium itself in their blood. They are the finest that humanity has to offer—or so they would have you believe, at any rate.</p><h3>Life as a Noble</h3><p>Nobility of birth has never been a guarantee of good character, and for every example of true enlightenment or greatness, there exist dozens of capricious, self-obsessed noble scions who prove, by their base failings, that bloodline is no measure of superiority in the Imperium. Worse still than the dissolute idlers and petty tyrants are those nobles whose dark inclinations spill over into heresy and other forms of true malignancy, often for no better reason than boredom or a sadistic love of power.</p><p>From almost their first breath, those born to the high nobility are schooled in the role they must play and how they must play it. Their fine tutelage covers not only the details of history, commerce, and power-politics, but an education in the finer points of taste and etiquette. How to wear a mask of one's own choosing, how to give an intended slight, how to curry and mete favour, how to defend one's honour, and how to comport oneself are all lessons deeply ingrained.</p><p>Connected, socially skilled, highly educated, and able to move in the high circles of Imperial society, those of noble blood are frequently as ruthless as they are charming and as dangerous as they are well mannered.</p>"
     },
     "requirements": {
       "text": "Origin Path: Home World",
@@ -15,60 +15,83 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": -5,
-          "fellowship": 5,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "2xTB+1d5",
+      "wounds": 0,
+      "fateFormula": "(1-3|=2),(4-9|=3),(10|=4)",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
           "name": "Literacy",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Speak Language (High Gothic)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "High Gothic",
+          "level": "trained"
         },
         {
-          "name": "Speak Language (Low Gothic) as untrained Basic",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "to Interaction",
-          "trainingModifier": 2,
-          "specialization": ""
-        },
-        {
-          "name": "Peer(Nobility)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Low Gothic",
+          "level": "trained"
         }
       ],
       "talents": [
-        "one other Peer talent from Noted List",
-        "Peer(Nobility)"
+        {
+          "name": "Etiquette (Noble Born)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.NB00000000000001"
+        },
+        {
+          "name": "Legacy of Wealth (Noble Born)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.NB00000000000002"
+        },
+        {
+          "name": "Supremely Connected (Noble Born)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.NB00000000000003"
+        },
+        {
+          "name": "Vendetta (Noble Born)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.NB00000000000004"
+        }
       ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []
     },
-    "effectText": "-5 Willpower, +5 Fellowship. Gain Literacy, Speak Language (High Gothic), Speak Language (Low Gothic) as untrained Basic Skills. Gain +10 to Interaction Skill Tests when dealing with high authority and formal situations. Add +1 to group's Starting Profit Factor. Gain Peer(Nobility) Talent, and one other Peer talent from Noted List. However also gain some kind of powerful enemy that may make moves against you. Noted List: Academics, Adeptus Mechanicus, Administratum, Astropaths, Ecclesiarchy, Government, Mercantile, Military, or Underworld",
+    "modifiers": {
+      "characteristics": {
+        "willpower": -5,
+        "fellowship": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Characteristic Modifiers:</strong> −5 Willpower, +5 Fellowship</p><p><strong>Starting Skills:</strong> Literacy, Speak Language (High Gothic), and Speak Language (Low Gothic) are untrained Basic Skills.</p><p><strong>Starting Wounds:</strong> Noble born characters double their starting Toughness Bonus and add 1d5 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–3, begin with 2 Fate Points; on a 4–9, begin with 3 Fate Points; on a 10, begin with 4 Fate Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "27",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

@@ -1,13 +1,13 @@
 {
   "name": "Imperial World",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/rogue-trader/icons/origins/imperial-world.webp",
   "system": {
     "identifier": "imperial-world",
     "step": "homeWorld",
     "stepIndex": 1,
     "description": {
-      "value": "<p>+3 Willpower. Gain Literacy, Speak Language (High Gothic), Common Lore (Imperial Creed), Common Lore (Imperium) and Common Lore (War) as untrained Basic Skills. Suffer -5 to Forbidden Lore Tests.</p>"
+      "value": "<h2>Imperial World</h2><blockquote><p><em>\"You hail from an Imperial world, one of a million planets united by a belief in the immortal God-Emperor of Mankind. Soldier, fanatic, thief, mercenary, noble: these are some of your many possible backgrounds. Whatever your previous calling, you are now an Explorer of the void, and your adventure has only just begun.\"</em></p></blockquote><p>A bewildering variety of worlds are known to the Imperium. Hailing from hyper-technological democratic societies to grimy feudal populations, the inhabitants of countless worlds offer fealty and devotion to the God-Emperor of Mankind and the Imperial Creed taught by His servants.</p><h3>Life on an Imperial World</h3><p>The Imperium covers such an utterly vast area of the galaxy that it is impossible to conjure an image of a \"typical\" Imperial world—no such thing exists. Amongst the uncounted worlds of man, there exists endless variety. Agri-worlds are little more than vast farms, producing food for Imperial hives and legions. Mining worlds produce ore and raw minerals for use in the vast factories of the forge worlds. Cardinal worlds are ruled by the Ministorum, given over entirely to the priesthood of the Imperial Creed—the Ecclesiarchy.</p><p>The closer an Imperial world is to the centre of mankind, far from the Calixis Sector—the more important, advanced, and well-governed it is likely to be. Far-flung planets on the fringes, on the other hand, are more likely to be frontier worlds, left to their own devices for much of the time and under the constant threat of physical or spiritual attack.</p><p>Religion, superstition, and fear dominates much of society within the Imperium, and deviancy from the standards expected from a loyal servant of the God-Emperor is rarely tolerated by the powers-that-be. Common people place great faith in honest hatred to guard them against the manifold horrors of the universe and find genuine spiritual solace in the Imperial Creed of the Ministorum to uplift and protect them.</p>"
     },
     "requirements": {
       "text": "Origin Path: Home World",
@@ -15,57 +15,61 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 3,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
+      "woundsFormula": "2xTB+1d5",
+      "wounds": 0,
+      "fateFormula": "(1-8|=3),(9-10|=4)",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [
         {
-          "name": "Literacy",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Blessed Ignorance (Imperial World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.IW00000000000001"
         },
         {
-          "name": "Speak Language (High Gothic)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Hagiography (Imperial World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.IW00000000000002"
         },
         {
-          "name": "Common Lore (Imperial Creed)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Common Lore (Imperium)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Common Lore (War) as untrained Basic",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Liturgical Familiarity (Imperial World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.IW00000000000003"
         }
       ],
-      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []
     },
-    "effectText": "+3 Willpower. Gain Literacy, Speak Language (High Gothic), Common Lore (Imperial Creed), Common Lore (Imperium) and Common Lore (War) as untrained Basic Skills. Suffer -5 to Forbidden Lore Tests.",
+    "modifiers": {
+      "characteristics": {
+        "willpower": 3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Characteristic Modifiers:</strong> +3 Willpower</p><p><strong>Starting Wounds:</strong> Imperial world characters double their starting Toughness Bonus and add 1d5 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–8, begin with 3 Fate Points; on a 9-10, begin with 4 Fate Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "26-27",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

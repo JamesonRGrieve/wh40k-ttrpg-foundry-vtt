@@ -1,0 +1,82 @@
+{
+  "name": "Etiquette (Noble Born)",
+  "type": "talent",
+  "img": "icons/svg/crown.svg",
+  "system": {
+    "identifier": "etiquette-noble-born",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "27"
+    },
+    "description": {
+      "value": "<p><strong>Etiquette:</strong> Nobles are schooled in how to comport themselves in all manner of formal situations.</p><p>They gain a +10 bonus on Interaction Skill Tests when dealing with high authority and in formal situations.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain a +10 bonus on Interaction Skill Tests when dealing with high authority and in formal situations.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Noble Born Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": 10,
+            "condition": "With high authority or in formal situations",
+            "icon": "fa-user-tie"
+          },
+          {
+            "key": "deceive",
+            "value": 10,
+            "condition": "With high authority or in formal situations",
+            "icon": "fa-user-tie"
+          },
+          {
+            "key": "commerce",
+            "value": 10,
+            "condition": "With high authority or in formal situations",
+            "icon": "fa-user-tie"
+          },
+          {
+            "key": "command",
+            "value": 10,
+            "condition": "With high authority or in formal situations",
+            "icon": "fa-user-tie"
+          },
+          {
+            "key": "scrutiny",
+            "value": 10,
+            "condition": "With high authority or in formal situations",
+            "icon": "fa-user-tie"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "+10 to Interaction Skills with high authority or in formal situations"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NB00000000000001"
+}

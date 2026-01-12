@@ -1,0 +1,51 @@
+{
+  "name": "If It Bleeds, I Can Kill It (Death World)",
+  "type": "talent",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "if-it-bleeds-death-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "21"
+    },
+    "description": {
+      "value": "<p><strong>If It Bleeds, I Can Kill It:</strong> Most death worlds possess plants and beasts utterly hostile to human life, and inhabitants must find any means necessary to combat them if they are to survive. Death worlders are adept at using weapons commonly found in or fashioned from their environment.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Melee Weapon Training (Primitive) talent, allowing you to use all primitive melee weapons without penalty.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Death World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "Primitive",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Melee Weapon Training (Primitive)"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DW00000000000002"
+}

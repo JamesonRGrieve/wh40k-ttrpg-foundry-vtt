@@ -1,0 +1,51 @@
+{
+  "name": "Shipwise (Void Born)",
+  "type": "talent",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "identifier": "shipwise-void-born",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "23"
+    },
+    "description": {
+      "value": "<p><strong>Shipwise:</strong> Birthed in the depths of a voidfaring craft, the void born have a natural affinity for such vehicles.</p><p>As a result, Navigation (Stellar) (Int) and Pilot (Spacecraft) (Ag) are untrained Basic Skills (instead of Advanced Skills) for void born characters.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Navigation (Stellar) and Pilot (Spacecraft) are treated as untrained Basic Skills instead of Advanced Skills.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Void Born Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Navigation (Stellar) and Pilot (Spacecraft) become untrained Basic Skills"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VB00000000000003"
+}

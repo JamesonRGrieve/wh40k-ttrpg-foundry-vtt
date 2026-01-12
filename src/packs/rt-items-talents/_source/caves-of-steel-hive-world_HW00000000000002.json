@@ -1,0 +1,51 @@
+{
+  "name": "Caves of Steel (Hive World)",
+  "type": "talent",
+  "img": "icons/svg/ruins.svg",
+  "system": {
+    "identifier": "caves-of-steel-hive-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "25"
+    },
+    "description": {
+      "value": "<p><strong>Caves of Steel:</strong> To a hiver, surrounded at all times by metal, machinery, and industry, the lesser arcane mysteries of technology are not so strange.</p><p>Hivers treat the Tech-Use (Int) Skill as an untrained Basic Skill.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Tech-Use is treated as an untrained Basic Skill instead of an Advanced Skill.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Hive World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Tech-Use becomes untrained Basic Skill"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HW00000000000002"
+}

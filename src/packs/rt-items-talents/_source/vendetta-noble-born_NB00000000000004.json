@@ -1,0 +1,51 @@
+{
+  "name": "Vendetta (Noble Born)",
+  "type": "talent",
+  "img": "icons/svg/dagger.svg",
+  "system": {
+    "identifier": "vendetta-noble-born",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "27"
+    },
+    "description": {
+      "value": "<p><strong>Vendetta:</strong> Every noble house has its sworn enemies and rivals who would do it and its members harm. Even the protection of a Rogue Trader's mission merely forces those who wish you harm to be a bit more cautious and subtle in exacting their vengeance.</p><p>As a result, starting noble born characters have powerful enemies, perhaps in the shape of a rival noble house or some other powerful group. The details of these enemies are left to the player and the Game Master to define, working together to create a formidable threat. Whilst they do not dog the character's steps at every turn, these enemies aim to inconvenience, harm, or kill him whenever he crosses their path. The noble character, of course, is free to return the favour when it's expedient to do so.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You have powerful enemies (rival noble house or other powerful group) who will seek to harm you when opportunities arise. Work with the GM to define these enemies.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Noble Born Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Narrative trait - powerful enemies will act against character"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NB00000000000004"
+}

@@ -1,0 +1,82 @@
+{
+  "name": "Paranoid (Death World)",
+  "type": "talent",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "identifier": "paranoid-death-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "21"
+    },
+    "description": {
+      "value": "<p><strong>Paranoid:</strong> The inherently dangerous conditions of a death world encourage distrust and doubt. Death worlders tend to be slow to put their faith in anyone other than themselves and chafe against the petty strictures of a more complex society.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You suffer a −10 penalty to all Interaction Skill Tests made in formal surroundings.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Death World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": -10,
+            "condition": "In formal surroundings",
+            "icon": "fa-user-tie"
+          },
+          {
+            "key": "deceive",
+            "value": -10,
+            "condition": "In formal surroundings",
+            "icon": "fa-user-tie"
+          },
+          {
+            "key": "commerce",
+            "value": -10,
+            "condition": "In formal surroundings",
+            "icon": "fa-user-tie"
+          },
+          {
+            "key": "command",
+            "value": -10,
+            "condition": "In formal surroundings",
+            "icon": "fa-user-tie"
+          },
+          {
+            "key": "scrutiny",
+            "value": -10,
+            "condition": "In formal surroundings",
+            "icon": "fa-user-tie"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "Applies to all Interaction skills in formal settings"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DW00000000000003"
+}

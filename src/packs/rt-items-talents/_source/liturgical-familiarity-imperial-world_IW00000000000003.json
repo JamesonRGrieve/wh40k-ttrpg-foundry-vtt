@@ -1,0 +1,51 @@
+{
+  "name": "Liturgical Familiarity (Imperial World)",
+  "type": "talent",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "identifier": "liturgical-familiarity-imperial-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "27"
+    },
+    "description": {
+      "value": "<p><strong>Liturgical Familiarity:</strong> Surrounded as they are by the zealous and the faithful, Imperial citizens are accustomed to the tutelage of the Ecclesiarchy.</p><p>Imperial world characters gain Literacy (Int) and Speak Language (High Gothic) (Int) as untrained Basic Skills.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Literacy and Speak Language (High Gothic) are treated as untrained Basic Skills.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Imperial World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Literacy and Speak Language (High Gothic) become untrained Basic Skills"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IW00000000000003"
+}

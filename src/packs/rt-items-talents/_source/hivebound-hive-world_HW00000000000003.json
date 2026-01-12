@@ -1,0 +1,65 @@
+{
+  "name": "Hivebound (Hive World)",
+  "type": "talent",
+  "img": "icons/svg/city.svg",
+  "system": {
+    "identifier": "hivebound-hive-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "25"
+    },
+    "description": {
+      "value": "<p><strong>Hivebound:</strong> Hivers seldom endure the horrors of the open sky or the indignity of the great outdoors.</p><p>They suffer a −10 penalty to all Survival (Int) Tests, and whilst out of a \"proper hab\" (e.g., places without manufactured goods, solid ceilings, and electrical power) the hiver suffers a −5 penalty to all Intelligence Tests.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You suffer −10 to Survival Tests and −5 to Intelligence Tests when outside proper habitation.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Hive World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "intelligence",
+            "value": -5,
+            "condition": "Outside proper habitation",
+            "icon": "fa-tree"
+          }
+        ],
+        "skills": [
+          {
+            "key": "survival",
+            "value": -10,
+            "condition": "All Survival Tests",
+            "icon": "fa-campground"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "-10 Survival, -5 Int outside proper habs"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HW00000000000003"
+}

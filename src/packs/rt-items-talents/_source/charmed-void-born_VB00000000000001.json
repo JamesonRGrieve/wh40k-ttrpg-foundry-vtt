@@ -1,0 +1,51 @@
+{
+  "name": "Charmed (Void Born)",
+  "type": "talent",
+  "img": "icons/svg/dice-target.svg",
+  "system": {
+    "identifier": "charmed-void-born",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "23"
+    },
+    "description": {
+      "value": "<p><strong>Charmed:</strong> The void born are touched by the fickle powers of the warp, making them preternaturally lucky.</p><p>Whenever a void born character spends a Fate Point (though not if he burns one), roll a 1d10. On the roll of a natural 9, the Fate Point is not lost.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>When you spend (not burn) a Fate Point, roll 1d10. On a 9, the Fate Point is not consumed.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Void Born Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Roll 1d10 when spending Fate Point, on 9 it is not lost"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VB00000000000001"
+}

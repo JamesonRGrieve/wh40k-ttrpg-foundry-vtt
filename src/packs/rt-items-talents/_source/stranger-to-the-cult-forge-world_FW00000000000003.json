@@ -1,0 +1,64 @@
+{
+  "name": "Stranger to the Cult (Forge World)",
+  "type": "talent",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "identifier": "stranger-to-the-cult-forge-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "24"
+    },
+    "description": {
+      "value": "<p><strong>Stranger to the Cult:</strong> Although forge world born citizens know that the Emperor is their god and saviour, they see the Imperial Creed through the lens of Cult Mechanicus doctrine. As a result, they can be surprisingly—and sometimes dangerously—ignorant of the common teachings and practices of the Ecclesiarchy, often failing to offer its clerics the level of deference they expect.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You suffer a −10 penalty on Tests involving knowledge of the Imperial Creed and a −5 penalty on Fellowship Tests to interact with members of the Ecclesiarchy in formal settings.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Forge World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "commonLoreImperialCreed",
+            "value": -10,
+            "condition": "Knowledge of Imperial Creed",
+            "icon": "fa-book"
+          },
+          {
+            "key": "fellowship",
+            "value": -5,
+            "condition": "With Ecclesiarchy in formal settings",
+            "icon": "fa-church"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "-10 to Imperial Creed knowledge, -5 Fellowship with Ecclesiarchy"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FW00000000000003"
+}

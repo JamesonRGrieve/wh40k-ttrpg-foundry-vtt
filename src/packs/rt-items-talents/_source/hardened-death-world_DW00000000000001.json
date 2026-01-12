@@ -1,0 +1,51 @@
+{
+  "name": "Hardened (Death World)",
+  "type": "talent",
+  "img": "icons/svg/skull.svg",
+  "system": {
+    "identifier": "hardened-death-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "21"
+    },
+    "description": {
+      "value": "<p><strong>Hardened:</strong> Death worlders are accustomed to violence. In addition, many death worlds contain many venomous predators.</p><p>This talent is gained during character creation from the Death World origin. You must choose either Jaded or Resistance (Poisons) when you take this talent.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Choose one: Gain the Jaded talent (immune to mundane horrors and fear effects from natural sources) OR Resistance (Poisons) talent (+10 to resist poison effects).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Death World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "This talent represents the choice between Jaded or Resistance (Poisons). The specific choice should be noted in the specialization field."
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DW00000000000001"
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Credo Omnissiah (Forge World)",
+  "type": "talent",
+  "img": "icons/svg/cogwheel.svg",
+  "system": {
+    "identifier": "credo-omnissiah-forge-world",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "24"
+    },
+    "description": {
+      "value": "<p><strong>Credo Omnissiah:</strong> Rather than being fully indoctrinated into the Imperial Cult, even the lowliest member of a forge world's society is brought up to properly venerate the spirits of the machine and taught the basic rites of tech-propitiation.</p><p>All forge world characters begin with the Technical Knock Talent.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Technical Knock talent, allowing you to perform basic repairs and appease machine spirits.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Forge World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Technical Knock talent"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FW00000000000001"
+}
