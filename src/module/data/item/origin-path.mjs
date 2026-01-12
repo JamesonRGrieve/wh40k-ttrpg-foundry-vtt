@@ -35,6 +35,23 @@ export default class OriginPathData extends ItemDataModel.mixin(
       // Step order (for display)
       stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, max: 5, integer: true }),
       
+      // XP cost (for Into The Storm advanced origins)
+      xpCost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+      
+      // Source book information
+      source: new fields.SchemaField({
+        book: new fields.StringField({ required: false, blank: true }),
+        page: new fields.StringField({ required: false, blank: true }),
+        custom: new fields.StringField({ required: false, blank: true })
+      }),
+      
+      // Flags for alternate origins
+      isAdvancedOrigin: new fields.BooleanField({ required: true, initial: false }),
+      replacesOrigins: new fields.ArrayField(
+        new fields.StringField({ required: true }),
+        { required: true, initial: [] }
+      ),
+      
       // Requirements to select this origin
       requirements: new fields.SchemaField({
         text: new fields.StringField({ required: false, blank: true }),
@@ -129,16 +146,14 @@ export default class OriginPathData extends ItemDataModel.mixin(
         // Choices the player must make
         choices: new fields.ArrayField(
           new fields.SchemaField({
-            type: new fields.StringField({
-              required: true,
-              choices: ["skill", "talent", "characteristic", "equipment"]
-            }),
+            type: new fields.StringField({ required: true }),
             label: new fields.StringField({ required: true }),
             options: new fields.ArrayField(
-              new fields.StringField({ required: true }),
+              new fields.ObjectField({ required: true }),
               { required: true }
             ),
-            count: new fields.NumberField({ required: true, initial: 1, min: 1 })
+            count: new fields.NumberField({ required: true, initial: 1, min: 1 }),
+            xpCost: new fields.NumberField({ required: false, initial: 0, min: 0 })
           }),
           { required: true, initial: [] }
         )
@@ -180,6 +195,22 @@ export default class OriginPathData extends ItemDataModel.mixin(
    */
   get stepLabel() {
     return game.i18n.localize(`RT.OriginPath.${this.step.capitalize()}`);
+  }
+
+  /**
+   * Is this an advanced origin from Into The Storm?
+   * @type {boolean}
+   */
+  get isAdvanced() {
+    return this.isAdvancedOrigin || this.xpCost > 0;
+  }
+
+  /**
+   * Get display string for XP cost.
+   * @type {string}
+   */
+  get xpCostLabel() {
+    return this.xpCost > 0 ? `${this.xpCost} XP` : "—";
   }
 
   /**
