@@ -1,13 +1,13 @@
 {
   "name": "Penal World",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/rogue-trader/icons/origins/penal-world.webp",
   "system": {
     "identifier": "penal-world",
     "step": "homeWorld",
     "stepIndex": 1,
     "description": {
-      "value": "<p>-5 Willpower, +5 Perception, +5 Toughness, -5 Fellowship. Gain Security as Untrained Basic Skill and either Deceive or Intimidate as Trained Skill. Gain Peer (Underworld) and Light Sleeper Talents. When making Acquisiton Tests, once per session can improve availability by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity. List: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military</p>"
+      "value": "<h2>Penal World</h2><blockquote><p><em>\"Within the Imperium, crime can be so prevalent that entire worlds are given over to the dumping of humanity's dregs. Inmates—or just plain unlucky inhabitants—scrape by on worlds that barely support indigenous life, let alone tide of humanity dumped upon it. Not that it matters, as everyone from your world is considered to be a devious, lying criminal and the planet seen as sprawling den of thieves.\"</em></p></blockquote><p>In the Imperium, crime is widespread enough that entire worlds are given over to incarcerating the refuse of society. On these Penal Worlds live the criminals of the Imperium, the guards that keep them there, and any luckless denizen unfortunate enough to have been born there. Penal worlds are, very often, barely-habitable planets. Here, the criminals labour and toil at various menial tasks while serving out their sentences; and only a few parole out. On some worlds, the worst criminals (those whose crimes aren't severe enough to warrant death) might be segregated from the rest, but this practice varies from world to world. Thus, murderers and rapists might mix with petty thieves and con-men. From this melting pot comes a brutal society, where survival comes only when one forgets morality and is willing to do whatever is necessary to make it to the next day.</p><p>These worlds are a dichotomy; on one hand they are used to dump undesirables upon, and on the other they make excellent places for a Rogue Trader to round up expendable crew.</p><h3>Life on a Penal World</h3><p>A penal world is a planet used to exile prisoners. Within the Calixis Sector, inmates sentenced to penal worlds are marked with a barcode tattoo that is typically placed on their neck, forehead, or other easily-spotted area of the body. Here, many inmates die of disease, starvation, infection, the environment, an escape attempt, an encounter with the brutal enforcer-guards, or one of a hundred other maladies. Inmates are sentenced far away from their home worlds and most never see that world again. Inmates condemned to a penal world are those found guilty of crimes that don't warrant execution. Some feel that those who are executed are the lucky ones, for those who are sentenced to penal worlds are sent to hellish places where death is slow in coming. The only denizens that have any real freedoms whatsoever are the warden and his guards.</p><p>On many penal worlds the planetary governor is also the prison's warden, and his authority is absolute. The warden and his guards often brutalise the inmate population, adding to their considerable misery and mortality. The populace tends to be hardened, ruthless, shifty, and untrustworthy. However, they can also be resourceful and possess a low cunning. They are haunted individuals who are witness to the kind of atrocity most will never see.</p><h3>Penal World Characters</h3><p>You have been sentenced for crimes against the Imperium of Man—or maybe your parents were, and you were just unfortunate enough to be born in a hellhole. You have learned to live with fear, looking over your shoulder for the brutal guards that stalked you through the dank pits and filthy shantytowns of your home. You've learned to be resourceful and cunning, but you are also considered a criminal—even if you didn't start out that way. As such, you are thought to be untrustworthy, and perhaps it is even true. However, trying to survive has also hardened you, and made you ruthless. You have witnessed your planet serve as dumping ground for the numerous Rogue Traders and Chartist captains to leave their wretched filth behind, and as a place for salvation when they return to fill their holds with new crew and take them away from their wretched existence.</p>"
     },
     "requirements": {
       "text": "Origin Path: Home World",
@@ -15,67 +15,85 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 5,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 5,
-          "willpower": -5,
-          "fellowship": -5,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "2xTB+1d5+1",
+      "wounds": 0,
+      "fateFormula": "(1-6|=2),(7-9|=3),(10|=4)",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
-          "name": "Security as Untrained Basic",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Peer (Underworld)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Light Sleeper",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d5 Insanity",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Security",
+          "specialization": "",
+          "level": "untrained"
         }
       ],
-      "talents": [],
+      "talents": [
+        {
+          "name": "Syndicate (Penal World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.PW00000000000001"
+        },
+        {
+          "name": "Criminal (Penal World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.PW00000000000002"
+        },
+        {
+          "name": "Nightmares (Penal World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.PW00000000000003"
+        },
+        {
+          "name": "Underground Resources (Penal World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.PW00000000000004"
+        }
+      ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [
-        {
-          "name": "Special Ability",
-          "description": "by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity"
-        }
-      ],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "skill",
-          "label": "Choose from: Deceive, Intimidate as Trained Skill",
+          "label": "Choose one: Deceive or Intimidate as Trained Skill",
           "options": [
             "Deceive",
-            "Intimidate as Trained Skill"
+            "Intimidate"
           ],
           "count": 1
         }
       ]
     },
-    "effectText": "-5 Willpower, +5 Perception, +5 Toughness, -5 Fellowship. Gain Security as Untrained Basic Skill and either Deceive or Intimidate as Trained Skill. Gain Peer (Underworld) and Light Sleeper Talents. When making Acquisiton Tests, once per session can improve availability by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity. List: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military",
+    "modifiers": {
+      "characteristics": {
+        "willpower": -5,
+        "perception": 5,
+        "toughness": 5,
+        "fellowship": -5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Characteristic Modifiers:</strong> −5 Willpower, +5 Perception, +5 Toughness, −5 Fellowship</p><p><strong>Starting Wounds:</strong> Penal world characters double their starting Toughness Bonus and add 1d5+1 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–6, begin with 2 Fate Points; on a 7–9, begin with 3 Fate Points; on a 10, begin with 4 Fate Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Into the Storm",
+      "page": "14",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

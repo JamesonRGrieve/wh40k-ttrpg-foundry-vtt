@@ -1,13 +1,13 @@
 {
   "name": "Fortress World",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/rogue-trader/icons/origins/fortress-world.webp",
   "system": {
     "identifier": "fortress-world",
     "step": "homeWorld",
     "stepIndex": 1,
     "description": {
-      "value": "<p>+5 Ballistic Skill, +5 Willpower, -5 Intelligence, -5 Fellowship. Gain Secret Tongue (Military) and Common Lore (War) as Trained Skills. Gain one Appropriate Hatred Talent for an enemy that the Fortress world often fought against. Gain Basic Weapon Training (Las or SP) and Nerves of Steel Talent. Suffer -5 to Social Interaction Tests regarding non-combat topics.</p>"
+      "value": "<h2>Fortress World</h2><blockquote><p><em>\"With the Imperium in a constant state of war, some worlds are designated as Fortress worlds to act as bastions against the enemies of the God-Emperor. You are part of that defence, keeping the evil outside the gates from breaking through. This has made you part of the glory of the Imperium's mighty forces of war.\"</em></p></blockquote><p>There are few sectors within the Imperium of Man free from constant war. To contain the greatest threats, whole worlds have been established to act as bastions. Called fortress worlds, the entire populace is immersed in warfare; they constantly train for the day they may be called upon to defend the Imperium, and they take their duty very seriously. Fortress worlds are established as bulwarks against the enemy. Every citizen is a soldier, trained to fight from the moment they can handle a weapon. Perhaps the best-known fortress world is the planet of Cadia—a world standing at the end of the Cadian Gate against the forces of the Eye of Terror. The Imperial Guard's best and most celebrated regiments often come from fortress worlds.</p><h3>Life on a Fortress World</h3><p>Fortress worlds are uncommon, but necessary, planets. They are established to act as military strongholds, staging points, and physical deterrents. Worlds like these are as much \"roadblock\" as they are bastion; they are often established on habitable planets and built up for warfare. Linked together, they are able to form blockades used to interdict the enemy and prevent them from spreading out into the Imperium.</p><p>Life on a fortress world is steeped in military discipline and doctrine. From the moment the citizens wake until they go to sleep they train and operate as a military unit. All citizens of fortress worlds prepare for the day they are called upon to push back the darkness that sits beyond their crenelated walls. Cities are giant fortresses studded with artillery weapons, and industry is focused almost exclusively on manufacturing machines of war. Those old enough to enlist in the Imperial Guard or Planetary Defence Forces are often required to do so, and even those too young or infirm find ways to serve. It's not uncommon to have whole generations of a family in service to the Imperium at one time, and many such Imperial Guard regiments boast a rich and proud history.</p><h3>Fortress World Characters</h3><p>From the moment you could walk and hold a weapon, every waking moment of your life has been spent training to fight and kill the enemies of the God-Emperor. You know the basics of combat and military tactics. You are disciplined, honourable, loyal, and have the highest regard for integrity. However, the military doctrine that has surrounded you your whole life has also made you inflexible and dogmatic. You grew up in a fortress-city; your neighbours all served to keep the mighty bulwark of your world standing against the enemy. As a member of a Rogue Trader's crew, you may serve as the ship's Master-at-Arms, or you may command a ship's mighty armaments and military compliments as a Rogue Trader. In any case you know your knowledge and skills in warfare are put to good use.</p>"
     },
     "requirements": {
       "text": "Origin Path: Home World",
@@ -15,62 +15,75 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 5,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": -5,
-          "perception": 0,
-          "willpower": 5,
-          "fellowship": -5,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "2xTB+1d5+1",
+      "wounds": 0,
+      "fateFormula": "(1-9|=3),(10|=4)",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
-          "name": "Secret Tongue (Military)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Secret Tongue",
+          "specialization": "Military",
+          "level": "trained"
         },
         {
-          "name": "Common Lore (War) as Trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "one Appropriate Hatred",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Basic Weapon Training (Las or SP)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Nerves of Steel",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Las or SP",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "War",
+          "level": "trained"
         }
       ],
-      "talents": [],
+      "talents": [
+        {
+          "name": "Hated Enemy (Fortress World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FO00000000000001"
+        },
+        {
+          "name": "Constant Combat Training (Fortress World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FO00000000000002"
+        },
+        {
+          "name": "Steel Nerve (Fortress World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FO00000000000003"
+        }
+      ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []
     },
-    "effectText": "+5 Ballistic Skill, +5 Willpower, -5 Intelligence, -5 Fellowship. Gain Secret Tongue (Military) and Common Lore (War) as Trained Skills. Gain one Appropriate Hatred Talent for an enemy that the Fortress world often fought against. Gain Basic Weapon Training (Las or SP) and Nerves of Steel Talent. Suffer -5 to Social Interaction Tests regarding non-combat topics.",
+    "modifiers": {
+      "characteristics": {
+        "ballisticSkill": 5,
+        "willpower": 5,
+        "intelligence": -5,
+        "fellowship": -5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Characteristic Modifiers:</strong> +5 Ballistic Skill, +5 Willpower, −5 Intelligence, −5 Fellowship</p><p><strong>Starting Wounds:</strong> Fortress world characters double their starting Toughness Bonus and add 1d5+1 to the result to determine their starting wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–9, begin with 3 Fate Points; on a 10, begin with 4 Fate Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Into the Storm",
+      "page": "12",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

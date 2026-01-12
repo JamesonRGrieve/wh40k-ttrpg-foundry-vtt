@@ -7,7 +7,7 @@
     "step": "birthright",
     "stepIndex": 2,
     "description": {
-      "value": "<p>+3 Intelligence or +3 Fellowship, -3 Toughness. Gain Logic as Trained Skill and Peer (Academic) Talent.</p>"
+      "value": "<h2>Savant</h2><blockquote><p><em>\"To the scholar's ear, there is no worse sound than the tearing of parchment. It always marks a desecration of one sort or another, be it a priceless work lost or a savant destroying his own flawed labours in disgust.\"</em></p></blockquote><p>You know this because the murmuring of savants, clicking of lexmachinery, and scent of ink and dust have been a part of your life for as long as you can recall. Apprentices are brought young into the Adept's trade, for there is much to learn and the human span holds little time to learn it in.</p><p>Apprentices sit in attendance at meeting after meeting between elder savants, bathed in the exchange of knowledge until they know how to learn and the correct knowledge has been drilled into them. All the galaxy is packed with knowledge, and even the smallest drop of it would fill the minds of a world of savants to bursting. Yet you derive much comfort from learning—even though you could never personally know more than a miniscule fraction of all there is to know.</p>"
     },
     "requirements": {
       "text": "Origin Path: Birthright",
@@ -15,42 +15,71 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": -3,
-          "agility": 0,
-          "intelligence": 3,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 3,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Logic as Trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Logic",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "skill_or_talent",
+          "label": "Choose Logic skill or Peer talent",
+          "options": [
+            {
+              "label": "Logic (Int) as trained Basic Skill",
+              "value": "skill:logic"
+            },
+            {
+              "label": "Peer (Academic) Talent",
+              "value": "talent:peer_academic"
+            }
+          ],
+          "count": 1
+        },
+        {
+          "type": "characteristic",
+          "label": "Choose one characteristic bonus",
+          "options": [
+            {
+              "label": "+3 Intelligence",
+              "value": "intelligence"
+            },
+            {
+              "label": "+3 Fellowship",
+              "value": "fellowship"
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "+3 Intelligence or +3 Fellowship, -3 Toughness. Gain Logic as Trained Skill and Peer (Academic) Talent.",
+    "modifiers": {
+      "characteristics": {
+        "toughness": -3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> You gain your choice of Logic (Int) as a trained Basic skill or the Peer (Academic) Talent. You also gain your choice of +3 Intelligence or +3 Fellowship, but you suffer −3 Toughness.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "29",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

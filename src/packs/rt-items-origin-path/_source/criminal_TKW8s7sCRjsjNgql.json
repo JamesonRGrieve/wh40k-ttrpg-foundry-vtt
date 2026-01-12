@@ -7,7 +7,7 @@
     "step": "lureOfTheVoid",
     "stepIndex": 3,
     "description": {
-      "value": "<p>1. Wanted Fugitive: Gain Enemy (Adeptus Arbites) and Peer (Underworld) Talents<br>2. Hunted by a Crime Baron: +3 Perception. Gain Enemy (Underworld) Talent<br>3. Judged and Found Wanting: -5 Fellowship. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).</p>"
+      "value": "<h2>Criminal</h2><blockquote><p><em>\"The wheels of Imperial justice turn slowly, but they will surely grind to a pulp any life caught in their path. To make matters worse, there are traps in the criminal underworld that will lead to far worse consequences than years of hard labour in an Imperial penal colony.\"</em></p></blockquote><p>You are an individual declared guilty by Imperial law or called outcast by the crime baron you once served and have no recourse but to leave the life you once knew. The black paths of smugglers and renegades that winds behind the facade of Imperial society offer a dangerous refuge for those one step ahead of justice, as well as those so damaged by past punishment that they could never rejoin a law-abiding citizenry.</p>"
     },
     "requirements": {
       "text": "Origin Path: Lure of the Void",
@@ -15,56 +15,75 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 3,
-          "willpower": 0,
-          "fellowship": -5,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Enemy (Adeptus Arbites)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Peer (Underworld)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Enemy (Underworld)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "or 300xp for Good)",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "s<br>2",
-        "<br>3",
-        "Enemy (Underworld)"
-      ],
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "criminal_path",
+          "label": "Choose one criminal background",
+          "options": [
+            {
+              "label": "Wanted Fugitive: Enemy (Adeptus Arbites) and Peer (Underworld)",
+              "value": "fugitive",
+              "description": "You gain the Enemy (Adeptus Arbites) and Peer (Underworld) Talents.",
+              "grants": {
+                "talents": ["Enemy (Adeptus Arbites)", "Peer (Underworld)"]
+              }
+            },
+            {
+              "label": "Hunted by a Crime Baron: +3 Perception and Enemy (Underworld)",
+              "value": "hunted",
+              "description": "You gain +3 Perception and the Enemy (Underworld) Talent.",
+              "grants": {
+                "characteristics": {
+                  "perception": 3
+                },
+                "talents": ["Enemy (Underworld)"]
+              }
+            },
+            {
+              "label": "Judged and Found Wanting: −5 Fellowship and poor bionic",
+              "value": "judged",
+              "description": "You suffer −5 Fellowship. You gain one poor-Craftsmanship bionic limb or implant (you may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship).",
+              "grants": {
+                "characteristics": {
+                  "fellowship": -5
+                }
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. Wanted Fugitive: Gain Enemy (Adeptus Arbites) and Peer (Underworld) Talents\n2. Hunted by a Crime Baron: +3 Perception. Gain Enemy (Underworld) Talent\n3. Judged and Found Wanting: -5 Fellowship. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Wanted Fugitive:</strong> You gain the Enemy (Adeptus Arbites) and Peer (Underworld) Talents.</li><li><strong>Hunted by a Crime Baron:</strong> You gain +3 Perception and the Enemy (Underworld) Talent.</li><li><strong>Judged and Found Wanting:</strong> You suffer −5 Fellowship. You gain one poor-Craftsmanship bionic limb or implant (you may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship).</li></ul>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

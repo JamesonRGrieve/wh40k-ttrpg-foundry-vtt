@@ -7,7 +7,7 @@
     "step": "lureOfTheVoid",
     "stepIndex": 3,
     "description": {
-      "value": "<p>1. Duty to the Throne: +3 Willpower. -10 to Interaction Skills when dealing with sources outside of the Imperium. Gain Armour of Contempt Talent if you have 40+ Willpower.<br>2. Duty to Humanity: +3 Perception or +3 Intelligence. -1 to starting Profit Factor.<br>3. Duty to your Dynasty: -3 Toughness. Gain Rival (Another Rogue Trader Family). +1 to starting Profit Factor.</p>"
+      "value": "<h2>Duty Bound</h2><blockquote><p><em>\"Only the ignorant believe that duty is a prison forced on others by those in power. True duty arises spontaneously from the soul, a call to service and struggle that should be neither shirked nor denied.\"</em></p></blockquote><p>It is your faith and your honour that impels you to places and labours far beyond the imagining of those that grub in the dirt of self-interest. Whether you serve the Aquila, strive to guide and guard the numberless masses of mankind, or serve the honour and calling of your blood, you know well the great trials and far journeys that lie ahead, and intend to see them through to the last.</p><p>Your sense of duty defines you, and you would rather die than abandon those you are sworn to protect or the ideals you hold sacred.</p>"
     },
     "requirements": {
       "text": "Origin Path: Lure of the Void",
@@ -15,44 +15,73 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": -3,
-          "agility": 0,
-          "intelligence": 3,
-          "perception": 3,
-          "willpower": 3,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Armour of Contempt",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Rival (Another Rogue Trader Family)",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "if you have 40+ Willpower"
-      ],
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "duty_path",
+          "label": "Choose one duty path",
+          "options": [
+            {
+              "label": "Duty to the Throne: +3 Willpower, Armour of Contempt, −10 Interaction vs non-Imperium",
+              "value": "throne",
+              "description": "You gain +3 Willpower and (if you meet the WP 40 prerequisite) the Armour of Contempt Talent. You suffer a −10 penalty to Interaction Skill Tests when dealing with any source outside of the Imperium (e.g., aliens and traitors).",
+              "grants": {
+                "characteristics": {
+                  "willpower": 3
+                }
+              }
+            },
+            {
+              "label": "Duty to Humanity: +3 Perception or Intelligence, −1 Profit Factor",
+              "value": "humanity",
+              "description": "You gain your choice of +3 Perception or +3 Intelligence. You suffer a −1 to your group's beginning Profit Factor.",
+              "grants": {}
+            },
+            {
+              "label": "Duty to Your Dynasty: Rival (Rogue Trader), −3 Toughness, +1 Profit Factor",
+              "value": "dynasty",
+              "description": "You gain the Rival (Rogue Trader family) Talent and suffer −3 Toughness. You gain a bonus of +1 to your group's beginning Profit Factor.",
+              "grants": {
+                "characteristics": {
+                  "toughness": -3
+                },
+                "talents": ["Rival (Rogue Trader Family)"]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. Duty to the Throne: +3 Willpower. -10 to Interaction Skills when dealing with sources outside of the Imperium. Gain Armour of Contempt Talent if you have 40+ Willpower.\n2. Duty to Humanity: +3 Perception or +3 Intelligence. -1 to starting Profit Factor.\n3. Duty to your Dynasty: -3 Toughness. Gain Rival (Another Rogue Trader Family). +1 to starting Profit Factor.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Duty to the Throne:</strong> You gain +3 Willpower and (if you meet the WP 40 prerequisite) the Armour of Contempt Talent. You suffer a −10 penalty to Interaction Skill Tests when dealing with any source outside of the Imperium (e.g., aliens and traitors).</li><li><strong>Duty to Humanity:</strong> You gain your choice of +3 Perception or +3 Intelligence. You suffer a −1 to your group's beginning Profit Factor.</li><li><strong>Duty to Your Dynasty:</strong> You gain the Rival (Rogue Trader family) Talent and suffer −3 Toughness. You gain a bonus of +1 to your group's beginning Profit Factor.</li></ul>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

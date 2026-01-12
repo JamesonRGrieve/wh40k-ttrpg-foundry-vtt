@@ -219,7 +219,10 @@
       "Tier0": "—",
       "Tier1": "Tier 1",
       "Tier2": "Tier 2",
-      "Tier3": "Tier 3"
+      "Tier3": "Tier 3",
+      "Grants": "Grants",
+      "GrantedBy": "Granted by {source}",
+      "AutoGranted": "Auto-Granted"
     },
     "TraitCategory": {
       "General": "General",

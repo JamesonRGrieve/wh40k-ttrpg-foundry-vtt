@@ -14,6 +14,11 @@
                 <div class="rt-row-main">
                     <button type="button" class="rt-row-name" data-action="itemEdit" data-item-id="{{talent.id}}" title="Click to open item sheet">
                         {{talent.fullName}}
+                        {{#if talent.flags.rogue-trader.autoGranted}}
+                        <span class="rt-granted-badge" title="Granted by {{talent.flags.rogue-trader.grantedBy}}">
+                            <i class="fas fa-gift"></i>
+                        </span>
+                        {{/if}}
                     </button>
                     
                     <div class="rt-row-meta">
@@ -28,6 +33,11 @@
                         {{#if talent.system.stackable}}
                         <span class="rt-meta-item rt-meta-rank">
                             Rank {{talent.system.rank}}
+                        </span>
+                        {{/if}}
+                        {{#if talent.system.hasGrants}}
+                        <span class="rt-meta-item rt-meta-grants" title="This talent grants other abilities">
+                            <i class="fas fa-gift"></i> Grants
                         </span>
                         {{/if}}
                     </div>

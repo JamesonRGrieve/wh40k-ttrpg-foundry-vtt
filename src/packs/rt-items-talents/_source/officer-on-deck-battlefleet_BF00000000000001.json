@@ -1,0 +1,63 @@
+{
+  "name": "Officer on Deck (Battlefleet)",
+  "type": "talent",
+  "img": "icons/svg/sword-cross.svg",
+  "system": {
+    "identifier": "officer-on-deck-battlefleet",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "13"
+    },
+    "description": {
+      "value": "<p><strong>Officer on Deck:</strong> Battlefleet characters are generally officers, and as such they are used to giving orders and having those orders obeyed. All Battlefleet characters gain a +5 bonus to all Command Tests while aboard any spacecraft.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain +5 to Command Tests while aboard any spacecraft.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Battlefleet Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "condition": "Command Tests aboard spacecraft",
+            "modifier": 5,
+            "type": "Fellowship Test"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "+5 to Command Tests aboard spacecraft",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BF00000000000001"
+}

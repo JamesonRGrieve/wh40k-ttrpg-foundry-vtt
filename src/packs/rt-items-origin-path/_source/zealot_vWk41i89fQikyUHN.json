@@ -7,7 +7,7 @@
     "step": "lureOfTheVoid",
     "stepIndex": 3,
     "description": {
-      "value": "<p>1. Blessed Scars: +10 to Intimidate Tests, -10 to Charm Tests. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).<br>2. Unnerving Clarity: +5 Willpower, -5 Fellowship or 1d10 Insanity.<br>3. Favoured of the Faithful: +5 Fellowship, -5 Toughness. Gain Peer (Ecclesiarchy).</p>"
+      "value": "<h2>Zealot</h2><blockquote><p><em>\"You possess faith so great that it has carried you far beyond the mundane life that would otherwise have been your lot. Whether it is something that has always been a part of you or was born in you from amidst a battlefield or came to you in a revelation, where others merely believe, you have certainty.\"</em></p></blockquote><p>It is this faith that has led you on a pilgrim's path to the stars, where you will bring the God-Emperor's will to the unbeliever and the needy, to protect the righteous and punish the enemies of mankind.</p><p>Your conviction burns with a fierce intensity that can inspire allies and terrify foes. You have seen the light of the Emperor's truth, and you will not rest until all the galaxy basks in His glory—or is cleansed by righteous fire.</p>"
     },
     "requirements": {
       "text": "Origin Path: Lure of the Void",
@@ -15,42 +15,74 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": -5,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 5,
-          "fellowship": 5,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "or 300xp for Good)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Peer (Ecclesiarchy)",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "zealot_path",
+          "label": "Choose one zealot background",
+          "options": [
+            {
+              "label": "Blessed Scars: +10 Intimidate, −10 Charm, poor bionic",
+              "value": "scars",
+              "description": "You gain +10 to Intimidate Tests and −10 to Charm Tests, and one poor-Craftsmanship bionic (you may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship).",
+              "grants": {}
+            },
+            {
+              "label": "Unnerving Clarity: +5 Willpower, −5 Fellowship or 1d10 Insanity",
+              "value": "clarity",
+              "description": "You gain +5 Willpower. You also suffer your choice of −5 Fellowship or 1d10 Insanity Points.",
+              "grants": {
+                "characteristics": {
+                  "willpower": 5
+                }
+              }
+            },
+            {
+              "label": "Favoured of the Faithful: +5 Fellowship, −5 Toughness, Peer (Ecclesiarchy)",
+              "value": "favoured",
+              "description": "You gain +5 Fellowship and the Peer (Ecclesiarchy) Talent. You suffer −5 Toughness.",
+              "grants": {
+                "characteristics": {
+                  "fellowship": 5,
+                  "toughness": -5
+                },
+                "talents": ["Peer (Ecclesiarchy)"]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. Blessed Scars: +10 to Intimidate Tests, -10 to Charm Tests. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).\n2. Unnerving Clarity: +5 Willpower, -5 Fellowship or 1d10 Insanity.\n3. Favoured of the Faithful: +5 Fellowship, -5 Toughness. Gain Peer (Ecclesiarchy).",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Blessed Scars:</strong> You gain +10 to Intimidate Tests and −10 to Charm Tests, and one poor-Craftsmanship bionic (you may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship).</li><li><strong>Unnerving Clarity:</strong> You gain +5 Willpower. You also suffer your choice of −5 Fellowship or 1d10 Insanity Points.</li><li><strong>Favoured of the Faithful:</strong> You gain +5 Fellowship and the Peer (Ecclesiarchy) Talent. You suffer −5 Toughness.</li></ul>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

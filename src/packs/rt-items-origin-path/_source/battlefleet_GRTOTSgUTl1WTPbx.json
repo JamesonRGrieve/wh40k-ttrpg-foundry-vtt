@@ -1,13 +1,13 @@
 {
   "name": "Battlefleet",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/rogue-trader/icons/origins/battlefleet.webp",
   "system": {
     "identifier": "battlefleet",
     "step": "homeWorld",
     "stepIndex": 1,
     "description": {
-      "value": "<p>+5 Willpower, +3 Fellowship, -5 Perception. Gain Common Lore (Imperial Navy),  Speak Language (Battlefleet War Cant) and either Navigation (Stellar) or Pilot(Space Craft) as Trained skills. Gain +5 to all Command Tests. Zero/Low Gravity Environments are not Difficult Terrain, and don&#x27;t get space travel sickness. Suffer -2 to Initiative and Double penalty for firing weapons at Long Range or Greater unless inside confined space.</p>"
+      "value": "<h2>Battlefleet</h2><blockquote><p><em>\"The Battlefleet serves as a cornerstone of the Imperium's mighty war machine. You are descended from a long and noble line of naval families and warship clans. As a member of the Battlefleet of the Imperial Navy you have a proud lineage—you are mankind's shield against the darkness of the void.\"</em></p></blockquote><p>The great battlefleets of the Imperial Navy are among the most ordered and disciplined organizations in the Imperium. The men and women of the Imperial Navy's officer class stand apart, even from other Void Born. They have their own culture, and descend from a long and noble line of naval families and ship clans that can trace their lineage back millennia. It is with great distinction that these members serve the Golden Throne, persecuting renegades and pirates in the name of God-Emperor of Mankind. Many battlefleet members can trace their origins to the rulers of worlds that administer the battlefleets' ships. Here their families collect and organise battle-won wealth, judiciously managing the spoils of war so that the great battlefleets may continue to serve the God-Emperor with distinction and honour.</p><h3>Life in the Battlefleet</h3><p>The men and women of the Imperial Battlefleets are a proud, martially-minded people with a strong sense of honour. Crews live together on ship, eat together, and face the enemies of the Imperium together. Since they are trained from birth, they have knowledge of shipboard life that surpasses many of the most knowledgeable void-born. From the moment they are able, the people serving the Battlefleet are taught how to move about in zero gravity, deal with ship-board emergencies, and handle warp travel. As they mature, they progress on to more complicated pursuits such as learning ship-based weaponry, spatial navigation, and basic naval tactics. They learn the history of their ship and their Battlefleet, and they learn the pride that comes from being among the Emperor's finest.</p><p>Members of the Battlefleets are a diverse and varied lot, but they have a few things in common with each other. They almost universally respect duty, loyalty, and integrity, and show great strength of character. Conversely, they despise those who show weakness, deceit, and those who are generally lazy and inconsistent. Compared to the Void Born of Chartist and trade vessels, they have a larger physical build, the result of living in more normal gravity conditions than that of their counterparts. Members of the battlefleets are also more respected for their role as humanity's protectors among the stars.</p><h3>Battlefleet Characters</h3><p>You were born to a life aboard ship. Nothing stirs your blood more than sailing the void or facing pirate ships with gun batteries locked. Yours is a tradition of bravery, honour, sacrifice, and adventure. The void is where you truly feel alive. You have grown up within the confines of the Battlefleet and as such you are confident, arrogant, loud, and brash—with the skills to back it up. You see yourself as born leader and commander, and a Rogue Trader's ship offers both a desired challenge and a chance to write your legacy amongst the stars.</p>"
     },
     "requirements": {
       "text": "Origin Path: Home World",
@@ -15,57 +15,74 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": -5,
-          "willpower": 5,
-          "fellowship": 3,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "2xTB+1d5",
+      "wounds": 0,
+      "fateFormula": "(1-6|=3),(7-10|=4)",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
-          "name": "Common Lore (Imperial Navy)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "Imperial Navy",
+          "level": "trained"
         },
         {
-          "name": "Speak Language (Battlefleet War Cant)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "to all Command Tests",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Battlefleet War Cant",
+          "level": "trained"
         }
       ],
-      "talents": [],
+      "talents": [
+        {
+          "name": "Officer on Deck (Battlefleet)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.BF00000000000001"
+        },
+        {
+          "name": "Void-Born Ancestry (Battlefleet)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.BF00000000000002"
+        },
+        {
+          "name": "Ship-Bound Fighter (Battlefleet)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.BF00000000000003"
+        }
+      ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": [
-        {
-          "type": "skill",
-          "label": "Choose from: Navigation (Stellar), Pilot(Space Craft) as Trained skills",
-          "options": [
-            "Navigation (Stellar)",
-            "Pilot(Space Craft) as Trained skills"
-          ],
-          "count": 1
-        }
-      ]
+      "choices": []
     },
-    "effectText": "+5 Willpower, +3 Fellowship, -5 Perception. Gain Common Lore (Imperial Navy),  Speak Language (Battlefleet War Cant) and either Navigation (Stellar) or Pilot(Space Craft) as Trained skills. Gain +5 to all Command Tests. Zero/Low Gravity Environments are not Difficult Terrain, and don't get space travel sickness. Suffer -2 to Initiative and Double penalty for firing weapons at Long Range or Greater unless inside confined space.",
+    "modifiers": {
+      "characteristics": {
+        "willpower": 5,
+        "fellowship": 3,
+        "perception": -5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Characteristic Modifiers:</strong> +5 Willpower, +3 Fellowship, −5 Perception</p><p><strong>Starting Wounds:</strong> Battlefleet characters double their starting Toughness Bonus and add 1d5 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–6, begin with 3 Fate Points; on a 7–10, begin with 4 Fate Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Into the Storm",
+      "page": "13",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

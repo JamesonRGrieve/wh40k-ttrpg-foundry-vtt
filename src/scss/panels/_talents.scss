@@ -167,6 +167,32 @@
   font-weight: 600;
 }
 
+.rt-meta-grants {
+  color: $rt-color-gold;
+  font-weight: 600;
+}
+
+// Granted badge (inline with talent name)
+.rt-granted-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 2px 6px;
+  background: linear-gradient(135deg, 
+    rgba($rt-color-gold, 0.15) 0%, 
+    rgba($rt-color-gold, 0.08) 100%);
+  border: 1px solid rgba($rt-color-gold, 0.3);
+  border-radius: 3px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: $rt-color-gold;
+  cursor: help;
+  
+  i {
+    font-size: 0.7rem;
+  }
+}
+
 // Row Actions
 .rt-row-actions {
   display: flex;

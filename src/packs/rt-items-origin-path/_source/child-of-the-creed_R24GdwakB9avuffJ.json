@@ -7,7 +7,7 @@
     "step": "birthright",
     "stepIndex": 2,
     "description": {
-      "value": "<p>+3 Willpower or +3 Fellowship, -3 Weapon Skill. Gain Unshakeable Faith Talent.</p>"
+      "value": "<h2>Child of the Creed</h2><blockquote><p><em>\"It was not until comparatively late in your youth that you set foot in a room in which the stern gaze of the God-Emperor was absent, and during your impressionable years, you were shielded by the enfolding arms of the Ministorum from much of the hardship and uncertainty so many must endure.\"</em></p></blockquote><p>The unyielding visage of His statues was as much a part of your upbringing as the zealous, pure faith of those closest to you. Scripture, ritual, lessons, and priestly exhortations fill your memories, rising unbidden in every quiet moment—as though the aged, white-haired clerics who taught you still remain by your shoulder in spirit, jealously guarding over your soul.</p><p>All men hear the God-Emperor's words if they are born and raised in the right fashion, shaped by devotion from youth into adulthood.</p>"
     },
     "requirements": {
       "text": "Origin Path: Birthright",
@@ -15,39 +15,62 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": -3,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 3,
-          "fellowship": 3,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
+      "skills": [],
+      "talents": [
         {
           "name": "Unshakeable Faith",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "uuid": ""
         }
       ],
-      "talents": [
-        "Unshakeable Faith"
-      ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "characteristic",
+          "label": "Choose one characteristic bonus",
+          "options": [
+            {
+              "label": "+3 Willpower",
+              "value": "willpower"
+            },
+            {
+              "label": "+3 Fellowship",
+              "value": "fellowship"
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "+3 Willpower or +3 Fellowship, -3 Weapon Skill. Gain Unshakeable Faith Talent.",
+    "modifiers": {
+      "characteristics": {
+        "weaponSkill": -3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> You gain the Unshakeable Faith Talent and a bonus of +3 to your choice of Willpower or Fellowship. However, you suffer −3 Weapon Skill.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "29",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

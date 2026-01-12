@@ -7,7 +7,7 @@
     "step": "lureOfTheVoid",
     "stepIndex": 3,
     "description": {
-      "value": "<p>1. Mutant: Roll once on Mutations table, or spend 200xp to choose any one result that is lower than 76.<br>2. Insane: +3 Toughness, -3 Fellowship or -1 Fate Point. Gain Peer (The Insane). Gain 2d10 Insanity Points.<br>3. Deviant Philosphy: +3 Willpower and Enemy(Ecclesiarchy) Talent</p>"
+      "value": "<h2>Tainted</h2><blockquote><p><em>\"You are vile in the eyes of the holy, declared tainted by your twisted form or marked by your accursed bloodline or your strange demeanour and heretical beliefs.\"</em></p></blockquote><p>Few look more closely than is needed to condemn you, fearing the contagion of evil and the judgment of the God-Emperor's appointed servants. But despite the excoriation by the witless fools who have turned their hands against you, your soul burns for greatness.</p><p>You now search relentlessly for the place where you might attain even a small fraction of what would have been your rightful victories were your life not so blighted by fate, and the power to avenge yourself on those who would see you suffer.</p>"
     },
     "requirements": {
       "text": "Origin Path: Lure of the Void",
@@ -15,44 +15,73 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 3,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 3,
-          "fellowship": -3,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": -1
-      },
-      "skills": [
-        {
-          "name": "Peer (The Insane)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "2d10 Insanity Points",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "</p>"
-      ],
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "tainted_path",
+          "label": "Choose one tainted origin",
+          "options": [
+            {
+              "label": "Mutant: Roll once on Mutations table (or spend 200xp to select)",
+              "value": "mutant",
+              "description": "You must roll once on Table 14-3: Mutations. If you choose, you may spend 200 xp to select one result from the table (must be a result of lower than 76-00) instead of rolling randomly."
+            },
+            {
+              "label": "Insane: +3 Toughness, −3 Fellowship or −1 Fate, Peer (The Insane), 2d10 Insanity",
+              "value": "insane",
+              "description": "You suffer your choice of either −3 Fellowship or −1 Fate point. You gain +3 Toughness, the Peer (The Insane) Talent, and suffer 2d10 Insanity Points.",
+              "grants": {
+                "characteristics": {
+                  "toughness": 3
+                },
+                "talents": ["Peer (The Insane)"]
+              }
+            },
+            {
+              "label": "Deviant Philosophy: +3 Willpower, Enemy (Ecclesiarchy)",
+              "value": "deviant",
+              "description": "You gain +3 Willpower and the Enemy (Ecclesiarchy) Talent.",
+              "grants": {
+                "characteristics": {
+                  "willpower": 3
+                },
+                "talents": ["Enemy (Ecclesiarchy)"]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. Mutant: Roll once on Mutations table, or spend 200xp to choose any one result that is lower than 76.\n2. Insane: +3 Toughness, -3 Fellowship or -1 Fate Point. Gain Peer (The Insane). Gain 2d10 Insanity Points.\n3. Deviant Philosphy: +3 Willpower and Enemy(Ecclesiarchy) Talent",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Mutant:</strong> You must roll once on Table 14-3: Mutations (see page 369). If you choose, you may spend 200 xp to select one result from the table (must be a result of lower than 76-00) instead of rolling randomly.</li><li><strong>Insane:</strong> You suffer your choice of either −3 Fellowship or −1 Fate point. You gain +3 Toughness, the Peer (The Insane) Talent, and suffer 2d10 Insanity Points.</li><li><strong>Deviant Philosophy:</strong> You gain +3 Willpower and the Enemy (Ecclesiarchy) Talent.</li></ul>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

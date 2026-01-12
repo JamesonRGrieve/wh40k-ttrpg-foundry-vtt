@@ -7,7 +7,7 @@
     "step": "birthright",
     "stepIndex": 2,
     "description": {
-      "value": "<p>+3 Willpower or +3 Agility. Gain Unremarkable Talent or Resistance (Fear). Gain 1d5 Corruption or 1d5 Insanity.</p>"
+      "value": "<h2>Scavenger</h2><blockquote><p><em>\"You became an adult amidst the yearning and poverty of the least of the God-Emperor's flock, one soul amongst countless underhivers, renegades, bonepickers, and a thousand other outcast castes that exist on the fringes of the Imperium, scavenging what they can to survive.\"</em></p></blockquote><p>All that you owned was claimed from the wastes of those far above you in the Imperial hierarchy or gleaned from the wreckage and ashes of past war and catastrophe—at least, everything that wasn't taken from the bodies of your peers and rivals, of course. Yours was a hard life lived upon a knife-edge: the dark abyss of starvation on one side and death or worse on the other.</p><p>A childhood where each day of survival was a triumph has hardened and honed you, but left its scars on your soul. You have learned to blend into the background, to avoid notice, and to endure through sheer force of will.</p>"
     },
     "requirements": {
       "text": "Origin Path: Birthright",
@@ -15,45 +15,78 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 3,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 3,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Unremarkable",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d5 Corruption or 1d5 Insanity",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "or Resistance (Fear)",
-        "Unremarkable"
-      ],
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "characteristic",
+          "label": "Choose one characteristic bonus",
+          "options": [
+            {
+              "label": "+3 Willpower",
+              "value": "willpower"
+            },
+            {
+              "label": "+3 Agility",
+              "value": "agility"
+            }
+          ],
+          "count": 1
+        },
+        {
+          "type": "talent",
+          "label": "Choose one talent",
+          "options": [
+            "Unremarkable",
+            "Resistance (Fear)"
+          ],
+          "count": 1
+        },
+        {
+          "type": "corruption_or_insanity",
+          "label": "Choose corruption or insanity",
+          "options": [
+            {
+              "label": "1d5 Corruption Points",
+              "value": "corruption:1d5"
+            },
+            {
+              "label": "1d5 Insanity Points",
+              "value": "insanity:1d5"
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "+3 Willpower or +3 Agility. Gain Unremarkable Talent or Resistance (Fear). Gain 1d5 Corruption or 1d5 Insanity.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> You gain the Unremarkable Talent or the Resistance (Fear) Talent, plus you gain a +3 bonus to your choice of Willpower or Agility. You suffer your choice of 1d5 Corruption Points or 1d5 Insanity Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "28",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

@@ -573,3 +573,120 @@
     min-height: 150px;
   }
 }
+
+// ============================================
+// GRANTS DISPLAY
+// ============================================
+
+.rt-grants-display {
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.rt-grants-group {
+  margin-bottom: 16px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rt-grants-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px 0;
+  padding: 6px 10px;
+  background: linear-gradient(90deg, rgba(201, 162, 39, 0.1) 0%, transparent 100%);
+  border-left: 3px solid var(--rt-gold);
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--rt-text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  
+  i {
+    color: var(--rt-gold);
+    font-size: 0.8rem;
+  }
+}
+
+.rt-grants-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-grants-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--rt-text-dark);
+  
+  i {
+    color: var(--rt-gold);
+    font-size: 0.7rem;
+  }
+}
+
+.rt-grants-name {
+  font-weight: 600;
+  color: var(--rt-text-dark);
+}
+
+.rt-grants-specialization {
+  font-style: italic;
+  color: var(--rt-text-muted);
+}
+
+.rt-grants-level {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--rt-bronze);
+}
+
+.rt-grants-special {
+  padding: 10px;
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rt-grants-special-name {
+  margin: 0 0 8px 0;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--rt-text-dark);
+}
+
+.rt-grants-special-description {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--rt-text-dark);
+  
+  p {
+    margin: 0 0 8px 0;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

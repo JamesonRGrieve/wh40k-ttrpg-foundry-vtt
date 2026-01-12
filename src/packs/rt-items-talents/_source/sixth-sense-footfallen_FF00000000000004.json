@@ -1,0 +1,69 @@
+{
+  "name": "Sixth Sense (Footfallen)",
+  "type": "talent",
+  "img": "icons/svg/brain.svg",
+  "system": {
+    "identifier": "sixth-sense-footfallen",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "11"
+    },
+    "description": {
+      "value": "<p><strong>Sixth Sense:</strong> Though they cannot explain it, the true Footfallen have a strange attunement to the Expanse that borders on the supernatural. All Footfallen characters gain Psyniscience as a Trained Skill, although they do not count as psykers. However, they are of an interest to the Inquisition, and begin the game with the Rival (Inquisition) Talent.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain Psyniscience as a Trained Skill (but are not a psyker). You also gain Rival (Inquisition).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Footfallen Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Psyniscience skill and Rival (Inquisition) talent",
+    "grants": {
+      "skills": [
+        {
+          "name": "Psyniscience",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Rival",
+          "specialization": "Inquisition",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FF00000000000004"
+}

@@ -1,0 +1,57 @@
+{
+  "name": "Underground Resources (Penal World)",
+  "type": "talent",
+  "img": "icons/svg/coins.svg",
+  "system": {
+    "identifier": "underground-resources-penal-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "14"
+    },
+    "description": {
+      "value": "<p><strong>Underground Resources:</strong> Characters from penal worlds know many people of ill repute. As such, they can often acquire items much more readily than those working through legitimate channels. When making Acquisition Tests on a world with a criminal underworld, the penal world character can opt to make use of these resources (providing the GM rules they are available) to make the item's Availability one \"level\" more common (to a minimum of Abundant). This ability can only be used once every other game session (at the GM's discretion), and players should remember that the items this character procures are more than likely stolen—they should be prepared in case the authorities come knocking.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Once per two sessions, you can improve an item's Availability by one level (to minimum Abundant) via criminal connections.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Penal World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Can improve Availability once per two sessions via criminal contacts",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PW00000000000004"
+}

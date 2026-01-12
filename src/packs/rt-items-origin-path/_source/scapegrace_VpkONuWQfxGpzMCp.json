@@ -7,7 +7,7 @@
     "step": "birthright",
     "stepIndex": 2,
     "description": {
-      "value": "<p>+3 Intelligence or +3 Perception. Gain Sleight of Hand as Trained Skill. Gain 1d5 Corruption or 1d5 Insanity.</p>"
+      "value": "<h2>Scapegrace</h2><blockquote><p><em>\"An orphan of the borderland between light and dark, you spent years living by your wits as a scapegrace amidst entertainers, gangers, reclaimators, and other ne'er-do-wells on the fringes of Imperial society.\"</em></p></blockquote><p>Your youth was spent in a grey borderland where the near-outcast mingled with shadowed figures risen from the depths and thrill-seekers come down from safer climes. A good scapegrace knows that the law only applies to those caught by the enforcers, that a life is worth only as much as is spent on keeping it.</p><p>You've carried these hard earned lessons on into later life. Survival is best thought of as a game, with pleasure and ease the rewards along the way. A body must eat, drink, and live well, for death can come calling when it pleases.</p>"
     },
     "requirements": {
       "text": "Origin Path: Birthright",
@@ -15,42 +15,75 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 3,
-          "perception": 3,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
       "skills": [
         {
-          "name": "Sleight of Hand as Trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d5 Corruption or 1d5 Insanity",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Sleight of Hand",
+          "specialization": "",
+          "level": "trained"
         }
       ],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "characteristic",
+          "label": "Choose one characteristic bonus",
+          "options": [
+            {
+              "label": "+3 Intelligence",
+              "value": "intelligence"
+            },
+            {
+              "label": "+3 Perception",
+              "value": "perception"
+            }
+          ],
+          "count": 1
+        },
+        {
+          "type": "corruption_or_insanity",
+          "label": "Choose corruption or insanity",
+          "options": [
+            {
+              "label": "1d5 Corruption Points",
+              "value": "corruption:1d5"
+            },
+            {
+              "label": "1d5 Insanity Points",
+              "value": "insanity:1d5"
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "+3 Intelligence or +3 Perception. Gain Sleight of Hand as Trained Skill. Gain 1d5 Corruption or 1d5 Insanity.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> You gain Sleight of Hand as a trained Basic Skill, plus a bonus of +3 to your choice of Intelligence or Perception. You suffer your choice of 1d5 Corruption Points or 1d5 Insanity Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "29",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

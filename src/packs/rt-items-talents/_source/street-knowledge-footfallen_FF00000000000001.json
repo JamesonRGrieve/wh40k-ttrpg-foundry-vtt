@@ -1,0 +1,63 @@
+{
+  "name": "Street Knowledge (Footfallen)",
+  "type": "talent",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "identifier": "street-knowledge-footfallen",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "11"
+    },
+    "description": {
+      "value": "<p><strong>Street Knowledge:</strong> As a result of their living on the 'streets, the Footfallen suffer a −5 penalty on all Scholastic Lore Tests except those that involve information on the Koronus Expanse (whether or not a given Scholastic Lore Test involves the Koronus expanse is up to the GM).</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You suffer a −5 penalty on Scholastic Lore Tests unless they involve the Koronus Expanse.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Footfallen Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "condition": "Scholastic Lore Tests (except Koronus Expanse)",
+            "modifier": -5,
+            "type": "Intelligence Test"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "−5 to Scholastic Lore Tests (except Koronus Expanse)",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FF00000000000001"
+}

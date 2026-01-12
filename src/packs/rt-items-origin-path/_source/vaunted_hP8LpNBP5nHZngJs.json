@@ -7,7 +7,7 @@
     "step": "birthright",
     "stepIndex": 2,
     "description": {
-      "value": "<p>+3 Agility or Fellowship, -3 Perception. Gain Decadence Talent. Gain 1d5 Corruption Points.</p>"
+      "value": "<h2>Vaunted</h2><blockquote><p><em>\"You grew to adulthood upon the spire of wealth and privilege that towers, in some cases literally, high above the common Imperial masses. You expected their obedience and lived upon the fruits of their toil, surrendered to your extended family in solemn fealty.\"</em></p></blockquote><p>It was an upbringing amidst proud scions, wastrel lords, and high-priced retainers of silent, watchful competence. All the distractions available to the wealthy, bored elite were arrayed before you for the taking, day after day—a panoply of decadence to enervate the body and transport the mind.</p><p>Those were years of fantastical exhibitions, sordid entanglements, strange drugs, conspiracies for the sake of show, mindless rivalries, and carefully hidden violence. You have become accustomed to luxury and excess, but your senses have been dulled by overindulgence.</p>"
     },
     "requirements": {
       "text": "Origin Path: Birthright",
@@ -15,44 +15,62 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 3,
-          "intelligence": 0,
-          "perception": -3,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
+      "skills": [],
+      "talents": [
         {
           "name": "Decadence",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d5 Corruption Points",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "uuid": ""
         }
       ],
-      "talents": [
-        "Decadence"
-      ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "characteristic",
+          "label": "Choose one characteristic bonus",
+          "options": [
+            {
+              "label": "+3 Agility",
+              "value": "agility"
+            },
+            {
+              "label": "+3 Fellowship",
+              "value": "fellowship"
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "+3 Agility or Fellowship, -3 Perception. Gain Decadence Talent. Gain 1d5 Corruption Points.",
-    "notes": "",
+    "modifiers": {
+      "characteristics": {
+        "perception": -3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> You gain the Decadence Talent and a bonus of +3 to Agility or Fellowship (your choice). You suffer −3 Perception and 1d5 Corruption Points.</p>",
+    "notes": "Note: This origin path always applies 1d5 Corruption Points upon selection.",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "29",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

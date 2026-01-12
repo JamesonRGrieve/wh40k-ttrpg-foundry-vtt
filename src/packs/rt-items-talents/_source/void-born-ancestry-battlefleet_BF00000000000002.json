@@ -1,0 +1,68 @@
+{
+  "name": "Void-Born Ancestry (Battlefleet)",
+  "type": "talent",
+  "img": "icons/svg/astronaut.svg",
+  "system": {
+    "identifier": "void-born-ancestry-battlefleet",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "13"
+    },
+    "description": {
+      "value": "<p><strong>Void-Born Ancestry:</strong> Members of the battlefleets are closely-related to the Void Born, and their service provides opportunities to hone a Void Born's innate abilities. A Battlefleet Character may choose Navigation (Stellar) or Pilot (Space Craft) as a Trained Skill. They also gain Void Accustomed.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain Navigation (Stellar) or Pilot (Space Craft) as a Trained Skill. You gain Void Accustomed.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Battlefleet Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants choice of Navigation or Pilot skill; grants Void Accustomed",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Void Accustomed",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.5SvqNk7sPgW8gKOx"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Void-Born Training",
+          "description": "Choose one: Navigation (Stellar) or Pilot (Space Craft) as a Trained Skill"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BF00000000000002"
+}

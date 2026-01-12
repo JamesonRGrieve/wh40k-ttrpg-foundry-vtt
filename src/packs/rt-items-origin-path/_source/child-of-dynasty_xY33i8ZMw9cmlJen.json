@@ -1,13 +1,13 @@
 {
   "name": "Child of Dynasty",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/rogue-trader/icons/origins/child-of-dynasty.webp",
   "system": {
     "identifier": "child-of-dynasty",
     "step": "homeWorld",
     "stepIndex": 1,
     "description": {
-      "value": "<p>-3 Toughness, +3 Intelligence, -5 Willpower, +5 Fellowship. Gain Literacy and Speak (High Gothic) as trained skills. Add +3 Ship Points to group&#x27;s starting ship, cannot exchange these for Profit Factor. Gain +5 to Fellowship Tests interacting with high-ranking officials of the Imperium and Imperial Nobility. Gain an appropriate Enemy Talent as an unseen foe seeks the character&#x27;s position and wealth.</p>"
+      "value": "<h2>Child of Dynasty</h2><blockquote><p><em>\"The nobility of the Imperium wields extreme power and wealth; not only those of the Noble Houses, but also those of other organisations such as the Rogue Traders. As the heir-apparent to a Rogue Trader family dynasty you have been given every advantage so that one day you might ascend the throne of leadership. You consider yourself to be clever and witty, but also sly, and you are very cautious as one fatal mistake can lead to a sibling or relative assuming the family fortunes—your legacy nothing more than your own rotting corpse.\"</em></p></blockquote><p>Within the Imperium of Man there are those who sit at the pinnacle of power—the nobility and the ruling elite. As the Imperium is structured as a feudal society, it stands to reason that within it exist many types of noble houses, including planetary rulers, military lords, and the Rogue Traders. Over time, once the Warrant of Trade has been given, a Rogue Trader may find that his empire is growing. The dynasty now has fleets of ships, planetary fiefdoms, and thousands of house soldiers to call upon. As time goes on and the family continues to grow, it develops into a Rogue Trader Dynasty—able to command scores of craft and countless troops. This legacy spans the Imperium and beyond.</p><p>To ensure that this legacy continues, the lords and ladies of the dynasty designate an heir-apparent in whatever fashion is deemed appropriate by their customs. These sons and daughters may find themselves struggling for the favour of their dynastic leaders in an effort to be worthy of succession. Oftentimes in noble families, the second, third, and even fourth child finds themselves with little option but to go out and make a name for themselves, or simply languish in obscurity, hoping that circumstances arise to change their fate. However, this is not the case in Rogue Trader families, where all are expected to work and prove themselves. It is oftentimes that these noble scions end up plotting and scheming for ways to manoeuvre into a position where the family leader has little choice but to name them heir.</p><h3>Life as a Child of Dynasty</h3><p>The children of the Rogue Trader clans are instructed in all manner of subjects mundane and esoteric. They are assigned the best tutors and mentors the clan can afford, and by the time the child enters adolescence, they are capable enough to be sent out into the wider galaxy (typically with bodyguard entourage in tow). They have been afforded every advantage that wealth and power can buy.</p><p>Not every heir-apparent turns out to be the best choice for the family, however. Some are lazy, shiftless souls who do nothing more than squander the family fortunes and pass their days in decadence and perversion. In such cases, the leaders of these dynasties often select more than one heir to the throne; it's a gamble they make to ensure that at least one of them survives to continue the dynasty. Rogue Trader heirs are often assigned one of the family's void ships under the command of one of their most capable captains or a family scion that has more days behind him than ahead. They are then given a stipend and sent to learn about the unforgiving galaxy. If along the way they make gains for the family, so much the better. Some return upon their majority to assume the title they have been ordained for; others are never seen or heard from again.</p><h3>Child of Dynasty Characters</h3><p>You are the child of a family gifted with a Warrant of Trade. Your dynasty may be thousands of years old, or perhaps your parents were awarded their own Warrant and your dynasty is considered to be an upstart. Whatever the case may be, you have been given the training needed to keep your family's dynasty alive for at least another generation.</p><p>You are the chosen son or daughter of a powerful Rogue Trader. You may have been granted the immense responsibility of inheriting your dynasty's Warrant of Trade, in which case you have assumed the coveted title of Rogue Trader. However, it is just as likely that you saw the Warrant passed on to one of your siblings, and you are either expected to support them in their Endeavours, or plunge into the unknown to make your fortune and earn glory for your family with your own resourcefulness. How you do this is up to you and whatever abilities you may possess, and you may even go so far as to sign on with a different Rogue Trader to grasp the opportunities you seek.</p><p>You have been gifted with immense rank and privilege, and the immense responsibilities to go with them. Trained in command and the intricacies of commerce, you are ambitious and perhaps even a bit devious. However, duplicity is the trademark of a child of your dynasty, and you know your trade well. You will use every shred of ingenuity to ensure your family's name survives in the cruel and uncaring world of the 41st Millennium.</p>"
     },
     "requirements": {
       "text": "Origin Path: Home World",
@@ -15,56 +15,75 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": -3,
-          "agility": 0,
-          "intelligence": 3,
-          "perception": 0,
-          "willpower": -5,
-          "fellowship": 5,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "2xTB+1d5",
+      "wounds": 0,
+      "fateFormula": "(1-3|=2),(4-7|=3),(8-10|=4)",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
           "name": "Literacy",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Speak (High Gothic) as trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Imperial Nobility",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "an appropriate Enemy",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "High Gothic",
+          "level": "trained"
         }
       ],
       "talents": [
-        "as an unseen foe seeks the character&#x27",
-        "s position",
-        "wealth"
+        {
+          "name": "Dynastic Warrant (Child of Dynasty)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CD00000000000001"
+        },
+        {
+          "name": "Honour Amongst One's Peers (Child of Dynasty)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CD00000000000002"
+        },
+        {
+          "name": "Unseen Enemy (Child of Dynasty)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CD00000000000003"
+        }
       ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []
     },
-    "effectText": "-3 Toughness, +3 Intelligence, -5 Willpower, +5 Fellowship. Gain Literacy and Speak (High Gothic) as trained skills. Add +3 Ship Points to group's starting ship, cannot exchange these for Profit Factor. Gain +5 to Fellowship Tests interacting with high-ranking officials of the Imperium and Imperial Nobility. Gain an appropriate Enemy Talent as an unseen foe seeks the character's position and wealth.",
+    "modifiers": {
+      "characteristics": {
+        "toughness": -3,
+        "intelligence": 3,
+        "willpower": -5,
+        "fellowship": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Characteristic Modifiers:</strong> −3 Toughness, +3 Intelligence, −5 Willpower, +5 Fellowship</p><p><strong>Starting Wounds:</strong> The Child of Dynasty doubles his starting Toughness Bonus and adds 1d5 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–3, begin with 2 Fate Points; on a 4–7, begin with 3 Fate Points; on an 8–10, begin with 4 Fate Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Into the Storm",
+      "page": "15-16",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

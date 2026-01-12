@@ -1,13 +1,13 @@
 {
   "name": "Frontier World",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/rogue-trader/icons/origins/frontier-world.webp",
   "system": {
     "identifier": "frontier-world",
     "step": "homeWorld",
     "stepIndex": 1,
     "description": {
-      "value": "<p>+5 Strength, -5 Intelligence. Gain Survival and Wrangling as Trained Skills. Can reroll an Initiative Roll they make, but must accept the new result. Immune to Fear Tests from Xenos with Fear(1) or Fear(2). Suffer -10 to Fellowship Tests with Strangers and also -5 with members of the Imperial Cult.</p>"
+      "value": "<h2>Frontier World</h2><blockquote><p><em>\"Frontier worlds are lawless planets that sit on the edge of the Imperium. Savage and brutal, your world has always been home to a small number of settlers that are descended from the original colonists. You are tenacious and hardy, and have learned that the only Justice in the galaxy is that which you hand out yourself.\"</em></p></blockquote><p>There are numerous frontier worlds scattered across the borders of the Imperium, particularly within the Calixis Sector and Koronus Expanse. A frontier world is more than simply a world or system that sits upon the edge of the map; it is far away from centres of power, the protection of the military, and the influence of the Ecclesiarchy. Many of these worlds consist of a small number of population centres, and often times their environment is every bit as deadly as any death world. Some planets are barely habitable; others are hardly explored. These are rough-and-tumble places with few luxuries and fewer defences. Because of this, many are left open to the predations of xenos invaders and pirates. Frontier worlds are also havens for those who are seeking to escape Imperial justice.</p><p>Due to their unique position on the frontier, it's not unusual for the populace to have extensive dealings with xenos and abhuman species. In fact, some settlements can only get by because of the trade they conduct with outsiders.</p><h3>Life on a Frontier World</h3><p>Frontier worlds, such as Faldon Kise or Solace Encarmine, can often barely be classified as \"civilised.\" The populace is rough and determined in equal measure, and many settlements on these worlds are ramshackle, resembling primitive, run-down, dry, dusty spots where life is harsh and unforgiving and justice comes from the barrel of a gun (or at the end of a rope). Here, the population must learn to survive on its own. There are no Adeptus Arbites Precinct-fortresses to maintain law, no PDF to protect the citizens from invasion, and no Fleet waiting in orbit to take them to safety. The people are tough and hard-working, used to living without the amenities that are taken for granted on other worlds. They are also insular and prefer to handle matters on their own, with little time for outsider interference.</p><h3>Frontier World Characters</h3><p>The world you come from is every bit as varied as the people on it. You are as rugged and tough as grox-hide leather, with excellent survival instincts that have been honed through years of harsh, bare-bones existence. The town you grew up in was a rough-and-tumble place where only the toughest and canniest survived. At times, rivals would try to cause trouble, but you, your neighbours, and your family would band together and fight them off. On occasion a traveller from beyond the stars would arrive and bring all manner of strange and exotic wonders for you to see. Sometimes these travellers would be human, other times not. Whatever they were, once you met them and smelled the odour of a thousand different worlds, you knew you were meant to travel amongst the stars.</p><p>You have a distrustful and gruff exterior—at least to those you don't know. Most people aren't worth your time, but those who are gain your respect and gratitude for life. The prejudice of humans from other worlds confuses you; you've had dealings with xenos and mutants before and suffered no ill effects. You are also known for your toughness and tenacity and you always try your utmost to finish what you start. When you give your word, it's as iron-clad as any written contract and you will go to any lengths to honour it.</p>"
     },
     "requirements": {
       "text": "Origin Path: Home World",
@@ -15,42 +15,78 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 5,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": -5,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "2xTB+1d5+2",
+      "wounds": 0,
+      "fateFormula": "(1-5|=2),(6-10|=3)",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
           "name": "Survival",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Wrangling as Trained",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Wrangling",
+          "specialization": "",
+          "level": "trained"
         }
       ],
-      "talents": [],
+      "talents": [
+        {
+          "name": "Tough as Grox-Hide (Frontier World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FR00000000000001"
+        },
+        {
+          "name": "Leery of Outsiders (Frontier World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FR00000000000002"
+        },
+        {
+          "name": "Tenacious Survivalist (Frontier World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FR00000000000003"
+        },
+        {
+          "name": "Xenos Interaction (Frontier World)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FR00000000000004"
+        }
+      ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []
     },
-    "effectText": "+5 Strength, -5 Intelligence. Gain Survival and Wrangling as Trained Skills. Can reroll an Initiative Roll they make, but must accept the new result. Immune to Fear Tests from Xenos with Fear(1) or Fear(2). Suffer -10 to Fellowship Tests with Strangers and also -5 with members of the Imperial Cult.",
+    "modifiers": {
+      "characteristics": {
+        "strength": 5,
+        "intelligence": -5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Characteristic Modifiers:</strong> +5 Strength, −5 Intelligence</p><p><strong>Starting Wounds:</strong> Frontier world characters double their starting Toughness Bonus and add 1d5+2 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–5, begin with 2 Fate Points; on a 6-10, begin with 3 Fate Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Into the Storm",
+      "page": "10",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },
