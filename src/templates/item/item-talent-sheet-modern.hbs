@@ -304,6 +304,95 @@
           </div>
         </div>
         
+        {{!-- Grants Display --}}
+        {{#if item.system.hasGrants}}
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-gift"></i> Grants
+          </h3>
+          
+          <div class="rt-grants-display">
+            <p class="rt-field-hint" style="margin-bottom: 0.75rem;">
+              <i class="fas fa-info-circle"></i> This talent automatically grants the following abilities when acquired:
+            </p>
+            
+            {{#if item.system.grants.talents.length}}
+            <div class="rt-grants-group">
+              <h4 class="rt-grants-group-title">
+                <i class="fas fa-book"></i> Talents
+              </h4>
+              <ul class="rt-grants-list">
+                {{#each item.system.grants.talents}}
+                <li class="rt-grants-item">
+                  <i class="fas fa-chevron-right"></i>
+                  <span class="rt-grants-name">{{this.name}}</span>
+                  {{#if this.specialization}}
+                    <span class="rt-grants-specialization">({{this.specialization}})</span>
+                  {{/if}}
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.grants.skills.length}}
+            <div class="rt-grants-group">
+              <h4 class="rt-grants-group-title">
+                <i class="fas fa-graduation-cap"></i> Skills
+              </h4>
+              <ul class="rt-grants-list">
+                {{#each item.system.grants.skills}}
+                <li class="rt-grants-item">
+                  <i class="fas fa-chevron-right"></i>
+                  <span class="rt-grants-name">{{this.name}}</span>
+                  {{#if this.specialization}}
+                    <span class="rt-grants-specialization">({{this.specialization}})</span>
+                  {{/if}}
+                  <span class="rt-grants-level">— {{capitalize this.level}}</span>
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.grants.traits.length}}
+            <div class="rt-grants-group">
+              <h4 class="rt-grants-group-title">
+                <i class="fas fa-dna"></i> Traits
+              </h4>
+              <ul class="rt-grants-list">
+                {{#each item.system.grants.traits}}
+                <li class="rt-grants-item">
+                  <i class="fas fa-chevron-right"></i>
+                  <span class="rt-grants-name">{{this.name}}</span>
+                  {{#if this.level}}
+                    <span class="rt-grants-level">— Level {{this.level}}</span>
+                  {{/if}}
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.grants.specialAbilities.length}}
+            <div class="rt-grants-group">
+              <h4 class="rt-grants-group-title">
+                <i class="fas fa-star"></i> Special Abilities
+              </h4>
+              {{#each item.system.grants.specialAbilities}}
+              <div class="rt-grants-special">
+                <h5 class="rt-grants-special-name">{{this.name}}</h5>
+                <div class="rt-grants-special-description">
+                  {{{this.description}}}
+                </div>
+              </div>
+              {{/each}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        {{/if}}
+        
         {{!-- Modifiers Display --}}
         {{#if (or item.system.modifiers.characteristics item.system.modifiers.skills item.system.modifiers.combat item.system.modifiers.wounds item.system.modifiers.fate item.system.modifiers.movement)}}
         <div class="rt-talent-section">

@@ -1,6 +1,7 @@
 import { prepareEnhancedSkillRoll } from '../applications/prompts/enhanced-skill-dialog.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { toCamelCase } from '../handlebars/handlebars-helpers.mjs';
+import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.mjs';
 
 export class RogueTraderBaseActor extends Actor {
 
@@ -11,12 +12,24 @@ export class RogueTraderBaseActor extends Actor {
     /**
      * Handle the creation of descendant documents (items).
      * Triggers recalculation of item-based data.
+     * Also processes talent grants for newly added talents.
      * @override
      */
     _onCreateDescendantDocuments(parent, collection, documents, data, options, userId) {
         super._onCreateDescendantDocuments(parent, collection, documents, data, options, userId);
         if (collection === "items") {
             this._onItemsChanged();
+            
+            // Process talent grants for newly added talents
+            // Only process if this is the user who created the items
+            if (game.user.id === userId) {
+                for (const item of documents) {
+                    if (item.type === 'talent' && item.system?.hasGrants) {
+                        // Use setTimeout to ensure the item is fully created before processing grants
+                        setTimeout(() => processTalentGrants(item, this), 100);
+                    }
+                }
+            }
         }
     }
 
@@ -35,9 +48,20 @@ export class RogueTraderBaseActor extends Actor {
     /**
      * Handle the deletion of descendant documents (items).
      * Triggers recalculation of item-based data.
+     * Also handles removal of granted items when a talent is deleted.
      * @override
      */
     _onDeleteDescendantDocuments(parent, collection, documents, ids, options, userId) {
+        // Process talent removal BEFORE deletion to access the talent's data
+        if (collection === "items" && game.user.id === userId) {
+            for (const item of documents) {
+                if (item.type === 'talent' && item.system?.hasGrants) {
+                    // Use setTimeout to show dialog after the item is deleted
+                    setTimeout(() => handleTalentRemoval(item, this), 100);
+                }
+            }
+        }
+        
         super._onDeleteDescendantDocuments(parent, collection, documents, ids, options, userId);
         if (collection === "items") {
             this._onItemsChanged();
