@@ -23,23 +23,35 @@
       "specialAbilities": [],
       "choices": [
         {
-          "type": "tainted_path",
+          "type": "talent",
           "label": "Choose one tainted origin",
           "options": [
             {
               "label": "Mutant: Roll once on Mutations table (or spend 200xp to select)",
               "value": "mutant",
-              "description": "You must roll once on Table 14-3: Mutations. If you choose, you may spend 200 xp to select one result from the table (must be a result of lower than 76-00) instead of rolling randomly."
+              "description": "You must roll once on Table 14-3: Mutations. If you choose, you may spend 200 xp to select one result from the table (must be a result of lower than 76-00) instead of rolling randomly.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Mutant (Tainted)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.TA00000000000001"
+                  }
+                ]
+              }
             },
             {
               "label": "Insane: +3 Toughness, −3 Fellowship or −1 Fate, Peer (The Insane), 2d10 Insanity",
               "value": "insane",
               "description": "You suffer your choice of either −3 Fellowship or −1 Fate point. You gain +3 Toughness, the Peer (The Insane) Talent, and suffer 2d10 Insanity Points.",
               "grants": {
-                "characteristics": {
-                  "toughness": 3
-                },
-                "talents": ["Peer (The Insane)"]
+                "talents": [
+                  {
+                    "name": "Insane (Tainted)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.TA00000000000002"
+                  }
+                ]
               }
             },
             {
@@ -47,10 +59,13 @@
               "value": "deviant",
               "description": "You gain +3 Willpower and the Enemy (Ecclesiarchy) Talent.",
               "grants": {
-                "characteristics": {
-                  "willpower": 3
-                },
-                "talents": ["Enemy (Ecclesiarchy)"]
+                "talents": [
+                  {
+                    "name": "Deviant Philosophy (Tainted)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.TA00000000000003"
+                  }
+                ]
               }
             }
           ],

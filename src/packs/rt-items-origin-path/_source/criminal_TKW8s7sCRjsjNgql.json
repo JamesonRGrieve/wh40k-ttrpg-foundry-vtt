@@ -23,7 +23,7 @@
       "specialAbilities": [],
       "choices": [
         {
-          "type": "criminal_path",
+          "type": "talent",
           "label": "Choose one criminal background",
           "options": [
             {
@@ -31,7 +31,13 @@
               "value": "fugitive",
               "description": "You gain the Enemy (Adeptus Arbites) and Peer (Underworld) Talents.",
               "grants": {
-                "talents": ["Enemy (Adeptus Arbites)", "Peer (Underworld)"]
+                "talents": [
+                  {
+                    "name": "Wanted Fugitive (Criminal)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.CR00000000000001"
+                  }
+                ]
               }
             },
             {
@@ -39,20 +45,27 @@
               "value": "hunted",
               "description": "You gain +3 Perception and the Enemy (Underworld) Talent.",
               "grants": {
-                "characteristics": {
-                  "perception": 3
-                },
-                "talents": ["Enemy (Underworld)"]
+                "talents": [
+                  {
+                    "name": "Hunted by a Crime Baron (Criminal)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.CR00000000000002"
+                  }
+                ]
               }
             },
             {
               "label": "Judged and Found Wanting: −5 Fellowship and poor bionic",
               "value": "judged",
-              "description": "You suffer −5 Fellowship. You gain one poor-Craftsmanship bionic limb or implant (you may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship).",
+              "description": "You suffer −5 Fellowship. You gain one poor-Craftsmanship bionic limb or implant.",
               "grants": {
-                "characteristics": {
-                  "fellowship": -5
-                }
+                "talents": [
+                  {
+                    "name": "Judged and Found Wanting (Criminal)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.CR00000000000003"
+                  }
+                ]
               }
             }
           ],

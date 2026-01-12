@@ -7,7 +7,7 @@
     "step": "motivation",
     "stepIndex": 5,
     "description": {
-      "value": "<p>Gain either Talented (any one skill) or Peer (any one) Talent.</p>"
+      "value": "<h2>Prestige</h2><blockquote><p><em>\"The Imperium of Mankind is a grand hierarchy, and that, to your eyes, is a ladder reaching from the least peasant to the blinding heights of the God-Emperor's own Holy Terra. You have dedicated your life to climbing that ladder in search of the highest station you can reach: the greatest power, the most important position of leadership, the utmost influence.\"</em></p></blockquote><p>Wealth, renown, and relationships with the powerful are only important insofar as they enable you to reach that next step. All too many fools never reach upward, but you bear them no ill-will. The position they might have ascended to will be yours, and they will be your loyal servants in the years ahead.</p><p>Every connection is a rung on the ladder. Every favor owed is leverage. Every alliance is a step closer to the pinnacle of power you seek.</p>"
     },
     "requirements": {
       "text": "Origin Path: Motivation",
@@ -15,49 +15,74 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "either",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "ed (any one"
-      ],
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": [
         {
-          "type": "skill",
-          "label": "Choose from: Talented (any one skill), Peer (any one) Talent",
+          "type": "prestige_talent",
+          "label": "Choose Talented or Peer",
           "options": [
-            "Talented (any one skill)",
-            "Peer (any one) Talent"
+            {
+              "label": "Talented (choose one skill)",
+              "value": "talented",
+              "description": "You gain the Talented Talent for one chosen skill.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Talented (X)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.QRbdcZXAqmmHdgfn"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Peer (choose one)",
+              "value": "peer",
+              "description": "You gain the Peer Talent for one chosen group.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Peer (X)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+                  }
+                ]
+              }
+            }
           ],
           "count": 1
         }
       ]
     },
-    "effectText": "Gain either Talented (any one skill) or Peer (any one) Talent.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> You gain your choice of the Talented (choose one) Talent or the Peer (choose one) Talent.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "34",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

@@ -1,0 +1,90 @@
+{
+  "name": "Duty to Humanity (Duty Bound)",
+  "type": "talent",
+  "img": "icons/svg/eagle.svg",
+  "system": {
+    "identifier": "duty-to-humanity-duty-bound",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Duty to Humanity</h2><p>You feel a deep obligation to protect and serve humanity as a whole, not just the Imperium's institutions. You strive to guide and guard the numberless masses of mankind, even at personal cost.</p><p><strong>Effect:</strong> You gain your choice of +3 Perception or +3 Intelligence. You suffer a −1 to your group's beginning Profit Factor.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain your choice of +3 Perception or +3 Intelligence. You suffer −1 to your group's beginning Profit Factor.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Duty Bound origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Reduced Profit Factor",
+          "description": "<p>You suffer a −1 to your group's beginning Profit Factor.</p>"
+        }
+      ],
+      "choices": [
+        {
+          "type": "characteristic",
+          "label": "Choose one characteristic bonus",
+          "options": [
+            {
+              "label": "+3 Perception",
+              "value": "perception",
+              "grants": {
+                "characteristics": {
+                  "perception": 3
+                }
+              }
+            },
+            {
+              "label": "+3 Intelligence",
+              "value": "intelligence",
+              "grants": {
+                "characteristics": {
+                  "intelligence": 3
+                }
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "DB00000000000002"
+}

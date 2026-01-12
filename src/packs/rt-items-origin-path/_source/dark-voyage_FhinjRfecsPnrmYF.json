@@ -7,7 +7,7 @@
     "step": "trialsAndTravails",
     "stepIndex": 4,
     "description": {
-      "value": "<p>Gain a single Trained Forbidden Lore Skill related to your experiences in a Dark and Traumatic Voyage (or increase that skill by one level), or gain Resistance (Fear).<br>Gain 1d5 Insanity from whatever traumatic even haunts you.</p>"
+      "value": "<h2>Dark Voyage</h2><blockquote><p><em>\"Starport taverns and station galleys are filled with travellers, wanderers, and old voidfarers. Sooner or later, when the lumen globes have dimmed, these folk will tell of the many strange legends they have heard. They tell of hell-hulks crewed by the lost and warp storms that howl with mocking voices, of the things that claw and scratch at the hull waiting for the merest flicker of the Geller Field for the warp to pour in and devour all, and of horrifying xenos encounters and voyages of the damned.\"</em></p></blockquote><p>But you have no taste for such stories, because you know the truth—you have lived them. You have stared into the eyes of the abyss and lived. You have seen the dead walk and the bulkheads bleed. These experiences have marked you, opening your eyes to the darkness that hides beneath the surface of things, and whether you have recoiled in dread or been drawn on in fascination is a truth you keep to yourself.</p><p>The horrors you witnessed have left scars on your soul that no medicae can heal, and the knowledge you gained came at a terrible price.</p>"
     },
     "requirements": {
       "text": "Origin Path: Trials and Travails",
@@ -15,42 +15,111 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "a single Trained Forbidden Lore",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Resistance (Fear)",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [],
-      "choices": []
+      "specialAbilities": [
+        {
+          "name": "Things Man Was Not Meant to Know",
+          "description": "<p>You may gain a single Forbidden Lore Skill pertaining to your experiences (or may increase a Forbidden Lore Skill you already possess by one level), or may gain the Resistance (Fear) Talent.</p>"
+        },
+        {
+          "name": "Marked by Darkness",
+          "description": "<p>Haunted by your experiences, you gain 1d5 Insanity Points.</p>"
+        }
+      ],
+      "choices": [
+        {
+          "type": "forbidden_knowledge",
+          "label": "Things Man Was Not Meant to Know",
+          "options": [
+            {
+              "label": "Forbidden Lore (Warp)",
+              "value": "warp",
+              "description": "You gain Forbidden Lore (Warp) or increase it by one level.",
+              "grants": {
+                "skills": [
+                  {
+                    "name": "Forbidden Lore",
+                    "specialization": "Warp",
+                    "level": "trained"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Forbidden Lore (Daemonology)",
+              "value": "daemonology",
+              "description": "You gain Forbidden Lore (Daemonology) or increase it by one level.",
+              "grants": {
+                "skills": [
+                  {
+                    "name": "Forbidden Lore",
+                    "specialization": "Daemonology",
+                    "level": "trained"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Forbidden Lore (Xenos)",
+              "value": "xenos",
+              "description": "You gain Forbidden Lore (Xenos) or increase it by one level.",
+              "grants": {
+                "skills": [
+                  {
+                    "name": "Forbidden Lore",
+                    "specialization": "Xenos",
+                    "level": "trained"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Resistance (Fear)",
+              "value": "resistance_fear",
+              "description": "You gain the Resistance (Fear) Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Resistance (Fear)",
+                    "specialization": "Fear",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "Gain a single Trained Forbidden Lore Skill related to your experiences in a Dark and Traumatic Voyage (or increase that skill by one level), or gain Resistance (Fear).\nGain 1d5 Insanity from whatever traumatic even haunts you.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Things Man Was Not Meant to Know:</strong> You may gain a single Forbidden Lore Skill pertaining to your experiences (or may increase a Forbidden Lore Skill you already possess by one level), or may gain the Resistance (Fear) Talent.</p><p><strong>Marked by Darkness:</strong> Haunted by your experiences, you gain 1d5 Insanity Points.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "32",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

@@ -23,7 +23,7 @@
       "specialAbilities": [],
       "choices": [
         {
-          "type": "renegade_path",
+          "type": "talent",
           "label": "Choose one renegade background",
           "options": [
             {
@@ -31,8 +31,13 @@
               "value": "recidivist",
               "description": "You gain the Enemy (Adeptus Arbites) and Resistance (Interrogation) Talents. You also gain Concealment as a trained Basic Skill.",
               "grants": {
-                "talents": ["Enemy (Adeptus Arbites)", "Resistance (Interrogation)"],
-                "skills": [{"name": "Concealment", "level": "trained"}]
+                "talents": [
+                  {
+                    "name": "Recidivist (Renegade)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RN00000000000001"
+                  }
+                ]
               }
             },
             {
@@ -40,10 +45,13 @@
               "value": "freethinker",
               "description": "You gain your choice of +3 Intelligence or +3 Perception. You suffer −3 Willpower and gain the Enemy (Ecclesiarchy) Talent.",
               "grants": {
-                "characteristics": {
-                  "willpower": -3
-                },
-                "talents": ["Enemy (Ecclesiarchy)"]
+                "talents": [
+                  {
+                    "name": "Free-thinker (Renegade)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RN00000000000002"
+                  }
+                ]
               }
             },
             {
@@ -51,7 +59,13 @@
               "value": "visionary",
               "description": "You suffer your choice of 1d5+1 Corruption Points or 1d5+1 Insanity Points. In return, you gain the Dark Soul Talent and Forbidden Lore (choose one) as a trained Basic Skill.",
               "grants": {
-                "talents": ["Dark Soul"]
+                "talents": [
+                  {
+                    "name": "Dark Visionary (Renegade)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RN00000000000003"
+                  }
+                ]
               }
             }
           ],

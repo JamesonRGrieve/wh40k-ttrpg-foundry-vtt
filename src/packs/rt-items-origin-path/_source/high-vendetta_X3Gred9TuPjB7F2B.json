@@ -7,7 +7,7 @@
     "step": "trialsAndTravails",
     "stepIndex": 4,
     "description": {
-      "value": "<p>Gain either Die Hard or Paranoia Talents. Gain Inquiry Skill (or increase by one level).<br>You Brook no Insult, if someone insults you or bismirches your honour, you react violently. You may take a Willpower Test to avert this, difficulty modified by GM.</p>"
+      "value": "<h2>High Vendetta</h2><blockquote><p><em>\"Honour, friendship, and loyalty are not mere empty words or worthy ideals to you, they are tools for survival. Without your ship, your crewmates, and your allies, you are alone in the cold darkness of space and prey to enemies and rivals without number; with them, you are protected, you have a home and backup when others seek your life.\"</em></p></blockquote><p>This knowledge was brought home to you when you and your allies were caught up in a deadly vendetta with another faction, a murderous feud that consumed your life and sent friends to their graves. Whether your enemies were a rival crew, noble house, cult, cartel, or outlaw gang, blood was spilt and vengeance taken. Regardless of whether your side was victorious, or was left tasting bitter defeat in the end, what matters was that you fought and would do so again.</p><p>The vendetta has left you hardened, paranoid, and fiercely protective of those you consider allies. You have learned that in the void, loyalty is the only currency that truly matters.</p>"
     },
     "requirements": {
       "text": "Origin Path: Trials and Travails",
@@ -15,52 +15,85 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
       "skills": [
         {
-          "name": "either Die Hard or Paranoia",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
           "name": "Inquiry",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         }
       ],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [],
+      "specialAbilities": [
+        {
+          "name": "Brook No Insult",
+          "description": "<p>You will allow no serious offence to your honour and person or those under your protection to pass unchallenged, meeting threat with threat and violence with violence. You may take a Willpower Test to avert this if you wish, modified by the provocation and the consequences (set by the GM) of succumbing to your rage.</p>"
+        }
+      ],
       "choices": [
         {
-          "type": "talent",
-          "label": "Choose from: Die Hard, Paranoia Talents",
+          "type": "vendetta_talent",
+          "label": "Blood Will Have Blood: Choose Die Hard or Paranoia",
           "options": [
-            "Die Hard",
-            "Paranoia Talents"
+            {
+              "label": "Die Hard",
+              "value": "die_hard",
+              "description": "You gain the Die Hard Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Die Hard",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.L6hVwqVcbLe6h4Dt"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Paranoia",
+              "value": "paranoia",
+              "description": "You gain the Paranoia Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Paranoia",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.MXViwrGcKNBtNZjx"
+                  }
+                ]
+              }
+            }
           ],
           "count": 1
         }
       ]
     },
-    "effectText": "Gain either Die Hard or Paranoia Talents. Gain Inquiry Skill (or increase by one level).\nYou Brook no Insult, if someone insults you or bismirches your honour, you react violently. You may take a Willpower Test to avert this, difficulty modified by GM.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Blood Will Have Blood:</strong> You gain your choice of the Die Hard or Paranoia Talent, and gain the Inquiry Skill (or, if you already possess it, increase it by one level).</p><p><strong>Brook No Insult:</strong> You will allow no serious offence to your honour and person or those under your protection to pass unchallenged, meeting threat with threat and violence with violence. You may take a Willpower Test to avert this if you wish, modified by the provocation and the consequences (set by the GM) of succumbing to your rage.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "33",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

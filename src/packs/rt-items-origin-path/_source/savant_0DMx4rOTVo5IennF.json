@@ -28,11 +28,31 @@
           "options": [
             {
               "label": "Logic (Int) as trained Basic Skill",
-              "value": "skill:logic"
+              "value": "skill_logic",
+              "description": "Gain Logic as a trained Basic Skill.",
+              "grants": {
+                "skills": [
+                  {
+                    "name": "Logic",
+                    "specialization": "",
+                    "level": "trained"
+                  }
+                ]
+              }
             },
             {
               "label": "Peer (Academic) Talent",
-              "value": "talent:peer_academic"
+              "value": "talent_peer_academic",
+              "description": "Gain the Peer (Academic) Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Peer (Academic)",
+                    "specialization": "Academic",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+                  }
+                ]
+              }
             }
           ],
           "count": 1
@@ -43,11 +63,23 @@
           "options": [
             {
               "label": "+3 Intelligence",
-              "value": "intelligence"
+              "value": "intelligence",
+              "description": "Gain +3 to Intelligence.",
+              "grants": {
+                "characteristics": {
+                  "intelligence": 3
+                }
+              }
             },
             {
               "label": "+3 Fellowship",
-              "value": "fellowship"
+              "value": "fellowship",
+              "description": "Gain +3 to Fellowship.",
+              "grants": {
+                "characteristics": {
+                  "fellowship": 3
+                }
+              }
             }
           ],
           "count": 1

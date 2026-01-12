@@ -1,0 +1,71 @@
+{
+  "name": "Duty to Your Dynasty (Duty Bound)",
+  "type": "talent",
+  "img": "icons/svg/eagle.svg",
+  "system": {
+    "identifier": "duty-to-your-dynasty-duty-bound",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Duty to Your Dynasty</h2><p>Your loyalty is first and foremost to your Rogue Trader dynasty. You serve the honour and calling of your blood, striving to elevate your house above all rivals—even if it means making enemies along the way.</p><p><strong>Effect:</strong> You gain the Rival (Rogue Trader family) Talent and suffer −3 Toughness. You gain a bonus of +1 to your group's beginning Profit Factor.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain the Rival (Rogue Trader family) Talent, suffer −3 Toughness, and gain +1 to beginning Profit Factor.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Duty Bound origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Rival (Rogue Trader Family)",
+          "specialization": "Rogue Trader Family",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.EodW9mOa1n3FFDWQ"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Increased Profit Factor",
+          "description": "<p>You gain a bonus of +1 to your group's beginning Profit Factor.</p>"
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "toughness": -3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "DB00000000000003"
+}

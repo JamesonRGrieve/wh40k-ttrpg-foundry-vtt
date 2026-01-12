@@ -1,0 +1,111 @@
+{
+  "name": "Lineage: A Long and Glorious History",
+  "type": "originPath",
+  "img": "systems/rogue-trader/icons/origins/lineage-glorious.webp",
+  "system": {
+    "identifier": "lineage-long-glorious-history",
+    "step": "lineage",
+    "stepIndex": 7,
+    "description": {
+      "value": "<h2>A Long and Glorious History</h2><blockquote><p><em>\"Your family has existed for a very long time, predating sectors of the Imperium and with branches spread far and wide across the galaxy. Your family name is one known well in many places, recorded in ancient archives of history and proudly remembered on worlds you may never see, due to the exploits of distant kin and legendary ancestors.\"</em></p></blockquote><p>Members of your family pride themselves on their lengthy and widespread legacy, and you were taught the lore of your ancestors from an early age.</p><h3>The Weight of History</h3><p>To carry such a name is both blessing and burden. Doors open for you that remain closed to others, yet the expectations placed upon you are immense. Every action you take reflects not just upon yourself, but upon centuries of forebears whose deeds echo through the ages.</p><p>Some families of this lineage can trace their roots to the founding of the Imperium itself, their founders having walked alongside the Emperor's own companions. Others rose to prominence in the dark millennia that followed, carving their names into history through deed of arms, acts of faith, or mercantile brilliance. Whatever the source of your family's renown, it is undeniable and far-reaching.</p><h3>A Legacy Across the Stars</h3><p>Your family's influence spans worlds and sectors. Relatives you have never met hold positions of power on distant planets. Archives on forge worlds contain records of your ancestors' innovations. Ecclesiarchy records note your family's pious deeds. Naval officers salute a name they learned in the Academy. Your lineage is written into the very fabric of the Imperium.</p><p><strong>Cost:</strong> This lineage option costs XP to be taken from starting XP at character creation. Choose one of three paths that define how your family's history has shaped you.</p>"
+    },
+    "requirements": {
+      "text": "Optional lineage choice (costs XP)",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose your relationship to this glorious history",
+          "options": [
+            {
+              "label": "A Dark Secret",
+              "value": "dark_secret",
+              "description": "Something foul lurks within your ancestry. You gain Deceive and Scrutiny as trained Skills, but reduce starting Profit Factor by 1. Cost: 100xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "A Dark Secret (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000001"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "My Great-Grandfather Built This Colony",
+              "value": "colonial_legacy",
+              "description": "Your family's connections reach far and wide. Gain one Peer talent of your choice and +1 Profit Factor. Cost: 350xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "My Great-Grandfather Built This Colony (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000002"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Prominent Ancestry",
+              "value": "prominent_ancestry",
+              "description": "Your formative years were spent learning history. Gain Scholastic Lore (Archaic) as trained and Scholastic Lore (Legend) as Basic. Cost: 200xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Prominent Ancestry (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000003"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Lineage Benefits:</strong> Choose one option that defines your relationship to your family's long history. Each option has a different XP cost that must be paid from starting XP at character creation.</p>",
+    "notes": "Optional lineage step. Must be purchased with starting XP.",
+    "source": {
+      "book": "Into the Storm",
+      "page": "29-30",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LNPATH0000000001"
+}

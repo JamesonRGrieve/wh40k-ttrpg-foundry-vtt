@@ -1,0 +1,96 @@
+{
+  "name": "Insane (Tainted)",
+  "type": "talent",
+  "img": "icons/svg/degen.svg",
+  "system": {
+    "identifier": "insane-tainted",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30"
+    },
+    "description": {
+      "value": "<h2>Insane</h2><p>Your mind has been broken by trauma, Warp exposure, or the horrors you have witnessed. While this has hardened you against physical pain, your shattered psyche makes you difficult to deal with—and you find strange kinship with others who have lost their sanity.</p><p><strong>Effect:</strong> You suffer your choice of either −3 Fellowship or −1 Fate point. You gain +3 Toughness, the Peer (The Insane) Talent, and suffer 2d10 Insanity Points.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain +3 Toughness, Peer (The Insane), and suffer 2d10 Insanity. You suffer −3 Fellowship or −1 Fate.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tainted origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Peer (The Insane)",
+          "specialization": "The Insane",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Broken Mind",
+          "description": "<p>You suffer 2d10 Insanity Points at character creation.</p>"
+        }
+      ],
+      "choices": [
+        {
+          "type": "consequence",
+          "label": "Choose your penalty",
+          "options": [
+            {
+              "label": "−3 Fellowship",
+              "value": "fellowship",
+              "grants": {
+                "characteristics": {
+                  "fellowship": -3
+                }
+              }
+            },
+            {
+              "label": "−1 Fate Point",
+              "value": "fate",
+              "grants": {
+                "fate": -1
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "toughness": 3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "TA00000000000002"
+}

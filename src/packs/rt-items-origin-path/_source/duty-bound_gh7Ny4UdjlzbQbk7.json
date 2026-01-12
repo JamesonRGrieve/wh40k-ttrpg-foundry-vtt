@@ -23,34 +23,49 @@
       "specialAbilities": [],
       "choices": [
         {
-          "type": "duty_path",
+          "type": "talent",
           "label": "Choose one duty path",
           "options": [
             {
               "label": "Duty to the Throne: +3 Willpower, Armour of Contempt, −10 Interaction vs non-Imperium",
               "value": "throne",
-              "description": "You gain +3 Willpower and (if you meet the WP 40 prerequisite) the Armour of Contempt Talent. You suffer a −10 penalty to Interaction Skill Tests when dealing with any source outside of the Imperium (e.g., aliens and traitors).",
+              "description": "You gain +3 Willpower and (if you meet the WP 40 prerequisite) the Armour of Contempt Talent. You suffer a −10 penalty to Interaction Skill Tests when dealing with any source outside of the Imperium.",
               "grants": {
-                "characteristics": {
-                  "willpower": 3
-                }
+                "talents": [
+                  {
+                    "name": "Duty to the Throne (Duty Bound)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.DB00000000000001"
+                  }
+                ]
               }
             },
             {
               "label": "Duty to Humanity: +3 Perception or Intelligence, −1 Profit Factor",
               "value": "humanity",
               "description": "You gain your choice of +3 Perception or +3 Intelligence. You suffer a −1 to your group's beginning Profit Factor.",
-              "grants": {}
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Duty to Humanity (Duty Bound)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.DB00000000000002"
+                  }
+                ]
+              }
             },
             {
               "label": "Duty to Your Dynasty: Rival (Rogue Trader), −3 Toughness, +1 Profit Factor",
               "value": "dynasty",
               "description": "You gain the Rival (Rogue Trader family) Talent and suffer −3 Toughness. You gain a bonus of +1 to your group's beginning Profit Factor.",
               "grants": {
-                "characteristics": {
-                  "toughness": -3
-                },
-                "talents": ["Rival (Rogue Trader Family)"]
+                "talents": [
+                  {
+                    "name": "Duty to Your Dynasty (Duty Bound)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.DB00000000000003"
+                  }
+                ]
               }
             }
           ],

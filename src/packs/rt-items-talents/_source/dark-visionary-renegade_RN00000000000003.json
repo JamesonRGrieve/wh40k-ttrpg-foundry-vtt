@@ -1,0 +1,143 @@
+{
+  "name": "Dark Visionary (Renegade)",
+  "type": "talent",
+  "img": "icons/svg/masked.svg",
+  "system": {
+    "identifier": "dark-visionary-renegade",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30"
+    },
+    "description": {
+      "value": "<h2>Dark Visionary</h2><p>You sought answers to questions others feared to ask, and what you found was dark indeed. Your pursuit of forbidden knowledge has marked you, but it has also granted you insights into the nature of the universe that few possess.</p><p><strong>Effect:</strong> You suffer your choice of 1d5+1 Corruption Points or 1d5+1 Insanity Points. In return, you gain the Dark Soul Talent and Forbidden Lore (choose one) as a trained Basic Skill.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain Dark Soul and Forbidden Lore (choose one). You suffer 1d5+1 Corruption or Insanity.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Renegade origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Dark Soul",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.UOSAYwEb4x3AyrQ4"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "skill",
+          "label": "Choose one Forbidden Lore specialization",
+          "options": [
+            {
+              "label": "Forbidden Lore (Archeotech)",
+              "value": "archeotech",
+              "grants": {
+                "skills": [{ "name": "Forbidden Lore", "specialization": "Archeotech", "level": "trained" }]
+              }
+            },
+            {
+              "label": "Forbidden Lore (Daemonology)",
+              "value": "daemonology",
+              "grants": {
+                "skills": [{ "name": "Forbidden Lore", "specialization": "Daemonology", "level": "trained" }]
+              }
+            },
+            {
+              "label": "Forbidden Lore (Heresy)",
+              "value": "heresy",
+              "grants": {
+                "skills": [{ "name": "Forbidden Lore", "specialization": "Heresy", "level": "trained" }]
+              }
+            },
+            {
+              "label": "Forbidden Lore (Mutants)",
+              "value": "mutants",
+              "grants": {
+                "skills": [{ "name": "Forbidden Lore", "specialization": "Mutants", "level": "trained" }]
+              }
+            },
+            {
+              "label": "Forbidden Lore (Psykers)",
+              "value": "psykers",
+              "grants": {
+                "skills": [{ "name": "Forbidden Lore", "specialization": "Psykers", "level": "trained" }]
+              }
+            },
+            {
+              "label": "Forbidden Lore (The Warp)",
+              "value": "warp",
+              "grants": {
+                "skills": [{ "name": "Forbidden Lore", "specialization": "The Warp", "level": "trained" }]
+              }
+            },
+            {
+              "label": "Forbidden Lore (Xenos)",
+              "value": "xenos",
+              "grants": {
+                "skills": [{ "name": "Forbidden Lore", "specialization": "Xenos", "level": "trained" }]
+              }
+            }
+          ],
+          "count": 1
+        },
+        {
+          "type": "consequence",
+          "label": "Choose your consequence",
+          "options": [
+            {
+              "label": "1d5+1 Corruption Points",
+              "value": "corruption",
+              "grants": {
+                "corruption": "1d5+1"
+              }
+            },
+            {
+              "label": "1d5+1 Insanity Points",
+              "value": "insanity",
+              "grants": {
+                "insanity": "1d5+1"
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "RN00000000000003"
+}

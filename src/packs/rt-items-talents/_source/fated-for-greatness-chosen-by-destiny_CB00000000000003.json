@@ -1,0 +1,63 @@
+{
+  "name": "Fated for Greatness (Chosen by Destiny)",
+  "type": "talent",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "identifier": "fated-for-greatness-chosen-by-destiny",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Fated for Greatness</h2><p>You are certain that you are destined for greatness, that you will be the greatest of your bloodline, whose name will echo down through the ages, no matter what the cost. This certainty grants you extraordinary luck—but the weight of destiny takes its toll on your sanity.</p><p><strong>Effect:</strong> You gain +1 Fate Point, but you also suffer 1d10+1 Insanity Points.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain +1 Fate Point. You suffer 1d10+1 Insanity Points.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Chosen by Destiny origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Weight of Destiny",
+          "description": "<p>You suffer 1d10+1 Insanity Points at character creation.</p>"
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 1,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "CB00000000000003"
+}

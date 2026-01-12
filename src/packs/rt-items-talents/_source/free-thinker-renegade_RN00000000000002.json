@@ -1,0 +1,93 @@
+{
+  "name": "Free-thinker (Renegade)",
+  "type": "talent",
+  "img": "icons/svg/masked.svg",
+  "system": {
+    "identifier": "free-thinker-renegade",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30"
+    },
+    "description": {
+      "value": "<h2>Free-thinker</h2><p>You rejected the dogma of the Ecclesiarchy and embraced rationalism and inquiry. Your independent mind has made you sharper, but your rejection of the Imperial Creed has earned you powerful enemies.</p><p><strong>Effect:</strong> You gain your choice of +3 Intelligence or +3 Perception. You suffer −3 Willpower and gain the Enemy (Ecclesiarchy) Talent.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain +3 Intelligence or +3 Perception. You suffer −3 Willpower and gain Enemy (Ecclesiarchy).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Renegade origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Enemy (Ecclesiarchy)",
+          "specialization": "Ecclesiarchy",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.9IcwnVH72BVplVtv"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "characteristic",
+          "label": "Choose one characteristic bonus",
+          "options": [
+            {
+              "label": "+3 Intelligence",
+              "value": "intelligence",
+              "grants": {
+                "characteristics": {
+                  "intelligence": 3
+                }
+              }
+            },
+            {
+              "label": "+3 Perception",
+              "value": "perception",
+              "grants": {
+                "characteristics": {
+                  "perception": 3
+                }
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "willpower": -3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "RN00000000000002"
+}

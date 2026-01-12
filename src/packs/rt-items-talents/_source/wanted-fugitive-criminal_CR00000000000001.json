@@ -1,0 +1,69 @@
+{
+  "name": "Wanted Fugitive (Criminal)",
+  "type": "talent",
+  "img": "icons/svg/skull.svg",
+  "system": {
+    "identifier": "wanted-fugitive-criminal",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30"
+    },
+    "description": {
+      "value": "<h2>Wanted Fugitive</h2><p>You are a wanted fugitive, hunted by the Adeptus Arbites for crimes against the Imperium. However, your time evading Imperial law enforcement has made you well-connected within the criminal underworld.</p><p><strong>Effect:</strong> You gain the Enemy (Adeptus Arbites) and Peer (Underworld) Talents.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain the Enemy (Adeptus Arbites) and Peer (Underworld) Talents.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Criminal origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Enemy (Adeptus Arbites)",
+          "specialization": "Adeptus Arbites",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.9IcwnVH72BVplVtv"
+        },
+        {
+          "name": "Peer (Underworld)",
+          "specialization": "Underworld",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "CR00000000000001"
+}

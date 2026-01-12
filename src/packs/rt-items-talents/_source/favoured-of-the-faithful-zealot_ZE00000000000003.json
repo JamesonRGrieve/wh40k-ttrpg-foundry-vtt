@@ -1,0 +1,67 @@
+{
+  "name": "Favoured of the Faithful (Zealot)",
+  "type": "talent",
+  "img": "icons/svg/fire.svg",
+  "system": {
+    "identifier": "favoured-of-the-faithful-zealot",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Favoured of the Faithful</h2><p>The Ecclesiarchy has recognized your devotion to the God-Emperor, and you move easily among the faithful. Priests and pilgrims alike view you as one of their own—though your zealotry has perhaps come at the cost of your physical resilience.</p><p><strong>Effect:</strong> You gain +5 Fellowship and the Peer (Ecclesiarchy) Talent. You suffer −5 Toughness.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain +5 Fellowship and the Peer (Ecclesiarchy) Talent. You suffer −5 Toughness.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Zealot origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Peer (Ecclesiarchy)",
+          "specialization": "Ecclesiarchy",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {
+        "fellowship": 5,
+        "toughness": -5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "ZE00000000000003"
+}

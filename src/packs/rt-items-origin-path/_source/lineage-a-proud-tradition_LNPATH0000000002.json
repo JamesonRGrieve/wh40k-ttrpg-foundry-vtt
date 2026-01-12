@@ -1,0 +1,111 @@
+{
+  "name": "Lineage: A Proud Tradition",
+  "type": "originPath",
+  "img": "systems/rogue-trader/icons/origins/lineage-tradition.webp",
+  "system": {
+    "identifier": "lineage-proud-tradition",
+    "step": "lineage",
+    "stepIndex": 7,
+    "description": {
+      "value": "<h2>A Proud Tradition</h2><blockquote><p><em>\"You are the latest in a long line to take up this profession, an heir to a proud and prestigious lineage. The pressure of expectation and the weight of responsibility have always been your companions and your burden.\"</em></p></blockquote><p>While you may have acted out against them as a callow youth, you are now the head of the household, the one whose name is synonymous with that of your line and your profession. For better or worse, the prestige of your lineage is now yours to carry.</p><h3>Dynasty of Dedication</h3><p>Some families pass down a Warrant of Trade. Others pass down the mantle of Navigator, generation upon generation born with the warp eye. Military families produce generals, admirals, and Lord Commanders. Tech-priest dynasties see their scions rise to Magos and Archmagos. Missionary families spread the Imperial Creed across a hundred worlds. Whatever your family's calling, it has been honed and perfected over countless generations.</p><p>You were raised knowing your destiny: to follow in the footsteps of your forebears and surpass them if possible. Every lesson, every tutor, every experience was designed to prepare you for this role. Whether you embraced this destiny eagerly or resented it bitterly, it has shaped who you are today.</p><h3>The Inheritance</h3><p>Now the mantle has passed to you. The question is: were you the chosen heir, groomed from birth? A rival who fought for this position? Or an unexpected successor who squandered their youth only to find themselves thrust into power?</p><p><strong>Cost:</strong> This lineage option costs XP to be taken from starting XP at character creation. Choose one of three paths that define how you claimed your inheritance.</p>"
+    },
+    "requirements": {
+      "text": "Optional lineage choice (costs XP)",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose how you came to inherit your family's profession",
+          "options": [
+            {
+              "label": "Heir Apparent",
+              "value": "heir_apparent",
+              "description": "You were always destined for this role. Gain Talented for one career skill. Cost: 100xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Heir Apparent (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000004"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Uncertain Inheritance",
+              "value": "uncertain_inheritance",
+              "description": "You fought rivals for this position. Gain Paranoia, Deceive skill, and +3 Intelligence or Perception. Cost: 300xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Uncertain Inheritance (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000005"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Shameful Offspring",
+              "value": "shameful_offspring",
+              "description": "You squandered your youth, but fate made you heir. Gain Carouse or Gamble, Decadence talent, and 1d5 Corruption or Insanity. Cost: 150xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Shameful Offspring (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000006"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Lineage Benefits:</strong> Choose one option that defines how you came to inherit your family's proud tradition. Each option has a different XP cost that must be paid from starting XP at character creation.</p>",
+    "notes": "Optional lineage step. Must be purchased with starting XP.",
+    "source": {
+      "book": "Into the Storm",
+      "page": "30-31",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LNPATH0000000002"
+}

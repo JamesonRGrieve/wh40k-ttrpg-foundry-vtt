@@ -26,140 +26,50 @@
       "specialAbilities": [],
       "choices": [
         {
-          "type": "unnatural_origin_path",
+          "type": "talent",
           "label": "Choose one Unnatural Origin path",
           "options": [
             {
               "label": "Contaminated Environs (100 XP)",
               "value": "contaminated",
-              "xpCost": 100,
-              "description": "You grew up in toxic wastelands or mutant-infested zones where survival required adaptation. Your body has been hardened by exposure to poisons and disease, and you understand the ways of the outcasts.",
+              "description": "You grew up in toxic wastelands or mutant-infested zones. Grants Peer (Mutants) and Resistance (Poisons), -3 Fellowship. Choose +3 Toughness or +3 Willpower.",
               "grants": {
-                "characteristics": {
-                  "fellowship": -3
-                },
-                "talents": ["Peer (Mutants)", "Resistance (Poisons)"]
-              },
-              "choices": [
-                {
-                  "type": "characteristic",
-                  "label": "Choose one characteristic bonus",
-                  "options": [
-                    {"label": "+3 Toughness", "value": "toughness"},
-                    {"label": "+3 Willpower", "value": "willpower"}
-                  ],
-                  "count": 1
-                },
-                {
-                  "type": "upgrade",
-                  "label": "Optional: Gain mutation (requires +100 XP)",
-                  "options": [
-                    {
-                      "label": "Roll for 1 mutation (reroll 75+) [+100 XP]",
-                      "value": "mutation",
-                      "xpCost": 100,
-                      "description": "You may pay an additional 100 XP to roll once on the mutation table, rerolling results of 75 or higher."
-                    }
-                  ],
-                  "count": 1
-                }
-              ]
+                "talents": [
+                  {
+                    "name": "Contaminated Environs (Unnatural Origin)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.UO00000000000001"
+                  }
+                ]
+              }
             },
             {
               "label": "False-Man (300 XP)",
               "value": "false_man",
-              "xpCost": 300,
-              "description": "You are a gene-crafted creation, built for purposes unknown—perhaps a failed experiment or a heretical masterwork. Your body is optimized beyond normal human limits, but your mind bears scars from the process.",
+              "description": "You are a gene-crafted creation. Grants Ambidextrous, Autosanguine, and Chem-Geld. +3 to two characteristics, -3 to one. 2d10 Insanity or lose 1 Fate.",
               "grants": {
-                "talents": ["Ambidextrous", "Autosanguine", "Chem-Geld"]
-              },
-              "choices": [
-                {
-                  "type": "characteristics_multi",
-                  "label": "Choose two characteristics to increase by +3",
-                  "options": [
-                    {"label": "+3 Weapon Skill", "value": "weaponSkill"},
-                    {"label": "+3 Ballistic Skill", "value": "ballisticSkill"},
-                    {"label": "+3 Strength", "value": "strength"},
-                    {"label": "+3 Toughness", "value": "toughness"},
-                    {"label": "+3 Agility", "value": "agility"},
-                    {"label": "+3 Intelligence", "value": "intelligence"},
-                    {"label": "+3 Perception", "value": "perception"},
-                    {"label": "+3 Willpower", "value": "willpower"},
-                    {"label": "+3 Fellowship", "value": "fellowship"}
-                  ],
-                  "count": 2
-                },
-                {
-                  "type": "characteristic_penalty",
-                  "label": "Choose one characteristic to reduce by -3",
-                  "options": [
-                    {"label": "-3 Weapon Skill", "value": "weaponSkill"},
-                    {"label": "-3 Ballistic Skill", "value": "ballisticSkill"},
-                    {"label": "-3 Strength", "value": "strength"},
-                    {"label": "-3 Toughness", "value": "toughness"},
-                    {"label": "-3 Agility", "value": "agility"},
-                    {"label": "-3 Intelligence", "value": "intelligence"},
-                    {"label": "-3 Perception", "value": "perception"},
-                    {"label": "-3 Willpower", "value": "willpower"},
-                    {"label": "-3 Fellowship", "value": "fellowship"}
-                  ],
-                  "count": 1
-                },
-                {
-                  "type": "consequence",
-                  "label": "Choose one consequence of creation",
-                  "options": [
-                    {"label": "Gain 2d10 Insanity Points", "value": "insanity"},
-                    {"label": "Lose 1 Fate Point", "value": "fate"}
-                  ],
-                  "count": 1
-                }
-              ]
+                "talents": [
+                  {
+                    "name": "False-Man (Unnatural Origin)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.UO00000000000002"
+                  }
+                ]
+              }
             },
             {
               "label": "Tainted by the Warp (200 XP)",
               "value": "tainted",
-              "xpCost": 200,
-              "description": "The Warp has touched you—whether through exposure to the Immaterium, proximity to psykers, or darker circumstances. You sense things others cannot, but the price is corruption of body and soul.",
+              "description": "The Warp has touched you. Grants Dark Soul, Jaded, Forbidden Lore (Warp), 1d10 Corruption, -3 Fellowship. Choose +3 Perception or +3 Willpower.",
               "grants": {
-                "characteristics": {
-                  "fellowship": -3
-                },
-                "talents": ["Dark Soul", "Jaded"],
-                "skills": [
-                  {"name": "Forbidden Lore (Warp)", "specialization": "", "level": "untrained"}
-                ],
-                "corruption": "1d10"
-              },
-              "choices": [
-                {
-                  "type": "characteristic",
-                  "label": "Choose one characteristic bonus",
-                  "options": [
-                    {"label": "+3 Perception", "value": "perception"},
-                    {"label": "+3 Willpower", "value": "willpower"}
-                  ],
-                  "count": 1
-                },
-                {
-                  "type": "upgrade",
-                  "label": "Optional: Favoured by the Warp (requires +300 XP)",
-                  "options": [
-                    {
-                      "label": "Gain Favoured by the Warp talent and +1d10 Corruption [+300 XP]",
-                      "value": "favoured",
-                      "xpCost": 300,
-                      "description": "You may pay an additional 300 XP to gain the Favoured by the Warp talent, but you also gain an additional 1d10 Corruption Points.",
-                      "grants": {
-                        "talents": ["Favoured by the Warp"],
-                        "corruption": "1d10"
-                      }
-                    }
-                  ],
-                  "count": 1
-                }
-              ]
+                "talents": [
+                  {
+                    "name": "Tainted by the Warp (Unnatural Origin)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.UO00000000000003"
+                  }
+                ]
+              }
             }
           ],
           "count": 1

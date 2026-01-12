@@ -7,7 +7,7 @@
     "step": "motivation",
     "stepIndex": 5,
     "description": {
-      "value": "<p>+1 Fate Point</p>"
+      "value": "<h2>Fortune</h2><blockquote><p><em>\"You seek wealth beyond measure, countless Thrones with which to purchase the fulfilment of your every desire. You understand that all things begin with the clink, clink, clink of Throne coins dropped upon a finely crafted counter, the sound that carries into the hearts of men and makes them listen where they would otherwise turn away.\"</em></p></blockquote><p>Birth and wealth causes others to care not. So it is that everything you have ever wanted, everything you could ever need, all comes down to Thrones. You must have them and the great wealth they represent. That is your quest, and you can only hope that you are still the same person at the end of it, having evaded the myriad ways in which single-minded fortune-seeking twists the mind and the soul.</p><p>In the void, wealth is power, and power is survival. You will have both, no matter the cost.</p>"
     },
     "requirements": {
       "text": "Origin Path: Motivation",
@@ -15,31 +15,38 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 1
-      },
+      "fate": 1,
       "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [],
-      "choices": []
+      "specialAbilities": []
     },
-    "effectText": "+1 Fate Point",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 1,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> +1 Fate Point.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "33",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

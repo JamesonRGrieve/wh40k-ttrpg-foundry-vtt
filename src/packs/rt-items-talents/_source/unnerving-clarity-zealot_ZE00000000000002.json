@@ -1,0 +1,85 @@
+{
+  "name": "Unnerving Clarity (Zealot)",
+  "type": "talent",
+  "img": "icons/svg/fire.svg",
+  "system": {
+    "identifier": "unnerving-clarity-zealot",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Unnerving Clarity</h2><p>Your faith grants you an unshakeable certainty that others find unsettling. You see the universe with a clarity that comes from absolute conviction—but this intensity can alienate those around you or push you toward the edge of sanity.</p><p><strong>Effect:</strong> You gain +5 Willpower. You also suffer your choice of −5 Fellowship or 1d10 Insanity Points.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain +5 Willpower. You suffer −5 Fellowship or 1d10 Insanity Points.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Zealot origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "consequence",
+          "label": "Choose your penalty",
+          "options": [
+            {
+              "label": "−5 Fellowship",
+              "value": "fellowship",
+              "grants": {
+                "characteristics": {
+                  "fellowship": -5
+                }
+              }
+            },
+            {
+              "label": "1d10 Insanity Points",
+              "value": "insanity",
+              "grants": {
+                "insanity": "1d10"
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "willpower": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "ZE00000000000002"
+}

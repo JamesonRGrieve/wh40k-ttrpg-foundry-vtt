@@ -127,7 +127,18 @@
                 "characteristics": {
                   "strength": -3
                 },
-                "talents": ["Paranoia", "Unremarkable"]
+                "talents": [
+                  {
+                    "name": "Paranoia",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.MXViwrGcKNBtNZjx"
+                  },
+                  {
+                    "name": "Unremarkable",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.J7ThXpRuaRPOo0sj"
+                  }
+                ]
               },
               "choices": [
                 {

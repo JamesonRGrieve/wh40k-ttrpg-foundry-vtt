@@ -1,0 +1,72 @@
+{
+  "name": "Lineage: Of Extensive Means",
+  "type": "originPath",
+  "img": "systems/rogue-trader/icons/origins/lineage-wealth.webp",
+  "system": {
+    "identifier": "lineage-extensive-means",
+    "step": "lineage",
+    "stepIndex": 7,
+    "description": {
+      "value": "<h2>Of Extensive Means</h2><blockquote><p><em>\"Wealth, power, servants... your family has all of these things in abundance. For longer than you can recall, your family has always known the right people, had the most money, been able to obtain the finest things, and had the most dignified and skilful vassals.\"</em></p></blockquote><p>You were born to such means, and never wanted for anything. Some may call you spoiled, or unfairly lucky, but the challenges of having and maintaining wealth and power are far beyond the unfortunates who have never possessed such things. Now that wealth and power is yours to command, and it shall take you far.</p><h3>Born to Privilege</h3><p>From your first breath, you were surrounded by opulence. The finest tutors instructed you. The best equipment was always at your disposal. Servants attended your every need. When you expressed even the slightest interest in something, it was procured for you. When you made mistakes, your family's wealth and connections smoothed them over.</p><p>Your nursery was larger than most families' homes. Your wardrobe cost more than a merchant's annual profit. Your education would bankrupt a minor noble house. And this was considered normal, unremarkable even, because this is simply how your family has always lived.</p><h3>The Weight of Expectations</h3><p>Yet with such privilege comes immense expectation. You are not merely wealthy—you are among the elite who shape the destinies of entire sectors. Your family doesn't just participate in Imperial politics; they help direct it. The decisions you make don't just affect you; they ripple across worlds.</p><p>You have been trained from birth to wield authority as naturally as breathing. Command comes easily to you, not from arrogance, but from a lifetime of seeing orders obeyed and witnessing the consequences of weak leadership. You understand power not as a theoretical concept, but as a practical tool to be wielded with precision and discretion.</p><p><strong>Cost:</strong> 350 XP. This lineage grants you three powerful talents that make you a formidable leader and commander.</p>"
+    },
+    "requirements": {
+      "text": "Optional lineage choice (costs 350 XP)",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [
+        {
+          "name": "A Powerful Legacy (Lineage)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000013"
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Born to Command",
+          "description": "<p>Your lifetime of privilege and training grants you exceptional leadership abilities. You automatically receive the A Powerful Legacy talent, which in turn grants you Talented (Intimidate), Talented (Command), and Air of Authority. These combined abilities make you a natural leader whose orders are obeyed instinctively.</p>"
+        }
+      ],
+      "choices": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Lineage Benefits:</strong> You gain the A Powerful Legacy talent, which grants you Talented (Intimidate), Talented (Command), and Air of Authority. These represent your lifetime of training in the exercise of power.</p><p><strong>XP Cost:</strong> 350 XP (paid from starting XP at character creation)</p>",
+    "notes": "Optional lineage step. Costs 350 XP. No choice - directly grants A Powerful Legacy.",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LNPATH0000000005"
+}

@@ -6,84 +6,119 @@
     "identifier": "devotion",
     "step": "motivation",
     "stepIndex": 5,
+    "xpCost": 0,
+    "isAdvancedOrigin": true,
+    "replacesOrigins": ["endurance", "renown"],
     "description": {
-      "value": "<p>1. Creed (200xp): Gain Charm and Common Lore (Imperial Creed) as Trained Skills. Gain Inspire Wrath Talent.<br>2. Duty (100xp): +3 Willpower. Gain either Armour of Contempt Talent or Unshakable Faith Talent.<br>3. Loyalty (100xp): Gain Trade (Voidfarer) as Trained Basic Skill, gain +5 to Willpower and Fellowship Tests aboard the ship your character lives on.</p>"
+      "value": "<h2>Devotion</h2><blockquote><p><em>\"You go into the unknown not for yourself, but for something greater. You believe, and whether your belief is a religious one, a matter of personal loyalty, an absolute dedication to duty, or something else entirely, it gives you the strength to persevere when all seems lost.\"</em></p></blockquote><p>You will not rest, nor will you falter, while your faith remains intact. Others may question your devotion, unable to understand how someone could cleave so tightly to something as distant and abstract as duty, loyalty, honour, or faith, when other paths grant so much more...but you know better. You will not be swayed by those who comprehend nothing beyond themselves and their own ambitions.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay its XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
     "requirements": {
-      "text": "Origin Path: Motivation",
+      "text": "Origin Path: Motivation (Advanced)",
       "previousSteps": [],
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 3,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Charm",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Common Lore (Imperial Creed) as Trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Inspire Wrath",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "either Armour of Contempt",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Trade (Voidfarer) as Trained Basic",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "to Willpower",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "or Unshakable Faith Talent",
-        "Inspire Wrath"
-      ],
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": [
         {
-          "type": "equipment",
-          "label": "Choose from: Armour of Contempt Talent, Unshakable Faith Talent",
+          "type": "devotion_path",
+          "label": "Choose one Devotion path",
           "options": [
-            "Armour of Contempt Talent",
-            "Unshakable Faith Talent"
+            {
+              "label": "Creed (200 XP)",
+              "value": "creed",
+              "xpCost": 200,
+              "description": "Faith is your shield and your sword, it is the strength in your muscles and the life in your veins, and the power that drives you ever onwards. While stars exist beyond the reaches of the Emperor's light, there can be no rest, for it is Mankind's destiny to rule the stars and you will permit no exception to that. You look with scorn upon those who crave material things, for their deeds are tainted by their impure desires, no matter how great those deeds may be. If you seek any remembrance or legacy of your own, it is as an implement of the Emperor's will, the blade in His right hand and the mouthpiece for His voice. You seek to inspire and rally others to your cause, to instil fervour and zeal and drive your fellow man to righteousness.",
+              "grants": {
+                "skills": [
+                  {"name": "Charm", "specialization": "", "level": "trained"},
+                  {"name": "Common Lore", "specialization": "Imperial Creed", "level": "trained"}
+                ],
+                "talents": [
+                  {"name": "Inspire Wrath", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.m4ByYYPM9jVtcy3f"}
+                ]
+              },
+              "choices": []
+            },
+            {
+              "label": "Duty (100 XP)",
+              "value": "duty",
+              "xpCost": 100,
+              "description": "To labour is human, to serve divine. You find strength in duty and eagerly embrace the strictures and dictates such duty requires. To see obligations fulfilled and assume a role in the vast structure of the Imperium is your greatest desire. So strong is that desire you will stop at nothing to see it done, and fear only failure. To others, your rigid discipline and obsessive focus may seem disquieting, but you do not share their doubts. You pity them, for they will never know the contentment and satisfaction your purpose gives you, nor the purity of life your conviction provides.",
+              "grants": {
+                "characteristics": {
+                  "willpower": 3
+                }
+              },
+              "choices": [
+                {
+                  "type": "talent",
+                  "label": "Choose one devotion talent",
+                  "options": [
+                    {"label": "Armour of Contempt", "uuid": "Compendium.rogue-trader.rt-items-talents.KX2Dp1gAZcPXbZMI"},
+                    {"label": "Unshakeable Faith", "uuid": "Compendium.rogue-trader.rt-items-talents.iOEQr0ljJ5zJdofj"}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Loyalty (100 XP)",
+              "value": "loyalty",
+              "xpCost": 100,
+              "description": "The ship is home, the crew is family, and the captain is its ruler. To those who ply the void, this is an indisputable truth, a notion so strong that in some people it provides a sense of purpose great enough to brave any risk. There may be disputes between different parts of the crew, but such things are all in the family, not for the concern of outsiders. You would do anything for your captain, and will go anywhere the ship goes. You burn with pride at the sight of her and at the triumphs of her crew, and to shame or mock the her is the gravest mistake an outsider can make. You care not where you go or what you face, so long as you do it with that familiar deck plating beneath your feet, surrounded by men and women whose abilities you trust without hesitation.",
+              "grants": {
+                "skills": [
+                  {"name": "Trade", "specialization": "Voidfarer", "level": "trained"}
+                ]
+              },
+              "choices": []
+            }
           ],
           "count": 1
         }
       ]
     },
-    "effectText": "1. Creed (200xp): Gain Charm and Common Lore (Imperial Creed) as Trained Skills. Gain Inspire Wrath Talent.\n2. Duty (100xp): +3 Willpower. Gain either Armour of Contempt Talent or Unshakable Faith Talent.\n3. Loyalty (100xp): Gain Trade (Voidfarer) as Trained Basic Skill, gain +5 to Willpower and Fellowship Tests aboard the ship your character lives on.",
-    "notes": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "condition": "Loyalty: Aboard your home ship",
+            "modifier": 5,
+            "appliesTo": ["willpower", "fellowship"]
+          }
+        ]
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Creed (200 XP):</strong> Gain Charm and Common Lore (Imperial Creed) as trained Skills. In addition, gain the Inspire Wrath Talent.</li><li><strong>Duty (100 XP):</strong> Gain either the Armour of Contempt Talent or the Unshakeable Faith Talent. In addition, gain +3 Willpower.</li><li><strong>Loyalty (100 XP):</strong> Gain Trade (Voidfarer) as a Trained Basic Skill, and gain a +5 bonus to all Willpower and Fellowship tests made while aboard the ship the character lives on.</li></ul>",
+    "notes": "Advanced Motivation option from Into The Storm, pages 26-27.",
+    "source": {
+      "book": "Into The Storm",
+      "page": "26-27",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

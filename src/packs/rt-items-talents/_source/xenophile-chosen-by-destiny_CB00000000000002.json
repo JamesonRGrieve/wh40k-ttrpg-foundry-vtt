@@ -1,0 +1,67 @@
+{
+  "name": "Xenophile (Chosen by Destiny)",
+  "type": "talent",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "identifier": "xenophile-chosen-by-destiny",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Xenophile</h2><p>You know in your heart that your destiny lies upon strange xenos worlds. You are drawn to alien cultures and find yourself understanding their ways with unusual ease—though this fascination leaves you vulnerable to their influence.</p><p><strong>Effect:</strong> You gain a bonus of +10 to Fellowship Tests when dealing with alien races or cultures. You suffer a −5 penalty to Willpower Tests involving alien artefacts and alien psychic powers.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain +10 to Fellowship Tests with aliens. You suffer −5 to Willpower Tests involving alien artefacts and psychic powers.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Chosen by Destiny origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Alien Affinity",
+          "description": "<p>You gain a bonus of +10 to Fellowship Tests when dealing with alien races or cultures.</p>"
+        },
+        {
+          "name": "Vulnerable to Alien Influence",
+          "description": "<p>You suffer a −5 penalty to Willpower Tests involving alien artefacts and alien psychic powers.</p>"
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "CB00000000000002"
+}

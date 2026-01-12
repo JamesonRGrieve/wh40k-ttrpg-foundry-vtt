@@ -28,11 +28,23 @@
           "options": [
             {
               "label": "+3 Willpower",
-              "value": "willpower"
+              "value": "willpower",
+              "description": "Gain +3 to Willpower.",
+              "grants": {
+                "characteristics": {
+                  "willpower": 3
+                }
+              }
             },
             {
               "label": "+3 Agility",
-              "value": "agility"
+              "value": "agility",
+              "description": "Gain +3 to Agility.",
+              "grants": {
+                "characteristics": {
+                  "agility": 3
+                }
+              }
             }
           ],
           "count": 1
@@ -41,8 +53,34 @@
           "type": "talent",
           "label": "Choose one talent",
           "options": [
-            "Unremarkable",
-            "Resistance (Fear)"
+            {
+              "label": "Unremarkable",
+              "value": "unremarkable",
+              "description": "You are forgettable and blend into crowds easily.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Unremarkable",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.J7ThXpRuaRPOo0sj"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Resistance (Fear)",
+              "value": "resistance_fear",
+              "description": "Gain +10 to resist Fear effects.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Resistance (Fear)",
+                    "specialization": "Fear",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"
+                  }
+                ]
+              }
+            }
           ],
           "count": 1
         },
@@ -52,11 +90,19 @@
           "options": [
             {
               "label": "1d5 Corruption Points",
-              "value": "corruption:1d5"
+              "value": "corruption",
+              "description": "Gain 1d5 Corruption Points.",
+              "grants": {
+                "corruption": "1d5"
+              }
             },
             {
               "label": "1d5 Insanity Points",
-              "value": "insanity:1d5"
+              "value": "insanity",
+              "description": "Gain 1d5 Insanity Points.",
+              "grants": {
+                "insanity": "1d5"
+              }
             }
           ],
           "count": 1

@@ -7,7 +7,7 @@
     "step": "trialsAndTravails",
     "stepIndex": 4,
     "description": {
-      "value": "<p>Gain the Survival Skill (or increase it by one level) or Dark Soul Talent. Whenever you spend a Fate Point to recover wounds, you can reroll the dice but must accept the second result.<br>Reduce starting Fate Points by 1, suffer -5 on Fellowship Tests when interacting with Void Born, ORgue Traders, or Voidfarers that are not Personal Friends if they have heard of your background and reputation.</p>"
+      "value": "<h2>Ship-Lorn</h2><blockquote><p><em>\"For those who ply the void, there are few things that provoke as much fear in them as to be robbed of their starship, to have the very crux of their identity cruelly taken from them by sudden destruction or betrayal. Whether by shipwreck, enemy action, or darker reasons such as mutiny or deliberate abandonment, there are few more terrible fates for an Explorer than to have been a castaway without help, either on a strange world or, worse yet, lost in the icy grip of the cold stars.\"</em></p></blockquote><p>It takes a remarkable individual to survive such a fate, capable of drawing on reservoirs of resolve and self-reliance few can hope to muster, but such endurance can be a two-edged sword. To others who travel the stars and brave the tides of the empyrean, you are marked out and distrusted for surviving what you should not have endured, and the void born whisper that your ill-luck will follow you wherever you go. You care not, for every day you stride the deck of a ship and see another star dawn is another step taken in scorn of the doom you have escaped.</p><p>You have stared into the abyss of the void and returned—changed, hardened, and forever marked by your ordeal.</p>"
     },
     "requirements": {
       "text": "Origin Path: Trials and Travails",
@@ -15,37 +15,87 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "the Survival",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [],
-      "choices": []
+      "specialAbilities": [
+        {
+          "name": "Against All Odds",
+          "description": "<p>You gain the Survival Skill (or increase it by one level if you already possess it) or the Dark Soul Talent. Additionally, whenever you spend a Fate Point to recover Wounds (see page 233), you may re-roll the dice if you wish but must accept the second result even if it is worse.</p>"
+        },
+        {
+          "name": "Ill-starred",
+          "description": "<p>Reduce your starting number of Fate Points permanently by −1. Additionally, you suffer −5 on Fellowship Tests when interacting with the void born, Rogue Traders, and other voidfarers who are not personal friends, if they have heard of your background and reputation.</p>"
+        }
+      ],
+      "choices": [
+        {
+          "type": "survival_path",
+          "label": "Against All Odds: Choose Survival skill or Dark Soul talent",
+          "options": [
+            {
+              "label": "Survival Skill",
+              "value": "survival",
+              "description": "You gain the Survival Skill (or increase it by one level if you already possess it).",
+              "grants": {
+                "skills": [
+                  {
+                    "name": "Survival",
+                    "specialization": "",
+                    "level": "trained"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Dark Soul",
+              "value": "dark_soul",
+              "description": "You gain the Dark Soul Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Dark Soul",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.UOSAYwEb4x3AyrQ4"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "Gain the Survival Skill (or increase it by one level) or Dark Soul Talent. Whenever you spend a Fate Point to recover wounds, you can reroll the dice but must accept the second result.\nReduce starting Fate Points by 1, suffer -5 on Fellowship Tests when interacting with Void Born, ORgue Traders, or Voidfarers that are not Personal Friends if they have heard of your background and reputation.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": -1,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "description": "−5 on Fellowship Tests when interacting with void born, Rogue Traders, and other voidfarers who are not personal friends, if they have heard of your background"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Against All Odds:</strong> You gain the Survival Skill (or increase it by one level if you already possess it) or the Dark Soul Talent. Additionally, whenever you spend a Fate Point to recover Wounds (see page 233), you may re-roll the dice if you wish but must accept the second result even if it is worse.</p><p><strong>Ill-starred:</strong> Reduce your starting number of Fate Points permanently by −1. Additionally, you suffer −5 on Fellowship Tests when interacting with the void born, Rogue Traders, and other voidfarers who are not personal friends, if they have heard of your background and reputation.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "32",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

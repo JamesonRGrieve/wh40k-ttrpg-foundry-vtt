@@ -1,0 +1,111 @@
+{
+  "name": "Lineage: Accursed Be Thy Name",
+  "type": "originPath",
+  "img": "systems/rogue-trader/icons/origins/lineage-accursed.webp",
+  "system": {
+    "identifier": "lineage-accursed-name",
+    "step": "lineage",
+    "stepIndex": 7,
+    "description": {
+      "value": "<h2>Accursed Be Thy Name</h2><blockquote><p><em>\"Your line is tainted, corrupted by some unspeakable foulness that has attracted the scorn and wrath of Inquisitors and Confessors and all manner of others over the generations.\"</em></p></blockquote><p>Like the Haarlock line of Rogue Traders (thought cursed by many) or the scions of the tainted houses of Malfi, many of your ancestors and predecessors were vile heretics, unrepentant blasphemers and twisted schemers whose evil is legendary, and more than a few of them burned for their sins.</p><p>Now the burden of their infamy is yours to bear, and whether you choose to continue their legacy or strive to overcome it remains to be seen.</p><h3>The Mark of Shame</h3><p>Your family name is spoken in whispers, if at all. When Inquisitors compile their lists of suspected heretics, your bloodline features prominently. Confessors preach sermons warning against your family's corruption. In some sectors, your very name is enough to turn allies into enemies and close doors that should remain open.</p><p>The taint runs deep. Perhaps it began with a single ancestor who dabbled in forbidden lore. Perhaps an entire generation fell to Chaos during the Heresy. Perhaps your family made pacts with xenos or trafficked in archaeotech better left buried. Whatever the source, the stain cannot be easily washed away.</p><h3>Three Paths</h3><p>You stand at a crossroads. Will you reject your family's evil and seek redemption? Will you hide the worst of it, maintaining a facade of respectability while pursuing your own dark agenda? Or will you embrace the forbidden knowledge your family has accumulated, using it as a weapon regardless of the cost to your soul?</p><p><strong>Cost:</strong> This lineage option costs XP to be taken from starting XP at character creation. Choose one of three paths that define your relationship to your family's corruption.</p>"
+    },
+    "requirements": {
+      "text": "Optional lineage choice (costs XP)",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose how you deal with your family's dark legacy",
+          "options": [
+            {
+              "label": "Outraged Scion",
+              "value": "outraged_scion",
+              "description": "You reject your family's evil utterly. Gain Armour of Contempt and two Forbidden Lores as Basic skills. Cost: 300xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Outraged Scion (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000007"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Secret Taint",
+              "value": "secret_taint",
+              "description": "You hide the worst of your family's corruption. Gain Dark Soul, Deceive, +5 Int or WP, but 1d10+10 Corruption. Cost: 400xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Secret Taint (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000008"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Vile Insight",
+              "value": "vile_insight",
+              "description": "You possess terrible knowledge. Gain three Forbidden Lores as trained, but 2d5 Insanity and 2d5 Corruption. Cost: 300xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Vile Insight (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000009"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Lineage Benefits:</strong> Choose one option that defines how you deal with your family's accursed reputation. Each option has a different XP cost that must be paid from starting XP at character creation.</p>",
+    "notes": "Optional lineage step. Must be purchased with starting XP.",
+    "source": {
+      "book": "Into the Storm",
+      "page": "31",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LNPATH0000000003"
+}

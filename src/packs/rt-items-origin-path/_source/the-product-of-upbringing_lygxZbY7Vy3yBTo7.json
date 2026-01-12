@@ -1,67 +1,113 @@
 {
-  "name": "The Product of Upbringing",
+  "name": "A Product of Upbringing",
   "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
     "identifier": "the-product-of-upbringing",
     "step": "trialsAndTravails",
     "stepIndex": 4,
+    "xpCost": 0,
+    "isAdvancedOrigin": true,
+    "replacesOrigins": ["press-ganged", "ship-lorn"],
     "description": {
-      "value": "<p>1. New Blood (200xp): Gain Rival (Nobility) from being part of an upstart Noble Family. Add +1 Profit Factor to Group&#x27;s Starting Profit Factor.<br>2. Rivals (100xp): +3 Fellowship. Gain Rival Talent of group character dislikes and Peer of group that supports them. Make -10 Willpower Test to avoid acting out at rivals. <br>3. Decadent (150xp): +3 Willpower. Gain Decadence Talent and +5 to all Charm Tests. Gain 1d5 Corruption.</p>"
+      "value": "<h2>A Product of Upbringing</h2><blockquote><p><em>\"There are many different types of nobility within the Imperium. Some might be part of the Commercia Houses, others are Imperial Officers, and still others are members of the Rogue Trader Dynasties and clans. It's a confusing and often tangled web of intrigue and fealty.\"</em></p></blockquote><p>Only the High Lords of Terra can declare a family line to be nobility, but planetary lords, Imperial Commanders, and sector Governors can all declare lesser vassals to be raised in status under them. Some families are given titles as a reward for service to the Golden Throne; these family members are often looked down upon as upstarts until they have proven themselves over the course of many generations.</p><p>Of course, noble families are always trying to gain the advantage over one another, and thus earn the favour of their lords. They scheme and plot in the hopes that one day their plans will come to fruition and they will be elevated in status and gain even more power and wealth. Aside from the direct bloodlines and heirs, there are those family members who are associated by marriage, and those who have been brought into the family for some potent ability they possess. These scions typically form the backbone of the nobility and help keep the lines viable for future generations.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
     "requirements": {
-      "text": "Origin Path: Trials and Travails",
+      "text": "Origin Path: Trials and Travails (Advanced)",
       "previousSteps": [],
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 3,
-          "fellowship": 3,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Rival",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Decadence",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d5 Corruption",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "of group character dislikes",
-        "Peer of group that supports them",
-        "and +5 to all Charm Tests",
-        "Decadence",
-        "Rival"
-      ],
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose one Product of Upbringing path",
+          "options": [
+            {
+              "label": "New Blood (200 XP)",
+              "value": "new_blood",
+              "xpCost": 200,
+              "description": "Your family's newfound wealth adds +1 Profit Factor, but you gain Rival (Nobility) as the aristocracy scorns your upstart family.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "New Blood (Product of Upbringing)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.PU00000000000001"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Rivals (100 XP)",
+              "value": "rivals",
+              "xpCost": 100,
+              "description": "Gain +3 Fellowship, a Rival Talent for your vendetta target, and a Peer Talent for your allied supporters.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Rivals (Product of Upbringing)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.PU00000000000002"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Decadent (150 XP)",
+              "value": "decadent",
+              "xpCost": 150,
+              "description": "Gain +3 Willpower, the Decadence Talent, +5 to Charm Tests, and 1d5 Corruption Points.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Decadent (Product of Upbringing)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.PU00000000000003"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. New Blood (200xp): Gain Rival (Nobility) from being part of an upstart Noble Family. Add +1 Profit Factor to Group's Starting Profit Factor.\n2. Rivals (100xp): +3 Fellowship. Gain Rival Talent of group character dislikes and Peer of group that supports them. Make -10 Willpower Test to avoid acting out at rivals. \n3. Decadent (150xp): +3 Willpower. Gain Decadence Talent and +5 to all Charm Tests. Gain 1d5 Corruption.",
-    "notes": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>New Blood (200 XP):</strong> The character is considered part of an upstart family and as such gains the Rival (Nobility) Talent. However, their wealth adds +1 Profit Factor to the group's starting Profit Factor.</li><li><strong>Rivals (100 XP):</strong> Gain +3 Fellowship. Also, gain the Rival Talent (the rival being the group that the character has a rivalry with, subject to GM's approval). Whenever you encounter a member of this rival faction, the character attempts to visit retribution upon them. A Difficult (-10) Willpower Test can be made to prevent this from happening once per scene. In addition, the character gains the Peer Talent: these peers consist of an allied group that supports him in his rivalry.</li><li><strong>Decadent (150 XP):</strong> Gain +3 Willpower, the Decadence Talent and a +5 bonus to Charm Tests. Additionally, gain 1d5 Corruption Points.</li></ul>",
+    "notes": "Advanced Trials and Travails option from Into The Storm, page 25.",
+    "source": {
+      "book": "Into The Storm",
+      "page": "25",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

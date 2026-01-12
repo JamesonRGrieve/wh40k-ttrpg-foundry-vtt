@@ -6,86 +6,143 @@
     "identifier": "exhilaration",
     "step": "motivation",
     "stepIndex": 5,
+    "xpCost": 0,
+    "isAdvancedOrigin": true,
+    "replacesOrigins": ["fortune", "prestige"],
     "description": {
-      "value": "<p>1. New Horizons (200xp): Gain Common Lore (Koronus Expanse) and either Scholastic Lore (Astromancy) or Trade (Explorator) as trained Skills.<br>2. The Thrill of War (250xp): +3 Weapon Skill or Ballistic Skill, -3 Fellowship. Gain Scholastic Lore (Tactical Imperialis) as Trained Skill. Gain Nerves of Steel and Quick Draw Talents.<br>3. No Joy Unexplored (200xp): +3 Toughness or +3 Fellowship, -3 Willpower. Gain Decadence and Carouse Trained Skill. Gain 1d5 Corruption Points.</p>"
+      "value": "<h2>Exhilaration</h2><blockquote><p><em>\"What joy is there in the mundane? What pleasure can be found in experiences already oft-tasted? To your mind, there is little if any excitement left in civilised realms.\"</em></p></blockquote><p>For you, the unexplored is a source of endless amusement, the rush of battle a sensation to be relished anew each time. New horizons and thrills are your aim and your goal, and everything else is simply a means to that end. But you grow worried, in the quiet moments, for what will you do once you've had it all? What joys remain for one who has seen and done everything?</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay its XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
     "requirements": {
-      "text": "Origin Path: Motivation",
+      "text": "Origin Path: Motivation (Advanced)",
       "previousSteps": [],
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 3,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 3,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": -3,
-          "fellowship": 3,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Common Lore (Koronus Expanse)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Scholastic Lore (Tactical Imperialis) as Trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Nerves of Steel",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Quick Draw",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Decadence",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Carouse Trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d5 Corruption Points",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": [
         {
-          "type": "skill",
-          "label": "Choose from: Scholastic Lore (Astromancy), Trade (Explorator) as trained Skills",
+          "type": "exhilaration_path",
+          "label": "Choose one Exhilaration path",
           "options": [
-            "Scholastic Lore (Astromancy)",
-            "Trade (Explorator) as trained Skills"
+            {
+              "label": "New Horizons (200 XP)",
+              "value": "new_horizons_exh",
+              "xpCost": 200,
+              "description": "To see the stars, the suns and the moons of worlds already claimed by Man is of no interest to you. Only the hidden promise of strange and distant worlds entices you, and you desire only to push on and see as many new horizons and unique skies as possible. To mark unknown worlds with your presence and see things the likes of which no man has ever seen before is what drives you, and such a desire leaves no time for laxity, nor any room for complacency. You must go forward, for there is nothing unseen in your wake.",
+              "grants": {
+                "skills": [
+                  {"name": "Common Lore", "specialization": "Koronus Expanse", "level": "trained"}
+                ]
+              },
+              "choices": [
+                {
+                  "type": "skill",
+                  "label": "Choose one exploration skill (Trained)",
+                  "options": [
+                    {"label": "Scholastic Lore (Astromancy)", "value": "scholasticLore_astromancy"},
+                    {"label": "Trade (Explorator)", "value": "trade_explorator"}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "The Thrill of War (250 XP)",
+              "value": "thrill_war",
+              "xpCost": 250,
+              "description": "You live for excitement, and no greater excitement can be found than that of battle. You yearn for the din and mayhem of conflict, the tests of skill, wits and courage, and eagerly seek out fights wherever they can be found. Others may condemn you as a warmonger or find your belligerent ways off-putting, but your heart craves the rush of battle and such a thing should not be denied. Even in times of peace, you prepare for war, duelling for sport and honour, honing your skills and musing through countless theoretical strategies in anticipation of wars to come.",
+              "grants": {
+                "characteristics": {
+                  "fellowship": -3
+                },
+                "skills": [
+                  {"name": "Scholastic Lore", "specialization": "Tactica Imperialis", "level": "trained"}
+                ],
+                "talents": [
+                  {"name": "Nerves of Steel", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.ew2l7tuorQ7fCJD8"},
+                  {"name": "Quick Draw", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.qdn5GQvS11uRvnIO"}
+                ]
+              },
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one combat characteristic bonus",
+                  "options": [
+                    {"label": "+3 Weapon Skill", "characteristic": "weaponSkill", "value": 3},
+                    {"label": "+3 Ballistic Skill", "characteristic": "ballisticSkill", "value": 3}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "No Joy Unexplored (200 XP)",
+              "value": "no_joy",
+              "xpCost": 200,
+              "description": "Whatever the pleasure, you have indulged in it. Your hedonism defines you, your reputation is dark and sordid, and you are not sated yet. Amongst the unknown must be sights and sounds and experiences as yet undreamt of by mankind, and you cannot stop until you have found and sampled them! The world around you grows dull and grey as you begin to tire of the mundane pleasures your culture provides. Even the most extreme delights that would horrify the average Imperial citizen are becoming increasingly tempting in your desperate search for something new to satisfy you. Whatever you find, you may not escape it unscathed—or unchanged.",
+              "grants": {
+                "characteristics": {
+                  "willpower": -3
+                },
+                "corruption": "1d5",
+                "skills": [
+                  {"name": "Carouse", "specialization": "", "level": "trained"}
+                ],
+                "talents": [
+                  {"name": "Decadence", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.8rzBqEoffSgKTAp3"}
+                ]
+              },
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one physical/social characteristic bonus",
+                  "options": [
+                    {"label": "+3 Toughness", "characteristic": "toughness", "value": 3},
+                    {"label": "+3 Fellowship", "characteristic": "fellowship", "value": 3}
+                  ],
+                  "count": 1
+                }
+              ]
+            }
           ],
           "count": 1
         }
       ]
     },
-    "effectText": "1. New Horizons (200xp): Gain Common Lore (Koronus Expanse) and either Scholastic Lore (Astromancy) or Trade (Explorator) as trained Skills.\n2. The Thrill of War (250xp): +3 Weapon Skill or Ballistic Skill, -3 Fellowship. Gain Scholastic Lore (Tactical Imperialis) as Trained Skill. Gain Nerves of Steel and Quick Draw Talents.\n3. No Joy Unexplored (200xp): +3 Toughness or +3 Fellowship, -3 Willpower. Gain Decadence and Carouse Trained Skill. Gain 1d5 Corruption Points.",
-    "notes": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>New Horizons (200 XP):</strong> Gain Common Lore (Koronus Expanse) and either Scholastic Lore (Astromancy) or Trade (Explorator) as trained Skills.</li><li><strong>The Thrill of War (250 XP):</strong> Gain +3 Weapon Skill or Ballistic Skill (choose one), but suffer −3 Fellowship. Gain Scholastic Lore (Tactica Imperialis) as a Trained Skill. Additionally gain the Nerves of Steel and Quick Draw Talents.</li><li><strong>No Joy Unexplored (200 XP):</strong> Gain +3 Toughness or Fellowship (choose one), but suffer −3 Willpower. Gain the Decadence Talent, Carouse as a trained Skill. However, diverse and possibly ill-advised experiences have left their mark, tainting the character and making him incautious of further risks. Gain 1d5 Corruption Points.</li></ul>",
+    "notes": "Advanced Motivation option from Into The Storm, page 29.",
+    "source": {
+      "book": "Into The Storm",
+      "page": "29",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

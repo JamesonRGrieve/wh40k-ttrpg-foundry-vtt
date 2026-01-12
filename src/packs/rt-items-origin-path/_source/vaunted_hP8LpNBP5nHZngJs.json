@@ -20,13 +20,18 @@
         {
           "name": "Decadence",
           "specialization": "",
-          "uuid": ""
+          "uuid": "Compendium.rogue-trader.rt-items-talents.8rzBqEoffSgKTAp3"
         }
       ],
       "traits": [],
       "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [],
+      "specialAbilities": [
+        {
+          "name": "Overindulgence",
+          "description": "<p>You suffer 1d5 Corruption Points from your life of decadence.</p>"
+        }
+      ],
       "choices": [
         {
           "type": "characteristic",
@@ -34,11 +39,23 @@
           "options": [
             {
               "label": "+3 Agility",
-              "value": "agility"
+              "value": "agility",
+              "description": "Gain +3 to Agility.",
+              "grants": {
+                "characteristics": {
+                  "agility": 3
+                }
+              }
             },
             {
               "label": "+3 Fellowship",
-              "value": "fellowship"
+              "value": "fellowship",
+              "description": "Gain +3 to Fellowship.",
+              "grants": {
+                "characteristics": {
+                  "fellowship": 3
+                }
+              }
             }
           ],
           "count": 1

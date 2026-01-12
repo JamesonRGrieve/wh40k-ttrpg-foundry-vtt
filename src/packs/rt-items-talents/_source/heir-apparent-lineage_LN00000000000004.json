@@ -1,0 +1,62 @@
+{
+  "name": "Heir Apparent (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/crown.svg",
+  "system": {
+    "identifier": "heir-apparent-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "31"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Your fate was always this: to stand at the forefront of the next generation and carry the family tradition one step further.\"</em></p></blockquote><p>For you, the weight of responsibility was the hardest, for you alone were required to bear the expectations of your entire family. Now, however, you look back thankfully on those harsh formative years, for the constant pressure of your teachers and predecessors gave you an advantage which will allow you to thrive in the years ahead.</p><p>You were groomed from birth to inherit your family's profession, receiving the finest training and education available.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Pick a single Skill from amongst your Career Path's Starting Skills. You gain the Talented talent for that Skill, granting you a +10 bonus to all tests using that skill.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "A Proud Tradition lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 100,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Talented talent for one career skill.",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Perfect Training",
+          "description": "<p>Choose one Skill from your Career Path's Starting Skills. You gain the Talented talent for that skill, providing a permanent +10 bonus to all tests made using it. This represents the intensive training you received as the designated heir.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000004"
+}

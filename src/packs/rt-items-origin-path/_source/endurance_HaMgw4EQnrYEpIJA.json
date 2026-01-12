@@ -7,7 +7,7 @@
     "step": "motivation",
     "stepIndex": 5,
     "description": {
-      "value": "<p>+1 Wound</p>"
+      "value": "<h2>Endurance</h2><blockquote><p><em>\"You seek to endure and, in enduring, grow stronger. You welcome opposition, risk, setbacks, injury, and pain as old friends—for these trials are but a stairway by which you will climb to greater heights. Endure, and you shall be made mighty in the God-Emperor's eyes, and a power of the Imperium.\"</em></p></blockquote><p>The virtuous welcome the storm, the Imperial Creed teaches, for its fury guides humanity upon the path to strength in body and soul. Just as a mighty tree sheds its weakest limbs before the tearing winds, and stands the greater for it, so too is humanity made sturdy by struggle and want. Others would put it more simply: the weak die and only the strong remain, and you choose to be the latter.</p><p>Through hardship and adversity, you will forge yourself into an instrument of the Emperor's will—unbreakable, unyielding, eternal.</p>"
     },
     "requirements": {
       "text": "Origin Path: Motivation",
@@ -15,31 +15,38 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 1,
-        "fate": 0
-      },
+      "wounds": 1,
       "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [],
-      "choices": []
+      "specialAbilities": []
     },
-    "effectText": "+1 Wound",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 1,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> +1 Wound.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "33",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

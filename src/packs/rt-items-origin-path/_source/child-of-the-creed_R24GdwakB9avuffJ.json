@@ -20,7 +20,7 @@
         {
           "name": "Unshakeable Faith",
           "specialization": "",
-          "uuid": ""
+          "uuid": "Compendium.rogue-trader.rt-items-talents.iOEQr0ljJ5zJdofj"
         }
       ],
       "traits": [],
@@ -34,11 +34,23 @@
           "options": [
             {
               "label": "+3 Willpower",
-              "value": "willpower"
+              "value": "willpower",
+              "description": "Gain +3 to Willpower.",
+              "grants": {
+                "characteristics": {
+                  "willpower": 3
+                }
+              }
             },
             {
               "label": "+3 Fellowship",
-              "value": "fellowship"
+              "value": "fellowship",
+              "description": "Gain +3 to Fellowship.",
+              "grants": {
+                "characteristics": {
+                  "fellowship": 3
+                }
+              }
             }
           ],
           "count": 1

@@ -1,0 +1,75 @@
+{
+  "name": "Recidivist (Renegade)",
+  "type": "talent",
+  "img": "icons/svg/masked.svg",
+  "system": {
+    "identifier": "recidivist-renegade",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30"
+    },
+    "description": {
+      "value": "<h2>Recidivist</h2><p>You are a repeat offender, constantly evading Imperial law enforcement. Your time in and out of Imperial custody has taught you how to resist interrogation and how to remain hidden from those who hunt you.</p><p><strong>Effect:</strong> You gain the Enemy (Adeptus Arbites) and Resistance (Interrogation) Talents. You also gain Concealment as a trained Basic Skill.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain Enemy (Adeptus Arbites), Resistance (Interrogation), and Concealment as a trained skill.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Renegade origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [
+        {
+          "name": "Concealment",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Enemy (Adeptus Arbites)",
+          "specialization": "Adeptus Arbites",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.9IcwnVH72BVplVtv"
+        },
+        {
+          "name": "Resistance (Interrogation)",
+          "specialization": "Interrogation",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "RN00000000000001"
+}

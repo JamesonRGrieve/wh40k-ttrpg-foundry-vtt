@@ -53,8 +53,34 @@
           "type": "talent",
           "label": "Hardened: Choose one",
           "options": [
-            "Jaded",
-            "Resistance (Poisons)"
+            {
+              "label": "Jaded",
+              "value": "jaded",
+              "description": "Mundane traumatic events do not force you to gain Insanity Points or make Fear Tests. Terrors of the Warp still affect you normally.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Jaded",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.ldTw7wC9T3dPeOig"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Resistance (Poisons)",
+              "value": "resistance_poisons",
+              "description": "Gain +10 to resist poison effects.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Resistance (Poisons)",
+                    "specialization": "Poisons",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"
+                  }
+                ]
+              }
+            }
           ],
           "count": 1
         }

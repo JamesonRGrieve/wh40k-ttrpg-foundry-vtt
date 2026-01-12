@@ -1,0 +1,101 @@
+{
+  "name": "Seeker of Truth (Chosen by Destiny)",
+  "type": "talent",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "identifier": "seeker-of-truth-chosen-by-destiny",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Seeker of Truth</h2><p>You quest for forbidden truths that lie concealed in the darkest secrets of the Imperium. Your pursuit of hidden knowledge has granted you unusual foresight, but it has also made enemies of those who guard such secrets.</p><p><strong>Effect:</strong> You gain the Foresight Talent and the Enemy (Academics or Ecclesiarchy) Talent. You suffer −3 Willpower.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain Foresight and Enemy (Academics or Ecclesiarchy). You suffer −3 Willpower.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Chosen by Destiny origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Foresight",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.OJFzaZs0NhmI5ySC"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose your enemy",
+          "options": [
+            {
+              "label": "Enemy (Academics)",
+              "value": "academics",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Enemy (Academics)",
+                    "specialization": "Academics",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.9IcwnVH72BVplVtv"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Enemy (Ecclesiarchy)",
+              "value": "ecclesiarchy",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Enemy (Ecclesiarchy)",
+                    "specialization": "Ecclesiarchy",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.9IcwnVH72BVplVtv"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "willpower": -3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "CB00000000000001"
+}

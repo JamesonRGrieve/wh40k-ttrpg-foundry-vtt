@@ -7,7 +7,7 @@
     "step": "trialsAndTravails",
     "stepIndex": 4,
     "description": {
-      "value": "<p>Gain any One Weapon Training, or Leap Up Talent. Gain one of Hatred (Orks, Eldar, Mutants, Chaos Worshippers, Imperial Guard, Imperial Navy, Void Pirates), your character fought against this foe in the past. Your character will never work with their sworn enemy unless under dire circumstances. Suffer -10 Fellowship in such dealings. Must make Willpower test to avoid succumbing to your hatred if this sworn enemy provokes you, difficulty modified by GM.</p>"
+      "value": "<h2>The Hand of War</h2><blockquote><p><em>\"The Imperium of Man is wracked by war and violence, whilst beyond its borders the strife and conflict is even worse in many regions. Not all wars, however, are equal, and you were caught up in a bitter and terrifying campaign in which starships were left as burning hulks and cities were blasted to ruin in a vicious series of battles that saw no quarter asked or given.\"</em></p></blockquote><p>The war and the enemy you fought to the death has had a profound effect on you, and to the present day, the faces of the dead haunt you still when you close your eyes. Now, you count only those you have fought and bled with as true allies, and will never forgive your old foe. You strive hard for what you desire, for you know that death stands never more than a heartbeat away.</p><p>The bonds forged in the crucible of war are stronger than any other, and your hatred for your sworn enemy burns with an undying flame.</p>"
     },
     "requirements": {
       "text": "Origin Path: Trials and Travails",
@@ -15,77 +15,176 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": -10,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "any One Weapon Training",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "or Leap Up",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "one of Hatred (Orks",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Eldar",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Mutants",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Chaos Worshippers",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Imperial Guard",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Imperial Navy",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Void Pirates)",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [],
-      "choices": []
+      "specialAbilities": [
+        {
+          "name": "The Face of the Enemy",
+          "description": "<p>You will never willingly have dealings with your sworn enemy except under the direst circumstances, and if you must do so, you suffer −10 to all Fellowship Tests in those dealings. Also, if given the slightest provocation, you will react violently towards them. (You may take a Willpower Test to avert this, modified by the provocation and the consequences of succumbing to your hatred.)</p>"
+        }
+      ],
+      "choices": [
+        {
+          "type": "war_training",
+          "label": "The Ashes of War: Choose one Weapon Training or Leap Up",
+          "options": [
+            {
+              "label": "One Weapon Training Talent of your choice",
+              "value": "weapon_training",
+              "description": "You gain one Weapon Training Talent of your choice.",
+              "grants": {}
+            },
+            {
+              "label": "Leap Up",
+              "value": "leap_up",
+              "description": "You gain the Leap Up Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Leap Up",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.Q6A7dCNVqRhgEp2o"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        },
+        {
+          "type": "war_hatred",
+          "label": "Choose your sworn enemy from the war",
+          "options": [
+            {
+              "label": "Hatred (Orks)",
+              "value": "orks",
+              "description": "You fought against the savage Ork hordes. You gain Hatred (Orks).",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Hatred (Orks)",
+                    "specialization": "Orks",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RR3rNt6WnWvwG4n8"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Hatred (Eldar)",
+              "value": "eldar",
+              "description": "You fought against the enigmatic Eldar. You gain Hatred (Eldar).",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Hatred (Eldar)",
+                    "specialization": "Eldar",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RR3rNt6WnWvwG4n8"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Hatred (Mutants)",
+              "value": "mutants",
+              "description": "You fought against twisted mutants. You gain Hatred (Mutants).",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Hatred (Mutants)",
+                    "specialization": "Mutants",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RR3rNt6WnWvwG4n8"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Hatred (Chaos Worshipers)",
+              "value": "chaos",
+              "description": "You fought against the forces of Chaos. You gain Hatred (Chaos Worshipers).",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Hatred (Chaos Worshipers)",
+                    "specialization": "Chaos Worshipers",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RR3rNt6WnWvwG4n8"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Hatred (Imperial Guard)",
+              "value": "imperial_guard",
+              "description": "You fought in a civil war against Imperial Guard forces. You gain Hatred (Imperial Guard).",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Hatred (Imperial Guard)",
+                    "specialization": "Imperial Guard",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RR3rNt6WnWvwG4n8"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Hatred (Imperial Navy)",
+              "value": "imperial_navy",
+              "description": "You fought in a civil war against Imperial Navy forces. You gain Hatred (Imperial Navy).",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Hatred (Imperial Navy)",
+                    "specialization": "Imperial Navy",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RR3rNt6WnWvwG4n8"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Hatred (Void Pirates)",
+              "value": "void_pirates",
+              "description": "You fought against void pirates. You gain Hatred (Void Pirates).",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Hatred (Void Pirates)",
+                    "specialization": "Void Pirates",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RR3rNt6WnWvwG4n8"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "Gain any One Weapon Training, or Leap Up Talent. Gain one of Hatred (Orks, Eldar, Mutants, Chaos Worshippers, Imperial Guard, Imperial Navy, Void Pirates), your character fought against this foe in the past. Your character will never work with their sworn enemy unless under dire circumstances. Suffer -10 Fellowship in such dealings. Must make Willpower test to avoid succumbing to your hatred if this sworn enemy provokes you, difficulty modified by GM.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>The Ashes of War:</strong> You gain one Weapon Training Talent of your choice, or the Leap Up Talent, as well as the Hatred Talent against your foe in the war that defined your past. Choose from among: Orks, Eldar, mutants, Chaos worshipers, the Imperial Guard, the Imperial Navy or void pirates.</p><p><strong>The Face of the Enemy:</strong> You will never willingly have dealings with your sworn enemy except under the direst circumstances, and if you must do so, you suffer −10 to all Fellowship Tests in those dealings. Also, if given the slightest provocation, you will react violently towards them. (You may take a Willpower Test to avert this, modified by the provocation and the consequences of succumbing to your hatred.)</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31-32",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

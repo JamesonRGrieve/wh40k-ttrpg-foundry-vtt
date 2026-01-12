@@ -1,0 +1,111 @@
+{
+  "name": "Lineage: Disgraced",
+  "type": "originPath",
+  "img": "systems/rogue-trader/icons/origins/lineage-disgraced.webp",
+  "system": {
+    "identifier": "lineage-disgraced",
+    "step": "lineage",
+    "stepIndex": 7,
+    "description": {
+      "value": "<h2>Disgraced</h2><blockquote><p><em>\"Shame is your inheritance. Your family line is in shambles, its resources all but depleted, its connections severed and its reputation met with only scorn and pity.\"</em></p></blockquote><p>You grew up in dilapidated finery, constantly mocked by the wealth and prestige of generations past, and constantly reminded of the fact that you are yet another heir with nothing of worth to inherit. Now you stand at the forefront of your broken family, and must choose whether you will continue their disgrace or end it.</p><h3>The Fall from Grace</h3><p>Once, your family stood among the great houses of the Imperium. Perhaps they were Rogue Traders whose ventures failed catastrophically. Perhaps they were nobles who backed the wrong side in a political struggle. Perhaps they were military officers court-martialed for cowardice or incompetence. Perhaps they simply squandered their wealth through generations of poor decisions.</p><p>Now the family manse is mortgaged, the heirlooms sold, the servants dismissed. Former allies cross the street to avoid acknowledging you. Creditors hound your every step. The very name that once opened doors now slams them shut.</p><h3>Rock Bottom</h3><p>You have three choices before you. Will you sink even lower, frittering away what little remains in pursuit of fleeting pleasures? Will you cling to survival as the last of your line, rebuilding from nothing? Or will you fight with every fiber of your being to redeem your family's honor and restore its fortunes?</p><p><strong>Cost:</strong> This lineage option costs XP to be taken from starting XP at character creation. Choose one of three paths that define how you deal with your family's disgrace.</p>"
+    },
+    "requirements": {
+      "text": "Optional lineage choice (costs XP)",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose how you respond to your family's disgrace",
+          "options": [
+            {
+              "label": "Another Generation of Shame",
+              "value": "more_shame",
+              "description": "Your life continues the family's downward spiral. Gain Carouse and Peer (Underworld), but -2 Profit Factor. Cost: 100xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Another Generation of Shame (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000010"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "The Last Child",
+              "value": "last_child",
+              "description": "You alone survive to rebuild. Gain Barter, one Trade skill, +3 Int or Fel, but -3 Profit Factor. Cost: 200xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "The Last Child (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000011"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "The One to Redeem Them",
+              "value": "redeemer",
+              "description": "You seek to restore your family's glory. Gain Commerce and +50 Endeavour AP, but -1 Profit Factor. Cost: 300xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "The One to Redeem Them (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000012"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Lineage Benefits:</strong> Choose one option that defines how you respond to your family's disgrace. Each option has a different XP cost that must be paid from starting XP at character creation.</p>",
+    "notes": "Optional lineage step. Must be purchased with starting XP.",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LNPATH0000000004"
+}

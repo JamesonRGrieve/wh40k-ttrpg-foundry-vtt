@@ -1,0 +1,66 @@
+{
+  "name": "Hunted by a Crime Baron (Criminal)",
+  "type": "talent",
+  "img": "icons/svg/skull.svg",
+  "system": {
+    "identifier": "hunted-by-crime-baron-criminal",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30"
+    },
+    "description": {
+      "value": "<h2>Hunted by a Crime Baron</h2><p>You crossed the wrong people in the criminal underworld and now a powerful crime baron has marked you for death. Your time on the run has sharpened your senses, but the underworld is closed to you.</p><p><strong>Effect:</strong> You gain +3 Perception and the Enemy (Underworld) Talent.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain +3 Perception and the Enemy (Underworld) Talent.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Criminal origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Enemy (Underworld)",
+          "specialization": "Underworld",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.9IcwnVH72BVplVtv"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {
+        "perception": 3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "CR00000000000002"
+}

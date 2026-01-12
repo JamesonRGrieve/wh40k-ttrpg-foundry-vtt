@@ -23,7 +23,7 @@
       "specialAbilities": [],
       "choices": [
         {
-          "type": "destiny_path",
+          "type": "talent",
           "label": "Choose one destiny path",
           "options": [
             {
@@ -31,23 +31,42 @@
               "value": "seeker",
               "description": "You gain the Foresight Talent and the Enemy (Academics or Ecclesiarchy) Talent. You suffer −3 Willpower.",
               "grants": {
-                "characteristics": {
-                  "willpower": -3
-                },
-                "talents": ["Foresight"]
+                "talents": [
+                  {
+                    "name": "Seeker of Truth (Chosen by Destiny)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.CB00000000000001"
+                  }
+                ]
               }
             },
             {
               "label": "Xenophile: +10 Fellowship vs aliens, −5 Willpower vs alien artifacts/powers",
               "value": "xenophile",
               "description": "You gain a bonus of +10 to Fellowship Tests when dealing with alien races or cultures. You suffer a −5 penalty to Willpower Tests involving alien artefacts and alien psychic powers.",
-              "grants": {}
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Xenophile (Chosen by Destiny)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.CB00000000000002"
+                  }
+                ]
+              }
             },
             {
               "label": "Fated for Greatness: +1 Fate Point, 1d10+1 Insanity Points",
               "value": "fated",
               "description": "You gain +1 Fate Point, but you also suffer 1d10+1 Insanity Points.",
-              "grants": {}
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Fated for Greatness (Chosen by Destiny)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.CB00000000000003"
+                  }
+                ]
+              }
             }
           ],
           "count": 1

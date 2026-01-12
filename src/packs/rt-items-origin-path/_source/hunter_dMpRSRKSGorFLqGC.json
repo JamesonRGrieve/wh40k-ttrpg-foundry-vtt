@@ -39,7 +39,13 @@
                   "willpower": 3,
                   "fellowship": 3
                 },
-                "talents": ["Bloodtracker"]
+                "talents": [
+                  {
+                    "name": "Blood Tracker",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.hNSqevLz8O0Tmfbb"
+                  }
+                ]
               },
               "choices": [
                 {

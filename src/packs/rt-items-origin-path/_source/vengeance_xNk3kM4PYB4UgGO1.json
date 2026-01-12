@@ -7,7 +7,7 @@
     "step": "motivation",
     "stepIndex": 5,
     "description": {
-      "value": "<p>Gain Hatred (any one) Talent</p>"
+      "value": "<h2>Vengeance</h2><blockquote><p><em>\"Vengeance burns within your heart, flaming afresh in your veins each time you wake from dreams of knives and murder. You seek revenge against those who have wronged you. That desire gnaws at you, haunts your sleep, and shadows your every action.\"</em></p></blockquote><p>All must toil to live, but with each step you take, you ask yourself: \"Is this a step closer to my revenge?\" The need rides you, and it will do so until the day you stand above the bloody corpses of the last of your enemies. And what then? It matters not, now, for that day is far yet, and the path long. If retribution consumes you entirely between now and then, making a ghost of the man you once were, then that is a price you are willing to pay.</p><p>Your hatred is a cold flame that will never be extinguished until your enemies are dust. It is the only warmth you know, the only purpose you acknowledge.</p>"
     },
     "requirements": {
       "text": "Origin Path: Motivation",
@@ -15,40 +15,60 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Hatred (any one)",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "</p>",
-        "Hatred (any one)"
-      ],
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "hatred_target",
+          "label": "Choose your sworn enemy",
+          "options": [
+            {
+              "label": "Hatred (Choose one)",
+              "value": "hatred",
+              "description": "You gain the Hatred Talent against a chosen enemy.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Hatred (X)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.RR3rNt6WnWvwG4n8"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "Gain Hatred (any one) Talent",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> You gain the Hatred (choose one) Talent.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "33",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

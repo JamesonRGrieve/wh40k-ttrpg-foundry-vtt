@@ -7,7 +7,7 @@
     "step": "trialsAndTravails",
     "stepIndex": 4,
     "description": {
-      "value": "<p>Gain Light Sleeper, and either Hardy or Nerves of Steel Talents. -1 Starting Profit Factor.</p>"
+      "value": "<h2>Calamity</h2><blockquote><p><em>\"When reaching out beyond the relative safety of the Imperium, one of the great, often underestimated, dangers is disaster, whether it affects an isolated colony outpost or affects a star vessel suddenly robbed of its supplies by circumstances or sabotage. Famine, plague, and other unlooked-for disasters kill the weak, can make death a mercy, and often destroy the thin veneer of civilisation worn by many, revealing both the worst and best in humanity.\"</em></p></blockquote><p>You have seen all this and more, and perhaps were forced into desperate measures in order to survive or remain true to your honour. Regardless, you hold no illusions about what others are capable of in extremis and have learned the hard way that sometimes a bolt shell is worth a Lord Commander's ransom and that a starving man cannot eat gold, no matter how much he has grasped.</p><p>You understand that survival is the first law, and all else is luxury. Your experiences have hardened you, but also taught you the true value of preparation and pragmatism.</p>"
     },
     "requirements": {
       "text": "Origin Path: Trials and Travails",
@@ -15,52 +15,86 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
+      "skills": [],
+      "talents": [
         {
           "name": "Light Sleeper",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "either Hardy or Nerves of Steel",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.5zWJdxMlWz5X4Dvx"
         }
       ],
-      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [],
+      "specialAbilities": [
+        {
+          "name": "Echo of Hard Times",
+          "description": "<p>Thanks to the adversities of the past and a sense of priority that promotes caution and the needs of the present over acquisition and risk, you reduce your group's starting Profit Factor by −1.</p>"
+        }
+      ],
       "choices": [
         {
-          "type": "talent",
-          "label": "Choose from: Hardy, Nerves of Steel Talents",
+          "type": "adversity_talent",
+          "label": "Inured to Adversity: Choose Hardy or Nerves of Steel",
           "options": [
-            "Hardy",
-            "Nerves of Steel Talents"
+            {
+              "label": "Hardy",
+              "value": "hardy",
+              "description": "You gain the Hardy Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Hardy",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.cxdCGZYushVAWRzB"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Nerves of Steel",
+              "value": "nerves_of_steel",
+              "description": "You gain the Nerves of Steel Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Nerves of Steel",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.ew2l7tuorQ7fCJD8"
+                  }
+                ]
+              }
+            }
           ],
           "count": 1
         }
       ]
     },
-    "effectText": "Gain Light Sleeper, and either Hardy or Nerves of Steel Talents. -1 Starting Profit Factor.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": -1
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Inured to Adversity:</strong> You gain the Light Sleeper Talent and your choice of the Hardy Talent or Nerves of Steel Talent.</p><p><strong>Echo of Hard Times:</strong> Thanks to the adversities of the past and a sense of priority that promotes caution and the needs of the present over acquisition and risk, you reduce your group's starting Profit Factor by −1.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "32",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

@@ -1,0 +1,63 @@
+{
+  "name": "Mutant (Tainted)",
+  "type": "talent",
+  "img": "icons/svg/degen.svg",
+  "system": {
+    "identifier": "mutant-tainted",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30"
+    },
+    "description": {
+      "value": "<h2>Mutant</h2><p>Your body has been twisted by unnatural forces—whether through Warp exposure, radiation, or genetic instability. You bear visible mutations that mark you as an outcast in Imperial society.</p><p><strong>Effect:</strong> You must roll once on Table 14-3: Mutations (see page 369). If you choose, you may spend 200 xp to select one result from the table (must be a result of lower than 76-00) instead of rolling randomly.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You must roll once on the Mutations table (or spend 200 XP to select one result below 76).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Tainted origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Mutation",
+          "description": "<p>Roll once on Table 14-3: Mutations (page 369). You may spend 200 XP to select one result from the table (must be a result of lower than 76-00) instead of rolling randomly.</p>"
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "TA00000000000001"
+}

@@ -1,0 +1,71 @@
+{
+  "name": "Duty to the Throne (Duty Bound)",
+  "type": "talent",
+  "img": "icons/svg/eagle.svg",
+  "system": {
+    "identifier": "duty-to-the-throne-duty-bound",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Duty to the Throne</h2><p>Your loyalty to the Golden Throne and the Imperium of Man is absolute. You serve the God-Emperor with unwavering devotion, and your faith strengthens your mind against the enemies of mankind.</p><p><strong>Effect:</strong> You gain +3 Willpower and (if you meet the WP 40 prerequisite) the Armour of Contempt Talent. You suffer a −10 penalty to Interaction Skill Tests when dealing with any source outside of the Imperium (e.g., aliens and traitors).</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain +3 Willpower and (if you meet the WP 40 prerequisite) the Armour of Contempt Talent. You suffer −10 to Interaction Tests with non-Imperium sources.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Duty Bound origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Armour of Contempt",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.KX2Dp1gAZcPXbZMI"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Intolerant of Outsiders",
+          "description": "<p>You suffer a −10 penalty to Interaction Skill Tests when dealing with any source outside of the Imperium (e.g., aliens and traitors).</p>"
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "willpower": 3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "DB00000000000001"
+}

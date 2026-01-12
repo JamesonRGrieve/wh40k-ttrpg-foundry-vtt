@@ -7,7 +7,7 @@
     "step": "trialsAndTravails",
     "stepIndex": 4,
     "description": {
-      "value": "<p>Gain any one skill that has no prerequisites (GM has final say). Gain a single Common Lore Skill, or improve one you already have by one level. <br>You react violently to the concept of imprisonment or loss of your freedom, you may make a Willpower Test to avert this, difficult modified by GM.</p>"
+      "value": "<h2>Press-Ganged</h2><blockquote><p><em>\"Skilled women and men with unique and valuable talents, be they Navigators or Armsmen, are themselves commodities to the unscrupulous and the desperate. There are many voyages undertaken and crewed by those who have little choice in the matter, from ratings that toil under an overseer's lash in the depths of a warship to abducted Astropaths and scions of Rogue Trader blood whose shackles may be made of silken threats and prison cells crafted by insidious blackmail but are no less real for that.\"</em></p></blockquote><p>Although some may see such experiences as no more than part of the \"great game\" of things, you take a different view and have sworn never to be a puppet or pawn in someone else's game again. Just who you were forced into serving in the past and how you managed to escape your bondage is a secret you rarely share, but one day your captors will have cause to remember the offence they did you and regret it.</p><p>The memory of your captivity burns bright, and you would rather die than lose your freedom again.</p>"
     },
     "requirements": {
       "text": "Origin Path: Trials and Travails",
@@ -15,42 +15,47 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "any one",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "a single Common Lore",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [],
+      "specialAbilities": [
+        {
+          "name": "Unwilling Accomplice",
+          "description": "<p>Thanks to your shadowed past, you have picked up some knowledge on the way that you would not normally have access to. You gain a single Skill (as long as it has no prerequisites) for your character. You may also either select a single additional Common Lore Skill or improve a Common Lore Skill you already have by one level.</p>"
+        },
+        {
+          "name": "Jealous Freedom",
+          "description": "<p>Having endured captivity once, you have no intention of doing so again. You react violently towards the prospect of imprisonment or loss of your freedom. You may take a Willpower Test to avert this, modified by the provocation and the consequences (set by the GM) of succumbing to your dread.</p>"
+        }
+      ],
       "choices": []
     },
-    "effectText": "Gain any one skill that has no prerequisites (GM has final say). Gain a single Common Lore Skill, or improve one you already have by one level. \nYou react violently to the concept of imprisonment or loss of your freedom, you may make a Willpower Test to avert this, difficult modified by GM.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Unwilling Accomplice:</strong> Thanks to your shadowed past, you have picked up some knowledge on the way that you would not normally have access to. You gain a single Skill (as long as it has no prerequisites) for your character. You may also either select a single additional Common Lore Skill or improve a Common Lore Skill you already have by one level.</p><p><strong>Jealous Freedom:</strong> Having endured captivity once, you have no intention of doing so again. You react violently towards the prospect of imprisonment or loss of your freedom. You may take a Willpower Test to avert this, modified by the provocation and the consequences (set by the GM) of succumbing to your dread.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "32",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

@@ -34,11 +34,23 @@
           "options": [
             {
               "label": "+3 Intelligence",
-              "value": "intelligence"
+              "value": "intelligence",
+              "description": "Gain +3 to Intelligence.",
+              "grants": {
+                "characteristics": {
+                  "intelligence": 3
+                }
+              }
             },
             {
               "label": "+3 Perception",
-              "value": "perception"
+              "value": "perception",
+              "description": "Gain +3 to Perception.",
+              "grants": {
+                "characteristics": {
+                  "perception": 3
+                }
+              }
             }
           ],
           "count": 1
@@ -49,11 +61,19 @@
           "options": [
             {
               "label": "1d5 Corruption Points",
-              "value": "corruption:1d5"
+              "value": "corruption",
+              "description": "Gain 1d5 Corruption Points.",
+              "grants": {
+                "corruption": "1d5"
+              }
             },
             {
               "label": "1d5 Insanity Points",
-              "value": "insanity:1d5"
+              "value": "insanity",
+              "description": "Gain 1d5 Insanity Points.",
+              "grants": {
+                "insanity": "1d5"
+              }
             }
           ],
           "count": 1

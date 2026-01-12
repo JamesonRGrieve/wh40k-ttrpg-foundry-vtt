@@ -6,78 +6,149 @@
     "identifier": "darkness",
     "step": "trialsAndTravails",
     "stepIndex": 4,
+    "xpCost": 0,
+    "isAdvancedOrigin": true,
+    "replacesOrigins": ["the-hand-of-war", "high-vendetta"],
     "description": {
-      "value": "<p>1. Forbidden Knowledge (200xp): Gain one Common Lore and one Forbidden lore trained skill you didn&#x27;t have. Gain Paranoia and Enemy Talent for group Lore was stolen from.<br>2. Warp Incursion (100xp): Gaint Resistance (Psychic Powers) and Light Sleeper Talents. Gain 1d5 Corruption Points.<br>3. Dark Secret (200xp): +6 to any one Characteristic. 1d5 Insanity Points. Character possesses a dark and difficult to get rid of secret or curse (work with GM).</p>"
+      "value": "<h2>Darkness</h2><blockquote><p><em>\"The galaxy is a dark and unforgiving place; anyone who says otherwise is a fool! As happens in the universe, some are selected by things dark and terrible. Their exposure to such things has left its mark upon their souls.\"</em></p></blockquote><p>Some study forbidden tomes and texts in the hopes of learning some arcane or esoteric lore. Others have been victim to a warp-incursion, a tear in the barrier between the material universe and the Realm of Chaos. A rare few have been touched by something wicked, even possessed by it, and now carry the burden of that encounter—seeking to rid themselves of the affliction before they either succumb to it or are found out by their peers or the authorities.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
     "requirements": {
-      "text": "Origin Path: Trials and Travails",
+      "text": "Origin Path: Trials and Travails (Advanced)",
       "previousSteps": [],
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "one Common Lore",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "one Forbidden lore trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Paranoia",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Enemy",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "t Resistance (Psychic Powers)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Light Sleeper",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d5 Corruption Points",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "for group Lore was stolen from"
-      ],
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "darkness_path",
+          "label": "Choose one Darkness path",
+          "options": [
+            {
+              "label": "Forbidden Knowledge (200 XP)",
+              "value": "forbidden_knowledge",
+              "xpCost": 200,
+              "description": "You are drawn to the esoteric like a moth to a flame. Perhaps your study was intentional; you found a mysterious tome or other work. Maybe it was accidental. It could have been spoken to you through the cracked lips of a dying man, or perhaps you spied a document that should have been sealed and the knowledge burned itself into your brain. Whatever the reason or circumstance, you bear forbidden knowledge. It might be part of the name of a daemon, or the location of some barbaric fane where human sacrifices are made in the name of the Ruinous Powers. It might also be something a bit more mundane, such as a proscribed experiment being conducted by a Magus-Biologis of the Adeptus Mechanicus. Whatever it is, you're sure that if the powers that be were to learn that you know, they would stop at nothing to purge it from you.",
+              "grants": {
+                "talents": [
+                  {"name": "Paranoia", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.MXViwrGcKNBtNZjx"}
+                ]
+              },
+              "choices": [
+                {
+                  "type": "skill",
+                  "label": "Choose one Common Lore (Trained)",
+                  "options": [
+                    {"label": "Common Lore (Imperium)", "value": "commonLore_imperium"},
+                    {"label": "Common Lore (Koronus Expanse)", "value": "commonLore_koronus"},
+                    {"label": "Common Lore (Machine Cult)", "value": "commonLore_machine"},
+                    {"label": "Common Lore (War)", "value": "commonLore_war"}
+                  ],
+                  "count": 1
+                },
+                {
+                  "type": "skill",
+                  "label": "Choose one Forbidden Lore (Trained)",
+                  "options": [
+                    {"label": "Forbidden Lore (Archeotech)", "value": "forbiddenLore_archeotech"},
+                    {"label": "Forbidden Lore (Daemonology)", "value": "forbiddenLore_daemonology"},
+                    {"label": "Forbidden Lore (Heresy)", "value": "forbiddenLore_heresy"},
+                    {"label": "Forbidden Lore (Psykers)", "value": "forbiddenLore_psykers"},
+                    {"label": "Forbidden Lore (The Warp)", "value": "forbiddenLore_warp"},
+                    {"label": "Forbidden Lore (Xenos)", "value": "forbiddenLore_xenos"}
+                  ],
+                  "count": 1
+                },
+                {
+                  "type": "talent",
+                  "label": "Enemy faction (GM and player determine)",
+                  "options": [
+                    {"label": "Enemy (group knowledge was taken from)", "value": "enemy_custom"}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Warp Incursion (100 XP)",
+              "value": "warp_incursion",
+              "xpCost": 100,
+              "description": "You have been witness to a singular event: the opening of a portal between the material universe and the warp. You were the survivor of a Geller Field failure, or witness to (or victim of) a daemonic possession or another warp entity—somehow you lived through the incident, but it has scarred you forever. You suffer from nightmares, but in return you have gained a degree of protection from warp entities. This might manifest as a type of invisibility to these entities, or maybe they find your 'smell' to be intolerable. Whatever the reason, you thank the God-Emperor every day for the protection He has imparted unto you.",
+              "grants": {
+                "corruption": "1d5",
+                "talents": [
+                  {"name": "Resistance (Psychic Powers)", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"},
+                  {"name": "Light Sleeper", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.5zWJdxMlWz5X4Dvx"}
+                ]
+              },
+              "choices": []
+            },
+            {
+              "label": "Dark Secret (200 XP)",
+              "value": "dark_secret",
+              "xpCost": 200,
+              "description": "There's a secret you carry with you that, if known by others, could destroy you. Perhaps you were the unfortunate victim of a possession, and even though you fought the entity off its mark is forever upon you. Or maybe you carry within you some xenos artefact, such as a Yu'vath device, and you seek a way to rid yourself of it. Whatever the secret is, you're sure it will devastate you and your friends if found out. There are no lengths you would not go to prevent that discovery. Something terrible happened to you, but it gave you a great advantage as well. However, you also harbour a dark secret you struggle to be rid of. Work with the GM to determine what this is and what circumstances are required to remove it. It should be something difficult, rare, esoteric, and very dangerous for the Explorer (such as getting blasted with gamma rays from a certain pulsar at a certain time).",
+              "grants": {
+                "insanity": "1d5"
+              },
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one characteristic to gain +6",
+                  "options": [
+                    {"label": "+6 Weapon Skill", "characteristic": "weaponSkill", "value": 6},
+                    {"label": "+6 Ballistic Skill", "characteristic": "ballisticSkill", "value": 6},
+                    {"label": "+6 Strength", "characteristic": "strength", "value": 6},
+                    {"label": "+6 Toughness", "characteristic": "toughness", "value": 6},
+                    {"label": "+6 Agility", "characteristic": "agility", "value": 6},
+                    {"label": "+6 Intelligence", "characteristic": "intelligence", "value": 6},
+                    {"label": "+6 Perception", "characteristic": "perception", "value": 6},
+                    {"label": "+6 Willpower", "characteristic": "willpower", "value": 6},
+                    {"label": "+6 Fellowship", "characteristic": "fellowship", "value": 6}
+                  ],
+                  "count": 1
+                }
+              ]
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. Forbidden Knowledge (200xp): Gain one Common Lore and one Forbidden lore trained skill you didn't have. Gain Paranoia and Enemy Talent for group Lore was stolen from.\n2. Warp Incursion (100xp): Gaint Resistance (Psychic Powers) and Light Sleeper Talents. Gain 1d5 Corruption Points.\n3. Dark Secret (200xp): +6 to any one Characteristic. 1d5 Insanity Points. Character possesses a dark and difficult to get rid of secret or curse (work with GM).",
-    "notes": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Forbidden Knowledge (200 XP):</strong> Gain one Common Lore and one Forbidden Lore as Trained Skills. Also, gain the Paranoia and Enemy Talents; the Enemy is the group the character took the knowledge from.</li><li><strong>Warp Incursion (100 XP):</strong> Gain Resistance (Psychic Powers) and Light Sleeper Talents. Also gain +1d5 Corruption Points from the exposure to the incursion.</li><li><strong>Dark Secret (200 XP):</strong> Add +6 to any one Characteristic. However, the character also harbours a dark secret he struggles to be rid of. Gain +1d5 Insanity Points and work with the GM to determine what this is and what circumstances are required to remove it. It should be something difficult, rare, esoteric, and very dangerous for the Explorer.</li></ul>",
+    "notes": "Advanced Trials and Travails option from Into The Storm, page 24-25.",
+    "source": {
+      "book": "Into The Storm",
+      "page": "24-25",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

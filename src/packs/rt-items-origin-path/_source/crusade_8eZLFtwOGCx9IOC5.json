@@ -38,7 +38,13 @@
                 "characteristics": {
                   "ballisticSkill": 5
                 },
-                "talents": ["Peer (Military)"],
+                "talents": [
+                  {
+                    "name": "Peer (Military)",
+                    "specialization": "Military",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+                  }
+                ],
                 "insanity": "1d10"
               },
               "choices": [
@@ -92,7 +98,13 @@
                   "weaponSkill": 5,
                   "fellowship": -5
                 },
-                "talents": ["Meditation"]
+                "talents": [
+                  {
+                    "name": "Meditation",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.nzJ0FV3oFUxUziW9"
+                  }
+                ]
               },
               "choices": [
                 {

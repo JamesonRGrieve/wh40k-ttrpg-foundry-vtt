@@ -7,7 +7,7 @@
     "step": "motivation",
     "stepIndex": 5,
     "description": {
-      "value": "<p>Gain either Air of Authority or Peer (any one) Talent.</p>"
+      "value": "<h2>Renown</h2><blockquote><p><em>\"The Imperium is undying and uncaring, and every day countless billions toil and strive and die unknown, nameless, unremarked, and unthanked. But there are a rare few whose names echo through eternity in glory: Macharius, Solon, Haarlock, Land... And it is amongst their company you will one day be counted, or such is your most fervent desire.\"</em></p></blockquote><p>You have grand visions and the burning desire to make them real. Through your actions and victories, you will ensure that your name will be spoken on the lips of the multitudes yet to be born in the millennia ahead. You will gather the best and brightest to your banner, secure the allegiance of Imperial potentates, and then achieve such great deeds that those who come after you will one day bow down to statues cast in your image.</p><p>Legacy is all. Glory is eternal. Your name will live forever, even if you must die to achieve it.</p>"
     },
     "requirements": {
       "text": "Origin Path: Motivation",
@@ -15,47 +15,74 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "either Air of Authority or Peer (any one)",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": [
         {
-          "type": "talent",
-          "label": "Choose from: Air of Authority, Peer (any one) Talent",
+          "type": "renown_talent",
+          "label": "Choose Air of Authority or Peer",
           "options": [
-            "Air of Authority",
-            "Peer (any one) Talent"
+            {
+              "label": "Air of Authority",
+              "value": "air_of_authority",
+              "description": "You gain the Air of Authority Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Air of Authority",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.uzlRRMNKLdIYKiCn"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Peer (choose one)",
+              "value": "peer",
+              "description": "You gain the Peer Talent for one chosen group.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Peer (X)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+                  }
+                ]
+              }
+            }
           ],
           "count": 1
         }
       ]
     },
-    "effectText": "Gain either Air of Authority or Peer (any one) Talent.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> You gain your choice of the Air of Authority or the Peer (choose one) Talent.</p>",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "33",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

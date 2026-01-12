@@ -1,0 +1,66 @@
+{
+  "name": "Blessed Scars (Zealot)",
+  "type": "talent",
+  "img": "icons/svg/fire.svg",
+  "system": {
+    "identifier": "blessed-scars-zealot",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Blessed Scars</h2><p>You bear the marks of your faith upon your flesh—ritual scarification, brandings of holy symbols, or wounds received in the Emperor's service that you wear proudly. These scars inspire fear in your enemies but make you less approachable to others.</p><p><strong>Effect:</strong> You gain +10 to Intimidate Tests and −10 to Charm Tests, and one poor-Craftsmanship bionic (you may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship).</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You gain +10 to Intimidate Tests, −10 to Charm Tests, and one poor-Craftsmanship bionic.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Zealot origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Poor Bionic",
+          "description": "<p>You have one poor-Craftsmanship bionic of your choice. You may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship.</p>"
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "intimidate": 10,
+        "charm": -10
+      },
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "ZE00000000000001"
+}

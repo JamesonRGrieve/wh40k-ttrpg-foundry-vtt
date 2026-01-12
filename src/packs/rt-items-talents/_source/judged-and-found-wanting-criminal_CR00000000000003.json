@@ -1,0 +1,65 @@
+{
+  "name": "Judged and Found Wanting (Criminal)",
+  "type": "talent",
+  "img": "icons/svg/skull.svg",
+  "system": {
+    "identifier": "judged-and-found-wanting-criminal",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30"
+    },
+    "description": {
+      "value": "<h2>Judged and Found Wanting</h2><p>You were caught by Imperial justice and punished severely. The marks of your punishment are visible for all to see—perhaps a brand, a missing limb, or crude augmetics that mark you as a criminal.</p><p><strong>Effect:</strong> You suffer −5 Fellowship. You gain one poor-Craftsmanship bionic limb or implant (you may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship).</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>You suffer −5 Fellowship. You gain one poor-Craftsmanship bionic limb or implant.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Criminal origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Poor Bionic",
+          "description": "<p>You have one poor-Craftsmanship bionic limb or implant of your choice. You may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship.</p>"
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "fellowship": -5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "CR00000000000003"
+}

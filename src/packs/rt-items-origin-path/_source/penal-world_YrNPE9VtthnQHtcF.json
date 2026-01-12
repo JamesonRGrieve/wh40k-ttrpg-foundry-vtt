@@ -58,8 +58,34 @@
           "type": "skill",
           "label": "Choose one: Deceive or Intimidate as Trained Skill",
           "options": [
-            "Deceive",
-            "Intimidate"
+            {
+              "label": "Deceive",
+              "value": "deceive",
+              "description": "Gain Deceive as a Trained Skill.",
+              "grants": {
+                "skills": [
+                  {
+                    "name": "Deceive",
+                    "specialization": "",
+                    "level": "trained"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Intimidate",
+              "value": "intimidate",
+              "description": "Gain Intimidate as a Trained Skill.",
+              "grants": {
+                "skills": [
+                  {
+                    "name": "Intimidate",
+                    "specialization": "",
+                    "level": "trained"
+                  }
+                ]
+              }
+            }
           ],
           "count": 1
         }
