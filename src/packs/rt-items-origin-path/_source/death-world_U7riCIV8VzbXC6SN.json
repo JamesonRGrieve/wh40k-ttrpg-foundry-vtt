@@ -14,56 +14,38 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 5,
-        "toughness": 5,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 0,
-        "willpower": -5,
-        "fellowship": -5,
-        "influence": 0
-      },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [
-        "Survival"
-      ],
-      "talents": [],
-      "traits": [],
-      "other": []
-    },
     "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 5,
+          "toughness": 5,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": -5,
+          "fellowship": -5
+        },
+        "wounds": 0,
+        "fate": 0
+      },
       "skills": [
         {
           "name": "Survival",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Primitive",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         }
       ],
-      "talents": [],
-      "traits": [],
-      "aptitudes": [],
+      "talents": ["Melee Weapon Training (Primitive)", "Death World (Paranoid), Death World (Survivor)"],
       "equipment": [],
-      "specialAbilities": [],
       "choices": [
         {
           "type": "talent",
-          "label": "Choose from: Jaded, Resistance(Poisons) Talent",
+          "label": "Hardened: Choose from Jaded, Resistance (Poisons) Talent",
           "options": [
             "Jaded",
-            "Resistance(Poisons) Talent"
+            "Resistance (Poisons)"
           ],
           "count": 1
         }
