@@ -43,7 +43,19 @@
         "combat": []
       }
     },
-    "notes": "Grants Technical Knock talent"
+    "notes": "Grants Technical Knock talent",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Technical Knock",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.W6FkTzFZmG8C5ieI"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

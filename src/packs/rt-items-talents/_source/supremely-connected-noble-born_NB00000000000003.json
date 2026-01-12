@@ -43,7 +43,24 @@
         "combat": []
       }
     },
-    "notes": "Grants Peer (Nobility) plus one additional Peer talent of choice"
+    "notes": "Grants Peer (Nobility) plus one additional Peer talent of choice",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Peer",
+          "specialization": "Nobility",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Additional Peer Choice",
+          "description": "<p>Choose one additional Peer talent from the following: Academics, Adeptus Mechanicus, Administratum, Astropaths, Ecclesiarchy, Government, Mercantile, Military, or Underworld.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

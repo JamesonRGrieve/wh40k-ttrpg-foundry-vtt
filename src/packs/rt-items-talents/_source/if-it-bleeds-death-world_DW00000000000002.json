@@ -43,7 +43,19 @@
         "combat": []
       }
     },
-    "notes": "Grants Melee Weapon Training (Primitive)"
+    "notes": "Grants Melee Weapon Training (Primitive)",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Melee Weapon Training",
+          "specialization": "Primitive",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.IA7IeKuu9Sura3tN"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},
