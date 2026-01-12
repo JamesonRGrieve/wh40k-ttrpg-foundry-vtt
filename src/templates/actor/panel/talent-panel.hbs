@@ -6,96 +6,48 @@
         </span>
     </div>
     <div class="rt-panel-body">
-        {{#if talentsCount}}
         <div class="rt-talents-table" data-drop-zone="talents" data-accepts="talent">
             {{#each talents as |talent|}}
             <div class="rt-talent-row item-drag" data-item-id="{{talent.id}}" draggable="true">
-                {{!-- Compact View --}}
-                <div class="rt-row-compact">
-                    <img class="rt-row-icon" src="{{talent.img}}" alt="{{talent.name}}" />
+                <img class="rt-row-icon" src="{{talent.img}}" alt="{{talent.name}}" />
+                
+                <div class="rt-row-main">
+                    <button type="button" class="rt-row-name" data-action="itemEdit" data-item-id="{{talent.id}}" title="Click to open item sheet">
+                        {{talent.fullName}}
+                    </button>
                     
-                    <div class="rt-row-main">
-                        <span class="rt-row-name" data-action="itemEdit" data-item-id="{{talent.id}}" title="{{talent.fullName}}">
-                            {{talent.fullName}}
+                    <div class="rt-row-meta">
+                        <span class="rt-meta-item">
+                            <i class="fas {{talentIcon talent.system.category}}"></i> {{talent.categoryLabel}}
                         </span>
-                        
-                        <div class="rt-row-meta">
-                            <span class="rt-meta-item">
-                                <i class="fas {{talentIcon talent.system.category}}"></i> {{talent.categoryLabel}}
-                            </span>
-                            {{#if talent.system.tier}}
-                            <span class="rt-meta-item">
-                                Tier {{talent.system.tier}}
-                            </span>
-                            {{/if}}
-                            {{#if talent.system.stackable}}
-                            <span class="rt-meta-item rt-meta-rank">
-                                Rank {{talent.system.rank}}
-                            </span>
-                            {{/if}}
-                        </div>
-                    </div>
-                    
-                    <div class="rt-row-actions">
-                        <button type="button" class="rt-action-btn rt-btn-expand" data-action="toggleTalentExpand" data-item-id="{{talent.id}}" title="Show Details">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <button type="button" class="rt-action-btn" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Send to Chat">
-                            <i class="fas fa-comment"></i>
-                        </button>
-                        <button type="button" class="rt-action-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        {{#if talent.system.tier}}
+                        <span class="rt-meta-item">
+                            Tier {{talent.system.tier}}
+                        </span>
+                        {{/if}}
+                        {{#if talent.system.stackable}}
+                        <span class="rt-meta-item rt-meta-rank">
+                            Rank {{talent.system.rank}}
+                        </span>
+                        {{/if}}
                     </div>
                 </div>
                 
-                {{!-- Expanded Details --}}
-                <div class="rt-row-expanded" style="display: none;">
-                    {{#if talent.system.specialization}}
-                    <div class="rt-detail-row">
-                        <span class="rt-detail-label">Specialization:</span>
-                        <span class="rt-detail-value">{{talent.system.specialization}}</span>
-                    </div>
-                    {{/if}}
-                    
-                    {{#if talent.system.aptitudes.length}}
-                    <div class="rt-detail-row">
-                        <span class="rt-detail-label">Aptitudes:</span>
-                        <div class="rt-detail-badges">
-                            {{#each talent.system.aptitudes as |apt|}}
-                            <span class="rt-badge rt-badge-aptitude">{{apt}}</span>
-                            {{/each}}
-                        </div>
-                    </div>
-                    {{/if}}
-                    
-                    {{#if talent.hasPrerequisites}}
-                    <div class="rt-detail-row">
-                        <span class="rt-detail-label">Prerequisites:</span>
-                        <span class="rt-detail-value">{{talent.prerequisitesLabel}}</span>
-                    </div>
-                    {{/if}}
-                    
-                    {{#if talent.system.benefit}}
-                    <div class="rt-detail-row rt-detail-benefit">
-                        <span class="rt-detail-label">Benefit:</span>
-                        <div class="rt-detail-content">{{{talent.system.benefit}}}</div>
-                    </div>
-                    {{/if}}
+                <div class="rt-row-actions">
+                    <button type="button" class="rt-action-btn" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Send to Chat">
+                        <i class="fas fa-comment"></i>
+                    </button>
+                    <button type="button" class="rt-action-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
             </div>
             {{/each}}
         </div>
-        {{else}}
-        <div class="rt-empty-state">
-            <i class="fas fa-star"></i>
-            <p>No talents yet.</p>
-        </div>
-        {{/if}}
         
-        <div class="rt-dropzone" data-action="itemCreate" data-type="talent">
+        <div class="rt-dropzone {{#if talentsCount}}rt-dropzone--compact{{/if}}" data-action="itemCreate" data-type="talent">
             <i class="fas fa-star rt-dropzone-icon"></i>
-            <span class="rt-dropzone-text">Drop Talent or Click to Create</span>
+            <span class="rt-dropzone-text">{{#if talentsCount}}Drop to add{{else}}Drop Talent or Click to Create{{/if}}</span>
         </div>
     </div>
 </div>

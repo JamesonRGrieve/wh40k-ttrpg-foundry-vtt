@@ -645,6 +645,15 @@ export default class ArmourData extends ItemDataModel.mixin(
   }
 
   /**
+   * Get the count of locations with AP > 0.
+   * @type {number}
+   */
+  get locationCount() {
+    const locations = ["head", "body", "leftArm", "rightArm", "leftLeg", "rightLeg"];
+    return locations.filter(loc => this.getAPForLocation(loc) > 0).length;
+  }
+
+  /**
    * Get armour points as an array of location objects for visual display.
    * @type {Array<{location: string, label: string, abbr: string, ap: number, covered: boolean, icon: string}>}
    */

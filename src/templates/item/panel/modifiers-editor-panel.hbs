@@ -1,0 +1,125 @@
+{{!-- 
+  Modifiers Display/Editor Panel
+  Shows stat modifiers provided by this item
+--}}
+
+<div class="rt-modifiers-display">
+  
+  {{!-- Characteristic Modifiers --}}
+  {{#if item.system.modifiers.characteristics}}
+  <div class="rt-modifier-section">
+    <h4 class="rt-modifier-section__title">
+      <i class="fas fa-user-circle"></i>
+      Characteristics
+    </h4>
+    <div class="rt-modifier-list">
+      {{#each item.system.modifiers.characteristics}}
+      {{#unless (eq this 0)}}
+      <div class="rt-modifier-item">
+        <span class="rt-modifier-item__name">{{capitalize @key}}</span>
+        <span class="rt-modifier-item__value {{#if (gt this 0)}}rt-modifier-item__value--positive{{else}}rt-modifier-item__value--negative{{/if}}">
+          {{signedNumber this}}
+        </span>
+      </div>
+      {{/unless}}
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Skill Modifiers --}}
+  {{#if item.system.modifiers.skills}}
+  <div class="rt-modifier-section">
+    <h4 class="rt-modifier-section__title">
+      <i class="fas fa-book"></i>
+      Skills
+    </h4>
+    <div class="rt-modifier-list">
+      {{#each item.system.modifiers.skills}}
+      {{#unless (eq this 0)}}
+      <div class="rt-modifier-item">
+        <span class="rt-modifier-item__name">{{capitalize @key}}</span>
+        <span class="rt-modifier-item__value {{#if (gt this 0)}}rt-modifier-item__value--positive{{else}}rt-modifier-item__value--negative{{/if}}">
+          {{signedNumber this}}
+        </span>
+      </div>
+      {{/unless}}
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Combat Modifiers --}}
+  {{#if item.system.modifiers.combat}}
+  <div class="rt-modifier-section">
+    <h4 class="rt-modifier-section__title">
+      <i class="fas fa-crosshairs"></i>
+      Combat
+    </h4>
+    <div class="rt-modifier-list">
+      {{#each item.system.modifiers.combat}}
+      {{#unless (eq this 0)}}
+      <div class="rt-modifier-item">
+        <span class="rt-modifier-item__name">{{capitalize @key}}</span>
+        <span class="rt-modifier-item__value {{#if (gt this 0)}}rt-modifier-item__value--positive{{else}}rt-modifier-item__value--negative{{/if}}">
+          {{signedNumber this}}
+        </span>
+      </div>
+      {{/unless}}
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Resource Modifiers --}}
+  {{#if item.system.modifiers.resources}}
+  <div class="rt-modifier-section">
+    <h4 class="rt-modifier-section__title">
+      <i class="fas fa-heart"></i>
+      Resources
+    </h4>
+    <div class="rt-modifier-list">
+      {{#each item.system.modifiers.resources}}
+      {{#unless (eq this 0)}}
+      <div class="rt-modifier-item">
+        <span class="rt-modifier-item__name">{{capitalize @key}}</span>
+        <span class="rt-modifier-item__value {{#if (gt this 0)}}rt-modifier-item__value--positive{{else}}rt-modifier-item__value--negative{{/if}}">
+          {{signedNumber this}}
+        </span>
+      </div>
+      {{/unless}}
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Other Modifiers --}}
+  {{#if item.system.modifiers.other.length}}
+  <div class="rt-modifier-section">
+    <h4 class="rt-modifier-section__title">
+      <i class="fas fa-ellipsis-h"></i>
+      Other
+    </h4>
+    <div class="rt-modifier-list">
+      {{#each item.system.modifiers.other}}
+      <div class="rt-modifier-item">
+        <span class="rt-modifier-item__name">{{this.label}} {{#if this.mode}}({{this.mode}}){{/if}}</span>
+        <span class="rt-modifier-item__value {{#if (gt this.value 0)}}rt-modifier-item__value--positive{{else}}rt-modifier-item__value--negative{{/if}}">
+          {{signedNumber this.value}}
+        </span>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- No Modifiers Message --}}
+  {{#unless (or item.system.modifiers.characteristics item.system.modifiers.skills item.system.modifiers.combat item.system.modifiers.resources item.system.modifiers.other.length)}}
+  <div class="rt-empty-state">
+    <i class="fas fa-info-circle"></i>
+    <p>This item does not provide any stat modifiers.</p>
+    <p class="rt-field-hint">Use Active Effects to add modifiers to this item.</p>
+  </div>
+  {{/unless}}
+
+</div>

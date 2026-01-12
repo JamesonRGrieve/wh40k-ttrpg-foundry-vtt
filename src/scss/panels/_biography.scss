@@ -153,6 +153,163 @@
   padding: 2px 0;
 }
 
+// Journal Entries Section - Modern Design
+.rt-journal-entries-section {
+  margin-top: $rt-space-md;  // Consistent spacing
+}
+
+.rt-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $rt-space-sm;
+  padding-bottom: $rt-space-xs;
+  border-bottom: 1px solid var(--rt-border-color-light);
+}
+
+.rt-section-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  
+  i {
+    color: $rt-accent-bio;
+  }
+}
+
+.rt-add-btn {
+  background: transparent;
+  border: 1px solid var(--rt-border-color-light);
+  color: var(--rt-text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  font-size: 0.75rem;
+  
+  &:hover {
+    background: var(--rt-panel-bg-translucent);
+    border-color: $rt-accent-bio;
+    color: $rt-accent-bio;
+  }
+}
+
+.rt-panel-action-btn {
+  background: transparent;
+  border: 1px solid var(--rt-border-color-light);
+  color: var(--rt-text-muted);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  
+  i {
+    font-size: 0.85rem;
+  }
+  
+  &:hover {
+    background: rgba($rt-accent-bio, 0.1);
+    border-color: $rt-accent-bio;
+    color: $rt-accent-bio;
+    
+    i {
+      color: $rt-accent-bio;
+    }
+  }
+  
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+
+.rt-journal-list {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-xs;
+}
+
+.rt-journal-entry {
+  padding: $rt-space-sm;
+  background: var(--rt-panel-bg-solid);
+  border: 1px solid var(--rt-border-color-light);
+  border-left: 3px solid $rt-accent-bio;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--rt-panel-bg);
+    border-color: var(--rt-border-color);
+    box-shadow: 0 1px 3px var(--rt-shadow-soft);
+  }
+}
+
+.rt-entry-header {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+}
+
+.rt-entry-name {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--rt-text-dark);
+  cursor: pointer;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 0;
+  
+  &:hover {
+    color: $rt-accent-bio;
+    text-decoration: underline;
+  }
+}
+
+.rt-entry-meta {
+  font-size: 0.7rem;
+  color: var(--rt-text-muted);
+  white-space: nowrap;
+}
+
+.rt-entry-delete {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--rt-text-muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+  font-size: 0.75rem;
+  
+  &:hover {
+    color: var(--rt-wounds-secondary);
+    background: var(--rt-wounds-bg);
+    border-color: var(--rt-wounds-border);
+  }
+}
+
+.rt-entry-preview {
+  margin-top: $rt-space-xs;
+  padding-top: $rt-space-xs;
+  border-top: 1px solid var(--rt-border-color-light);
+  font-size: 0.8rem;
+  color: var(--rt-text-secondary);
+  font-style: italic;
+  line-height: 1.4;
+}
+
 // Connections
 .rt-connections-section {
   margin-bottom: $rt-space-sm;
@@ -203,6 +360,7 @@
   display: flex;
   flex-direction: column;
   gap: $rt-space-xs;
+  margin-top: $rt-space-sm;  // Reduced spacing above journal sections
   
   &.rt-journal-main {
     flex: 1;
@@ -211,7 +369,7 @@
 
   &.rt-journal-notes {
     flex: 1;
-    min-height: 300px;
+    min-height: 150px;  // Reduced from 300px to avoid excessive space
   }
 }
 

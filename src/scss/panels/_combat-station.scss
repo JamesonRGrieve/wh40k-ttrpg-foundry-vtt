@@ -15,15 +15,35 @@
 
 .rt-combat-grid {
   display: grid;
-  grid-template-columns: 250px 350px 250px;
+  grid-template-columns: 1fr minmax(320px, 400px);  // Left side (vitals+armour+weapons) + Actions column
   gap: $rt-space-md;
   min-height: 0;
+  width: 100%;
+  align-items: start;
+}
+
+// Left side contains vitals, armour, and weapons in a nested grid
+.rt-combat-left-side {
+  display: grid;
+  grid-template-columns: minmax(220px, 250px) minmax(280px, 320px);  // Vitals + Armour
+  gap: $rt-space-md;
+  grid-auto-rows: min-content;
+  
+  // Weapons panel spans both columns
+  .rt-panel-arsenal {
+    grid-column: 1 / -1;  // Span from first to last column
+  }
 }
 
 .rt-combat-col {
   display: flex;
   flex-direction: column;
   gap: $rt-space-sm;
+}
+
+// Actions column on the right
+.rt-combat-actions {
+  min-height: 100%;
 }
 
 // ============================================
@@ -92,140 +112,44 @@
 }
 
 // ============================================
-// VITAL STAT CARD
+// VITAL STAT CARD - ADDITIONAL STYLES
 // ============================================
+// NOTE: Core .rt-vital-stat definition is in _unified-components.scss
+// Only combat-specific extensions live here
 
-.rt-vital-stat {
+// Clickable area (label + chevron only)
+.rt-vital-header-clickable {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: $rt-space-sm;
-  background: $rt-bg-paper;
-  border: 1px solid $rt-border-light;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-  
-  // Accent strip
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--vital-color, $rt-border-medium);
-    transition: all 0.3s ease;
-  }
+  align-items: center;
+  gap: $rt-space-xs;
+  flex: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  padding: $rt-space-xs;
+  margin: -#{$rt-space-xs};
+  margin-right: 0;
+  border-radius: 4px;
   
   &:hover {
-    border-color: var(--vital-color, $rt-border-medium);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.05);
+  }
+  
+  .rt-panel-chevron {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+    color: var(--vital-color, $rt-text-muted);
+    font-size: 0.7rem;
     
-    &::before {
-      width: 5px;
+    &.rt-panel-chevron--open {
+      transform: rotate(180deg);
     }
-  }
-}
-
-// Vital-specific colors
-.rt-vital-wounds {
-  --vital-color: #{$rt-accent-combat};
-}
-
-.rt-vital-fatigue {
-  --vital-color: #c08020;
-}
-
-.rt-vital-fate {
-  --vital-color: #3498db;
-}
-
-// Warning states
-.rt-vital-warning {
-  border-color: rgba(255, 165, 0, 0.4);
-  background: rgba(255, 165, 0, 0.05);
-  
-  &::before {
-    background: linear-gradient(180deg, #ffa500 0%, #ff8c00 100%);
-    animation: pulse-warn 1.5s ease-in-out infinite;
-  }
-}
-
-.rt-vital-critical {
-  border-color: rgba($rt-accent-combat, 0.6);
-  background: rgba($rt-accent-combat, 0.08);
-  
-  &::before {
-    background: linear-gradient(180deg, $rt-accent-combat 0%, darken($rt-accent-combat, 15%) 100%);
-    animation: pulse-critical 1s ease-in-out infinite;
-  }
-}
-
-@keyframes pulse-warn {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-@keyframes pulse-critical {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-// ============================================
-// STAT HEADER
-// ============================================
-
-.rt-vital-stat-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $rt-space-sm;
-  
-  // When clickable, add pointer cursor and hover effect
-  &.rt-panel-header--clickable {
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    padding: $rt-space-xs;
-    margin: -#{$rt-space-xs};
-    border-radius: 4px;
-    
-    &:hover {
-      background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.05);
-    }
-    
-    .rt-panel-chevron {
-      margin-left: $rt-space-xs;
-      transition: transform 0.2s ease;
-      color: var(--vital-color, $rt-text-muted);
-      font-size: 0.7rem;
-      
-      &.rt-panel-chevron--open {
-        transform: rotate(180deg);
-      }
-    }
-  }
-}
-
-.rt-vital-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--vital-color, $rt-text-secondary);
-  
-  i {
-    font-size: 0.75rem;
   }
 }
 
 .rt-vital-controls {
   display: flex;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 // NOTE: Use .rt-btn-control--compact for new code; this maintains backwards compatibility
@@ -248,45 +172,6 @@
   }
 }
 
-// Add RGB versions for rgba usage
-.rt-vital-wounds { --vital-color-rgb: 168, 32, 32; }
-.rt-vital-fatigue { --vital-color-rgb: 192, 128, 32; }
-.rt-vital-fate { --vital-color-rgb: 52, 152, 219; }
-
-// ============================================
-// STAT BODY
-// ============================================
-
-.rt-vital-stat-body {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.rt-vital-readout {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  justify-content: center;
-  padding: 4px 0;
-}
-
-.rt-vital-value {
-  font-family: 'Modesto Condensed', serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--vital-color, $rt-text-primary);
-  line-height: 1;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.rt-vital-max-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: $rt-text-muted;
-  line-height: 1;
-}
-
 // ============================================
 // PROGRESS BAR
 // ============================================
@@ -295,6 +180,7 @@
   display: flex;
   align-items: center;
   gap: $rt-space-xs;
+  width: 100%;
 }
 
 .rt-vital-bar-track {
@@ -396,6 +282,53 @@
 }
 
 // ============================================
+// FATIGUE BOLTS DISPLAY
+// ============================================
+
+.rt-fatigue-bolts-combat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 0;
+  flex-wrap: wrap;
+}
+
+.rt-fatigue-pip {
+  font-size: 1.2rem;
+  color: rgba(#c08020, 0.25);  // Unfilled: faded amber
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    transform: scale(1.15);
+    color: rgba(#c08020, 0.5);
+  }
+  
+  &.rt-fatigue-pip--filled {
+    color: #c08020;  // Filled: solid amber
+    text-shadow: 0 0 6px rgba(#c08020, 0.5);
+    animation: bolt-glow-combat 2s ease-in-out infinite;
+  }
+}
+
+@keyframes bolt-glow-combat {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+}
+
+// ============================================
 // FATE STARS DISPLAY
 // ============================================
 
@@ -409,17 +342,24 @@
 
 .rt-fate-pip {
   font-size: 1.2rem;
-  color: rgba($rt-accent-gold, 0.25);
+  color: rgba(#3498db, 0.25);  // Unfilled: faded blue
   transition: all 0.2s ease;
   cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   
   &:hover {
     transform: scale(1.15);
   }
   
   &.rt-fate-pip--active {
-    color: $rt-accent-gold;
-    text-shadow: 0 0 8px rgba($rt-accent-gold, 0.5), 0 0 4px rgba($rt-accent-gold, 0.3);
+    color: #3498db;  // Filled: solid blue
+    text-shadow: 0 0 8px rgba(#3498db, 0.5), 0 0 4px rgba(#3498db, 0.3);
     animation: star-glow 2s ease-in-out infinite;
   }
 }
@@ -435,27 +375,193 @@
   }
 }
 
-.rt-fate-counter {
+// ============================================
+// MOBILITY SPEEDS (Compact Vitals Version)
+// ============================================
+
+.rt-vital-mobility {
+  .rt-vital-stat-body {
+    padding: 0;
+  }
+}
+
+// ============================================
+// MOBILITY SPEEDS - Inline Compact Layout
+// ============================================
+
+.rt-mobility-speeds-inline {
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
   gap: 4px;
+  width: 100%;
+}
+
+.rt-speed-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border-radius: 3px;
+  transition: background 0.2s ease;
+  
+  &:hover {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  }
+  
+  i {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    width: 14px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  
+  .rt-speed-value {
+    font-family: 'Modesto Condensed', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1;
+    min-width: 28px;
+    flex-shrink: 0;
+  }
+  
+  .rt-speed-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: $rt-text-muted;
+    margin-left: auto;
+  }
+}
+
+// Speed-specific icon colors
+.rt-speed-half i { color: #27ae60; }
+.rt-speed-full i { color: #2980b9; }
+.rt-speed-charge i { color: #e67e22; }
+.rt-speed-run i { color: #c0392b; }
+
+// ============================================
+// ACTIVE EFFECTS - Compact Vitals Version
+// ============================================
+
+.rt-vital-effects {
+  .rt-effects-count {
+    margin-left: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: $rt-accent-gold;
+  }
+}
+
+.rt-effects-compact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rt-effect-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border-left: 2px solid $rt-accent-gold;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border-left-color: lighten($rt-accent-gold, 10%);
+  }
+  
+  &--disabled {
+    opacity: 0.5;
+    border-left-color: $rt-text-muted;
+    
+    .rt-effect-compact-icon {
+      filter: grayscale(100%);
+    }
+    
+    .rt-effect-compact-name {
+      text-decoration: line-through;
+      color: $rt-text-muted;
+    }
+  }
+}
+
+.rt-effect-compact-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.rt-effect-compact-name {
+  flex: 1;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.rt-effect-compact-controls {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.rt-effect-compact-btn {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding-top: 4px;
-}
-
-.rt-fate-available {
-  font-family: 'Modesto Condensed', serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: $rt-accent-gold;
-  line-height: 1;
-}
-
-.rt-fate-total {
-  font-size: 0.8rem;
-  font-weight: 600;
+  background: transparent;
+  border: none;
   color: $rt-text-muted;
-  line-height: 1;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 0.7rem;
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: $rt-accent-gold;
+  }
+  
+  &--danger:hover {
+    color: $rt-accent-combat;
+  }
+}
+
+.rt-effects-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: $rt-space-md 0;
+  color: $rt-text-muted;
+  
+  i {
+    font-size: 1.2rem;
+    opacity: 0.5;
+  }
+  
+  span {
+    font-size: 0.75rem;
+    font-style: italic;
+  }
 }
 
 // ============================================
@@ -807,6 +913,26 @@
   opacity: 0.8;
 }
 
+.rt-action-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--action-color, $rt-accent-gold);
+  padding: 2px 8px;
+  background: rgba(var(--action-color-rgb, 201, 162, 39), 0.1);
+  border-radius: 3px;
+  border: 1px solid rgba(var(--action-color-rgb, 201, 162, 39), 0.3);
+}
+
+// Initiative-specific styling
+.rt-action-initiative {
+  .rt-action-value {
+    background: rgba($rt-accent-talents, 0.15);
+    border-color: rgba($rt-accent-talents, 0.4);
+    color: $rt-accent-talents;
+  }
+}
+
 // Action type colors
 .rt-action-attack {
   --action-color: #{$rt-accent-combat};
@@ -858,40 +984,6 @@
 // ============================================
 // INITIATIVE PANEL
 // ============================================
-
-.rt-initiative-display {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $rt-space-md;
-}
-
-.rt-init-value {
-  font-size: $rt-font-size-xxl;
-  font-weight: 700;
-  color: $rt-accent-gold;
-}
-
-.rt-init-roll-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(180deg, $rt-accent-gold 0%, darken($rt-accent-gold, 10%) 100%);
-  border: none;
-  border-radius: $rt-radius-md;
-  color: #fff;
-  cursor: pointer;
-  transition: all $rt-transition-fast;
-  
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: $rt-shadow-md;
-  }
-  
-  i { font-size: 1rem; }
-}
 
 // ============================================
 // QUICK ACTIONS
@@ -1168,6 +1260,8 @@
   padding-top: $rt-space-md;
   border-top: 2px solid rgba($rt-accent-talents, 0.15);
   position: relative;
+  display: flex;
+  flex-direction: column;
   
   &::before {
     content: '';
@@ -1179,6 +1273,16 @@
     height: 4px;
     background: linear-gradient(90deg, transparent, rgba($rt-accent-talents, 0.3), transparent);
     border-radius: 2px;
+  }
+  
+  .rt-panel-header {
+    order: -1;  // Force header to top
+    flex-shrink: 0;
+  }
+  
+  .rt-panel-body {
+    flex: 1;
+    overflow: auto;
   }
 }
 
@@ -1258,88 +1362,98 @@
 // ============================================
 // DROP ZONES
 // ============================================
+// NOTE: Core .rt-dropzone definitions are in _unified-components.scss
+// No overrides needed here - using unified styles
 
-.rt-dropzone {
+// ============================================
+// COMBAT ACTIONS FAVORITES
+// ============================================
+
+.rt-actions-favorites {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: $rt-space-xs;
+}
+
+.rt-action-chip {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-lg;
-  background: repeating-linear-gradient(
-    45deg,
-    rgba($rt-accent-gold, 0.03),
-    rgba($rt-accent-gold, 0.03) 10px,
-    rgba($rt-accent-gold, 0.08) 10px,
-    rgba($rt-accent-gold, 0.08) 20px
-  );
-  border: 2px dashed rgba($rt-accent-gold, 0.3);
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.1), rgba($rt-accent-gold, 0.05));
+  border: 1px solid rgba($rt-accent-gold, 0.3);
   border-radius: $rt-radius-md;
+  color: $rt-text-primary;
+  font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-height: 80px;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 0.85rem;
+    color: $rt-accent-gold;
+  }
   
   &:hover {
-    background: repeating-linear-gradient(
-      45deg,
-      rgba($rt-accent-gold, 0.08),
-      rgba($rt-accent-gold, 0.08) 10px,
-      rgba($rt-accent-gold, 0.15) 10px,
-      rgba($rt-accent-gold, 0.15) 20px
-    );
-    border-color: rgba($rt-accent-gold, 0.5);
+    background: linear-gradient(135deg, rgba($rt-accent-gold, 0.2), rgba($rt-accent-gold, 0.1));
+    border-color: $rt-accent-gold;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active {
+    transform: translateY(0);
   }
 }
 
-.rt-dropzone-compact {
+.rt-action-with-fav {
+  display: flex;
+  gap: 4px;
+  position: relative;
+}
+
+.rt-action-fav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $rt-space-xs;
-  padding: $rt-space-sm;
-  margin-top: $rt-space-sm;
-  background: rgba($rt-accent-gold, 0.05);
-  border: 1px dashed rgba($rt-accent-gold, 0.25);
-  border-radius: $rt-radius-sm;
+  width: 28px;
+  height: 100%;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid $rt-border-light;
+  border-radius: $rt-radius-md;
+  color: $rt-text-muted;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: $rt-font-size-sm;
-  color: var(--color-text-secondary);
-  
-  i {
-    font-size: 0.9rem;
-    color: rgba($rt-accent-gold, 0.6);
-  }
+  flex-shrink: 0;
   
   &:hover {
     background: rgba($rt-accent-gold, 0.1);
-    border-color: rgba($rt-accent-gold, 0.4);
-    color: var(--color-text-primary);
+    border-color: $rt-accent-gold;
+    color: $rt-accent-gold;
+    transform: scale(1.1);
+  }
+  
+  &.rt-action-fav--active {
+    background: rgba($rt-accent-gold, 0.15);
+    border-color: $rt-accent-gold;
+    color: $rt-accent-gold;
     
     i {
-      color: $rt-accent-gold;
+      animation: star-pulse 1.5s ease-in-out infinite;
     }
   }
 }
 
-.rt-dropzone-icon {
-  font-size: 2rem;
-  color: rgba($rt-accent-gold, 0.5);
-  transition: all 0.3s ease;
-  
-  .rt-dropzone:hover & {
-    color: $rt-accent-gold;
-    transform: scale(1.1);
+@keyframes star-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
   }
-}
-
-.rt-dropzone-text {
-  font-size: $rt-font-size-sm;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  text-align: center;
-  
-  .rt-dropzone:hover & {
-    color: var(--color-text-primary);
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
   }
 }

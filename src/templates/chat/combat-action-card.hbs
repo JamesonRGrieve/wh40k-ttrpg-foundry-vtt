@@ -1,0 +1,83 @@
+{{!-- Rogue Trader Combat Action Card - For vocalizing actions to chat --}}
+<div class="rt-chat rt-combat-action-card">
+    <div class="rt-item-card rt-item-card--combat-action">
+        {{!-- Header with Image --}}
+        <div class="rt-item-card__header">
+            {{#if img}}
+            <img class="rt-item-card__image" src="{{img}}" alt="{{name}}" />
+            {{else}}
+            <div class="rt-item-card__image rt-item-card__image--placeholder">
+                <i class="fas fa-fist-raised"></i>
+            </div>
+            {{/if}}
+            <div class="rt-item-card__title-group">
+                <h2 class="rt-item-card__name">{{name}}</h2>
+                <div class="rt-item-card__meta">
+                    {{#if actor}}
+                    <span class="rt-item-card__actor">{{actor}}</span>
+                    <span class="rt-item-card__separator">•</span>
+                    {{/if}}
+                    <span class="rt-item-card__type">Combat Action</span>
+                </div>
+            </div>
+            <span class="rt-meta-badge rt-meta-badge--action">
+                <i class="fas fa-clock"></i>
+                {{actionType}}
+            </span>
+        </div>
+        
+        {{!-- Body --}}
+        <div class="rt-item-card__body">
+            {{!-- Quick Stats Row --}}
+            {{#if (or attackModifier subtypes)}}
+            <div class="rt-item-card__quick-stats">
+                {{#if attackModifier}}
+                <div class="rt-quick-stat {{#if (gt attackModifier 0)}}rt-quick-stat--positive{{else}}rt-quick-stat--negative{{/if}}">
+                    <span class="rt-quick-stat__label">Attack</span>
+                    <span class="rt-quick-stat__value">{{attackModifier}}</span>
+                </div>
+                {{/if}}
+                {{#if subtypes}}
+                <div class="rt-quick-stat">
+                    <span class="rt-quick-stat__label">Type</span>
+                    <span class="rt-quick-stat__value">{{subtypes}}</span>
+                </div>
+                {{/if}}
+            </div>
+            <div class="rt-item-card__divider"></div>
+            {{/if}}
+            
+            {{!-- Description --}}
+            {{#if description}}
+            <div class="rt-item-card__section">
+                <div class="rt-item-card__description">{{{description}}}</div>
+            </div>
+            {{/if}}
+            
+            {{!-- Summary (if different from description) --}}
+            {{#if summary}}
+            <div class="rt-item-card__section rt-item-card__section--summary">
+                <div class="rt-item-card__summary">{{{summary}}}</div>
+            </div>
+            {{/if}}
+        </div>
+        
+        {{!-- Footer --}}
+        {{#if source}}
+        <div class="rt-item-card__footer">
+            <i class="fas fa-book"></i>
+            <span class="rt-item-card__source">{{source}}</span>
+        </div>
+        {{/if}}
+        
+        {{!-- Action Button (Open Sheet) --}}
+        {{#if itemUuid}}
+        <div class="rt-item-card__actions">
+            <button type="button" class="rt-item-card__btn rt-item-card__btn--sheet" data-uuid="{{itemUuid}}" data-action="openItemSheet">
+                <i class="fas fa-scroll-old"></i>
+                View Details
+            </button>
+        </div>
+        {{/if}}
+    </div>
+</div>

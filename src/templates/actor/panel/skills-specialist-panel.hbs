@@ -5,7 +5,7 @@
     </div>
     <div class="rt-panel-body">
         {{#each skillLists.specialist as |entry|}}
-        <div class="rt-specialist-group" data-skill="{{entry.[0]}}">
+        <div class="rt-specialist-group{{#if entry.[1].advanced}} rt-specialist-group--advanced{{/if}}" data-skill="{{entry.[0]}}">
             <!-- Group Header -->
             <div class="rt-specialist-header">
                 <span class="rt-specialist-name">{{entry.[1].label}}</span>

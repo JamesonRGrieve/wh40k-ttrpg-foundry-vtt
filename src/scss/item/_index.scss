@@ -1,24 +1,39 @@
 // ============================================
 // Modern Item Sheet Styles Index
 // ============================================
-// Split from original _item-modern.scss for maintainability
+// Organized by category for maintainability
 
+// Core Item Sheet Components
 @import 'base';          // Base container, scrollbars
-@import 'header';        // Item header section
+@import 'header';        // Header section
 @import 'stats';         // Quick stats bar
 @import 'tabs';          // Tab navigation
+@import 'item-tabs';     // Shared tab system for modern item sheets
 @import 'forms';         // Form fields, panels
 @import 'content';       // Description, damage display
 @import 'buttons';       // Action buttons
 @import 'tables';        // Tables, animations
 @import 'tags';          // Tier badges, tags, stat badges
 @import 'compact';       // Compact sheet variants
-@import 'actor-styles';  // Modern actor sheet integration
-@import 'talents';       // Talent/trait specific styles
-@import 'armour';        // Armour-specific styles (coverage, properties)
-@import 'armour-modification'; // Armour modification sheet styles
-@import 'critical-injury'; // Critical injury sheet & chat card styles
-@import 'condition';     // Condition sheet & chat card styles
 @import 'misc';          // Prose fields, compendium browser
 @import 'sheets';        // New RT item sheet design system
-@import 'weapon';        // Weapon sheet & chat card styles
+
+// Item Type Specific Styles
+@import 'weapon';                // Weapon sheet & chat card
+@import 'armour-v2';             // Armour sheet V2
+@import 'armour-modification';   // Armour modification sheet
+@import 'gear-v2';               // Gear sheet V2
+@import 'cybernetic-v2';         // Cybernetic sheet V2
+@import 'force-field-v2';        // Force field sheet V2
+@import 'talent-sheet';          // Talent sheet modern redesign
+@import 'trait-sheet';           // Trait sheet modern redesign
+@import 'skill';                 // Skill sheet
+@import 'condition';             // Condition sheet & chat card
+@import 'critical-injury';       // Critical injury sheet & chat card
+@import 'origin-path-modern';    // Origin path modern tabbed redesign
+
+// Legacy/Deprecated (keep for backwards compatibility)
+@import 'talents';               // Talent/trait legacy styles
+@import 'talent-trait-modern';   // Talent/trait legacy tabbed
+@import 'origin-path';           // Origin path legacy styles
+@import 'actor-styles';          // Modern actor sheet integration

@@ -1,0 +1,131 @@
+{{!-- Rituals Panel V2 - Modern Card-based Design --}}
+<div class="rt-panel rt-panel-powers rt-panel-rituals">
+    <header class="rt-panel-header" data-action="togglePanel" data-panel-id="rituals">
+        <span class="rt-panel-title">
+            <i class="fas fa-pray"></i>
+            Rituals
+            {{#if ritualsCount}}
+            <span class="rt-count-badge">{{ritualsCount}}</span>
+            {{/if}}
+        </span>
+        <i class="fas fa-chevron-down rt-panel-toggle"></i>
+    </header>
+    <div class="rt-panel-body">
+        {{!-- Rituals List --}}
+        <div class="rt-powers-list" data-drop-zone="powers" data-accepts="ritual">
+            {{#each rituals as |ritual|}}
+            <div class="rt-power-card rt-ritual-card item-drag" data-item-id="{{ritual.id}}" data-ritual-type="{{ritual.system.type}}" draggable="true">
+                {{!-- Ritual Header --}}
+                <div class="rt-power-card-header">
+                    <img class="rt-power-icon" src="{{ritual.img}}" alt="{{ritual.name}}" />
+                    <div class="rt-power-info">
+                        <button type="button" class="rt-power-name" data-action="itemEdit" data-item-id="{{ritual.id}}" title="Edit Ritual">
+                            {{ritual.name}}
+                        </button>
+                        <div class="rt-power-meta">
+                            <span class="rt-ritual-type rt-type-{{ritual.system.type}}">
+                                {{#if (eq ritual.system.type "prayer")}}
+                                <i class="fas fa-praying-hands"></i>
+                                {{else if (eq ritual.system.type "rite")}}
+                                <i class="fas fa-book-dead"></i>
+                                {{else if (eq ritual.system.type "invocation")}}
+                                <i class="fas fa-hand-sparkles"></i>
+                                {{else if (eq ritual.system.type "ceremony")}}
+                                <i class="fas fa-church"></i>
+                                {{else if (eq ritual.system.type "tech-rite")}}
+                                <i class="fas fa-cog"></i>
+                                {{else}}
+                                <i class="fas fa-scroll"></i>
+                                {{/if}}
+                                {{ritual.system.typeLabel}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="rt-power-card-actions">
+                        <button type="button" class="rt-power-btn rt-btn-roll" data-action="rollRitual" data-item-id="{{ritual.id}}" title="Perform Ritual">
+                            <i class="fas fa-dice-d20"></i>
+                        </button>
+                        <button type="button" class="rt-power-btn rt-btn-chat" data-action="vocalizeRitual" data-item-id="{{ritual.id}}" title="Post to Chat">
+                            <i class="fas fa-comment"></i>
+                        </button>
+                        <button type="button" class="rt-power-btn rt-btn-expand" data-action="togglePowerDetails" data-item-id="{{ritual.id}}" title="Toggle Details">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                {{!-- Ritual Stats Row --}}
+                <div class="rt-power-stats">
+                    <div class="rt-power-stat">
+                        <span class="rt-stat-label">Test</span>
+                        <span class="rt-stat-value">{{ritual.system.testLabel}}</span>
+                    </div>
+                    <div class="rt-power-stat">
+                        <span class="rt-stat-label">Action</span>
+                        <span class="rt-stat-value">{{ritual.system.activationLabel}}</span>
+                    </div>
+                    {{#if ritual.system.test.threshold}}
+                    <div class="rt-power-stat">
+                        <span class="rt-stat-label">Threshold</span>
+                        <span class="rt-stat-value">{{ritual.system.test.threshold}} DoS</span>
+                    </div>
+                    {{/if}}
+                </div>
+                
+                {{!-- Expandable Details --}}
+                <div class="rt-power-details" data-power-id="{{ritual.id}}" hidden>
+                    {{#if ritual.system.requirements}}
+                    <div class="rt-power-detail-section">
+                        <span class="rt-detail-heading"><i class="fas fa-list-check"></i> Requirements</span>
+                        <div class="rt-detail-content">{{{ritual.system.requirements}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if ritual.system.costs}}
+                    <div class="rt-power-detail-section">
+                        <span class="rt-detail-heading"><i class="fas fa-coins"></i> Costs</span>
+                        <div class="rt-detail-content">{{{ritual.system.costs}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if ritual.system.effect}}
+                    <div class="rt-power-detail-section rt-section-success">
+                        <span class="rt-detail-heading"><i class="fas fa-check-circle"></i> Effect</span>
+                        <div class="rt-detail-content">{{{ritual.system.effect}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if ritual.system.failure}}
+                    <div class="rt-power-detail-section rt-section-danger">
+                        <span class="rt-detail-heading"><i class="fas fa-skull"></i> Failure</span>
+                        <div class="rt-detail-content">{{{ritual.system.failure}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if ritual.system.description}}
+                    <div class="rt-power-detail-section">
+                        <span class="rt-detail-heading">Description</span>
+                        <div class="rt-detail-content">{{{ritual.system.description}}}</div>
+                    </div>
+                    {{/if}}
+                    <div class="rt-power-detail-actions">
+                        <button type="button" class="rt-detail-btn" data-action="itemEdit" data-item-id="{{ritual.id}}">
+                            <i class="fas fa-cog"></i> Edit
+                        </button>
+                        <button type="button" class="rt-detail-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{ritual.id}}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div class="rt-empty-state">
+                <i class="fas fa-pray"></i>
+                <p>No rituals known</p>
+            </div>
+            {{/each}}
+        </div>
+        
+        {{!-- Add Ritual Dropzone --}}
+        <div class="rt-dropzone {{#if ritualsCount}}rt-dropzone--compact{{/if}}" data-action="itemCreate" data-type="ritual">
+            <i class="fas fa-plus rt-dropzone-icon"></i>
+            <span class="rt-dropzone-text">{{#if ritualsCount}}Drop or click to add{{else}}Drop Ritual or Click to Create{{/if}}</span>
+        </div>
+    </div>
+</div>

@@ -142,7 +142,25 @@ export default class OriginPathData extends ItemDataModel.mixin(
       effectText: new fields.HTMLField({ required: false, blank: true }),
       
       // Notes
-      notes: new fields.StringField({ required: false, blank: true })
+      notes: new fields.StringField({ required: false, blank: true }),
+      
+      // Choice tracking - records player's selections for grants.choices
+      selectedChoices: new fields.ObjectField({ 
+        required: true, 
+        initial: {} 
+        // Structure: { "choiceLabel": ["selected option 1", "selected option 2"] }
+      }),
+      
+      // Active modifiers from choices
+      activeModifiers: new fields.ArrayField(
+        new fields.SchemaField({
+          source: new fields.StringField({ required: true }),  // Which choice this came from
+          type: new fields.StringField({ required: true }),    // characteristic/skill/talent/equipment
+          key: new fields.StringField({ required: true }),
+          value: new fields.NumberField({ required: false })
+        }),
+        { required: true, initial: [] }
+      )
     };
   }
 
@@ -165,6 +183,41 @@ export default class OriginPathData extends ItemDataModel.mixin(
   get hasRequirements() {
     const reqs = this.requirements;
     return !!(reqs.text || reqs.previousSteps.length || reqs.excludedSteps.length);
+  }
+
+  /**
+   * Does this origin have choices?
+   * @type {boolean}
+   */
+  get hasChoices() {
+    return this.grants.choices.length > 0;
+  }
+
+  /**
+   * Get choices that still need selection.
+   * @type {object[]}
+   */
+  get pendingChoices() {
+    return this.grants.choices.filter(choice => {
+      const selected = this.selectedChoices[choice.label] || [];
+      return selected.length < choice.count;
+    });
+  }
+
+  /**
+   * Check if all choices have been made.
+   * @type {boolean}
+   */
+  get choicesComplete() {
+    return this.pendingChoices.length === 0;
+  }
+
+  /**
+   * Get the active modifiers derived from selected choices.
+   * @type {object[]}
+   */
+  get derivedModifiers() {
+    return this.activeModifiers || [];
   }
 
   /**

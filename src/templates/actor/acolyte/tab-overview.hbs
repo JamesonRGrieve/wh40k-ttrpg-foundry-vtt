@@ -30,20 +30,38 @@
                         </div>
                     </div>
                     
+                    {{!-- Critical Wounds - Below wounds, always visible if critical > 0 --}}
+                    {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
+                    <div class="rt-vital-row rt-vital-critical-row">
+                        <span class="rt-vital-icon"><i class="fas fa-skull"></i></span>
+                        <span class="rt-vital-label">Critical</span>
+                        <div class="rt-critical-pips-inline">
+                            {{#times 10}}
+                                <button type="button"
+                                        class="rt-crit-pip-mini {{#if (lte this ../system.wounds.critical)}}rt-crit-pip-mini--filled{{/if}}"
+                                        data-action="setCriticalPip"
+                                        data-crit-level="{{this}}"
+                                        title="Critical Level {{this}}">
+                                </button>
+                            {{/times}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    
                     {{!-- Fatigue --}}
                     <div class="rt-vital-row">
                         <span class="rt-vital-icon"><i class="fas fa-bolt"></i></span>
                         <span class="rt-vital-label">Fatigue</span>
-                        <div class="rt-vital-controls">
-                            <button type="button" class="rt-vital-btn" data-action="decrement" data-field="system.fatigue.value" data-min="0" title="−1">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <span class="rt-vital-value {{#if (gt system.fatigue.value system.fatigue.max)}}rt-critical{{else if (gt system.fatigue.value 0)}}rt-warning{{/if}}">
-                                {{system.fatigue.value}}/{{system.fatigue.max}}
-                            </span>
-                            <button type="button" class="rt-vital-btn" data-action="increment" data-field="system.fatigue.value" title="+1">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                        <div class="rt-fatigue-bolts-inline">
+                            {{#each (range 1 system.fatigue.max) as |index|}}
+                                <button type="button"
+                                        class="rt-fatigue-pip {{#if (lte index ../system.fatigue.value)}}rt-fatigue-pip--filled{{/if}}"
+                                        data-action="setFatigueBolt"
+                                        data-fatigue-index="{{index}}"
+                                        title="Fatigue Level {{index}}">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                            {{/each}}
                         </div>
                         {{#if (gt system.fatigue.value 0)}}
                         <span class="rt-vital-penalty">−10</span>
@@ -55,7 +73,7 @@
                         <span class="rt-vital-icon"><i class="fas fa-star"></i></span>
                         <span class="rt-vital-label">Fate</span>
                         <div class="rt-fate-stars-inline">
-                            {{#each (range 1 (add system.fate.max 1)) as |index|}}
+                            {{#each (range 1 system.fate.max) as |index|}}
                                 <button type="button"
                                         class="rt-fate-pip {{#if (lte index ../system.fate.value)}}rt-fate-pip--filled{{/if}}"
                                         data-action="setFateStar"
@@ -69,29 +87,6 @@
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
-                    
-                    {{!-- Initiative --}}
-                    <div class="rt-vital-row">
-                        <span class="rt-vital-icon"><i class="fas fa-dice-d20"></i></span>
-                        <span class="rt-vital-label">Initiative</span>
-                        <span class="rt-vital-value rt-vital-value--static">{{actor.characteristics.agility.bonus}}</span>
-                        <button type="button" class="rt-vital-btn-small rt-roll-btn" data-action="rollInitiative" title="Roll Initiative">
-                            <i class="fas fa-dice"></i>
-                        </button>
-                    </div>
-                    
-                    {{!-- Critical Damage (if any) --}}
-                    {{#if (gt system.wounds.critical 0)}}
-                    <div class="rt-vital-row rt-vital-row--critical">
-                        <span class="rt-vital-icon"><i class="fas fa-skull"></i></span>
-                        <span class="rt-vital-label">Critical</span>
-                        <div class="rt-critical-pips-inline">
-                            {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
-                                <span class="rt-crit-pip-mini {{#if (lte level ../system.wounds.critical)}}rt-crit-pip-mini--filled{{/if}}"></span>
-                            {{/each}}
-                        </div>
-                    </div>
-                    {{/if}}
                 </div>
                 
                 {{!-- Mental State (compact) --}}
@@ -275,15 +270,15 @@
                 <div class="rt-zone-content">
                     <div class="rt-xp-row">
                         <span class="rt-xp-label">Available XP</span>
-                        <span class="rt-xp-value rt-xp-available">{{actor.system.experience.available}}</span>
+                        <span class="rt-xp-value rt-xp-available">{{system.experience.available}}</span>
                     </div>
                     <div class="rt-xp-row">
                         <span class="rt-xp-label">Spent XP</span>
-                        <span class="rt-xp-value">{{actor.system.experience.used}}</span>
+                        <span class="rt-xp-value">{{system.experience.used}}</span>
                     </div>
                     <div class="rt-xp-row">
                         <span class="rt-xp-label">Total XP</span>
-                        <span class="rt-xp-value">{{actor.system.experience.total}}</span>
+                        <span class="rt-xp-value">{{system.experience.total}}</span>
                     </div>
                     <div class="rt-xp-row rt-rank-row">
                         <span class="rt-xp-label">Rank</span>

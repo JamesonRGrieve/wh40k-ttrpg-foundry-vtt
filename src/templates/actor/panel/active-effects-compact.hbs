@@ -1,0 +1,48 @@
+{{!-- Active Effects - Compact Vitals Version --}}
+{{!-- Designed to fit in the Combat tab vitals column --}}
+<div class="rt-vital-stat rt-vital-effects">
+    <div class="rt-vital-stat-header">
+        <div class="rt-vital-label">
+            <i class="fas fa-sparkles"></i>
+            <span>EFFECTS</span>
+            {{#if effects.length}}
+                <span class="rt-effects-count">({{effects.length}})</span>
+            {{/if}}
+        </div>
+    </div>
+    <div class="rt-vital-stat-body">
+        {{#if effects.length}}
+            <div class="rt-effects-compact-list">
+                {{#each effects as |effect|}}
+                    <div class="rt-effect-compact {{#if effect.disabled}}rt-effect-compact--disabled{{/if}}" 
+                         data-effect-id="{{effect.id}}"
+                         title="{{effect.label}}{{#if effect.sourceName}} (from {{effect.sourceName}}){{/if}}">
+                        <img src="{{effect.icon}}" class="rt-effect-compact-icon" alt="" />
+                        <span class="rt-effect-compact-name">{{effect.label}}</span>
+                        <div class="rt-effect-compact-controls">
+                            <button type="button" 
+                                    class="rt-effect-compact-btn" 
+                                    data-action="effectToggle"
+                                    data-effect-id="{{effect.id}}"
+                                    title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}}">
+                                <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
+                            </button>
+                            <button type="button" 
+                                    class="rt-effect-compact-btn rt-effect-compact-btn--danger" 
+                                    data-action="effectDelete"
+                                    data-effect-id="{{effect.id}}"
+                                    title="Remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="rt-effects-empty">
+                <i class="fas fa-sparkles"></i>
+                <span>No active effects</span>
+            </div>
+        {{/if}}
+    </div>
+</div>

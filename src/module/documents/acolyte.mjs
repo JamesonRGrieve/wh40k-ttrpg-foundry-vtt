@@ -4,7 +4,7 @@ import { RogueTraderBaseActor } from './base-actor.mjs';
 import { ForceFieldData } from '../rolls/force-field-data.mjs';
 import { prepareForceFieldRoll } from '../applications/prompts/force-field-dialog.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
-import { SYSTEM_ID } from '../hooks-manager.mjs';
+import { SYSTEM_ID } from '../constants.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 import { D100Roll } from '../dice/_module.mjs';
 

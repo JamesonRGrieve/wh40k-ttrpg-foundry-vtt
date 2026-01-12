@@ -32,14 +32,14 @@
         {{!-- Row 1: First 3 Steps --}}
         <div class="path-row">
             {{#each (slice steps 0 3) as |step|}}
-                <div class="origin-step" data-step="{{step.key}}">
+                <div class="origin-step" data-step="{{step.step}}">
                     <div class="step-header">
                         <i class="fa-solid {{step.icon}}"></i>
                         <span class="step-label">{{step.label}}</span>
                     </div>
                     
                     {{#if step.isEmpty}}
-                        <div class="origin-step-slot empty" data-step="{{step.key}}" draggable="false">
+                        <div class="origin-step-slot empty" data-step="{{step.step}}" draggable="false">
                             <div class="empty-state">
                                 <i class="fa-solid fa-plus-circle"></i>
                                 <p>{{localize "RT.OriginPath.DragHere"}}</p>
@@ -50,7 +50,7 @@
                             </div>
                         </div>
                     {{else}}
-                        <div class="origin-step-slot filled" data-step="{{step.key}}" draggable="true">
+                        <div class="origin-step-slot filled" data-step="{{step.step}}" draggable="true">
                             <div class="item-card">
                                 <div class="item-header">
                                     <img src="{{step.item.img}}" alt="{{step.item.name}}" class="item-img" />
@@ -96,14 +96,14 @@
         {{!-- Row 2: Last 3 Steps (reversed for visual flow) --}}
         <div class="path-row path-row-reverse">
             {{#each (slice steps 3 6) as |step|}}
-                <div class="origin-step" data-step="{{step.key}}">
+                <div class="origin-step" data-step="{{step.step}}">
                     <div class="step-header">
                         <i class="fa-solid {{step.icon}}"></i>
                         <span class="step-label">{{step.label}}</span>
                     </div>
                     
                     {{#if step.isEmpty}}
-                        <div class="origin-step-slot empty" data-step="{{step.key}}" draggable="false">
+                        <div class="origin-step-slot empty" data-step="{{step.step}}" draggable="false">
                             <div class="empty-state">
                                 <i class="fa-solid fa-plus-circle"></i>
                                 <p>{{localize "RT.OriginPath.DragHere"}}</p>
@@ -114,7 +114,7 @@
                             </div>
                         </div>
                     {{else}}
-                        <div class="origin-step-slot filled" data-step="{{step.key}}" draggable="true">
+                        <div class="origin-step-slot filled" data-step="{{step.step}}" draggable="true">
                             <div class="item-card">
                                 <div class="item-header">
                                     <img src="{{step.item.img}}" alt="{{step.item.name}}" class="item-img" />
@@ -178,28 +178,70 @@
             {{/if}}
 
             {{!-- Skills --}}
-            {{#if preview.skills}}
+            {{#if preview.skills.length}}
                 <div class="preview-section">
                     <h4>{{localize "RT.Skills"}}</h4>
-                    <div class="preview-grid">
-                        {{#each preview.skills as |value key|}}
-                            <div class="preview-item {{#if (gt value 0)}}positive{{else}}negative{{/if}}">
-                                <span class="preview-label">{{key}}</span>
-                                <span class="preview-value">{{#if (gt value 0)}}+{{/if}}{{value}}</span>
+                    <div class="preview-list">
+                        {{#each preview.skills as |skill|}}
+                            <div class="preview-item">
+                                <span class="preview-label">{{skill.name}}{{#if skill.specialization}} ({{skill.specialization}}){{/if}}</span>
+                                <span class="preview-badge">{{capitalize skill.level}}</span>
                             </div>
                         {{/each}}
                     </div>
                 </div>
             {{/if}}
 
-            {{!-- Abilities --}}
-            {{#if preview.abilities}}
+            {{!-- Talents --}}
+            {{#if preview.talents.length}}
+                <div class="preview-section">
+                    <h4>{{localize "RT.Talents"}}</h4>
+                    <div class="preview-list">
+                        {{#each preview.talents as |talent|}}
+                            <div class="preview-item">
+                                <span class="preview-label">{{talent.name}}{{#if talent.specialization}} ({{talent.specialization}}){{/if}}</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Traits --}}
+            {{#if preview.traits.length}}
+                <div class="preview-section">
+                    <h4>{{localize "RT.Traits"}}</h4>
+                    <div class="preview-list">
+                        {{#each preview.traits as |trait|}}
+                            <div class="preview-item">
+                                <span class="preview-label">{{trait.name}}{{#if trait.level}} ({{trait.level}}){{/if}}</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Aptitudes --}}
+            {{#if preview.aptitudes.length}}
+                <div class="preview-section">
+                    <h4>{{localize "RT.Aptitudes"}}</h4>
+                    <div class="preview-list">
+                        {{#each preview.aptitudes as |aptitude|}}
+                            <div class="preview-item">
+                                <span class="preview-label">{{aptitude}}</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Special Abilities --}}
+            {{#if preview.specialAbilities.length}}
                 <div class="preview-section">
                     <h4>{{localize "RT.OriginPath.SpecialAbilities"}}</h4>
                     <div class="abilities-list">
-                        {{#each preview.abilities as |ability|}}
+                        {{#each preview.specialAbilities as |ability|}}
                             <div class="ability-item">
-                                <strong>{{ability.source}}:</strong> {{ability.text}}
+                                <strong>{{ability.source}}:</strong> {{ability.name}} - {{{ability.description}}}
                             </div>
                         {{/each}}
                     </div>
@@ -208,8 +250,8 @@
 
             {{!-- Empty state --}}
             {{#unless preview.characteristics}}
-                {{#unless preview.skills}}
-                    {{#unless preview.abilities}}
+                {{#unless preview.skills.length}}
+                    {{#unless preview.specialAbilities.length}}
                         <div class="preview-empty">
                             <i class="fa-solid fa-info-circle"></i>
                             <p>{{localize "RT.OriginPath.NoBonusesYet"}}</p>

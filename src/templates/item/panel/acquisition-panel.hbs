@@ -1,0 +1,73 @@
+{{!-- Acquisition Panel
+     Weight, Availability, and Craftsmanship configuration for physical items
+     Uses PhysicalItemTemplate fields
+--}}
+<div class="rt-acquisition-panel">
+  <header class="rt-panel-header">
+    <i class="fas fa-coins"></i>
+    <span>{{localize "RT.Acquisition"}}</span>
+  </header>
+  
+  <div class="rt-panel-body">
+    <div class="rt-acquisition-grid">
+      
+      {{!-- Weight --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas fa-weight-hanging"></i>
+          {{localize "RT.Weight"}}
+        </label>
+        <div class="rt-field__input-group">
+          <input class="rt-field__input rt-field__input--numeric" 
+                 name="system.weight" 
+                 type="number" 
+                 value="{{system.weight}}" 
+                 step="0.1" 
+                 min="0" 
+                 placeholder="0" />
+          <span class="rt-field__unit">kg</span>
+        </div>
+      </div>
+      
+      {{!-- Availability --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas fa-store"></i>
+          {{localize "RT.Availability"}}
+        </label>
+        <select class="rt-field__input rt-field__select" name="system.availability">
+          <option value="">{{localize "RT.Availability.None"}}</option>
+          {{#each config.availabilities}}
+          <option value="{{@key}}" {{selected (eq @key ../system.availability)}}>
+            {{label}} ({{signedNumber modifier}})
+          </option>
+          {{/each}}
+        </select>
+      </div>
+      
+      {{!-- Craftsmanship --}}
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas fa-hammer"></i>
+          {{localize "RT.Craftsmanship"}}
+        </label>
+        <select class="rt-field__input rt-field__select" name="system.craftsmanship">
+          {{#each config.craftsmanships}}
+          <option value="{{@key}}" {{selected (eq @key ../system.craftsmanship)}}>
+            {{label}} ({{signedNumber modifier}})
+          </option>
+          {{/each}}
+        </select>
+      </div>
+      
+    </div>
+    
+    {{!-- Acquisition Info Display --}}
+    {{#if system.acquisitionInfo}}
+    <div class="rt-acquisition-summary">
+      <i class="fas fa-info-circle"></i>
+      <span>{{system.acquisitionInfo}}</span>
+    </div>
+    {{/if}}
+  </div>
+</div>

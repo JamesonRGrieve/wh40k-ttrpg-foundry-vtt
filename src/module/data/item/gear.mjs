@@ -252,6 +252,22 @@ export default class GearData extends ItemDataModel.mixin(
     return `${this.uses.value}/${this.uses.max}`;
   }
 
+  /**
+   * Get formatted weight label.
+   * @type {string}
+   */
+  get weightLabel() {
+    return `${this.weight ?? 0} kg`;
+  }
+
+  /**
+   * Get total weight (weight × quantity).
+   * @type {number}
+   */
+  get totalWeight() {
+    return (this.weight ?? 0) * (this.quantity ?? 1);
+  }
+
   /* -------------------------------------------- */
   /*  Chat Properties                             */
   /* -------------------------------------------- */

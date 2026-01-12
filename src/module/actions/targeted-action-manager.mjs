@@ -2,7 +2,7 @@ import { prepareWeaponRoll } from '../applications/prompts/weapon-attack-dialog.
 import { preparePsychicPowerRoll } from '../applications/prompts/psychic-power-dialog.mjs';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
-import { SYSTEM_ID } from '../hooks-manager.mjs';
+import { SYSTEM_ID } from '../constants.mjs';
 
 export class TargetedActionManager {
 

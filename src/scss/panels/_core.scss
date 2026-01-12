@@ -136,6 +136,11 @@
   margin-top: $rt-space-md;
   padding-top: $rt-space-md;
   border-top: 1px solid rgba($rt-border-light, 0.5);
+  
+  // Collapsed state - hide the details
+  &--collapsed {
+    display: none;
+  }
 }
 
 .rt-panel:hover .rt-panel-header {

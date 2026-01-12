@@ -365,6 +365,19 @@ ROGUE_TRADER.talentCategories = {
   career: { label: "RT.TalentCategory.Career" }
 };
 
+/**
+ * Trait categories.
+ * @type {Object<string, {label: string}>}
+ */
+ROGUE_TRADER.traitCategories = {
+  general: { label: "RT.TraitCategory.General" },
+  creature: { label: "RT.TraitCategory.Creature" },
+  character: { label: "RT.TraitCategory.Character" },
+  elite: { label: "RT.TraitCategory.Elite" },
+  unique: { label: "RT.TraitCategory.Unique" },
+  origin: { label: "RT.TraitCategory.Origin" }
+};
+
 /* -------------------------------------------- */
 /*  Action Types                                */
 /* -------------------------------------------- */

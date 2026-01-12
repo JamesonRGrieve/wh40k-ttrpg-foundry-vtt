@@ -7,7 +7,7 @@
         <div class="rt-field__wrapper">
             <span class="rt-field__header">{{localize "RT.Vehicle.Integrity.Max"}}</span>
             <input type="number" data-dtype="Number" class="rt-field__input" 
-                   name="system.integrity.max" value="{{actor.system.integrity.max}}" />
+                   name="system.integrity.max" value="{{system.integrity.max}}" />
         </div>
         <div class="rt-field__wrapper">
             <span class="rt-field__header">{{localize "RT.Vehicle.Integrity.Current"}}</span>
@@ -16,7 +16,7 @@
                     <i class="fas fa-minus"></i>
                 </button>
                 <input type="number" data-dtype="Number" class="rt-field__input" 
-                       name="system.integrity.value" value="{{actor.system.integrity.value}}" />
+                       name="system.integrity.value" value="{{system.integrity.value}}" />
                 <button class="rt-control-button" data-action="adjustIntegrity" data-delta="1" title="Repair">
                     <i class="fas fa-plus"></i>
                 </button>
@@ -25,12 +25,12 @@
         <div class="rt-field__wrapper">
             <span class="rt-field__header">{{localize "RT.Vehicle.Integrity.Critical"}}</span>
             <input type="number" data-dtype="Number" class="rt-field__input" 
-                   name="system.integrity.critical" value="{{actor.system.integrity.critical}}" />
+                   name="system.integrity.critical" value="{{system.integrity.critical}}" />
         </div>
         {{#if actor.system.isDamaged}}
         <div class="rt-integrity-status rt-status-damaged">
             <i class="fas fa-exclamation-triangle"></i>
-            {{localize "RT.Vehicle.Status.Damaged"}} ({{actor.system.integrityPercentage}}%)
+            {{localize "RT.Vehicle.Status.Damaged"}} ({{system.integrityPercentage}}%)
         </div>
         {{/if}}
         {{#if actor.system.isDestroyed}}

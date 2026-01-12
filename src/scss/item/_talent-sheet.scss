@@ -1,0 +1,575 @@
+// ============================================
+// Talent Item Sheet - Modern Tabbed Design
+// ============================================
+// Follows weapon sheet pattern with talent-specific theming
+
+// ============================================
+// CONTAINER
+// ============================================
+
+.rt-talent-sheet {
+  --talent-color: var(--rt-talents-primary, #a07818);
+  --talent-bg: var(--rt-talents-bg, rgba(160, 120, 24, 0.1));
+  --talent-border: var(--rt-talents-border, rgba(160, 120, 24, 0.3));
+  
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--rt-sheet-bg);
+  color: var(--rt-text-dark);
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  overflow: hidden;
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.rt-talent-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--talent-bg) 0%, transparent 100%);
+  border-bottom: 2px solid var(--talent-border);
+  flex-shrink: 0;
+  
+  &__image {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border: 2px solid var(--rt-bronze);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px var(--rt-shadow-medium);
+      
+      .rt-talent-header__image-overlay {
+        opacity: 1;
+      }
+    }
+  }
+  
+  &__image-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    
+    i {
+      color: white;
+      font-size: 1.2rem;
+    }
+  }
+  
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  &__name {
+    width: 100%;
+    padding: 4px 8px;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    transition: border-color 0.2s ease;
+    
+    &:hover,
+    &:focus {
+      border-bottom-color: var(--rt-gold);
+      outline: none;
+    }
+  }
+  
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+    padding-left: 8px;
+  }
+}
+
+// ============================================
+// STATS BAR
+// ============================================
+
+.rt-talent-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 8px;
+  background: var(--rt-panel-bg-solid);
+  border-bottom: 1px solid var(--rt-border-color-light);
+  flex-shrink: 0;
+}
+
+.rt-talent-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 60px;
+  padding: 8px 6px;
+  background: var(--rt-panel-bg);
+  border-radius: 4px;
+  border: 1px solid var(--rt-border-color-light);
+  
+  &__icon {
+    font-size: 1rem;
+    color: var(--rt-bronze);
+    margin-bottom: 4px;
+  }
+  
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  &__label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+  }
+  
+  &__value {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--rt-text-dark);
+  }
+  
+  // Tier stat
+  &--tier {
+    .rt-talent-stat__icon { color: var(--talent-color); }
+    .rt-talent-stat__value { color: var(--talent-color); }
+  }
+  
+  // XP cost stat
+  &--cost {
+    .rt-talent-stat__icon { color: var(--rt-gold); }
+  }
+}
+
+// ============================================
+// BADGES
+// ============================================
+
+.rt-talent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
+  color: var(--rt-text-dark);
+  
+  i {
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+  
+  &--tier {
+    background: var(--talent-bg);
+    border-color: var(--talent-border);
+    color: var(--talent-color);
+    font-weight: 700;
+    
+    &1 { 
+      --talent-color: #4a9d62;
+      --talent-bg: rgba(74, 157, 98, 0.15);
+      --talent-border: rgba(74, 157, 98, 0.4);
+    }
+    &2 { 
+      --talent-color: #3b7fa8;
+      --talent-bg: rgba(59, 127, 168, 0.15);
+      --talent-border: rgba(59, 127, 168, 0.4);
+    }
+    &3 { 
+      --talent-color: #9d4a9d;
+      --talent-bg: rgba(157, 74, 157, 0.15);
+      --talent-border: rgba(157, 74, 157, 0.4);
+    }
+  }
+  
+  &--category {
+    background: var(--talent-bg);
+    border-color: var(--talent-border);
+    color: var(--talent-color);
+  }
+  
+  &--cost {
+    background: rgba(201, 162, 39, 0.1);
+    border-color: rgba(201, 162, 39, 0.3);
+    color: var(--rt-gold);
+  }
+  
+  &--passive {
+    background: rgba(74, 157, 98, 0.1);
+    border-color: rgba(74, 157, 98, 0.3);
+    color: #4a9d62;
+  }
+  
+  &--stackable {
+    background: rgba(59, 127, 168, 0.1);
+    border-color: rgba(59, 127, 168, 0.3);
+    color: #3b7fa8;
+  }
+}
+
+// ============================================
+// CONTENT BODY (legacy - use rt-talent-content from _item-tabs.scss)
+// ============================================
+
+.rt-talent-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  min-height: 0;
+}
+
+// ============================================
+// SECTIONS
+// ============================================
+
+.rt-talent-section {
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
+    border-bottom: 1px solid var(--rt-border-color-light);
+    
+    i {
+      font-size: 0.9rem;
+      color: var(--rt-bronze);
+    }
+    
+    h3 {
+      flex: 1;
+      margin: 0;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--rt-text-dark);
+    }
+  }
+  
+  &__body {
+    padding: 12px;
+  }
+}
+
+// Legacy support for old section title style
+.rt-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px 0;
+  padding: 8px 12px;
+  background: linear-gradient(90deg, var(--talent-bg) 0%, transparent 100%);
+  border-left: 3px solid var(--talent-color);
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--rt-text-dark);
+  
+  i {
+    color: var(--talent-color);
+    font-size: 0.9rem;
+  }
+}
+
+// ============================================
+// PROPERTIES GRID
+// ============================================
+
+.rt-properties-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.rt-property {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  &--checkbox {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.rt-property-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--rt-text-muted);
+  
+  .rt-field-hint {
+    font-size: 0.7rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--rt-text-muted);
+    opacity: 0.7;
+    font-style: italic;
+  }
+}
+
+.rt-property-label-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--rt-text-dark);
+  cursor: pointer;
+  
+  input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+  }
+}
+
+.rt-property-input,
+.rt-property-textarea {
+  width: 100%;
+  padding: 6px 10px;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 4px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.85rem;
+  color: var(--rt-text-dark);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: var(--rt-border-color);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--rt-gold);
+    background: var(--rt-panel-bg);
+    box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.1);
+  }
+  
+  &::placeholder {
+    color: var(--rt-text-muted);
+    opacity: 0.5;
+  }
+}
+
+.rt-property-textarea {
+  resize: vertical;
+  min-height: 60px;
+  font-family: 'Roboto', sans-serif;
+}
+
+// ============================================
+// APTITUDES DISPLAY
+// ============================================
+
+.rt-aptitudes-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rt-aptitude-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--talent-bg);
+  border: 1px solid var(--talent-border);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--talent-color);
+}
+
+// ============================================
+// PREREQUISITES DISPLAY
+// ============================================
+
+.rt-prerequisites-display {
+  padding: 12px;
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 4px;
+}
+
+.rt-prereq-label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--rt-text-dark);
+  line-height: 1.5;
+}
+
+// ============================================
+// MODIFIERS DISPLAY
+// ============================================
+
+.rt-modifiers-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.rt-modifier-group {
+  background: var(--rt-panel-bg-translucent);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.rt-modifier-group-title {
+  margin: 0 0 8px 0;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--rt-text-muted);
+}
+
+.rt-modifier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-modifier-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background: var(--rt-panel-bg);
+  border-radius: 3px;
+}
+
+.rt-modifier-name {
+  font-size: 0.8rem;
+  color: var(--rt-text-dark);
+  text-transform: capitalize;
+}
+
+.rt-modifier-value {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  
+  &.positive {
+    color: #4a9d62;
+  }
+  
+  &.negative {
+    color: #c94a4a;
+  }
+}
+
+// ============================================
+// EMPTY STATE
+// ============================================
+
+.rt-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--rt-text-muted);
+  
+  i {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    opacity: 0.3;
+  }
+  
+  p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    
+    &.rt-field-hint {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+  }
+}
+
+// ============================================
+// FIELD HINTS
+// ============================================
+
+.rt-field-hint {
+  font-size: 0.75rem;
+  color: var(--rt-text-muted);
+  font-style: italic;
+  
+  i {
+    margin-right: 4px;
+    opacity: 0.7;
+  }
+}
+
+// ============================================
+// EDITOR CONTAINER
+// ============================================
+
+.rt-editor-container {
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 4px;
+  overflow: hidden;
+  
+  .editor {
+    min-height: 150px;
+  }
+}

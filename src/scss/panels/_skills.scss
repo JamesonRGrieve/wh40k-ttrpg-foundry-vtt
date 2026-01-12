@@ -54,29 +54,11 @@
   gap: 6px;
 }
 
-.rt-favorite-btn {
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  background: transparent;
-  border: none;
-  color: var(--color-text-tertiary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  
-  &:hover {
-    color: $rt-accent-gold;
-    transform: scale(1.1);
-  }
-  
-  &.rt-favorite--active {
-    color: $rt-accent-gold;
-  }
-  
-  i {
-    font-size: 14px;
-  }
+.rt-skill-name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
 }
 
 .rt-skill-name {
@@ -84,6 +66,7 @@
   border: none;
   padding: 0;
   color: var(--color-text-primary);
+  font-family: $rt-font-body;
   font-size: 0.95rem;
   line-height: 1;
   text-align: left;
@@ -91,9 +74,16 @@
   letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
+  transition: color 0.15s ease, text-shadow 0.15s ease;
+  flex: 1;
   
   &:hover {
     color: $rt-accent-skills;
+    text-shadow: 0 0 8px rgba($rt-accent-skills, 0.3);
+  }
+  
+  &:active {
+    color: lighten($rt-accent-skills, 10%);
   }
   
   .rt-skill-label {
@@ -101,11 +91,37 @@
     align-items: baseline;
     gap: 4px;
     line-height: 1;
+    font-family: $rt-font-body;
   }
 
   .rt-skill-char {
     font-size: 0.75rem;
     color: $rt-text-muted;
+    font-family: $rt-font-ui;
+  }
+}
+
+.rt-skill-roll {
+  background: none;
+  border: none;
+  padding: 4px;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  border-radius: 3px;
+  
+  &:hover {
+    color: $rt-accent-skills;
+    background: rgba($rt-accent-skills, 0.1);
+    transform: scale(1.1);
+  }
+  
+  &:active {
+    transform: scale(0.95);
   }
 }
 
@@ -221,3 +237,50 @@
   }
 }
 
+// ============================================
+// Advanced Skills Visual Distinction
+// ============================================
+
+.rt-skill-row--advanced {
+  background: linear-gradient(90deg, rgba($rt-accent-skills, 0.08) 0%, rgba($rt-accent-skills, 0.03) 100%);
+  border-left: 2px solid rgba($rt-accent-skills, 0.5);
+  
+  .rt-skill-name {
+    font-style: italic;
+    
+    &::before {
+      content: "ADV";
+      display: inline-block;
+      font-size: 0.6rem;
+      font-style: normal;
+      font-weight: 700;
+      padding: 1px 4px;
+      margin-right: 4px;
+      background: rgba($rt-accent-skills, 0.15);
+      border: 1px solid rgba($rt-accent-skills, 0.4);
+      border-radius: 3px;
+      color: $rt-accent-skills;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  }
+  
+  // Future: grey out if actor lacks appropriate talent/trait
+  &.rt-skill-row--unavailable {
+    opacity: 0.5;
+    filter: grayscale(0.5);
+    
+    .rt-skill-name {
+      cursor: not-allowed;
+      
+      &:hover {
+        color: var(--color-text-primary);
+      }
+    }
+    
+    .rt-train-btn {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  }
+}

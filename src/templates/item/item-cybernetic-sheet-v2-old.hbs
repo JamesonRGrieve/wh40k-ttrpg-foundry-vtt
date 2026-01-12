@@ -1,0 +1,108 @@
+{{!-- Cybernetic Item Sheet V2 - Placeholder until redesign --}}
+<form class="rt-item-sheet rt-cybernetic-sheet" autocomplete="off">
+  <div class="rt-item-sheet__header">
+    <div class="rt-item-sheet__image-wrapper">
+      <img class="rt-item-sheet__image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    </div>
+    <div class="rt-item-sheet__title-area">
+      <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Cybernetic Name" />
+      <div class="rt-item-sheet__subtitle">
+        <i class="fas fa-cog"></i> Cybernetic Implant
+      </div>
+    </div>
+  </div>
+
+  {{!-- Basic Properties --}}
+  <div class="rt-item-sheet__panel">
+    <h3 class="rt-item-sheet__panel-title">Properties</h3>
+    
+    <div class="rt-item-sheet__field-row">
+      <div class="rt-item-sheet__field">
+        <label class="rt-item-sheet__label">Slot</label>
+        <select class="rt-item-sheet__select" name="system.slot">
+          {{#select system.slot}}
+          <option value="">None</option>
+          <option value="head">Head</option>
+          <option value="body">Body</option>
+          <option value="arm">Arm</option>
+          <option value="leg">Leg</option>
+          <option value="internal">Internal</option>
+          {{/select}}
+        </select>
+      </div>
+      
+      <div class="rt-item-sheet__field">
+        <label class="rt-item-sheet__label">
+          <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
+          <span>Equipped</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Physical Properties --}}
+  <div class="rt-item-sheet__panel">
+    <h3 class="rt-item-sheet__panel-title">Physical</h3>
+    
+    <div class="rt-item-sheet__field-row">
+      <div class="rt-item-sheet__field">
+        <label class="rt-item-sheet__label">Weight (kg)</label>
+        <input class="rt-item-sheet__input" name="system.weight" type="number" step="0.1" value="{{system.weight}}" />
+      </div>
+      
+      <div class="rt-item-sheet__field">
+        <label class="rt-item-sheet__label">Craftsmanship</label>
+        <select class="rt-item-sheet__select" name="system.craftsmanship">
+          {{#select system.craftsmanship}}
+          <option value="poor">Poor</option>
+          <option value="common">Common</option>
+          <option value="good">Good</option>
+          <option value="best">Best</option>
+          {{/select}}
+        </select>
+      </div>
+      
+      <div class="rt-item-sheet__field">
+        <label class="rt-item-sheet__label">Availability</label>
+        <select class="rt-item-sheet__select" name="system.availability">
+          {{#select system.availability}}
+          <option value="ubiquitous">Ubiquitous</option>
+          <option value="abundant">Abundant</option>
+          <option value="plentiful">Plentiful</option>
+          <option value="common">Common</option>
+          <option value="average">Average</option>
+          <option value="scarce">Scarce</option>
+          <option value="rare">Rare</option>
+          <option value="veryRare">Very Rare</option>
+          <option value="extremelyRare">Extremely Rare</option>
+          <option value="nearUnique">Near Unique</option>
+          <option value="unique">Unique</option>
+          {{/select}}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Description --}}
+  <div class="rt-item-sheet__panel">
+    <h3 class="rt-item-sheet__panel-title">Description</h3>
+    <div class="rt-editor-container">
+      {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+    </div>
+  </div>
+
+  {{!-- Source --}}
+  <div class="rt-item-sheet__panel">
+    <h3 class="rt-item-sheet__panel-title">Source</h3>
+    <div class="rt-item-sheet__field-row">
+      <div class="rt-item-sheet__field">
+        <label class="rt-item-sheet__label">Book</label>
+        <input class="rt-item-sheet__input" name="system.source.book" type="text" value="{{system.source.book}}" placeholder="RT: Core" />
+      </div>
+      <div class="rt-item-sheet__field">
+        <label class="rt-item-sheet__label">Page</label>
+        <input class="rt-item-sheet__input" name="system.source.page" type="text" value="{{system.source.page}}" placeholder="142" />
+      </div>
+    </div>
+  </div>
+</form>

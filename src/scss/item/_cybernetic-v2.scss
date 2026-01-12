@@ -1,0 +1,464 @@
+// ============================================
+// Rogue Trader Cybernetic Sheet Styles
+// ============================================
+// Modern cybernetic item sheet styling
+// Matches weapon sheet pattern with tech-themed colors
+
+// ============================================
+// CYBERNETIC SHEET BASE
+// ============================================
+
+.rt-cybernetic-sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--rt-sheet-bg);
+  color: var(--rt-text-dark);
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  overflow: hidden;
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.rt-cybernetic-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(128, 128, 128, 0.15) 0%, transparent 100%);
+  border-bottom: 2px solid rgba(128, 128, 128, 0.4);
+  
+  &__image {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border: 2px solid var(--rt-bronze);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px var(--rt-shadow-medium);
+      
+      .rt-cybernetic-header__image-overlay {
+        opacity: 1;
+      }
+    }
+  }
+  
+  &__image-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    
+    i {
+      color: white;
+      font-size: 1.2rem;
+    }
+  }
+  
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  &__name {
+    width: 100%;
+    padding: 4px 8px;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    transition: border-color 0.2s ease;
+    
+    &:hover,
+    &:focus {
+      border-bottom-color: var(--rt-gold);
+      outline: none;
+    }
+  }
+  
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+    padding-left: 8px;
+  }
+  
+  &__equipped {
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// CYBERNETIC BADGES
+// ============================================
+
+.rt-cybernetic-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  
+  &--type {
+    background: rgba(128, 128, 128, 0.1);
+    border: 1px solid rgba(128, 128, 128, 0.4);
+    color: silver;
+  }
+  
+  &--location {
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    color: var(--rt-text-medium);
+  }
+  
+  &--craft {
+    border: 1px solid;
+    
+    &.rt-cybernetic-badge--poor {
+      background: rgba(139, 0, 0, 0.1);
+      border-color: rgba(139, 0, 0, 0.4);
+      color: var(--rt-red);
+    }
+    
+    &.rt-cybernetic-badge--common {
+      background: var(--rt-panel-bg-translucent);
+      border-color: var(--rt-border-color-light);
+      color: var(--rt-text-muted);
+    }
+    
+    &.rt-cybernetic-badge--good {
+      background: rgba(45, 90, 45, 0.1);
+      border-color: rgba(45, 90, 45, 0.4);
+      color: var(--rt-green);
+    }
+    
+    &.rt-cybernetic-badge--best {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: rgba(212, 175, 55, 0.5);
+      color: var(--rt-gold);
+    }
+  }
+}
+
+// ============================================
+// STAT BAR
+// ============================================
+
+.rt-cybernetic-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 8px;
+  background: var(--rt-panel-bg-solid);
+  border-bottom: 1px solid var(--rt-border-color-light);
+}
+
+.rt-cybernetic-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 60px;
+  padding: 8px 6px;
+  background: var(--rt-panel-bg);
+  border-radius: 4px;
+  border: 1px solid var(--rt-border-color-light);
+  
+  &__icon {
+    font-size: 1rem;
+    color: var(--rt-bronze);
+    margin-bottom: 4px;
+  }
+  
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  &__label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+  }
+  
+  &__value {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--rt-text-dark);
+  }
+  
+  // Stat variants
+  &--type {
+    .rt-cybernetic-stat__icon { color: silver; }
+    .rt-cybernetic-stat__value { color: silver; }
+  }
+  
+  &--locations {
+    .rt-cybernetic-stat__icon { color: var(--rt-bronze); }
+  }
+}
+
+// ============================================
+// TAB NAVIGATION
+// ============================================
+
+.rt-cybernetic-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 12px;
+  background: var(--rt-panel-bg-solid);
+  border-bottom: 1px solid var(--rt-border-color);
+}
+
+.rt-cybernetic-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--rt-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 0.9rem;
+  }
+  
+  &:hover {
+    color: var(--rt-text-dark);
+    background: var(--rt-panel-bg-translucent);
+  }
+  
+  &.active {
+    color: silver;
+    border-bottom-color: silver;
+    background: rgba(128, 128, 128, 0.1);
+  }
+}
+
+// ============================================
+// TAB CONTENT
+// ============================================
+
+.rt-cybernetic-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--rt-panel-bg);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--rt-border-color);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--rt-gold-dark);
+    }
+  }
+}
+
+.rt-cybernetic-panel {
+  display: none;
+  
+  &.active {
+    display: block;
+  }
+}
+
+// ============================================
+// SECTIONS
+// ============================================
+
+.rt-cybernetic-section {
+  background: var(--rt-panel-bg);
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
+    border-bottom: 1px solid var(--rt-border-color-light);
+    
+    i {
+      font-size: 0.9rem;
+      color: var(--rt-bronze);
+    }
+    
+    h3 {
+      flex: 1;
+      margin: 0;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--rt-text-dark);
+    }
+  }
+  
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    color: var(--rt-text-muted);
+  }
+  
+  &__body {
+    padding: 12px;
+    
+    &--editor {
+      padding: 0;
+      
+      .editor {
+        min-height: 200px;
+      }
+    }
+  }
+  
+  &--full .rt-cybernetic-section__body {
+    padding: 0;
+  }
+}
+
+// ============================================
+// LOCATION GRID
+// ============================================
+
+.rt-location-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.rt-location-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 6px;
+  background: var(--rt-panel-bg-translucent);
+  border: 2px solid var(--rt-border-color-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  input {
+    display: none;
+  }
+  
+  i {
+    font-size: 1.5rem;
+    color: var(--rt-text-muted);
+    transition: color 0.2s ease;
+  }
+  
+  span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+    transition: color 0.2s ease;
+  }
+  
+  &:hover {
+    background: var(--rt-btn-bg-hover);
+    border-color: var(--rt-bronze);
+  }
+  
+  &--active,
+  input:checked ~ & {
+    background: rgba(128, 128, 128, 0.15);
+    border-color: silver;
+    
+    i {
+      color: silver;
+    }
+    
+    span {
+      color: silver;
+    }
+  }
+}
+
+// ============================================
+// CYBERNETIC AP GRID
+// ============================================
+
+.rt-cybernetic-ap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+// ============================================
+// MODIFIER GRID
+// ============================================
+
+.rt-modifier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}

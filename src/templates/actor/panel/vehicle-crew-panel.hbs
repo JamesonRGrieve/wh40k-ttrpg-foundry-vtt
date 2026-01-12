@@ -8,19 +8,19 @@
         <div class="rt-field__wrapper">
             <span class="rt-field__header">{{localize "RT.Vehicle.Crew.Required"}}</span>
             <input type="number" data-dtype="Number" class="rt-field__input" 
-                   name="system.crew.required" value="{{actor.system.crew.required}}" 
+                   name="system.crew.required" value="{{system.crew.required}}" 
                    min="0" placeholder="1" />
         </div>
         <div class="rt-field__wrapper">
             <span class="rt-field__header">{{localize "RT.Vehicle.Passengers"}}</span>
             <input type="number" data-dtype="Number" class="rt-field__input" 
-                   name="system.passengers" value="{{actor.system.passengers}}" 
+                   name="system.passengers" value="{{system.passengers}}" 
                    min="0" placeholder="0" />
         </div>
         <div class="rt-field__wrapper rt-field__full">
             <span class="rt-field__header">{{localize "RT.Vehicle.Crew.Notes"}}</span>
             <textarea class="rt-field__textarea" name="system.crew.notes" 
-                      rows="3" placeholder="Crew positions, roles, requirements...">{{actor.system.crew.notes}}</textarea>
+                      rows="3" placeholder="Crew positions, roles, requirements...">{{system.crew.notes}}</textarea>
         </div>
     </div>
 </div>

@@ -1,18 +1,26 @@
 {{!-- Acolyte Sheet Powers Tab --}}
-{{!-- This part renders the Powers tab content with psychic powers, navigator powers, etc. --}}
-<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    <div class="rt-powers-grid">
-        {{!-- Left Column: Psy Rating & Psychic Powers --}}
-        <div class="rt-powers-col">
-            {{> systems/rogue-trader/templates/actor/panel/psy-panel.hbs}}
-            {{> systems/rogue-trader/templates/actor/panel/psychic-powers-panel.hbs}}
+{{!-- Modern powers management with psychic powers, navigator powers, rituals, and orders --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} rt-tab-powers" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    <div class="rt-powers-layout">
+        {{!-- Left Column: Psyker Control & Psychic Powers --}}
+        <div class="rt-powers-col rt-powers-col-left">
+            {{!-- Psy Rating Control Center --}}
+            {{> systems/rogue-trader/templates/actor/panel/psy-rating-panel-v2.hbs}}
+            
+            {{!-- Psychic Powers --}}
+            {{> systems/rogue-trader/templates/actor/panel/psychic-powers-panel-v2.hbs}}
         </div>
         
-        {{!-- Right Column: Navigator, Orders, Rituals --}}
-        <div class="rt-powers-col">
-            {{> systems/rogue-trader/templates/actor/panel/navigator-powers-panel.hbs}}
-            {{> systems/rogue-trader/templates/actor/panel/orders-panel.hbs}}
-            {{> systems/rogue-trader/templates/actor/panel/rituals-panel.hbs}}
+        {{!-- Right Column: Navigator, Rituals, Orders --}}
+        <div class="rt-powers-col rt-powers-col-right">
+            {{!-- Navigator Powers --}}
+            {{> systems/rogue-trader/templates/actor/panel/navigator-powers-panel-v2.hbs}}
+            
+            {{!-- Rituals --}}
+            {{> systems/rogue-trader/templates/actor/panel/rituals-panel-v2.hbs}}
+            
+            {{!-- Ship Orders --}}
+            {{> systems/rogue-trader/templates/actor/panel/orders-panel-v2.hbs}}
         </div>
     </div>
 </section>

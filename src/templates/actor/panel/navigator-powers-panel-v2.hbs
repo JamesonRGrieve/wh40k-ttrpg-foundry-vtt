@@ -1,0 +1,131 @@
+{{!-- Navigator Powers Panel V2 - Modern Card-based Design --}}
+<div class="rt-panel rt-panel-powers rt-panel-navigator-powers">
+    <header class="rt-panel-header" data-action="togglePanel" data-panel-id="navigator-powers">
+        <span class="rt-panel-title">
+            <i class="fas fa-eye"></i>
+            Navigator Powers
+            {{#if navigatorPowersCount}}
+            <span class="rt-count-badge">{{navigatorPowersCount}}</span>
+            {{/if}}
+        </span>
+        <i class="fas fa-chevron-down rt-panel-toggle"></i>
+    </header>
+    <div class="rt-panel-body">
+        {{!-- Powers List --}}
+        <div class="rt-powers-list" data-drop-zone="powers" data-accepts="navigatorPower">
+            {{#each navigatorPowers as |power|}}
+            <div class="rt-power-card rt-navigator-card item-drag" data-item-id="{{power.id}}" draggable="true">
+                {{!-- Power Header --}}
+                <div class="rt-power-card-header">
+                    <img class="rt-power-icon" src="{{power.img}}" alt="{{power.name}}" />
+                    <div class="rt-power-info">
+                        <button type="button" class="rt-power-name" data-action="itemEdit" data-item-id="{{power.id}}" title="Edit Power">
+                            {{power.name}}
+                        </button>
+                        <div class="rt-power-meta">
+                            <span class="rt-power-type rt-type-navigator">
+                                <i class="fas fa-eye"></i> Navigator
+                            </span>
+                        </div>
+                    </div>
+                    <div class="rt-power-card-actions">
+                        <button type="button" class="rt-power-btn rt-btn-roll" data-action="rollPower" data-item-id="{{power.id}}" title="Use Power">
+                            <i class="fas fa-dice-d20"></i>
+                        </button>
+                        <button type="button" class="rt-power-btn rt-btn-chat" data-action="vocalizePower" data-item-id="{{power.id}}" title="Post to Chat">
+                            <i class="fas fa-comment"></i>
+                        </button>
+                        <button type="button" class="rt-power-btn rt-btn-expand" data-action="togglePowerDetails" data-item-id="{{power.id}}" title="Toggle Details">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                {{!-- Power Stats Row --}}
+                <div class="rt-power-stats">
+                    <div class="rt-power-stat">
+                        <span class="rt-stat-label">Test</span>
+                        <span class="rt-stat-value">{{power.system.testLabel}}</span>
+                    </div>
+                    <div class="rt-power-stat">
+                        <span class="rt-stat-label">Action</span>
+                        <span class="rt-stat-value">{{power.system.activationLabel}}</span>
+                    </div>
+                </div>
+                
+                {{!-- Power Level Badges --}}
+                <div class="rt-navigator-levels">
+                    {{#if power.system.levels.novice.effect}}
+                    <span class="rt-level-badge rt-level-novice" title="Novice Effect">
+                        <i class="fas fa-seedling"></i> Novice
+                    </span>
+                    {{/if}}
+                    {{#if power.system.levels.adept.effect}}
+                    <span class="rt-level-badge rt-level-adept" title="Adept Effect">
+                        <i class="fas fa-star-half-alt"></i> Adept
+                    </span>
+                    {{/if}}
+                    {{#if power.system.levels.master.effect}}
+                    <span class="rt-level-badge rt-level-master" title="Master Effect">
+                        <i class="fas fa-crown"></i> Master
+                    </span>
+                    {{/if}}
+                </div>
+                
+                {{!-- Expandable Details --}}
+                <div class="rt-power-details" data-power-id="{{power.id}}" hidden>
+                    {{#if power.system.levels.novice.effect}}
+                    <div class="rt-power-detail-section rt-section-novice">
+                        <span class="rt-detail-heading"><i class="fas fa-seedling"></i> Novice</span>
+                        <div class="rt-detail-content">{{{power.system.levels.novice.effect}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if power.system.levels.adept.effect}}
+                    <div class="rt-power-detail-section rt-section-adept">
+                        <span class="rt-detail-heading"><i class="fas fa-star-half-alt"></i> Adept</span>
+                        <div class="rt-detail-content">{{{power.system.levels.adept.effect}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if power.system.levels.master.effect}}
+                    <div class="rt-power-detail-section rt-section-master">
+                        <span class="rt-detail-heading"><i class="fas fa-crown"></i> Master</span>
+                        <div class="rt-detail-content">{{{power.system.levels.master.effect}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if power.system.sideEffects}}
+                    <div class="rt-power-detail-section rt-section-danger">
+                        <span class="rt-detail-heading"><i class="fas fa-exclamation-triangle"></i> Side Effects</span>
+                        <div class="rt-detail-content">{{{power.system.sideEffects}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if power.system.description}}
+                    <div class="rt-power-detail-section">
+                        <span class="rt-detail-heading">Description</span>
+                        <div class="rt-detail-content">{{{power.system.description}}}</div>
+                    </div>
+                    {{/if}}
+                    <div class="rt-power-detail-actions">
+                        <button type="button" class="rt-detail-btn" data-action="itemEdit" data-item-id="{{power.id}}">
+                            <i class="fas fa-cog"></i> Edit
+                        </button>
+                        <button type="button" class="rt-detail-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{power.id}}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div class="rt-empty-state">
+                <i class="fas fa-eye"></i>
+                <p>No navigator powers</p>
+            </div>
+            {{/each}}
+        </div>
+        
+        {{!-- Add Power Dropzone --}}
+        <div class="rt-dropzone {{#if navigatorPowersCount}}rt-dropzone--compact{{/if}}" data-action="itemCreate" data-type="navigatorPower">
+            <i class="fas fa-plus rt-dropzone-icon"></i>
+            <span class="rt-dropzone-text">{{#if navigatorPowersCount}}Drop or click to add{{else}}Drop Navigator Power or Click to Create{{/if}}</span>
+        </div>
+    </div>
+</div>

@@ -86,6 +86,11 @@
           "description.value"
         ]
       },
+      "combatAction": {
+        "htmlFields": [
+          "description.value"
+        ]
+      },
       "consumable": {
         "htmlFields": [
           "description.value"

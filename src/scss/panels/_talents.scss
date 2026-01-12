@@ -19,6 +19,14 @@
   gap: 2px;
   min-height: 60px;
   
+  // Empty state when no items
+  &:empty {
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
   // Dropzone styling when empty or dragging
   &[data-drop-zone] {
     position: relative;
@@ -48,17 +56,27 @@
 // Table Rows
 .rt-talent-row,
 .rt-trait-row {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: 6px $rt-space-sm;
   background: var(--rt-panel-bg-solid);
   border: 1px solid var(--rt-border-color-light);
   border-left: 3px solid $rt-accent-talents;
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.2s ease;
+  cursor: grab;
+  min-height: 40px; // Ensure consistent row height
   
   &:hover {
     background: var(--rt-panel-bg);
     border-color: var(--rt-border-color);
     box-shadow: 0 1px 3px var(--rt-shadow-soft);
+  }
+  
+  &:active {
+    cursor: grabbing;
   }
   
   &.dragging {
@@ -69,19 +87,6 @@
 
 .rt-trait-row {
   border-left-color: $rt-accent-equipment;
-}
-
-// Compact Row View
-.rt-row-compact {
-  display: flex;
-  align-items: center;
-  gap: $rt-space-sm;
-  padding: 6px $rt-space-sm;
-  cursor: grab;
-  
-  &:active {
-    cursor: grabbing;
-  }
 }
 
 // Row Icon
@@ -108,10 +113,15 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 0;
+  min-width: 0; // Critical for text-overflow to work in flex
+  overflow: hidden; // Prevent content overflow
 }
 
 .rt-row-name {
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--rt-text-dark);
@@ -119,6 +129,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%; // Ensure button takes full width for ellipsis
   
   &:hover {
     color: $rt-accent-talents;
@@ -135,15 +146,19 @@
   flex-wrap: wrap;
   font-size: 0.7rem;
   color: var(--rt-text-muted);
+  align-items: center; // Ensure vertical alignment
+  line-height: 1.2; // Prevent extra height
 }
 
 .rt-meta-item {
   display: flex;
   align-items: center;
   gap: 3px;
+  white-space: nowrap; // Prevent mid-word wrapping
   
   i {
     font-size: 0.7rem;
+    flex-shrink: 0; // Icons don't shrink
   }
 }
 
@@ -312,6 +327,10 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  
+  // Ensure proper stacking context
+  position: relative;
+  z-index: 1;
 }
 
 .rt-group-header {
@@ -327,14 +346,22 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--rt-text-secondary);
+  position: sticky; // Make headers sticky during scroll
+  top: 0;
+  z-index: 2;
   
   i {
     font-size: 0.8rem;
+    flex-shrink: 0;
   }
 }
 
 .rt-group-title {
   flex: 1;
+  min-width: 0; // Allow text truncation if needed
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .rt-count-badge {
@@ -399,32 +426,59 @@
 }
 
 // Dropzone
-.rt-dropzone {
-  border: 2px dashed var(--rt-border-color-light);
-  border-radius: 6px;
-  padding: $rt-space-md;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: var(--rt-panel-bg-translucent);
+// ============================================
+// DROP ZONES
+// ============================================
+// NOTE: Core .rt-dropzone definitions are in _unified-components.scss
+// No overrides needed here - using unified styles
+
+// ============================================
+// Responsive Improvements
+// ============================================
+
+// Ensure proper layout on narrower sheets
+@media (max-width: 800px) {
+  .rt-talent-row,
+  .rt-trait-row {
+    flex-wrap: nowrap; // Never wrap to multiple lines
+    
+    .rt-row-main {
+      min-width: 150px; // Ensure some minimum space for name
+    }
+    
+    .rt-row-meta {
+      font-size: 0.65rem; // Slightly smaller on narrow
+    }
+  }
   
-  &:hover {
-    border-color: $rt-accent-talents;
-    background: linear-gradient(135deg, 
-      rgba($rt-accent-talents, 0.05) 0%, 
-      transparent 100%);
+  .rt-action-btn {
+    padding: 3px 4px; // Tighter padding
+    font-size: 0.75rem;
   }
 }
 
-.rt-dropzone-icon {
-  font-size: 1.5rem;
-  color: var(--rt-text-muted);
-  margin-bottom: $rt-space-xs;
-  display: block;
+// Extra narrow - hide meta items if needed
+@media (max-width: 600px) {
+  .rt-row-meta {
+    display: none; // Hide metadata on very narrow
+  }
 }
 
-.rt-dropzone-text {
-  font-size: 0.8rem;
-  color: var(--rt-text-muted);
-  display: block;
-}
+// ============================================
+// Layout Fixes & Improvements Summary
+// ============================================
+// 
+// 1. Added min-height to rows for consistency
+// 2. Added overflow: hidden to rt-row-main
+// 3. Added width: 100% to rt-row-name for ellipsis
+// 4. Added empty state styling for tables
+// 5. Improved meta item wrapping with white-space: nowrap
+// 6. Made group headers sticky for better navigation
+// 7. Added responsive breakpoints for narrow sheets
+// 8. Ensured all flex items have proper min-width: 0
+// 9. Added line-height controls to prevent extra space
+// 10. Improved z-index stacking for groups
+// 
+// All changes maintain Imperial Gothic theme and 
+// follow the dnd5e V13 architecture pattern.
+// ============================================

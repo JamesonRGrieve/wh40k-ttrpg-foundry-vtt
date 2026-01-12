@@ -46,18 +46,16 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             effectToggle: BaseActorSheet.#effectToggle,
             toggleSection: BaseActorSheet.#toggleSection,
             toggleTraining: BaseActorSheet.#toggleTraining,
-            toggleTalentExpand: BaseActorSheet.#toggleTalentExpand,
-            toggleTraitExpand: BaseActorSheet.#toggleTraitExpand,
             addSpecialistSkill: BaseActorSheet.#addSpecialistSkill,
             deleteSpecialization: BaseActorSheet.#deleteSpecialization,
+            viewSkillInfo: BaseActorSheet.#viewSkillInfo,
             togglePanel: BaseActorSheet._onTogglePanel,
             applyPreset: BaseActorSheet._onApplyPreset,
             enterWhatIf: BaseActorSheet.#enterWhatIf,
             commitWhatIf: BaseActorSheet.#commitWhatIf,
             cancelWhatIf: BaseActorSheet.#cancelWhatIf,
             spendXPAdvance: BaseActorSheet.#spendXPAdvance,
-            editCharacteristic: BaseActorSheet.#editCharacteristic,
-            rollHitLocation: BaseActorSheet.#rollHitLocation
+            editCharacteristic: BaseActorSheet.#editCharacteristic
         },
         classes: ["rogue-trader", "sheet", "actor"],
         form: {
@@ -410,6 +408,35 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
     /* -------------------------------------------- */
 
     /**
+     * Handle input changes manually - updates actor when input changes.
+     * @param {Event} event  The change event
+     * @returns {Promise<void>}
+     * @private
+     */
+    async _onInputChange(event) {
+        const input = event.currentTarget;
+        if (!input.name) return;
+
+        // Get the value based on input type
+        let value = input.value;
+        if (input.type === 'checkbox') {
+            value = input.checked;
+        } else if (input.type === 'number' || input.dataset.dtype === 'Number') {
+            value = parseFloat(value) || 0;
+        }
+
+        // Update the actor
+        try {
+            await this.document.update({ [input.name]: value });
+        } catch (error) {
+            console.error("Failed to update actor:", error);
+            ui.notifications.error("Failed to save changes");
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Prepare skills for display.
      * @param {object} context  Context being prepared.
      * @protected
@@ -424,8 +451,8 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      * @protected
      */
     _prepareSkillsContext(context) {
-        const skills = this.actor.skills ?? {};
-        const characteristics = this.actor.characteristics ?? {};
+        const skills = this.actor.system.skills ?? {};
+        const characteristics = this.actor.system.characteristics ?? {};
         
         // Apply filters
         const filters = this._skillsFilter;
@@ -471,14 +498,17 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             
             if (Array.isArray(data.entries)) {
                 // Specialist skill - process entries
-                data.entries.forEach(entry => {
+                // Convert entries to plain array to ensure Handlebars can iterate
+                const plainEntries = Array.from(data.entries);
+                plainEntries.forEach(entry => {
                     this._augmentSkillData(key, entry, characteristics, data);
                 });
                 
                 // Get suggested specializations from compendium for autocomplete
                 data.suggestedSpecializations = this._getSkillSuggestions(key);
                 
-                specialist.push([key, data]);
+                // Create plain object with converted entries
+                specialist.push([key, { ...data, entries: plainEntries }]);
             } else {
                 // Standard skill
                 standard.push([key, data]);
@@ -496,6 +526,29 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
     }
 
     /**
+     * Map characteristic short names to full keys.
+     * @param {string} short  Short name (e.g., "Ag", "WS")
+     * @returns {string}  Full characteristic key (e.g., "agility", "weaponSkill")
+     * @private
+     */
+    _charShortToKey(short) {
+        // Use the same map as CommonTemplate for consistency
+        const map = {
+            "WS": "weaponSkill",
+            "BS": "ballisticSkill",
+            "S": "strength",
+            "T": "toughness",
+            "Ag": "agility",
+            "Int": "intelligence",
+            "Per": "perception",
+            "WP": "willpower",
+            "Fel": "fellowship",
+            "Inf": "influence"
+        };
+        return map[short] || short.toLowerCase();
+    }
+
+    /**
      * Augment skill data with computed display properties.
      * @param {string} key  Skill key
      * @param {object} data  Skill or entry data
@@ -504,7 +557,8 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      * @protected
      */
     _augmentSkillData(key, data, characteristics, parentSkill = null) {
-        const charKey = data.characteristic || parentSkill?.characteristic || 'strength';
+        const charShort = data.characteristic || parentSkill?.characteristic || 'S';
+        const charKey = this._charShortToKey(charShort);
         const char = characteristics[charKey];
         
         // Training level (0-3)
@@ -515,10 +569,6 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         
         // Breakdown string for tooltip/title
         data.breakdown = this._getSkillBreakdown(data, char);
-        
-        // Check if skill is favorited
-        const favorites = this.actor.getFlag("rogue-trader", "favoriteSkills") || [];
-        data.isFavorite = favorites.includes(key);
         
         // Tooltip data (JSON string)
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
@@ -648,7 +698,12 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      */
     _augmentTalentData(talent) {
         return {
-            ...talent,
+            id: talent.id,
+            _id: talent._id,
+            name: talent.name,
+            img: talent.img,
+            type: talent.type,
+            system: talent.system,
             tierLabel: talent.system.tierLabel,
             categoryLabel: talent.system.categoryLabel,
             fullName: talent.system.fullName,
@@ -667,7 +722,12 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      */
     _augmentTraitData(trait) {
         return {
-            ...trait,
+            id: trait.id,
+            _id: trait._id,
+            name: trait.name,
+            img: trait.img,
+            type: trait.type,
+            system: trait.system,
             fullName: trait.system.fullName,
             categoryLabel: trait.system.categoryLabel,
             hasLevel: trait.system.hasLevel,
@@ -918,6 +978,21 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
     /*  Event Listeners and Handlers                */
     /* -------------------------------------------- */
 
+    /**
+     * Handle form submission - override from ApplicationV2.
+     * @param {FormDataExtended} formData   The parsed form data
+     * @param {SubmitEvent} event           The form submission event
+     * @returns {Promise<void>}
+     * @override
+     * @protected
+     */
+    async _onSubmitForm(formData, event) {
+        // Update the actor with the form data
+        await this.document.update(formData.object);
+    }
+
+    /* -------------------------------------------- */
+
     /** @inheritDoc */
     async _onRender(context, options) {
         await super._onRender(context, options);
@@ -969,25 +1044,32 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             }
         });
 
+        // MANUAL FORM HANDLING: Add change listeners to all inputs with names
+        if (this.isEditable) {
+            this.element.querySelectorAll('input[name], select[name], textarea[name]').forEach(input => {
+                input.addEventListener('change', this._onInputChange.bind(this));
+            });
+        }
+
         // Legacy item action handlers for V1 templates
         // These use .item-edit, .item-delete, .item-vocalize classes
         this.element.querySelectorAll(".item-edit").forEach(el => {
             el.addEventListener("click", (event) => {
-                const itemId = event.currentTarget.closest("[data-item-id]")?.dataset.itemId;
+                const itemId = event.currentTarget.dataset.itemId || event.currentTarget.closest("[data-item-id]")?.dataset.itemId;
                 if (itemId) BaseActorSheet.#itemEdit.call(this, event, event.currentTarget);
             });
         });
 
         this.element.querySelectorAll(".item-delete").forEach(el => {
             el.addEventListener("click", (event) => {
-                const itemId = event.currentTarget.closest("[data-item-id]")?.dataset.itemId;
+                const itemId = event.currentTarget.dataset.itemId || event.currentTarget.closest("[data-item-id]")?.dataset.itemId;
                 if (itemId) BaseActorSheet.#itemDelete.call(this, event, event.currentTarget);
             });
         });
 
         this.element.querySelectorAll(".item-vocalize").forEach(el => {
             el.addEventListener("click", (event) => {
-                const itemId = event.currentTarget.closest("[data-item-id]")?.dataset.itemId;
+                const itemId = event.currentTarget.dataset.itemId || event.currentTarget.closest("[data-item-id]")?.dataset.itemId;
                 if (itemId) BaseActorSheet.#itemVocalize.call(this, event, event.currentTarget);
             });
         });
@@ -1224,7 +1306,7 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemRoll(event, target) {
-        const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+        const itemId = target.dataset.itemId || target.closest("[data-item-id]")?.dataset.itemId;
         if (itemId) await this.actor.rollItem?.(itemId);
     }
 
@@ -1237,9 +1319,20 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #itemEdit(event, target) {
-        const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+        console.log("RT | itemEdit action triggered", { target, dataset: target.dataset });
+        const itemId = target.dataset.itemId || target.closest("[data-item-id]")?.dataset.itemId;
+        console.log("RT | itemEdit itemId:", itemId);
+        if (!itemId) {
+            console.warn("RT | itemEdit: No itemId found", target);
+            return;
+        }
         const item = this.actor.items.get(itemId);
-        item?.sheet.render(true);
+        console.log("RT | itemEdit item:", item);
+        if (!item) {
+            console.warn("RT | itemEdit: Item not found with ID", itemId);
+            return;
+        }
+        item.sheet.render(true);
     }
 
     /* -------------------------------------------- */
@@ -1251,18 +1344,37 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemDelete(event, target) {
-        const itemId = target.closest("[data-item-id]")?.dataset.itemId;
-        if (!itemId) return;
+        console.log("RT | itemDelete action triggered", { target, dataset: target.dataset });
+        const itemId = target.dataset.itemId || target.closest("[data-item-id]")?.dataset.itemId;
+        console.log("RT | itemDelete itemId:", itemId);
+        if (!itemId) {
+            console.warn("RT | itemDelete: No itemId found", target);
+            return;
+        }
+
+        const item = this.actor.items.get(itemId);
+        console.log("RT | itemDelete item:", item);
+        if (!item) {
+            console.warn("RT | itemDelete: Item not found with ID", itemId);
+            return;
+        }
 
         const confirmed = await ConfirmationDialog.confirm({
             title: "Confirm Delete",
-            content: "Are you sure you would like to delete this?",
+            content: `Are you sure you want to delete ${item.name}?`,
             confirmLabel: "Delete",
             cancelLabel: "Cancel"
         });
         
+        console.log("RT | itemDelete confirmed:", confirmed);
         if (confirmed) {
-            await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+            try {
+                await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+                console.log("RT | itemDelete: Successfully deleted item", itemId);
+            } catch (err) {
+                console.error("RT | itemDelete: Error deleting item", err);
+                ui.notifications.error(`Failed to delete ${item.name}`);
+            }
         }
     }
 
@@ -1275,22 +1387,27 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemVocalize(event, target) {
-        const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+        console.log("RT | itemVocalize action triggered", { target, dataset: target.dataset });
+        const itemId = target.dataset.itemId || target.closest("[data-item-id]")?.dataset.itemId;
+        console.log("RT | itemVocalize itemId:", itemId);
         if (!itemId) {
-            console.warn("RT | itemVocalize: No item ID found");
+            console.warn("RT | itemVocalize: No item ID found", target);
             return;
         }
         
         const item = this.actor.items.get(itemId);
+        console.log("RT | itemVocalize item:", item);
         if (!item) {
             console.warn(`RT | itemVocalize: Item ${itemId} not found on actor`);
             return;
         }
         
         try {
+            console.log("RT | itemVocalize: Calling item.sendToChat()");
             await item.sendToChat();
+            console.log("RT | itemVocalize: Successfully sent to chat");
         } catch (err) {
-            console.error("RT | Error sending item to chat:", err);
+            console.error("RT | itemVocalize: Error sending item to chat", err);
             ui.notifications.error(`Failed to send ${item.name} to chat`);
         }
     }
@@ -1309,6 +1426,19 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
             type: itemType
         };
+        
+        // Add type-specific defaults for array/Set fields to prevent validation errors
+        if (itemType === "armour") {
+            data.system = {
+                coverage: ["body"],      // Default array for SetField
+                properties: []           // Default empty array for SetField
+            };
+        } else if (itemType === "cybernetic") {
+            data.system = {
+                locations: ["internal"]  // Default for cybernetics
+            };
+        }
+        
         await this.actor.createEmbeddedDocuments("Item", [data], { renderSheet: true });
     }
 
@@ -1458,68 +1588,6 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
     /* -------------------------------------------- */
 
     /**
-     * Toggle expanded details for a talent row.
-     * @this {BaseActorSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #toggleTalentExpand(event, target) {
-        event.stopPropagation();
-        const itemId = target.dataset.itemId;
-        if (!itemId) return;
-
-        // Find the talent row
-        const row = this.element.querySelector(`.rt-talent-row[data-item-id="${itemId}"]`);
-        if (!row) return;
-
-        // Toggle expanded view
-        const expandedView = row.querySelector('.rt-row-expanded');
-        if (!expandedView) return;
-
-        const isExpanded = expandedView.style.display !== 'none';
-        expandedView.style.display = isExpanded ? 'none' : 'block';
-
-        // Toggle button icon
-        const icon = target.querySelector('i');
-        if (icon) {
-            target.classList.toggle('expanded', !isExpanded);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Toggle expanded details for a trait row.
-     * @this {BaseActorSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #toggleTraitExpand(event, target) {
-        event.stopPropagation();
-        const itemId = target.dataset.itemId;
-        if (!itemId) return;
-
-        // Find the trait row
-        const row = this.element.querySelector(`.rt-trait-row[data-item-id="${itemId}"]`);
-        if (!row) return;
-
-        // Toggle expanded view
-        const expandedView = row.querySelector('.rt-row-expanded');
-        if (!expandedView) return;
-
-        const isExpanded = expandedView.style.display !== 'none';
-        expandedView.style.display = isExpanded ? 'none' : 'block';
-
-        // Toggle button icon
-        const icon = target.querySelector('i');
-        if (icon) {
-            target.classList.toggle('expanded', !isExpanded);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
      * Handle adding a specialist skill.
      * @this {BaseActorSheet}
      * @param {Event} event         Triggering click event.
@@ -1616,6 +1684,58 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         if (confirmed) {
             entries.splice(index, 1);
             await this.actor.update({ [`system.skills.${skillName}.entries`]: entries });
+        }
+    }
+
+    /**
+     * View skill information from compendium.
+     * Opens the skill item sheet from the skills compendium in read-only mode.
+     * @this {BaseActorSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Element that was clicked.
+     */
+    static async #viewSkillInfo(event, target) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const skillKey = target.dataset.skill || target.dataset.rollTarget;
+        const specialty = target.dataset.specialty;
+        
+        if (!skillKey) {
+            console.warn("RT | viewSkillInfo: No skill key found");
+            return;
+        }
+        
+        const skill = this.actor.system.skills?.[skillKey];
+        if (!skill) {
+            console.warn(`RT | viewSkillInfo: Skill ${skillKey} not found`);
+            return;
+        }
+        
+        // Try to find the skill item in the compendium
+        const pack = game.packs.get("rogue-trader.rt-items-skills");
+        if (!pack) {
+            ui.notifications.warn("Skills compendium not found.");
+            return;
+        }
+        
+        // Search for the skill by label
+        const searchLabel = skill.label.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const index = await pack.getIndex();
+        const entry = index.find(i => {
+            const indexName = i.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+            return indexName === searchLabel;
+        });
+        
+        if (!entry) {
+            ui.notifications.info(`No compendium entry found for ${skill.label}.`);
+            return;
+        }
+        
+        // Load and render the skill item sheet
+        const skillItem = await pack.getDocument(entry._id);
+        if (skillItem) {
+            skillItem.sheet.render(true, { editable: false });
         }
     }
 
@@ -1905,67 +2025,6 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             });
 
             ui.notifications.info(`${char.label} updated successfully!`);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle hit location roll.
-     * @this {BaseActorSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #rollHitLocation(event, target) {
-        try {
-            const roll = await new Roll("1d100").evaluate();
-            const result = roll.total;
-
-            const locations = [
-                { name: "Head", min: 1, max: 10, key: "head" },
-                { name: "Right Arm", min: 11, max: 20, key: "rightArm" },
-                { name: "Left Arm", min: 21, max: 30, key: "leftArm" },
-                { name: "Body", min: 31, max: 70, key: "body" },
-                { name: "Right Leg", min: 71, max: 85, key: "rightLeg" },
-                { name: "Left Leg", min: 86, max: 100, key: "leftLeg" }
-            ];
-
-            const hitLocation = locations.find(loc => result >= loc.min && result <= loc.max);
-            const armourValue = this.actor.system.armour?.[hitLocation.key]?.total ?? 0;
-
-            const content = `
-                <div class="rt-hit-location-result">
-                    <h3><i class="fas fa-crosshairs"></i> Hit Location Roll</h3>
-                    <div class="rt-hit-roll">
-                        <span class="rt-roll-result">${result}</span>
-                    </div>
-                    <div class="rt-hit-location">
-                        <span class="rt-location-name">${hitLocation.name}</span>
-                        <span class="rt-location-armour">Armour: ${armourValue}</span>
-                    </div>
-                </div>
-            `;
-
-            await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content,
-                rolls: [roll],
-                flags: {
-                    "rogue-trader": {
-                        type: "hitLocation"
-                    }
-                }
-            });
-
-            // Flash highlight the hit location on the sheet
-            const locationSlot = this.element.querySelector(`[data-location="${hitLocation.key}"]`);
-            if (locationSlot) {
-                locationSlot.classList.add("rt-hit-location-highlight");
-                setTimeout(() => locationSlot.classList.remove("rt-hit-location-highlight"), 2000);
-            }
-        } catch (error) {
-            ui.notifications.error(`Hit location roll failed: ${error.message}`);
-            console.error("Hit location roll error:", error);
         }
     }
 }

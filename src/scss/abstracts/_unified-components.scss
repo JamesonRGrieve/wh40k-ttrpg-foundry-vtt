@@ -472,11 +472,12 @@
 }
 
 // ============================================
-// UNIFIED PANEL STRUCTURE
+// RT-PANEL - Collapsible Content Sections
 // ============================================
-// Standard panel structure for all tabs
+// NOTE: This is the canonical definition from _core.scss
+// All panel usage should reference this structure
 
-.rt-panel-unified {
+.rt-panel {
   background: var(--rt-panel-bg);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 8px;
@@ -484,17 +485,21 @@
   margin-bottom: $rt-space-md;
   box-shadow: 0 2px 8px var(--rt-shadow-soft);
   position: relative;
-  
-  // Optional accent strip
+
   &::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--panel-accent, transparent);
+    inset: 0;
+    background: var(--rt-accent-overlay);
+    border-top: 2px solid var(--rt-accent-border);
+    border-bottom: 2px solid var(--rt-accent-border);
     pointer-events: none;
+    z-index: 0;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
   }
   
   // Accent color modifiers
@@ -509,70 +514,392 @@
   &--powers { --panel-accent: #{$rt-accent-powers}; }
   &--dynasty { --panel-accent: #{$rt-accent-dynasty}; }
   &--bio { --panel-accent: #{$rt-accent-bio}; }
+  &--combat { --panel-accent: #{$rt-accent-combat}; }
+  &--xp { --panel-accent: #{$rt-color-gold}; }
+  
+  // Apply accent color to header icon when modifier is present
+  &[class*="--"] .rt-panel-header .rt-panel-title i {
+    color: var(--panel-accent, $rt-accent-gold);
+  }
 }
 
-.rt-panel-unified__header {
-  display: flex;
-  align-items: center;
+.rt-panel-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
   gap: $rt-space-sm;
   padding: $rt-space-sm $rt-space-md;
-  background: linear-gradient(180deg, rgba($rt-accent-gold, 0.12) 0%, rgba($rt-accent-gold, 0.04) 100%);
+  background: linear-gradient(180deg, rgba($rt-accent-gold, 0.15) 0%, rgba($rt-accent-gold, 0.05) 100%);
   border-bottom: 1px solid var(--rt-border-color-light);
-  cursor: pointer;
-  user-select: none;
-  transition: background $rt-transition-fast;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
   
-  &:hover {
-    background: linear-gradient(180deg, rgba($rt-accent-gold, 0.18) 0%, rgba($rt-accent-gold, 0.08) 100%);
-  }
-  
-  // Panel title
-  .rt-panel-unified__title {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: $rt-space-sm;
-    font-family: var(--rt-font-display);
-    font-size: var(--rt-text-h3);
+  .rt-panel-title {
+    flex: 1 1 auto !important;
+    font-family: var(--rt-font-display, 'Modesto Condensed', serif);
+    font-size: var(--rt-text-h3, 1.1rem);
     font-weight: 600;
     color: var(--rt-text-dark);
     letter-spacing: 0.02em;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex !important;
+    align-items: center !important;
+    gap: $rt-space-sm;
+    min-width: 0;
     
     i {
+      margin-right: 0;
       color: var(--panel-accent, $rt-accent-gold);
-      font-size: 0.9em;
+      flex-shrink: 0;
     }
   }
   
-  // Chevron indicator
-  .rt-panel-unified__chevron {
-    font-size: 0.75rem;
-    color: var(--rt-text-muted);
-    transition: transform $rt-transition-fast;
-  }
-  
-  // Header actions (buttons)
-  .rt-panel-unified__actions {
-    display: flex;
-    gap: $rt-space-xs;
+  // Ensure buttons don't break layout
+  > button,
+  > label,
+  > .rt-control-button,
+  > .rt-header-btn,
+  > .rt-btn-icon,
+  > .rt-btn-control {
+    flex-shrink: 0 !important;
     margin-left: auto;
   }
 }
 
-.rt-panel-unified__body {
+// Clickable panel header for expand/collapse
+.rt-panel-header--clickable {
+  cursor: pointer;
+  user-select: none;
+  
+  &:hover {
+    background: linear-gradient(180deg, rgba($rt-accent-gold, 0.2) 0%, rgba($rt-accent-gold, 0.08) 100%);
+  }
+}
+
+.rt-panel-chevron {
+  font-size: 0.75rem;
+  color: var(--rt-text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.rt-panel-body {
   padding: $rt-space-md;
   background: var(--rt-panel-body-bg);
 }
 
+.rt-panel-details {
+  padding: $rt-space-sm $rt-space-md;
+  background: rgba(0, 0, 0, 0.02);
+  border-top: 1px solid var(--rt-border-color-light);
+}
+
 // Collapsed state
-.rt-panel-unified--collapsed {
-  .rt-panel-unified__body {
+.rt-panel.collapsed {
+  .rt-panel-body,
+  .rt-panel-details {
     display: none;
   }
   
-  .rt-panel-unified__chevron {
+  .rt-panel-chevron {
     transform: rotate(-90deg);
   }
+}
+
+// ============================================
+// RT-VITAL-STAT - Compact Stat Cards
+// ============================================
+// Used in combat tab for wounds, fatigue, fate display
+
+.rt-vital-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: $rt-space-sm;
+  background: var(--rt-panel-bg);
+  border: 1px solid $rt-border-light;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  
+  // Accent strip
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--vital-color, $rt-border-medium);
+    transition: all 0.3s ease;
+  }
+  
+  &:hover {
+    border-color: var(--vital-color, $rt-border-medium);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    
+    &::before {
+      width: 5px;
+    }
+  }
+}
+
+// Vital-specific colors
+.rt-vital-wounds {
+  --vital-color: #{$rt-accent-combat};
+  --vital-color-rgb: 168, 32, 32;
+}
+
+.rt-vital-fatigue {
+  --vital-color: #c08020;
+  --vital-color-rgb: 192, 128, 32;
+}
+
+.rt-vital-fate {
+  --vital-color: #3498db;
+  --vital-color-rgb: 52, 152, 219;
+}
+
+// Warning states
+.rt-vital-warning {
+  background: rgba(255, 165, 0, 0.05);
+  box-sizing: border-box;
+  
+  &::before {
+    animation: pulse-warn-intense 1.5s ease-in-out infinite;
+  }
+}
+
+.rt-vital-critical {
+  background: rgba($rt-accent-combat, 0.08);
+  box-sizing: border-box;
+  
+  &::before {
+    animation: pulse-critical-intense 1s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-warn-intense {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 0 0 8px currentColor;
+  }
+  50% { 
+    opacity: 0.3;
+    box-shadow: none;
+  }
+}
+
+@keyframes pulse-critical-intense {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 0 0 12px currentColor;
+  }
+  50% { 
+    opacity: 0.3;
+    box-shadow: none;
+  }
+}
+
+// Vital stat header
+.rt-vital-stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $rt-space-sm;
+  width: 100%;
+}
+
+.rt-vital-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--vital-color, $rt-text-secondary);
+  white-space: nowrap;
+  
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+// Vital stat body
+.rt-vital-stat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.rt-vital-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  justify-content: flex-start;
+  padding: 4px 0;
+}
+
+.rt-vital-value {
+  font-family: 'Modesto Condensed', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--vital-color, $rt-text-primary);
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.rt-vital-max-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $rt-text-muted;
+  line-height: 1;
+}
+
+// ============================================
+// RT-DROPZONE - Drag-Drop Target Areas
+// ============================================
+
+.rt-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-lg;
+  border: 2px dashed var(--rt-border-color-light);
+  border-radius: $rt-radius-md;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.02) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.02) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 20px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 80px;
+  
+  &:hover {
+    border-color: $rt-accent-gold;
+    background-color: rgba($rt-accent-gold, 0.05);
+  }
+  
+  // Compact variant when items exist
+  &--compact,
+  &.has-items {
+    padding: $rt-space-sm $rt-space-md;
+    flex-direction: row;
+    gap: $rt-space-xs;
+    min-height: auto;
+    
+    .rt-dropzone-icon { font-size: 0.9rem; }
+    .rt-dropzone-text { font-size: 0.7rem; }
+  }
+  
+  // Active drag-over state
+  &--active {
+    border-color: $rt-accent-gold;
+    background-color: rgba($rt-accent-gold, 0.1);
+    box-shadow: inset 0 0 10px rgba($rt-accent-gold, 0.2);
+  }
+}
+
+.rt-dropzone-icon {
+  font-size: 2rem;
+  color: var(--rt-text-muted);
+  transition: color 0.2s ease;
+  
+  .rt-dropzone:hover & { 
+    color: $rt-accent-gold; 
+  }
+}
+
+.rt-dropzone-text {
+  font-size: 0.75rem;
+  color: var(--rt-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  
+  .rt-dropzone:hover & { 
+    color: var(--rt-text-light); 
+  }
+}
+
+// Small variant (for inline use)
+.rt-dropzone-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $rt-space-xs;
+  padding: $rt-space-xs $rt-space-sm;
+  margin-top: $rt-space-sm;
+  background: rgba($rt-accent-gold, 0.05);
+  border: 1px dashed rgba($rt-accent-gold, 0.25);
+  border-radius: $rt-radius-sm;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  color: $rt-text-muted;
+  
+  i {
+    font-size: 0.85rem;
+    color: rgba($rt-accent-gold, 0.6);
+  }
+  
+  &:hover {
+    background: rgba($rt-accent-gold, 0.1);
+    border-color: rgba($rt-accent-gold, 0.4);
+    color: var(--color-text-secondary);
+    
+    i {
+      color: $rt-accent-gold;
+    }
+  }
+}
+
+// ============================================
+// RT-ACTIONS-GROUP-HEADER - Section Headers
+// ============================================
+
+.rt-actions-group-header {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  padding: 6px $rt-space-sm;
+  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.08) 0%, rgba($rt-accent-gold, 0.03) 100%);
+  border-left: 3px solid $rt-accent-gold;
+  border-radius: 0 $rt-radius-sm $rt-radius-sm 0;
+  margin-bottom: $rt-space-sm;
+}
+
+.rt-group-icon {
+  font-size: 0.85rem;
+  color: $rt-accent-gold;
+}
+
+.rt-actions-group-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--rt-text-secondary);
 }
 
 // ============================================

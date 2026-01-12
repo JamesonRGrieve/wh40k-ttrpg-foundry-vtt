@@ -27,9 +27,9 @@
                     <span class="rt-meta-badge rt-meta-badge--availability">
                         <i class="fas fa-store"></i> {{item.system.availabilityLabel}}
                     </span>
-                    {{#if item.system.source.book}}
+                    {{#if system.source.book}}
                     <span class="rt-meta-badge rt-meta-badge--source">
-                        <i class="fas fa-book"></i> {{item.system.sourceReference}}
+                        <i class="fas fa-book"></i> {{system.sourceReference}}
                     </span>
                     {{/if}}
                 </div>
@@ -267,17 +267,17 @@
                             <div class="rt-field">
                                 <label class="rt-field__label">{{localize "RT.Source.Book"}}</label>
                                 <input type="text" class="rt-field__input" name="system.source.book" 
-                                       value="{{item.system.source.book}}" />
+                                       value="{{system.source.book}}" />
                             </div>
                             <div class="rt-field">
                                 <label class="rt-field__label">{{localize "RT.Source.Page"}}</label>
                                 <input type="text" class="rt-field__input" name="system.source.page" 
-                                       value="{{item.system.source.page}}" />
+                                       value="{{system.source.page}}" />
                             </div>
                             <div class="rt-field">
                                 <label class="rt-field__label">{{localize "RT.Source.Custom"}}</label>
                                 <input type="text" class="rt-field__input" name="system.source.custom" 
-                                       value="{{item.system.source.custom}}" />
+                                       value="{{system.source.custom}}" />
                             </div>
                         </div>
                     </div>

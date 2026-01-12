@@ -30,6 +30,9 @@ export default class AcolyteSheet extends BaseActorSheet {
             parry: AcolyteSheet.#parry,
             initiative: AcolyteSheet.#rollInitiative,
             "assign-damage": AcolyteSheet.#assignDamage,
+            toggleFavoriteAction: AcolyteSheet.#toggleFavoriteAction,
+            combatAction: AcolyteSheet.#combatAction,
+            vocalizeCombatAction: AcolyteSheet.#vocalizeCombatAction,
             
             // Stat adjustment actions
             adjustStat: AcolyteSheet.#adjustStat,
@@ -37,6 +40,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             decrement: AcolyteSheet.#decrement,
             setCriticalPip: AcolyteSheet.#setCriticalPip,
             setFateStar: AcolyteSheet.#setFateStar,
+            setFatigueBolt: AcolyteSheet.#setFatigueBolt,
             setCorruption: AcolyteSheet.#setCorruption,
             setInsanity: AcolyteSheet.#setInsanity,
             restoreFate: AcolyteSheet.#restoreFate,
@@ -46,6 +50,8 @@ export default class AcolyteSheet extends BaseActorSheet {
             toggleEquip: AcolyteSheet.#toggleEquip,
             stowItem: AcolyteSheet.#stowItem,
             unstowItem: AcolyteSheet.#unstowItem,
+            stowToShip: AcolyteSheet.#stowToShip,
+            unstowFromShip: AcolyteSheet.#unstowFromShip,
             toggleActivate: AcolyteSheet.#toggleActivate,
             filterEquipment: AcolyteSheet.#filterEquipment,
             clearEquipmentSearch: AcolyteSheet.#clearEquipmentSearch,
@@ -55,7 +61,6 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Skills actions
             filterSkills: AcolyteSheet.#filterSkills,
             clearSkillsSearch: AcolyteSheet.#clearSkillsSearch,
-            toggleSkillFavorite: AcolyteSheet.#toggleSkillFavorite,
             
             // Talents actions
             filterTalents: AcolyteSheet.#filterTalents,
@@ -63,6 +68,20 @@ export default class AcolyteSheet extends BaseActorSheet {
             filterTraits: AcolyteSheet.#filterTraits,
             clearTraitsFilter: AcolyteSheet.#clearTraitsFilter,
             adjustTraitLevel: AcolyteSheet.#adjustTraitLevel,
+
+            // Powers actions
+            rollPower: AcolyteSheet.#rollPower,
+            rollPowerDamage: AcolyteSheet.#rollPowerDamage,
+            vocalizePower: AcolyteSheet.#vocalizePower,
+            togglePowerDetails: AcolyteSheet.#togglePowerDetails,
+            rollRitual: AcolyteSheet.#rollRitual,
+            vocalizeRitual: AcolyteSheet.#vocalizeRitual,
+            rollOrder: AcolyteSheet.#rollOrder,
+            vocalizeOrder: AcolyteSheet.#vocalizeOrder,
+            rollPhenomena: AcolyteSheet.#rollPhenomena,
+            rollPerils: AcolyteSheet.#rollPerils,
+            filterPowers: AcolyteSheet.#filterPowers,
+            filterOrders: AcolyteSheet.#filterOrders,
 
             // Acquisition actions
             addAcquisition: AcolyteSheet.#addAcquisition,
@@ -76,6 +95,9 @@ export default class AcolyteSheet extends BaseActorSheet {
             createEffect: AcolyteSheet.#createEffect,
             toggleEffect: AcolyteSheet.#toggleEffect,
             deleteEffect: AcolyteSheet.#deleteEffect,
+            
+            // Biography actions
+            openOriginPathBuilder: AcolyteSheet.#openOriginPathBuilder,
             
             // Misc actions
             bonusVocalize: AcolyteSheet.#bonusVocalize
@@ -179,65 +201,8 @@ export default class AcolyteSheet extends BaseActorSheet {
     };
 
     /* -------------------------------------------- */
-    /*  Data Cache                                  */
-    /* -------------------------------------------- */
-
-    /**
-     * Cached categorized items. Invalidated when items change.
-     * @type {object|null}
-     * @private
-     */
-    _cachedItems = null;
-
-    /**
-     * Cached origin path steps. Invalidated when items change.
-     * @type {Array|null}
-     * @private
-     */
-    _cachedOriginPath = null;
-
-    /**
-     * Cache version number. Incremented on each actor update to invalidate caches.
-     * @type {number}
-     * @private
-     */
-    _cacheVersion = 0;
-
-    /**
-     * Last known actor update timestamp for cache invalidation.
-     * @type {number}
-     * @private
-     */
-    _lastActorUpdate = 0;
-
-    /* -------------------------------------------- */
     /*  Utility Methods                             */
     /* -------------------------------------------- */
-
-    /**
-     * Invalidate all cached data. Called when actor data changes.
-     * @private
-     */
-    _invalidateCache() {
-        this._cachedItems = null;
-        this._cachedOriginPath = null;
-        this._cacheVersion++;
-    }
-
-    /**
-     * Check if cache needs invalidation based on actor update time.
-     * @returns {boolean} True if cache was invalidated
-     * @private
-     */
-    _checkCacheValidity() {
-        const actorUpdate = this.actor?._stats?.modifiedTime ?? 0;
-        if (actorUpdate > this._lastActorUpdate) {
-            this._lastActorUpdate = actorUpdate;
-            this._invalidateCache();
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Throttle wrapper to prevent rapid-fire clicks on action buttons.
@@ -315,9 +280,6 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options) {
-        // Check if caches need invalidation due to actor changes
-        this._checkCacheValidity();
-
         const context = await super._prepareContext(options);
         
         // RT-specific configuration
@@ -326,10 +288,10 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Prepare characteristic HUD data
         this._prepareCharacteristicHUD(context);
 
-        // Prepare origin path (cached)
+        // Prepare origin path
         context.originPathSteps = this._prepareOriginPathSteps();
 
-        // Prepare navigator powers and ship roles (use cached items)
+        // Prepare navigator powers and ship roles (compute fresh)
         const categorized = this._getCategorizedItems();
         context.navigatorPowers = this.actor.items.filter(
             item => item.type === "navigatorPower" || item.isNavigatorPower
@@ -403,7 +365,6 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Prepare context for a tab content part.
-     * Lazy loads templates for non-overview tabs on first access.
      * @param {string} partId   The part ID (which matches the tab ID).
      * @param {object} context  Context being prepared.
      * @param {object} options  Render options.
@@ -411,11 +372,6 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @protected
      */
     async _prepareTabPartContext(partId, context, options) {
-        // Lazy load templates for non-overview tabs
-        if (partId !== "overview") {
-            await HandlebarManager.loadAcolyteTabTemplates(partId);
-        }
-
         // Find the tab configuration
         const tabConfig = this.constructor.TABS.find(t => t.tab === partId);
         if (tabConfig) {
@@ -439,6 +395,12 @@ export default class AcolyteSheet extends BaseActorSheet {
             Object.assign(context, talentsData);
             const traitsData = this._prepareTraitsContext(context);
             Object.assign(context, traitsData);
+        }
+        
+        // Add powers context for powers tab
+        if (partId === "powers") {
+            const powersData = this._preparePowersContext();
+            Object.assign(context, powersData);
         }
         
         return context;
@@ -585,14 +547,11 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Prepare origin path step data (cached).
+     * Prepare origin path step data.
      * @returns {Array<object>}
      * @protected
      */
     _prepareOriginPathSteps() {
-        // Return cached version if available
-        if (this._cachedOriginPath) return this._cachedOriginPath;
-
         const steps = CONFIG.rt.originPath?.steps || [
             { key: "homeWorld", label: "Home World", choiceGroup: "origin.home-world" },
             { key: "birthright", label: "Birthright", choiceGroup: "origin.birthright" },
@@ -606,7 +565,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             item => item.isOriginPath || (item.type === "trait" && item.flags?.rt?.kind === "origin")
         );
 
-        this._cachedOriginPath = steps.map(step => {
+        return steps.map(step => {
             const item = originItems.find(i => {
                 const itemStep = i.flags?.rt?.step || i.system?.step || "";
                 return itemStep === step.label || i.flags?.rt?.choiceGroup === step.choiceGroup;
@@ -622,22 +581,20 @@ export default class AcolyteSheet extends BaseActorSheet {
                 } : null
             };
         });
-
-        return this._cachedOriginPath;
     }
 
     /* -------------------------------------------- */
 
     /**
-     * Get cached categorized items, computing only if cache is invalid.
+     * Get categorized items. Called fresh each time (no caching).
      * @returns {object} Categorized items
      * @protected
      */
     _getCategorizedItems() {
-        if (this._cachedItems) return this._cachedItems;
-        
         const categories = {
             all: [],
+            allCarried: [], // Items on person or in backpack (not ship)
+            allShip: [], // Items in ship storage
             weapons: [],
             armour: [],
             forceField: [],
@@ -652,25 +609,33 @@ export default class AcolyteSheet extends BaseActorSheet {
         const equipmentTypes = ["weapon", "armour", "forceField", "cybernetic", "gear", "storageLocation", "ammunition", "drugOrConsumable"];
 
         for (const item of this.actor.items) {
-            // Only add equipment-type items to "all" for backpack display
+            const inShip = item.system?.inShipStorage === true;
+            
+            // Add all equipment to "all" for display
             if (equipmentTypes.includes(item.type)) {
                 categories.all.push(item);
+                
+                // Split into carried vs ship storage
+                if (inShip) {
+                    categories.allShip.push(item);
+                } else {
+                    categories.allCarried.push(item);
+                }
             }
 
-            // Categorize by type
+            // Categorize by type (ONLY non-ship items for armour/forceField/gear panels)
             if (item.type === "weapon" || item.isWeapon) categories.weapons.push(item);
-            else if (item.type === "armour" || item.isArmour) categories.armour.push(item);
-            else if (item.type === "forceField" || item.isForceField) categories.forceField.push(item);
-            else if (item.type === "cybernetic" || item.isCybernetic) categories.cybernetic.push(item);
-            else if (item.type === "gear" || item.isGear) categories.gear.push(item);
+            else if ((item.type === "armour" || item.isArmour) && !inShip) categories.armour.push(item);
+            else if ((item.type === "forceField" || item.isForceField) && !inShip) categories.forceField.push(item);
+            else if ((item.type === "cybernetic" || item.isCybernetic) && !inShip) categories.cybernetic.push(item);
+            else if ((item.type === "gear" || item.isGear) && !inShip) categories.gear.push(item);
             else if (item.type === "storageLocation") categories.storageLocation.push(item);
             else if (item.type === "criticalInjury" || item.isCriticalInjury) categories.criticalInjury.push(item);
 
-            // Track equipped items
-            if (item.system?.equipped === true) categories.equipped.push(item);
+            // Track equipped items (only non-ship items can be equipped)
+            if (item.system?.equipped === true && !inShip) categories.equipped.push(item);
         }
 
-        this._cachedItems = categories;
         return categories;
     }
 
@@ -679,14 +644,15 @@ export default class AcolyteSheet extends BaseActorSheet {
     /**
      * Prepare loadout/equipment data for the template.
      * @param {object} context      The template render context.
-     * @param {object} [categorized]  Pre-computed categorized items (optional).
+     * @param {object} categorized  Categorized items.
      * @protected
      */
-    _prepareLoadoutData(context, categorized = null) {
-        categorized = categorized ?? this._getCategorizedItems();
+    _prepareLoadoutData(context, categorized) {
 
         // Add all items to context for the Backpack panel
         context.allItems = categorized.all;
+        context.allCarriedItems = categorized.allCarried; // Personal/backpack items
+        context.allShipItems = categorized.allShip; // Ship storage items
 
         // Filter items by type
         context.armourItems = categorized.armour;
@@ -718,13 +684,12 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Prepare combat station data for the template.
+     * Prepare combat tab data for the template.
      * @param {object} context      The template render context.
-     * @param {object} [categorized]  Pre-computed categorized items (optional).
+     * @param {object} categorized  Categorized items.
      * @protected
      */
-    _prepareCombatData(context, categorized = null) {
-        categorized = categorized ?? this._getCategorizedItems();
+    _prepareCombatData(context, categorized) {
         const weapons = categorized.weapons;
         const system = context.system ?? this.actor.system ?? {};
 
@@ -800,6 +765,27 @@ export default class AcolyteSheet extends BaseActorSheet {
                 w.ammoPercent = Math.round((w.system.clip.value / w.system.clip.max) * 100);
             }
         });
+
+        // Prepare active effects data
+        context.effects = this.actor.effects.map(effect => ({
+            id: effect.id,
+            label: effect.label || effect.name,
+            icon: effect.icon,
+            disabled: effect.disabled,
+            sourceName: effect.sourceName,
+            changes: effect.changes || [],
+            document: effect
+        }));
+
+        // Change mode lookup for display
+        context.changeModeLookup = {
+            0: "Custom",
+            1: "Multiply",
+            2: "Add",
+            3: "Downgrade",
+            4: "Upgrade",
+            5: "Override"
+        };
     }
 
     /* -------------------------------------------- */
@@ -952,8 +938,9 @@ export default class AcolyteSheet extends BaseActorSheet {
                 const skill = skills[key];
                 if (!skill) return null;
                 
-                // Get characteristic data
-                const charKey = skill.characteristic || 'strength';
+                // Get characteristic data - convert short name to key
+                const charShort = skill.characteristic || 'S';
+                const charKey = this._charShortToKey(charShort);
                 const char = characteristics[charKey];
                 
                 return {
@@ -966,6 +953,8 @@ export default class AcolyteSheet extends BaseActorSheet {
                     tooltipData: JSON.stringify({
                         name: skill.label || key,
                         value: skill.current ?? 0,
+                        characteristic: char?.label || charKey,
+                        charValue: char?.total ?? 0,
                         breakdown: this._getSkillBreakdown(skill, char)
                     })
                 };
@@ -1076,6 +1065,84 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     async _prepareEffectsContext(context, options) {
         return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare powers tab context.
+     * Prepares psychic powers, navigator powers, rituals, and orders.
+     * @returns {object} Powers context data
+     * @protected
+     */
+    _preparePowersContext() {
+        // Get all power items
+        const psychicPowers = this.actor.items.filter(i => i.type === "psychicPower");
+        const navigatorPowers = this.actor.items.filter(i => i.type === "navigatorPower");
+        const rituals = this.actor.items.filter(i => i.type === "ritual");
+        const orders = this.actor.items.filter(i => i.type === "order");
+        
+        // Extract unique disciplines for filtering
+        const disciplines = new Map();
+        for (const power of psychicPowers) {
+            const disc = power.system.discipline;
+            if (disc && !disciplines.has(disc)) {
+                disciplines.set(disc, {
+                    id: disc,
+                    label: power.system.disciplineLabel || disc.charAt(0).toUpperCase() + disc.slice(1)
+                });
+            }
+        }
+        const psychicDisciplines = Array.from(disciplines.values());
+        
+        // Extract unique order categories
+        const categories = new Map();
+        for (const order of orders) {
+            const cat = order.system.category;
+            if (cat && !categories.has(cat)) {
+                categories.set(cat, {
+                    id: cat,
+                    label: order.system.categoryLabel || cat.charAt(0).toUpperCase() + cat.slice(1)
+                });
+            }
+        }
+        const orderCategories = Array.from(categories.values());
+        
+        // Get filter state
+        const activeDiscipline = this._powersFilter?.discipline || "";
+        const activeOrderCategory = this._powersFilter?.orderCategory || "";
+        
+        // Apply discipline filter to psychic powers
+        let filteredPsychicPowers = psychicPowers;
+        if (activeDiscipline) {
+            filteredPsychicPowers = psychicPowers.filter(p => p.system.discipline === activeDiscipline);
+        }
+        
+        // Apply category filter to orders
+        let filteredOrders = orders;
+        if (activeOrderCategory) {
+            filteredOrders = orders.filter(o => o.system.category === activeOrderCategory);
+        }
+        
+        return {
+            // Item arrays
+            psychicPowers: filteredPsychicPowers,
+            navigatorPowers,
+            rituals,
+            orders: filteredOrders,
+            
+            // Counts
+            psychicPowersCount: psychicPowers.length,
+            navigatorPowersCount: navigatorPowers.length,
+            ritualsCount: rituals.length,
+            ordersCount: orders.length,
+            
+            // Filter data
+            psychicDisciplines,
+            orderCategories,
+            activeDiscipline,
+            activeOrderCategory
+        };
     }
 
     /* -------------------------------------------- */
@@ -1195,6 +1262,102 @@ export default class AcolyteSheet extends BaseActorSheet {
         }
     }
 
+    /**
+     * Handle toggling a combat action as favorite.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #toggleFavoriteAction(event, target) {
+        event.stopPropagation(); // Prevent parent action from triggering
+        const actionKey = target.dataset.actionKey;
+        if (!actionKey) return;
+
+        const currentFavorites = this.actor.system.favoriteCombatActions || [];
+        const newFavorites = currentFavorites.includes(actionKey)
+            ? currentFavorites.filter(k => k !== actionKey)
+            : [...currentFavorites, actionKey];
+
+        await this.actor.update({ "system.favoriteCombatActions": newFavorites });
+    }
+
+    /**
+     * Handle generic combat action from favorites.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #combatAction(event, target) {
+        const actionKey = target.dataset.combatAction;
+        if (!actionKey) return;
+
+        // Route to specific handler based on action key
+        switch (actionKey) {
+            case "dodge":
+                await this.#dodge.call(this, event, target);
+                break;
+            case "parry":
+                await this.#parry.call(this, event, target);
+                break;
+            case "assignDamage":
+                await this.#assignDamage.call(this, event, target);
+                break;
+            case "initiative":
+                await this.#rollInitiative.call(this, event, target);
+                break;
+            default:
+                this._notify("warning", `Unknown combat action: ${actionKey}`, {
+                    duration: 3000
+                });
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle vocalizing combat actions to chat.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #vocalizeCombatAction(event, target) {
+        const actionKey = target.dataset.actionKey;
+        if (!actionKey) return;
+
+        // Find the action definition in config
+        const allActions = [
+            ...(CONFIG.rt.combatActions?.attacks || []),
+            ...(CONFIG.rt.combatActions?.movement || []),
+            ...(CONFIG.rt.combatActions?.utility || [])
+        ];
+        
+        const actionConfig = allActions.find(a => a.key === actionKey);
+        if (!actionConfig) {
+            this._notify("warning", `Unknown combat action: ${actionKey}`, { duration: 3000 });
+            return;
+        }
+
+        // Prepare chat data
+        const chatData = {
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: await renderTemplate(
+                "systems/rogue-trader/templates/chat/combat-action-card.hbs",
+                {
+                    name: game.i18n.localize(actionConfig.label),
+                    actor: this.actor.name,
+                    actionType: actionConfig.type,
+                    description: game.i18n.localize(actionConfig.description),
+                    subtypes: actionConfig.subtypes?.join(", ") || "",
+                    icon: actionConfig.icon
+                }
+            )
+        };
+
+        // Create chat message
+        await ChatMessage.create(chatData);
+    }
+
     /* -------------------------------------------- */
     /*  Event Handlers - Stat Adjustments           */
     /* -------------------------------------------- */
@@ -1287,6 +1450,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #increment(event, target) {
+        event.stopPropagation(); // Prevent header toggle
         target.dataset.statAction = "increment";
         return AcolyteSheet.#adjustStat.call(this, event, target);
     }
@@ -1298,6 +1462,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #decrement(event, target) {
+        event.stopPropagation(); // Prevent header toggle
         target.dataset.statAction = "decrement";
         return AcolyteSheet.#adjustStat.call(this, event, target);
     }
@@ -1312,6 +1477,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #setCriticalPip(event, target) {
+        event.stopPropagation(); // Prevent panel toggle
         const throttleKey = `setCriticalPip-${this.actor.id}`;
         return await this._throttle(throttleKey, 200, this.#setCriticalPipImpl, this, [event, target]);
     }
@@ -1338,6 +1504,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #setFateStar(event, target) {
+        event.stopPropagation(); // Prevent panel toggle
         const throttleKey = `setFateStar-${this.actor.id}`;
         return await this._throttle(throttleKey, 200, this.#setFateStarImpl, this, [event, target]);
     }
@@ -1358,12 +1525,40 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
+     * Handle quick-set fatigue bolt.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #setFatigueBolt(event, target) {
+        event.stopPropagation(); // Prevent panel toggle
+        const throttleKey = `setFatigueBolt-${this.actor.id}`;
+        return await this._throttle(throttleKey, 200, this.#setFatigueBoltImpl, this, [event, target]);
+    }
+
+    /**
+     * Implementation of fatigue bolt setting (used by throttled wrapper).
+     * @private
+     */
+    async #setFatigueBoltImpl(event, target) {
+        const index = parseInt(target.dataset.fatigueIndex);
+        const currentFatigue = this.actor.system.fatigue?.value || 0;
+        const newValue = (index === currentFatigue) ? index - 1 : index;
+        const maxFatigue = this.actor.system.fatigue?.max || 0;
+        const clampedValue = Math.min(Math.max(newValue, 0), maxFatigue);
+        await this._updateSystemField("system.fatigue.value", clampedValue);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Handle quick-set corruption.
      * @this {AcolyteSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #setCorruption(event, target) {
+        event.stopPropagation(); // Prevent panel toggle
         const throttleKey = `setCorruption-${this.actor.id}`;
         return await this._throttle(throttleKey, 200, this.#setCorruptionImpl, this, [event, target]);
     }
@@ -1392,6 +1587,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #setInsanity(event, target) {
+        event.stopPropagation(); // Prevent panel toggle
         const throttleKey = `setInsanity-${this.actor.id}`;
         return await this._throttle(throttleKey, 200, this.#setInsanityImpl, this, [event, target]);
     }
@@ -1420,6 +1616,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #restoreFate(event, target) {
+        event.stopPropagation(); // Prevent panel toggle
         const throttleKey = `restoreFate-${this.actor.id}`;
         return await this._throttle(throttleKey, 500, this.#restoreFateImpl, this, [event, target]);
     }
@@ -1446,6 +1643,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #spendFate(event, target) {
+        event.stopPropagation(); // Prevent panel toggle
         const action = target.dataset.fateAction;
         const throttleKey = `spendFate-${action}-${this.actor.id}`;
         return await this._throttle(throttleKey, 500, this.#spendFateImpl, this, [event, target]);
@@ -1546,7 +1744,8 @@ export default class AcolyteSheet extends BaseActorSheet {
         if (!item) return;
         await item.update({
             "system.equipped": false,
-            "system.inBackpack": true
+            "system.inBackpack": true,
+            "system.inShipStorage": false
         });
     }
 
@@ -1563,6 +1762,40 @@ export default class AcolyteSheet extends BaseActorSheet {
         const item = this.actor.items.get(itemId);
         if (!item) return;
         await item.update({ "system.inBackpack": false });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle stowing an item in ship storage.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #stowToShip(event, target) {
+        const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        if (!item) return;
+        await item.update({
+            "system.equipped": false,
+            "system.inBackpack": false,
+            "system.inShipStorage": true
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle unstowing an item from ship storage.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #unstowFromShip(event, target) {
+        const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        if (!item) return;
+        await item.update({ "system.inShipStorage": false });
     }
 
     /* -------------------------------------------- */
@@ -1767,6 +2000,34 @@ export default class AcolyteSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+    /*  Event Handlers - Biography Actions          */
+    /* -------------------------------------------- */
+
+    /**
+     * Open the Origin Path Builder dialog for this character.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #openOriginPathBuilder(event, target) {
+        try {
+            if (game.rt?.openOriginPathBuilder) {
+                await game.rt.openOriginPathBuilder(this.actor);
+            } else {
+                this._notify("warning", "Origin Path Builder not available", {
+                    duration: 3000
+                });
+                console.warn("game.rt.openOriginPathBuilder not found");
+            }
+        } catch (error) {
+            this._notify("error", `Failed to open Origin Path Builder: ${error.message}`, {
+                duration: 5000
+            });
+            console.error("Origin Path Builder error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
     /*  Event Handlers - Equipment Filtering        */
     /* -------------------------------------------- */
 
@@ -1892,32 +2153,6 @@ export default class AcolyteSheet extends BaseActorSheet {
         this._skillsFilter = { search: '', characteristic: '', training: '' };
         
         // Re-render skills tab
-        await this.render({ parts: ['skills'] });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Toggle skill favorite status.
-     * @this {AcolyteSheet}
-     * @param {Event} event         Triggering event.
-     * @param {HTMLElement} target  Element that triggered the event.
-     */
-    static async #toggleSkillFavorite(event, target) {
-        const skill = target.dataset.skill;
-        if (!skill) return;
-        
-        const favorites = this.actor.getFlag("rogue-trader", "favoriteSkills") || [];
-        
-        if (favorites.includes(skill)) {
-            // Remove from favorites
-            await this.actor.setFlag("rogue-trader", "favoriteSkills", favorites.filter(s => s !== skill));
-        } else {
-            // Add to favorites
-            await this.actor.setFlag("rogue-trader", "favoriteSkills", [...favorites, skill]);
-        }
-        
-        // Re-render skills tab only
         await this.render({ parts: ['skills'] });
     }
 
@@ -2113,5 +2348,353 @@ export default class AcolyteSheet extends BaseActorSheet {
             });
             console.error("Delete effect error:", error);
         }
+    }
+
+    /* -------------------------------------------- */
+    /*  Event Handlers - Powers Actions             */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle rolling a psychic or navigator power.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #rollPower(event, target) {
+        try {
+            const itemId = target.dataset.itemId;
+            const item = this.actor.items.get(itemId);
+            if (!item) {
+                this._notify("warning", "Power not found", { duration: 3000 });
+                return;
+            }
+            
+            // Use the actor's rollItem method for consistent handling
+            await this.actor.rollItem(itemId);
+        } catch (error) {
+            this._notify("error", `Power roll failed: ${error.message}`, { duration: 5000 });
+            console.error("Power roll error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle rolling damage for an attack power.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #rollPowerDamage(event, target) {
+        try {
+            const itemId = target.dataset.itemId;
+            const item = this.actor.items.get(itemId);
+            if (!item) {
+                this._notify("warning", "Power not found", { duration: 3000 });
+                return;
+            }
+            
+            // Use the actor's damageItem method
+            await this.actor.damageItem(itemId);
+        } catch (error) {
+            this._notify("error", `Damage roll failed: ${error.message}`, { duration: 5000 });
+            console.error("Power damage error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle vocalizing a power to chat.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #vocalizePower(event, target) {
+        try {
+            const itemId = target.dataset.itemId;
+            const item = this.actor.items.get(itemId);
+            if (!item) {
+                this._notify("warning", "Power not found", { duration: 3000 });
+                return;
+            }
+            
+            // Post to chat using the item's vocalize or toChat method
+            if (typeof item.toChat === "function") {
+                await item.toChat();
+            } else {
+                // Fallback: create a simple chat message
+                await ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                    content: `<div class="rt-power-chat"><h3>${item.name}</h3><p>${item.system.description || ""}</p></div>`
+                });
+            }
+        } catch (error) {
+            this._notify("error", `Failed to post power: ${error.message}`, { duration: 5000 });
+            console.error("Vocalize power error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle toggling power details expansion.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static #togglePowerDetails(event, target) {
+        const itemId = target.dataset.itemId;
+        const detailsEl = this.element.querySelector(`.rt-power-details[data-power-id="${itemId}"]`);
+        
+        if (detailsEl) {
+            const isHidden = detailsEl.hasAttribute("hidden");
+            if (isHidden) {
+                detailsEl.removeAttribute("hidden");
+                target.classList.add("expanded");
+            } else {
+                detailsEl.setAttribute("hidden", "");
+                target.classList.remove("expanded");
+            }
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle rolling a ritual.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #rollRitual(event, target) {
+        try {
+            const itemId = target.dataset.itemId;
+            await this.actor.rollItem(itemId);
+        } catch (error) {
+            this._notify("error", `Ritual roll failed: ${error.message}`, { duration: 5000 });
+            console.error("Ritual roll error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle vocalizing a ritual to chat.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #vocalizeRitual(event, target) {
+        try {
+            const itemId = target.dataset.itemId;
+            const item = this.actor.items.get(itemId);
+            if (!item) return;
+            
+            if (typeof item.toChat === "function") {
+                await item.toChat();
+            } else {
+                await ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                    content: `<div class="rt-ritual-chat"><h3>${item.name}</h3><p>${item.system.description || ""}</p></div>`
+                });
+            }
+        } catch (error) {
+            this._notify("error", `Failed to post ritual: ${error.message}`, { duration: 5000 });
+            console.error("Vocalize ritual error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle rolling an order.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #rollOrder(event, target) {
+        try {
+            const itemId = target.dataset.itemId;
+            await this.actor.rollItem(itemId);
+        } catch (error) {
+            this._notify("error", `Order roll failed: ${error.message}`, { duration: 5000 });
+            console.error("Order roll error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle vocalizing an order to chat.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #vocalizeOrder(event, target) {
+        try {
+            const itemId = target.dataset.itemId;
+            const item = this.actor.items.get(itemId);
+            if (!item) return;
+            
+            if (typeof item.toChat === "function") {
+                await item.toChat();
+            } else {
+                await ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                    content: `<div class="rt-order-chat"><h3>${item.name}</h3><p>${item.system.description || ""}</p></div>`
+                });
+            }
+        } catch (error) {
+            this._notify("error", `Failed to post order: ${error.message}`, { duration: 5000 });
+            console.error("Vocalize order error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle rolling psychic phenomena.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #rollPhenomena(event, target) {
+        try {
+            // Use the game.rt roll helper if available
+            if (game.rt?.rollPsychicPhenomena) {
+                await game.rt.rollPsychicPhenomena(this.actor);
+            } else {
+                // Fallback: roll on phenomena table
+                const table = game.tables.getName("Psychic Phenomena") || 
+                             await game.packs.get("rogue-trader.rt-rolltables-psychic")?.getDocuments()
+                                 .then(docs => docs.find(d => d.name.includes("Phenomena")));
+                
+                if (table) {
+                    await table.draw();
+                } else {
+                    // Simple d100 roll as last resort
+                    const roll = await new Roll("1d100").evaluate();
+                    await ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                        content: `<div class="rt-phenomena-roll"><h3>Psychic Phenomena</h3><p>Roll: ${roll.total}</p></div>`,
+                        rolls: [roll]
+                    });
+                }
+            }
+        } catch (error) {
+            this._notify("error", `Phenomena roll failed: ${error.message}`, { duration: 5000 });
+            console.error("Phenomena roll error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle rolling perils of the warp.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #rollPerils(event, target) {
+        try {
+            // Use the game.rt roll helper if available
+            if (game.rt?.rollPerilsOfTheWarp) {
+                await game.rt.rollPerilsOfTheWarp(this.actor);
+            } else {
+                // Fallback: roll on perils table
+                const table = game.tables.getName("Perils of the Warp") || 
+                             await game.packs.get("rogue-trader.rt-rolltables-psychic")?.getDocuments()
+                                 .then(docs => docs.find(d => d.name.includes("Perils")));
+                
+                if (table) {
+                    await table.draw();
+                } else {
+                    // Simple d100 roll as last resort
+                    const roll = await new Roll("1d100").evaluate();
+                    await ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                        content: `<div class="rt-perils-roll"><h3>Perils of the Warp</h3><p>Roll: ${roll.total}</p></div>`,
+                        rolls: [roll]
+                    });
+                }
+            }
+        } catch (error) {
+            this._notify("error", `Perils roll failed: ${error.message}`, { duration: 5000 });
+            console.error("Perils roll error:", error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle filtering psychic powers by discipline.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #filterPowers(event, target) {
+        const discipline = target.dataset.discipline || "";
+        
+        // Initialize filter state if needed
+        if (!this._powersFilter) this._powersFilter = {};
+        this._powersFilter.discipline = discipline;
+        
+        // Update active class on filter buttons
+        const filterBtns = this.element.querySelectorAll(".rt-panel-psychic-powers .rt-filter-btn");
+        filterBtns.forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.discipline === discipline);
+        });
+        
+        // Re-render the powers part
+        await this.render({ parts: ["powers"] });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle filtering orders by category.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #filterOrders(event, target) {
+        const category = target.dataset.category || "";
+        
+        // Initialize filter state if needed
+        if (!this._powersFilter) this._powersFilter = {};
+        this._powersFilter.orderCategory = category;
+        
+        // Update active class on filter buttons
+        const filterBtns = this.element.querySelectorAll(".rt-panel-orders .rt-filter-btn");
+        filterBtns.forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.category === category);
+        });
+        
+        // Re-render the powers part
+        await this.render({ parts: ["powers"] });
+    }
+
+    /* -------------------------------------------- */
+    /*  Drag & Drop Override                        */
+    /* -------------------------------------------- */
+
+    /**
+     * Override drop item to handle origin path updates.
+     * @override
+     */
+    async _onDropItem(event, item) {
+        const result = await super._onDropItem(event, item);
+        
+        // If dropped item is an origin path (trait with origin flag), re-render biography part
+        const isOriginPath = item?.type === "originPath" || 
+                           (item?.type === "trait" && item?.flags?.rt?.kind === "origin");
+        
+        if (isOriginPath) {
+            // Render only the biography part to update origin path panel
+            await this.render({ parts: ["biography"] });
+        }
+        
+        return result;
     }
 }

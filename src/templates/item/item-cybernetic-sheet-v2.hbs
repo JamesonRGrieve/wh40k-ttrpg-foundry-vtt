@@ -1,0 +1,647 @@
+{{!-- 
+  Rogue Trader Cybernetic Item Sheet - V2 Complete Redesign
+  Comprehensive cybernetic augmentation configuration
+--}}
+<div class="rt-cybernetic-sheet">
+  <form autocomplete="off">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Compact cybernetic identity with inline badges
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="rt-cybernetic-header">
+      <div class="rt-cybernetic-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="rt-cybernetic-header__image-overlay">
+          <i class="fas fa-edit"></i>
+        </div>
+      </div>
+      
+      <div class="rt-cybernetic-header__info">
+        <input type="text" class="rt-cybernetic-header__name" name="name" value="{{item.name}}" placeholder="Cybernetic Name" />
+        
+        <div class="rt-cybernetic-header__meta">
+          <span class="rt-cybernetic-badge rt-cybernetic-badge--type" title="Cybernetic Type">
+            <i class="fas fa-microchip"></i>
+            {{system.typeLabel}}
+          </span>
+          {{#if system.locations.size}}
+          <span class="rt-cybernetic-badge rt-cybernetic-badge--location" title="Body Locations">
+            <i class="fas fa-location-dot"></i>
+            {{system.locationsLabel}}
+          </span>
+          {{/if}}
+          {{#if (ne system.craftsmanship "common")}}
+          <span class="rt-cybernetic-badge rt-cybernetic-badge--craft rt-cybernetic-badge--{{system.craftsmanship}}" title="Craftsmanship">
+            <i class="fas fa-hammer"></i>
+            {{system.craftsmanshipLabel}}
+          </span>
+          {{/if}}
+          {{#if system.hasArmourPoints}}
+          <span class="rt-cybernetic-badge rt-cybernetic-badge--armour" title="Provides Armour">
+            <i class="fas fa-shield-halved"></i>
+            Armoured
+          </span>
+          {{/if}}
+        </div>
+      </div>
+      
+      <div class="rt-cybernetic-header__equipped">
+        <label class="rt-toggle-equipped" title="Toggle Equipped">
+          <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
+          <span class="rt-toggle-equipped__indicator">
+            <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+          </span>
+          <span class="rt-toggle-equipped__label">{{#if system.equipped}}Installed{{else}}Uninstalled{{/if}}</span>
+        </label>
+      </div>
+    </header>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         STATS BAR: Key cybernetic info at a glance
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-cybernetic-stats">
+      {{!-- Type --}}
+      <div class="rt-cybernetic-stat">
+        <div class="rt-cybernetic-stat__icon">
+          <i class="fas fa-microchip"></i>
+        </div>
+        <div class="rt-cybernetic-stat__content">
+          <span class="rt-cybernetic-stat__label">Type</span>
+          <span class="rt-cybernetic-stat__value">{{system.typeLabel}}</span>
+        </div>
+      </div>
+      
+      {{!-- Weight --}}
+      <div class="rt-cybernetic-stat">
+        <div class="rt-cybernetic-stat__icon">
+          <i class="fas fa-weight-hanging"></i>
+        </div>
+        <div class="rt-cybernetic-stat__content">
+          <span class="rt-cybernetic-stat__label">Weight</span>
+          <span class="rt-cybernetic-stat__value">{{system.weight}}kg</span>
+        </div>
+      </div>
+      
+      {{!-- Availability --}}
+      <div class="rt-cybernetic-stat">
+        <div class="rt-cybernetic-stat__icon">
+          <i class="fas fa-store"></i>
+        </div>
+        <div class="rt-cybernetic-stat__content">
+          <span class="rt-cybernetic-stat__label">Availability</span>
+          <span class="rt-cybernetic-stat__value">{{system.availabilityLabel}}</span>
+        </div>
+      </div>
+    </div>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="rt-cybernetic-tabs" data-group="primary">
+      <button type="button" class="rt-cybernetic-tab active" data-tab="properties" data-group="primary">
+        <i class="fas fa-cog"></i>
+        <span>Properties</span>
+      </button>
+      <button type="button" class="rt-cybernetic-tab" data-tab="effects" data-group="primary">
+        <i class="fas fa-bolt"></i>
+        <span>Effects</span>
+      </button>
+      <button type="button" class="rt-cybernetic-tab" data-tab="armour" data-group="primary">
+        <i class="fas fa-shield-halved"></i>
+        <span>Armour</span>
+      </button>
+      <button type="button" class="rt-cybernetic-tab" data-tab="installation" data-group="primary">
+        <i class="fas fa-syringe"></i>
+        <span>Installation</span>
+      </button>
+      <button type="button" class="rt-cybernetic-tab" data-tab="description" data-group="primary">
+        <i class="fas fa-book"></i>
+        <span>Description</span>
+      </button>
+    </nav>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-cybernetic-content scrollable">
+      
+      {{!-- PROPERTIES TAB --}}
+      <div class="rt-cybernetic-panel active" data-tab="properties" data-group="primary">
+        
+        {{!-- Cybernetic Type & Locations --}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-microchip"></i>
+            <h3>Cybernetic Configuration</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <div class="rt-properties-grid">
+              
+              {{!-- Type --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fas fa-tag"></i> Type
+                </label>
+                <select name="system.type" class="rt-property-input">
+                  {{#select system.type}}
+                  <option value="replacement">Replacement</option>
+                  <option value="implant">Implant</option>
+                  <option value="augmetic">Augmetic</option>
+                  <option value="bionic">Bionic</option>
+                  <option value="mechadendrite">Mechadendrite</option>
+                  <option value="integrated-weapon">Integrated Weapon</option>
+                  {{/select}}
+                </select>
+              </div>
+              
+              {{!-- Slot/Location Toggles --}}
+              <div class="rt-property rt-property--full">
+                <label class="rt-property-label">
+                  <i class="fas fa-location-dot"></i> Body Locations
+                </label>
+                <div class="rt-cybernetic-locations">
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="head" 
+                           {{#if (includes system.locations "head")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-head-side-brain"></i> Head
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="eyes" 
+                           {{#if (includes system.locations "eyes")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-eye"></i> Eyes
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="ears" 
+                           {{#if (includes system.locations "ears")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-ear-listen"></i> Ears
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="mouth" 
+                           {{#if (includes system.locations "mouth")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-face-grin-tongue"></i> Mouth
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="brain" 
+                           {{#if (includes system.locations "brain")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-brain"></i> Brain
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="leftArm" 
+                           {{#if (includes system.locations "leftArm")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-hand-fist"></i> Left Arm
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="rightArm" 
+                           {{#if (includes system.locations "rightArm")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-hand-fist"></i> Right Arm
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="body" 
+                           {{#if (includes system.locations "body")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-shield"></i> Body
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="organs" 
+                           {{#if (includes system.locations "organs")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-heart-pulse"></i> Organs
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="leftLeg" 
+                           {{#if (includes system.locations "leftLeg")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-boot"></i> Left Leg
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="rightLeg" 
+                           {{#if (includes system.locations "rightLeg")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-boot"></i> Right Leg
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="spine" 
+                           {{#if (includes system.locations "spine")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-spine"></i> Spine
+                    </span>
+                  </label>
+                  <label class="rt-location-toggle">
+                    <input type="checkbox" name="system.locations" value="internal" 
+                           {{#if (includes system.locations "internal")}}checked{{/if}} />
+                    <span class="rt-location-toggle__label">
+                      <i class="fas fa-gears"></i> Internal
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {{!-- Physical Properties --}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-box"></i>
+            <h3>Physical Properties</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <div class="rt-properties-grid">
+              
+              {{!-- Weight --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fas fa-weight-hanging"></i> Weight (kg)
+                </label>
+                <input type="number" name="system.weight" value="{{system.weight}}" 
+                       step="0.1" min="0" class="rt-property-input" />
+              </div>
+              
+              {{!-- Craftsmanship --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fas fa-hammer"></i> Craftsmanship
+                </label>
+                <select name="system.craftsmanship" class="rt-property-input">
+                  {{#select system.craftsmanship}}
+                  <option value="poor">Poor</option>
+                  <option value="common">Common</option>
+                  <option value="good">Good</option>
+                  <option value="best">Best</option>
+                  {{/select}}
+                </select>
+              </div>
+              
+              {{!-- Availability --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fas fa-store"></i> Availability
+                </label>
+                <select name="system.availability" class="rt-property-input">
+                  {{#select system.availability}}
+                  <option value="ubiquitous">Ubiquitous</option>
+                  <option value="abundant">Abundant</option>
+                  <option value="plentiful">Plentiful</option>
+                  <option value="common">Common</option>
+                  <option value="average">Average</option>
+                  <option value="scarce">Scarce</option>
+                  <option value="rare">Rare</option>
+                  <option value="veryRare">Very Rare</option>
+                  <option value="extremelyRare">Extremely Rare</option>
+                  <option value="nearUnique">Near Unique</option>
+                  <option value="unique">Unique</option>
+                  {{/select}}
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+      {{!-- EFFECTS TAB --}}
+      <div class="rt-cybernetic-panel" data-tab="effects" data-group="primary">
+        
+        {{!-- Effect Description --}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-bolt"></i>
+            <h3>Effect</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <p class="rt-field-hint">
+              <i class="fas fa-info-circle"></i> Describe the mechanical benefits or abilities granted by this cybernetic.
+            </p>
+            <div class="rt-editor-container">
+              {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror" collaborate=false}}
+            </div>
+          </div>
+        </div>
+        
+        {{!-- Drawbacks --}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Drawbacks</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <p class="rt-field-hint">
+              <i class="fas fa-info-circle"></i> Any negative effects, limitations, or complications from this cybernetic.
+            </p>
+            <div class="rt-editor-container">
+              {{editor system.drawbacks target="system.drawbacks" button=true editable=editable engine="prosemirror" collaborate=false}}
+            </div>
+          </div>
+        </div>
+        
+        {{!-- Modifiers Display --}}
+        {{#if (or system.modifiers.characteristics system.modifiers.skills system.modifiers.combat system.modifiers.wounds system.modifiers.movement)}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-chart-line"></i>
+            <h3>Stat Modifiers</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <div class="rt-modifiers-display">
+              
+              {{#if system.modifiers.characteristics}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-title">Characteristics</h4>
+                <div class="rt-modifier-list">
+                  {{#each system.modifiers.characteristics}}
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">{{capitalize @key}}</span>
+                    <span class="rt-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                      {{signedNumber this}}
+                    </span>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+              
+              {{#if system.modifiers.skills}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-title">Skills</h4>
+                <div class="rt-modifier-list">
+                  {{#each system.modifiers.skills}}
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">{{capitalize @key}}</span>
+                    <span class="rt-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                      {{signedNumber this}}
+                    </span>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+              
+              {{#if system.modifiers.combat}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-title">Combat</h4>
+                <div class="rt-modifier-list">
+                  {{#each system.modifiers.combat}}
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">{{capitalize @key}}</span>
+                    <span class="rt-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                      {{signedNumber this}}
+                    </span>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+              
+              {{#if system.modifiers.wounds}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-title">Other</h4>
+                <div class="rt-modifier-list">
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">Wounds</span>
+                    <span class="rt-modifier-value {{#if (gt system.modifiers.wounds 0)}}positive{{else}}negative{{/if}}">
+                      {{signedNumber system.modifiers.wounds}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {{/if}}
+              
+              {{#if system.modifiers.movement}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-title">Movement</h4>
+                <div class="rt-modifier-list">
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">Movement Bonus</span>
+                    <span class="rt-modifier-value {{#if (gt system.modifiers.movement 0)}}positive{{else}}negative{{/if}}">
+                      {{signedNumber system.modifiers.movement}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {{/if}}
+            </div>
+            
+            <p class="rt-field-hint" style="margin-top: 1rem;">
+              <i class="fas fa-info-circle"></i> Modifiers are configured via Active Effects. This panel is read-only.
+            </p>
+          </div>
+        </div>
+        {{else}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-empty-state">
+            <i class="fas fa-chart-line"></i>
+            <p>No stat modifiers defined</p>
+            <p class="rt-field-hint">Use Active Effects tab to add bonuses</p>
+          </div>
+        </div>
+        {{/if}}
+        
+      </div>
+      
+      {{!-- ARMOUR TAB --}}
+      <div class="rt-cybernetic-panel" data-tab="armour" data-group="primary">
+        
+        {{!-- Armour Points Toggle --}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-shield-halved"></i>
+            <h3>Armour Protection</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <div class="rt-property rt-property--checkbox">
+              <label class="rt-property-label-inline">
+                <input type="checkbox" name="system.hasArmourPoints" {{checked system.hasArmourPoints}} />
+                <span>This cybernetic provides armour protection</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        {{!-- Armour Points Grid (if enabled) --}}
+        {{#if system.hasArmourPoints}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-shield-halved"></i>
+            <h3>Armour Points by Location</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <div class="rt-armour-ap-grid">
+              <div class="rt-armour-ap-field">
+                <label><i class="fas fa-head-side-brain"></i> Head</label>
+                <input type="number" name="system.armourPoints.head" value="{{system.armourPoints.head}}" 
+                       data-dtype="Number" min="0" />
+              </div>
+              <div class="rt-armour-ap-field">
+                <label><i class="fas fa-hand-fist"></i> Left Arm</label>
+                <input type="number" name="system.armourPoints.leftArm" value="{{system.armourPoints.leftArm}}" 
+                       data-dtype="Number" min="0" />
+              </div>
+              <div class="rt-armour-ap-field">
+                <label><i class="fas fa-hand-fist"></i> Right Arm</label>
+                <input type="number" name="system.armourPoints.rightArm" value="{{system.armourPoints.rightArm}}" 
+                       data-dtype="Number" min="0" />
+              </div>
+              <div class="rt-armour-ap-field">
+                <label><i class="fas fa-shield"></i> Body</label>
+                <input type="number" name="system.armourPoints.body" value="{{system.armourPoints.body}}" 
+                       data-dtype="Number" min="0" />
+              </div>
+              <div class="rt-armour-ap-field">
+                <label><i class="fas fa-boot"></i> Left Leg</label>
+                <input type="number" name="system.armourPoints.leftLeg" value="{{system.armourPoints.leftLeg}}" 
+                       data-dtype="Number" min="0" />
+              </div>
+              <div class="rt-armour-ap-field">
+                <label><i class="fas fa-boot"></i> Right Leg</label>
+                <input type="number" name="system.armourPoints.rightLeg" value="{{system.armourPoints.rightLeg}}" 
+                       data-dtype="Number" min="0" />
+              </div>
+            </div>
+            <p class="rt-field-hint" style="margin-top: 1rem;">
+              <i class="fas fa-info-circle"></i> Cybernetic armour stacks with worn armour at the affected locations.
+            </p>
+          </div>
+        </div>
+        {{else}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-empty-state">
+            <i class="fas fa-shield-halved"></i>
+            <p>This cybernetic does not provide armour</p>
+            <p class="rt-field-hint">Enable armour protection above to configure AP values</p>
+          </div>
+        </div>
+        {{/if}}
+        
+      </div>
+      
+      {{!-- INSTALLATION TAB --}}
+      <div class="rt-cybernetic-panel" data-tab="installation" data-group="primary">
+        
+        {{!-- Installation Requirements --}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-syringe"></i>
+            <h3>Installation Requirements</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <div class="rt-properties-grid">
+              
+              {{!-- Surgery Required --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fas fa-user-doctor"></i> Surgery Type
+                </label>
+                <input type="text" name="system.installation.surgery" value="{{system.installation.surgery}}" 
+                       class="rt-property-input" placeholder="e.g., Major, Simple, Complex" />
+              </div>
+              
+              {{!-- Difficulty --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fas fa-gauge-high"></i> Difficulty
+                </label>
+                <input type="text" name="system.installation.difficulty" value="{{system.installation.difficulty}}" 
+                       class="rt-property-input" placeholder="e.g., Challenging (-10), Difficult (-20)" />
+              </div>
+              
+              {{!-- Recovery Time --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fas fa-clock"></i> Recovery Time
+                </label>
+                <input type="text" name="system.installation.recoveryTime" value="{{system.installation.recoveryTime}}" 
+                       class="rt-property-input" placeholder="e.g., 1d5 days, 2 weeks" />
+              </div>
+            </div>
+            
+            <p class="rt-field-hint" style="margin-top: 1rem;">
+              <i class="fas fa-info-circle"></i> Installation typically requires a successful Medicae test. Failed installations may cause complications or injury.
+            </p>
+          </div>
+        </div>
+        
+      </div>
+      
+      {{!-- DESCRIPTION TAB --}}
+      <div class="rt-cybernetic-panel" data-tab="description" data-group="primary">
+        
+        {{!-- Description --}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-book"></i>
+            <h3>Description</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <p class="rt-field-hint">
+              <i class="fas fa-info-circle"></i> Flavor text, appearance, and background information.
+            </p>
+            <div class="rt-editor-container">
+              {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror" collaborate=false}}
+            </div>
+          </div>
+        </div>
+        
+        {{!-- Notes --}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-sticky-note"></i>
+            <h3>Notes</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <div class="rt-property">
+              <textarea name="system.notes" rows="4" class="rt-property-textarea" 
+                        placeholder="GM notes, house rules, special considerations...">{{system.notes}}</textarea>
+            </div>
+          </div>
+        </div>
+        
+        {{!-- Source --}}
+        <div class="rt-cybernetic-section">
+          <div class="rt-cybernetic-section__header">
+            <i class="fas fa-book-bookmark"></i>
+            <h3>Source</h3>
+          </div>
+          <div class="rt-cybernetic-section__body">
+            <div class="rt-properties-grid">
+              <div class="rt-property">
+                <label class="rt-property-label">Book</label>
+                <input type="text" name="system.source.book" value="{{system.source.book}}" 
+                       class="rt-property-input" placeholder="RT: Core Rulebook" />
+              </div>
+              <div class="rt-property">
+                <label class="rt-property-label">Page</label>
+                <input type="text" name="system.source.page" value="{{system.source.page}}" 
+                       class="rt-property-input" placeholder="142" />
+              </div>
+              <div class="rt-property rt-property--full">
+                <label class="rt-property-label">Custom Reference</label>
+                <input type="text" name="system.source.custom" value="{{system.source.custom}}" 
+                       class="rt-property-input" placeholder="Optional: Custom source text overrides book/page" />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>{{!-- .rt-cybernetic-content --}}
+  </form>
+</div>{{!-- .rt-cybernetic-sheet --}}

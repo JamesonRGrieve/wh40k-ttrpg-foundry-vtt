@@ -6,14 +6,15 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 
 /**
  * Sheet for skill items (used in compendiums).
+ * Redesigned with Imperial Gothic theme and comprehensive layout.
  */
 export default class SkillSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ["skill"],
         position: {
-            width: 520,
-            height: 450
+            width: 600,
+            height: 700
         }
     };
 
@@ -23,22 +24,19 @@ export default class SkillSheet extends BaseItemSheet {
     static PARTS = {
         sheet: {
             template: "systems/rogue-trader/templates/item/item-skill-sheet-modern.hbs",
-            scrollable: [".rt-tab-content"]
+            scrollable: [".rt-item-body"]
         }
     };
 
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
-        { tab: "details", group: "primary", label: "Details" },
-        { tab: "description", group: "primary", label: "Description" }
-    ];
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    tabGroups = {
-        primary: "details"
-    };
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+        
+        // Add any additional context data needed for the skill sheet
+        // None needed currently - all data comes from DataModel
+        
+        return context;
+    }
 }

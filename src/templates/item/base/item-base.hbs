@@ -1,0 +1,62 @@
+{{!-- Item-Base Physical Item Sheet Template --}}
+{{!-- Base template for physical items (weapons, armour, gear, cybernetics, etc.) --}}
+<div class="rt-item-sheet rt-physical-sheet rt-{{item.type}}-sheet">
+  <form autocomplete="off">
+    
+    {{!-- HEADER: Image + Name + Badges (Class, Type, Craftsmanship) --}}
+    {{> systems/rogue-trader/templates/item/panel/item-header-physical.hbs}}
+    
+    {{!-- STAT BAR: Quick-reference metrics --}}
+    {{> @partial-block name="stats"}}
+    
+    {{!-- TAB NAVIGATION --}}
+    <nav class="rt-item-tabs" data-group="primary">
+      <button type="button" class="rt-item-tab active" data-tab="stats" data-group="primary">
+        <i class="fas fa-chart-bar"></i>
+        <span>Stats</span>
+      </button>
+      <button type="button" class="rt-item-tab" data-tab="properties" data-group="primary">
+        <i class="fas fa-cogs"></i>
+        <span>Properties</span>
+      </button>
+      <button type="button" class="rt-item-tab" data-tab="description" data-group="primary">
+        <i class="fas fa-scroll"></i>
+        <span>Info</span>
+      </button>
+      <button type="button" class="rt-item-tab" data-tab="effects" data-group="primary">
+        <i class="fas fa-magic"></i>
+        <span>Effects</span>
+      </button>
+    </nav>
+    
+    {{!-- TAB CONTENT --}}
+    <section class="rt-item-content">
+      
+      {{!-- STATS TAB --}}
+      <div class="rt-item-panel active" data-tab="stats" data-group="primary">
+        {{> @partial-block name="stats-tab"}}
+      </div>
+      
+      {{!-- PROPERTIES TAB --}}
+      <div class="rt-item-panel" data-tab="properties" data-group="primary">
+        {{!-- Acquisition Section (Weight, Availability, Craftsmanship) --}}
+        {{> systems/rogue-trader/templates/item/panel/acquisition-panel.hbs}}
+        
+        {{!-- Type-specific properties --}}
+        {{> @partial-block name="properties-tab"}}
+      </div>
+      
+      {{!-- DESCRIPTION TAB --}}
+      <div class="rt-item-panel" data-tab="description" data-group="primary">
+        {{> systems/rogue-trader/templates/item/panel/description-panel.hbs}}
+        {{> systems/rogue-trader/templates/item/panel/source-panel.hbs}}
+      </div>
+      
+      {{!-- EFFECTS TAB --}}
+      <div class="rt-item-panel" data-tab="effects" data-group="primary">
+        {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+      </div>
+      
+    </section>
+  </form>
+</div>

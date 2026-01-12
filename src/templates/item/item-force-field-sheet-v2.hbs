@@ -1,0 +1,297 @@
+{{!-- 
+  Rogue Trader Force Field Item Sheet - V2 Complete Redesign
+  Matches weapon sheet pattern with modern ApplicationV2 structure
+--}}
+<div class="rt-forcefield-sheet">
+  <form autocomplete="off">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Compact force field identity with status
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="rt-forcefield-header">
+      <div class="rt-forcefield-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="rt-forcefield-header__image-overlay">
+          <i class="fas fa-edit"></i>
+        </div>
+      </div>
+      
+      <div class="rt-forcefield-header__info">
+        <input type="text" class="rt-forcefield-header__name" name="name" value="{{item.name}}" placeholder="Force Field Name" />
+        
+        <div class="rt-forcefield-header__meta">
+          <span class="rt-forcefield-badge rt-forcefield-badge--status {{#if system.overloaded}}rt-forcefield-badge--overloaded{{else if system.activated}}rt-forcefield-badge--active{{else}}rt-forcefield-badge--inactive{{/if}}" 
+                title="Status">
+            <i class="fas {{#if system.overloaded}}fa-exclamation-triangle{{else if system.activated}}fa-shield{{else}}fa-shield-slash{{/if}}"></i>
+            {{system.statusLabel}}
+          </span>
+          <span class="rt-forcefield-badge rt-forcefield-badge--protection" title="Protection Rating">
+            <i class="fas fa-percent"></i>
+            {{system.protectionRating}}%
+          </span>
+          {{#if (ne system.craftsmanship "common")}}
+          <span class="rt-forcefield-badge rt-forcefield-badge--craft rt-forcefield-badge--{{system.craftsmanship}}" title="Craftsmanship">
+            <i class="fas fa-hammer"></i>
+            {{system.craftsmanshipLabel}}
+          </span>
+          {{/if}}
+        </div>
+      </div>
+      
+      <div class="rt-forcefield-header__equipped">
+        <label class="rt-toggle-equipped" title="Toggle Equipped">
+          <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
+          <span class="rt-toggle-equipped__indicator">
+            <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+          </span>
+          <span class="rt-toggle-equipped__label">{{#if system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
+        </label>
+      </div>
+    </header>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         STAT BAR: Key force field statistics
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-forcefield-stats">
+      <div class="rt-forcefield-stat rt-forcefield-stat--rating">
+        <div class="rt-forcefield-stat__icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="rt-forcefield-stat__content">
+          <span class="rt-forcefield-stat__label">Rating</span>
+          <span class="rt-forcefield-stat__value">{{system.protectionRating}}</span>
+        </div>
+      </div>
+      
+      <div class="rt-forcefield-stat rt-forcefield-stat--overload">
+        <div class="rt-forcefield-stat__icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div class="rt-forcefield-stat__content">
+          <span class="rt-forcefield-stat__label">Overload</span>
+          <span class="rt-forcefield-stat__value">{{system.overloadThreshold}}+</span>
+        </div>
+      </div>
+      
+      <div class="rt-forcefield-stat rt-forcefield-stat--weight">
+        <div class="rt-forcefield-stat__icon">
+          <i class="fas fa-weight-hanging"></i>
+        </div>
+        <div class="rt-forcefield-stat__content">
+          <span class="rt-forcefield-stat__label">Weight</span>
+          <span class="rt-forcefield-stat__value">{{system.weight}}kg</span>
+        </div>
+      </div>
+    </div>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="rt-forcefield-tabs" data-group="primary">
+      <button type="button" class="rt-forcefield-tab active" data-tab="stats" data-group="primary">
+        <i class="fas fa-chart-bar"></i>
+        <span>Stats</span>
+      </button>
+      <button type="button" class="rt-forcefield-tab" data-tab="description" data-group="primary">
+        <i class="fas fa-scroll"></i>
+        <span>Info</span>
+      </button>
+      <button type="button" class="rt-forcefield-tab" data-tab="effects" data-group="primary">
+        <i class="fas fa-magic"></i>
+        <span>Effects</span>
+      </button>
+    </nav>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <section class="rt-forcefield-content">
+      
+      {{!-- STATS TAB --}}
+      <div class="rt-forcefield-panel active" data-tab="stats" data-group="primary">
+      
+      {{!-- Status Controls --}}
+      <div class="rt-forcefield-section">
+        <div class="rt-forcefield-section__header">
+          <i class="fas fa-toggle-on"></i>
+          <h3>Status Controls</h3>
+        </div>
+        <div class="rt-forcefield-section__body">
+          <div class="rt-forcefield-toggles">
+            <label class="rt-checkbox rt-checkbox--large">
+              <input type="checkbox" name="system.activated" {{checked system.activated}} />
+              <span class="rt-checkbox__indicator">
+                <i class="fas fa-shield"></i>
+              </span>
+              <span class="rt-checkbox__label">
+                <strong>Activated</strong>
+                <small>Force field is currently active and providing protection</small>
+              </span>
+            </label>
+            
+            <label class="rt-checkbox rt-checkbox--large rt-checkbox--danger">
+              <input type="checkbox" name="system.overloaded" {{checked system.overloaded}} />
+              <span class="rt-checkbox__indicator">
+                <i class="fas fa-exclamation-triangle"></i>
+              </span>
+              <span class="rt-checkbox__label">
+                <strong>Overloaded</strong>
+                <small>Force field has overloaded and is temporarily disabled</small>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Protection Settings --}}
+      <div class="rt-forcefield-section">
+        <div class="rt-forcefield-section__header">
+          <i class="fas fa-shield-halved"></i>
+          <h3>Protection Settings</h3>
+        </div>
+        <div class="rt-forcefield-section__body">
+          <div class="rt-field-row">
+            <div class="rt-field">
+              <label>
+                Protection Rating
+                <small>Roll equal to or under this to be protected</small>
+              </label>
+              <div class="rt-field-with-unit">
+                <input type="number" name="system.protectionRating" value="{{system.protectionRating}}" 
+                       data-dtype="Number" min="0" max="100" />
+                <span class="rt-field-unit">%</span>
+              </div>
+            </div>
+            <div class="rt-field">
+              <label>
+                Overload Threshold
+                <small>Roll this or higher on hit to overload</small>
+              </label>
+              <div class="rt-field-with-unit">
+                <input type="number" name="system.overloadThreshold" value="{{system.overloadThreshold}}" 
+                       data-dtype="Number" min="0" max="100" />
+                <span class="rt-field-unit">+</span>
+              </div>
+            </div>
+          </div>
+          <div class="rt-field">
+            <label>
+              Overload Duration
+              <small>How long does the field stay disabled?</small>
+            </label>
+            <input type="text" name="system.overloadDuration" value="{{system.overloadDuration}}" 
+                   placeholder="1d5 rounds" />
+          </div>
+        </div>
+      </div>
+
+      {{!-- Physical Properties --}}
+      <div class="rt-forcefield-section">
+        <div class="rt-forcefield-section__header">
+          <i class="fas fa-cog"></i>
+          <h3>Physical Properties</h3>
+        </div>
+        <div class="rt-forcefield-section__body">
+          <div class="rt-field-row">
+            <div class="rt-field">
+              <label>Weight (kg)</label>
+              <input type="number" name="system.weight" value="{{system.weight}}" 
+                     data-dtype="Number" min="0" step="0.1" />
+            </div>
+            <div class="rt-field">
+              <label>Cost (Thrones)</label>
+              <input type="number" name="system.cost.value" value="{{system.cost.value}}" 
+                     data-dtype="Number" min="0" />
+            </div>
+          </div>
+          <div class="rt-field-row">
+            <div class="rt-field">
+              <label>Availability</label>
+              <select name="system.availability">
+                <option value="ubiquitous" {{#if (eq system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
+                <option value="abundant" {{#if (eq system.availability "abundant")}}selected{{/if}}>Abundant</option>
+                <option value="plentiful" {{#if (eq system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
+                <option value="common" {{#if (eq system.availability "common")}}selected{{/if}}>Common</option>
+                <option value="average" {{#if (eq system.availability "average")}}selected{{/if}}>Average</option>
+                <option value="scarce" {{#if (eq system.availability "scarce")}}selected{{/if}}>Scarce</option>
+                <option value="rare" {{#if (eq system.availability "rare")}}selected{{/if}}>Rare</option>
+                <option value="very-rare" {{#if (eq system.availability "very-rare")}}selected{{/if}}>Very Rare</option>
+                <option value="extremely-rare" {{#if (eq system.availability "extremely-rare")}}selected{{/if}}>Extremely Rare</option>
+                <option value="near-unique" {{#if (eq system.availability "near-unique")}}selected{{/if}}>Near Unique</option>
+                <option value="unique" {{#if (eq system.availability "unique")}}selected{{/if}}>Unique</option>
+              </select>
+            </div>
+            <div class="rt-field">
+              <label>Craftsmanship</label>
+              <select name="system.craftsmanship">
+                <option value="poor" {{#if (eq system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
+                <option value="common" {{#if (eq system.craftsmanship "common")}}selected{{/if}}>Common</option>
+                <option value="good" {{#if (eq system.craftsmanship "good")}}selected{{/if}}>Good</option>
+                <option value="best" {{#if (eq system.craftsmanship "best")}}selected{{/if}}>Best</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+
+      {{!-- DESCRIPTION TAB --}}
+      <div class="rt-forcefield-panel" data-tab="description" data-group="primary">
+
+      {{!-- Effect --}}
+      <div class="rt-forcefield-section">
+        <div class="rt-forcefield-section__header">
+          <i class="fas fa-bolt"></i>
+          <h3>Effect</h3>
+        </div>
+        <div class="rt-forcefield-section__body rt-forcefield-section__body--editor">
+          {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
+        </div>
+      </div>
+
+      {{!-- Description --}}
+      <div class="rt-forcefield-section">
+        <div class="rt-forcefield-section__header">
+          <i class="fas fa-book"></i>
+          <h3>Description</h3>
+        </div>
+        <div class="rt-forcefield-section__body rt-forcefield-section__body--editor">
+          {{editor system.description target="system.description" button=true editable=editable engine="prosemirror"}}
+        </div>
+      </div>
+
+      {{!-- Notes --}}
+      <div class="rt-forcefield-section">
+        <div class="rt-forcefield-section__header">
+          <i class="fas fa-sticky-note"></i>
+          <h3>Notes</h3>
+        </div>
+        <div class="rt-forcefield-section__body">
+          <textarea name="system.notes" rows="4" placeholder="GM notes, special rules, etc.">{{system.notes}}</textarea>
+        </div>
+      </div>
+
+      {{!-- Source --}}
+      <div class="rt-forcefield-section">
+        <div class="rt-forcefield-section__header">
+          <i class="fas fa-book-open"></i>
+          <h3>Source</h3>
+        </div>
+        <div class="rt-forcefield-section__body">
+          <input type="text" name="system.source" value="{{system.source}}" 
+                 placeholder="Rogue Trader Core Rulebook, pg. 123" />
+        </div>
+      </div>
+
+      </div>
+
+      {{!-- EFFECTS TAB --}}
+      <div class="rt-forcefield-panel" data-tab="effects" data-group="primary">
+        {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+      </div>
+
+    </section>
+
+  </form>
+</div>

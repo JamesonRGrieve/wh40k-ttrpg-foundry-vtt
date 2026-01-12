@@ -416,3 +416,189 @@
   border-radius: 3px;
   color: var(--rt-item-border);
 }
+
+// ============================================
+// Vocalize Card Enhancements
+// ============================================
+
+.rt-item-card--vocalize {
+  // Slightly different styling for vocalized items
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+// Placeholder image icon
+.rt-item-card__image--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--rt-accent-overlay), transparent);
+  
+  i {
+    font-size: 1.5rem;
+    color: var(--rt-item-border);
+    opacity: 0.6;
+  }
+}
+
+// Meta information in header
+.rt-item-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.rt-item-card__actor {
+  font-size: 0.7rem;
+  color: var(--rt-item-muted);
+  font-weight: 600;
+}
+
+.rt-item-card__separator {
+  font-size: 0.7rem;
+  color: var(--rt-border-color);
+}
+
+// Quick stats row
+.rt-item-card__quick-stats {
+  display: flex;
+  gap: $rt-space-md;
+  flex-wrap: wrap;
+  margin-bottom: $rt-space-sm;
+}
+
+.rt-quick-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px;
+  background: var(--rt-accent-overlay);
+  border-radius: $rt-radius-sm;
+  border: 1px solid var(--rt-border-color-light);
+}
+
+.rt-quick-stat__label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--rt-item-muted);
+}
+
+.rt-quick-stat__value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--rt-item-border);
+  font-family: $rt-font-alt;
+}
+
+// Property tags in vocalize
+.rt-property-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.12), rgba($rt-accent-gold, 0.06));
+  border: 1px solid rgba($rt-accent-gold, 0.3);
+  border-radius: $rt-radius-sm;
+  color: var(--rt-item-border);
+  
+  i {
+    font-size: 0.75rem;
+    color: $rt-accent-gold;
+  }
+}
+
+// Section styling with icons
+.rt-item-card__section--effect {
+  .rt-item-card__section-title {
+    color: #9b59b6;
+    
+    i {
+      color: #9b59b6;
+    }
+  }
+  
+  .rt-item-card__effect-text {
+    padding: $rt-space-sm;
+    background: linear-gradient(135deg, rgba(#9b59b6, 0.08), transparent);
+    border-left: 3px solid rgba(#9b59b6, 0.4);
+    border-radius: 0 $rt-radius-sm $rt-radius-sm 0;
+  }
+}
+
+.rt-item-card__section--benefit {
+  .rt-item-card__section-title {
+    color: #27ae60;
+    
+    i {
+      color: #27ae60;
+    }
+  }
+  
+  .rt-item-card__benefit-text {
+    padding: $rt-space-sm;
+    background: linear-gradient(135deg, rgba(#27ae60, 0.08), transparent);
+    border-left: 3px solid rgba(#27ae60, 0.4);
+    border-radius: 0 $rt-radius-sm $rt-radius-sm 0;
+  }
+}
+
+// Requirements bar
+.rt-item-card__requirements {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-xs;
+  padding: $rt-space-sm;
+  margin-top: $rt-space-sm;
+  background: linear-gradient(135deg, rgba(#e67e22, 0.1), transparent);
+  border-left: 3px solid rgba(#e67e22, 0.5);
+  border-radius: 0 $rt-radius-sm $rt-radius-sm 0;
+  font-size: 0.8rem;
+}
+
+.rt-requirements__label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  color: #e67e22;
+  
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+.rt-requirements__text {
+  color: var(--rt-text-secondary);
+}
+
+// Footer with icon
+.rt-item-card__footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+  
+  i {
+    font-size: 0.7rem;
+    color: var(--rt-item-muted);
+  }
+}
+
+// "View Details" button styling
+.rt-item-card__btn--sheet {
+  flex: 1;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--rt-item-border), var(--rt-item-accent));
+  border-color: var(--rt-item-border);
+  color: #fff;
+  
+  &:hover {
+    background: linear-gradient(135deg, var(--rt-item-accent), var(--rt-item-border));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}

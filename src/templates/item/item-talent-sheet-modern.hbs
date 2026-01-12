@@ -1,63 +1,459 @@
-<div class="rt-item-sheet rt-compact">
-    <form autocomplete="off">
-        <!-- Compact Header -->
-        <header class="rt-item-header rt-item-header--compact">
-            <div class="rt-item-image rt-item-image--sm" data-edit="img">
-                <img src="{{item.img}}" alt="{{item.name}}" />
-            </div>
-            <div class="rt-item-title">
-                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Talent Name" />
-                <div class="rt-item-meta">
-                    <span class="rt-meta-badge rt-meta-badge--type"><i class="fas fa-star"></i> Talent</span>
-                    <input type="text" class="rt-meta-text rt-meta-text--tiny" name="system.tier" value="{{item.system.tier}}" placeholder="T1" />
-                    <div class="rt-meta-input">
-                        <input type="number" name="system.cost" value="{{item.system.cost}}" min="0" placeholder="XP" />
-                        <span>xp</span>
-                    </div>
-                    <label class="rt-meta-check"><input type="checkbox" name="system.stackable" {{checked item.system.stackable}} /> Multi</label>
-                    <label class="rt-meta-check"><input type="checkbox" name="system.isPassive" {{checked item.system.isPassive}} /> Passive</label>
-                </div>
-            </div>
-        </header>
+{{!-- 
+  Rogue Trader Talent Item Sheet - Modern Tabbed Redesign
+  Comprehensive talent configuration with tabbed interface
+--}}
+<div class="rt-talent-sheet">
+  <form autocomplete="off">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Compact talent identity with inline badges
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="rt-talent-header">
+      <div class="rt-talent-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="rt-talent-header__image-overlay">
+          <i class="fas fa-edit"></i>
+        </div>
+      </div>
+      
+      <div class="rt-talent-header__info">
+        <input type="text" class="rt-talent-header__name" name="name" value="{{item.name}}" placeholder="Talent Name" />
+        
+        <div class="rt-talent-header__meta">
+          {{!-- Tier Badge --}}
+          {{#if (gt item.system.tier 0)}}
+          <span class="rt-talent-badge rt-talent-badge--tier rt-talent-badge--tier{{item.system.tier}}" title="Tier {{item.system.tier}}">
+            <i class="fas fa-layer-group"></i>
+            T{{item.system.tier}}
+          </span>
+          {{/if}}
+          
+          {{!-- Category Badge --}}
+          <span class="rt-talent-badge rt-talent-badge--category" title="{{item.system.categoryLabel}}">
+            <i class="fas fa-tag"></i>
+            {{item.system.categoryLabel}}
+          </span>
+          
+          {{!-- XP Cost Badge --}}
+          {{#if (gt item.system.cost 0)}}
+          <span class="rt-talent-badge rt-talent-badge--cost" title="Experience Cost">
+            <i class="fas fa-coins"></i>
+            {{item.system.cost}} XP
+          </span>
+          {{/if}}
+          
+          {{!-- Passive Indicator --}}
+          {{#if item.system.isPassive}}
+          <span class="rt-talent-badge rt-talent-badge--passive" title="Passive Talent">
+            <i class="fas fa-circle-check"></i>
+            Passive
+          </span>
+          {{/if}}
+          
+          {{!-- Stackable Indicator --}}
+          {{#if item.system.stackable}}
+          <span class="rt-talent-badge rt-talent-badge--stackable" title="Can Take Multiple Times">
+            <i class="fas fa-layer-group"></i>
+            Rank {{item.system.rank}}
+          </span>
+          {{/if}}
+        </div>
+      </div>
+    </header>
 
-        <!-- Compact Body -->
-        <div class="rt-item-body rt-item-body--compact">
-            <!-- Prerequisites -->
-            <div class="rt-inline-field">
-                <label><i class="fas fa-lock"></i> Prerequisites</label>
-                <input type="text" name="system.requirements" value="{{item.system.requirements}}" placeholder="None" />
-            </div>
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         STATS BAR: Key talent info at a glance
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-talent-stats">
+      {{!-- Tier --}}
+      {{#if (gt item.system.tier 0)}}
+      <div class="rt-talent-stat rt-talent-stat--tier">
+        <div class="rt-talent-stat__icon">
+          <i class="fas fa-layer-group"></i>
+        </div>
+        <div class="rt-talent-stat__content">
+          <span class="rt-talent-stat__label">Tier</span>
+          <span class="rt-talent-stat__value">{{item.system.tier}}</span>
+        </div>
+      </div>
+      {{/if}}
+      
+      {{!-- XP Cost --}}
+      {{#if (gt item.system.cost 0)}}
+      <div class="rt-talent-stat rt-talent-stat--cost">
+        <div class="rt-talent-stat__icon">
+          <i class="fas fa-coins"></i>
+        </div>
+        <div class="rt-talent-stat__content">
+          <span class="rt-talent-stat__label">XP Cost</span>
+          <span class="rt-talent-stat__value">{{item.system.cost}}</span>
+        </div>
+      </div>
+      {{/if}}
+      
+      {{!-- Category --}}
+      <div class="rt-talent-stat">
+        <div class="rt-talent-stat__icon">
+          <i class="fas fa-tag"></i>
+        </div>
+        <div class="rt-talent-stat__content">
+          <span class="rt-talent-stat__label">Category</span>
+          <span class="rt-talent-stat__value">{{item.system.categoryLabel}}</span>
+        </div>
+      </div>
+      
+      {{!-- Type --}}
+      <div class="rt-talent-stat">
+        <div class="rt-talent-stat__icon">
+          <i class="fas {{#if item.system.isPassive}}fa-circle-check{{else}}fa-bolt{{/if}}"></i>
+        </div>
+        <div class="rt-talent-stat__content">
+          <span class="rt-talent-stat__label">Type</span>
+          <span class="rt-talent-stat__value">{{#if item.system.isPassive}}Passive{{else}}Active{{/if}}</span>
+        </div>
+      </div>
+      
+      {{!-- Rank (if stackable) --}}
+      {{#if item.system.stackable}}
+      <div class="rt-talent-stat">
+        <div class="rt-talent-stat__icon">
+          <i class="fas fa-layer-group"></i>
+        </div>
+        <div class="rt-talent-stat__content">
+          <span class="rt-talent-stat__label">Rank</span>
+          <span class="rt-talent-stat__value">{{item.system.rank}}</span>
+        </div>
+      </div>
+      {{/if}}
+    </div>
 
-            <!-- Aptitudes -->
-            <div class="rt-inline-field">
-                <label>Aptitudes</label>
-                <input type="text" name="system.aptitudes" value="{{join item.system.aptitudes ", "}}" placeholder="N/A" />
-            </div>
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="rt-talent-tabs" data-group="primary">
+      <button type="button" class="rt-talent-tab active" data-tab="properties" data-group="primary">
+        <i class="fas fa-cog"></i>
+        <span>Properties</span>
+      </button>
+      <button type="button" class="rt-talent-tab" data-tab="prerequisites" data-group="primary">
+        <i class="fas fa-lock"></i>
+        <span>Prerequisites</span>
+      </button>
+      <button type="button" class="rt-talent-tab" data-tab="effects" data-group="primary">
+        <i class="fas fa-magic"></i>
+        <span>Effects</span>
+      </button>
+      <button type="button" class="rt-talent-tab" data-tab="description" data-group="primary">
+        <i class="fas fa-book"></i>
+        <span>Description</span>
+      </button>
+    </nav>
 
-            <!-- Specialization (conditional) -->
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <section class="rt-talent-content">
+      
+      {{!-- PROPERTIES TAB --}}
+      <div class="rt-talent-panel active" data-tab="properties" data-group="primary">
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-info-circle"></i> Basic Properties
+          </h3>
+          
+          <div class="rt-properties-grid">
+            {{!-- Category --}}
+            <div class="rt-property">
+              <label class="rt-property-label">Category</label>
+              <select name="system.category" class="rt-property-input">
+                {{#select item.system.category}}
+                <option value="">General</option>
+                <option value="general">General</option>
+                <option value="combat">Combat</option>
+                <option value="social">Social</option>
+                <option value="investigation">Investigation</option>
+                <option value="psychic">Psychic</option>
+                <option value="navigator">Navigator</option>
+                <option value="tech">Tech</option>
+                <option value="leadership">Leadership</option>
+                <option value="career">Career</option>
+                <option value="unique">Unique</option>
+                {{/select}}
+              </select>
+            </div>
+            
+            {{!-- Tier --}}
+            <div class="rt-property">
+              <label class="rt-property-label">Tier</label>
+              <select name="system.tier" class="rt-property-input">
+                <option value="0" {{#if (eq item.system.tier 0)}}selected{{/if}}>—</option>
+                <option value="1" {{#if (eq item.system.tier 1)}}selected{{/if}}>Tier 1</option>
+                <option value="2" {{#if (eq item.system.tier 2)}}selected{{/if}}>Tier 2</option>
+                <option value="3" {{#if (eq item.system.tier 3)}}selected{{/if}}>Tier 3</option>
+              </select>
+            </div>
+            
+            {{!-- XP Cost --}}
+            <div class="rt-property">
+              <label class="rt-property-label">XP Cost</label>
+              <input type="number" name="system.cost" value="{{item.system.cost}}" min="0" class="rt-property-input" placeholder="0" />
+            </div>
+            
+            {{!-- Passive/Active --}}
+            <div class="rt-property rt-property--checkbox">
+              <label class="rt-property-label-inline">
+                <input type="checkbox" name="system.isPassive" {{checked item.system.isPassive}} />
+                <span>Passive Talent</span>
+              </label>
+            </div>
+            
+            {{!-- Stackable --}}
+            <div class="rt-property rt-property--checkbox">
+              <label class="rt-property-label-inline">
+                <input type="checkbox" name="system.stackable" {{checked item.system.stackable}} />
+                <span>Can Take Multiple Times</span>
+              </label>
+            </div>
+            
+            {{!-- Rank (if stackable) --}}
             {{#if item.system.stackable}}
-            <div class="rt-inline-row">
-                <div class="rt-inline-field">
-                    <label>Specialization</label>
-                    <input type="text" name="system.specialization" value="{{item.system.specialization}}" placeholder="Las, Bolt, Plasma" />
-                </div>
-                <div class="rt-inline-field rt-inline-field--short">
-                    <label>Rank</label>
-                    <input type="number" name="system.rank" value="{{item.system.rank}}" min="1" />
-                </div>
+            <div class="rt-property">
+              <label class="rt-property-label">Current Rank</label>
+              <input type="number" name="system.rank" value="{{item.system.rank}}" min="1" class="rt-property-input" />
             </div>
             {{/if}}
-
-            <!-- Effect -->
-            <div class="rt-prose-field">
-                <label>Effect</label>
-                <div class="rt-prose" data-edit="system.effect">{{{item.system.effect}}}{{{item.system.benefit}}}</div>
-            </div>
-
-            <!-- Footer -->
-            <div class="rt-item-footer">
-                <input type="text" class="rt-source-input" name="system.source" value="{{#if item.system.source}}{{item.system.source}}{{else}}Core Rulebook{{/if}}" placeholder="Core Rulebook" />
-            </div>
+          </div>
         </div>
-    </form>
-</div>
+        
+        {{!-- Aptitudes --}}
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-star"></i> Aptitudes
+          </h3>
+          
+          {{#if item.system.aptitudes.length}}
+          <div class="rt-aptitudes-display">
+            {{#each item.system.aptitudes}}
+            <span class="rt-aptitude-tag">{{this}}</span>
+            {{/each}}
+          </div>
+          {{/if}}
+          
+          <div class="rt-property" style="margin-top: {{#if item.system.aptitudes.length}}0.75rem{{else}}0{{/if}};">
+            <label class="rt-property-label">Aptitudes <span class="rt-field-hint">(comma-separated)</span></label>
+            <input type="text" name="system.aptitudes" value="{{join item.system.aptitudes ", "}}" class="rt-property-input" placeholder="Finesse, Agility, General" />
+          </div>
+        </div>
+        
+        {{!-- Specialization --}}
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-wrench"></i> Specialization
+          </h3>
+          
+          <div class="rt-property">
+            <label class="rt-property-label">Specialization <span class="rt-field-hint">(e.g., "Weapon Training (Las)")</span></label>
+            <input type="text" name="system.specialization" value="{{item.system.specialization}}" class="rt-property-input" placeholder="Enter specialization..." />
+          </div>
+        </div>
+      </div>
+      
+      {{!-- PREREQUISITES TAB --}}
+      <div class="rt-talent-panel" data-tab="prerequisites" data-group="primary">
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-lock"></i> Text Description
+          </h3>
+          
+          <div class="rt-property">
+            <label class="rt-property-label">Prerequisites <span class="rt-field-hint">(freeform text)</span></label>
+            <textarea name="system.prerequisites.text" rows="3" class="rt-property-textarea" placeholder="e.g., Agility 40+, Dodge skill, Lightning Reflexes">{{item.system.prerequisites.text}}</textarea>
+          </div>
+        </div>
+        
+        {{#if item.system.hasPrerequisites}}
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-list-check"></i> Summary
+          </h3>
+          
+          <div class="rt-prerequisites-display">
+            <p class="rt-prereq-label">{{item.system.prerequisitesLabel}}</p>
+          </div>
+        </div>
+        {{else}}
+        <div class="rt-talent-section">
+          <div class="rt-empty-state">
+            <i class="fas fa-unlock"></i>
+            <p>No prerequisites defined</p>
+          </div>
+        </div>
+        {{/if}}
+      </div>
+      
+      {{!-- EFFECTS TAB --}}
+      <div class="rt-talent-panel" data-tab="effects" data-group="primary">
+        {{!-- Benefit/Effect Description --}}
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-magic"></i> Benefit
+          </h3>
+          
+          <div class="rt-editor-container">
+            {{editor item.system.benefit target="system.benefit" button=true editable=editable engine="prosemirror" collaborate=false}}
+          </div>
+        </div>
+        
+        {{!-- Modifiers Display --}}
+        {{#if (or item.system.modifiers.characteristics item.system.modifiers.skills item.system.modifiers.combat item.system.modifiers.wounds item.system.modifiers.fate item.system.modifiers.movement)}}
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-chart-line"></i> Modifiers
+          </h3>
+          
+          <div class="rt-modifiers-display">
+            {{#if item.system.modifiers.characteristics}}
+            <div class="rt-modifier-group">
+              <h4 class="rt-modifier-group-title">Characteristics</h4>
+              <div class="rt-modifier-list">
+                {{#each item.system.modifiers.characteristics}}
+                <div class="rt-modifier-item">
+                  <span class="rt-modifier-name">{{capitalize @key}}</span>
+                  <span class="rt-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                    {{signedNumber this}}
+                  </span>
+                </div>
+                {{/each}}
+              </div>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.modifiers.skills}}
+            <div class="rt-modifier-group">
+              <h4 class="rt-modifier-group-title">Skills</h4>
+              <div class="rt-modifier-list">
+                {{#each item.system.modifiers.skills}}
+                <div class="rt-modifier-item">
+                  <span class="rt-modifier-name">{{capitalize @key}}</span>
+                  <span class="rt-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                    {{signedNumber this}}
+                  </span>
+                </div>
+                {{/each}}
+              </div>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.modifiers.combat}}
+            <div class="rt-modifier-group">
+              <h4 class="rt-modifier-group-title">Combat</h4>
+              <div class="rt-modifier-list">
+                {{#each item.system.modifiers.combat}}
+                <div class="rt-modifier-item">
+                  <span class="rt-modifier-name">{{capitalize @key}}</span>
+                  <span class="rt-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                    {{signedNumber this}}
+                  </span>
+                </div>
+                {{/each}}
+              </div>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.modifiers.wounds}}
+            <div class="rt-modifier-group">
+              <h4 class="rt-modifier-group-title">Other</h4>
+              <div class="rt-modifier-list">
+                <div class="rt-modifier-item">
+                  <span class="rt-modifier-name">Wounds</span>
+                  <span class="rt-modifier-value {{#if (gt item.system.modifiers.wounds 0)}}positive{{else}}negative{{/if}}">
+                    {{signedNumber item.system.modifiers.wounds}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.modifiers.fate}}
+            <div class="rt-modifier-group">
+              <h4 class="rt-modifier-group-title">Resources</h4>
+              <div class="rt-modifier-list">
+                <div class="rt-modifier-item">
+                  <span class="rt-modifier-name">Fate Points</span>
+                  <span class="rt-modifier-value positive">
+                    {{signedNumber item.system.modifiers.fate}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            {{/if}}
+            
+            {{#if item.system.modifiers.movement}}
+            <div class="rt-modifier-group">
+              <h4 class="rt-modifier-group-title">Movement</h4>
+              <div class="rt-modifier-list">
+                <div class="rt-modifier-item">
+                  <span class="rt-modifier-name">Movement Bonus</span>
+                  <span class="rt-modifier-value {{#if (gt item.system.modifiers.movement 0)}}positive{{else}}negative{{/if}}">
+                    {{signedNumber item.system.modifiers.movement}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            {{/if}}
+          </div>
+          
+          <p class="rt-field-hint" style="margin-top: 1rem;">
+            <i class="fas fa-info-circle"></i> Modifiers are configured via Active Effects. This panel is read-only.
+          </p>
+        </div>
+        {{else}}
+        <div class="rt-talent-section">
+          <div class="rt-empty-state">
+            <i class="fas fa-chart-line"></i>
+            <p>No modifiers defined</p>
+            <p class="rt-field-hint">Use Active Effects tab to add stat bonuses</p>
+          </div>
+        </div>
+        {{/if}}
+      </div>
+      
+      {{!-- DESCRIPTION TAB --}}
+      <div class="rt-talent-panel" data-tab="description" data-group="primary">
+        {{!-- Description --}}
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-book"></i> Description
+          </h3>
+          
+          <div class="rt-editor-container">
+            {{editor item.system.description.value target="system.description.value" button=true editable=editable engine="prosemirror" collaborate=false}}
+          </div>
+        </div>
+        
+        {{!-- Notes --}}
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-sticky-note"></i> Notes
+          </h3>
+          
+          <div class="rt-property">
+            <textarea name="system.notes" rows="4" class="rt-property-textarea" placeholder="GM notes, house rules, clarifications, etc.">{{item.system.notes}}</textarea>
+          </div>
+        </div>
+        
+        {{!-- Source --}}
+        <div class="rt-talent-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-book-bookmark"></i> Source
+          </h3>
+          
+          <div class="rt-property">
+            <input type="text" name="system.source" value="{{item.system.source}}" class="rt-property-input" placeholder="Core Rulebook, pg. XX" />
+          </div>
+        </div>
+      </div>
+      
+    </section>{{!-- .rt-talent-content --}}
+  </form>
+</div>{{!-- .rt-talent-sheet --}}

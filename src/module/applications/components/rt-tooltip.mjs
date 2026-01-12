@@ -731,6 +731,29 @@ export function prepareCharacteristicTooltipData(key, characteristic, modifierSo
 }
 
 /**
+ * Map characteristic short names to full keys.
+ * @param {string} short  Short name (e.g., "Ag", "WS").
+ * @returns {string}  Full characteristic key (e.g., "agility", "weaponSkill").
+ * @private
+ */
+function _charShortToKey(short) {
+    // Use the same map as CommonTemplate for consistency
+    const map = {
+        "WS": "weaponSkill",
+        "BS": "ballisticSkill",
+        "S": "strength",
+        "T": "toughness",
+        "Ag": "agility",
+        "Int": "intelligence",
+        "Per": "perception",
+        "WP": "willpower",
+        "Fel": "fellowship",
+        "Inf": "influence"
+    };
+    return map[short] || short.toLowerCase();
+}
+
+/**
  * Prepare tooltip data for a skill.
  * @param {string} key            Skill key.
  * @param {object} skill          Skill data object.
@@ -739,10 +762,11 @@ export function prepareCharacteristicTooltipData(key, characteristic, modifierSo
  * @returns {string}  JSON string for data-rt-tooltip-data attribute.
  */
 export function prepareSkillTooltipData(key, skill, characteristics = {}, actorUuid = null) {
-    const charKey = skill.characteristic || skill.char || "strength";
+    const charShort = skill.characteristic || skill.char || "S";
+    const charKey = _charShortToKey(charShort);
     const char = characteristics[charKey] || {};
     const charTotal = char.total || 0;
-    const charLabel = char.label || charKey;
+    const charLabel = char.label || charShort;
     
     // Calculate training level and base value exactly as creature.mjs does
     const trained = skill.trained || false;

@@ -23,86 +23,64 @@
                     <div class="rt-trait-row item-drag" 
                          data-item-id="{{trait.id}}" 
                          draggable="true">
-                        {{!-- Compact View --}}
-                        <div class="rt-row-compact">
-                            <i class="fas {{trait.categoryIcon}} rt-row-icon-inline"></i>
+                        <i class="fas {{trait.categoryIcon}} rt-row-icon-inline"></i>
+                        
+                        <div class="rt-row-main">
+                            <button type="button" 
+                                  class="rt-row-name" 
+                                  data-action="itemEdit" 
+                                  data-item-id="{{trait.id}}" 
+                                  title="Click to open item sheet">
+                                {{trait.name}}
+                            </button>
                             
-                            <div class="rt-row-main">
-                                <span class="rt-row-name" 
-                                      data-action="itemEdit" 
-                                      data-item-id="{{trait.id}}" 
-                                      title="{{trait.fullName}}">
-                                    {{trait.name}}
+                            {{#if trait.system.requirements}}
+                            <div class="rt-row-meta">
+                                <span class="rt-meta-item">
+                                    <i class="fas fa-lock"></i> {{trait.system.requirements}}
                                 </span>
-                                
-                                {{#if trait.system.requirements}}
-                                <div class="rt-row-meta">
-                                    <span class="rt-meta-item">
-                                        <i class="fas fa-lock"></i> {{trait.system.requirements}}
-                                    </span>
-                                </div>
-                                {{/if}}
-                            </div>
-                            
-                            {{!-- Level Stepper for variable traits --}}
-                            {{#if trait.hasLevel}}
-                            <div class="rt-level-stepper">
-                                <button type="button" 
-                                        class="rt-stepper-btn" 
-                                        data-action="adjustTraitLevel" 
-                                        data-item-id="{{trait.id}}" 
-                                        data-delta="-1"
-                                        title="Decrease Level">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <span class="rt-level-display">{{trait.system.level}}</span>
-                                <button type="button" 
-                                        class="rt-stepper-btn" 
-                                        data-action="adjustTraitLevel" 
-                                        data-item-id="{{trait.id}}" 
-                                        data-delta="1"
-                                        title="Increase Level">
-                                    <i class="fas fa-plus"></i>
-                                </button>
                             </div>
                             {{/if}}
-                            
-                            <div class="rt-row-actions">
-                                <button type="button" class="rt-action-btn rt-btn-expand" data-action="toggleTraitExpand" data-item-id="{{trait.id}}" title="Show Details">
-                                    <i class="fas fa-chevron-down"></i>
-                                </button>
-                                <button type="button" 
-                                        class="rt-action-btn" 
-                                        data-action="itemVocalize" 
-                                        data-item-id="{{trait.id}}" 
-                                        title="Send to Chat">
-                                    <i class="fas fa-comment"></i>
-                                </button>
-                                <button type="button" 
-                                        class="rt-action-btn rt-btn-danger" 
-                                        data-action="itemDelete" 
-                                        data-item-id="{{trait.id}}" 
-                                        title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
                         </div>
                         
-                        {{!-- Expanded Details --}}
-                        <div class="rt-row-expanded" style="display: none;">
-                            {{#if trait.system.benefit}}
-                            <div class="rt-detail-row rt-detail-benefit">
-                                <span class="rt-detail-label">Benefit:</span>
-                                <div class="rt-detail-content">{{{trait.system.benefit}}}</div>
-                            </div>
-                            {{/if}}
-                            
-                            {{#if trait.system.notes}}
-                            <div class="rt-detail-row">
-                                <span class="rt-detail-label">Notes:</span>
-                                <span class="rt-detail-value">{{trait.system.notes}}</span>
-                            </div>
-                            {{/if}}
+                        {{!-- Level Stepper for variable traits --}}
+                        {{#if trait.hasLevel}}
+                        <div class="rt-level-stepper">
+                            <button type="button" 
+                                    class="rt-stepper-btn" 
+                                    data-action="adjustTraitLevel" 
+                                    data-item-id="{{trait.id}}" 
+                                    data-delta="-1"
+                                    title="Decrease Level">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="rt-level-display">{{trait.system.level}}</span>
+                            <button type="button" 
+                                    class="rt-stepper-btn" 
+                                    data-action="adjustTraitLevel" 
+                                    data-item-id="{{trait.id}}" 
+                                    data-delta="1"
+                                    title="Increase Level">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        {{/if}}
+                        
+                        <div class="rt-row-actions">
+                            <button type="button" 
+                                    class="rt-action-btn" 
+                                    data-action="itemVocalize" 
+                                    data-item-id="{{trait.id}}" 
+                                    title="Send to Chat">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button type="button" 
+                                    class="rt-action-btn rt-btn-danger" 
+                                    data-action="itemDelete" 
+                                    data-item-id="{{trait.id}}" 
+                                    title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                     {{/each}}
@@ -113,9 +91,9 @@
         {{/if}}
         
         {{!-- Dropzone --}}
-        <div class="rt-dropzone" data-action="itemCreate" data-type="trait">
+        <div class="rt-dropzone {{#if traits.length}}rt-dropzone--compact{{/if}}" data-action="itemCreate" data-type="trait">
             <i class="fas fa-shield-alt rt-dropzone-icon"></i>
-            <span class="rt-dropzone-text">Drop Trait or Click to Create</span>
+            <span class="rt-dropzone-text">{{#if traits.length}}Drop to add{{else}}Drop Trait or Click to Create{{/if}}</span>
         </div>
     </div>
 </div>

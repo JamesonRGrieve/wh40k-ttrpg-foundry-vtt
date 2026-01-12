@@ -1,0 +1,156 @@
+{{!-- 
+  Rogue Trader Combat Action Item Sheet
+  Sheet for combat action configuration
+--}}
+<div class="rt-combat-action-sheet">
+  <form autocomplete="off">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Combat action identity
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="rt-item-header">
+      <div class="rt-item-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="rt-item-header__overlay">
+          <i class="fas fa-edit"></i>
+        </div>
+      </div>
+      
+      <div class="rt-item-header__info">
+        <input type="text" class="rt-item-header__name" name="name" value="{{item.name}}" placeholder="Action Name" />
+        
+        <div class="rt-item-header__meta">
+          {{!-- Action Type Badge --}}
+          <span class="rt-badge rt-badge--action-type">
+            <i class="fas fa-clock"></i>
+            {{item.system.actionTypeLabel}}
+          </span>
+          
+          {{!-- Attack Modifier Badge --}}
+          {{#if (ne item.system.attackModifier 0)}}
+          <span class="rt-badge {{#if (gt item.system.attackModifier 0)}}rt-badge--positive{{else}}rt-badge--negative{{/if}}">
+            <i class="fas fa-crosshairs"></i>
+            Attack {{item.system.attackModifierLabel}}
+          </span>
+          {{/if}}
+        </div>
+      </div>
+    </header>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         PROPERTIES PANEL
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-item-body">
+      <div class="rt-panel">
+        <div class="rt-panel-header">
+          <span class="rt-panel-title"><i class="fas fa-cog"></i> Properties</span>
+        </div>
+        <div class="rt-panel-body">
+          <div class="rt-form-grid">
+            {{!-- Action Type --}}
+            <div class="rt-form-field">
+              <label class="rt-label">Action Type</label>
+              <select name="system.actionType" class="rt-select">
+                {{#select item.system.actionType}}
+                <option value="Half">Half Action</option>
+                <option value="Full">Full Action</option>
+                <option value="Reaction">Reaction</option>
+                <option value="Free">Free Action</option>
+                <option value="2Full">2 Full Actions</option>
+                {{/select}}
+              </select>
+            </div>
+            
+            {{!-- Attack Modifier --}}
+            <div class="rt-form-field">
+              <label class="rt-label">Attack Modifier</label>
+              <input type="number" name="system.attackModifier" value="{{item.system.attackModifier}}" 
+                     class="rt-input" placeholder="0" step="5" />
+            </div>
+          </div>
+          
+          {{!-- Subtypes --}}
+          <div class="rt-form-field rt-form-field--full">
+            <label class="rt-label">Action Subtypes</label>
+            <div class="rt-checkbox-group">
+              <label class="rt-checkbox-label">
+                <input type="checkbox" name="system.subtypes" value="Attack" 
+                       {{#if (includes item.system.subtypesList "Attack")}}checked{{/if}} />
+                Attack
+              </label>
+              <label class="rt-checkbox-label">
+                <input type="checkbox" name="system.subtypes" value="Movement" 
+                       {{#if (includes item.system.subtypesList "Movement")}}checked{{/if}} />
+                Movement
+              </label>
+              <label class="rt-checkbox-label">
+                <input type="checkbox" name="system.subtypes" value="Concentration" 
+                       {{#if (includes item.system.subtypesList "Concentration")}}checked{{/if}} />
+                Concentration
+              </label>
+              <label class="rt-checkbox-label">
+                <input type="checkbox" name="system.subtypes" value="Miscellaneous" 
+                       {{#if (includes item.system.subtypesList "Miscellaneous")}}checked{{/if}} />
+                Miscellaneous
+              </label>
+              <label class="rt-checkbox-label">
+                <input type="checkbox" name="system.subtypes" value="Melee" 
+                       {{#if (includes item.system.subtypesList "Melee")}}checked{{/if}} />
+                Melee
+              </label>
+              <label class="rt-checkbox-label">
+                <input type="checkbox" name="system.subtypes" value="Ranged" 
+                       {{#if (includes item.system.subtypesList "Ranged")}}checked{{/if}} />
+                Ranged
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {{!-- ═══════════════════════════════════════════════════════════════════
+           DESCRIPTION PANEL
+      ═══════════════════════════════════════════════════════════════════ --}}
+      <div class="rt-panel">
+        <div class="rt-panel-header">
+          <span class="rt-panel-title"><i class="fas fa-book"></i> Description</span>
+        </div>
+        <div class="rt-panel-body">
+          <div class="rt-form-field rt-form-field--full">
+            <label class="rt-label">Full Description</label>
+            {{editor item.system.description.value target="system.description.value" button=true owner=owner editable=editable}}
+          </div>
+          
+          <div class="rt-form-field rt-form-field--full">
+            <label class="rt-label">Summary (for cards/tooltips)</label>
+            <input type="text" name="system.description.summary" value="{{item.system.description.summary}}" 
+                   class="rt-input" placeholder="Brief action summary" />
+          </div>
+        </div>
+      </div>
+      
+      {{!-- ═══════════════════════════════════════════════════════════════════
+           SOURCE REFERENCE
+      ═══════════════════════════════════════════════════════════════════ --}}
+      <div class="rt-panel">
+        <div class="rt-panel-header">
+          <span class="rt-panel-title"><i class="fas fa-bookmark"></i> Source</span>
+        </div>
+        <div class="rt-panel-body">
+          <div class="rt-form-grid">
+            <div class="rt-form-field">
+              <label class="rt-label">Book</label>
+              <input type="text" name="system.source.book" value="{{system.source.book}}" 
+                     class="rt-input" placeholder="e.g. Core Rulebook" />
+            </div>
+            <div class="rt-form-field">
+              <label class="rt-label">Page</label>
+              <input type="text" name="system.source.page" value="{{system.source.page}}" 
+                     class="rt-input" placeholder="e.g. 232" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

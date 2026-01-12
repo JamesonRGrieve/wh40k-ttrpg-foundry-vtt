@@ -77,6 +77,20 @@ export class RogueTraderBaseActor extends Actor {
         if (data.type === 'acolyte' || data.type === 'character') {
             initData['token.vision'] = true;
             initData['token.actorLink'] = true;
+            
+            // Set default favorite skills for new characters
+            if (!this.getFlag("rogue-trader", "favoriteSkills")) {
+                initData['flags.rogue-trader.favoriteSkills'] = [
+                    'dodge',
+                    'awareness',
+                    'scrutiny',
+                    'inquiry',
+                    'commerce',
+                    'techUse',
+                    'command',
+                    'medicae'
+                ];
+            }
         }
         this.updateSource(initData);
     }

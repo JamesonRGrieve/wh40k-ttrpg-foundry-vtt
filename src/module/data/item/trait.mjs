@@ -106,15 +106,10 @@ export default class TraitData extends ItemDataModel.mixin(
    * @type {string}
    */
   get categoryLabel() {
-    const categories = {
-      creature: "Creature",
-      character: "Character",
-      elite: "Elite",
-      unique: "Unique",
-      origin: "Origin Path",
-      general: "General"
-    };
-    return categories[this.category] || "General";
+    if (!this.category) return game.i18n.localize("RT.TraitCategory.General");
+    const key = `RT.TraitCategory.${this.category.capitalize()}`;
+    const localized = game.i18n.localize(key);
+    return localized === key ? this.category : localized;
   }
 
   /**

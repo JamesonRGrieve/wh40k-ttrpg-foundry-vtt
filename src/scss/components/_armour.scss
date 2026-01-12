@@ -4,12 +4,17 @@
 // ============================================
 
 .rt-armour-panel {
+  // Ensure the panel displays with fallback values
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  
   .rt-panel-header {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: var(--rt-space-sm);
+    gap: var(--rt-space-sm, 8px);
     width: 100%;
     
     .rt-panel-title {
@@ -19,8 +24,13 @@
   }
   
   .rt-panel-body {
-    padding: var(--rt-space-md);
-    background: var(--rt-panel-body-bg);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: var(--rt-space-sm, 8px);
+    padding-top: var(--rt-space-sm, 8px);
+    background: var(--rt-panel-body-bg, rgba(40, 35, 30, 0.6));
+    min-height: auto;
   }
 }
 
@@ -61,37 +71,41 @@
 // Uses CSS Grid to position boxes in a human body shape:
 //
 //        [HEAD]
-//  [R.ARM][BODY][L.ARM]
-//       [R.LEG][L.LEG]
+//  [R.ARM][BODY][L.ARM]  (upper body + arms)
+//       [BODY]           (body extends down)
+//     [R.LEG][L.LEG]     (longer legs)
 
 .rt-armour-silhouette {
-  display: grid;
-  grid-template-columns: 120px 1fr 120px;
+  display: grid !important; // Force grid display
+  visibility: visible !important;
+  grid-template-columns: 80px 1fr 80px;  // Arms on sides, body center
   grid-template-rows: auto auto auto;
   grid-template-areas:
     ".       head      ."
     "rarm    body      larm"
-    "rleg    .         lleg";
-  gap: 6px;
-  padding: var(--rt-space-sm);
-  max-width: 450px;
-  margin: 0 auto;
+    "rleg    body      lleg";  // Legs positioned at bottom, body spans
+  gap: 4px;
+  padding: var(--rt-space-xs, 4px);
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto; // Center the silhouette
 }
 
 // Base box styling shared by all locations
 .rt-armour-box {
-  display: flex;
+  display: flex !important; // Force display
+  visibility: visible !important;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--rt-space-sm) var(--rt-space-sm);
-  background: var(--rt-panel-bg);
-  border: 2px solid var(--rt-border-color);
-  border-radius: var(--rt-radius-lg);
+  padding: var(--rt-space-sm, 8px) var(--rt-space-sm, 8px);
+  background: var(--rt-panel-bg, rgba(45, 40, 35, 0.7));
+  border: 2px solid var(--rt-border-color, rgba(180, 140, 100, 0.4));
+  border-radius: var(--rt-radius-lg, 8px);
   box-shadow: 
-    0 2px 4px var(--rt-shadow-soft),
+    0 2px 4px var(--rt-shadow-soft, rgba(0, 0, 0, 0.2)),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all var(--rt-transition-normal);
+  transition: all var(--rt-transition-normal, 0.2s ease);
   cursor: pointer;
   
   &:hover {
@@ -121,9 +135,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--rt-text-muted);
+  color: var(--rt-text-muted, #8a7a6a);
   line-height: 1;
-  margin-bottom: var(--rt-space-xs);
+  margin-bottom: var(--rt-space-xs, 4px);
   white-space: nowrap;
 }
 
@@ -137,31 +151,31 @@
   font-family: var(--rt-font-numbers, 'Cinzel', serif);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--rt-text-dark);
+  color: var(--rt-text-dark, #e8dcc8);
   line-height: 1;
-  background: var(--rt-panel-bg-solid);
-  border: 2px solid var(--rt-border-color-strong);
+  background: var(--rt-panel-bg-solid, rgba(45, 40, 35, 0.9));
+  border: 2px solid var(--rt-border-color-strong, rgba(212, 175, 55, 0.5));
   border-radius: 50%;
   box-shadow: 
-    inset 0 1px 2px var(--rt-shadow-soft),
-    0 2px 4px var(--rt-shadow-soft);
-  transition: all var(--rt-transition-normal);
+    inset 0 1px 2px var(--rt-shadow-soft, rgba(0, 0, 0, 0.2)),
+    0 2px 4px var(--rt-shadow-soft, rgba(0, 0, 0, 0.2));
+  transition: all var(--rt-transition-normal, 0.2s ease);
 }
 
 // Roll range (bottom badge)
 .rt-box-range {
   font-size: 0.55rem;
   font-weight: 700;
-  color: var(--rt-text-muted);
-  background: var(--rt-accent-overlay);
+  color: var(--rt-text-muted, #8a7a6a);
+  background: var(--rt-accent-overlay, rgba(212, 175, 55, 0.1));
   padding: 3px 6px;
-  border-radius: var(--rt-radius-sm);
+  border-radius: var(--rt-radius-sm, 4px);
   letter-spacing: 0.03em;
   line-height: 1;
   font-family: 'Courier New', monospace;
-  transition: all var(--rt-transition-normal);
+  transition: all var(--rt-transition-normal, 0.2s ease);
   white-space: nowrap;
-  margin-top: var(--rt-space-xs);
+  margin-top: var(--rt-space-xs, 4px);
 }
 
 // ============================================
@@ -177,39 +191,47 @@
 
 .rt-box-body {
   grid-area: body;
-  min-height: 120px;
+  grid-row: 2 / 4;  // Spans rows 2-3 (arms and legs row)
+  min-height: 140px;
+  align-self: stretch;
   
   .rt-box-ap {
-    width: 46px;
-    height: 46px;
-    font-size: 1.7rem;
+    width: 48px;
+    height: 48px;
+    font-size: 1.8rem;
   }
 }
 
 .rt-box-right-arm {
   grid-area: rarm;
   justify-self: end;
-  min-height: 85px;
+  align-self: center;  // Center vertically with body
+  min-height: 80px;
+  min-width: 60px;
 }
 
 .rt-box-left-arm {
   grid-area: larm;
   justify-self: start;
-  min-height: 85px;
+  align-self: center;  // Center vertically with body
+  min-height: 80px;
+  min-width: 60px;
 }
 
 .rt-box-right-leg {
   grid-area: rleg;
-  justify-self: end;
-  margin-left: 20px;
-  min-height: 100px;
+  justify-self: end;   // Align with body edge
+  align-self: start;
+  min-height: 120px;   // Taller legs
+  min-width: 65px;
 }
 
 .rt-box-left-leg {
   grid-area: lleg;
-  justify-self: start;
-  margin-right: 20px;
-  min-height: 100px;
+  justify-self: start; // Align with body edge
+  align-self: start;
+  min-height: 120px;   // Taller legs
+  min-width: 65px;
 }
 
 // ============================================

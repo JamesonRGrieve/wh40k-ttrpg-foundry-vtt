@@ -1,19 +1,114 @@
-{{!-- Rogue Trader Item Vocalize Card - Modern Design --}}
-<div class="rt-chat">
-    <div class="rt-item-card">
-        {{!-- Header --}}
+{{!-- Rogue Trader Item Vocalize Card - Modern Comprehensive Design --}}
+<div class="rt-chat rt-vocalize-card">
+    <div class="rt-item-card rt-item-card--vocalize">
+        {{!-- Header with Image --}}
         <div class="rt-item-card__header">
+            {{#if img}}
+            <img class="rt-item-card__image" src="{{img}}" alt="{{name}}" />
+            {{else}}
+            <div class="rt-item-card__image rt-item-card__image--placeholder">
+                <i class="fas fa-scroll"></i>
+            </div>
+            {{/if}}
             <div class="rt-item-card__title-group">
                 <h2 class="rt-item-card__name">{{name}}</h2>
-                <span class="rt-item-card__type">{{actor}} • {{type}}</span>
+                <div class="rt-item-card__meta">
+                    {{#if actor}}
+                    <span class="rt-item-card__actor">{{actor}}</span>
+                    <span class="rt-item-card__separator">•</span>
+                    {{/if}}
+                    <span class="rt-item-card__type">{{type}}</span>
+                </div>
             </div>
+            {{#if itemTypeLabel}}
+            <span class="rt-meta-badge rt-meta-badge--{{itemType}}">
+                {{#if itemIcon}}<i class="{{itemIcon}}"></i>{{/if}}
+                {{itemTypeLabel}}
+            </span>
+            {{/if}}
         </div>
         
         {{!-- Body --}}
         <div class="rt-item-card__body">
+            {{!-- Quick Stats Row (if available) --}}
+            {{#if stats}}
+            <div class="rt-item-card__quick-stats">
+                {{#each stats as |stat|}}
+                <div class="rt-quick-stat">
+                    <span class="rt-quick-stat__label">{{stat.label}}</span>
+                    <span class="rt-quick-stat__value">{{stat.value}}</span>
+                </div>
+                {{/each}}
+            </div>
+            <div class="rt-item-card__divider"></div>
+            {{/if}}
+            
+            {{!-- Properties/Traits (if available) --}}
+            {{#if properties}}
+            <div class="rt-item-card__properties">
+                {{#each properties as |prop|}}
+                <span class="rt-property-tag">
+                    {{#if prop.icon}}<i class="{{prop.icon}}"></i>{{/if}}
+                    {{prop.label}}
+                </span>
+                {{/each}}
+            </div>
+            {{/if}}
+            
+            {{!-- Description --}}
+            {{#if description}}
             <div class="rt-item-card__section">
                 <div class="rt-item-card__description">{{{description}}}</div>
             </div>
+            {{/if}}
+            
+            {{!-- Special Effect --}}
+            {{#if effect}}
+            <div class="rt-item-card__section rt-item-card__section--effect">
+                <h3 class="rt-item-card__section-title">
+                    <i class="fas fa-sparkles"></i> Effect
+                </h3>
+                <div class="rt-item-card__effect-text">{{{effect}}}</div>
+            </div>
+            {{/if}}
+            
+            {{!-- Benefit --}}
+            {{#if benefit}}
+            <div class="rt-item-card__section rt-item-card__section--benefit">
+                <h3 class="rt-item-card__section-title">
+                    <i class="fas fa-plus-circle"></i> Benefit
+                </h3>
+                <div class="rt-item-card__benefit-text">{{{benefit}}}</div>
+            </div>
+            {{/if}}
+            
+            {{!-- Requirements --}}
+            {{#if requirements}}
+            <div class="rt-item-card__requirements">
+                <span class="rt-requirements__label">
+                    <i class="fas fa-exclamation-triangle"></i> Requirements:
+                </span>
+                <span class="rt-requirements__text">{{requirements}}</span>
+            </div>
+            {{/if}}
         </div>
+        
+        {{!-- Footer --}}
+        {{#if source}}
+        <div class="rt-item-card__footer">
+            <i class="fas fa-book"></i>
+            <span class="rt-item-card__source">{{source}}</span>
+        </div>
+        {{/if}}
+        
+        {{!-- Action Button (Open Sheet) --}}
+        {{#if itemUuid}}
+        <div class="rt-item-card__actions">
+            <button type="button" class="rt-item-card__btn rt-item-card__btn--sheet" data-uuid="{{itemUuid}}" data-action="openItemSheet">
+                <i class="fas fa-scroll-old"></i>
+                View Details
+            </button>
+        </div>
+        {{/if}}
     </div>
 </div>

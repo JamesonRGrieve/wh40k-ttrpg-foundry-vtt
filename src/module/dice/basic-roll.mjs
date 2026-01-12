@@ -273,14 +273,20 @@ export default class BasicRollRT extends Roll {
      * @override
      */
     static fromData(data) {
-        // Let parent class handle core roll reconstruction
-        const roll = super.fromData(data);
-        
-        // Restore our custom configuration
-        if (data.configuration) {
-            roll.configuration = data.configuration;
+        try {
+            // Let parent class handle core roll reconstruction
+            const roll = super.fromData(data);
+            
+            // Restore our custom configuration
+            if (data.configuration) {
+                roll.configuration = data.configuration;
+            }
+            
+            return roll;
+        } catch (error) {
+            console.warn(`Failed to recreate ${this.name} from data:`, error);
+            // Return a basic roll as fallback
+            return super.fromData(data);
         }
-        
-        return roll;
     }
 }

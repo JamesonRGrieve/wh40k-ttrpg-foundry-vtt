@@ -30,9 +30,11 @@ import {
     ForceFieldSheet,
     CriticalInjurySheet,
     ConditionSheet,
+    CombatActionSheet,
     StorageLocationSheet,
     PeerEnemySheet,
     JournalEntryItemSheet,
+    OriginPathSheet,
     WeaponModSheet,
     AttackSpecialSheet,
     ShipComponentSheet,
@@ -59,10 +61,12 @@ import { checkAndMigrateWorld } from './rogue-trader-migrations.mjs';
 import { DHTourMain } from './tours/main-tour.mjs';
 import { RollTableUtils } from './utils/roll-table-utils.mjs';
 import { TooltipsRT } from './applications/components/_module.mjs';
+import * as characterCreation from './applications/character-creation/_module.mjs';
 
 import * as documents from './documents/_module.mjs'
+import { SYSTEM_ID } from './constants.mjs';
 
-export const SYSTEM_ID = 'rogue-trader';
+export { SYSTEM_ID };
 
 export class HooksManager {
     static registerHooks() {
@@ -109,6 +113,9 @@ Enable Debug with: game.rt.debug = true
             showRollTableDialog: () => RollTableUtils.showRollTableDialog(),
             // Compendium browser
             openCompendiumBrowser: (options) => RTCompendiumBrowser.open(options),
+            // Character creation
+            OriginPathBuilder: characterCreation.OriginPathBuilder,
+            openOriginPathBuilder: (actor) => characterCreation.OriginPathBuilder.show(actor),
             // Dice/Roll classes
             dice: dice,
             BasicRollRT: dice.BasicRollRT,
@@ -171,6 +178,7 @@ Enable Debug with: game.rt.debug = true
             aptitude: dataModels.AptitudeData,
             peer: dataModels.PeerEnemyData,
             enemy: dataModels.PeerEnemyData,
+            combatAction: dataModels.CombatActionData,
             // Powers
             psychicPower: dataModels.PsychicPowerData,
             navigatorPower: dataModels.NavigatorPowerData,
@@ -322,6 +330,13 @@ Enable Debug with: game.rt.debug = true
             label: "RT.Sheet.Condition"
         });
         
+        // Combat Action sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, CombatActionSheet, {
+            types: ["combatAction"],
+            makeDefault: true,
+            label: "RT.Sheet.CombatAction"
+        });
+        
         // Storage Location sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, StorageLocationSheet, {
             types: ["storageLocation"],
@@ -341,6 +356,13 @@ Enable Debug with: game.rt.debug = true
             types: ["journalEntry"],
             makeDefault: true,
             label: "RT.Sheet.JournalEntry"
+        });
+        
+        // Origin Path sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, OriginPathSheet, {
+            types: ["originPath"],
+            makeDefault: true,
+            label: "RT.Sheet.OriginPath"
         });
         
         // Weapon Modification sheet

@@ -5,7 +5,7 @@ import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-d
 import { DHTargetedActionManager } from './targeted-action-manager.mjs';
 import { Hit } from '../rolls/damage-data.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
-import { SYSTEM_ID } from '../hooks-manager.mjs';
+import { SYSTEM_ID } from '../constants.mjs';
 import { ConfirmationDialog } from '../applications/dialogs/_module.mjs';
 
 export class BasicActionManager {

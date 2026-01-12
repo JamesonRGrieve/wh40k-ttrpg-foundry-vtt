@@ -1,4 +1,9 @@
+import { ROGUE_TRADER } from '../config.mjs';
+
 export const RogueTrader = {};
+
+// Merge the comprehensive config from config.mjs
+Object.assign(RogueTrader, ROGUE_TRADER);
 
 // Origin Path steps for Rogue Trader character creation
 RogueTrader.originPath = {

@@ -1,5 +1,5 @@
 import { RogueTraderSettings } from './rogue-trader-settings.mjs';
-import { SYSTEM_ID } from './hooks-manager.mjs';
+import { SYSTEM_ID } from './constants.mjs';
 
 export async function checkAndMigrateWorld() {
     const worldVersion = 184;

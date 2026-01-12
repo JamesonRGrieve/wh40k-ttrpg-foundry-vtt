@@ -1,0 +1,863 @@
+// ============================================
+// Rogue Trader Armour Sheet Styles - V2
+// ============================================
+// Modern, information-dense armour display matching weapon sheet pattern
+// Uses theme-aware CSS custom properties
+
+// ============================================
+// ARMOUR SHEET BASE
+// ============================================
+
+.rt-armour-sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: rgba(30, 25, 20, 0.95);
+  color: #e0d5c7;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  overflow: hidden;
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.rt-armour-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, transparent 100%);
+  border-bottom: 2px solid #c9a227;
+  
+  &__image {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border: 2px solid #8b6914;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      
+      .rt-armour-header__image-overlay {
+        opacity: 1;
+      }
+    }
+  }
+  
+  &__image-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    
+    i {
+      color: white;
+      font-size: 1.2rem;
+    }
+  }
+  
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  &__name {
+    width: 100%;
+    padding: 4px 8px;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #e0d5c7;
+    transition: border-color 0.2s ease;
+    
+    &:hover {
+      border-bottom-color: #c9a227;
+    }
+    
+    &:focus {
+      outline: none;
+      border-bottom-color: #c9a227;
+    }
+  }
+  
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  
+  &__equipped {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// ============================================
+// ARMOUR BADGES
+// ============================================
+
+.rt-armour-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  i {
+    font-size: 0.65rem;
+  }
+  
+  // Type badges
+  &--type {
+    background: rgba(201, 162, 39, 0.2);
+    border-color: rgba(201, 162, 39, 0.4);
+    color: #d4af37;
+  }
+  
+  // Protection level
+  &--protection {
+    background: rgba(46, 204, 113, 0.2);
+    border-color: rgba(46, 204, 113, 0.4);
+    color: #2ecc71;
+    font-family: 'Courier New', monospace;
+  }
+  
+  // Craftsmanship
+  &--craft {
+    background: rgba(139, 105, 20, 0.2);
+    border-color: rgba(139, 105, 20, 0.4);
+    
+    &--poor { color: #95a5a6; }
+    &--good { color: #2ecc71; }
+    &--best { color: #d4af37; }
+  }
+  
+  // Agility
+  &--agility {
+    background: rgba(52, 152, 219, 0.2);
+    border-color: rgba(52, 152, 219, 0.4);
+    color: #3498db;
+  }
+}
+
+// ============================================
+// STATS BAR (matching weapon pattern)
+// ============================================
+
+.rt-armour-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+}
+
+.rt-armour-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 60px;
+  padding: 8px 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &__icon {
+    font-size: 1rem;
+    color: #8b6914;
+    margin-bottom: 4px;
+  }
+  
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  &__label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  &__value {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #c9a227;
+  }
+  
+  // Stat variants
+  &--ap {
+    .rt-armour-stat__icon { color: #c9a227; }
+    .rt-armour-stat__value { color: #c9a227; font-size: 1.25rem; }
+  }
+  
+  &--coverage {
+    .rt-armour-stat__icon { color: rgba(52, 152, 219, 0.8); }
+  }
+  
+  &--agility {
+    .rt-armour-stat__icon { color: #3498db; }
+  }
+  
+  &--location {
+    .rt-armour-stat__value { font-size: 0.9rem; }
+  }
+}
+
+// ============================================
+// TAB NAVIGATION (matching weapon pattern)
+// ============================================
+
+.rt-armour-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 12px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+}
+
+.rt-armour-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 0.9rem;
+  }
+  
+  &:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(201, 162, 39, 0.1);
+  }
+  
+  &.active {
+    color: #c9a227;
+    border-bottom-color: #c9a227;
+    background: rgba(201, 162, 39, 0.1);
+  }
+}
+
+// ============================================
+// TAB CONTENT
+// ============================================
+
+.rt-armour-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(201, 162, 39, 0.4);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(201, 162, 39, 0.6);
+    }
+  }
+}
+
+.rt-armour-panel {
+  display: none;
+  
+  &.active {
+    display: block;
+  }
+}
+
+// ============================================
+// SECTIONS (matching weapon pattern)
+// ============================================
+
+.rt-armour-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.05) 100%);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+    
+    i {
+      color: #c9a227;
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+    
+    h3 {
+      margin: 0;
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #c9a227;
+    }
+  }
+  
+  &__count {
+    margin-left: auto;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  &__body {
+    padding: 12px;
+    
+    &--editor {
+      padding: 0;
+      
+      .editor {
+        min-height: 150px;
+      }
+      
+      .editor-content {
+        padding: 12px;
+      }
+    }
+    
+    textarea {
+      width: 100%;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.85rem;
+      resize: vertical;
+      
+      &:focus {
+        outline: none;
+        border-color: #c9a227;
+      }
+    }
+    
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 6px 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      color: #fff;
+      font-size: 0.85rem;
+      
+      &:focus {
+        outline: none;
+        border-color: #c9a227;
+      }
+    }
+  }
+}
+
+// ============================================
+// AP GRID
+// ============================================
+
+.rt-armour-ap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.rt-armour-ap-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    
+    i {
+      color: #c9a227;
+      opacity: 0.7;
+    }
+  }
+  
+  input {
+    width: 100%;
+    padding: 6px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(201, 162, 39, 0.3);
+    border-radius: 4px;
+    color: #c9a227;
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    
+    &:focus {
+      outline: none;
+      border-color: #c9a227;
+      box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.2);
+    }
+  }
+}
+
+// Remove obsolete coverage toggle grid styles
+// (Coverage now inferred from non-zero AP values)
+
+// ============================================
+// FIELD GRID (2-column layout for base properties)
+// ============================================
+
+.rt-field-grid {
+  display: grid;
+  gap: 12px;
+  
+  &--2col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rt-armour-sheet .rt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    
+    small {
+      font-size: 0.65rem;
+      text-transform: none;
+      font-weight: 400;
+      opacity: 0.8;
+    }
+  }
+  
+  input, select {
+    padding: 6px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.85rem;
+    
+    &:focus {
+      outline: none;
+      border-color: #c9a227;
+    }
+  }
+  
+  select {
+    cursor: pointer;
+  }
+}
+
+// ============================================
+// PROPERTY TAGS
+// ============================================
+
+.rt-property-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.rt-property-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.2) 0%, rgba(201, 162, 39, 0.1) 100%);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: 4px;
+  
+  &__label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  
+  &__remove {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: #e74c3c;
+    }
+    
+    i {
+      font-size: 0.7rem;
+    }
+  }
+}
+
+.rt-property-add {
+  display: flex;
+  gap: 8px;
+  
+  &__select {
+    flex: 1;
+    padding: 6px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    
+    &:focus {
+      outline: none;
+      border-color: #c9a227;
+    }
+  }
+}
+
+// ============================================
+// PROPERTY DETAILS
+// ============================================
+
+.rt-property-detail {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &__name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: #c9a227;
+    margin-bottom: 4px;
+    
+    i {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+  }
+  
+  &__desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+    padding-left: 20px;
+  }
+}
+
+// ============================================
+// MODIFICATIONS
+// ============================================
+
+.rt-mod-slots {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  input {
+    width: 60px;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(201, 162, 39, 0.3);
+    border-radius: 4px;
+    color: #c9a227;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    
+    &:focus {
+      outline: none;
+      border-color: #c9a227;
+    }
+  }
+  
+  &__available {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.rt-mod-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.rt-mod-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    i {
+      color: #c9a227;
+      opacity: 0.7;
+    }
+  }
+  
+  &__name {
+    font-weight: 600;
+    color: #fff;
+  }
+  
+  &__actions {
+    display: flex;
+    gap: 4px;
+  }
+}
+
+// ============================================
+// EMPTY STATES
+// ============================================
+
+.rt-armour-sheet .rt-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  
+  i {
+    font-size: 2rem;
+    opacity: 0.5;
+  }
+  
+  span {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  p {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+  
+  &--mods {
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+}
+
+.rt-empty-text {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  margin: 0;
+  padding: 8px 0;
+}
+
+// ============================================
+// BUTTONS
+// ============================================
+
+.rt-armour-sheet .rt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid;
+  
+  &--primary {
+    background: rgba(201, 162, 39, 0.2);
+    border-color: rgba(201, 162, 39, 0.5);
+    color: #c9a227;
+    
+    &:hover {
+      background: rgba(201, 162, 39, 0.3);
+      border-color: #c9a227;
+    }
+  }
+  
+  &--secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+  
+  &--icon {
+    padding: 6px;
+    width: 28px;
+    height: 28px;
+  }
+  
+  &--danger {
+    &:hover {
+      background: rgba(#e74c3c, 0.2);
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+  }
+  
+  &--full {
+    width: 100%;
+  }
+}
+
+// ============================================
+// TOGGLE EQUIPPED
+// ============================================
+
+.rt-armour-sheet .rt-toggle-equipped {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  
+  input {
+    display: none;
+  }
+  
+  &__indicator {
+    i {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.3);
+      transition: color 0.2s ease;
+    }
+  }
+  
+  &__label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.2s ease;
+  }
+  
+  input:checked ~ &__indicator i {
+    color: #2ecc71;
+  }
+  
+  input:checked ~ &__label {
+    color: #2ecc71;
+  }
+  
+  &:hover {
+    .rt-toggle-equipped__indicator i {
+      color: rgba(#2ecc71, 0.7);
+    }
+    
+    .rt-toggle-equipped__label {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}

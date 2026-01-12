@@ -1,0 +1,136 @@
+{{!-- Orders Panel V2 - Modern Card-based Design --}}
+<div class="rt-panel rt-panel-powers rt-panel-orders">
+    <header class="rt-panel-header" data-action="togglePanel" data-panel-id="orders">
+        <span class="rt-panel-title">
+            <i class="fas fa-ship"></i>
+            Ship Orders
+            {{#if ordersCount}}
+            <span class="rt-count-badge">{{ordersCount}}</span>
+            {{/if}}
+        </span>
+        <i class="fas fa-chevron-down rt-panel-toggle"></i>
+    </header>
+    <div class="rt-panel-body">
+        {{!-- Category Filter Tabs --}}
+        {{#if orderCategories.length}}
+        <div class="rt-power-filters">
+            <button type="button" class="rt-filter-btn {{#unless activeOrderCategory}}active{{/unless}}" data-action="filterOrders" data-category="">
+                All
+            </button>
+            {{#each orderCategories as |cat|}}
+            <button type="button" class="rt-filter-btn rt-filter-{{cat.id}}" data-action="filterOrders" data-category="{{cat.id}}">
+                {{cat.label}}
+            </button>
+            {{/each}}
+        </div>
+        {{/if}}
+        
+        {{!-- Orders List --}}
+        <div class="rt-powers-list" data-drop-zone="powers" data-accepts="order">
+            {{#each orders as |order|}}
+            <div class="rt-power-card rt-order-card item-drag" data-item-id="{{order.id}}" data-category="{{order.system.category}}" draggable="true">
+                {{!-- Order Header --}}
+                <div class="rt-power-card-header">
+                    <img class="rt-power-icon" src="{{order.img}}" alt="{{order.name}}" />
+                    <div class="rt-power-info">
+                        <button type="button" class="rt-power-name" data-action="itemEdit" data-item-id="{{order.id}}" title="Edit Order">
+                            {{order.name}}
+                        </button>
+                        <div class="rt-power-meta">
+                            <span class="rt-order-category rt-cat-{{order.system.category}}">
+                                {{#if (eq order.system.category "combat")}}
+                                <i class="fas fa-crosshairs"></i>
+                                {{else if (eq order.system.category "maneuver")}}
+                                <i class="fas fa-route"></i>
+                                {{else if (eq order.system.category "command")}}
+                                <i class="fas fa-bullhorn"></i>
+                                {{else if (eq order.system.category "support")}}
+                                <i class="fas fa-hands-helping"></i>
+                                {{else if (eq order.system.category "special")}}
+                                <i class="fas fa-star"></i>
+                                {{else}}
+                                <i class="fas fa-ship"></i>
+                                {{/if}}
+                                {{order.system.categoryLabel}}
+                            </span>
+                            <span class="rt-order-action">
+                                {{order.system.actionTypeLabel}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="rt-power-card-actions">
+                        <button type="button" class="rt-power-btn rt-btn-roll" data-action="rollOrder" data-item-id="{{order.id}}" title="Execute Order">
+                            <i class="fas fa-dice-d20"></i>
+                        </button>
+                        <button type="button" class="rt-power-btn rt-btn-chat" data-action="vocalizeOrder" data-item-id="{{order.id}}" title="Post to Chat">
+                            <i class="fas fa-comment"></i>
+                        </button>
+                        <button type="button" class="rt-power-btn rt-btn-expand" data-action="togglePowerDetails" data-item-id="{{order.id}}" title="Toggle Details">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                {{!-- Order Stats Row --}}
+                <div class="rt-power-stats">
+                    <div class="rt-power-stat">
+                        <span class="rt-stat-label">Test</span>
+                        <span class="rt-stat-value">{{order.system.testLabel}}</span>
+                    </div>
+                    <div class="rt-power-stat">
+                        <span class="rt-stat-label">Action</span>
+                        <span class="rt-stat-value">{{order.system.actionTypeLabel}}</span>
+                    </div>
+                </div>
+                
+                {{!-- Expandable Details --}}
+                <div class="rt-power-details" data-power-id="{{order.id}}" hidden>
+                    {{#if order.system.requirements}}
+                    <div class="rt-power-detail-section">
+                        <span class="rt-detail-heading"><i class="fas fa-list-check"></i> Requirements</span>
+                        <div class="rt-detail-content">{{{order.system.requirements}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if order.system.effect}}
+                    <div class="rt-power-detail-section rt-section-success">
+                        <span class="rt-detail-heading"><i class="fas fa-check-circle"></i> Effect</span>
+                        <div class="rt-detail-content">{{{order.system.effect}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if order.system.failure}}
+                    <div class="rt-power-detail-section rt-section-danger">
+                        <span class="rt-detail-heading"><i class="fas fa-exclamation-triangle"></i> Failure</span>
+                        <div class="rt-detail-content">{{{order.system.failure}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if order.system.description}}
+                    <div class="rt-power-detail-section">
+                        <span class="rt-detail-heading">Description</span>
+                        <div class="rt-detail-content">{{{order.system.description}}}</div>
+                    </div>
+                    {{/if}}
+                    <div class="rt-power-detail-actions">
+                        <button type="button" class="rt-detail-btn" data-action="itemEdit" data-item-id="{{order.id}}">
+                            <i class="fas fa-cog"></i> Edit
+                        </button>
+                        <button type="button" class="rt-detail-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{order.id}}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div class="rt-empty-state">
+                <i class="fas fa-ship"></i>
+                <p>No ship orders known</p>
+            </div>
+            {{/each}}
+        </div>
+        
+        {{!-- Add Order Dropzone --}}
+        <div class="rt-dropzone {{#if ordersCount}}rt-dropzone--compact{{/if}}" data-action="itemCreate" data-type="order">
+            <i class="fas fa-plus rt-dropzone-icon"></i>
+            <span class="rt-dropzone-text">{{#if ordersCount}}Drop or click to add{{else}}Drop Ship Order or Click to Create{{/if}}</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+{{!-- Psy Rating Panel V2 - Modern Psyker Control Center --}}
+<div class="rt-panel rt-panel-psy-rating">
+    <header class="rt-panel-header" data-action="togglePanel" data-panel-id="psy-rating">
+        <span class="rt-panel-title">
+            <i class="fas fa-brain"></i>
+            Psy Rating
+        </span>
+        <i class="fas fa-chevron-down rt-panel-toggle"></i>
+    </header>
+    <div class="rt-panel-body">
+        {{!-- Psy Rating Display --}}
+        <div class="rt-psy-display">
+            <div class="rt-psy-current">
+                <div class="rt-psy-value">
+                    <span class="rt-psy-number">{{system.psy.currentRating}}</span>
+                    <span class="rt-psy-label">Available PR</span>
+                </div>
+            </div>
+            <div class="rt-psy-stats">
+                <div class="rt-psy-stat">
+                    <label>
+                        <span class="rt-stat-label">Rating</span>
+                        <input type="number" name="system.psy.rating" value="{{system.psy.rating}}" min="0" max="10" class="rt-psy-input" data-dtype="Number" />
+                    </label>
+                </div>
+                <div class="rt-psy-stat">
+                    <label>
+                        <span class="rt-stat-label">Sustained</span>
+                        <input type="number" name="system.psy.sustained" value="{{system.psy.sustained}}" min="0" class="rt-psy-input" data-dtype="Number" />
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        {{!-- Psyker Details --}}
+        <div class="rt-psy-details">
+            <div class="rt-psy-detail-row">
+                <label class="rt-psy-detail">
+                    <span class="rt-detail-label">Psyker Type</span>
+                    <select name="system.psy.class" class="rt-psy-select">
+                        <option value="bound" {{#if (eq system.psy.class "bound")}}selected{{/if}}>Bound</option>
+                        <option value="unbound" {{#if (eq system.psy.class "unbound")}}selected{{/if}}>Unbound</option>
+                        <option value="ascended" {{#if (eq system.psy.class "ascended")}}selected{{/if}}>Ascended</option>
+                    </select>
+                </label>
+            </div>
+            <div class="rt-psy-detail-row">
+                <label class="rt-psy-checkbox-row">
+                    <input type="checkbox" name="system.psy.hasFocus" {{checked system.psy.hasFocus}} data-dtype="Boolean" class="rt-checkbox" />
+                    <span class="rt-checkbox-label">
+                        <i class="fas fa-gem"></i>
+                        Psy Focus
+                    </span>
+                </label>
+            </div>
+        </div>
+        
+        {{!-- Quick Actions --}}
+        <div class="rt-psy-actions">
+            <button type="button" class="rt-psy-action-btn" data-action="rollPhenomena" title="Roll Psychic Phenomena">
+                <i class="fas fa-bolt"></i>
+                <span>Phenomena</span>
+            </button>
+            <button type="button" class="rt-psy-action-btn rt-btn-danger" data-action="rollPerils" title="Roll Perils of the Warp">
+                <i class="fas fa-skull"></i>
+                <span>Perils</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -323,9 +323,15 @@ export default function EnhancedDragDropMixin(Base) {
             event.stopPropagation();
 
             const zone = event.currentTarget;
+            const zoneType = zone.dataset.dropZone;
             
-            // Check if this is a valid drop
-            if (zone.classList.contains("drop-valid")) {
+            // Add drag-over visual feedback
+            if (zoneType === "personal" || zoneType === "ship") {
+                zone.classList.add("rt-drag-over");
+                event.dataTransfer.dropEffect = "move";
+            }
+            // Check if this is a valid drop for equipment zones
+            else if (zone.classList.contains("drop-valid")) {
                 zone.classList.add("drop-hover");
                 event.dataTransfer.dropEffect = "move";
             } else if (zone.classList.contains("drop-invalid")) {
@@ -341,7 +347,9 @@ export default function EnhancedDragDropMixin(Base) {
          * @private
          */
         _onEnhancedDragLeave(event) {
-            event.currentTarget.classList.remove("drop-hover");
+            const zone = event.currentTarget;
+            zone.classList.remove("drop-hover");
+            zone.classList.remove("rt-drag-over");
         }
 
         /* -------------------------------------------- */
@@ -422,8 +430,43 @@ export default function EnhancedDragDropMixin(Base) {
             const zoneType = zone.dataset.dropZone;
             const slot = zone.dataset.slot;
 
+            // Handle ship/personal storage zone drops
+            if (zoneType === "personal") {
+                // If item is from compendium or another actor, create new item
+                if (item.actor?.id !== this.document.id) {
+                    const itemData = item.toObject();
+                    itemData.system.inShipStorage = false;
+                    itemData.system.equipped = false;
+                    await this.document.createEmbeddedDocuments("Item", [itemData]);
+                    if (this.flashElement) this.flashElement(zone, "success");
+                } else {
+                    // Move existing item to personal inventory (remove from ship)
+                    await item.update({ 
+                        "system.inShipStorage": false 
+                    });
+                    if (this.flashElement) this.flashElement(zone, "success");
+                }
+            } else if (zoneType === "ship") {
+                // If item is from compendium or another actor, create new item
+                if (item.actor?.id !== this.document.id) {
+                    const itemData = item.toObject();
+                    itemData.system.inShipStorage = true;
+                    itemData.system.equipped = false;
+                    itemData.system.inBackpack = false;
+                    await this.document.createEmbeddedDocuments("Item", [itemData]);
+                    if (this.flashElement) this.flashElement(zone, "success");
+                } else {
+                    // Move existing item to ship storage
+                    await item.update({ 
+                        "system.equipped": false,
+                        "system.inBackpack": false,
+                        "system.inShipStorage": true 
+                    });
+                    if (this.flashElement) this.flashElement(zone, "success");
+                }
+            }
             // Handle equipment slot drops
-            if (zoneType === "equipment") {
+            else if (zoneType === "equipment") {
                 await this._handleEquipmentDrop(item, slot);
             }
             // Handle general drops

@@ -1,4 +1,4 @@
-import { SYSTEM_ID } from '../hooks-manager.mjs';
+import { SYSTEM_ID } from '../constants.mjs';
 
 export const DH_CONTAINER_ID = 'nested';
 
