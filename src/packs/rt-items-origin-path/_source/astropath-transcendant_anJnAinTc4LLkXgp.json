@@ -1,14 +1,18 @@
 {
   "name": "Astropath Transcendant",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Career",
-    "descriptionText": "Sanctioned Psykers who allow for communication across the galaxy and who can bend reality with the power of the warp. (See Psychic Powers Page to choose Psychic Powers)\nSkills: Awareness, Common Lore (Adeptus Astra Telepathica), Forbidden Lore (Psykers), Invocation, Psyniscience, Scholastic Lore (Crytography), Speak Language (High Gothic, Low Gothic).\nTalents: Pistol Weapon Training (Universal), Heightened Senses (Sound), Psy Rating 2, Psychic Technique (x2)(200xp), Psychic Discipline (Telepathy). Psychic Technique (Astral Telepathy).\nGear: Best Laspistol or Best Stub Automatic, Best Mono-sword or Common Shock Staff, Guard Flak Armour, Charm, Void Suit, Microbead, Psy-Focus.\nSpecial Abilities: Soul-Bound: Gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test  to resist talents, psychic powers, abilities, or other effects from a daemon. Roll additional d10 when rolling Perils of the Warp, then discard one of choice. See Without Eyes: Are blind, see with psychic senses, ignore effects that target vision such as blind grenades or cameleoline, cannot see Untouchables. Power of Fate: Can spend 1 Fate Point to add +1 to Psy Rating for a single Focus Power Test.",
-    "effects": "Sanctioned Psykers who allow for communication across the galaxy and who can bend reality with the power of the warp. (See Psychic Powers Page to choose Psychic Powers)\nSkills: Awareness, Common Lore (Adeptus Astra Telepathica), Forbidden Lore (Psykers), Invocation, Psyniscience, Scholastic Lore (Crytography), Speak Language (High Gothic, Low Gothic).\nTalents: Pistol Weapon Training (Universal), Heightened Senses (Sound), Psy Rating 2, Psychic Technique (x2)(200xp), Psychic Discipline (Telepathy). Psychic Technique (Astral Telepathy).\nGear: Best Laspistol or Best Stub Automatic, Best Mono-sword or Common Shock Staff, Guard Flak Armour, Charm, Void Suit, Microbead, Psy-Focus.\nSpecial Abilities: Soul-Bound: Gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test  to resist talents, psychic powers, abilities, or other effects from a daemon. Roll additional d10 when rolling Perils of the Warp, then discard one of choice. See Without Eyes: Are blind, see with psychic senses, ignore effects that target vision such as blind grenades or cameleoline, cannot see Untouchables. Power of Fate: Can spend 1 Fate Point to add +1 to Psy Rating for a single Focus Power Test.",
-    "source": "Character Creation (sheet)",
+    "identifier": "astropath-transcendant",
+    "step": "career",
+    "stepIndex": 6,
     "description": {
       "value": "<p>Sanctioned Psykers who allow for communication across the galaxy and who can bend reality with the power of the warp. (See Psychic Powers Page to choose Psychic Powers)<br>Skills: Awareness, Common Lore (Adeptus Astra Telepathica), Forbidden Lore (Psykers), Invocation, Psyniscience, Scholastic Lore (Crytography), Speak Language (High Gothic, Low Gothic).<br>Talents: Pistol Weapon Training (Universal), Heightened Senses (Sound), Psy Rating 2, Psychic Technique (x2)(200xp), Psychic Discipline (Telepathy). Psychic Technique (Astral Telepathy).<br>Gear: Best Laspistol or Best Stub Automatic, Best Mono-sword or Common Shock Staff, Guard Flak Armour, Charm, Void Suit, Microbead, Psy-Focus.<br>Special Abilities: Soul-Bound: Gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test  to resist talents, psychic powers, abilities, or other effects from a daemon. Roll additional d10 when rolling Perils of the Warp, then discard one of choice. See Without Eyes: Are blind, see with psychic senses, ignore effects that target vision such as blind grenades or cameleoline, cannot see Untouchables. Power of Fate: Can spend 1 Fate Point to add +1 to Psy Rating for a single Focus Power Test.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Career",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,117 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Awareness",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore (Adeptus Astra Telepathica)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Forbidden Lore (Psykers)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Invocation",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Psyniscience",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Scholastic Lore (Crytography)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Speak Language (High Gothic",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Low Gothic)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Universal",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "s: Pistol Weapon Training",
+          "specialization": "Universal",
+          "uuid": ""
+        },
+        {
+          "name": "Heightened Senses",
+          "specialization": "Sound",
+          "uuid": ""
+        },
+        {
+          "name": "Psy Rating 2",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "Psychic Technique",
+          "specialization": "x2",
+          "uuid": ""
+        },
+        {
+          "name": "Psychic Discipline",
+          "specialization": "Telepathy",
+          "uuid": ""
+        },
+        {
+          "name": "psychic powers",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "abilities",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "or other effects from a daemon",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Special Ability",
+          "description": "Abilities: Soul-Bound: Gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test  to resist talents, psychic powers, abilities, or other effects from a daemon. Roll additional d10 when rolling Perils of the Warp, then discard one of choice"
+        }
+      ],
+      "choices": []
+    },
+    "effectText": "Sanctioned Psykers who allow for communication across the galaxy and who can bend reality with the power of the warp. (See Psychic Powers Page to choose Psychic Powers)\nSkills: Awareness, Common Lore (Adeptus Astra Telepathica), Forbidden Lore (Psykers), Invocation, Psyniscience, Scholastic Lore (Crytography), Speak Language (High Gothic, Low Gothic).\nTalents: Pistol Weapon Training (Universal), Heightened Senses (Sound), Psy Rating 2, Psychic Technique (x2)(200xp), Psychic Discipline (Telepathy). Psychic Technique (Astral Telepathy).\nGear: Best Laspistol or Best Stub Automatic, Best Mono-sword or Common Shock Staff, Guard Flak Armour, Charm, Void Suit, Microbead, Psy-Focus.\nSpecial Abilities: Soul-Bound: Gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test  to resist talents, psychic powers, abilities, or other effects from a daemon. Roll additional d10 when rolling Perils of the Warp, then discard one of choice. See Without Eyes: Are blind, see with psychic senses, ignore effects that target vision such as blind grenades or cameleoline, cannot see Untouchables. Power of Fate: Can spend 1 Fate Point to add +1 to Psy Rating for a single Focus Power Test.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.career",
-      "step": "Career",
-      "stepIndex": 6,
-      "number": "1"
-    }
-  },
+  "flags": {},
   "_id": "anJnAinTc4LLkXgp"
 }

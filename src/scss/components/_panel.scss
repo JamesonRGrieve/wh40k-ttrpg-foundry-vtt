@@ -1,6 +1,9 @@
 // ============================================
 // Panel Component System
 // ============================================
+// NOTE: This file contains LEGACY panel styles for backwards compatibility
+// The canonical .rt-panel definition is in abstracts/_unified-components.scss
+// DO NOT use these legacy styles in new code
 
 .rt-controls {
     button {
@@ -9,8 +12,11 @@
     }
 }
 
+// LEGACY: Old .rt-panel style with border images (pre-V2)
+// This is kept for backwards compatibility with old templates only
+// DO NOT use in new templates - use the unified .rt-panel from _unified-components.scss
 //noinspection CssUnknownTarget
-.rt-panel {
+.rt-panel-legacy {
     position: relative;
     padding: 2px;
 

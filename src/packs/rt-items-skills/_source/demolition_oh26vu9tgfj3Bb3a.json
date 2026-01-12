@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Safely employing explosives to achieve a desired effect, such as cutting through bulkheads, destroying targets without collatoral damage, etc. Diffusing Explosives left by others, and manufacturing explosives, fuses, and blasting caps from component materials.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "skillType": "advanced",
     "aptitudes": [],
     "source": ""

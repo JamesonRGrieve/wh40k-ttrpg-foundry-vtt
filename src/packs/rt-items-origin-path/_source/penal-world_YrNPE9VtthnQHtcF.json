@@ -1,14 +1,18 @@
 {
   "name": "Penal World",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Home World",
-    "descriptionText": "-5 Willpower, +5 Perception, +5 Toughness, -5 Fellowship. Gain Security as Untrained Basic Skill and either Deceive or Intimidate as Trained Skill. Gain Peer (Underworld) and Light Sleeper Talents. When making Acquisiton Tests, once per session can improve availability by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity. List: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military",
-    "effects": "-5 Willpower, +5 Perception, +5 Toughness, -5 Fellowship. Gain Security as Untrained Basic Skill and either Deceive or Intimidate as Trained Skill. Gain Peer (Underworld) and Light Sleeper Talents. When making Acquisiton Tests, once per session can improve availability by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity. List: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military",
-    "source": "Character Creation (sheet)",
+    "identifier": "penal-world",
+    "step": "homeWorld",
+    "stepIndex": 1,
     "description": {
       "value": "<p>-5 Willpower, +5 Perception, +5 Toughness, -5 Fellowship. Gain Security as Untrained Basic Skill and either Deceive or Intimidate as Trained Skill. Gain Peer (Underworld) and Light Sleeper Talents. When making Acquisiton Tests, once per session can improve availability by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity. List: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Home World",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,61 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Security as Untrained Basic",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Peer (Underworld)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Light Sleeper",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d5 Insanity",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Special Ability",
+          "description": "by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity"
+        }
+      ],
+      "choices": [
+        {
+          "type": "skill",
+          "label": "Choose from: Deceive, Intimidate as Trained Skill",
+          "options": [
+            "Deceive",
+            "Intimidate as Trained Skill"
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "effectText": "-5 Willpower, +5 Perception, +5 Toughness, -5 Fellowship. Gain Security as Untrained Basic Skill and either Deceive or Intimidate as Trained Skill. Gain Peer (Underworld) and Light Sleeper Talents. When making Acquisiton Tests, once per session can improve availability by one level (up to Abundant) via criminal ties. Suffer -20 on Interaction tests with groups in Noted List if homeworld is known to them, and gain 1d5 Insanity. List: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.home-world",
-      "step": "Home World",
-      "stepIndex": 1,
-      "number": "5"
-    }
-  },
+  "flags": {},
   "_id": "YrNPE9VtthnQHtcF"
 }

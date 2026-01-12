@@ -469,91 +469,9 @@
 // ============================================
 // DROP ZONES
 // ============================================
+// NOTE: Core .rt-dropzone definitions are in _unified-components.scss
+// No overrides needed here - using unified styles
 
-.rt-dropzone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-lg;
-  background: repeating-linear-gradient(
-    45deg,
-    rgba($rt-accent-gold, 0.03),
-    rgba($rt-accent-gold, 0.03) 10px,
-    rgba($rt-accent-gold, 0.08) 10px,
-    rgba($rt-accent-gold, 0.08) 20px
-  );
-  border: 2px dashed rgba($rt-accent-gold, 0.3);
-  border-radius: $rt-radius-md;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-height: 80px;
-  
-  &:hover {
-    background: repeating-linear-gradient(
-      45deg,
-      rgba($rt-accent-gold, 0.08),
-      rgba($rt-accent-gold, 0.08) 10px,
-      rgba($rt-accent-gold, 0.15) 10px,
-      rgba($rt-accent-gold, 0.15) 20px
-    );
-    border-color: rgba($rt-accent-gold, 0.5);
-  }
-}
-
-.rt-dropzone-small {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $rt-space-xs;
-  padding: $rt-space-xs $rt-space-sm;
-  margin-top: $rt-space-sm;
-  background: rgba($rt-accent-gold, 0.05);
-  border: 1px dashed rgba($rt-accent-gold, 0.25);
-  border-radius: $rt-radius-sm;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.8rem;
-  color: $rt-text-muted;
-  
-  i {
-    font-size: 0.85rem;
-    color: rgba($rt-accent-gold, 0.6);
-  }
-  
-  &:hover {
-    background: rgba($rt-accent-gold, 0.1);
-    border-color: rgba($rt-accent-gold, 0.4);
-    color: var(--color-text-secondary);
-    
-    i {
-      color: $rt-accent-gold;
-    }
-  }
-}
-
-.rt-dropzone-icon {
-  font-size: 2rem;
-  color: rgba($rt-accent-gold, 0.5);
-  transition: all 0.3s ease;
-  
-  .rt-dropzone:hover & {
-    color: $rt-accent-gold;
-    transform: scale(1.1);
-  }
-}
-
-.rt-dropzone-text {
-  font-size: $rt-font-size-sm;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  text-align: center;
-  
-  .rt-dropzone:hover & {
-    color: var(--color-text-primary);
-  }
-}
 
 // ============================================
 // ALL ITEMS INVENTORY PANEL

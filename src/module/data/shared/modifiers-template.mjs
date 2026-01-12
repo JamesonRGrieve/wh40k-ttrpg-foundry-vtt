@@ -39,7 +39,36 @@ export default class ModifiersTemplate extends SystemDataModel {
             })
           }),
           { required: true, initial: [] }
-        )
+        ),
+        situational: new fields.SchemaField({
+          characteristics: new fields.ArrayField(
+            new fields.SchemaField({
+              key: new fields.StringField({ required: true }),
+              value: new fields.NumberField({ required: true, initial: 0 }),
+              condition: new fields.StringField({ required: true }),
+              icon: new fields.StringField({ required: false, initial: "fa-exclamation-triangle" })
+            }),
+            { required: true, initial: [] }
+          ),
+          skills: new fields.ArrayField(
+            new fields.SchemaField({
+              key: new fields.StringField({ required: true }),
+              value: new fields.NumberField({ required: true, initial: 0 }),
+              condition: new fields.StringField({ required: true }),
+              icon: new fields.StringField({ required: false, initial: "fa-exclamation-triangle" })
+            }),
+            { required: true, initial: [] }
+          ),
+          combat: new fields.ArrayField(
+            new fields.SchemaField({
+              key: new fields.StringField({ required: true }),
+              value: new fields.NumberField({ required: true, initial: 0 }),
+              condition: new fields.StringField({ required: true }),
+              icon: new fields.StringField({ required: false, initial: "fa-exclamation-triangle" })
+            }),
+            { required: true, initial: [] }
+          )
+        })
       })
     };
   }
@@ -57,6 +86,9 @@ export default class ModifiersTemplate extends SystemDataModel {
     if ( Object.values(mods.combat).some(v => v !== 0) ) return true;
     if ( Object.values(mods.resources).some(v => v !== 0) ) return true;
     if ( mods.other?.length ) return true;
+    if ( mods.situational?.characteristics?.length ) return true;
+    if ( mods.situational?.skills?.length ) return true;
+    if ( mods.situational?.combat?.length ) return true;
     return false;
   }
 
@@ -149,5 +181,31 @@ export default class ModifiersTemplate extends SystemDataModel {
     }
 
     return list;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Get situational modifiers as a structured list.
+   * @type {object}
+   */
+  get situationalModifiers() {
+    const situational = this.modifiers.situational || {};
+    return {
+      characteristics: situational.characteristics || [],
+      skills: situational.skills || [],
+      combat: situational.combat || []
+    };
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Check if this item has any situational modifiers.
+   * @type {boolean}
+   */
+  get hasSituationalModifiers() {
+    const sit = this.situationalModifiers;
+    return sit.characteristics.length > 0 || sit.skills.length > 0 || sit.combat.length > 0;
   }
 }

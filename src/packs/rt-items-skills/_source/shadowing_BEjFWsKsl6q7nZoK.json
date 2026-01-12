@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Following other people, vehicles, or starships on the move while remaining out of sight, contrasts Concealment due to movement and blending in. </p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "skillType": "advanced",
     "aptitudes": [],
     "source": ""

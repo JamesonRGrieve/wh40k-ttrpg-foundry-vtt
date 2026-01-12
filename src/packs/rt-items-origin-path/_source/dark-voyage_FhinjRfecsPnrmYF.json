@@ -1,14 +1,18 @@
 {
   "name": "Dark Voyage",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Trials and Travails",
-    "descriptionText": "Gain a single Trained Forbidden Lore Skill related to your experiences in a Dark and Traumatic Voyage (or increase that skill by one level), or gain Resistance (Fear).\nGain 1d5 Insanity from whatever traumatic even haunts you.",
-    "effects": "Gain a single Trained Forbidden Lore Skill related to your experiences in a Dark and Traumatic Voyage (or increase that skill by one level), or gain Resistance (Fear).\nGain 1d5 Insanity from whatever traumatic even haunts you.",
-    "source": "Character Creation (sheet)",
+    "identifier": "dark-voyage",
+    "step": "trialsAndTravails",
+    "stepIndex": 4,
     "description": {
       "value": "<p>Gain a single Trained Forbidden Lore Skill related to your experiences in a Dark and Traumatic Voyage (or increase that skill by one level), or gain Resistance (Fear).<br>Gain 1d5 Insanity from whatever traumatic even haunts you.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Trials and Travails",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,36 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "a single Trained Forbidden Lore",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Resistance (Fear)",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "Gain a single Trained Forbidden Lore Skill related to your experiences in a Dark and Traumatic Voyage (or increase that skill by one level), or gain Resistance (Fear).\nGain 1d5 Insanity from whatever traumatic even haunts you.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.trials-and-travails",
-      "step": "Trials and Travails",
-      "stepIndex": 4,
-      "number": "5"
-    }
-  },
+  "flags": {},
   "_id": "FhinjRfecsPnrmYF"
 }

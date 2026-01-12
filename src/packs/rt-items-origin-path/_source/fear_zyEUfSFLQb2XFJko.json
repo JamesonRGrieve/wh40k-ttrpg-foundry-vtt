@@ -1,14 +1,18 @@
 {
   "name": "Fear",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Motivation",
-    "descriptionText": "1. Enemy in Ascendance (100xp): +3 Perception. Gain Paranoia Talent.\n2. Haunted by thy own Sins (300xp): Gain Dark Soul, Frenzy, and Flagellant Talents. Gain one Untrained Forbidden Lore Skill. Gain 1d10 Corruption.\n3. Tormented by the Unspeakable (200xp): Gain Light Sleeper, Jaded, and Resistance (Fear) Talents. Gain 2d10 Insanity.",
-    "effects": "1. Enemy in Ascendance (100xp): +3 Perception. Gain Paranoia Talent.\n2. Haunted by thy own Sins (300xp): Gain Dark Soul, Frenzy, and Flagellant Talents. Gain one Untrained Forbidden Lore Skill. Gain 1d10 Corruption.\n3. Tormented by the Unspeakable (200xp): Gain Light Sleeper, Jaded, and Resistance (Fear) Talents. Gain 2d10 Insanity.",
-    "source": "Character Creation (sheet)",
+    "identifier": "fear",
+    "step": "motivation",
+    "stepIndex": 5,
     "description": {
       "value": "<p>1. Enemy in Ascendance (100xp): +3 Perception. Gain Paranoia Talent.<br>2. Haunted by thy own Sins (300xp): Gain Dark Soul, Frenzy, and Flagellant Talents. Gain one Untrained Forbidden Lore Skill. Gain 1d10 Corruption.<br>3. Tormented by the Unspeakable (200xp): Gain Light Sleeper, Jaded, and Resistance (Fear) Talents. Gain 2d10 Insanity.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Motivation",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -31,17 +35,76 @@
       ],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Paranoia",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Dark Soul",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Frenzy",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Flagellant",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "one Untrained Forbidden Lore",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d10 Corruption",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Light Sleeper",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Jaded",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Resistance (Fear)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "2d10 Insanity",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "1. Enemy in Ascendance (100xp): +3 Perception. Gain Paranoia Talent.\n2. Haunted by thy own Sins (300xp): Gain Dark Soul, Frenzy, and Flagellant Talents. Gain one Untrained Forbidden Lore Skill. Gain 1d10 Corruption.\n3. Tormented by the Unspeakable (200xp): Gain Light Sleeper, Jaded, and Resistance (Fear) Talents. Gain 2d10 Insanity.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.motivation",
-      "step": "Motivation",
-      "stepIndex": 5,
-      "number": "Any"
-    }
-  },
+  "flags": {},
   "_id": "zyEUfSFLQb2XFJko"
 }

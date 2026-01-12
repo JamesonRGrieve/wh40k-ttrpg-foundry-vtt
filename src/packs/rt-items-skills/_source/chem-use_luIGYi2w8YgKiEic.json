@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Identifying, Handling, and preparing of Chemicals, Toxins, Poisons, and Drugs. (Does not cover creating or combining them, that would be Trade (Chymist). </p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "skillType": "advanced",
     "aptitudes": [],
     "source": ""

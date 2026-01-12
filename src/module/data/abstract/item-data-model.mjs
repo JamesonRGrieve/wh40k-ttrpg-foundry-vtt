@@ -82,6 +82,26 @@ export default class ItemDataModel extends SystemDataModel {
   static migrateData(source) {
     // Handle common legacy field patterns
     
+    // V13: Validate and clean img field - ensure valid file extension
+    if (source.img) {
+      const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'];
+      const hasValidExtension = validExtensions.some(ext => source.img.toLowerCase().endsWith(ext));
+      if (!hasValidExtension) {
+        // Invalid or missing extension - use default icons
+        const defaultIcons = {
+          weapon: 'icons/svg/sword.svg',
+          armour: 'icons/svg/shield.svg',
+          gear: 'icons/svg/item-bag.svg',
+          talent: 'icons/svg/book.svg',
+          trait: 'icons/svg/blood.svg',
+          psychicPower: 'icons/svg/lightning.svg',
+          skill: 'icons/svg/target.svg'
+        };
+        // Use type-specific default or generic mystery-man
+        source.img = defaultIcons[source.type] || 'icons/svg/mystery-man.svg';
+      }
+    }
+    
     // Migrate flat description string to object structure
     if ( typeof source.description === "string" ) {
       source.description = { 

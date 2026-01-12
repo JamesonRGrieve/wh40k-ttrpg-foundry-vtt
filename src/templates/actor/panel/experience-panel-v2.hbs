@@ -49,7 +49,7 @@
 
             {{!-- Available XP Box --}}
             <div class="rt-xp-available-box">
-                <span class="rt-xp-available-value">{{actor.system.experience.available}}</span>
+                <span class="rt-xp-available-value">{{system.experience.available}}</span>
                 <span class="rt-xp-available-label">Available</span>
             </div>
 
@@ -58,7 +58,7 @@
 
             {{!-- Spent XP --}}
             <div class="rt-xp-inline-stat">
-                <span class="rt-xp-inline-value">{{actor.system.experience.used}}</span>
+                <span class="rt-xp-inline-value">{{system.experience.used}}</span>
                 <span class="rt-xp-inline-label">Spent</span>
             </div>
 
@@ -67,7 +67,7 @@
 
             {{!-- Total XP --}}
             <div class="rt-xp-inline-stat">
-                <span class="rt-xp-inline-value">{{actor.system.experience.total}}</span>
+                <span class="rt-xp-inline-value">{{system.experience.total}}</span>
                 <span class="rt-xp-inline-label">Total</span>
             </div>
 
@@ -95,7 +95,7 @@
                                data-dtype="Number"
                                class="rt-edit-input"
                                name="system.experience.total"
-                               value="{{actor.system.experience.total}}"
+                               value="{{system.experience.total}}"
                                min="0"
                                placeholder="0" />
                     </label>
@@ -106,9 +106,9 @@
                                data-dtype="Number"
                                class="rt-edit-input"
                                name="system.experience.used"
-                               value="{{actor.system.experience.used}}"
+                               value="{{system.experience.used}}"
                                min="0"
-                               max="{{actor.system.experience.total}}"
+                               max="{{system.experience.total}}"
                                placeholder="0" />
                     </label>
                 </div>

@@ -1,14 +1,18 @@
 {
   "name": "Scapegrace",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Birthright",
-    "descriptionText": "+3 Intelligence or +3 Perception. Gain Sleight of Hand as Trained Skill. Gain 1d5 Corruption or 1d5 Insanity.",
-    "effects": "+3 Intelligence or +3 Perception. Gain Sleight of Hand as Trained Skill. Gain 1d5 Corruption or 1d5 Insanity.",
-    "source": "Character Creation (sheet)",
+    "identifier": "scapegrace",
+    "step": "birthright",
+    "stepIndex": 2,
     "description": {
       "value": "<p>+3 Intelligence or +3 Perception. Gain Sleight of Hand as Trained Skill. Gain 1d5 Corruption or 1d5 Insanity.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Birthright",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,36 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Sleight of Hand as Trained",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d5 Corruption or 1d5 Insanity",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "+3 Intelligence or +3 Perception. Gain Sleight of Hand as Trained Skill. Gain 1d5 Corruption or 1d5 Insanity.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.birthright",
-      "step": "Birthright",
-      "stepIndex": 2,
-      "number": "2"
-    }
-  },
+  "flags": {},
   "_id": "VpkONuWQfxGpzMCp"
 }

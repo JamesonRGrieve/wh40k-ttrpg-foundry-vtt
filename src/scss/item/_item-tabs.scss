@@ -1,0 +1,112 @@
+// ============================================
+// Shared Item Tab System
+// ============================================
+// Universal tab styling for all modern item sheets
+// Based on weapon sheet tab pattern
+
+// ============================================
+// TAB NAVIGATION BAR
+// ============================================
+
+.rt-talent-tabs,
+.rt-trait-tabs,
+.rt-origin-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 12px;
+  background: var(--rt-panel-bg-solid);
+  border-bottom: 1px solid var(--rt-border-color);
+  flex-shrink: 0;
+}
+
+.rt-talent-tab,
+.rt-trait-tab,
+.rt-origin-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--rt-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 0.9rem;
+  }
+  
+  &:hover {
+    color: var(--rt-text-dark);
+    background: var(--rt-panel-bg-translucent);
+  }
+  
+  &.active {
+    // Color variants handled by parent sheet classes
+    border-bottom-color: currentColor;
+  }
+}
+
+// Item type specific active states
+.rt-talent-tab.active {
+  color: var(--rt-talents-primary);
+  background: var(--rt-talents-bg);
+}
+
+.rt-trait-tab.active {
+  color: var(--rt-traits-primary);
+  background: var(--rt-traits-bg);
+}
+
+.rt-origin-tab.active {
+  color: var(--rt-dynasty-primary);
+  background: var(--rt-dynasty-bg);
+}
+
+// ============================================
+// TAB CONTENT CONTAINER
+// ============================================
+
+.rt-talent-content,
+.rt-trait-content,
+.rt-origin-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  min-height: 0;
+  
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--rt-panel-bg);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--rt-border-color);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--rt-gold-dark);
+    }
+  }
+}
+
+// ============================================
+// TAB PANELS
+// ============================================
+
+.rt-talent-panel,
+.rt-trait-panel,
+.rt-origin-panel {
+  display: none;
+  
+  &.active {
+    display: block;
+  }
+}

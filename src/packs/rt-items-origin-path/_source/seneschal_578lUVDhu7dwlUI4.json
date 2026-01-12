@@ -1,14 +1,18 @@
 {
   "name": "Seneschal",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Career",
-    "descriptionText": "Keeper of knowledge, subtle investigators and spymasters. They act as eyes, ears, contacts, and dealers of business legal or not.\nSkills: Barter, Commerce, Common Lore (Underworld), Deceive, Evaluate, Forbidden Lore (Archeotech), Inquiry, Literacy, Speak Language (Low Gothic, Trader's Cant)\nTalents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal).\nGear: Best Hellpistol or Common Inferno Pistol, Best Hellgun or common Boltgun, Xeno-mesh Armour, Autoquill, Dataslate, Micro-bead, Multikey, two robes, synskin, chrono, cameleoline cloak.\nSpecial Ability: Seeker of Lore: Can spend a Fate Point to automatically suceed Ciphers, Lore, or Logic Test. Doing so resolves the test in the minimum time required, the character adds one Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.",
-    "effects": "Keeper of knowledge, subtle investigators and spymasters. They act as eyes, ears, contacts, and dealers of business legal or not.\nSkills: Barter, Commerce, Common Lore (Underworld), Deceive, Evaluate, Forbidden Lore (Archeotech), Inquiry, Literacy, Speak Language (Low Gothic, Trader's Cant)\nTalents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal).\nGear: Best Hellpistol or Common Inferno Pistol, Best Hellgun or common Boltgun, Xeno-mesh Armour, Autoquill, Dataslate, Micro-bead, Multikey, two robes, synskin, chrono, cameleoline cloak.\nSpecial Ability: Seeker of Lore: Can spend a Fate Point to automatically suceed Ciphers, Lore, or Logic Test. Doing so resolves the test in the minimum time required, the character adds one Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.",
-    "source": "Character Creation (sheet)",
+    "identifier": "seneschal",
+    "step": "career",
+    "stepIndex": 6,
     "description": {
       "value": "<p>Keeper of knowledge, subtle investigators and spymasters. They act as eyes, ears, contacts, and dealers of business legal or not.<br>Skills: Barter, Commerce, Common Lore (Underworld), Deceive, Evaluate, Forbidden Lore (Archeotech), Inquiry, Literacy, Speak Language (Low Gothic, Trader&#x27;s Cant)<br>Talents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal).<br>Gear: Best Hellpistol or Common Inferno Pistol, Best Hellgun or common Boltgun, Xeno-mesh Armour, Autoquill, Dataslate, Micro-bead, Multikey, two robes, synskin, chrono, cameleoline cloak.<br>Special Ability: Seeker of Lore: Can spend a Fate Point to automatically suceed Ciphers, Lore, or Logic Test. Doing so resolves the test in the minimum time required, the character adds one Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Career",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,102 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Barter",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Commerce",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore (Underworld)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Deceive",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Evaluate",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Forbidden Lore (Archeotech)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Inquiry",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Literacy",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Speak Language (Low Gothic",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Trader&#x27",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "s Cant)<br>",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Universal",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "s: Basic Weapon Training",
+          "specialization": "Universal",
+          "uuid": ""
+        },
+        {
+          "name": "Pistol Weapon Training",
+          "specialization": "Universal",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Special Ability",
+          "description": "Seeker of Lore: Can spend a Fate Point to automatically suceed Ciphers, Lore, or Logic Test. Doing so resolves the test in the minimum time required, the character adds one Degree of Success to any successful Commerce, Inquiry, or Evaluate Test"
+        }
+      ],
+      "choices": []
+    },
+    "effectText": "Keeper of knowledge, subtle investigators and spymasters. They act as eyes, ears, contacts, and dealers of business legal or not.\nSkills: Barter, Commerce, Common Lore (Underworld), Deceive, Evaluate, Forbidden Lore (Archeotech), Inquiry, Literacy, Speak Language (Low Gothic, Trader's Cant)\nTalents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal).\nGear: Best Hellpistol or Common Inferno Pistol, Best Hellgun or common Boltgun, Xeno-mesh Armour, Autoquill, Dataslate, Micro-bead, Multikey, two robes, synskin, chrono, cameleoline cloak.\nSpecial Ability: Seeker of Lore: Can spend a Fate Point to automatically suceed Ciphers, Lore, or Logic Test. Doing so resolves the test in the minimum time required, the character adds one Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.career",
-      "step": "Career",
-      "stepIndex": 6,
-      "number": "6"
-    }
-  },
+  "flags": {},
   "_id": "578lUVDhu7dwlUI4"
 }

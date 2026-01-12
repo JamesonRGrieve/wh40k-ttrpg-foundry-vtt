@@ -1,0 +1,42 @@
+{{!-- Item Header - Talent/Trait/Condition Style
+     Compact header for non-physical items with image + name + type badge
+--}}
+<header class="rt-item-header rt-item-header--talent">
+  <div class="rt-item-header__image" data-action="editImage" data-edit="img">
+    <img src="{{item.img}}" alt="{{item.name}}" />
+    <div class="rt-item-header__image-overlay">
+      <i class="fas fa-edit"></i>
+    </div>
+  </div>
+  
+  <div class="rt-item-header__info">
+    <input type="text" 
+           class="rt-item-header__name" 
+           name="name" 
+           value="{{item.name}}" 
+           placeholder="{{localize 'RT.Item.NamePlaceholder'}}" />
+    
+    <div class="rt-item-header__meta">
+      {{!-- Item Type Badge --}}
+      <span class="rt-badge rt-badge--type" title="{{localize (concat 'TYPES.Item.' item.type)}}">
+        <i class="fas {{item.icon}}"></i>
+        {{localize (concat "TYPES.Item." item.type)}}
+      </span>
+      
+      {{!-- Additional type-specific badges can be added here by child templates --}}
+      {{#if system.tier}}
+      <span class="rt-badge rt-badge--tier" title="Tier {{system.tier}}">
+        <i class="fas fa-layer-group"></i>
+        T{{system.tier}}
+      </span>
+      {{/if}}
+      
+      {{#if system.category}}
+      <span class="rt-badge rt-badge--category" title="{{system.category}}">
+        <i class="fas fa-tag"></i>
+        {{system.category}}
+      </span>
+      {{/if}}
+    </div>
+  </div>
+</header>

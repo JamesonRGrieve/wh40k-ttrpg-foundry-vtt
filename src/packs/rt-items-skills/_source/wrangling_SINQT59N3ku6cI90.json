@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Taming, Training, and riding of animals for any purpose the user wishes. Not useful for Cybernetic, Psy-Bonded, or Sapient Animals.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "skillType": "advanced",
     "aptitudes": [],
     "source": ""

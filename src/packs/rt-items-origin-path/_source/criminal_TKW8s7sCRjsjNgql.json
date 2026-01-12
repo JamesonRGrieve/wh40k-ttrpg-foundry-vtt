@@ -1,14 +1,18 @@
 {
   "name": "Criminal",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Lure of the Void",
-    "descriptionText": "1. Wanted Fugitive: Gain Enemy (Adeptus Arbites) and Peer (Underworld) Talents\n2. Hunted by a Crime Baron: +3 Perception. Gain Enemy (Underworld) Talent\n3. Judged and Found Wanting: -5 Fellowship. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).",
-    "effects": "1. Wanted Fugitive: Gain Enemy (Adeptus Arbites) and Peer (Underworld) Talents\n2. Hunted by a Crime Baron: +3 Perception. Gain Enemy (Underworld) Talent\n3. Judged and Found Wanting: -5 Fellowship. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).",
-    "source": "Character Creation (sheet)",
+    "identifier": "criminal",
+    "step": "lureOfTheVoid",
+    "stepIndex": 3,
     "description": {
       "value": "<p>1. Wanted Fugitive: Gain Enemy (Adeptus Arbites) and Peer (Underworld) Talents<br>2. Hunted by a Crime Baron: +3 Perception. Gain Enemy (Underworld) Talent<br>3. Judged and Found Wanting: -5 Fellowship. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Lure of the Void",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -31,17 +35,57 @@
       ],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Enemy (Adeptus Arbites)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Peer (Underworld)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Enemy (Underworld)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "or 300xp for Good)",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "s<br>2",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "<br>3",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "1. Wanted Fugitive: Gain Enemy (Adeptus Arbites) and Peer (Underworld) Talents\n2. Hunted by a Crime Baron: +3 Perception. Gain Enemy (Underworld) Talent\n3. Judged and Found Wanting: -5 Fellowship. Gain one Poor Craftsmanship Bionic Limb or Implant (Spend 200xp to upgrade to Common, or 300xp for Good).",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.lure-of-the-void",
-      "step": "Lure of the Void",
-      "stepIndex": 3,
-      "number": "2"
-    }
-  },
+  "flags": {},
   "_id": "TKW8s7sCRjsjNgql"
 }

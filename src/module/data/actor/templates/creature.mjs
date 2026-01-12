@@ -19,14 +19,16 @@ export default class CreatureTemplate extends CommonTemplate {
    * Skill schema factory for standard and specialist skills.
    * @param {string} label - Display label
    * @param {string} charShort - Characteristic short name
-   * @param {boolean} hasEntries - Whether skill has specialist entries
+   * @param {boolean} advanced - Whether skill is Advanced (true) or Basic (false)
+   * @param {boolean} hasEntries - Whether skill has specialist entries (skill group)
    * @returns {SchemaField}
    */
-  static SkillField(label, charShort, hasEntries = false) {
+  static SkillField(label, charShort, advanced = false, hasEntries = false) {
     const schema = {
       label: new StringField({ required: true, initial: label }),
       characteristic: new StringField({ required: true, initial: charShort }),
-      basic: new BooleanField({ required: true, initial: false }),
+      advanced: new BooleanField({ required: true, initial: advanced }),
+      basic: new BooleanField({ required: true, initial: !advanced }),
       trained: new BooleanField({ required: true, initial: false }),
       plus10: new BooleanField({ required: true, initial: false }),
       plus20: new BooleanField({ required: true, initial: false }),
@@ -44,7 +46,8 @@ export default class CreatureTemplate extends CommonTemplate {
           name: new StringField({ required: true }),
           slug: new StringField({ required: false }),
           characteristic: new StringField({ required: false }),
-          basic: new BooleanField({ required: true, initial: false }),
+          advanced: new BooleanField({ required: true, initial: advanced }),
+          basic: new BooleanField({ required: true, initial: !advanced }),
           trained: new BooleanField({ required: true, initial: false }),
           plus10: new BooleanField({ required: true, initial: false }),
           plus20: new BooleanField({ required: true, initial: false }),
@@ -95,62 +98,64 @@ export default class CreatureTemplate extends CommonTemplate {
         })
       }),
 
-      // Skills
+      // Skills - Type: Basic=false, Advanced=true per SKILL_TABLE.md
       skills: new SchemaField({
-        acrobatics: this.SkillField("Acrobatics", "Ag"),
-        awareness: this.SkillField("Awareness", "Per"),
-        barter: this.SkillField("Barter", "Fel"),
-        blather: this.SkillField("Blather", "Fel"),
-        carouse: this.SkillField("Carouse", "T"),
-        charm: this.SkillField("Charm", "Fel"),
-        chemUse: this.SkillField("Chem-Use", "Int"),
-        ciphers: this.SkillField("Ciphers", "Int"),
-        climb: this.SkillField("Climb", "S"),
-        command: this.SkillField("Command", "Fel"),
-        commerce: this.SkillField("Commerce", "Fel"),
-        concealment: this.SkillField("Concealment", "Ag"),
-        contortionist: this.SkillField("Contortionist", "Ag"),
-        deceive: this.SkillField("Deceive", "Fel"),
-        demolition: this.SkillField("Demolition", "Int"),
-        disguise: this.SkillField("Disguise", "Fel"),
-        dodge: this.SkillField("Dodge", "Ag"),
-        drive: this.SkillField("Drive", "Ag"),
-        evaluate: this.SkillField("Evaluate", "Int"),
-        gamble: this.SkillField("Gamble", "Int"),
-        inquiry: this.SkillField("Inquiry", "Fel"),
-        interrogation: this.SkillField("Interrogation", "WP"),
-        intimidate: this.SkillField("Intimidate", "S"),
-        invocation: this.SkillField("Invocation", "WP"),
-        lipReading: this.SkillField("Lip Reading", "Per"),
-        literacy: this.SkillField("Literacy", "Int"),
-        logic: this.SkillField("Logic", "Int"),
-        medicae: this.SkillField("Medicae", "Int"),
-        navigation: this.SkillField("Navigation", "Int"),
-        psyniscience: this.SkillField("Psyniscience", "Per"),
-        scrutiny: this.SkillField("Scrutiny", "Per"),
-        search: this.SkillField("Search", "Per"),
-        security: this.SkillField("Security", "Ag"),
-        shadowing: this.SkillField("Shadowing", "Ag"),
-        silentMove: this.SkillField("Silent Move", "Ag"),
-        sleightOfHand: this.SkillField("Sleight of Hand", "Ag"),
-        survival: this.SkillField("Survival", "Int"),
-        swim: this.SkillField("Swim", "S"),
-        techUse: this.SkillField("Tech-Use", "Int"),
-        tracking: this.SkillField("Tracking", "Int"),
-        wrangling: this.SkillField("Wrangling", "Int"),
-        // Specialist skills with entries
-        commonLore: this.SkillField("Common Lore", "Int", true),
-        forbiddenLore: this.SkillField("Forbidden Lore", "Int", true),
-        scholasticLore: this.SkillField("Scholastic Lore", "Int", true),
-        speakLanguage: this.SkillField("Speak Language", "Int", true),
-        secretTongue: this.SkillField("Secret Tongue", "Int", true),
-        trade: this.SkillField("Trade", "Int", true),
-        performer: this.SkillField("Performer", "Fel", true),
-        pilot: this.SkillField("Pilot", "Ag", true),
-        // Hidden skills (from other game lines)
-        athletics: this.SkillField("Athletics", "S"),
-        parry: this.SkillField("Parry", "WS"),
-        stealth: this.SkillField("Stealth", "Ag")
+        // Standard skills (non-specialist)
+        acrobatics: this.SkillField("Acrobatics", "Ag", true),  // Advanced
+        awareness: this.SkillField("Awareness", "Per", false),  // Basic
+        barter: this.SkillField("Barter", "Fel", false),  // Basic
+        blather: this.SkillField("Blather", "Fel", true),  // Advanced
+        carouse: this.SkillField("Carouse", "T", false),  // Basic
+        charm: this.SkillField("Charm", "Fel", false),  // Basic
+        chemUse: this.SkillField("Chem-Use", "Int", true),  // Advanced
+        climb: this.SkillField("Climb", "S", false),  // Basic
+        command: this.SkillField("Command", "Fel", false),  // Basic
+        commerce: this.SkillField("Commerce", "Fel", true),  // Advanced
+        concealment: this.SkillField("Concealment", "Ag", false),  // Basic
+        contortionist: this.SkillField("Contortionist", "Ag", false),  // Basic
+        deceive: this.SkillField("Deceive", "Fel", false),  // Basic
+        demolition: this.SkillField("Demolition", "Int", true),  // Advanced
+        disguise: this.SkillField("Disguise", "Fel", false),  // Basic
+        dodge: this.SkillField("Dodge", "Ag", false),  // Basic
+        evaluate: this.SkillField("Evaluate", "Int", false),  // Basic
+        gamble: this.SkillField("Gamble", "Int", false),  // Basic
+        inquiry: this.SkillField("Inquiry", "Fel", false),  // Basic
+        interrogation: this.SkillField("Interrogation", "WP", true),  // Advanced
+        intimidate: this.SkillField("Intimidate", "S", false),  // Basic
+        invocation: this.SkillField("Invocation", "WP", true),  // Advanced
+        literacy: this.SkillField("Literacy", "Int", false),  // Basic
+        logic: this.SkillField("Logic", "Int", false),  // Basic
+        medicae: this.SkillField("Medicae", "Int", true),  // Advanced
+        psyniscience: this.SkillField("Psyniscience", "Per", true),  // Advanced
+        scrutiny: this.SkillField("Scrutiny", "Per", false),  // Basic
+        search: this.SkillField("Search", "Per", false),  // Basic
+        security: this.SkillField("Security", "Ag", true),  // Advanced
+        shadowing: this.SkillField("Shadowing", "Ag", true),  // Advanced
+        silentMove: this.SkillField("Silent Move", "Ag", false),  // Basic
+        sleightOfHand: this.SkillField("Sleight of Hand", "Ag", true),  // Advanced
+        survival: this.SkillField("Survival", "Int", false),  // Basic
+        swim: this.SkillField("Swim", "S", false),  // Basic
+        tracking: this.SkillField("Tracking", "Int", true),  // Advanced
+        wrangling: this.SkillField("Wrangling", "Int", true),  // Advanced
+        
+        // Specialist skill groups (IsSkillGroup=true) - Advanced with entries
+        ciphers: this.SkillField("Ciphers", "Int", true, true),  // Advanced, Group
+        commonLore: this.SkillField("Common Lore", "Int", true, true),  // Advanced, Group
+        drive: this.SkillField("Drive", "Ag", true, true),  // Advanced, Group
+        forbiddenLore: this.SkillField("Forbidden Lore", "Int", true, true),  // Advanced, Group
+        navigation: this.SkillField("Navigation", "Int", true, true),  // Advanced, Group
+        performer: this.SkillField("Performer", "Fel", true, true),  // Advanced, Group
+        pilot: this.SkillField("Pilot", "Ag", true, true),  // Advanced, Group
+        scholasticLore: this.SkillField("Scholastic Lore", "Int", true, true),  // Advanced, Group
+        secretTongue: this.SkillField("Secret Tongue", "Int", true, true),  // Advanced, Group
+        speakLanguage: this.SkillField("Speak Language", "Int", true, true),  // Advanced, Group
+        techUse: this.SkillField("Tech-Use", "Int", true, true),  // Advanced, Group
+        trade: this.SkillField("Trade", "Int", true, true),  // Advanced, Group
+        
+        // Hidden skills (from other game lines - kept for compatibility)
+        athletics: this.SkillField("Athletics", "S", false),
+        parry: this.SkillField("Parry", "WS", false),
+        stealth: this.SkillField("Stealth", "Ag", false)
       }),
 
       // Computed armour by location
@@ -223,7 +228,13 @@ export default class CreatureTemplate extends CommonTemplate {
         damage: new NumberField({ required: true, initial: 0, integer: true }),
         initiative: new NumberField({ required: true, initial: 0, integer: true }),
         defence: new NumberField({ required: true, initial: 0, integer: true })
-      })
+      }),
+
+      // UI preferences
+      favoriteCombatActions: new ArrayField(
+        new StringField({ required: true }),
+        { required: true, initial: ["dodge", "parry"] }
+      )
     };
   }
 
@@ -233,13 +244,64 @@ export default class CreatureTemplate extends CommonTemplate {
 
   /** @override */
   static migrateData(source) {
+    // Define canonical skill types from SKILL_TABLE.md
+    const SKILL_TYPES = {
+      // Standard skills - Advanced
+      acrobatics: true, blather: true, chemUse: true, commerce: true, demolition: true,
+      interrogation: true, invocation: true, medicae: true, psyniscience: true,
+      security: true, shadowing: true, sleightOfHand: true, tracking: true, wrangling: true,
+      
+      // Standard skills - Basic
+      awareness: false, barter: false, carouse: false, charm: false, climb: false,
+      command: false, concealment: false, contortionist: false, deceive: false,
+      disguise: false, dodge: false, evaluate: false, gamble: false, inquiry: false,
+      intimidate: false, literacy: false, logic: false, scrutiny: false, search: false,
+      silentMove: false, survival: false, swim: false,
+      
+      // Specialist skills - ALL Advanced
+      ciphers: true, commonLore: true, drive: true, forbiddenLore: true, navigation: true,
+      performer: true, pilot: true, scholasticLore: true, secretTongue: true,
+      speakLanguage: true, techUse: true, trade: true,
+      
+      // Hidden compatibility skills - Basic
+      athletics: false, parry: false, stealth: false
+    };
+    
     // Migrate skills specializations -> entries
     if (source.skills) {
-      for (const skill of Object.values(source.skills)) {
+      for (const [key, skill] of Object.entries(source.skills)) {
         if (skill.specializations !== undefined && skill.entries === undefined) {
           skill.entries = skill.specializations;
           delete skill.specializations;
         }
+        
+        // Force correct advanced/basic values based on canonical table
+        if (SKILL_TYPES.hasOwnProperty(key)) {
+          const isAdvanced = SKILL_TYPES[key];
+          skill.advanced = isAdvanced;
+          skill.basic = !isAdvanced;
+        } else if (skill.advanced === undefined && skill.basic !== undefined) {
+          // Fallback for unknown skills
+          skill.advanced = !skill.basic;
+        } else if (skill.advanced === undefined && skill.basic === undefined) {
+          // Default to basic if both missing
+          skill.advanced = false;
+          skill.basic = true;
+        }
+        
+        // Apply same fix to specialist entries
+        if (Array.isArray(skill.entries)) {
+          const parentIsAdvanced = SKILL_TYPES.hasOwnProperty(key) ? SKILL_TYPES[key] : skill.advanced;
+          for (const entry of skill.entries) {
+            entry.advanced = parentIsAdvanced;
+            entry.basic = !parentIsAdvanced;
+          }
+        }
+      }
+      
+      // Remove deprecated lipReading skill
+      if (source.skills.lipReading !== undefined) {
+        delete source.skills.lipReading;
       }
     }
     

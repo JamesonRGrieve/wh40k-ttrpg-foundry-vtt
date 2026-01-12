@@ -10,8 +10,8 @@
     "description": {
       "value": "<p>Extracting Information from Unwilling Subjects, not neccisarily torture, but rather use of psychology, serums, devices to get actually useful information. Test difficulty dependent on target, tool and facility availability, and other conditions.</p>"
     },
-    "isBasic": true,
-    "skillType": "basic",
+    "isBasic": false,
+    "skillType": "advanced",
     "aptitudes": [
       "Willpower",
       "Social",

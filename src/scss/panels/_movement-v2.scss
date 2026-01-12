@@ -436,10 +436,109 @@
 // ============================================
 .rt-panel-movement-compact {
   .rt-panel-body {
-    padding: $rt-space-sm;
+    padding: $rt-space-xs;  // Reduced for compactness
   }
 }
 
+// Modern compact grid layout (4 columns)
+.rt-movement-modern-compact {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);  // 4 columns for compact horizontal layout
+  gap: 4px;  // Tighter gap
+}
+
+.rt-move-modern-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;  // More compact padding
+  min-height: 40px;  // Reduced from auto for consistent height
+  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.04) 0%, rgba($rt-accent-gold, 0.01) 100%);
+  border: 1px solid rgba($rt-border-light, 0.5);
+  border-radius: $rt-radius-sm;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba($rt-accent-gold, 0.08) 0%, rgba($rt-accent-gold, 0.03) 100%);
+    border-color: rgba($rt-accent-gold, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+.rt-move-modern-icon {
+  font-size: 1rem;  // Slightly larger for better visibility
+  color: rgba($rt-accent-gold, 0.6);
+  margin-bottom: 2px;
+  
+  .rt-move-modern-cell:hover & {
+    color: rgba($rt-accent-gold, 0.8);
+    transform: scale(1.1);
+  }
+}
+
+.rt-move-modern-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  z-index: 1;
+}
+
+.rt-move-modern-label {
+  font-size: 0.5rem;  // Smaller label
+  font-weight: 600;
+  color: $rt-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1;
+}
+
+.rt-move-modern-value {
+  font-size: 1.1rem;  // Slightly larger value for readability
+  font-weight: 700;
+  color: $rt-text-primary;
+  font-family: $rt-font-alt;
+  line-height: 1;
+  
+  .rt-move-unit {
+    font-size: 0.65rem;
+    color: $rt-text-muted;
+    margin-left: 1px;
+  }
+}
+
+// Background progress bar
+.rt-move-modern-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    rgba($rt-accent-gold, 0.3) 0%, 
+    rgba($rt-accent-gold, 0.6) 100%);
+  width: var(--move-percent, 0%);
+  transition: width 0.3s ease;
+}
+
+// Movement type specific colors
+.rt-move-half .rt-move-modern-bar { 
+  background: linear-gradient(90deg, rgba(#95a5a6, 0.4), rgba(#7f8c8d, 0.6)); 
+}
+.rt-move-full .rt-move-modern-bar { 
+  background: linear-gradient(90deg, rgba(#3498db, 0.4), rgba(#2980b9, 0.6)); 
+}
+.rt-move-charge .rt-move-modern-bar { 
+  background: linear-gradient(90deg, rgba(#e67e22, 0.4), rgba(#d35400, 0.6)); 
+}
+.rt-move-run .rt-move-modern-bar { 
+  background: linear-gradient(90deg, rgba(#e74c3c, 0.4), rgba(#c0392b, 0.6)); 
+}
+
+// Legacy compact styles (kept for backwards compatibility)
 .rt-movement-grid-compact {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

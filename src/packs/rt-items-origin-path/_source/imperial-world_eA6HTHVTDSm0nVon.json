@@ -1,14 +1,18 @@
 {
   "name": "Imperial World",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Home World",
-    "descriptionText": "+3 Willpower. Gain Literacy, Speak Language (High Gothic), Common Lore (Imperial Creed), Common Lore (Imperium) and Common Lore (War) as untrained Basic Skills. Suffer -5 to Forbidden Lore Tests.",
-    "effects": "+3 Willpower. Gain Literacy, Speak Language (High Gothic), Common Lore (Imperial Creed), Common Lore (Imperium) and Common Lore (War) as untrained Basic Skills. Suffer -5 to Forbidden Lore Tests.",
-    "source": "Character Creation (sheet)",
+    "identifier": "imperial-world",
+    "step": "homeWorld",
+    "stepIndex": 1,
     "description": {
       "value": "<p>+3 Willpower. Gain Literacy, Speak Language (High Gothic), Common Lore (Imperial Creed), Common Lore (Imperium) and Common Lore (War) as untrained Basic Skills. Suffer -5 to Forbidden Lore Tests.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Home World",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,51 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Literacy",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Speak Language (High Gothic)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore (Imperial Creed)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore (Imperium)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore (War) as untrained Basic",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "+3 Willpower. Gain Literacy, Speak Language (High Gothic), Common Lore (Imperial Creed), Common Lore (Imperium) and Common Lore (War) as untrained Basic Skills. Suffer -5 to Forbidden Lore Tests.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.home-world",
-      "step": "Home World",
-      "stepIndex": 1,
-      "number": "5"
-    }
-  },
+  "flags": {},
   "_id": "eA6HTHVTDSm0nVon"
 }

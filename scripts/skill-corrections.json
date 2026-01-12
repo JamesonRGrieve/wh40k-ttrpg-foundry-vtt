@@ -1,0 +1,398 @@
+{
+  "Acrobatics": {
+    "file": "acrobatics_SdZkMMrVzF2lK0FL.json",
+    "corrections": {}
+  },
+  "Awareness": {
+    "file": "awareness_TaE35cDsKSdLQkiF.json",
+    "corrections": {}
+  },
+  "Barter": {
+    "file": "barter_9HhJQm60JFyy0I8V.json",
+    "corrections": {}
+  },
+  "Blather": {
+    "file": "blather_c9afk9ycabXAVklz.json",
+    "corrections": {}
+  },
+  "Charm": {
+    "file": "charm_6tf4CnImVLqgvQGS.json",
+    "corrections": {}
+  },
+  "Chem-Use": {
+    "file": "chem-use_luIGYi2w8YgKiEic.json",
+    "corrections": {}
+  },
+  "Climb": {
+    "file": "climb_w6ejCGuZTrDIIJXn.json",
+    "corrections": {}
+  },
+  "Command": {
+    "file": "command_qNMXuATk16TufuCh.json",
+    "corrections": {}
+  },
+  "Common Lore (Adeptus Administratum)": {
+    "file": "common-lore-adeptus-administratum_f21ce10ff2b4c02f.json",
+    "corrections": {}
+  },
+  "Common Lore (Adeptus Arbites)": {
+    "file": "common-lore-adeptus-arbites_fdc33d9800b19a22.json",
+    "corrections": {}
+  },
+  "Common Lore (Adeptus Astra Telepathica)": {
+    "file": "common-lore-adeptus-astra-telepathica_5d8ad674d7bb8c9b.json",
+    "corrections": {}
+  },
+  "Common Lore (Adeptus Mechanicus)": {
+    "file": "common-lore-adeptus-mechanicus_9d4f1bc954608d45.json",
+    "corrections": {}
+  },
+  "Common Lore (Calixis Sector)": {
+    "file": "common-lore-calixis-sector_b26b963106092656.json",
+    "corrections": {}
+  },
+  "Common Lore (Ecclesiarchy)": {
+    "file": "common-lore-ecclesiarchy_59aa57402b0de3bb.json",
+    "corrections": {}
+  },
+  "Common Lore (Imperial Creed)": {
+    "file": "common-lore-imperial-creed_611cd29dda17454b.json",
+    "corrections": {}
+  },
+  "Common Lore (Imperial Guard)": {
+    "file": "common-lore-imperial-guard_4ff51289dd35395d.json",
+    "corrections": {}
+  },
+  "Common Lore (Imperial Navy)": {
+    "file": "common-lore-imperial-navy_129db2aa587e8a5c.json",
+    "corrections": {}
+  },
+  "Common Lore (Imperium)": {
+    "file": "common-lore-imperium_149114b48d71099b.json",
+    "corrections": {}
+  },
+  "Common Lore (Jericho Reach)": {
+    "file": "common-lore-jericho-reach_28df2c9b807491b7.json",
+    "corrections": {}
+  },
+  "Common Lore (Koronus Expanse)": {
+    "file": "common-lore-koronus-expanse_7adbf67375c8355d.json",
+    "corrections": {}
+  },
+  "Common Lore (Navis Nobilite)": {
+    "file": "common-lore-navis-nobilite_dbf3e56876f3e92c.json",
+    "corrections": {}
+  },
+  "Common Lore (Rogue Traders)": {
+    "file": "common-lore-rogue-traders_61901b59c4ebc2c6.json",
+    "corrections": {}
+  },
+  "Common Lore (Screaming Vortex)": {
+    "file": "common-lore-screaming-vortex_d7de759f50c11e58.json",
+    "corrections": {}
+  },
+  "Common Lore (Spinward Front)": {
+    "file": "common-lore-spinward-front_d1b8545024f2e2ea.json",
+    "corrections": {}
+  },
+  "Common Lore (Tech)": {
+    "file": "common-lore-tech_b8297bda33ee910c.json",
+    "corrections": {}
+  },
+  "Common Lore (Underworld)": {
+    "file": "common-lore-underworld_a3b060edba06b4f7.json",
+    "corrections": {}
+  },
+  "Common Lore (War)": {
+    "file": "common-lore-war_1a6ce7f0a3a64f12.json",
+    "corrections": {}
+  },
+  "Common Lore (X)": {
+    "file": "common-lore-x_1I8VwbtfaXIi6DF5.json",
+    "corrections": {}
+  },
+  "Contortionist": {
+    "file": "contortionist_7c3orPNWzD65Wofw.json",
+    "corrections": {}
+  },
+  "Deceive": {
+    "file": "deceive_XwfcZpfBdzD4lXKt.json",
+    "corrections": {}
+  },
+  "Demolition": {
+    "file": "demolition_oh26vu9tgfj3Bb3a.json",
+    "corrections": {}
+  },
+  "Drive (Bike)": {
+    "file": "drive-bike_c159bb753995010a.json",
+    "corrections": {}
+  },
+  "Drive (Chariot)": {
+    "file": "drive-chariot_4d8331482800be68.json",
+    "corrections": {}
+  },
+  "Drive (Grav-Vehicle)": {
+    "file": "drive-grav-vehicle_0893610263e8acf3.json",
+    "corrections": {}
+  },
+  "Drive (Ground Vehicle)": {
+    "file": "drive-ground-vehicle_324aae4ddd2ed6f0.json",
+    "corrections": {}
+  },
+  "Drive (Skimmer)": {
+    "file": "drive-skimmer_a1c7a667a9643487.json",
+    "corrections": {}
+  },
+  "Drive (Walker)": {
+    "file": "drive-walker_7887b9351bc82d5d.json",
+    "corrections": {}
+  },
+  "Drive (X)": {
+    "file": "drive-x_XwbDQ1DmvW3T7zEa.json",
+    "corrections": {}
+  },
+  "Evaluate": {
+    "file": "evaluate_3bMXKh0MRL4Ooj6T.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Adeptus Mechanicus)": {
+    "file": "forbidden-lore-adeptus-mechanicus_61d89d7c91347f17.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Archaeotech)": {
+    "file": "forbidden-lore-archaeotech_5f2b1d3a867b636d.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Archeotech)": {
+    "file": "forbidden-lore-archeotech_e3aa3c2a56019e30.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Chaos)": {
+    "file": "forbidden-lore-chaos_6ca514de57478d58.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Daemonology)": {
+    "file": "forbidden-lore-daemonology_27d7f14fef2b9394.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Heresy)": {
+    "file": "forbidden-lore-heresy_dbe7d7f2de6093d8.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Inquisition)": {
+    "file": "forbidden-lore-inquisition_e421289185183056.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Mutants)": {
+    "file": "forbidden-lore-mutants_6f0027da654d0b1e.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Pirates)": {
+    "file": "forbidden-lore-pirates_7b98b6a73f645461.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Psykers)": {
+    "file": "forbidden-lore-psykers_bd72f7191934d511.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (The Horus Heresy)": {
+    "file": "forbidden-lore-the-horus-heresy_d392f47585258bac.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Warp)": {
+    "file": "forbidden-lore-warp_0f0b5b349d655fdf.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (X)": {
+    "file": "forbidden-lore-x_dcFOoPyKaSVG2qbh.json",
+    "corrections": {}
+  },
+  "Forbidden Lore (Xenos)": {
+    "file": "forbidden-lore-xenos_291eb563c175cfa5.json",
+    "corrections": {}
+  },
+  "Inquiry": {
+    "file": "inquiry_CyLSooxmxP8RBzmJ.json",
+    "corrections": {}
+  },
+  "Interrogation": {
+    "file": "interrogation_Q84lvh8RoUsTnD3J.json",
+    "corrections": {}
+  },
+  "Intimidate": {
+    "file": "intimidate_vbvMVd7hBvtxX7r7.json",
+    "corrections": {}
+  },
+  "Logic": {
+    "file": "logic_oPJBUdgIgkelRU7Z.json",
+    "corrections": {}
+  },
+  "Navigation (X)": {
+    "file": "navigation-x_oVVG1Y5hyoiYBHvh.json",
+    "corrections": {}
+  },
+  "Pilot (Assault Ram)": {
+    "file": "pilot-assault-ram_661c87936c316ae0.json",
+    "corrections": {}
+  },
+  "Pilot (Drop Pod)": {
+    "file": "pilot-drop-pod_173ccf8305cface6.json",
+    "corrections": {}
+  },
+  "Pilot (Flyers)": {
+    "file": "pilot-flyers_d982eab4a22d6a38.json",
+    "corrections": {}
+  },
+  "Pilot (Land Speeder)": {
+    "file": "pilot-land-speeder_b65f647f23b894da.json",
+    "corrections": {}
+  },
+  "Pilot (Personal)": {
+    "file": "pilot-personal_3f2a3220fb1c4960.json",
+    "corrections": {}
+  },
+  "Pilot (Spacecraft)": {
+    "file": "pilot-spacecraft_850c2c74b43123a0.json",
+    "corrections": {}
+  },
+  "Pilot (Thunderhawk)": {
+    "file": "pilot-thunderhawk_95eb2fd2738bfed5.json",
+    "corrections": {}
+  },
+  "Pilot (X)": {
+    "file": "pilot-x_dVj4QK82PMgrjVZ4.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Astromancy)": {
+    "file": "scholastic-lore-astromancy_2311f00a08939948.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Beasts)": {
+    "file": "scholastic-lore-beasts_7be6c01f0e7533be.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Bureaucracy)": {
+    "file": "scholastic-lore-bureaucracy_acd89810af4dafb0.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Chymistry)": {
+    "file": "scholastic-lore-chymistry_cc50459646f7e85d.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Cryptology)": {
+    "file": "scholastic-lore-cryptology_5dff18ccd246897b.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Heraldry)": {
+    "file": "scholastic-lore-heraldry_e2fbc0dbf02640a8.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Imperial Warrants)": {
+    "file": "scholastic-lore-imperial-warrants_56037aa59f0f54d6.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Judgement)": {
+    "file": "scholastic-lore-judgement_7b5e3e3dd5adc252.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Legend)": {
+    "file": "scholastic-lore-legend_2297e5f07742bc4a.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Numerology)": {
+    "file": "scholastic-lore-numerology_6e541f8451c363d0.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Occult)": {
+    "file": "scholastic-lore-occult_83d9b6d354b648fe.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Philosophy)": {
+    "file": "scholastic-lore-philosophy_9a2260d4f65575a7.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (Tactica Imperialis)": {
+    "file": "scholastic-lore-tactica-imperialis_49dfc701bdfd6f93.json",
+    "corrections": {}
+  },
+  "Scholastic Lore (X)": {
+    "file": "scholastic-lore-x_jPfXcl9ip3yPxdjE.json",
+    "corrections": {}
+  },
+  "Search": {
+    "file": "search_8lRnM7bD6ZBV9HRl.json",
+    "corrections": {}
+  },
+  "Security": {
+    "file": "security_3N601Jd9Uy0Yzq0y.json",
+    "corrections": {}
+  },
+  "Silent Move": {
+    "file": "silent-move_2rC4el6UQLjP1Xrq.json",
+    "corrections": {}
+  },
+  "Survival": {
+    "file": "survival_Qeq1e0b9ScC02w1k.json",
+    "corrections": {}
+  },
+  "Swim": {
+    "file": "swim_12hPACiHVQWLpRSN.json",
+    "corrections": {}
+  },
+  "Tech-Use": {
+    "file": "tech-use_YWjhn2cLyzEensXi.json",
+    "corrections": {}
+  },
+  "Tracking": {
+    "file": "tracking_mGHePIHKXUcyCfjG.json",
+    "corrections": {}
+  },
+  "Trade (Armorer)": {
+    "file": "trade-armorer_d1b1edc5764eef69.json",
+    "corrections": {}
+  },
+  "Trade (Cartographer)": {
+    "file": "trade-cartographer_ea378c0b12182768.json",
+    "corrections": {}
+  },
+  "Trade (Chymist)": {
+    "file": "trade-chymist_50fbfd4215d56229.json",
+    "corrections": {}
+  },
+  "Trade (Cook)": {
+    "file": "trade-cook_3bf377080869a5e7.json",
+    "corrections": {}
+  },
+  "Trade (Explorator)": {
+    "file": "trade-explorator_ddaa3ffa4628377d.json",
+    "corrections": {}
+  },
+  "Trade (Remembrancer)": {
+    "file": "trade-remembrancer_f7ecfeee2fc2a7c8.json",
+    "corrections": {}
+  },
+  "Trade (Scrimshawer)": {
+    "file": "trade-scrimshawer_8ebcba8aee157f02.json",
+    "corrections": {}
+  },
+  "Trade (Shipwright)": {
+    "file": "trade-shipwright_1877ca97f13ae250.json",
+    "corrections": {}
+  },
+  "Trade (Soothsayer)": {
+    "file": "trade-soothsayer_069a31dfc68a1cb4.json",
+    "corrections": {}
+  },
+  "Trade (Technomat)": {
+    "file": "trade-technomat_7e3fe6b82ad8ef3d.json",
+    "corrections": {}
+  },
+  "Trade (Voidfarer)": {
+    "file": "trade-voidfarer_40e07eb825c9b433.json",
+    "corrections": {}
+  },
+  "Trade (X)": {
+    "file": "trade-x_heE9hGFUIrGsGUw7.json",
+    "corrections": {}
+  }
+}

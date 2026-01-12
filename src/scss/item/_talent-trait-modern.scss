@@ -1,0 +1,599 @@
+// ============================================
+// Talent & Trait Item Sheets - Modern Tabbed Design
+// ============================================
+// Following weapon sheet patterns with tabs and modern layout
+
+// ============================================
+// Shared Base Styles
+// ============================================
+
+.rt-talent-sheet,
+.rt-trait-sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-bg-primary);
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}
+
+// ============================================
+// HEADER - Compact identity with badges
+// ============================================
+
+.rt-talent-header,
+.rt-trait-header {
+  display: flex;
+  align-items: flex-start;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+  background: linear-gradient(180deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
+  border-bottom: 2px solid var(--color-border-secondary);
+}
+
+.rt-talent-header__image,
+.rt-trait-header__image {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: $rt-radius-md;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid var(--color-border-secondary);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    border-color: $rt-color-gold;
+    box-shadow: 0 0 12px rgba($rt-color-gold, 0.3);
+    
+    .rt-talent-header__image-overlay,
+    .rt-trait-header__image-overlay {
+      opacity: 1;
+    }
+  }
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.rt-talent-header__image-overlay,
+.rt-trait-header__image-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  
+  i {
+    color: $rt-color-gold;
+    font-size: 1.5rem;
+  }
+}
+
+.rt-talent-header__info,
+.rt-trait-header__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+  min-width: 0;
+}
+
+.rt-talent-header__name,
+.rt-trait-header__name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: $rt-font-display;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 4px 0;
+  transition: border-color 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-bottom-color: $rt-color-gold;
+  }
+  
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.rt-talent-header__meta,
+.rt-trait-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+// ============================================
+// BADGES
+// ============================================
+
+.rt-talent-badge,
+.rt-trait-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: $rt-radius-sm;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  color: var(--color-text-secondary);
+  
+  i {
+    font-size: 0.85em;
+  }
+}
+
+// Talent Specific Badges
+.rt-talent-badge--tier {
+  background: linear-gradient(135deg, rgba($rt-accent-talents, 0.15), rgba($rt-accent-talents, 0.05));
+  border-color: rgba($rt-accent-talents, 0.3);
+  color: $rt-accent-talents;
+}
+
+.rt-talent-badge--tier1 {
+  background: linear-gradient(135deg, rgba(#4a7c59, 0.15), rgba(#4a7c59, 0.05));
+  border-color: rgba(#4a7c59, 0.3);
+  color: #5ba86d;
+}
+
+.rt-talent-badge--tier2 {
+  background: linear-gradient(135deg, rgba(#7a6c4a, 0.15), rgba(#7a6c4a, 0.05));
+  border-color: rgba(#7a6c4a, 0.3);
+  color: #a89150;
+}
+
+.rt-talent-badge--tier3 {
+  background: linear-gradient(135deg, rgba(#8b4a7c, 0.15), rgba(#8b4a7c, 0.05));
+  border-color: rgba(#8b4a7c, 0.3);
+  color: #b05ba0;
+}
+
+.rt-talent-badge--category {
+  background: linear-gradient(135deg, rgba($rt-color-gold, 0.15), rgba($rt-color-gold, 0.05));
+  border-color: rgba($rt-color-gold, 0.3);
+  color: $rt-color-gold;
+}
+
+.rt-talent-badge--cost {
+  background: linear-gradient(135deg, rgba(#2a7a9a, 0.15), rgba(#2a7a9a, 0.05));
+  border-color: rgba(#2a7a9a, 0.3);
+  color: #3da5d9;
+}
+
+.rt-talent-badge--passive {
+  background: linear-gradient(135deg, rgba(#27ae60, 0.15), rgba(#27ae60, 0.05));
+  border-color: rgba(#27ae60, 0.3);
+  color: #2ecc71;
+}
+
+.rt-talent-badge--stackable {
+  background: linear-gradient(135deg, rgba(#e67e22, 0.15), rgba(#e67e22, 0.05));
+  border-color: rgba(#e67e22, 0.3);
+  color: #f39c12;
+}
+
+// Trait Specific Badges
+.rt-trait-badge--category {
+  background: linear-gradient(135deg, rgba($rt-accent-combat, 0.15), rgba($rt-accent-combat, 0.05));
+  border-color: rgba($rt-accent-combat, 0.3);
+  color: lighten($rt-accent-combat, 15%);
+}
+
+.rt-trait-badge--level {
+  background: linear-gradient(135deg, rgba($rt-color-gold, 0.15), rgba($rt-color-gold, 0.05));
+  border-color: rgba($rt-color-gold, 0.3);
+  color: $rt-color-gold;
+}
+
+.rt-trait-badge--variable {
+  background: linear-gradient(135deg, rgba(#9b59b6, 0.15), rgba(#9b59b6, 0.05));
+  border-color: rgba(#9b59b6, 0.3);
+  color: #c39bd3;
+}
+
+// ============================================
+// TAB NAVIGATION
+// ============================================
+
+.rt-talent-tabs,
+.rt-trait-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--color-bg-secondary);
+  border-bottom: 2px solid var(--color-border-secondary);
+  padding: 0 $rt-space-md;
+}
+
+.rt-talent-tab,
+.rt-trait-tab {
+  flex: 1;
+  padding: $rt-space-sm $rt-space-md;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  
+  i {
+    font-size: 1em;
+  }
+  
+  &:hover {
+    color: var(--color-text-primary);
+    background: rgba($rt-color-gold, 0.05);
+  }
+  
+  &.active {
+    color: $rt-color-gold;
+    border-bottom-color: $rt-color-gold;
+    background: rgba($rt-color-gold, 0.08);
+  }
+}
+
+// ============================================
+// TAB CONTENT BODY
+// ============================================
+
+.rt-talent-body,
+.rt-trait-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--color-bg-tertiary);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border-secondary);
+    border-radius: $rt-radius-sm;
+    
+    &:hover {
+      background: var(--color-border-highlight);
+    }
+  }
+}
+
+.rt-talent-panel,
+.rt-trait-panel {
+  display: none;
+  padding: $rt-space-md;
+  
+  &.active {
+    display: block;
+  }
+}
+
+// ============================================
+// SECTIONS
+// ============================================
+
+.rt-talent-section,
+.rt-trait-section {
+  margin-bottom: $rt-space-lg;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rt-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: $rt-font-heading;
+  color: var(--color-text-primary);
+  margin-bottom: $rt-space-md;
+  padding-bottom: $rt-space-xs;
+  border-bottom: 2px solid var(--color-border-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  
+  i {
+    color: $rt-color-gold;
+    font-size: 0.9em;
+  }
+}
+
+// ============================================
+// PROPERTIES GRID
+// ============================================
+
+.rt-properties-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $rt-space-md;
+  
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rt-property {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  
+  &.rt-property--checkbox {
+    justify-content: center;
+  }
+}
+
+.rt-property-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rt-property-label-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+  
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+  
+  span {
+    font-weight: 600;
+  }
+}
+
+.rt-property-input,
+.rt-property-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-sm;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: $rt-color-gold;
+    box-shadow: 0 0 0 2px rgba($rt-color-gold, 0.15);
+  }
+  
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.rt-property-textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.rt-field-hint {
+  font-size: 0.7rem;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+  margin-left: 4px;
+}
+
+// ============================================
+// APTITUDES DISPLAY
+// ============================================
+
+.rt-aptitudes-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rt-aptitude-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, rgba($rt-color-gold, 0.15), rgba($rt-color-gold, 0.05));
+  border: 1px solid rgba($rt-color-gold, 0.3);
+  border-radius: $rt-radius-sm;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: $rt-color-gold;
+}
+
+// ============================================
+// REQUIREMENTS DISPLAY
+// ============================================
+
+.rt-requirements-display {
+  padding: $rt-space-sm;
+  background: rgba($rt-accent-combat, 0.05);
+  border: 1px solid rgba($rt-accent-combat, 0.2);
+  border-radius: $rt-radius-sm;
+}
+
+.rt-requirement-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: lighten($rt-accent-combat, 10%);
+  font-size: 0.85rem;
+  font-weight: 600;
+  
+  i {
+    color: $rt-accent-combat;
+  }
+}
+
+// ============================================
+// PREREQUISITES DISPLAY
+// ============================================
+
+.rt-prerequisites-display {
+  padding: $rt-space-md;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-md;
+}
+
+.rt-prereq-label {
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+// ============================================
+// MODIFIERS DISPLAY
+// ============================================
+
+.rt-modifiers-display {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-md;
+}
+
+.rt-modifier-group {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+}
+
+.rt-modifier-group-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $rt-color-gold;
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.rt-modifier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rt-modifier-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--color-bg-secondary);
+  border-radius: $rt-radius-sm;
+  font-size: 0.85rem;
+}
+
+.rt-modifier-name {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.rt-modifier-value {
+  font-family: $rt-font-display;
+  font-weight: 700;
+  font-size: 0.95rem;
+  
+  &.positive {
+    color: #2ecc71;
+  }
+  
+  &.negative {
+    color: $rt-accent-combat;
+  }
+}
+
+// ============================================
+// EDITOR CONTAINER
+// ============================================
+
+.rt-editor-container {
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-md;
+  padding: $rt-space-sm;
+  
+  .editor {
+    min-height: 150px;
+  }
+}
+
+// ============================================
+// EMPTY STATE
+// ============================================
+
+.rt-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $rt-space-xl;
+  text-align: center;
+  
+  i {
+    font-size: 3rem;
+    color: var(--color-text-tertiary);
+    margin-bottom: $rt-space-md;
+    opacity: 0.5;
+  }
+  
+  p {
+    margin: 4px 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    
+    &.rt-field-hint {
+      font-size: 0.75rem;
+      color: var(--color-text-tertiary);
+    }
+  }
+}

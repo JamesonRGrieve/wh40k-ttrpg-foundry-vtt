@@ -1,14 +1,18 @@
 {
   "name": "Lost Worlds",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Trials and Travails",
-    "descriptionText": "1. Lost Dynasty (400xp): +1 to Group's Profit Factor, +1 Fate Point. Work the the GM to create a Lost Claim or Resource that you intend to seek out.\n2. Rogue Planet (200xp): +3 Willpower. Gain any one Exploration Skill as trained Skill. Gain 1d5 Insanity Points. Work with GM to creat a lost world you have only partly explored.\n3. Beyond the Pale (100xp): Gain 1d5 Corruption and 1d5 Insanity. Gain two Trained Forbidden Lore Skills, or add +10 to two already known Forbidden Lore Skills.",
-    "effects": "1. Lost Dynasty (400xp): +1 to Group's Profit Factor, +1 Fate Point. Work the the GM to create a Lost Claim or Resource that you intend to seek out.\n2. Rogue Planet (200xp): +3 Willpower. Gain any one Exploration Skill as trained Skill. Gain 1d5 Insanity Points. Work with GM to creat a lost world you have only partly explored.\n3. Beyond the Pale (100xp): Gain 1d5 Corruption and 1d5 Insanity. Gain two Trained Forbidden Lore Skills, or add +10 to two already known Forbidden Lore Skills.",
-    "source": "Character Creation (sheet)",
+    "identifier": "lost-worlds",
+    "step": "trialsAndTravails",
+    "stepIndex": 4,
     "description": {
       "value": "<p>1. Lost Dynasty (400xp): +1 to Group&#x27;s Profit Factor, +1 Fate Point. Work the the GM to create a Lost Claim or Resource that you intend to seek out.<br>2. Rogue Planet (200xp): +3 Willpower. Gain any one Exploration Skill as trained Skill. Gain 1d5 Insanity Points. Work with GM to creat a lost world you have only partly explored.<br>3. Beyond the Pale (100xp): Gain 1d5 Corruption and 1d5 Insanity. Gain two Trained Forbidden Lore Skills, or add +10 to two already known Forbidden Lore Skills.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Trials and Travails",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,51 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "any one Exploration",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d5 Insanity Points",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d5 Corruption",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d5 Insanity",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "two Trained Forbidden Lore",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "1. Lost Dynasty (400xp): +1 to Group's Profit Factor, +1 Fate Point. Work the the GM to create a Lost Claim or Resource that you intend to seek out.\n2. Rogue Planet (200xp): +3 Willpower. Gain any one Exploration Skill as trained Skill. Gain 1d5 Insanity Points. Work with GM to creat a lost world you have only partly explored.\n3. Beyond the Pale (100xp): Gain 1d5 Corruption and 1d5 Insanity. Gain two Trained Forbidden Lore Skills, or add +10 to two already known Forbidden Lore Skills.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.trials-and-travails",
-      "step": "Trials and Travails",
-      "stepIndex": 4,
-      "number": "3 and 5"
-    }
-  },
+  "flags": {},
   "_id": "ZRAqpUCN29Gzv0vY"
 }

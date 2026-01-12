@@ -10,8 +10,8 @@
     "description": {
       "value": "<p>Plot a Course between two points, be it across a continent or through the Warp. Successful test provides estimated navigation time, cosmography, conditions, weather, warp tides, and so on. Often makes use of maps, charts, or Innate Abilities.</p>"
     },
-    "isBasic": true,
-    "skillType": "specialist",
+    "isBasic": false,
+    "skillType": "advanced",
     "aptitudes": [],
     "source": "",
     "specializations": []

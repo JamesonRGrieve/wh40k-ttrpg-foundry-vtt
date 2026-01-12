@@ -1,14 +1,18 @@
 {
   "name": "The Hand of War",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Trials and Travails",
-    "descriptionText": "Gain any One Weapon Training, or Leap Up Talent. Gain one of Hatred (Orks, Eldar, Mutants, Chaos Worshippers, Imperial Guard, Imperial Navy, Void Pirates), your character fought against this foe in the past. Your character will never work with their sworn enemy unless under dire circumstances. Suffer -10 Fellowship in such dealings. Must make Willpower test to avoid succumbing to your hatred if this sworn enemy provokes you, difficulty modified by GM.",
-    "effects": "Gain any One Weapon Training, or Leap Up Talent. Gain one of Hatred (Orks, Eldar, Mutants, Chaos Worshippers, Imperial Guard, Imperial Navy, Void Pirates), your character fought against this foe in the past. Your character will never work with their sworn enemy unless under dire circumstances. Suffer -10 Fellowship in such dealings. Must make Willpower test to avoid succumbing to your hatred if this sworn enemy provokes you, difficulty modified by GM.",
-    "source": "Character Creation (sheet)",
+    "identifier": "the-hand-of-war",
+    "step": "trialsAndTravails",
+    "stepIndex": 4,
     "description": {
       "value": "<p>Gain any One Weapon Training, or Leap Up Talent. Gain one of Hatred (Orks, Eldar, Mutants, Chaos Worshippers, Imperial Guard, Imperial Navy, Void Pirates), your character fought against this foe in the past. Your character will never work with their sworn enemy unless under dire circumstances. Suffer -10 Fellowship in such dealings. Must make Willpower test to avoid succumbing to your hatred if this sworn enemy provokes you, difficulty modified by GM.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Trials and Travails",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,71 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "any One Weapon Training",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "or Leap Up",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "one of Hatred (Orks",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Eldar",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Mutants",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Chaos Worshippers",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Imperial Guard",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Imperial Navy",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Void Pirates)",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "Gain any One Weapon Training, or Leap Up Talent. Gain one of Hatred (Orks, Eldar, Mutants, Chaos Worshippers, Imperial Guard, Imperial Navy, Void Pirates), your character fought against this foe in the past. Your character will never work with their sworn enemy unless under dire circumstances. Suffer -10 Fellowship in such dealings. Must make Willpower test to avoid succumbing to your hatred if this sworn enemy provokes you, difficulty modified by GM.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.trials-and-travails",
-      "step": "Trials and Travails",
-      "stepIndex": 4,
-      "number": "1"
-    }
-  },
+  "flags": {},
   "_id": "rDe3gSqcyM4y0xB3"
 }

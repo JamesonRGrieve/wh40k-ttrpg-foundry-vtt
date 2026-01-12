@@ -1,4 +1,265 @@
 // ============================================
+// Talent & Trait Item Sheet Layout
+// ============================================
+
+.rt-talent-sheet,
+.rt-trait-sheet {
+  // Scrollable content area
+  .rt-item-content {
+    flex: 1; // Take remaining space
+    min-height: 0; // Critical for flex scrolling
+    overflow-y: auto; // Enable vertical scrolling
+    overflow-x: hidden; // Prevent horizontal scrolling
+    padding: $rt-space-md;
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-md;
+    
+    // Modern scrollbar styling
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: var(--rt-panel-bg);
+      border-radius: $rt-radius-sm;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: var(--rt-border-color);
+      border-radius: $rt-radius-sm;
+      
+      &:hover {
+        background: var(--rt-gold-dark);
+      }
+    }
+  }
+  
+  // Panel styling for modern look
+  .rt-panel {
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: $rt-radius-md;
+    box-shadow: $rt-shadow-sm;
+    overflow: hidden;
+    transition: border-color $rt-transition-fast;
+    
+    &:hover {
+      border-color: var(--rt-border-color);
+    }
+  }
+  
+  .rt-panel-header {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding: $rt-space-sm $rt-space-md;
+    background: linear-gradient(180deg, rgba($rt-color-gold, 0.12) 0%, rgba($rt-color-gold, 0.04) 100%);
+    border-bottom: 1px solid var(--rt-border-color-light);
+  }
+  
+  .rt-panel-title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    font-family: $rt-font-heading;
+    font-size: $rt-font-size-base;
+    color: var(--rt-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    i {
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+  }
+  
+  .rt-panel-body {
+    padding: $rt-space-md;
+    background: var(--rt-panel-body-bg);
+  }
+  
+  // Field styling
+  .rt-field {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-xs;
+    
+    label {
+      font-size: $rt-font-size-sm;
+      color: var(--rt-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+    }
+    
+    input,
+    select,
+    textarea {
+      background: var(--rt-input-bg);
+      border: 1px solid var(--rt-border-color-light);
+      border-radius: $rt-radius-sm;
+      color: var(--rt-text-dark);
+      font-family: $rt-font-ui;
+      font-size: $rt-font-size-sm;
+      padding: $rt-space-xs $rt-space-sm;
+      transition: border-color $rt-transition-fast, background-color $rt-transition-fast;
+      
+      &:focus {
+        outline: none;
+        border-color: var(--rt-gold);
+        background: var(--rt-input-bg-focus);
+      }
+      
+      &::placeholder {
+        color: var(--rt-text-subtle);
+      }
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+      line-height: 1.4;
+    }
+    
+    &--checkbox {
+      flex-direction: row;
+      align-items: center;
+      gap: $rt-space-sm;
+      
+      label {
+        margin: 0;
+        text-transform: none;
+        font-size: $rt-font-size-sm;
+        cursor: pointer;
+      }
+      
+      input[type="checkbox"] {
+        margin: 0;
+        accent-color: var(--rt-gold);
+        cursor: pointer;
+      }
+    }
+  }
+  
+  .rt-field-grid {
+    display: grid;
+    gap: $rt-space-md;
+    
+    &--2col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    &--3col {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .rt-field-hint {
+    font-size: $rt-font-size-xs;
+    color: var(--rt-text-subtle);
+    font-style: italic;
+    margin-top: $rt-space-xs;
+  }
+  
+  // Modifiers display
+  .rt-modifiers-display {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-md;
+  }
+  
+  .rt-modifier-section {
+    h4 {
+      font-family: $rt-font-heading;
+      font-size: $rt-font-size-sm;
+      color: var(--rt-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 $rt-space-sm 0;
+      padding-bottom: $rt-space-xs;
+      border-bottom: 1px solid var(--rt-border-color-light);
+    }
+  }
+  
+  .rt-modifier-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $rt-space-xs $rt-space-sm;
+    background: var(--rt-input-bg);
+    border-radius: $rt-radius-sm;
+    
+    &:not(:last-child) {
+      margin-bottom: $rt-space-xs;
+    }
+  }
+  
+  .rt-modifier-name {
+    font-size: $rt-font-size-sm;
+    color: var(--rt-text-dark);
+    text-transform: capitalize;
+  }
+  
+  .rt-modifier-value {
+    font-family: $rt-font-display;
+    font-size: $rt-font-size-base;
+    font-weight: 600;
+    color: var(--rt-gold);
+  }
+  
+  // Badge styling for category
+  .rt-meta-badge--talent {
+    background: rgba(181, 166, 66, 0.15);
+    border-color: rgba(181, 166, 66, 0.4);
+    color: $rt-color-brass;
+    
+    i {
+      color: $rt-color-brass;
+    }
+  }
+  
+  .rt-meta-badge--trait {
+    background: rgba(139, 0, 0, 0.15);
+    border-color: rgba(139, 0, 0, 0.4);
+    color: lighten($rt-color-crimson, 25%);
+    
+    i {
+      color: lighten($rt-color-crimson, 25%);
+    }
+  }
+  
+  // ProseMirror editor styling
+  .editor {
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: $rt-radius-sm;
+    min-height: 120px;
+    
+    &:focus-within {
+      border-color: var(--rt-gold);
+      background: var(--rt-input-bg-focus);
+    }
+  }
+  
+  .editor-content {
+    padding: $rt-space-sm;
+    color: var(--rt-text-dark);
+    font-family: $rt-font-ui;
+    font-size: $rt-font-size-sm;
+    line-height: 1.5;
+    
+    p {
+      margin: 0 0 $rt-space-xs 0;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// ============================================
 // Compact Sheet Styles (Skills, Talents, Traits)
 // ============================================
 

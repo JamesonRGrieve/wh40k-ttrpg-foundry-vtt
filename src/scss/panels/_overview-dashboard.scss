@@ -112,6 +112,12 @@
     padding: 4px 8px;
     border-radius: 4px;
   }
+  
+  &.rt-vital-critical-row {
+    padding: 4px 0;
+    margin-top: 2px;
+    border-top: 1px solid rgba($rt-accent-combat, 0.15);
+  }
 }
 
 .rt-vital-icon {
@@ -208,6 +214,48 @@
   border-radius: 3px;
 }
 
+// Fatigue Bolts Inline
+.rt-fatigue-bolts-inline {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.rt-fatigue-pip {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(#c08020, 0.25);
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  
+  &.rt-fatigue-pip--filled {
+    color: #c08020;
+    text-shadow: 0 0 6px rgba(#c08020, 0.5);
+    animation: bolt-glow 2s ease-in-out infinite;
+  }
+  
+  &:hover {
+    transform: scale(1.15);
+    color: rgba(#c08020, 0.5);
+  }
+}
+
+@keyframes bolt-glow {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+}
+
 // Fate Stars Inline
 .rt-fate-stars-inline {
   display: flex;
@@ -230,13 +278,13 @@
   transition: all 0.15s ease;
   
   &.rt-fate-pip--filled {
-    color: $rt-color-gold;
-    text-shadow: 0 0 4px rgba($rt-color-gold, 0.5);
+    color: #3498db !important;  // Blue instead of gold
+    text-shadow: 0 0 4px rgba(#3498db, 0.5);
   }
   
   &:hover {
     transform: scale(1.2);
-    color: $rt-color-gold;
+    color: #3498db;  // Blue instead of gold
   }
 }
 
@@ -248,11 +296,23 @@
 }
 
 .rt-crit-pip-mini {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    transform: scale(1.2);
+    border-color: $rt-accent-combat;
+    box-shadow: 0 0 4px rgba($rt-accent-combat, 0.4);
+  }
   
   &.rt-crit-pip-mini--filled {
     background: $rt-accent-combat;
@@ -292,41 +352,88 @@
 }
 
 .rt-mental-degree {
+  padding: 3px 8px;
+  border-radius: 4px;
   font-size: 0.65rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  padding: 1px 4px;
-  border-radius: 3px;
+  letter-spacing: 0.05em;
   margin-left: auto;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   
-  &.rt-degree-pure,
+  // Corruption Degrees
+  &.rt-degree-pure {
+    background: rgba($rt-degree-pure, 0.2);
+    border: 1px solid $rt-degree-pure;
+    color: darken($rt-degree-pure, 20%);
+  }
+  
+  &.rt-degree-tainted {
+    background: rgba($rt-degree-tainted, 0.2);
+    border: 1px solid $rt-degree-tainted;
+    color: darken($rt-degree-tainted, 25%);
+  }
+  
+  &.rt-degree-soiled {
+    background: rgba($rt-degree-soiled, 0.2);
+    border: 1px solid $rt-degree-soiled;
+    color: darken($rt-degree-soiled, 20%);
+  }
+  
+  &.rt-degree-debased {
+    background: rgba($rt-degree-debased, 0.25);
+    border: 1px solid $rt-degree-debased;
+    color: $rt-degree-debased;
+  }
+  
+  &.rt-degree-profane {
+    background: rgba($rt-degree-profane, 0.3);
+    border: 1px solid $rt-degree-profane;
+    color: $rt-degree-profane;
+  }
+  
+  &.rt-degree-damned {
+    background: rgba($rt-degree-damned, 0.3);
+    border: 1px solid $rt-degree-damned;
+    color: lighten($rt-degree-damned, 10%);
+  }
+  
+  // Insanity Degrees
   &.rt-degree-stable {
-    color: #2d7a6b;
-    background: rgba(45, 122, 107, 0.1);
+    background: rgba($rt-degree-stable, 0.2);
+    border: 1px solid $rt-degree-stable;
+    color: darken($rt-degree-stable, 20%);
   }
   
-  &.rt-degree-tainted,
   &.rt-degree-unsettled {
-    color: #8b7355;
-    background: rgba(139, 115, 85, 0.1);
+    background: rgba($rt-degree-unsettled, 0.2);
+    border: 1px solid $rt-degree-unsettled;
+    color: darken($rt-degree-unsettled, 25%);
   }
   
-  &.rt-degree-soiled,
   &.rt-degree-disturbed {
-    color: #9b59b6;
-    background: rgba(155, 89, 182, 0.1);
+    background: rgba($rt-degree-disturbed, 0.2);
+    border: 1px solid $rt-degree-disturbed;
+    color: darken($rt-degree-disturbed, 20%);
   }
   
-  &.rt-degree-debased,
   &.rt-degree-unhinged {
-    color: #c0392b;
-    background: rgba(192, 57, 43, 0.1);
+    background: rgba($rt-degree-debased, 0.25);
+    border: 1px solid $rt-degree-unhinged;
+    color: $rt-degree-unhinged;
   }
   
-  &.rt-degree-profane,
   &.rt-degree-deranged {
-    color: #8b0000;
-    background: rgba(139, 0, 0, 0.15);
+    background: rgba($rt-degree-deranged, 0.3);
+    border: 1px solid $rt-degree-deranged;
+    color: $rt-degree-deranged;
+  }
+  
+  &.rt-degree-terminally {
+    background: rgba($rt-degree-terminally, 0.3);
+    border: 1px solid $rt-degree-terminally;
+    color: lighten($rt-degree-terminally, 10%);
   }
 }
 

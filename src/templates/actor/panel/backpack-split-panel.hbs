@@ -1,0 +1,218 @@
+{{!-- Backpack Split Panel - Personal & Ship Storage --}}
+{{!-- Modern split-panel design with compact table rows --}}
+
+<div class="rt-panel rt-panel-backpack-split">
+    {{!-- Panel Header with Encumbrance Bar --}}
+    <div class="rt-panel-header rt-backpack-header">
+        <div class="rt-backpack-title">
+            <i class="fas fa-boxes"></i>
+            <span class="rt-panel-title">Inventory</span>
+        </div>
+        <div class="rt-encumbrance-display">
+            <span class="rt-enc-label">Carry:</span>
+            <div class="rt-encumbrance-bar-container">
+                <div class="rt-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}rt-enc-danger{{else if (gte encumbrancePercent 75)}}rt-enc-warning{{else if (gte encumbrancePercent 50)}}rt-enc-caution{{/if}}" 
+                     style="width: {{encumbrancePercent}}%"></div>
+            </div>
+            <span class="rt-enc-value">{{actor.encumbrance.current}} / {{actor.encumbrance.max}} kg</span>
+            {{#if actor.encumbrance.encumbered}}
+            <i class="fas fa-exclamation-triangle rt-enc-alert" title="Encumbered!"></i>
+            {{/if}}
+        </div>
+    </div>
+
+    {{!-- Search & Filter Controls --}}
+    <div class="rt-backpack-controls">
+        <div class="rt-search-box">
+            <i class="fas fa-search rt-search-icon"></i>
+            <input type="search"
+                   class="rt-backpack-search"
+                   placeholder="Search all items..."
+                   data-action="filterEquipment"
+                   autocomplete="off">
+            <button type="button" class="rt-search-clear" data-action="clearEquipmentSearch" title="Clear search">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="rt-filter-controls">
+            <select class="rt-equipment-type-filter" data-action="filterEquipment">
+                <option value="">All Types</option>
+                <option value="weapon">Weapons</option>
+                <option value="armour">Armour</option>
+                <option value="gear">Gear</option>
+                <option value="cybernetic">Cybernetics</option>
+                <option value="forceField">Force Fields</option>
+                <option value="ammunition">Ammunition</option>
+            </select>
+        </div>
+    </div>
+
+    {{!-- Split Panel Body --}}
+    <div class="rt-panel-body rt-split-container">
+        {{!-- LEFT: Backpack --}}
+        <div class="rt-split-column rt-backpack-inventory">
+            <div class="rt-column-header">
+                <i class="fas fa-suitcase"></i>
+                <span>Backpack</span>
+                <span class="rt-item-badge">{{allCarriedItems.length}}</span>
+            </div>
+            <div class="rt-column-body rt-dropzone-area" data-drop-zone="personal">
+                {{#if allCarriedItems.length}}
+                <div class="rt-inventory-table">
+                    <table class="rt-item-table">
+                        <thead>
+                            <tr>
+                                <th class="rt-col-icon"></th>
+                                <th class="rt-col-name">Item</th>
+                                <th class="rt-col-type">Type</th>
+                                <th class="rt-col-weight">Weight</th>
+                                <th class="rt-col-status">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="item-drop">
+                            {{#each allCarriedItems as |item|}}
+                            <tr class="rt-item-row item-drag {{#if item.system.equipped}}rt-row-equipped{{else if item.system.inBackpack}}rt-row-stowed{{/if}}" 
+                                data-item-id="{{item.id}}" 
+                                data-item-type="{{item.type}}"
+                                draggable="true">
+                                <td class="rt-col-icon">
+                                    <img src="{{item.img}}" alt="{{item.name}}" class="rt-item-icon" />
+                                </td>
+                                <td class="rt-col-name">
+                                    <button type="button" class="rt-item-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
+                                        {{item.name}}
+                                    </button>
+                                </td>
+                                <td class="rt-col-type">
+                                    <span class="rt-item-type">{{item.type}}</span>
+                                </td>
+                                <td class="rt-col-weight">
+                                    {{#if item.system.weight}}
+                                    <span class="rt-item-weight">{{item.system.weight}}</span>
+                                    {{else}}
+                                    <span class="rt-item-weight rt-weight-none">—</span>
+                                    {{/if}}
+                                </td>
+                                <td class="rt-col-status">
+                                    {{#if item.system.equipped}}
+                                    <span class="rt-status-badge rt-badge-equipped">
+                                        <i class="fas fa-check-circle"></i> Equipped
+                                    </span>
+                                    {{else if item.system.inBackpack}}
+                                    <span class="rt-status-badge rt-badge-backpack">
+                                        <i class="fas fa-suitcase"></i> Stowed
+                                    </span>
+                                    {{else}}
+                                    <span class="rt-status-badge rt-badge-carried">
+                                        <i class="fas fa-user"></i> Carried
+                                    </span>
+                                    {{/if}}
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                {{else}}
+                <div class="rt-empty-state item-drop">
+                    <i class="fas fa-box-open rt-empty-icon"></i>
+                    <p class="rt-empty-text">No items in backpack</p>
+                    <p class="rt-empty-hint">Drag items here from ship storage</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
+        {{!-- DIVIDER --}}
+        <div class="rt-split-divider">
+            <div class="rt-divider-line"></div>
+            <div class="rt-divider-icon">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <div class="rt-divider-line"></div>
+        </div>
+
+        {{!-- RIGHT: Ship Storage --}}
+        <div class="rt-split-column rt-ship-storage">
+            <div class="rt-column-header">
+                <i class="fas fa-rocket"></i>
+                <span>Ship Storage</span>
+                <span class="rt-item-badge">{{allShipItems.length}}</span>
+            </div>
+            <div class="rt-column-body rt-dropzone-area" data-drop-zone="ship">
+                {{#if allShipItems.length}}
+                <div class="rt-inventory-table">
+                    <table class="rt-item-table">
+                        <thead>
+                            <tr>
+                                <th class="rt-col-icon"></th>
+                                <th class="rt-col-name">Item</th>
+                                <th class="rt-col-type">Type</th>
+                                <th class="rt-col-weight">Weight</th>
+                                <th class="rt-col-status">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="item-drop">
+                            {{#each allShipItems as |item|}}
+                            <tr class="rt-item-row rt-row-ship item-drag" 
+                                data-item-id="{{item.id}}" 
+                                data-item-type="{{item.type}}"
+                                draggable="true">
+                                <td class="rt-col-icon">
+                                    <img src="{{item.img}}" alt="{{item.name}}" class="rt-item-icon" />
+                                </td>
+                                <td class="rt-col-name">
+                                    <button type="button" class="rt-item-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
+                                        {{item.name}}
+                                    </button>
+                                </td>
+                                <td class="rt-col-type">
+                                    <span class="rt-item-type">{{item.type}}</span>
+                                </td>
+                                <td class="rt-col-weight">
+                                    {{#if item.system.weight}}
+                                    <span class="rt-item-weight">{{item.system.weight}}</span>
+                                    {{else}}
+                                    <span class="rt-item-weight rt-weight-none">—</span>
+                                    {{/if}}
+                                </td>
+                                <td class="rt-col-status">
+                                    <span class="rt-status-badge rt-badge-ship">
+                                        <i class="fas fa-warehouse"></i> Ship
+                                    </span>
+                                </td>
+                                <td class="rt-col-actions">
+                                    {{!-- Removed arrow button - use drag-drop only --}}
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                {{else}}
+                <div class="rt-empty-state item-drop">
+                    <i class="fas fa-rocket rt-empty-icon"></i>
+                    <p class="rt-empty-text">No items in ship storage</p>
+                    <p class="rt-empty-hint">Drag items here to free carry weight</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    {{!-- Panel Footer with Quick Stats --}}
+    <div class="rt-panel-footer rt-backpack-footer">
+        <div class="rt-footer-stat">
+            <span class="rt-stat-label">Backpack:</span>
+            <span class="rt-stat-value">{{allCarriedItems.length}} items</span>
+        </div>
+        <div class="rt-footer-stat">
+            <span class="rt-stat-label">Total:</span>
+            <span class="rt-stat-value">{{allItems.length}} items</span>
+        </div>
+        <div class="rt-footer-stat">
+            <span class="rt-stat-label">Ship:</span>
+            <span class="rt-stat-value">{{allShipItems.length}} items</span>
+        </div>
+    </div>
+</div>

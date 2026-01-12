@@ -15,6 +15,7 @@ const ENCUMBRANCE_TABLE = [
 /**
  * Computes encumbrance from carried items on an actor.
  * Handles backpack/combat vest logic and calculates current vs max weight.
+ * Items in ship storage are excluded from weight calculations.
  * 
  * @param {Actor} actor - The actor to compute encumbrance for
  * @returns {object} Encumbrance data with current, max, and encumbered flags
@@ -25,12 +26,16 @@ export function computeEncumbrance(actor) {
     const backpack = actor.system.backpack;
     const backpackMax = backpack?.hasBackpack ? (backpack.weight?.max ?? 0) : 0;
 
-    // Filter out storage location items (they're containers, not carried directly)
-    const nonStorageItems = actor.items.filter((item) => !item.isStorageLocation);
+    // Filter out storage location items and ship-stowed items
+    const carriedItems = actor.items.filter((item) => {
+        if (item.isStorageLocation) return false;
+        if (item.system?.inShipStorage === true) return false;
+        return true;
+    });
 
     if (backpack?.hasBackpack) {
-        for (const item of nonStorageItems) {
-            if (item.system.backpack?.inBackpack) {
+        for (const item of carriedItems) {
+            if (item.system?.inBackpack) {
                 backpackWeight += item.totalWeight ?? 0;
             } else {
                 currentWeight += item.totalWeight ?? 0;
@@ -41,7 +46,7 @@ export function computeEncumbrance(actor) {
             currentWeight += backpackWeight;
         }
     } else {
-        for (const item of nonStorageItems) {
+        for (const item of carriedItems) {
             currentWeight += item.totalWeight ?? 0;
         }
     }

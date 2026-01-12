@@ -1,59 +1,40 @@
-{{#if (eq includePanel false)}}
-<div class="rt-journal-entries">
-    <div class="rt-journal-entries-title">Journal Entries</div>
-    <div class="rt-table--border rt-journaltable--border">
-{{else}}
-<div class="rt-panel rt-grid-col-4 rt-grid-row-3">
-    <div class="rt-panel-header">
-        <span class="rt-panel-title">Journal Entries</span>
+{{!-- Journal Entries Section --}}
+<div class="rt-journal-entries-section">
+    <div class="rt-section-header">
+        <span class="rt-section-title"><i class="fas fa-book"></i> Journal Entries</span>
+        <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="journalEntry" title="Add Journal Entry">
+            <i class="fas fa-plus"></i>
+        </button>
     </div>
-    <div class="rt-panel-body">
-        <div class="rt-table--border rt-journaltable--border">
-{{/if}}
-        <div class="table-row--head">
-            <div class="table-cell--span2">Name</div>
-            <div class="table-cell">Time</div>
-            <div class="table-cell">Place</div>
-            <div class="table-cell--last">
-                <label class="rt-control-button" data-action="itemCreate" data-type="journalEntry">
-                    <span class="rt-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
-                </label>
+    
+    {{#if journalEntries.length}}
+    <div class="rt-journal-list">
+        {{#each journalEntries as |entry|}}
+        <div class="rt-journal-entry" data-item-id="{{entry.id}}">
+            <div class="rt-entry-header">
+                <button type="button" class="rt-entry-name" data-action="itemEdit" data-item-id="{{entry.id}}" title="Click to edit">
+                    {{entry.name}}
+                </button>
+                <span class="rt-entry-meta">
+                    {{#if entry.system.time}}{{entry.system.time}}{{/if}}
+                    {{#if entry.system.place}}{{#if entry.system.time}} · {{/if}}{{entry.system.place}}{{/if}}
+                </span>
+                <button type="button" class="rt-entry-delete" data-action="itemDelete" data-item-id="{{entry.id}}" title="Delete">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-        </div>
-        {{#each actor.items as | item |}}
-            {{#if item.isJournalEntry}}
-                <div class="table-row">
-                    <div class="table-cell--settingstoggle">
-                        <label class="rt-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
-                        </label>
-                    </div>
-                    <div class="table-cell--left">
-                        {{> systems/rogue-trader/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
-                    </div>
-                    <div class="table-cell">
-                        <span class="display">{{item.system.time}}</span>
-                    </div>
-                    <div class="table-cell">
-                        <span class="display">{{item.system.place}}</span>
-                    </div>
-                    <div class="table-cell--last">
-                        <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="rt-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
-                        </label>
-                    </div>
-                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot
-                        (isExpanded (concat 'description_' item.id ))}}>
-                        <span class="display">{{item.system.description}}</span>
-                    </div>
-                </div>
+            {{#if entry.system.description}}
+            <div class="rt-entry-preview">
+                {{truncate entry.system.description 150}}
+            </div>
             {{/if}}
+        </div>
         {{/each}}
     </div>
-{{#if (eq includePanel false)}}
-</div>
-{{else}}
-        </div>
+    {{else}}
+    <div class="rt-empty-state">
+        <i class="fas fa-book-open"></i>
+        <p>No journal entries yet</p>
     </div>
+    {{/if}}
 </div>
-{{/if}}

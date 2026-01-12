@@ -2,6 +2,88 @@ import { RogueTraderItemContainer } from './item-container.mjs';
 import { capitalize } from '../handlebars/handlebars-helpers.mjs';
 
 export class RogueTraderItem extends RogueTraderItemContainer {
+    
+    /**
+     * Override to clean/validate img field before validation runs.
+     * Foundry V13 has strict img validation - ensure valid file extension.
+     * @param {object} data - The candidate data object to clean
+     * @param {object} options - Additional options
+     * @returns {object} The cleaned data
+     * @override
+     */
+    static cleanData(source = {}, options = {}) {
+        // CRITICAL: Clean img field if present - V13 validation is very strict
+        if ('img' in source) {
+            const imgValue = source.img;
+            
+            // Handle empty, null, undefined, or non-string img values
+            if (!imgValue || imgValue === '' || typeof imgValue !== 'string' || imgValue.trim() === '') {
+                // Set to type-specific default
+                source.img = this._getDefaultIcon(source.type || 'unknown');
+                console.warn(`RogueTrader | cleanData: Invalid img value "${imgValue}" for type "${source.type}", using default: ${source.img}`);
+            } else {
+                // Check if has valid extension
+                const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif', '.webm'];
+                const imgStr = imgValue.toLowerCase().trim();
+                
+                // Also check for obviously invalid paths
+                if (imgStr === 'null' || imgStr === 'undefined' || imgStr.length < 5) {
+                    source.img = this._getDefaultIcon(source.type || 'unknown');
+                    console.warn(`RogueTrader | cleanData: Invalid img path "${imgValue}" for type "${source.type}", using default: ${source.img}`);
+                } else {
+                    const hasValidExtension = validExtensions.some(ext => imgStr.endsWith(ext));
+                    
+                    if (!hasValidExtension) {
+                        // Invalid extension - use type-specific default
+                        source.img = this._getDefaultIcon(source.type || 'unknown');
+                        console.warn(`RogueTrader | cleanData: No valid extension in "${imgValue}" for type "${source.type}", using default: ${source.img}`);
+                    }
+                }
+            }
+        } else {
+            // img field not present at all - add it
+            source.img = this._getDefaultIcon(source.type || 'unknown');
+            console.warn(`RogueTrader | cleanData: Missing img field for type "${source.type}", using default: ${source.img}`);
+        }
+        
+        return super.cleanData(source, options);
+    }
+    
+    /**
+     * Get default icon path for an item type.
+     * Uses Foundry's built-in default icons which are guaranteed to exist.
+     * @param {string} type - The item type
+     * @returns {string} Path to default icon
+     * @private
+     */
+    static _getDefaultIcon(type) {
+        // Use Foundry's built-in default icons that definitely exist
+        const defaultIcons = {
+            weapon: 'icons/svg/sword.svg',
+            armour: 'icons/svg/shield.svg',
+            gear: 'icons/svg/item-bag.svg',
+            ammunition: 'icons/svg/explosion.svg',
+            talent: 'icons/svg/book.svg',
+            trait: 'icons/svg/blood.svg',
+            psychicPower: 'icons/svg/lightning.svg',
+            navigatorPower: 'icons/svg/eye.svg',
+            skill: 'icons/svg/target.svg',
+            cybernetic: 'icons/svg/upgrade.svg',
+            forceField: 'icons/svg/shield.svg',
+            shipComponent: 'icons/svg/mech.svg',
+            shipWeapon: 'icons/svg/cannon.svg',
+            condition: 'icons/svg/daze.svg',
+            criticalInjury: 'icons/svg/blood.svg',
+            combatAction: 'icons/svg/combat.svg',
+            originPath: 'icons/svg/direction.svg',
+            order: 'icons/svg/pawprint.svg',
+            ritual: 'icons/svg/book.svg'
+        };
+        
+        // Return type-specific icon or generic mystery-man fallback
+        return defaultIcons[type] || 'icons/svg/mystery-man.svg';
+    }
+    
     get totalWeight() {
         let weight = this.system.weight || 0;
         if (this.items && this.items.size > 0) {

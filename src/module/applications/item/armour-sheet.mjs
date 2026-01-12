@@ -30,7 +30,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-armour-sheet-modern.hbs",
+            template: "systems/rogue-trader/templates/item/item-armour-sheet-v2.hbs",
             scrollable: [".rt-armour-content"]
         }
     };
@@ -58,39 +58,37 @@ export default class ArmourSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context, options) {
-        super._onRender(context, options);
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+        
+        // Set up tab listeners
         this._setupArmourTabs();
     }
 
     /**
-     * Set up custom tab handling for armour sheet.
-     * @private
+     * Set up tab click listeners for armour sheet tabs.
+     * @protected
      */
     _setupArmourTabs() {
-        const tabs = this.element.querySelectorAll(".rt-armour-tab");
-        const panels = this.element.querySelectorAll(".rt-armour-panel");
-        
+        const tabs = this.element.querySelectorAll(".rt-armour-tabs .rt-armour-tab");
         tabs.forEach(tab => {
             tab.addEventListener("click", (event) => {
                 event.preventDefault();
-                const targetTab = tab.dataset.tab;
-                
-                // Update tab active states
+                const tabName = tab.dataset.tab;
+                if (!tabName) return;
+
+                // Update active tab button
                 tabs.forEach(t => t.classList.remove("active"));
                 tab.classList.add("active");
-                
-                // Update panel visibility
+
+                // Show/hide panels
+                const panels = this.element.querySelectorAll(".rt-armour-panel");
                 panels.forEach(panel => {
-                    if (panel.dataset.tab === targetTab) {
-                        panel.classList.add("active");
-                    } else {
-                        panel.classList.remove("active");
-                    }
+                    panel.classList.toggle("active", panel.dataset.tab === tabName);
                 });
-                
-                // Store active tab
-                this.tabGroups.primary = targetTab;
+
+                // Update tab group state
+                this.tabGroups.primary = tabName;
             });
         });
     }

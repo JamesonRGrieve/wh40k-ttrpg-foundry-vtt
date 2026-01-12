@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Communicate with others using the same language. Test not needed unless communication involves obscure dialects, complex concepts, or bad conditions.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "specializations": [
       "Eldar",
       "Explorator Binary",
@@ -19,7 +19,7 @@
       "Techna-Lingua",
       "Trader's Cant"
     ],
-    "skillType": "specialist",
+    "skillType": "advanced",
     "aptitudes": [],
     "source": ""
   },

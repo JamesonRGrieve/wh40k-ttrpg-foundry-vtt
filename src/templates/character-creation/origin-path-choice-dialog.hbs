@@ -1,0 +1,72 @@
+{{!-- Origin Path Choice Dialog Template --}}
+<div class="origin-choice-dialog-content">
+    
+    {{!-- Item Header --}}
+    <div class="choice-header">
+        <img src="{{itemImg}}" alt="{{itemName}}" class="item-img" />
+        <div class="item-info">
+            <h3 class="item-name">{{itemName}}</h3>
+            <p class="choice-instruction">{{localize "RT.OriginPath.ChoicesRequired"}}</p>
+        </div>
+    </div>
+
+    {{!-- Choices List --}}
+    <div class="choices-list">
+        {{#each choices as |choice|}}
+            <div class="choice-group">
+                <div class="choice-label">
+                    <span class="choice-type">{{capitalize choice.type}}</span>
+                    <span class="choice-text">{{choice.label}}</span>
+                    {{#if (gt choice.remaining 0)}}
+                        <span class="choice-remaining">
+                            ({{localize "RT.OriginPath.ChoicesRemaining" count=choice.remaining}})
+                        </span>
+                    {{else}}
+                        <i class="fa-solid fa-check-circle choice-complete"></i>
+                    {{/if}}
+                </div>
+                
+                <div class="choice-options">
+                    {{#each choice.options as |option|}}
+                        <button 
+                            type="button" 
+                            class="choice-option {{#if option.selected}}selected{{/if}} {{#if option.disabled}}disabled{{/if}}"
+                            data-action="toggleOption"
+                            data-choice="{{../label}}"
+                            data-option="{{option.value}}"
+                            {{#if option.disabled}}disabled{{/if}}>
+                            
+                            <span class="option-checkbox">
+                                {{#if option.selected}}
+                                    <i class="fa-solid fa-check-square"></i>
+                                {{else}}
+                                    <i class="fa-regular fa-square"></i>
+                                {{/if}}
+                            </span>
+                            
+                            <span class="option-label">{{option.label}}</span>
+                        </button>
+                    {{/each}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+
+    {{!-- Footer Actions --}}
+    <div class="choice-footer">
+        <button type="button" class="cancel-button" data-action="cancel">
+            <i class="fa-solid fa-times"></i>
+            {{localize "RT.Cancel"}}
+        </button>
+        
+        <button 
+            type="submit" 
+            class="confirm-button" 
+            data-action="confirm"
+            {{#unless allChoicesComplete}}disabled{{/unless}}>
+            <i class="fa-solid fa-check"></i>
+            {{localize "RT.OriginPath.ConfirmChoices"}}
+        </button>
+    </div>
+
+</div>

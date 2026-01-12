@@ -3,15 +3,15 @@
   "type": "skill",
   "img": "icons/svg/book.svg",
   "system": {
-    "characteristic": "intelligence",
+    "characteristic": "agility",
     "descriptor": "The Bypassing of Mechanical Locks or other physical security methods as well as the hacking of cogitators, tech, and simple mechanical devices.",
     "uses": "Uses: Opening a Locked Door, Hacking a Cogitator, Laying Traps.\nSpecial Use: Traps: Hide a Grenade under a corpse set to explode when rolled over, rig spiked pits, dead falls, rigged shotguns, etc. Time, Resources, and damage caused from trap vary. Either GM makes secret Skill Test to set up, with outcome determining how well trap goes off, or Opposed Test made vs Victim's Awareness to spot the trap before it goes off.",
     "useTime": "1 Minute, Reduced by 10 seconds per DoS. Could be more.",
     "description": {
       "value": "<p>The Bypassing of Mechanical Locks or other physical security methods as well as the hacking of cogitators, tech, and simple mechanical devices.</p>"
     },
-    "isBasic": true,
-    "skillType": "basic",
+    "isBasic": false,
+    "skillType": "advanced",
     "aptitudes": [
       "Intelligence",
       "Tech",

@@ -1,14 +1,18 @@
 {
   "name": "Endurance",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Motivation",
-    "descriptionText": "+1 Wound",
-    "effects": "+1 Wound",
-    "source": "Character Creation (sheet)",
+    "identifier": "endurance",
+    "step": "motivation",
+    "stepIndex": 5,
     "description": {
       "value": "<p>+1 Wound</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Motivation",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,25 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 1,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "+1 Wound",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.motivation",
-      "step": "Motivation",
-      "stepIndex": 5,
-      "number": "1"
-    }
-  },
+  "flags": {},
   "_id": "HaMgw4EQnrYEpIJA"
 }

@@ -1,14 +1,18 @@
 {
   "name": "Savant",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Birthright",
-    "descriptionText": "+3 Intelligence or +3 Fellowship, -3 Toughness. Gain Logic as Trained Skill and Peer (Academic) Talent.",
-    "effects": "+3 Intelligence or +3 Fellowship, -3 Toughness. Gain Logic as Trained Skill and Peer (Academic) Talent.",
-    "source": "Character Creation (sheet)",
+    "identifier": "savant",
+    "step": "birthright",
+    "stepIndex": 2,
     "description": {
       "value": "<p>+3 Intelligence or +3 Fellowship, -3 Toughness. Gain Logic as Trained Skill and Peer (Academic) Talent.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Birthright",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -31,17 +35,31 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Logic as Trained",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "+3 Intelligence or +3 Fellowship, -3 Toughness. Gain Logic as Trained Skill and Peer (Academic) Talent.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.birthright",
-      "step": "Birthright",
-      "stepIndex": 2,
-      "number": "5"
-    }
-  },
+  "flags": {},
   "_id": "0DMx4rOTVo5IennF"
 }

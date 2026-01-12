@@ -21,6 +21,8 @@
 @import 'src/scss/dialogs/loadout-preset-dialog';
 @import 'src/scss/dialogs/confirmation-dialog';
 @import 'src/scss/dialogs/effect-creation-dialog';
+@import 'src/scss/components/origin-path-builder';
+@import 'src/scss/components/origin-path-choice-dialog';
 @import 'journals';
 
 // Global components (appended to document.body, not inside wrappers)
@@ -78,7 +80,6 @@
     @import 'src/scss/components/combat-quick-panel';
     @import 'src/scss/components/what-if-mode';
     @import 'src/scss/components/acquisition-dialog';
-    @import 'src/scss/components/origin-path-builder';
 
     // Actor Sheets (split into modules)
     @import 'src/scss/actor/index';

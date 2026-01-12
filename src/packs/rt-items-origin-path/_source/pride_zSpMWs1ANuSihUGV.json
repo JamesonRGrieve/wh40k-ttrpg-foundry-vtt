@@ -1,14 +1,18 @@
 {
   "name": "Pride",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Motivation",
-    "descriptionText": "Gain one random Heirloom item from noted list or +3 Toughness. Hierloom, Roll 1d100, gain Hierloom. 01-20: Best Archeotech Laspistol, 21-40: Best Chainsword, 41-60: Ancestral Seal, +10 to Interaction Tests with Imperial Citizens whilst Displayed, 61-80: Best Carapace Armour, 81-00: Reliquary of Saint Drusus: +20 to Interaction Tests with Ministorum Members whilst Displayed",
-    "effects": "Gain one random Heirloom item from noted list or +3 Toughness. Hierloom, Roll 1d100, gain Hierloom. 01-20: Best Archeotech Laspistol, 21-40: Best Chainsword, 41-60: Ancestral Seal, +10 to Interaction Tests with Imperial Citizens whilst Displayed, 61-80: Best Carapace Armour, 81-00: Reliquary of Saint Drusus: +20 to Interaction Tests with Ministorum Members whilst Displayed",
-    "source": "Character Creation (sheet)",
+    "identifier": "pride",
+    "step": "motivation",
+    "stepIndex": 5,
     "description": {
       "value": "<p>Gain one random Heirloom item from noted list or +3 Toughness. Hierloom, Roll 1d100, gain Hierloom. 01-20: Best Archeotech Laspistol, 21-40: Best Chainsword, 41-60: Ancestral Seal, +10 to Interaction Tests with Imperial Citizens whilst Displayed, 61-80: Best Carapace Armour, 81-00: Reliquary of Saint Drusus: +20 to Interaction Tests with Ministorum Members whilst Displayed</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Motivation",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,31 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Hierloom",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "Gain one random Heirloom item from noted list or +3 Toughness. Hierloom, Roll 1d100, gain Hierloom. 01-20: Best Archeotech Laspistol, 21-40: Best Chainsword, 41-60: Ancestral Seal, +10 to Interaction Tests with Imperial Citizens whilst Displayed, 61-80: Best Carapace Armour, 81-00: Reliquary of Saint Drusus: +20 to Interaction Tests with Ministorum Members whilst Displayed",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.motivation",
-      "step": "Motivation",
-      "stepIndex": 5,
-      "number": "5"
-    }
-  },
+  "flags": {},
   "_id": "zSpMWs1ANuSihUGV"
 }

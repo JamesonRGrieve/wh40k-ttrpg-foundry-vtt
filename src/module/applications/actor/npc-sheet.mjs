@@ -80,12 +80,9 @@ export default class NpcSheet extends AcolyteSheet {
     /* -------------------------------------------- */
 
     /**
-     * Lazy load NPC templates before first render.
      * @inheritDoc
      */
     async _prepareContext(options) {
-        // Lazy load NPC-specific templates
-        await HandlebarManager.loadActorSheetTemplates("npc");
         return super._prepareContext(options);
     }
 

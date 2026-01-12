@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Using and Understanding of short-hand codes to express concepts via hand signs, markings, etc for particular group. Test not required for leaving or reading basic messages, might be required for complicated meanings or obscured/damaged ciphers.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "specializations": [
       "Rogue Trader",
       "Mercenary Cant",
@@ -18,7 +18,7 @@
       "Astropath",
       "Underworld"
     ],
-    "skillType": "specialist",
+    "skillType": "advanced",
     "aptitudes": [],
     "source": ""
   },

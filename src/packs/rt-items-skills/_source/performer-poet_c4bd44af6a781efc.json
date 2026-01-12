@@ -10,14 +10,14 @@
     "description": {
       "value": "<p>Entertain or Enthrall groups of Spectators, takes an amount of time dependant on Performance.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "specializations": [
       "Dancer",
       "Musician",
       "Singer",
       "Storyteller"
     ],
-    "skillType": "specialist",
+    "skillType": "advanced",
     "aptitudes": [],
     "source": ""
   },

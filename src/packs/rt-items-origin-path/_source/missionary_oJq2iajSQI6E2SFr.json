@@ -1,14 +1,18 @@
 {
   "name": "Missionary",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Career",
-    "descriptionText": "Emmisaries of the Emperor's Light as well as the carriers of the Burning Flames of righteous hatred, who may inspire the masses to acts of faith to destroy the alien, heretic, and worse.\nSkills: Common Lore (Imperial Creed, Imperium), Forbidden Lore (Heresy), Medicae, Scholastic Lore (Imperial Creed), Speak Language (High Gothic, Low Gothic).\nTalents: Basic Wepaon Training (Universal), Melee Weapon Training (Universal), Pure Faith, Unshakeable Faith.\nGear: Good Chainsword or Best Staff, Good Flamer or Best Lasgun, Best Guard Flak Armour, Ecclesiarchal Robes, Aquila Pendant, Sepulchre, Censer, and Incense, Micro-bead.\nSpecial Ability: Start with Pure Faith Talent.",
-    "effects": "Emmisaries of the Emperor's Light as well as the carriers of the Burning Flames of righteous hatred, who may inspire the masses to acts of faith to destroy the alien, heretic, and worse.\nSkills: Common Lore (Imperial Creed, Imperium), Forbidden Lore (Heresy), Medicae, Scholastic Lore (Imperial Creed), Speak Language (High Gothic, Low Gothic).\nTalents: Basic Wepaon Training (Universal), Melee Weapon Training (Universal), Pure Faith, Unshakeable Faith.\nGear: Good Chainsword or Best Staff, Good Flamer or Best Lasgun, Best Guard Flak Armour, Ecclesiarchal Robes, Aquila Pendant, Sepulchre, Censer, and Incense, Micro-bead.\nSpecial Ability: Start with Pure Faith Talent.",
-    "source": "Character Creation (sheet)",
+    "identifier": "missionary",
+    "step": "career",
+    "stepIndex": 6,
     "description": {
       "value": "<p>Emmisaries of the Emperor&#x27;s Light as well as the carriers of the Burning Flames of righteous hatred, who may inspire the masses to acts of faith to destroy the alien, heretic, and worse.<br>Skills: Common Lore (Imperial Creed, Imperium), Forbidden Lore (Heresy), Medicae, Scholastic Lore (Imperial Creed), Speak Language (High Gothic, Low Gothic).<br>Talents: Basic Wepaon Training (Universal), Melee Weapon Training (Universal), Pure Faith, Unshakeable Faith.<br>Gear: Good Chainsword or Best Staff, Good Flamer or Best Lasgun, Best Guard Flak Armour, Ecclesiarchal Robes, Aquila Pendant, Sepulchre, Censer, and Incense, Micro-bead.<br>Special Ability: Start with Pure Faith Talent.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Career",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,92 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Common Lore (Imperial Creed",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Imperium)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Forbidden Lore (Heresy)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Medicae",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Scholastic Lore (Imperial Creed)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Speak Language (High Gothic",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Low Gothic)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Universal",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "s: Basic Wepaon Training",
+          "specialization": "Universal",
+          "uuid": ""
+        },
+        {
+          "name": "Melee Weapon Training",
+          "specialization": "Universal",
+          "uuid": ""
+        },
+        {
+          "name": "Pure Faith",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "Unshakeable Faith",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Special Ability",
+          "description": "Start with Pure Faith Talent.</p>"
+        }
+      ],
+      "choices": []
+    },
+    "effectText": "Emmisaries of the Emperor's Light as well as the carriers of the Burning Flames of righteous hatred, who may inspire the masses to acts of faith to destroy the alien, heretic, and worse.\nSkills: Common Lore (Imperial Creed, Imperium), Forbidden Lore (Heresy), Medicae, Scholastic Lore (Imperial Creed), Speak Language (High Gothic, Low Gothic).\nTalents: Basic Wepaon Training (Universal), Melee Weapon Training (Universal), Pure Faith, Unshakeable Faith.\nGear: Good Chainsword or Best Staff, Good Flamer or Best Lasgun, Best Guard Flak Armour, Ecclesiarchal Robes, Aquila Pendant, Sepulchre, Censer, and Incense, Micro-bead.\nSpecial Ability: Start with Pure Faith Talent.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.career",
-      "step": "Career",
-      "stepIndex": 6,
-      "number": "5"
-    }
-  },
+  "flags": {},
   "_id": "oJq2iajSQI6E2SFr"
 }

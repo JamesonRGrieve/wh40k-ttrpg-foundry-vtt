@@ -1,14 +1,18 @@
 {
   "name": "Unnatural Origin",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Birthright",
-    "descriptionText": "1. Contaminated Environs (100xp): +3 Toughness or +3 Willpower, -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons). For add. 100xp, roll for 1 mutation (reroll 75+).\n2. False-Man (300xp): Gain Ambidextrous, Autosanguine, and Chem-Geld Talents, Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity or -1 Fate Point.\n3. Warp Tainted (200xp): +3 Perception or +3 Willpower, -3 Fellowship. Gain Dark Soul + Jaded talents and Untrained Forbidden Lore (Warp) skill. +1d10 Corruption. for +300xp gain Favoured by the Warp Talent and +1d10 Corruption.",
-    "effects": "1. Contaminated Environs (100xp): +3 Toughness or +3 Willpower, -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons). For add. 100xp, roll for 1 mutation (reroll 75+).\n2. False-Man (300xp): Gain Ambidextrous, Autosanguine, and Chem-Geld Talents, Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity or -1 Fate Point.\n3. Warp Tainted (200xp): +3 Perception or +3 Willpower, -3 Fellowship. Gain Dark Soul + Jaded talents and Untrained Forbidden Lore (Warp) skill. +1d10 Corruption. for +300xp gain Favoured by the Warp Talent and +1d10 Corruption.",
-    "source": "Character Creation (sheet)",
+    "identifier": "unnatural-origin",
+    "step": "birthright",
+    "stepIndex": 2,
     "description": {
       "value": "<p>1. Contaminated Environs (100xp): +3 Toughness or +3 Willpower, -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons). For add. 100xp, roll for 1 mutation (reroll 75+).<br>2. False-Man (300xp): Gain Ambidextrous, Autosanguine, and Chem-Geld Talents, Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity or -1 Fate Point.<br>3. Warp Tainted (200xp): +3 Perception or +3 Willpower, -3 Fellowship. Gain Dark Soul + Jaded talents and Untrained Forbidden Lore (Warp) skill. +1d10 Corruption. for +300xp gain Favoured by the Warp Talent and +1d10 Corruption.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Birthright",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,87 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Peer (Mutants)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Resistance (Poisons)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Ambidextrous",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Autosanguine",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Chem-Geld",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "2d10 Insanity or -1 Fate Point",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Dark Soul + Jaded",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Favoured by the Warp",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Increase two characteristics by +3",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "reduce one by -3",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "Untrained Forbidden Lore",
+          "specialization": "Warp",
+          "uuid": ""
+        },
+        {
+          "name": "and +1d10 Corruption",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "1. Contaminated Environs (100xp): +3 Toughness or +3 Willpower, -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons). For add. 100xp, roll for 1 mutation (reroll 75+).\n2. False-Man (300xp): Gain Ambidextrous, Autosanguine, and Chem-Geld Talents, Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity or -1 Fate Point.\n3. Warp Tainted (200xp): +3 Perception or +3 Willpower, -3 Fellowship. Gain Dark Soul + Jaded talents and Untrained Forbidden Lore (Warp) skill. +1d10 Corruption. for +300xp gain Favoured by the Warp Talent and +1d10 Corruption.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.birthright",
-      "step": "Birthright",
-      "stepIndex": 2,
-      "number": "2 and 3"
-    }
-  },
+  "flags": {},
   "_id": "XaJWGdKgLzRqNqVz"
 }

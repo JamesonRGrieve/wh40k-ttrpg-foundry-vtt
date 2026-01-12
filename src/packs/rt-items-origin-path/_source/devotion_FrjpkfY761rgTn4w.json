@@ -1,14 +1,18 @@
 {
   "name": "Devotion",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Motivation",
-    "descriptionText": "1. Creed (200xp): Gain Charm and Common Lore (Imperial Creed) as Trained Skills. Gain Inspire Wrath Talent.\n2. Duty (100xp): +3 Willpower. Gain either Armour of Contempt Talent or Unshakable Faith Talent.\n3. Loyalty (100xp): Gain Trade (Voidfarer) as Trained Basic Skill, gain +5 to Willpower and Fellowship Tests aboard the ship your character lives on.",
-    "effects": "1. Creed (200xp): Gain Charm and Common Lore (Imperial Creed) as Trained Skills. Gain Inspire Wrath Talent.\n2. Duty (100xp): +3 Willpower. Gain either Armour of Contempt Talent or Unshakable Faith Talent.\n3. Loyalty (100xp): Gain Trade (Voidfarer) as Trained Basic Skill, gain +5 to Willpower and Fellowship Tests aboard the ship your character lives on.",
-    "source": "Character Creation (sheet)",
+    "identifier": "devotion",
+    "step": "motivation",
+    "stepIndex": 5,
     "description": {
       "value": "<p>1. Creed (200xp): Gain Charm and Common Lore (Imperial Creed) as Trained Skills. Gain Inspire Wrath Talent.<br>2. Duty (100xp): +3 Willpower. Gain either Armour of Contempt Talent or Unshakable Faith Talent.<br>3. Loyalty (100xp): Gain Trade (Voidfarer) as Trained Basic Skill, gain +5 to Willpower and Fellowship Tests aboard the ship your character lives on.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Motivation",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -31,17 +35,72 @@
       ],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Charm",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore (Imperial Creed) as Trained",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Inspire Wrath",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "either Armour of Contempt",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Trade (Voidfarer) as Trained Basic",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "to Willpower",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "or Unshakable Faith Talent",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "equipment",
+          "label": "Choose from: Armour of Contempt Talent, Unshakable Faith Talent",
+          "options": [
+            "Armour of Contempt Talent",
+            "Unshakable Faith Talent"
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "effectText": "1. Creed (200xp): Gain Charm and Common Lore (Imperial Creed) as Trained Skills. Gain Inspire Wrath Talent.\n2. Duty (100xp): +3 Willpower. Gain either Armour of Contempt Talent or Unshakable Faith Talent.\n3. Loyalty (100xp): Gain Trade (Voidfarer) as Trained Basic Skill, gain +5 to Willpower and Fellowship Tests aboard the ship your character lives on.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.motivation",
-      "step": "Motivation",
-      "stepIndex": 5,
-      "number": "1 and 4"
-    }
-  },
+  "flags": {},
   "_id": "FrjpkfY761rgTn4w"
 }

@@ -1,14 +1,18 @@
 {
   "name": "Darkness",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Trials and Travails",
-    "descriptionText": "1. Forbidden Knowledge (200xp): Gain one Common Lore and one Forbidden lore trained skill you didn't have. Gain Paranoia and Enemy Talent for group Lore was stolen from.\n2. Warp Incursion (100xp): Gaint Resistance (Psychic Powers) and Light Sleeper Talents. Gain 1d5 Corruption Points.\n3. Dark Secret (200xp): +6 to any one Characteristic. 1d5 Insanity Points. Character possesses a dark and difficult to get rid of secret or curse (work with GM).",
-    "effects": "1. Forbidden Knowledge (200xp): Gain one Common Lore and one Forbidden lore trained skill you didn't have. Gain Paranoia and Enemy Talent for group Lore was stolen from.\n2. Warp Incursion (100xp): Gaint Resistance (Psychic Powers) and Light Sleeper Talents. Gain 1d5 Corruption Points.\n3. Dark Secret (200xp): +6 to any one Characteristic. 1d5 Insanity Points. Character possesses a dark and difficult to get rid of secret or curse (work with GM).",
-    "source": "Character Creation (sheet)",
+    "identifier": "darkness",
+    "step": "trialsAndTravails",
+    "stepIndex": 4,
     "description": {
       "value": "<p>1. Forbidden Knowledge (200xp): Gain one Common Lore and one Forbidden lore trained skill you didn&#x27;t have. Gain Paranoia and Enemy Talent for group Lore was stolen from.<br>2. Warp Incursion (100xp): Gaint Resistance (Psychic Powers) and Light Sleeper Talents. Gain 1d5 Corruption Points.<br>3. Dark Secret (200xp): +6 to any one Characteristic. 1d5 Insanity Points. Character possesses a dark and difficult to get rid of secret or curse (work with GM).</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Trials and Travails",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,67 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "one Common Lore",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "one Forbidden lore trained",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Paranoia",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Enemy",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "t Resistance (Psychic Powers)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Light Sleeper",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d5 Corruption Points",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "for group Lore was stolen from",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "1. Forbidden Knowledge (200xp): Gain one Common Lore and one Forbidden lore trained skill you didn't have. Gain Paranoia and Enemy Talent for group Lore was stolen from.\n2. Warp Incursion (100xp): Gaint Resistance (Psychic Powers) and Light Sleeper Talents. Gain 1d5 Corruption Points.\n3. Dark Secret (200xp): +6 to any one Characteristic. 1d5 Insanity Points. Character possesses a dark and difficult to get rid of secret or curse (work with GM).",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.trials-and-travails",
-      "step": "Trials and Travails",
-      "stepIndex": 4,
-      "number": "1 and 6"
-    }
-  },
+  "flags": {},
   "_id": "sRvYGgUsCiZPnbho"
 }

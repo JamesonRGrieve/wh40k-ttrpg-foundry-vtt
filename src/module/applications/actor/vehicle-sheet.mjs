@@ -73,13 +73,9 @@ export default class VehicleSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Lazy load Vehicle templates before first render.
      * @inheritDoc
      */
     async _prepareContext(options) {
-        // Lazy load Vehicle-specific templates
-        await HandlebarManager.loadActorSheetTemplates("vehicle");
-        
         const context = await super._prepareContext(options);
         context.dh = CONFIG.rt || ROGUE_TRADER;
         

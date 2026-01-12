@@ -88,9 +88,6 @@ export default class StarshipSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options) {
-        // Lazy load Starship-specific templates
-        await HandlebarManager.loadActorSheetTemplates("starship");
-        
         const context = await super._prepareContext(options);
         context.dh = CONFIG.rt || ROGUE_TRADER;
 

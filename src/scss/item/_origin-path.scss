@@ -1,0 +1,297 @@
+// ============================================
+// Origin Path Item Sheet Styles
+// ============================================
+// Styles for homeworld, birthright, career, etc. selection items
+
+.rt-origin-path-sheet {
+  // Header customization
+  .rt-item-header {
+    background: linear-gradient(135deg, rgba(#3498db, 0.1) 0%, rgba(#9b59b6, 0.08) 100%);
+    border-bottom: 2px solid rgba(#3498db, 0.3);
+  }
+
+  .rt-meta-badge--origin {
+    background: linear-gradient(135deg, rgba(#3498db, 0.15), rgba(#9b59b6, 0.12));
+    border-color: rgba(#3498db, 0.4);
+    color: #3498db;
+    
+    i {
+      color: #3498db;
+    }
+  }
+
+  // Meta controls
+  .rt-meta-select {
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(#3498db, 0.3);
+    border-radius: 4px;
+    color: var(--color-text-primary);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: #3498db;
+      background: rgba(#3498db, 0.1);
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+    }
+  }
+
+  .rt-meta-input {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    
+    span {
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    input {
+      width: 50px;
+      padding: 4px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(#3498db, 0.3);
+      border-radius: 4px;
+      color: var(--color-text-primary);
+      
+      &:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+      }
+    }
+  }
+}
+
+// Grants section
+.rt-grants-section {
+  .rt-section-title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding: $rt-space-sm $rt-space-md;
+    background: linear-gradient(135deg, rgba(#27ae60, 0.12) 0%, rgba(#27ae60, 0.05) 100%);
+    border-left: 3px solid #27ae60;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: $rt-space-md;
+    
+    i {
+      color: #27ae60;
+    }
+  }
+}
+
+.rt-subsection {
+  margin-bottom: $rt-space-md;
+  padding: $rt-space-md;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: $rt-radius-md;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  
+  h4 {
+    margin: 0 0 $rt-space-sm 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-secondary);
+  }
+}
+
+// Field grid layouts
+.rt-field-grid {
+  display: grid;
+  gap: $rt-space-sm;
+  
+  &--3col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  &--2col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  input[type="number"],
+  input[type="text"] {
+    padding: 6px $rt-space-sm;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $rt-radius-sm;
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    
+    &:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+    }
+  }
+  
+  &--checkbox {
+    flex-direction: row;
+    align-items: center;
+    
+    label {
+      display: flex;
+      align-items: center;
+      gap: $rt-space-xs;
+      cursor: pointer;
+      text-transform: none;
+      color: var(--color-text-primary);
+      
+      &:hover {
+        color: var(--color-text-dark);
+      }
+    }
+    
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+  }
+}
+
+// Grants list
+.rt-grants-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-grant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $rt-space-sm;
+  background: linear-gradient(90deg, rgba(#27ae60, 0.08) 0%, transparent 100%);
+  border-left: 3px solid rgba(#27ae60, 0.4);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: linear-gradient(90deg, rgba(#27ae60, 0.15) 0%, transparent 100%);
+    border-left-color: #27ae60;
+  }
+  
+  .rt-grant-name {
+    flex: 1;
+    font-weight: 500;
+  }
+  
+  .rt-grant-value {
+    font-weight: 700;
+    color: #27ae60;
+    font-family: $rt-font-alt;
+  }
+}
+
+// Add/Remove buttons for arrays
+.rt-grant-controls {
+  display: flex;
+  gap: 4px;
+  
+  button {
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $rt-radius-sm;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    i {
+      font-size: 0.7rem;
+    }
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: #3498db;
+      color: #3498db;
+    }
+    
+    &.rt-btn-remove:hover {
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+  }
+}
+
+// Requirements section
+.rt-requirements-section {
+  padding: $rt-space-md;
+  background: linear-gradient(135deg, rgba(#e67e22, 0.08) 0%, rgba(#d35400, 0.05) 100%);
+  border: 1px solid rgba(#e67e22, 0.3);
+  border-radius: $rt-radius-md;
+  margin-bottom: $rt-space-md;
+  
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    margin: 0 0 $rt-space-sm 0;
+    color: #e67e22;
+    
+    i {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .rt-requirement-text {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+  }
+}
+
+// Empty states
+.rt-empty {
+  padding: $rt-space-md;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+// Special effect box
+.rt-effect-text {
+  padding: $rt-space-md;
+  background: linear-gradient(135deg, rgba(#9b59b6, 0.08) 0%, rgba(#8e44ad, 0.05) 100%);
+  border-left: 3px solid #9b59b6;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  
+  strong {
+    color: var(--color-text-primary);
+  }
+}

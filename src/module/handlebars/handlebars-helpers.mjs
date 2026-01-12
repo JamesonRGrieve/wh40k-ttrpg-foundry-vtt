@@ -294,6 +294,17 @@ export function registerHandlebarsHelpers() {
     });
 
     /**
+     * Extract a slice of an array
+     * Usage: {{#each (slice array 0 3)}}
+     */
+    Handlebars.registerHelper('slice', function(array, start, end) {
+        if (!Array.isArray(array)) return [];
+        const s = Number(start) || 0;
+        const e = end !== undefined ? Number(end) : array.length;
+        return array.slice(s, e);
+    });
+
+    /**
      * Create a numeric range for iteration
      * Usage: {{#each (range 1 5)}}
      */
@@ -304,6 +315,19 @@ export function registerHandlebarsHelpers() {
         if (e < s) return out;
         for (let i = s; i <= e; i++) out.push(i);
         return out;
+    });
+
+    /**
+     * Repeat a block N times with 1-based index.
+     * Usage: {{#times 5}}{{this}}{{/times}}
+     */
+    Handlebars.registerHelper('times', function(count, options) {
+        const total = Math.max(0, Number(count) || 0);
+        let output = '';
+        for (let i = 1; i <= total; i++) {
+            output += options.fn(i);
+        }
+        return output;
     });
 
     /**
@@ -382,6 +406,16 @@ export function registerHandlebarsHelpers() {
      */
     Handlebars.registerHelper('floor', function(value) {
         return Math.floor(Number(value) || 0);
+    });
+
+    /**
+     * Format a number with a + or - sign
+     * Usage: {{signedNumber 5}} → "+5", {{signedNumber -3}} → "-3"
+     */
+    Handlebars.registerHelper('signedNumber', function(value) {
+        const num = Number(value) || 0;
+        if (num >= 0) return `+${num}`;
+        return `${num}`;
     });
 
     Handlebars.registerHelper('eq', function(a, b) {
@@ -567,12 +601,12 @@ export function registerHandlebarsHelpers() {
      */
     Handlebars.registerHelper('corruptionDegreeClass', function(corruption) {
         const points = Number(corruption) || 0;
-        if (points === 0) return 'degree-pure';
-        if (points <= 30) return 'degree-tainted';
-        if (points <= 60) return 'degree-soiled';
-        if (points <= 90) return 'degree-debased';
-        if (points <= 99) return 'degree-profane';
-        return 'degree-damned';
+        if (points === 0) return 'rt-degree-pure';
+        if (points <= 30) return 'rt-degree-tainted';
+        if (points <= 60) return 'rt-degree-soiled';
+        if (points <= 90) return 'rt-degree-debased';
+        if (points <= 99) return 'rt-degree-profane';
+        return 'rt-degree-damned';
     });
 
     /**
@@ -580,12 +614,12 @@ export function registerHandlebarsHelpers() {
      */
     Handlebars.registerHelper('insanityDegreeClass', function(insanity) {
         const points = Number(insanity) || 0;
-        if (points <= 9) return 'degree-stable';
-        if (points <= 39) return 'degree-unsettled';
-        if (points <= 59) return 'degree-disturbed';
-        if (points <= 79) return 'degree-unhinged';
-        if (points <= 99) return 'degree-deranged';
-        return 'degree-terminally-insane';
+        if (points <= 9) return 'rt-degree-stable';
+        if (points <= 39) return 'rt-degree-unsettled';
+        if (points <= 59) return 'rt-degree-disturbed';
+        if (points <= 79) return 'rt-degree-unhinged';
+        if (points <= 99) return 'rt-degree-deranged';
+        return 'rt-degree-terminally';
     });
 
     /**
@@ -869,6 +903,22 @@ export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('hasEmbeddedQualities', function(items) {
       if (!items || !items.length) return false;
       return items.some(item => item.type === 'attackSpecial');
+    });
+
+    /**
+     * Check if a collection contains a value.
+     * Works with Sets, Arrays, and Objects.
+     * @param {Set|Array|Object} collection    Collection to check
+     * @param {*} value                        Value to look for
+     * @returns {boolean}
+     */
+    Handlebars.registerHelper('has', function(collection, value) {
+      if (collection instanceof Set) return collection.has(value);
+      if (Array.isArray(collection)) return collection.includes(value);
+      if (typeof collection === 'object' && collection !== null) {
+        return Object.prototype.hasOwnProperty.call(collection, value);
+      }
+      return false;
     });
 
     /**

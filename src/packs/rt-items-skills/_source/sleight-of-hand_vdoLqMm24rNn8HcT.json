@@ -10,8 +10,8 @@
     "description": {
       "value": "<p>Picking Pockets, palming small objects, performing tricks, and other stealthy acts made without the notice of others. </p>"
     },
-    "isBasic": true,
-    "skillType": "basic",
+    "isBasic": false,
+    "skillType": "advanced",
     "aptitudes": [
       "Agility",
       "Knowledge",

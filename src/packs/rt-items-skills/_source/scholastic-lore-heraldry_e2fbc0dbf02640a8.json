@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>In-depth, Academic Knowledge of a group that may be complex or esoteric, providing a depth of knowledge far more than that of Common Lore due to the Experience required to obtain it.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "specializations": [
       "Archaic",
       "Astromancy",
@@ -29,7 +29,7 @@
       "Philosophy",
       "Tactica Imperialis"
     ],
-    "skillType": "specialist",
+    "skillType": "advanced",
     "aptitudes": [
       "Intelligence",
       "Knowledge",

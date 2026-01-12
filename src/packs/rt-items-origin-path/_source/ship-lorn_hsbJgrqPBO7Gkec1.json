@@ -1,14 +1,18 @@
 {
   "name": "Ship Lorn",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Trials and Travails",
-    "descriptionText": "Gain the Survival Skill (or increase it by one level) or Dark Soul Talent. Whenever you spend a Fate Point to recover wounds, you can reroll the dice but must accept the second result.\nReduce starting Fate Points by 1, suffer -5 on Fellowship Tests when interacting with Void Born, ORgue Traders, or Voidfarers that are not Personal Friends if they have heard of your background and reputation.",
-    "effects": "Gain the Survival Skill (or increase it by one level) or Dark Soul Talent. Whenever you spend a Fate Point to recover wounds, you can reroll the dice but must accept the second result.\nReduce starting Fate Points by 1, suffer -5 on Fellowship Tests when interacting with Void Born, ORgue Traders, or Voidfarers that are not Personal Friends if they have heard of your background and reputation.",
-    "source": "Character Creation (sheet)",
+    "identifier": "ship-lorn",
+    "step": "trialsAndTravails",
+    "stepIndex": 4,
     "description": {
       "value": "<p>Gain the Survival Skill (or increase it by one level) or Dark Soul Talent. Whenever you spend a Fate Point to recover wounds, you can reroll the dice but must accept the second result.<br>Reduce starting Fate Points by 1, suffer -5 on Fellowship Tests when interacting with Void Born, ORgue Traders, or Voidfarers that are not Personal Friends if they have heard of your background and reputation.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Trials and Travails",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,31 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "the Survival",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "Gain the Survival Skill (or increase it by one level) or Dark Soul Talent. Whenever you spend a Fate Point to recover wounds, you can reroll the dice but must accept the second result.\nReduce starting Fate Points by 1, suffer -5 on Fellowship Tests when interacting with Void Born, ORgue Traders, or Voidfarers that are not Personal Friends if they have heard of your background and reputation.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.trials-and-travails",
-      "step": "Trials and Travails",
-      "stepIndex": 4,
-      "number": "4"
-    }
-  },
+  "flags": {},
   "_id": "hsbJgrqPBO7Gkec1"
 }

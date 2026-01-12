@@ -1,0 +1,36 @@
+{{!-- Modifiers Summary Bar
+     Compact inline display of active modifiers for quick reference
+     Shows at top of talent/trait/condition sheets when hasModifiers is true
+--}}
+<div class="rt-modifiers-summary">
+  <div class="rt-modifiers-summary__header">
+    <i class="fas fa-sliders-h"></i>
+    <span>Active Modifiers</span>
+  </div>
+  
+  <div class="rt-modifiers-summary__list">
+    {{#each system.modifiersList}}
+    <span class="rt-modifier-badge rt-modifier-badge--{{type}} {{#if (gt value 0)}}rt-modifier-badge--positive{{else}}rt-modifier-badge--negative{{/if}}" 
+          title="{{label}}">
+      <span class="rt-modifier-badge__label">{{label}}</span>
+      <span class="rt-modifier-badge__value">{{signedNumber value}}</span>
+    </span>
+    {{/each}}
+    
+    {{!-- Show situational indicator if present --}}
+    {{#if system.hasSituationalModifiers}}
+    <span class="rt-modifier-badge rt-modifier-badge--situational" 
+          title="Has situational modifiers">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>Situational</span>
+    </span>
+    {{/if}}
+    
+    {{#unless system.modifiersList.length}}
+    <span class="rt-modifiers-summary__empty">
+      <i class="fas fa-info-circle"></i>
+      No active modifiers
+    </span>
+    {{/unless}}
+  </div>
+</div>

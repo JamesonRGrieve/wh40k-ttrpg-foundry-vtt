@@ -10,13 +10,13 @@
     "description": {
       "value": "<p>Piloting a Flying Vehicle type, test only needed for hazardous conditions, excessive speed, or dangerous manoeuvres. Skill user is assumed to be able to drive under normal conditions without test.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "specializations": [
       "Personal",
       "Flyers",
       "Space Craft"
     ],
-    "skillType": "specialist",
+    "skillType": "advanced",
     "aptitudes": [],
     "source": ""
   },

@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>The User's ability to clear their mind and better channel the warp through the use of Mantras, psychic foci, meditation, etc.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "skillType": "advanced",
     "aptitudes": [],
     "source": ""

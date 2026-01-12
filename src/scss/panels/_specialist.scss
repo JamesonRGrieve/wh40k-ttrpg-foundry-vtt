@@ -193,3 +193,35 @@
   font-style: italic;
 }
 
+// ============================================
+// Advanced Skill Group Visual Distinction
+// ============================================
+
+.rt-specialist-group--advanced {
+  border-left: 2px solid rgba($rt-accent-talents, 0.5);
+  
+  .rt-specialist-header {
+    background: linear-gradient(180deg, rgba($rt-accent-talents, 0.18) 0%, rgba($rt-accent-talents, 0.08) 100%);
+    
+    .rt-specialist-name {
+      font-style: italic;
+      
+      &::before {
+        content: "ADV";
+        display: inline-block;
+        font-size: 0.6rem;
+        font-style: normal;
+        font-weight: 700;
+        padding: 1px 4px;
+        margin-right: 6px;
+        background: rgba($rt-accent-talents, 0.2);
+        border: 1px solid rgba($rt-accent-talents, 0.5);
+        border-radius: 3px;
+        color: $rt-accent-talents;
+        vertical-align: middle;
+        line-height: 1;
+      }
+    }
+  }
+}
+

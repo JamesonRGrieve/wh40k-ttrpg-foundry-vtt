@@ -97,8 +97,8 @@ export default class WeaponData extends ItemDataModel.mixin(
     super.migrateData(source);
     
     // Ensure special is an array for SetField compatibility
-    if (source.special === undefined || source.special === null) {
-      source.special = [];
+    if (!Array.isArray(source.special)) {
+      source.special = source.special ? Array.from(source.special) : [];
     }
     
     return source;

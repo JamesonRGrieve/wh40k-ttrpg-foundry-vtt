@@ -1,14 +1,18 @@
 {
   "name": "Crusade",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Lure of the Void",
-    "descriptionText": "1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.\n2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)\n3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.",
-    "effects": "1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.\n2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)\n3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.",
-    "source": "Character Creation (sheet)",
+    "identifier": "crusade",
+    "step": "lureOfTheVoid",
+    "stepIndex": 3,
     "description": {
       "value": "<p>1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.<br>2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)<br>3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Lure of the Void",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -32,17 +36,66 @@
       ],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Peer (Military)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "one of Hatred(Eldar",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Orks",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Kroot",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Chaos or other appropriate)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d10 Insanity Points from war horrors",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Hatred",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Meditation",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.\n2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)\n3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.lure-of-the-void",
-      "step": "Lure of the Void",
-      "stepIndex": 3,
-      "number": "2 and 3"
-    }
-  },
+  "flags": {},
   "_id": "8eZLFtwOGCx9IOC5"
 }

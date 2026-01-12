@@ -1,14 +1,18 @@
 {
   "name": "Exhilaration",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Motivation",
-    "descriptionText": "1. New Horizons (200xp): Gain Common Lore (Koronus Expanse) and either Scholastic Lore (Astromancy) or Trade (Explorator) as trained Skills.\n2. The Thrill of War (250xp): +3 Weapon Skill or Ballistic Skill, -3 Fellowship. Gain Scholastic Lore (Tactical Imperialis) as Trained Skill. Gain Nerves of Steel and Quick Draw Talents.\n3. No Joy Unexplored (200xp): +3 Toughness or +3 Fellowship, -3 Willpower. Gain Decadence and Carouse Trained Skill. Gain 1d5 Corruption Points.",
-    "effects": "1. New Horizons (200xp): Gain Common Lore (Koronus Expanse) and either Scholastic Lore (Astromancy) or Trade (Explorator) as trained Skills.\n2. The Thrill of War (250xp): +3 Weapon Skill or Ballistic Skill, -3 Fellowship. Gain Scholastic Lore (Tactical Imperialis) as Trained Skill. Gain Nerves of Steel and Quick Draw Talents.\n3. No Joy Unexplored (200xp): +3 Toughness or +3 Fellowship, -3 Willpower. Gain Decadence and Carouse Trained Skill. Gain 1d5 Corruption Points.",
-    "source": "Character Creation (sheet)",
+    "identifier": "exhilaration",
+    "step": "motivation",
+    "stepIndex": 5,
     "description": {
       "value": "<p>1. New Horizons (200xp): Gain Common Lore (Koronus Expanse) and either Scholastic Lore (Astromancy) or Trade (Explorator) as trained Skills.<br>2. The Thrill of War (250xp): +3 Weapon Skill or Ballistic Skill, -3 Fellowship. Gain Scholastic Lore (Tactical Imperialis) as Trained Skill. Gain Nerves of Steel and Quick Draw Talents.<br>3. No Joy Unexplored (200xp): +3 Toughness or +3 Fellowship, -3 Willpower. Gain Decadence and Carouse Trained Skill. Gain 1d5 Corruption Points.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Motivation",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,71 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Common Lore (Koronus Expanse)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Scholastic Lore (Tactical Imperialis) as Trained",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Nerves of Steel",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Quick Draw",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Decadence",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Carouse Trained",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d5 Corruption Points",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "skill",
+          "label": "Choose from: Scholastic Lore (Astromancy), Trade (Explorator) as trained Skills",
+          "options": [
+            "Scholastic Lore (Astromancy)",
+            "Trade (Explorator) as trained Skills"
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "effectText": "1. New Horizons (200xp): Gain Common Lore (Koronus Expanse) and either Scholastic Lore (Astromancy) or Trade (Explorator) as trained Skills.\n2. The Thrill of War (250xp): +3 Weapon Skill or Ballistic Skill, -3 Fellowship. Gain Scholastic Lore (Tactical Imperialis) as Trained Skill. Gain Nerves of Steel and Quick Draw Talents.\n3. No Joy Unexplored (200xp): +3 Toughness or +3 Fellowship, -3 Willpower. Gain Decadence and Carouse Trained Skill. Gain 1d5 Corruption Points.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.motivation",
-      "step": "Motivation",
-      "stepIndex": 5,
-      "number": "2 and 6"
-    }
-  },
+  "flags": {},
   "_id": "lcuT3rio1pb0nPHb"
 }

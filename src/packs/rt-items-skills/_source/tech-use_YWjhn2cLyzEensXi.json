@@ -10,8 +10,8 @@
     "description": {
       "value": "<p>Use and Repair complex machinery, understand technology, etc. No test needed for basic machinery, but test needed for unusual gear, malfunctioning items, and so on. Also used for setting up and dealing with Explosives.</p>"
     },
-    "isBasic": true,
-    "skillType": "basic",
+    "isBasic": false,
+    "skillType": "advanced",
     "aptitudes": [
       "Intelligence",
       "Tech",

@@ -1,14 +1,18 @@
 {
   "name": "Footfallen",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Home World",
-    "descriptionText": "-5 Ballistic Skill, -5 Toughness, +5 Agility, +5 Fellowship. Gain Common Lore (Koronus Expanse) and Psyniscience as Trained Skill (Psyniscience acts as sixth sense, not innately psychic). Gain Polyglot Talent one Peer Talent from the noted list. Suffer -5 on any Scholastic Lore Test not related to the Kornus Expanse and gain Rival (Inquisition) Talent.\nNoted List: Choose one of: Peer(Astropaths, the Insane, Underworld, Void Born, or Workers)",
-    "effects": "-5 Ballistic Skill, -5 Toughness, +5 Agility, +5 Fellowship. Gain Common Lore (Koronus Expanse) and Psyniscience as Trained Skill (Psyniscience acts as sixth sense, not innately psychic). Gain Polyglot Talent one Peer Talent from the noted list. Suffer -5 on any Scholastic Lore Test not related to the Kornus Expanse and gain Rival (Inquisition) Talent.\nNoted List: Choose one of: Peer(Astropaths, the Insane, Underworld, Void Born, or Workers)",
-    "source": "Character Creation (sheet)",
+    "identifier": "footfallen",
+    "step": "homeWorld",
+    "stepIndex": 1,
     "description": {
       "value": "<p>-5 Ballistic Skill, -5 Toughness, +5 Agility, +5 Fellowship. Gain Common Lore (Koronus Expanse) and Psyniscience as Trained Skill (Psyniscience acts as sixth sense, not innately psychic). Gain Polyglot Talent one Peer Talent from the noted list. Suffer -5 on any Scholastic Lore Test not related to the Kornus Expanse and gain Rival (Inquisition) Talent.<br>Noted List: Choose one of: Peer(Astropaths, the Insane, Underworld, Void Born, or Workers)</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Home World",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -31,17 +35,65 @@
       ],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Common Lore (Koronus Expanse)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Psyniscience as Trained",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Polyglot",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Rival (Inquisition)",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "one Peer Talent from the noted list",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose from: Peer(Astropaths, the Insane, Underworld, Void Born, or Workers)</p>",
+          "options": [
+            "Peer(Astropaths",
+            "the Insane",
+            "Underworld",
+            "Void Born",
+            "or Workers)</p>"
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "effectText": "-5 Ballistic Skill, -5 Toughness, +5 Agility, +5 Fellowship. Gain Common Lore (Koronus Expanse) and Psyniscience as Trained Skill (Psyniscience acts as sixth sense, not innately psychic). Gain Polyglot Talent one Peer Talent from the noted list. Suffer -5 on any Scholastic Lore Test not related to the Kornus Expanse and gain Rival (Inquisition) Talent.\nNoted List: Choose one of: Peer(Astropaths, the Insane, Underworld, Void Born, or Workers)",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.home-world",
-      "step": "Home World",
-      "stepIndex": 1,
-      "number": "2"
-    }
-  },
+  "flags": {},
   "_id": "7We3BEMf0PAFsO7S"
 }

@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Following signs left by a target, determining time passed since tracks were made, numbers in a group of targets, and their race. Test only needed if environment or target concealment attempts affect the user's ability to track.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "skillType": "advanced",
     "aptitudes": [],
     "source": ""

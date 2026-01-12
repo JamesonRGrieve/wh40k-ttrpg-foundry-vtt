@@ -1,14 +1,18 @@
 {
   "name": "Knowledge",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Motivation",
-    "descriptionText": "1. Knowledge is Life, Life is Knowledge (300xp): Gain any two Trained Scholastic Lore Skills. Gain Total Recall Talent. Can buy Additional Trained Scholastic Lore Skill for 200xp.\n2. Know thy Foe (200xp): Gain any one Trained Forbidden Lore Skill. Can buy a second for an additional 200xp.\n3. Knowledge is Power, Guard it Well (300xp): +3 Intelligence or +3 Perception. Gain any one Trained Common or Scholastic Lore Skill. Gain Foresight Talent.",
-    "effects": "1. Knowledge is Life, Life is Knowledge (300xp): Gain any two Trained Scholastic Lore Skills. Gain Total Recall Talent. Can buy Additional Trained Scholastic Lore Skill for 200xp.\n2. Know thy Foe (200xp): Gain any one Trained Forbidden Lore Skill. Can buy a second for an additional 200xp.\n3. Knowledge is Power, Guard it Well (300xp): +3 Intelligence or +3 Perception. Gain any one Trained Common or Scholastic Lore Skill. Gain Foresight Talent.",
-    "source": "Character Creation (sheet)",
+    "identifier": "knowledge",
+    "step": "motivation",
+    "stepIndex": 5,
     "description": {
       "value": "<p>1. Knowledge is Life, Life is Knowledge (300xp): Gain any two Trained Scholastic Lore Skills. Gain Total Recall Talent. Can buy Additional Trained Scholastic Lore Skill for 200xp.<br>2. Know thy Foe (200xp): Gain any one Trained Forbidden Lore Skill. Can buy a second for an additional 200xp.<br>3. Knowledge is Power, Guard it Well (300xp): +3 Intelligence or +3 Perception. Gain any one Trained Common or Scholastic Lore Skill. Gain Foresight Talent.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Motivation",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -32,17 +36,51 @@
       ],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "any two Trained Scholastic Lore",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Total Recall",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "any one Trained Forbidden Lore",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "any one Trained Common or Scholastic Lore",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Foresight",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "1. Knowledge is Life, Life is Knowledge (300xp): Gain any two Trained Scholastic Lore Skills. Gain Total Recall Talent. Can buy Additional Trained Scholastic Lore Skill for 200xp.\n2. Know thy Foe (200xp): Gain any one Trained Forbidden Lore Skill. Can buy a second for an additional 200xp.\n3. Knowledge is Power, Guard it Well (300xp): +3 Intelligence or +3 Perception. Gain any one Trained Common or Scholastic Lore Skill. Gain Foresight Talent.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.motivation",
-      "step": "Motivation",
-      "stepIndex": 5,
-      "number": "3 and 5"
-    }
-  },
+  "flags": {},
   "_id": "HOv4DlMTBBdgQ5jG"
 }

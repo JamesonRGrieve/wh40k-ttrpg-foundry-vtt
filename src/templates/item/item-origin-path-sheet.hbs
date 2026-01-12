@@ -1,0 +1,470 @@
+{{!-- 
+  Rogue Trader Origin Path Item Sheet - Modern Tabbed Redesign
+  Character creation lifepath configuration with tabbed interface
+--}}
+<div class="rt-origin-sheet">
+  <form autocomplete="off">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Compact identity with step badge
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="rt-origin-header">
+      <div class="rt-origin-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="rt-origin-header__image-overlay">
+          <i class="fas fa-edit"></i>
+        </div>
+      </div>
+      
+      <div class="rt-origin-header__info">
+        <input type="text" class="rt-origin-header__name" name="name" value="{{item.name}}" placeholder="Origin Path Name" />
+        
+        <div class="rt-origin-header__meta">
+          {{!-- Step Badge --}}
+          <span class="rt-origin-badge rt-origin-badge--step rt-origin-badge--step{{item.system.stepIndex}}" title="{{item.system.stepLabel}}">
+            <i class="fas fa-map-signs"></i>
+            {{item.system.stepLabel}}
+          </span>
+          
+          {{!-- Step Index Badge --}}
+          <span class="rt-origin-badge rt-origin-badge--index" title="Order in path">
+            <i class="fas fa-sort-numeric-up"></i>
+            Step {{add item.system.stepIndex 1}}
+          </span>
+        </div>
+        
+        {{!-- Step Configuration --}}
+        <div class="rt-origin-header__config">
+          <div class="rt-config-field">
+            <label>Step Type</label>
+            <select name="system.step" class="rt-config-select">
+              <option value="homeWorld" {{#if (eq item.system.step "homeWorld")}}selected{{/if}}>Home World</option>
+              <option value="birthright" {{#if (eq item.system.step "birthright")}}selected{{/if}}>Birthright</option>
+              <option value="lureOfTheVoid" {{#if (eq item.system.step "lureOfTheVoid")}}selected{{/if}}>Lure of the Void</option>
+              <option value="trialsAndTravails" {{#if (eq item.system.step "trialsAndTravails")}}selected{{/if}}>Trials &amp; Travails</option>
+              <option value="motivation" {{#if (eq item.system.step "motivation")}}selected{{/if}}>Motivation</option>
+              <option value="career" {{#if (eq item.system.step "career")}}selected{{/if}}>Career</option>
+            </select>
+          </div>
+          
+          <div class="rt-config-field">
+            <label>Step Index</label>
+            <input type="number" name="system.stepIndex" value="{{item.system.stepIndex}}" min="0" max="5" class="rt-config-input" />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="rt-origin-tabs" data-group="primary">
+      <button type="button" class="rt-origin-tab active" data-tab="grants" data-group="primary">
+        <i class="fas fa-gift"></i>
+        <span>Grants</span>
+      </button>
+      <button type="button" class="rt-origin-tab" data-tab="requirements" data-group="primary">
+        <i class="fas fa-lock"></i>
+        <span>Requirements</span>
+      </button>
+      <button type="button" class="rt-origin-tab" data-tab="choices" data-group="primary">
+        <i class="fas fa-question-circle"></i>
+        <span>Choices</span>
+      </button>
+      <button type="button" class="rt-origin-tab" data-tab="description" data-group="primary">
+        <i class="fas fa-book"></i>
+        <span>Description</span>
+      </button>
+    </nav>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <section class="rt-origin-content">
+      
+      {{!-- GRANTS TAB --}}
+      <div class="rt-origin-panel active" data-tab="grants" data-group="primary">
+        
+        {{!-- Characteristic Modifiers --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-dumbbell"></i> Characteristic Modifiers
+          </h3>
+          
+          <div class="rt-characteristics-grid">
+            <div class="rt-char-field">
+              <label class="rt-char-label">WS</label>
+              <input type="number" name="system.modifiers.characteristics.weaponSkill" value="{{item.system.modifiers.characteristics.weaponSkill}}" class="rt-char-input" placeholder="0" />
+            </div>
+            <div class="rt-char-field">
+              <label class="rt-char-label">BS</label>
+              <input type="number" name="system.modifiers.characteristics.ballisticSkill" value="{{item.system.modifiers.characteristics.ballisticSkill}}" class="rt-char-input" placeholder="0" />
+            </div>
+            <div class="rt-char-field">
+              <label class="rt-char-label">S</label>
+              <input type="number" name="system.modifiers.characteristics.strength" value="{{item.system.modifiers.characteristics.strength}}" class="rt-char-input" placeholder="0" />
+            </div>
+            <div class="rt-char-field">
+              <label class="rt-char-label">T</label>
+              <input type="number" name="system.modifiers.characteristics.toughness" value="{{item.system.modifiers.characteristics.toughness}}" class="rt-char-input" placeholder="0" />
+            </div>
+            <div class="rt-char-field">
+              <label class="rt-char-label">Ag</label>
+              <input type="number" name="system.modifiers.characteristics.agility" value="{{item.system.modifiers.characteristics.agility}}" class="rt-char-input" placeholder="0" />
+            </div>
+            <div class="rt-char-field">
+              <label class="rt-char-label">Int</label>
+              <input type="number" name="system.modifiers.characteristics.intelligence" value="{{item.system.modifiers.characteristics.intelligence}}" class="rt-char-input" placeholder="0" />
+            </div>
+            <div class="rt-char-field">
+              <label class="rt-char-label">Per</label>
+              <input type="number" name="system.modifiers.characteristics.perception" value="{{item.system.modifiers.characteristics.perception}}" class="rt-char-input" placeholder="0" />
+            </div>
+            <div class="rt-char-field">
+              <label class="rt-char-label">WP</label>
+              <input type="number" name="system.modifiers.characteristics.willpower" value="{{item.system.modifiers.characteristics.willpower}}" class="rt-char-input" placeholder="0" />
+            </div>
+            <div class="rt-char-field">
+              <label class="rt-char-label">Fel</label>
+              <input type="number" name="system.modifiers.characteristics.fellowship" value="{{item.system.modifiers.characteristics.fellowship}}" class="rt-char-input" placeholder="0" />
+            </div>
+          </div>
+        </div>
+        
+        {{!-- Other Bonuses --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-heart"></i> Other Bonuses
+          </h3>
+          
+          <div class="rt-bonuses-grid">
+            <div class="rt-bonus-field">
+              <label class="rt-bonus-label">Wounds</label>
+              <input type="number" name="system.grants.wounds" value="{{item.system.grants.wounds}}" class="rt-bonus-input" placeholder="0" />
+            </div>
+            
+            <div class="rt-bonus-field">
+              <label class="rt-bonus-label">Fate Threshold</label>
+              <input type="number" name="system.grants.fateThreshold" value="{{item.system.grants.fateThreshold}}" min="0" class="rt-bonus-input" placeholder="0" />
+            </div>
+            
+            <div class="rt-bonus-field rt-bonus-field--checkbox">
+              <label class="rt-bonus-label-inline">
+                <input type="checkbox" name="system.grants.blessedByEmperor" {{checked item.system.grants.blessedByEmperor}} />
+                <span>Blessed by Emperor</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        {{!-- Skills Granted --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-graduation-cap"></i> Skills Granted
+          </h3>
+          
+          {{#if item.system.grants.skills.length}}
+          <div class="rt-grants-list">
+            {{#each item.system.grants.skills as |skill index|}}
+            <div class="rt-grant-card rt-grant-card--skill">
+              <div class="rt-grant-card__content">
+                <span class="rt-grant-name">{{skill.name}}</span>
+                {{#if skill.specialization}}
+                <span class="rt-grant-spec">({{skill.specialization}})</span>
+                {{/if}}
+              </div>
+              <span class="rt-grant-badge rt-grant-badge--{{skill.level}}">
+                {{#if (eq skill.level "trained")}}T{{/if}}
+                {{#if (eq skill.level "plus10")}}+10{{/if}}
+                {{#if (eq skill.level "plus20")}}+20{{/if}}
+              </span>
+            </div>
+            {{/each}}
+          </div>
+          {{else}}
+          <div class="rt-empty-state rt-empty-state--compact">
+            <i class="fas fa-graduation-cap"></i>
+            <p>No skills granted</p>
+          </div>
+          {{/if}}
+        </div>
+        
+        {{!-- Talents Granted --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-star"></i> Talents Granted
+          </h3>
+          
+          {{#if item.system.grants.talents.length}}
+          <div class="rt-grants-list">
+            {{#each item.system.grants.talents as |talent index|}}
+            <div class="rt-grant-card rt-grant-card--talent">
+              <div class="rt-grant-card__content">
+                <span class="rt-grant-name">{{talent.name}}</span>
+                {{#if talent.specialization}}
+                <span class="rt-grant-spec">({{talent.specialization}})</span>
+                {{/if}}
+              </div>
+              <i class="fas fa-star rt-grant-icon"></i>
+            </div>
+            {{/each}}
+          </div>
+          {{else}}
+          <div class="rt-empty-state rt-empty-state--compact">
+            <i class="fas fa-star"></i>
+            <p>No talents granted</p>
+          </div>
+          {{/if}}
+        </div>
+        
+        {{!-- Traits Granted --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-shield-alt"></i> Traits Granted
+          </h3>
+          
+          {{#if item.system.grants.traits.length}}
+          <div class="rt-grants-list">
+            {{#each item.system.grants.traits as |trait index|}}
+            <div class="rt-grant-card rt-grant-card--trait">
+              <div class="rt-grant-card__content">
+                <span class="rt-grant-name">{{trait.name}}</span>
+                {{#if trait.level}}
+                <span class="rt-grant-level">({{trait.level}})</span>
+                {{/if}}
+              </div>
+              <i class="fas fa-shield-alt rt-grant-icon"></i>
+            </div>
+            {{/each}}
+          </div>
+          {{else}}
+          <div class="rt-empty-state rt-empty-state--compact">
+            <i class="fas fa-shield-alt"></i>
+            <p>No traits granted</p>
+          </div>
+          {{/if}}
+        </div>
+        
+        {{!-- Aptitudes Granted --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-brain"></i> Aptitudes Granted
+          </h3>
+          
+          {{#if item.system.grants.aptitudes.length}}
+          <div class="rt-aptitudes-display">
+            {{#each item.system.grants.aptitudes as |apt|}}
+            <span class="rt-aptitude-tag">{{apt}}</span>
+            {{/each}}
+          </div>
+          {{else}}
+          <div class="rt-empty-state rt-empty-state--compact">
+            <i class="fas fa-brain"></i>
+            <p>No aptitudes granted</p>
+          </div>
+          {{/if}}
+        </div>
+        
+        {{!-- Equipment Granted --}}
+        {{#if item.system.grants.equipment.length}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-toolbox"></i> Equipment Granted
+          </h3>
+          
+          <div class="rt-grants-list">
+            {{#each item.system.grants.equipment as |equip index|}}
+            <div class="rt-grant-card rt-grant-card--equipment">
+              <div class="rt-grant-card__content">
+                <span class="rt-grant-name">{{equip.name}}</span>
+                {{#if (gt equip.quantity 1)}}
+                <span class="rt-grant-qty">×{{equip.quantity}}</span>
+                {{/if}}
+              </div>
+              <i class="fas fa-toolbox rt-grant-icon"></i>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+        {{/if}}
+        
+        {{!-- Special Abilities --}}
+        {{#if item.system.grants.specialAbilities.length}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-bolt"></i> Special Abilities
+          </h3>
+          
+          {{#each item.system.grants.specialAbilities as |ability index|}}
+          <div class="rt-ability-card">
+            <h4 class="rt-ability-name">{{ability.name}}</h4>
+            <div class="rt-ability-description">
+              {{{ability.description}}}
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+      </div>
+      
+      {{!-- REQUIREMENTS TAB --}}
+      <div class="rt-origin-panel" data-tab="requirements" data-group="primary">
+        {{#if item.system.hasRequirements}}
+          {{!-- Text Requirements --}}
+          {{#if item.system.requirements.text}}
+          <div class="rt-origin-section">
+            <h3 class="rt-section-title">
+              <i class="fas fa-file-alt"></i> Text Description
+            </h3>
+            
+            <div class="rt-property">
+              <label class="rt-property-label">Requirements</label>
+              <textarea name="system.requirements.text" rows="3" class="rt-property-textarea" placeholder="e.g., Must have Void Born homeworld">{{item.system.requirements.text}}</textarea>
+            </div>
+            
+            <div class="rt-requirement-display">
+              <p>{{item.system.requirements.text}}</p>
+            </div>
+          </div>
+          {{/if}}
+          
+          {{!-- Previous Steps Required --}}
+          {{#if item.system.requirements.previousSteps.length}}
+          <div class="rt-origin-section">
+            <h3 class="rt-section-title">
+              <i class="fas fa-check-circle"></i> Required Previous Steps
+            </h3>
+            
+            <div class="rt-requirement-list">
+              <p class="rt-requirement-note">Character must have ONE of these:</p>
+              {{#each item.system.requirements.previousSteps as |step|}}
+              <div class="rt-requirement-tag rt-requirement-tag--required">
+                <i class="fas fa-check"></i>
+                {{step}}
+              </div>
+              {{/each}}
+            </div>
+          </div>
+          {{/if}}
+          
+          {{!-- Excluded Steps --}}
+          {{#if item.system.requirements.excludedSteps.length}}
+          <div class="rt-origin-section">
+            <h3 class="rt-section-title">
+              <i class="fas fa-ban"></i> Excluded Steps
+            </h3>
+            
+            <div class="rt-requirement-list">
+              <p class="rt-requirement-note">Character cannot have ANY of these:</p>
+              {{#each item.system.requirements.excludedSteps as |step|}}
+              <div class="rt-requirement-tag rt-requirement-tag--excluded">
+                <i class="fas fa-times"></i>
+                {{step}}
+              </div>
+              {{/each}}
+            </div>
+          </div>
+          {{/if}}
+        {{else}}
+        <div class="rt-empty-state">
+          <i class="fas fa-unlock"></i>
+          <p>No requirements defined</p>
+          <p class="rt-field-hint">This origin path is available to all characters</p>
+        </div>
+        {{/if}}
+      </div>
+      
+      {{!-- CHOICES TAB --}}
+      <div class="rt-origin-panel" data-tab="choices" data-group="primary">
+        {{#if item.system.grants.choices.length}}
+          {{#each item.system.grants.choices as |choice index|}}
+          <div class="rt-origin-section">
+            <h3 class="rt-section-title">
+              <i class="fas fa-random"></i> {{choice.label}}
+            </h3>
+            
+            <div class="rt-choice-info">
+              <span class="rt-choice-badge rt-choice-badge--{{choice.type}}">
+                <i class="fas {{#if (eq choice.type "skill")}}fa-graduation-cap{{else if (eq choice.type "talent")}}fa-star{{else if (eq choice.type "characteristic")}}fa-dumbbell{{else}}fa-toolbox{{/if}}"></i>
+                {{capitalize choice.type}}
+              </span>
+              <span class="rt-choice-count">Choose {{choice.count}}</span>
+            </div>
+            
+            <div class="rt-choice-options">
+              {{#each choice.options as |option|}}
+              <div class="rt-choice-option">
+                <i class="fas fa-circle"></i>
+                {{option}}
+              </div>
+              {{/each}}
+            </div>
+          </div>
+          {{/each}}
+        {{else}}
+        <div class="rt-empty-state">
+          <i class="fas fa-question-circle"></i>
+          <p>No player choices required</p>
+          <p class="rt-field-hint">All grants are automatic</p>
+        </div>
+        {{/if}}
+      </div>
+      
+      {{!-- DESCRIPTION TAB --}}
+      <div class="rt-origin-panel" data-tab="description" data-group="primary">
+        {{!-- Effect Text --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-magic"></i> Effect Text
+          </h3>
+          
+          <p class="rt-field-hint" style="margin-bottom: 0.75rem;">
+            <i class="fas fa-info-circle"></i> Brief mechanical summary or flavor text
+          </p>
+          
+          <div class="rt-editor-container">
+            {{editor item.system.effectText target="system.effectText" button=true editable=editable engine="prosemirror" collaborate=false}}
+          </div>
+        </div>
+        
+        {{!-- Description --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-book"></i> Description
+          </h3>
+          
+          <p class="rt-field-hint" style="margin-bottom: 0.75rem;">
+            <i class="fas fa-info-circle"></i> Full lore and background information
+          </p>
+          
+          <div class="rt-editor-container">
+            {{editor item.system.description.value target="system.description.value" button=true editable=editable engine="prosemirror" collaborate=false}}
+          </div>
+        </div>
+        
+        {{!-- Notes --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-sticky-note"></i> Notes
+          </h3>
+          
+          <div class="rt-property">
+            <textarea name="system.notes" rows="4" class="rt-property-textarea" placeholder="GM notes, balance considerations, etc.">{{item.system.notes}}</textarea>
+          </div>
+        </div>
+        
+        {{!-- Source --}}
+        <div class="rt-origin-section">
+          <h3 class="rt-section-title">
+            <i class="fas fa-book-bookmark"></i> Source
+          </h3>
+          
+          <div class="rt-property">
+            <input type="text" name="system.source" value="{{item.system.source}}" class="rt-property-input" placeholder="Core Rulebook, pg. XX" />
+          </div>
+        </div>
+      </div>
+      
+    </section>{{!-- .rt-origin-content --}}
+  </form>
+</div>{{!-- .rt-origin-sheet --}}

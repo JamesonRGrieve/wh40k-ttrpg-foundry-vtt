@@ -1,14 +1,18 @@
 {
   "name": "Chosen by Destiny",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Lure of the Void",
-    "descriptionText": "1. Seeker of Truth: -3 Willpower. Gain Foresight Talent and Enemy (Academics or Ecclesiarchy).\n2. Xenophile: +10 to Fellowship Tests when dealing with alien races or cultures. -5 to Willpower Tests involving alien artifacts and alien psychic powers.\n3. Fated for Greatness: Gain +1 Fate Point and 1d10+1 Insanity Points.",
-    "effects": "1. Seeker of Truth: -3 Willpower. Gain Foresight Talent and Enemy (Academics or Ecclesiarchy).\n2. Xenophile: +10 to Fellowship Tests when dealing with alien races or cultures. -5 to Willpower Tests involving alien artifacts and alien psychic powers.\n3. Fated for Greatness: Gain +1 Fate Point and 1d10+1 Insanity Points.",
-    "source": "Character Creation (sheet)",
+    "identifier": "chosen-by-destiny",
+    "step": "lureOfTheVoid",
+    "stepIndex": 3,
     "description": {
       "value": "<p>1. Seeker of Truth: -3 Willpower. Gain Foresight Talent and Enemy (Academics or Ecclesiarchy).<br>2. Xenophile: +10 to Fellowship Tests when dealing with alien races or cultures. -5 to Willpower Tests involving alien artifacts and alien psychic powers.<br>3. Fated for Greatness: Gain +1 Fate Point and 1d10+1 Insanity Points.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Lure of the Void",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -31,17 +35,47 @@
       ],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Foresight",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Fate Point",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d10 Insanity Points",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "and Enemy",
+          "specialization": "Academics or Ecclesiarchy",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "1. Seeker of Truth: -3 Willpower. Gain Foresight Talent and Enemy (Academics or Ecclesiarchy).\n2. Xenophile: +10 to Fellowship Tests when dealing with alien races or cultures. -5 to Willpower Tests involving alien artifacts and alien psychic powers.\n3. Fated for Greatness: Gain +1 Fate Point and 1d10+1 Insanity Points.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.lure-of-the-void",
-      "step": "Lure of the Void",
-      "stepIndex": 3,
-      "number": "6"
-    }
-  },
+  "flags": {},
   "_id": "jUEjBWXgfjxqjFID"
 }

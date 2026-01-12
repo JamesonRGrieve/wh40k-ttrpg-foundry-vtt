@@ -38,14 +38,12 @@
   width: 100%;
 }
 
-// Talents tab uses 60/40 split instead of equal columns (only when 2+ columns)
-.rt-talents-grid {
-  grid-template-columns: 60% 40%;
-}
-
 // Talents tab 2-column variant: Specialist Skills (left 60%) / Talents+Traits (right 40%)
 .rt-talents-grid--2col {
+  display: grid;
   grid-template-columns: 60% 40%;
+  gap: $rt-space-md;
+  width: 100%;
 }
 
 .rt-overview-col,
@@ -103,7 +101,8 @@
   .rt-equipment-grid,
   .rt-dynasty-grid,
   .rt-bio-grid,
-  .rt-talents-grid {
+  .rt-talents-grid,
+  .rt-talents-grid--2col {
     grid-template-columns: 1fr;
   }
 }
@@ -114,6 +113,12 @@
   .rt-combat-grid,
   .rt-equipment-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  
+  // Talents keeps 60/40 split on medium screens
+  .rt-talents-grid,
+  .rt-talents-grid--2col {
+    grid-template-columns: 60% 40%;
   }
 }
 

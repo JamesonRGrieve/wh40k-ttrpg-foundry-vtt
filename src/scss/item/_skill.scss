@@ -1,0 +1,633 @@
+// ============================================
+// Skill Item Sheet Styles
+// ============================================
+// Imperial Gothic themed skill sheet with proper visual hierarchy
+
+.rt-skill-sheet {
+  // Header customization with skill-specific accent
+  .rt-item-header {
+    background: linear-gradient(135deg, rgba(#2980b9, 0.1) 0%, rgba(#3498db, 0.08) 100%);
+    border-bottom: 2px solid rgba(#2980b9, 0.3);
+  }
+
+  .rt-meta-badge--skill {
+    background: linear-gradient(135deg, rgba(#2980b9, 0.15), rgba(#3498db, 0.12));
+    border-color: rgba(#2980b9, 0.4);
+    color: #3498db;
+    
+    i {
+      color: #3498db;
+    }
+  }
+
+  // Skill type badges
+  .rt-skill-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: $rt-radius-sm;
+    font-size: $rt-font-size-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+    
+    &--basic {
+      background: linear-gradient(135deg, rgba(#27ae60, 0.15), rgba(#27ae60, 0.08));
+      border-color: rgba(#27ae60, 0.4);
+      color: #27ae60;
+      
+      i {
+        color: #27ae60;
+      }
+    }
+    
+    &--advanced {
+      background: linear-gradient(135deg, rgba(#e67e22, 0.15), rgba(#e67e22, 0.08));
+      border-color: rgba(#e67e22, 0.4);
+      color: #e67e22;
+      
+      i {
+        color: #e67e22;
+      }
+    }
+    
+    &--specialist {
+      background: linear-gradient(135deg, rgba(#9b59b6, 0.15), rgba(#9b59b6, 0.08));
+      border-color: rgba(#9b59b6, 0.4);
+      color: #9b59b6;
+      
+      i {
+        color: #9b59b6;
+      }
+    }
+  }
+
+  // Characteristic badge
+  .rt-char-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: $rt-radius-sm;
+    font-size: $rt-font-size-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, rgba($rt-color-gold, 0.15), rgba($rt-color-gold, 0.08));
+    border: 1px solid rgba($rt-color-gold, 0.4);
+    color: $rt-color-gold;
+    
+    i {
+      color: $rt-color-gold;
+    }
+  }
+
+  // Descriptor badge (optional tag)
+  .rt-descriptor-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: $rt-radius-sm;
+    font-size: $rt-font-size-2xs;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    background: rgba(#95a5a6, 0.15);
+    border: 1px solid rgba(#95a5a6, 0.3);
+    color: #95a5a6;
+  }
+
+  // Header badges row
+  .rt-skill-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $rt-space-xs;
+    margin-top: $rt-space-xs;
+  }
+}
+
+// Properties Panel
+.rt-skill-properties {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: $rt-radius-md;
+  padding: $rt-space-md;
+  
+  .rt-section-title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding-bottom: $rt-space-sm;
+    margin-bottom: $rt-space-md;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: $rt-font-heading;
+    font-size: $rt-font-size-md;
+    color: var(--rt-text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    i {
+      color: #3498db;
+    }
+  }
+  
+  .rt-properties-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $rt-space-md;
+    
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .rt-property {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    
+    label {
+      font-size: $rt-font-size-xs;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--rt-text-muted);
+    }
+    
+    .rt-property-value {
+      font-size: $rt-font-size-sm;
+      color: var(--rt-text-light);
+      padding: 6px 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: $rt-radius-sm;
+      font-family: $rt-font-ui;
+      
+      &.rt-property-value--editable {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          border-color: rgba(#3498db, 0.4);
+          background: rgba(#3498db, 0.05);
+        }
+      }
+    }
+    
+    input,
+    select {
+      font-size: $rt-font-size-sm;
+      padding: 6px 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: $rt-radius-sm;
+      color: var(--rt-text-light);
+      font-family: $rt-font-ui;
+      
+      &:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+      }
+    }
+  }
+  
+  // Aptitudes list (special styling)
+  .rt-aptitudes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    
+    .rt-aptitude-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      background: linear-gradient(135deg, rgba(#16a085, 0.15), rgba(#16a085, 0.08));
+      border: 1px solid rgba(#16a085, 0.3);
+      border-radius: $rt-radius-sm;
+      font-size: $rt-font-size-2xs;
+      font-weight: 600;
+      color: #16a085;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+  }
+}
+
+// Descriptor Panel
+.rt-skill-descriptor {
+  background: linear-gradient(135deg, rgba(#3498db, 0.08) 0%, rgba(#2980b9, 0.05) 100%);
+  border: 1px solid rgba(#3498db, 0.2);
+  border-left: 3px solid #3498db;
+  border-radius: 0 $rt-radius-md $rt-radius-md 0;
+  padding: $rt-space-md;
+  
+  .rt-section-title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    margin-bottom: $rt-space-sm;
+    font-family: $rt-font-heading;
+    font-size: $rt-font-size-sm;
+    font-weight: 600;
+    color: #3498db;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    i {
+      color: #3498db;
+    }
+  }
+  
+  .rt-descriptor-text {
+    font-size: $rt-font-size-sm;
+    line-height: 1.5;
+    color: var(--rt-text-light);
+    font-family: $rt-font-body;
+    font-style: italic;
+  }
+}
+
+// Uses & Rules Panel
+.rt-skill-uses {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: $rt-radius-md;
+  padding: $rt-space-md;
+  
+  .rt-section-title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding-bottom: $rt-space-sm;
+    margin-bottom: $rt-space-md;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: $rt-font-heading;
+    font-size: $rt-font-size-md;
+    color: var(--rt-text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    i {
+      color: #27ae60;
+    }
+  }
+  
+  .rt-uses-content {
+    font-size: $rt-font-size-sm;
+    line-height: 1.6;
+    color: var(--rt-text-light);
+    
+    // ProseMirror editor styling
+    .ProseMirror {
+      min-height: 150px;
+      padding: $rt-space-sm;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: $rt-radius-sm;
+      
+      &:focus {
+        outline: none;
+        border-color: rgba(#27ae60, 0.4);
+      }
+      
+      p {
+        margin-bottom: $rt-space-sm;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+      
+      ul, ol {
+        margin-left: $rt-space-lg;
+        margin-bottom: $rt-space-sm;
+      }
+      
+      strong {
+        color: $rt-color-gold;
+        font-weight: 700;
+      }
+      
+      em {
+        color: rgba(#3498db, 0.9);
+      }
+    }
+  }
+}
+
+// Difficulty Examples Table
+.rt-skill-difficulties {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: $rt-radius-md;
+  padding: $rt-space-md;
+  
+  .rt-section-title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding-bottom: $rt-space-sm;
+    margin-bottom: $rt-space-md;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: $rt-font-heading;
+    font-size: $rt-font-size-md;
+    color: var(--rt-text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    i {
+      color: #e67e22;
+    }
+  }
+  
+  .rt-difficulties-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    
+    thead {
+      background: rgba(0, 0, 0, 0.4);
+      
+      th {
+        padding: $rt-space-sm;
+        text-align: left;
+        font-size: $rt-font-size-xs;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--rt-text-muted);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        
+        &:first-child {
+          border-radius: $rt-radius-sm 0 0 0;
+        }
+        
+        &:last-child {
+          border-radius: 0 $rt-radius-sm 0 0;
+        }
+      }
+    }
+    
+    tbody {
+      tr {
+        transition: background-color 0.2s ease;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.03);
+        }
+        
+        &:last-child td {
+          border-bottom: none;
+          
+          &:first-child {
+            border-radius: 0 0 0 $rt-radius-sm;
+          }
+          
+          &:last-child {
+            border-radius: 0 0 $rt-radius-sm 0;
+          }
+        }
+      }
+      
+      td {
+        padding: $rt-space-sm;
+        font-size: $rt-font-size-sm;
+        color: var(--rt-text-light);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        
+        &.rt-difficulty-name {
+          font-weight: 600;
+          color: #e67e22;
+        }
+        
+        &.rt-difficulty-modifier {
+          text-align: center;
+          font-weight: 700;
+          font-family: $rt-font-ui;
+          
+          &.positive {
+            color: #27ae60;
+          }
+          
+          &.negative {
+            color: #e74c3c;
+          }
+          
+          &.neutral {
+            color: #95a5a6;
+          }
+        }
+      }
+    }
+  }
+  
+  // Empty state
+  .rt-difficulties-empty {
+    padding: $rt-space-lg;
+    text-align: center;
+    color: var(--rt-text-muted);
+    font-size: $rt-font-size-sm;
+    font-style: italic;
+  }
+}
+
+// Special Rules Panel (optional)
+.rt-skill-special-rules {
+  background: linear-gradient(135deg, rgba(#9b59b6, 0.08) 0%, rgba(#8e44ad, 0.05) 100%);
+  border: 1px solid rgba(#9b59b6, 0.2);
+  border-left: 3px solid #9b59b6;
+  border-radius: 0 $rt-radius-md $rt-radius-md 0;
+  padding: $rt-space-md;
+  
+  .rt-section-title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    margin-bottom: $rt-space-sm;
+    font-family: $rt-font-heading;
+    font-size: $rt-font-size-sm;
+    font-weight: 600;
+    color: #9b59b6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    i {
+      color: #9b59b6;
+    }
+  }
+  
+  .rt-special-rules-content {
+    font-size: $rt-font-size-sm;
+    line-height: 1.6;
+    color: var(--rt-text-light);
+    
+    .ProseMirror {
+      min-height: 80px;
+      padding: $rt-space-sm;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: $rt-radius-sm;
+      
+      &:focus {
+        outline: none;
+        border-color: rgba(#9b59b6, 0.4);
+      }
+    }
+  }
+}
+
+// Specializations Panel (for specialist skills)
+.rt-skill-specializations {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: $rt-radius-md;
+  padding: $rt-space-md;
+  
+  .rt-section-title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding-bottom: $rt-space-sm;
+    margin-bottom: $rt-space-md;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: $rt-font-heading;
+    font-size: $rt-font-size-md;
+    color: var(--rt-text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    i {
+      color: #9b59b6;
+    }
+  }
+  
+  .rt-specializations-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $rt-space-sm;
+    
+    .rt-specialization-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: linear-gradient(135deg, rgba(#9b59b6, 0.15), rgba(#9b59b6, 0.08));
+      border: 1px solid rgba(#9b59b6, 0.3);
+      border-radius: $rt-radius-sm;
+      font-size: $rt-font-size-sm;
+      font-weight: 500;
+      color: #9b59b6;
+      
+      i {
+        font-size: $rt-font-size-xs;
+      }
+    }
+  }
+  
+  .rt-specializations-input {
+    width: 100%;
+    padding: $rt-space-sm;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $rt-radius-sm;
+    color: var(--rt-text-light);
+    font-size: $rt-font-size-sm;
+    font-family: $rt-font-ui;
+    
+    &:focus {
+      outline: none;
+      border-color: #9b59b6;
+      box-shadow: 0 0 0 2px rgba(#9b59b6, 0.2);
+    }
+    
+    &::placeholder {
+      color: var(--rt-text-muted);
+      font-style: italic;
+    }
+  }
+}
+
+// Roll Config Panel (advanced settings)
+.rt-skill-roll-config {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: $rt-radius-md;
+  padding: $rt-space-md;
+  
+  .rt-section-title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    padding-bottom: $rt-space-sm;
+    margin-bottom: $rt-space-md;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: $rt-font-heading;
+    font-size: $rt-font-size-sm;
+    color: var(--rt-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    
+    i {
+      color: var(--rt-text-muted);
+    }
+  }
+  
+  .rt-config-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $rt-space-md;
+    
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .rt-config-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    
+    label {
+      font-size: $rt-font-size-2xs;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--rt-text-muted);
+    }
+    
+    input[type="number"] {
+      padding: 6px 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: $rt-radius-sm;
+      color: var(--rt-text-light);
+      font-size: $rt-font-size-sm;
+      font-family: $rt-font-ui;
+      text-align: center;
+      
+      &:focus {
+        outline: none;
+        border-color: rgba(#95a5a6, 0.4);
+        box-shadow: 0 0 0 2px rgba(#95a5a6, 0.1);
+      }
+    }
+    
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+  }
+}
+
+// Body layout spacing
+.rt-skill-sheet .rt-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+  overflow-y: auto;
+}

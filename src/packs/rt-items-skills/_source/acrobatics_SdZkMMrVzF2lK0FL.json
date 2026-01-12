@@ -10,8 +10,8 @@
     "description": {
       "value": "<p>The ability to perform precise bodily actions, such as leaping across gaps, perform flips, and contort oneself. More DoS means a more stylish or efficient result.</p>"
     },
-    "isBasic": true,
-    "skillType": "basic",
+    "isBasic": false,
+    "skillType": "advanced",
     "aptitudes": [
       "Agility",
       "General",

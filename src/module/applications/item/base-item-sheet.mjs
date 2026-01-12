@@ -103,6 +103,14 @@ export default class BaseItemSheet extends PrimarySheetMixin(
             // Tab state
             tabs: this._getTabs()
         };
+        
+        // Ensure dh has required config properties for selectOptions (safety measure)
+        if (!context.dh.availabilities) {
+            context.dh.availabilities = CONFIG.ROGUE_TRADER?.availabilities || ROGUE_TRADER.availabilities || {};
+        }
+        if (!context.dh.craftsmanships) {
+            context.dh.craftsmanships = CONFIG.ROGUE_TRADER?.craftsmanships || ROGUE_TRADER.craftsmanships || {};
+        }
 
         return context;
     }
@@ -132,6 +140,44 @@ export default class BaseItemSheet extends PrimarySheetMixin(
 
     /* -------------------------------------------- */
     /*  Event Listeners and Handlers                */
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare form data for submission.
+     * Override to clean img field before validation (V13 strictness).
+     * @param {FormDataExtended} formData - The form data
+     * @param {Event} event - The form submission event
+     * @returns {object} The prepared data object
+     * @override
+     * @protected
+     */
+    _prepareSubmitData(event, form, formData) {
+        const submitData = super._prepareSubmitData(event, form, formData);
+        
+        // CRITICAL FIX: Clean img field if present to prevent validation errors
+        // Foundry V13 has very strict validation on img field
+        if ('img' in submitData) {
+            const imgValue = submitData.img;
+            
+            // If img is invalid (empty, null, undefined, or no extension), remove it
+            // This prevents validation errors and lets the document use its existing value
+            if (!imgValue || imgValue === '' || typeof imgValue !== 'string' || imgValue.trim() === '') {
+                delete submitData.img;
+            } else {
+                const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif'];
+                const imgStr = imgValue.toLowerCase().trim();
+                const hasValidExtension = validExtensions.some(ext => imgStr.endsWith(ext));
+                
+                if (!hasValidExtension || imgStr.length < 5 || imgStr === 'null' || imgStr === 'undefined') {
+                    // Invalid img - remove from submit data so it doesn't override existing valid value
+                    delete submitData.img;
+                }
+            }
+        }
+        
+        return submitData;
+    }
+
     /* -------------------------------------------- */
 
     /** @inheritDoc */

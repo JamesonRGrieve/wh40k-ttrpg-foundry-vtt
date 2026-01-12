@@ -1,0 +1,54 @@
+{{!-- Source Reference Panel
+     Displays source book, page, and custom reference fields.
+     Requires system.source object from DescriptionTemplate.
+--}}
+<div class="rt-item-sheet__panel rt-source-panel">
+  <header class="rt-panel-header">
+    <i class="fas fa-book"></i>
+    <span>{{localize "RT.Source.Label"}}</span>
+  </header>
+  
+  <div class="rt-panel-body">
+    <div class="rt-field-group">
+      <div class="rt-field">
+        <label class="rt-field__label">
+          <i class="fas fa-book"></i>
+          {{localize "RT.Source.Book"}}
+        </label>
+        <input class="rt-field__input" 
+               name="system.source.book" 
+               type="text" 
+               value="{{system.source.book}}" 
+               placeholder="{{localize "RT.Source.BookPlaceholder"}}" />
+      </div>
+      
+      <div class="rt-field rt-field--inline">
+        <label class="rt-field__label">{{localize "RT.Source.Page"}}</label>
+        <input class="rt-field__input rt-field__input--short" 
+               name="system.source.page" 
+               type="text" 
+               value="{{system.source.page}}" 
+               placeholder="{{localize "RT.Source.PagePlaceholder"}}" />
+      </div>
+    </div>
+    
+    <div class="rt-field">
+      <label class="rt-field__label">
+        <i class="fas fa-pen"></i>
+        {{localize "RT.Source.Custom"}}
+      </label>
+      <input class="rt-field__input" 
+             name="system.source.custom" 
+             type="text" 
+             value="{{system.source.custom}}" 
+             placeholder="{{localize "RT.Source.CustomPlaceholder"}}" />
+    </div>
+    
+    {{#if system.sourceReference}}
+    <div class="rt-source-display">
+      <i class="fas fa-info-circle"></i>
+      <span>{{system.sourceReference}}</span>
+    </div>
+    {{/if}}
+  </div>
+</div>

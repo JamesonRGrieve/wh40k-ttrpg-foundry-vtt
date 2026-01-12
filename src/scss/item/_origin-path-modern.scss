@@ -1,0 +1,873 @@
+// ============================================
+// Origin Path Item Sheet - Modern Tabbed Design
+// ============================================
+// Character creation lifepath sheet following modern patterns
+
+// ============================================
+// Base Layout
+// ============================================
+
+.rt-origin-sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-bg-primary);
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}
+
+// ============================================
+// HEADER - Step identity with configuration
+// ============================================
+
+.rt-origin-header {
+  display: flex;
+  align-items: flex-start;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+  background: linear-gradient(180deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
+  border-bottom: 2px solid var(--color-border-secondary);
+}
+
+.rt-origin-header__image {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: $rt-radius-md;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid var(--color-border-secondary);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    border-color: $rt-color-gold;
+    box-shadow: 0 0 12px rgba($rt-color-gold, 0.3);
+    
+    .rt-origin-header__image-overlay {
+      opacity: 1;
+    }
+  }
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.rt-origin-header__image-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  
+  i {
+    color: $rt-color-gold;
+    font-size: 1.5rem;
+  }
+}
+
+.rt-origin-header__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+  min-width: 0;
+}
+
+.rt-origin-header__name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: $rt-font-display;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 4px 0;
+  transition: border-color 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-bottom-color: $rt-color-gold;
+  }
+  
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.rt-origin-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.rt-origin-header__config {
+  display: flex;
+  gap: $rt-space-md;
+  margin-top: $rt-space-xs;
+}
+
+// ============================================
+// CONFIGURATION FIELDS (in header)
+// ============================================
+
+.rt-config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-tertiary);
+  }
+}
+
+.rt-config-select,
+.rt-config-input {
+  padding: 6px 10px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-sm;
+  color: var(--color-text-primary);
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: $rt-color-gold;
+    box-shadow: 0 0 0 2px rgba($rt-color-gold, 0.15);
+  }
+}
+
+.rt-config-input {
+  width: 80px;
+  text-align: center;
+}
+
+// ============================================
+// BADGES - Step and Index
+// ============================================
+
+.rt-origin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: $rt-radius-sm;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  color: var(--color-text-secondary);
+  
+  i {
+    font-size: 0.85em;
+  }
+}
+
+// Step-specific colors (matching step index)
+.rt-origin-badge--step {
+  background: linear-gradient(135deg, rgba($rt-color-gold, 0.15), rgba($rt-color-gold, 0.05));
+  border-color: rgba($rt-color-gold, 0.3);
+  color: $rt-color-gold;
+}
+
+.rt-origin-badge--step0 {
+  // Home World - Green/Earth tones
+  background: linear-gradient(135deg, rgba(#4a7c59, 0.15), rgba(#4a7c59, 0.05));
+  border-color: rgba(#4a7c59, 0.3);
+  color: #5ba86d;
+}
+
+.rt-origin-badge--step1 {
+  // Birthright - Blue/Noble
+  background: linear-gradient(135deg, rgba(#4a6a7c, 0.15), rgba(#4a6a7c, 0.05));
+  border-color: rgba(#4a6a7c, 0.3);
+  color: #5b8aa8;
+}
+
+.rt-origin-badge--step2 {
+  // Lure - Purple/Mysterious
+  background: linear-gradient(135deg, rgba(#6a4a7c, 0.15), rgba(#6a4a7c, 0.05));
+  border-color: rgba(#6a4a7c, 0.3);
+  color: #8a5ba8;
+}
+
+.rt-origin-badge--step3 {
+  // Trials - Red/Danger
+  background: linear-gradient(135deg, rgba(#7c4a4a, 0.15), rgba(#7c4a4a, 0.05));
+  border-color: rgba(#7c4a4a, 0.3);
+  color: #a85b5b;
+}
+
+.rt-origin-badge--step4 {
+  // Motivation - Orange/Ambition
+  background: linear-gradient(135deg, rgba(#7c6a4a, 0.15), rgba(#7c6a4a, 0.05));
+  border-color: rgba(#7c6a4a, 0.3);
+  color: #a88a5b;
+}
+
+.rt-origin-badge--step5 {
+  // Career - Gold/Achievement
+  background: linear-gradient(135deg, rgba($rt-color-gold, 0.2), rgba($rt-color-gold, 0.1));
+  border-color: rgba($rt-color-gold, 0.4);
+  color: lighten($rt-color-gold, 10%);
+}
+
+.rt-origin-badge--index {
+  background: linear-gradient(135deg, rgba($rt-accent-skills, 0.15), rgba($rt-accent-skills, 0.05));
+  border-color: rgba($rt-accent-skills, 0.3);
+  color: $rt-accent-skills;
+}
+
+// ============================================
+// TAB NAVIGATION
+// ============================================
+
+.rt-origin-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--color-bg-secondary);
+  border-bottom: 2px solid var(--color-border-secondary);
+  padding: 0 $rt-space-md;
+}
+
+.rt-origin-tab {
+  flex: 1;
+  padding: $rt-space-sm $rt-space-md;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  
+  i {
+    font-size: 1em;
+  }
+  
+  &:hover {
+    color: var(--color-text-primary);
+    background: rgba($rt-color-gold, 0.05);
+  }
+  
+  &.active {
+    color: $rt-color-gold;
+    border-bottom-color: $rt-color-gold;
+    background: rgba($rt-color-gold, 0.08);
+  }
+}
+
+// ============================================
+// TAB CONTENT BODY
+// ============================================
+
+.rt-origin-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--color-bg-tertiary);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border-secondary);
+    border-radius: $rt-radius-sm;
+    
+    &:hover {
+      background: var(--color-border-highlight);
+    }
+  }
+}
+
+.rt-origin-panel {
+  display: none;
+  padding: $rt-space-md;
+  
+  &.active {
+    display: block;
+  }
+}
+
+// ============================================
+// SECTIONS
+// ============================================
+
+.rt-origin-section {
+  margin-bottom: $rt-space-lg;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rt-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: $rt-font-heading;
+  color: var(--color-text-primary);
+  margin-bottom: $rt-space-md;
+  padding-bottom: $rt-space-xs;
+  border-bottom: 2px solid var(--color-border-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  
+  i {
+    color: $rt-color-gold;
+    font-size: 0.9em;
+  }
+}
+
+// ============================================
+// CHARACTERISTICS GRID
+// ============================================
+
+.rt-characteristics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $rt-space-sm;
+  
+  @media (max-width: 500px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rt-char-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-sm;
+}
+
+.rt-char-label {
+  font-family: $rt-font-display;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  min-width: 28px;
+}
+
+.rt-char-input {
+  flex: 1;
+  padding: 4px 8px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: $rt-radius-sm;
+  color: var(--color-text-primary);
+  font-family: $rt-font-display;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: $rt-color-gold;
+    box-shadow: 0 0 0 2px rgba($rt-color-gold, 0.15);
+  }
+}
+
+// ============================================
+// BONUSES GRID
+// ============================================
+
+.rt-bonuses-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $rt-space-md;
+  
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rt-bonus-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  
+  &.rt-bonus-field--checkbox {
+    justify-content: center;
+  }
+}
+
+.rt-bonus-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.rt-bonus-label-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+  
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+  
+  span {
+    font-weight: 600;
+  }
+}
+
+.rt-bonus-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-sm;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-family: $rt-font-display;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: $rt-color-gold;
+    box-shadow: 0 0 0 2px rgba($rt-color-gold, 0.15);
+  }
+}
+
+// ============================================
+// GRANTS LIST (Skills, Talents, Traits)
+// ============================================
+
+.rt-grants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-grant-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-sm;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: var(--color-border-highlight);
+    background: var(--color-bg-secondary);
+  }
+}
+
+.rt-grant-card__content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.rt-grant-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.rt-grant-spec {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.rt-grant-level,
+.rt-grant-qty {
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
+}
+
+.rt-grant-icon {
+  color: var(--color-text-tertiary);
+  font-size: 1rem;
+}
+
+// Grant badges for skill training levels
+.rt-grant-badge {
+  padding: 3px 8px;
+  border-radius: $rt-radius-sm;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  
+  &--trained {
+    background: rgba($rt-accent-skills, 0.15);
+    border: 1px solid rgba($rt-accent-skills, 0.3);
+    color: $rt-accent-skills;
+  }
+  
+  &--plus10 {
+    background: rgba($rt-color-gold, 0.15);
+    border: 1px solid rgba($rt-color-gold, 0.3);
+    color: $rt-color-gold;
+  }
+  
+  &--plus20 {
+    background: rgba(#27ae60, 0.15);
+    border: 1px solid rgba(#27ae60, 0.3);
+    color: #2ecc71;
+  }
+}
+
+// ============================================
+// APTITUDES DISPLAY
+// ============================================
+
+.rt-aptitudes-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rt-aptitude-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, rgba($rt-color-gold, 0.15), rgba($rt-color-gold, 0.05));
+  border: 1px solid rgba($rt-color-gold, 0.3);
+  border-radius: $rt-radius-sm;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: $rt-color-gold;
+}
+
+// ============================================
+// ABILITY CARDS (Special Abilities)
+// ============================================
+
+.rt-ability-card {
+  padding: $rt-space-md;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-md;
+  margin-bottom: $rt-space-md;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rt-ability-name {
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: $rt-font-heading;
+  color: $rt-color-gold;
+  margin: 0 0 $rt-space-sm 0;
+}
+
+.rt-ability-description {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  
+  p {
+    margin: 0 0 $rt-space-xs 0;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// ============================================
+// REQUIREMENTS DISPLAY
+// ============================================
+
+.rt-requirement-display {
+  padding: $rt-space-md;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-md;
+  
+  p {
+    margin: 0;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+  }
+}
+
+.rt-requirement-list {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+}
+
+.rt-requirement-note {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin: 0 0 $rt-space-xs 0;
+}
+
+.rt-requirement-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: $rt-radius-sm;
+  font-size: 0.85rem;
+  font-weight: 600;
+  
+  i {
+    font-size: 0.9em;
+  }
+  
+  &--required {
+    background: rgba(#27ae60, 0.1);
+    border: 1px solid rgba(#27ae60, 0.3);
+    color: #2ecc71;
+    
+    i {
+      color: #27ae60;
+    }
+  }
+  
+  &--excluded {
+    background: rgba($rt-accent-combat, 0.1);
+    border: 1px solid rgba($rt-accent-combat, 0.3);
+    color: lighten($rt-accent-combat, 15%);
+    
+    i {
+      color: $rt-accent-combat;
+    }
+  }
+}
+
+// ============================================
+// CHOICES DISPLAY
+// ============================================
+
+.rt-choice-info {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-md;
+  margin-bottom: $rt-space-md;
+}
+
+.rt-choice-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: $rt-radius-sm;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  
+  &--skill {
+    background: rgba($rt-accent-skills, 0.15);
+    border: 1px solid rgba($rt-accent-skills, 0.3);
+    color: $rt-accent-skills;
+  }
+  
+  &--talent {
+    background: rgba($rt-accent-talents, 0.15);
+    border: 1px solid rgba($rt-accent-talents, 0.3);
+    color: $rt-accent-talents;
+  }
+  
+  &--characteristic {
+    background: rgba($rt-accent-combat, 0.15);
+    border: 1px solid rgba($rt-accent-combat, 0.3);
+    color: lighten($rt-accent-combat, 15%);
+  }
+  
+  &--equipment {
+    background: rgba($rt-accent-equipment, 0.15);
+    border: 1px solid rgba($rt-accent-equipment, 0.3);
+    color: lighten($rt-accent-equipment, 15%);
+  }
+}
+
+.rt-choice-count {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $rt-color-gold;
+  padding: 4px 10px;
+  background: rgba($rt-color-gold, 0.1);
+  border-radius: $rt-radius-sm;
+}
+
+.rt-choice-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-choice-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-light);
+  border-radius: $rt-radius-sm;
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+  
+  i {
+    font-size: 0.6em;
+    color: var(--color-text-tertiary);
+  }
+}
+
+// ============================================
+// PROPERTIES (used in Description tab)
+// ============================================
+
+.rt-property {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-property-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.rt-property-input,
+.rt-property-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-sm;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: $rt-color-gold;
+    box-shadow: 0 0 0 2px rgba($rt-color-gold, 0.15);
+  }
+  
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.rt-property-textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+// ============================================
+// EDITOR CONTAINER
+// ============================================
+
+.rt-editor-container {
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: $rt-radius-md;
+  padding: $rt-space-sm;
+  
+  .editor {
+    min-height: 150px;
+  }
+}
+
+// ============================================
+// EMPTY STATE
+// ============================================
+
+.rt-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $rt-space-xl;
+  text-align: center;
+  
+  i {
+    font-size: 3rem;
+    color: var(--color-text-tertiary);
+    margin-bottom: $rt-space-md;
+    opacity: 0.5;
+  }
+  
+  p {
+    margin: 4px 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    
+    &.rt-field-hint {
+      font-size: 0.75rem;
+      color: var(--color-text-tertiary);
+      font-style: italic;
+    }
+  }
+  
+  &--compact {
+    padding: $rt-space-md;
+    
+    i {
+      font-size: 1.5rem;
+      margin-bottom: $rt-space-sm;
+    }
+    
+    p {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.rt-field-hint {
+  font-size: 0.7rem;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}

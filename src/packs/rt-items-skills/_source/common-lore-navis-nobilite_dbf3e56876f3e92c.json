@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Recalling general knowledge on procedures, divisions, traditions, important individuals, superstitions, etc, for target group.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "specializations": [
       "Adeptus Arbites",
       "Adeptus Astra Telepathica",
@@ -32,7 +32,7 @@
       "Screaming Vortex",
       "Spinward Front"
     ],
-    "skillType": "specialist",
+    "skillType": "advanced",
     "aptitudes": [
       "Intelligence",
       "General",

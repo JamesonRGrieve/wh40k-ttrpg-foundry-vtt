@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Stalling for time, causing distractons through speaking. Requires sharing common language with opponent.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "skillType": "advanced",
     "aptitudes": [],
     "source": ""

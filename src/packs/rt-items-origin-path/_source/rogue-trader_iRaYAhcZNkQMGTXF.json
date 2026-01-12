@@ -1,14 +1,18 @@
 {
   "name": "Rogue Trader",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Career",
-    "descriptionText": "Master and Commander of their vessel, wielder of their warrants of trade and oft  beholden to a dynasty ancient beyond reckoning.\nSkills: Command, Commerce, Charm, Common Lore (Imperium), Evaluate, Literacy, Scholastic Lore (Astromancy), Speak Language (High Gothic, Low Gothic)\nTalents: Air of Authority, Pistol Weapon Training (Universal), Melee Weapon Training (Universal)\nGear: Best Laspisol/Good Hand Cannon/Common Plasma Pistol. Best Mono-sword/Common Power Sword. Micro-Bead, Void Suit, Fine Clothing, Xeno-pelt Cloak, Best Light/Storm Trooper Carapace.\nSpecial Ability: Exceptional Leader: As a free action once per round, the Rogue Trader may grant an ally that they can see who can hear them +10 to any one test, can't use ability on themselves.",
-    "effects": "Master and Commander of their vessel, wielder of their warrants of trade and oft  beholden to a dynasty ancient beyond reckoning.\nSkills: Command, Commerce, Charm, Common Lore (Imperium), Evaluate, Literacy, Scholastic Lore (Astromancy), Speak Language (High Gothic, Low Gothic)\nTalents: Air of Authority, Pistol Weapon Training (Universal), Melee Weapon Training (Universal)\nGear: Best Laspisol/Good Hand Cannon/Common Plasma Pistol. Best Mono-sword/Common Power Sword. Micro-Bead, Void Suit, Fine Clothing, Xeno-pelt Cloak, Best Light/Storm Trooper Carapace.\nSpecial Ability: Exceptional Leader: As a free action once per round, the Rogue Trader may grant an ally that they can see who can hear them +10 to any one test, can't use ability on themselves.",
-    "source": "Character Creation (sheet)",
+    "identifier": "rogue-trader",
+    "step": "career",
+    "stepIndex": 6,
     "description": {
       "value": "<p>Master and Commander of their vessel, wielder of their warrants of trade and oft  beholden to a dynasty ancient beyond reckoning.<br>Skills: Command, Commerce, Charm, Common Lore (Imperium), Evaluate, Literacy, Scholastic Lore (Astromancy), Speak Language (High Gothic, Low Gothic)<br>Talents: Air of Authority, Pistol Weapon Training (Universal), Melee Weapon Training (Universal)<br>Gear: Best Laspisol/Good Hand Cannon/Common Plasma Pistol. Best Mono-sword/Common Power Sword. Micro-Bead, Void Suit, Fine Clothing, Xeno-pelt Cloak, Best Light/Storm Trooper Carapace.<br>Special Ability: Exceptional Leader: As a free action once per round, the Rogue Trader may grant an ally that they can see who can hear them +10 to any one test, can&#x27;t use ability on themselves.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Career",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,92 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Command",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Commerce",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Charm",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore (Imperium)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Evaluate",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Literacy",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Scholastic Lore (Astromancy)",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Speak Language (High Gothic",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Low Gothic)<br>",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Universal",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "s: Air of Authority",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "Pistol Weapon Training",
+          "specialization": "Universal",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Special Ability",
+          "description": "Exceptional Leader: As a free action once per round, the Rogue Trader may grant an ally that they can see who can hear them +10 to any one test, can&#x27;t use ability on themselves.</p>"
+        }
+      ],
+      "choices": []
+    },
+    "effectText": "Master and Commander of their vessel, wielder of their warrants of trade and oft  beholden to a dynasty ancient beyond reckoning.\nSkills: Command, Commerce, Charm, Common Lore (Imperium), Evaluate, Literacy, Scholastic Lore (Astromancy), Speak Language (High Gothic, Low Gothic)\nTalents: Air of Authority, Pistol Weapon Training (Universal), Melee Weapon Training (Universal)\nGear: Best Laspisol/Good Hand Cannon/Common Plasma Pistol. Best Mono-sword/Common Power Sword. Micro-Bead, Void Suit, Fine Clothing, Xeno-pelt Cloak, Best Light/Storm Trooper Carapace.\nSpecial Ability: Exceptional Leader: As a free action once per round, the Rogue Trader may grant an ally that they can see who can hear them +10 to any one test, can't use ability on themselves.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.career",
-      "step": "Career",
-      "stepIndex": 6,
-      "number": "8"
-    }
-  },
+  "flags": {},
   "_id": "iRaYAhcZNkQMGTXF"
 }

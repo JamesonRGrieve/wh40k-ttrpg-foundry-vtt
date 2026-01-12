@@ -1,14 +1,18 @@
 {
   "name": "Child of Dynasty",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Home World",
-    "descriptionText": "-3 Toughness, +3 Intelligence, -5 Willpower, +5 Fellowship. Gain Literacy and Speak (High Gothic) as trained skills. Add +3 Ship Points to group's starting ship, cannot exchange these for Profit Factor. Gain +5 to Fellowship Tests interacting with high-ranking officials of the Imperium and Imperial Nobility. Gain an appropriate Enemy Talent as an unseen foe seeks the character's position and wealth.",
-    "effects": "-3 Toughness, +3 Intelligence, -5 Willpower, +5 Fellowship. Gain Literacy and Speak (High Gothic) as trained skills. Add +3 Ship Points to group's starting ship, cannot exchange these for Profit Factor. Gain +5 to Fellowship Tests interacting with high-ranking officials of the Imperium and Imperial Nobility. Gain an appropriate Enemy Talent as an unseen foe seeks the character's position and wealth.",
-    "source": "Character Creation (sheet)",
+    "identifier": "child-of-dynasty",
+    "step": "homeWorld",
+    "stepIndex": 1,
     "description": {
       "value": "<p>-3 Toughness, +3 Intelligence, -5 Willpower, +5 Fellowship. Gain Literacy and Speak (High Gothic) as trained skills. Add +3 Ship Points to group&#x27;s starting ship, cannot exchange these for Profit Factor. Gain +5 to Fellowship Tests interacting with high-ranking officials of the Imperium and Imperial Nobility. Gain an appropriate Enemy Talent as an unseen foe seeks the character&#x27;s position and wealth.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Home World",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -29,17 +33,62 @@
       "talents": [],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Literacy",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Speak (High Gothic) as trained",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Imperial Nobility",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "an appropriate Enemy",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "as an unseen foe seeks the character&#x27",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "s position",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "wealth",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "-3 Toughness, +3 Intelligence, -5 Willpower, +5 Fellowship. Gain Literacy and Speak (High Gothic) as trained skills. Add +3 Ship Points to group's starting ship, cannot exchange these for Profit Factor. Gain +5 to Fellowship Tests interacting with high-ranking officials of the Imperium and Imperial Nobility. Gain an appropriate Enemy Talent as an unseen foe seeks the character's position and wealth.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.home-world",
-      "step": "Home World",
-      "stepIndex": 1,
-      "number": "6"
-    }
-  },
+  "flags": {},
   "_id": "xY33i8ZMw9cmlJen"
 }

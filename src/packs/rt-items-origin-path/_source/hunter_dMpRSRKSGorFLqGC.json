@@ -1,14 +1,18 @@
 {
   "name": "Hunter",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Lure of the Void",
-    "descriptionText": "1. Bounty Hunter (250xp): +3 Willpower, +3 Fellowship, and Bloodtracker Talent. Gain either 1d5 Corruption or 1d5 Insanity.\n2. Xenos Hunter (250xp): +3 Weapon Skill or +3 Ballistic Skill. Gain either Leap Up or Sprint Talent. Gain either Scholastic Lore (Beasts) or Tracking as Trained Skills.\n3. Hunted (100xp): +3 Perception. Gain either Paranoia or Light Sleeper Talents. Gain Enemy Talent for whichever group is hunting you (Subject to GM Approval)",
-    "effects": "1. Bounty Hunter (250xp): +3 Willpower, +3 Fellowship, and Bloodtracker Talent. Gain either 1d5 Corruption or 1d5 Insanity.\n2. Xenos Hunter (250xp): +3 Weapon Skill or +3 Ballistic Skill. Gain either Leap Up or Sprint Talent. Gain either Scholastic Lore (Beasts) or Tracking as Trained Skills.\n3. Hunted (100xp): +3 Perception. Gain either Paranoia or Light Sleeper Talents. Gain Enemy Talent for whichever group is hunting you (Subject to GM Approval)",
-    "source": "Character Creation (sheet)",
+    "identifier": "hunter",
+    "step": "lureOfTheVoid",
+    "stepIndex": 3,
     "description": {
       "value": "<p>1. Bounty Hunter (250xp): +3 Willpower, +3 Fellowship, and Bloodtracker Talent. Gain either 1d5 Corruption or 1d5 Insanity.<br>2. Xenos Hunter (250xp): +3 Weapon Skill or +3 Ballistic Skill. Gain either Leap Up or Sprint Talent. Gain either Scholastic Lore (Beasts) or Tracking as Trained Skills.<br>3. Hunted (100xp): +3 Perception. Gain either Paranoia or Light Sleeper Talents. Gain Enemy Talent for whichever group is hunting you (Subject to GM Approval)</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Lure of the Void",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -31,17 +35,83 @@
       ],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "either 1d5 Corruption or 1d5 Insanity",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "either Leap Up or Sprint",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "either Paranoia or Light Sleeper",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Enemy",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose from: 1d5 Corruption, 1d5 Insanity",
+          "options": [
+            "1d5 Corruption",
+            "1d5 Insanity"
+          ],
+          "count": 1
+        },
+        {
+          "type": "talent",
+          "label": "Choose from: Leap Up, Sprint Talent",
+          "options": [
+            "Leap Up",
+            "Sprint Talent"
+          ],
+          "count": 1
+        },
+        {
+          "type": "skill",
+          "label": "Choose from: Scholastic Lore (Beasts), Tracking as Trained Skills",
+          "options": [
+            "Scholastic Lore (Beasts)",
+            "Tracking as Trained Skills"
+          ],
+          "count": 1
+        },
+        {
+          "type": "talent",
+          "label": "Choose from: Paranoia, Light Sleeper Talents",
+          "options": [
+            "Paranoia",
+            "Light Sleeper Talents"
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "effectText": "1. Bounty Hunter (250xp): +3 Willpower, +3 Fellowship, and Bloodtracker Talent. Gain either 1d5 Corruption or 1d5 Insanity.\n2. Xenos Hunter (250xp): +3 Weapon Skill or +3 Ballistic Skill. Gain either Leap Up or Sprint Talent. Gain either Scholastic Lore (Beasts) or Tracking as Trained Skills.\n3. Hunted (100xp): +3 Perception. Gain either Paranoia or Light Sleeper Talents. Gain Enemy Talent for whichever group is hunting you (Subject to GM Approval)",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.lure-of-the-void",
-      "step": "Lure of the Void",
-      "stepIndex": 3,
-      "number": "1 and 4"
-    }
-  },
+  "flags": {},
   "_id": "dMpRSRKSGorFLqGC"
 }

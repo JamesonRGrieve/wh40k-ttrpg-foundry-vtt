@@ -10,7 +10,7 @@
     "description": {
       "value": "<p>Knowledge that is deliberately hidden or suppressed about a certain group. Possession of this knowledge may cause difficulties, but reveals meany hidden truths.</p>"
     },
-    "isBasic": true,
+    "isBasic": false,
     "specializations": [
       "Mechanicus",
       "Astartes",
@@ -31,7 +31,7 @@
       "Webway",
       "Xenos"
     ],
-    "skillType": "specialist",
+    "skillType": "advanced",
     "aptitudes": [
       "Intelligence",
       "Knowledge",

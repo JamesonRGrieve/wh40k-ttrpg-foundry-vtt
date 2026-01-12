@@ -20,6 +20,7 @@ export { default as OriginPathData } from "./origin-path.mjs";
 export { default as ConditionData } from "./condition.mjs";
 export { default as AptitudeData } from "./aptitude.mjs";
 export { default as PeerEnemyData } from "./peer-enemy.mjs";
+export { default as CombatActionData } from "./combat-action.mjs";
 
 // Powers
 export { default as PsychicPowerData } from "./psychic-power.mjs";

@@ -401,7 +401,7 @@ _prepareContext(options)
   ↓ Shared data for ALL parts
   - actor, system, source, fields
   - characteristics with HUD data
-  - categorized items (cached)
+  - categorized items (computed fresh)
   ↓
 _preparePartContext(partId, context, options)
   ↓ Routes to part-specific methods
@@ -411,6 +411,13 @@ _preparePartContext(partId, context, options)
   - _prepareEquipmentContext()
   - etc.
 ```
+
+**No Sheet-Level Caching**: As of January 2026, sheets do NOT cache computed data (items, origin paths, etc.). Each render computes fresh data. This is simpler and more reliable:
+- Trust Foundry's reactive system to trigger re-renders when needed
+- Trust DataModel's `prepareDerivedData` for heavy computations
+- Avoid cache invalidation bugs and timing issues
+- Item categorization (~100 items) is fast enough on modern hardware
+
 
 ### Action Handlers (ApplicationV2 Pattern)
 
@@ -518,25 +525,57 @@ templates/
 
 ### Template Loading Strategy
 
-The `HandlebarManager` uses lazy loading:
+**As of January 2026**: All templates are loaded at system initialization for simplicity and reliability.
 
-**Core templates** (preloaded at startup):
-- Header, tabs, overview tab
-- Core panels (wounds, fatigue, fate, corruption, insanity)
-- Chat templates, roll prompts
-- Base item sheets
+The `HandlebarManager.loadTemplates()` preloads all system templates (~120 files) at startup:
+- All actor sheet templates (acolyte, npc, starship, vehicle)
+- All panel partials
+- All chat templates and roll prompts
+- All item sheet templates
 
-**Deferred templates** (loaded on-demand):
-- Other tab content (combat, skills, equipment, etc.)
-- Vehicle, starship, NPC sheets
-- Secondary item sheets
+**Why no lazy loading?**
+- Simpler architecture - no tracking of loaded state
+- More reliable - no timing issues or missing templates
+- Minimal performance impact - modern browsers handle this well
+- Eliminates a class of bugs related to template availability
 
 ```javascript
-// Load templates for a specific tab
-await HandlebarManager.loadAcolyteTabTemplates('combat');
+// In HandlebarManager
+static async loadTemplates() {
+    return this.preloadHandlebarsTemplates();
+}
+```
 
-// Load templates for actor type
-await HandlebarManager.loadActorSheetTemplates('starship');
+### Template Data Context
+
+**CRITICAL PATTERN**: Templates receive `system` directly in context from `_prepareContext`:
+
+```javascript
+// In BaseActorSheet._prepareContext()
+const context = {
+    actor: this.actor,
+    system: this.actor.system,  // ← Exposed for templates
+    source: this.isEditable ? this.actor.system._source : this.actor.system,
+    // ...
+};
+```
+
+**Template Usage**:
+```handlebars
+{{!-- CORRECT - use system directly --}}
+<input name="system.wounds.value" value="{{system.wounds.value}}" />
+
+{{!-- WRONG - do not use actor.system in templates --}}
+<input name="system.wounds.value" value="{{actor.system.wounds.value}}" />
+```
+
+**JavaScript Usage**:
+```javascript
+// In sheet methods, use this.actor.system
+static async #adjustStat(event, target) {
+    const current = this.actor.system.wounds?.value || 0;
+    await this.actor.update({ "system.wounds.value": current + 1 });
+}
 ```
 
 ---
@@ -628,6 +667,125 @@ $rt-accent-dynasty: #d4a520;
 
 .rt-panel.collapsed .rt-panel-body {
   display: none;
+}
+```
+
+### Unified Component Library
+
+**Location**: `src/scss/abstracts/_unified-components.scss`
+
+This is the **single source of truth** for all reusable UI components. All other files should reference these canonical definitions, not create duplicates.
+
+#### Core Components
+
+| Component | Classes | Purpose |
+|-----------|---------|---------|
+| **Panel** | `.rt-panel`, `.rt-panel-header`, `.rt-panel-body` | Collapsible content sections |
+| **Vital Stat** | `.rt-vital-stat`, `.rt-vital-stat-header`, `.rt-vital-stat-body` | Compact stat cards (wounds, fate, etc.) |
+| **Dropzone** | `.rt-dropzone`, `.rt-dropzone-icon`, `.rt-dropzone-text` | Drag-drop target areas |
+| **Actions Group** | `.rt-actions-group-header`, `.rt-group-icon` | Section headers |
+| **Buttons** | `.rt-btn-primary`, `.rt-btn-control`, `.rt-btn-icon`, `.rt-btn-quick` | All button variants |
+| **Inputs** | `.rt-input`, `.rt-input-numeric`, `.rt-input-inline`, `.rt-select`, `.rt-textarea` | All input variants |
+
+#### Panel Accent Modifiers
+
+Use modifiers to apply accent colors to panels:
+
+```handlebars
+<div class="rt-panel rt-panel--wounds">...</div>
+<div class="rt-panel rt-panel--fatigue">...</div>
+<div class="rt-panel rt-panel--skills">...</div>
+```
+
+Available modifiers: `--wounds`, `--fatigue`, `--fate`, `--corruption`, `--insanity`, `--skills`, `--talents`, `--equipment`, `--powers`, `--dynasty`, `--bio`, `--combat`, `--xp`
+
+#### Vital Stat Variants
+
+```handlebars
+<div class="rt-vital-stat rt-vital-wounds">
+  <div class="rt-vital-stat-header">
+    <span class="rt-vital-label">
+      <i class="fa-solid fa-heart"></i>
+      Wounds
+    </span>
+  </div>
+  <div class="rt-vital-stat-body">
+    <div class="rt-vital-readout">
+      <span class="rt-vital-value">{{system.wounds.value}}</span>
+      <span class="rt-vital-max-label">/ {{system.wounds.max}}</span>
+    </div>
+  </div>
+</div>
+```
+
+Available variants: `.rt-vital-wounds`, `.rt-vital-fatigue`, `.rt-vital-fate`
+Warning states: `.rt-vital-warning`, `.rt-vital-critical`
+
+#### Dropzone States
+
+```handlebars
+<div class="rt-dropzone" data-drop-type="weapon">
+  <i class="rt-dropzone-icon fa-solid fa-plus"></i>
+  <span class="rt-dropzone-text">Drop Weapon Here</span>
+</div>
+
+<!-- Compact variant when items exist -->
+<div class="rt-dropzone rt-dropzone--compact">...</div>
+
+<!-- Active drag state (applied via JS) -->
+<div class="rt-dropzone rt-dropzone--active">...</div>
+```
+
+#### Button Variants
+
+```handlebars
+<!-- Primary action (roll, use) -->
+<button class="rt-btn-primary" data-action="roll">
+  <i class="fa-solid fa-dice-d20"></i>
+  Roll
+</button>
+
+<!-- Stat control (±) -->
+<button class="rt-btn-control rt-btn-control--minus">
+  <i class="fa-solid fa-minus"></i>
+</button>
+
+<!-- Icon button (config, delete) -->
+<button class="rt-btn-icon rt-btn-icon--delete">
+  <i class="fa-solid fa-trash"></i>
+</button>
+
+<!-- Quick action (rest, heal) -->
+<button class="rt-btn-quick rt-btn-quick--success">
+  <i class="fa-solid fa-bed"></i>
+  Rest
+</button>
+```
+
+#### DO NOT Duplicate
+
+**Never create panel/dropzone/vital-stat styles in individual panel SCSS files.** All these components are defined once in `_unified-components.scss`. If you need panel-specific behavior:
+
+1. Use CSS custom properties (`--panel-accent`, `--vital-color`)
+2. Add modifiers to the unified component
+3. Extend the unified component with additional classes
+
+**Example of correct extension**:
+```scss
+// In _combat-station.scss
+.rt-vital-header-clickable {
+  // Combat-specific extension of unified .rt-vital-stat
+  display: flex;
+  // ... additional combat-specific styles
+}
+```
+
+**Example of WRONG duplicate** (DO NOT DO THIS):
+```scss
+// In _loadout.scss - WRONG!
+.rt-dropzone {
+  display: flex;
+  // ... duplicate definition
 }
 ```
 
@@ -999,43 +1157,81 @@ gulp packs              # Packs only
 
 ## Common Gotchas
 
-### 1. Template Field Names Must Match Schema
+### 1. Template Data Context - Use `system.` not `actor.system.`
+
+**CRITICAL**: In Handlebars templates, always use `{{system.xxx}}` not `{{actor.system.xxx}}`.
+
+```handlebars
+{{!-- CORRECT --}}
+<input name="system.wounds.value" value="{{system.wounds.value}}" />
+
+{{!-- WRONG --}}
+<input name="system.wounds.value" value="{{actor.system.wounds.value}}" />
+```
+
+The `system` property is exposed directly in template context from `_prepareContext`. In JavaScript action handlers, use `this.actor.system`.
+
+### 2. No Template Lazy Loading
+
+All templates are preloaded at system init. Do NOT call `HandlebarManager.loadAcolyteTabTemplates()` or similar - these methods no longer exist.
+
+### 3. No Sheet-Level Caching
+
+Do NOT cache computed data in sheet properties. Compute fresh on each render. Trust Foundry's reactive system and DataModel caching.
+
+```javascript
+// WRONG - do not cache
+_cachedItems = null;
+_getCategorizedItems() {
+    if (this._cachedItems) return this._cachedItems;
+    // ...
+}
+
+// CORRECT - compute fresh
+_getCategorizedItems() {
+    const categories = { /* ... */ };
+    // compute categories
+    return categories;
+}
+```
+
+### 4. Template Field Names Must Match Schema
 
 If template uses `{{system.endeavour.name}}`, schema must have `endeavour` not `endeavours`.
 
-### 2. jQuery vs Vanilla JS
+### 5. jQuery vs Vanilla JS
 
 Use `element.dataset.xxx` not `$(element).data('xxx')` for data attributes.
 
-### 3. Duplicate Handlers
+### 6. Duplicate Handlers
 
 Check parent class before adding handlers in child class - may already exist.
 
-### 4. DataModel Item Access
+### 7. DataModel Item Access
 
 Use `this.parent.items` in DataModel to access actor's items (not `this.items`).
 
-### 5. prepareEmbeddedData Timing
+### 8. prepareEmbeddedData Timing
 
 Called after items are ready, from Document's `prepareData()`. Do NOT call in DataModel's `prepareDerivedData()`.
 
-### 6. Tab Property Naming
+### 9. Tab Property Naming
 
 Always use `tab:` property in TABS array, not `id:`. PrimarySheetMixin expects `{ tab: "name", ... }`.
 
-### 7. ApplicationV2 Classes
+### 10. ApplicationV2 Classes
 
 V2 doesn't auto-add `sheet` class like V1. Include `"sheet"` in classes array for CSS selectors.
 
-### 8. V2 Integer Validation
+### 11. V2 Integer Validation
 
 Foundry V13 is stricter about integer fields. Use `migrateData()` and `cleanData()` to coerce values.
 
-### 9. Form Submission
+### 12. Form Submission
 
 With `submitOnChange: true`, partial form data may overwrite existing values. Use specific field updates.
 
-### 10. Pack IDs
+### 13. Pack IDs
 
 Foundry V13 requires exactly 16 alphanumeric characters for document IDs.
 
@@ -1246,6 +1442,36 @@ this.fatigue.max = this.characteristics.toughness.bonus;  // Auto-calculated
 ---
 
 ## Appendix D: Recent Changes Log
+
+### January 10, 2026 - Template & Caching Simplification
+
+**Removed all template preloading/lazy-loading complexity:**
+- All ~120 templates now load at system init via `HandlebarManager.loadTemplates()`
+- Removed `_loadedTemplates` Set tracking
+- Removed `loadTemplateOnDemand()` and `loadTemplatesOnDemand()` methods
+- Removed `loadAcolyteTabTemplates()` and `loadActorSheetTemplates()` methods
+- Removed deferred template loading from all sheet `_prepareContext()` methods
+
+**Removed all sheet-level data caching:**
+- Removed `_cachedItems`, `_cachedOriginPath`, `_cacheVersion`, `_lastActorUpdate` properties
+- Removed `_invalidateCache()` and `_checkCacheValidity()` methods
+- `_getCategorizedItems()` now computes fresh on each call (no caching)
+- Simplified `_prepareLoadoutData()` and `_prepareCombatData()` signatures
+
+**Standardized template data access:**
+- Replaced all `{{actor.system.xxx}}` with `{{system.xxx}}` in templates (39 instances across 11 files)
+  - 2 acolyte tab templates (12 replacements)
+  - 5 panel partials (27 replacements)
+  - 3 vehicle templates (3 replacements)
+  - 1 chat template (1 replacement - bleeding-chat.hbs has fatigue context)
+- `system` is exposed directly in context from `_prepareContext()`
+- JavaScript action handlers still use `this.actor.system` (correct)
+
+**Why these changes:**
+- Simpler architecture - fewer moving parts, less state to track
+- More reliable - eliminates timing issues and cache invalidation bugs
+- Trust Foundry's reactive system and DataModel caching
+- Modern browsers handle ~120 template preloads without performance issues
 
 ### January 2026
 

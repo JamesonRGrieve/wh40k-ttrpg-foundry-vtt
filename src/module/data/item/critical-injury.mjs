@@ -1,14 +1,17 @@
 import ItemDataModel from "../abstract/item-data-model.mjs";
 import DescriptionTemplate from "../shared/description-template.mjs";
+import ModifiersTemplate from "../shared/modifiers-template.mjs";
 import IdentifierField from "../fields/identifier-field.mjs";
 
 /**
  * Data model for Critical Injury items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
+ * @mixes ModifiersTemplate
  */
 export default class CriticalInjuryData extends ItemDataModel.mixin(
-  DescriptionTemplate
+  DescriptionTemplate,
+  ModifiersTemplate
 ) {
   
   /** @inheritdoc */

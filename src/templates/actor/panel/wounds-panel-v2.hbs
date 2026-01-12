@@ -120,8 +120,7 @@
                                name="system.wounds.max"
                                value="{{system.wounds.max}}"
                                min="1"
-                               placeholder="Max"
-                               {{#unless (isExpanded 'wounds_details' actor)}}disabled{{/unless}} />
+                               placeholder="Max" />
                     </label>
 
                     <label class="rt-edit-field">
@@ -133,8 +132,7 @@
                                value="{{system.wounds.value}}"
                                min="0"
                                max="{{system.wounds.max}}"
-                               placeholder="Current"
-                               {{#unless (isExpanded 'wounds_details' actor)}}disabled{{/unless}} />
+                               placeholder="Current" />
                     </label>
                 </div>
             </div>
@@ -162,8 +160,7 @@
                            value="{{system.wounds.critical}}"
                            min="0"
                            max="10"
-                           title="Critical Damage (0-10)"
-                           {{#unless (isExpanded 'wounds_details' actor)}}disabled{{/unless}} />
+                           title="Critical Damage (0-10)" />
 
                     <button type="button"
                             class="rt-critical-btn rt-btn-plus"

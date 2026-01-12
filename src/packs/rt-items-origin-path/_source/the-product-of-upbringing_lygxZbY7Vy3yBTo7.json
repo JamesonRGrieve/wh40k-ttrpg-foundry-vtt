@@ -1,14 +1,18 @@
 {
   "name": "The Product of Upbringing",
-  "type": "trait",
+  "type": "originPath",
   "img": "icons/svg/mystery-man.svg",
   "system": {
-    "requirements": "Origin Path: Trials and Travails",
-    "descriptionText": "1. New Blood (200xp): Gain Rival (Nobility) from being part of an upstart Noble Family. Add +1 Profit Factor to Group's Starting Profit Factor.\n2. Rivals (100xp): +3 Fellowship. Gain Rival Talent of group character dislikes and Peer of group that supports them. Make -10 Willpower Test to avoid acting out at rivals. \n3. Decadent (150xp): +3 Willpower. Gain Decadence Talent and +5 to all Charm Tests. Gain 1d5 Corruption.",
-    "effects": "1. New Blood (200xp): Gain Rival (Nobility) from being part of an upstart Noble Family. Add +1 Profit Factor to Group's Starting Profit Factor.\n2. Rivals (100xp): +3 Fellowship. Gain Rival Talent of group character dislikes and Peer of group that supports them. Make -10 Willpower Test to avoid acting out at rivals. \n3. Decadent (150xp): +3 Willpower. Gain Decadence Talent and +5 to all Charm Tests. Gain 1d5 Corruption.",
-    "source": "Character Creation (sheet)",
+    "identifier": "the-product-of-upbringing",
+    "step": "trialsAndTravails",
+    "stepIndex": 4,
     "description": {
       "value": "<p>1. New Blood (200xp): Gain Rival (Nobility) from being part of an upstart Noble Family. Add +1 Profit Factor to Group&#x27;s Starting Profit Factor.<br>2. Rivals (100xp): +3 Fellowship. Gain Rival Talent of group character dislikes and Peer of group that supports them. Make -10 Willpower Test to avoid acting out at rivals. <br>3. Decadent (150xp): +3 Willpower. Gain Decadence Talent and +5 to all Charm Tests. Gain 1d5 Corruption.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Trials and Travails",
+      "previousSteps": [],
+      "excludedSteps": []
     },
     "modifiers": {
       "characteristics": {
@@ -32,17 +36,57 @@
       ],
       "traits": [],
       "other": []
-    }
+    },
+    "grants": {
+      "wounds": 0,
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Rival",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Decadence",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "1d5 Corruption",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "of group character dislikes",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "Peer of group that supports them",
+          "specialization": "",
+          "uuid": ""
+        },
+        {
+          "name": "and +5 to all Charm Tests",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "effectText": "1. New Blood (200xp): Gain Rival (Nobility) from being part of an upstart Noble Family. Add +1 Profit Factor to Group's Starting Profit Factor.\n2. Rivals (100xp): +3 Fellowship. Gain Rival Talent of group character dislikes and Peer of group that supports them. Make -10 Willpower Test to avoid acting out at rivals. \n3. Decadent (150xp): +3 Willpower. Gain Decadence Talent and +5 to all Charm Tests. Gain 1d5 Corruption.",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": []
   },
   "effects": [],
-  "flags": {
-    "rt": {
-      "kind": "origin",
-      "choiceGroup": "origin.trials-and-travails",
-      "step": "Trials and Travails",
-      "stepIndex": 4,
-      "number": "2 and 5"
-    }
-  },
+  "flags": {},
   "_id": "lygxZbY7Vy3yBTo7"
 }

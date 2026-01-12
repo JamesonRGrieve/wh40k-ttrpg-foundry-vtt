@@ -1,47 +1,92 @@
-<section class="rt-item-sheet__panel">
-    <h2 class="rt-item-sheet__panel-title">
-        <span class="material-icons">auto_fix_high</span>
-        Active Effects
-        {{#unless item.isEmbedded}}
-        <button type="button" class="rt-item-sheet__panel-action effect-create" title="Add Effect">
-            <span class="material-icons">add_circle</span>
-        </button>
-        {{/unless}}
-    </h2>
+{{!-- Active Effects Panel
+     List and manage active effects attached to this item
+--}}
+<div class="rt-effects-panel">
+  <header class="rt-panel-header">
+    <i class="fas fa-magic"></i>
+    <span>{{localize "RT.Effects.Label"}}</span>
+    {{#unless item.isEmbedded}}
+    <button type="button" 
+            class="rt-btn-icon rt-btn-add" 
+            data-action="createEffect" 
+            title="{{localize 'RT.Effects.Create'}}">
+      <i class="fas fa-plus"></i>
+    </button>
+    {{/unless}}
+  </header>
 
+  <div class="rt-panel-body">
     {{#if effects.length}}
-    <div class="rt-item-sheet__effects-list">
-        {{#each effects as |effect|}}
-        <div class="rt-item-sheet__effect {{#if effect.disabled}}rt-item-sheet__effect--disabled{{/if}}">
-            {{#unless @root.item.isEmbedded}}
-            <button type="button" class="rt-item-sheet__effect-btn effect-edit" data-effect-id="{{effect.id}}" title="Edit Effect">
-                <span class="material-icons">settings</span>
-            </button>
-            {{/unless}}
-            <span class="rt-item-sheet__effect-name">{{effect.label}}</span>
-            {{#unless @root.item.isEmbedded}}
-            <div class="rt-item-sheet__effect-controls">
-                {{#if effect.disabled}}
-                <button type="button" class="rt-item-sheet__effect-btn effect-enable" data-effect-id="{{effect.id}}" title="Enable Effect">
-                    <span class="material-icons">flash_on</span>
-                </button>
-                {{else}}
-                <button type="button" class="rt-item-sheet__effect-btn effect-disable" data-effect-id="{{effect.id}}" title="Disable Effect">
-                    <span class="material-icons">flash_off</span>
-                </button>
-                {{/if}}
-                <button type="button" class="rt-item-sheet__effect-btn rt-item-sheet__effect-btn--danger effect-delete" data-effect-id="{{effect.id}}" title="Delete Effect">
-                    <span class="material-icons">delete</span>
-                </button>
-            </div>
-            {{/unless}}
+    <div class="rt-effects-list">
+      {{#each effects as |effect|}}
+      <div class="rt-effect-item {{#if effect.disabled}}rt-effect-item--disabled{{/if}}">
+        <div class="rt-effect-item__icon">
+          <i class="fas {{#if effect.disabled}}fa-circle-xmark{{else}}fa-circle-check{{/if}}"></i>
         </div>
-        {{/each}}
+        
+        <div class="rt-effect-item__info">
+          <span class="rt-effect-item__name">{{effect.label}}</span>
+          {{#if effect.duration}}
+          <span class="rt-effect-item__duration">
+            <i class="fas fa-clock"></i>
+            {{effect.duration.label}}
+          </span>
+          {{/if}}
+        </div>
+        
+        {{#unless @root.item.isEmbedded}}
+        <div class="rt-effect-item__controls">
+          <button type="button" 
+                  class="rt-btn-icon" 
+                  data-action="editEffect" 
+                  data-effect-id="{{effect.id}}" 
+                  title="{{localize 'RT.Effects.Edit'}}">
+            <i class="fas fa-edit"></i>
+          </button>
+          
+          {{#if effect.disabled}}
+          <button type="button" 
+                  class="rt-btn-icon" 
+                  data-action="enableEffect" 
+                  data-effect-id="{{effect.id}}" 
+                  title="{{localize 'RT.Effects.Enable'}}">
+            <i class="fas fa-toggle-off"></i>
+          </button>
+          {{else}}
+          <button type="button" 
+                  class="rt-btn-icon" 
+                  data-action="disableEffect" 
+                  data-effect-id="{{effect.id}}" 
+                  title="{{localize 'RT.Effects.Disable'}}">
+            <i class="fas fa-toggle-on"></i>
+          </button>
+          {{/if}}
+          
+          <button type="button" 
+                  class="rt-btn-icon rt-btn-icon--danger" 
+                  data-action="deleteEffect" 
+                  data-effect-id="{{effect.id}}" 
+                  title="{{localize 'RT.Effects.Delete'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+        {{/unless}}
+      </div>
+      {{/each}}
     </div>
     {{else}}
-    <div class="rt-item-sheet__empty rt-item-sheet__empty--small">
-        <span class="material-icons">auto_fix_off</span>
-        <p>No active effects</p>
+    <div class="rt-empty-state">
+      <i class="fas fa-magic"></i>
+      <p>{{localize "RT.Effects.None"}}</p>
+      {{#unless item.isEmbedded}}
+      <button type="button" 
+              class="rt-btn-secondary" 
+              data-action="createEffect">
+        <i class="fas fa-plus"></i>
+        {{localize "RT.Effects.CreateFirst"}}
+      </button>
+      {{/unless}}
     </div>
     {{/if}}
-</section>
+  </div>
+</div>

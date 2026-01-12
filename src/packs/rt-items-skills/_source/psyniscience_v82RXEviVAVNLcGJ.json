@@ -10,8 +10,8 @@
     "description": {
       "value": "<p>A Usually Psychic individuals's ability to sense the flow of the Warp, detecting presences or absences of Daemons, Psychic Powers, Phenomena, Disturbances, voids, etc. Non psykers may gain this, often taking the form of a sixth sense.</p>"
     },
-    "isBasic": true,
-    "skillType": "basic",
+    "isBasic": false,
+    "skillType": "advanced",
     "aptitudes": [
       "Perception",
       "Psyker",

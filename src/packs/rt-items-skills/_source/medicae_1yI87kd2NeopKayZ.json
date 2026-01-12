@@ -10,8 +10,8 @@
     "description": {
       "value": "<p>Diagnosing and treating injuries and disease, performing first aid or extended care, as well as long-term treatments. Identifying, Creating, and Applying Chemicals.</p>"
     },
-    "isBasic": true,
-    "skillType": "basic",
+    "isBasic": false,
+    "skillType": "advanced",
     "aptitudes": [
       "Intellgience",
       "Fieldcraft",

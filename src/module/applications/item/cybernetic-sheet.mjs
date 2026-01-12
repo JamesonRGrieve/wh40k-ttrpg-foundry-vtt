@@ -12,8 +12,8 @@ export default class CyberneticSheet extends BaseItemSheet {
     static DEFAULT_OPTIONS = {
         classes: ["cybernetic"],
         position: {
-            width: 520,
-            height: 480
+            width: 600,
+            height: 700
         }
     };
 
@@ -22,8 +22,8 @@ export default class CyberneticSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-cybernetic-sheet.hbs",
-            scrollable: [".rt-tab-content"]
+            template: "systems/rogue-trader/templates/item/item-cybernetic-sheet-v2.hbs",
+            scrollable: [".rt-cybernetic-content"]
         }
     };
 
@@ -31,8 +31,10 @@ export default class CyberneticSheet extends BaseItemSheet {
 
     /** @override */
     static TABS = [
-        { tab: "details", group: "primary", label: "Details" },
-        { tab: "description", group: "primary", label: "Description" },
+        { tab: "properties", group: "primary", label: "Properties" },
+        { tab: "installation", group: "primary", label: "Installation" },
+        { tab: "modifiers", group: "primary", label: "Modifiers" },
+        { tab: "description", group: "primary", label: "Info" },
         { tab: "effects", group: "primary", label: "Effects" }
     ];
 
@@ -40,6 +42,44 @@ export default class CyberneticSheet extends BaseItemSheet {
 
     /** @override */
     tabGroups = {
-        primary: "details"
+        primary: "properties"
     };
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+        
+        // Set up tab listeners
+        this._setupCyberneticTabs();
+    }
+
+    /**
+     * Set up tab click listeners for cybernetic sheet tabs.
+     * @protected
+     */
+    _setupCyberneticTabs() {
+        const tabs = this.element.querySelectorAll(".rt-cybernetic-tabs .rt-cybernetic-tab");
+        tabs.forEach(tab => {
+            tab.addEventListener("click", (event) => {
+                event.preventDefault();
+                const tabName = tab.dataset.tab;
+                if (!tabName) return;
+
+                // Update active tab button
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+
+                // Show/hide panels
+                const panels = this.element.querySelectorAll(".rt-cybernetic-panel");
+                panels.forEach(panel => {
+                    panel.classList.toggle("active", panel.dataset.tab === tabName);
+                });
+
+                // Update tab group state
+                this.tabGroups.primary = tabName;
+            });
+        });
+    }
 }
