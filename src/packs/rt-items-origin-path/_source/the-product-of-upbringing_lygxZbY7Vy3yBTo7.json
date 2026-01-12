@@ -14,69 +14,48 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 0,
-        "willpower": 3,
-        "fellowship": 3,
-        "influence": 0
+    "grants": {
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": 3,
+          "fellowship": 3,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
       },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
+      "skills": [
+        {
+          "name": "Rival",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Decadence",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "1d5 Corruption",
+          "trainingModifier": 1,
+          "specialization": ""
+        }
+      ],
       "talents": [
+        "of group character dislikes",
+        "Peer of group that supports them",
+        "and +5 to all Charm Tests",
         "Decadence",
         "Rival"
       ],
       "traits": [],
-      "other": []
-    },
-    "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "Rival",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Decadence",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "1d5 Corruption",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [
-        {
-          "name": "of group character dislikes",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "Peer of group that supports them",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "and +5 to all Charm Tests",
-          "specialization": "",
-          "uuid": ""
-        }
-      ],
-      "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

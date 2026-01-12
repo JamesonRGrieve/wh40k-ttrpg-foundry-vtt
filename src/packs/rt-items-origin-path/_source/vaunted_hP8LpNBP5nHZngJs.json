@@ -14,47 +14,39 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 3,
-        "intelligence": 0,
-        "perception": -3,
-        "willpower": 0,
-        "fellowship": 0,
-        "influence": 0
+    "grants": {
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 3,
+          "intelligence": 0,
+          "perception": -3,
+          "willpower": 0,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
       },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
+      "skills": [
+        {
+          "name": "Decadence",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "1d5 Corruption Points",
+          "trainingModifier": 1,
+          "specialization": ""
+        }
+      ],
       "talents": [
         "Decadence"
       ],
       "traits": [],
-      "other": []
-    },
-    "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "Decadence",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "1d5 Corruption Points",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [],
-      "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

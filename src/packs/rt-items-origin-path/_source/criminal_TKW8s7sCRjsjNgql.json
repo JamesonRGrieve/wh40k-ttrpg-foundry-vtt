@@ -14,68 +14,51 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 3,
-        "willpower": 0,
-        "fellowship": -5,
-        "influence": 0
-      },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
-      "talents": [
-        "Enemy (Underworld)"
-      ],
-      "traits": [],
-      "other": []
-    },
     "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 3,
+          "willpower": 0,
+          "fellowship": -5,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
+      },
       "skills": [
         {
           "name": "Enemy (Adeptus Arbites)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Peer (Underworld)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Enemy (Underworld)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "or 300xp for Good)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         }
       ],
       "talents": [
-        {
-          "name": "s<br>2",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "<br>3",
-          "specialization": "",
-          "uuid": ""
-        }
+        "s<br>2",
+        "<br>3",
+        "Enemy (Underworld)"
       ],
       "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

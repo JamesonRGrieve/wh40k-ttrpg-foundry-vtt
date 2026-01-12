@@ -37,8 +37,13 @@
           "specialization": ""
         }
       ],
-      "talents": ["Melee Weapon Training (Primitive)", "Death World (Paranoid), Death World (Survivor)"],
+      "talents": [
+        "Melee Weapon Training (Primitive)",
+        "Death World (Paranoid), Death World (Survivor)"
+      ],
+      "traits": [],
       "equipment": [],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "talent",

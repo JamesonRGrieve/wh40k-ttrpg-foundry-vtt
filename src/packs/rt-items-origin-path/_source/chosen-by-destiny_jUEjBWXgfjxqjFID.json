@@ -14,58 +14,45 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 0,
-        "willpower": -3,
-        "fellowship": 0,
-        "influence": 0
-      },
-      "wounds": 0,
-      "fate": 1,
-      "skills": [],
-      "talents": [
-        "Foresight"
-      ],
-      "traits": [],
-      "other": []
-    },
     "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": -3,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 1
+      },
       "skills": [
         {
           "name": "Foresight",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Fate Point",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "1d10 Insanity Points",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         }
       ],
       "talents": [
-        {
-          "name": "and Enemy",
-          "specialization": "Academics or Ecclesiarchy",
-          "uuid": ""
-        }
+        "and Enemy (Academics or Ecclesiarchy)",
+        "Foresight"
       ],
       "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

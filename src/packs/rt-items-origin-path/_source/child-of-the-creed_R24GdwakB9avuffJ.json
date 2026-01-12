@@ -14,42 +14,34 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": -3,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 0,
-        "willpower": 3,
-        "fellowship": 3,
-        "influence": 0
+    "grants": {
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": -3,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": 3,
+          "fellowship": 3,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
       },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
+      "skills": [
+        {
+          "name": "Unshakeable Faith",
+          "trainingModifier": 1,
+          "specialization": ""
+        }
+      ],
       "talents": [
         "Unshakeable Faith"
       ],
       "traits": [],
-      "other": []
-    },
-    "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "Unshakeable Faith",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [],
-      "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

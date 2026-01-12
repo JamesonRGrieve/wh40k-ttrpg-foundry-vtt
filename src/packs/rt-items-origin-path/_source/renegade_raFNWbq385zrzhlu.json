@@ -14,76 +14,66 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 3,
-        "perception": 3,
-        "willpower": -3,
-        "fellowship": 0,
-        "influence": 0
+    "grants": {
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 3,
+          "perception": 3,
+          "willpower": -3,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
       },
-      "wounds": 0,
-      "fate": 0,
       "skills": [
-        "Concealment"
+        {
+          "name": "Enemy (Adeptus Arbites)",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Resistance (Interrogation)",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Concealment as Trained",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Enemy (Ecclesiarchy)",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Dark Soul",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "1d5 Corruption or 1d5 Insanity",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Concealment",
+          "trainingModifier": 1,
+          "specialization": ""
+        }
       ],
       "talents": [
+        "and any one Trained Forbidden Lore",
         "Enemy (Ecclesiarchy)",
         "Dark Soul"
       ],
       "traits": [],
-      "other": []
-    },
-    "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "Enemy (Adeptus Arbites)",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Resistance (Interrogation)",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Concealment as Trained",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Enemy (Ecclesiarchy)",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Dark Soul",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "1d5 Corruption or 1d5 Insanity",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [
-        {
-          "name": "and any one Trained Forbidden Lore",
-          "specialization": "",
-          "uuid": ""
-        }
-      ],
-      "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

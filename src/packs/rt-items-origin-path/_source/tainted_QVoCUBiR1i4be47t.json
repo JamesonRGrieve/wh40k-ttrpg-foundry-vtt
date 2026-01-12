@@ -14,51 +14,39 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 3,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 0,
-        "willpower": 3,
-        "fellowship": -3,
-        "influence": 0
-      },
-      "wounds": 0,
-      "fate": -1,
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "other": []
-    },
     "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 3,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": 3,
+          "fellowship": -3,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": -1
+      },
       "skills": [
         {
           "name": "Peer (The Insane)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "2d10 Insanity Points",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         }
       ],
       "talents": [
-        {
-          "name": "</p>",
-          "specialization": "",
-          "uuid": ""
-        }
+        "</p>"
       ],
       "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

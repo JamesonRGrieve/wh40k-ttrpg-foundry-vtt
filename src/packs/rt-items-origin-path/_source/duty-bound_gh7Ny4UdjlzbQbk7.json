@@ -14,51 +14,39 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": -3,
-        "agility": 0,
-        "intelligence": 3,
-        "perception": 3,
-        "willpower": 3,
-        "fellowship": 0,
-        "influence": 0
-      },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "other": []
-    },
     "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": -3,
+          "agility": 0,
+          "intelligence": 3,
+          "perception": 3,
+          "willpower": 3,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
+      },
       "skills": [
         {
           "name": "Armour of Contempt",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Rival (Another Rogue Trader Family)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         }
       ],
       "talents": [
-        {
-          "name": "if you have 40+ Willpower",
-          "specialization": "",
-          "uuid": ""
-        }
+        "if you have 40+ Willpower"
       ],
       "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

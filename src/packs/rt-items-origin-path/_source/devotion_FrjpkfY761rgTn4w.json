@@ -14,73 +14,60 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 0,
-        "willpower": 3,
-        "fellowship": 0,
-        "influence": 0
-      },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
-      "talents": [
-        "Inspire Wrath"
-      ],
-      "traits": [],
-      "other": []
-    },
     "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": 3,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
+      },
       "skills": [
         {
           "name": "Charm",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Common Lore (Imperial Creed) as Trained",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Inspire Wrath",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "either Armour of Contempt",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Trade (Voidfarer) as Trained Basic",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "to Willpower",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         }
       ],
       "talents": [
-        {
-          "name": "or Unshakable Faith Talent",
-          "specialization": "",
-          "uuid": ""
-        }
+        "or Unshakable Faith Talent",
+        "Inspire Wrath"
       ],
       "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": [

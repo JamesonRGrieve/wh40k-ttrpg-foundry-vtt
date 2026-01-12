@@ -14,121 +14,81 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 0,
-        "willpower": 0,
-        "fellowship": 0,
-        "influence": 0
-      },
-      "wounds": 0,
-      "fate": 1,
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "other": []
-    },
     "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": 0,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 1
+      },
       "skills": [
         {
           "name": "Awareness",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Common Lore (Adeptus Astra Telepathica)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Forbidden Lore (Psykers)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Invocation",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Psyniscience",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Scholastic Lore (Crytography)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Speak Language (High Gothic",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Low Gothic)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Universal",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         }
       ],
       "talents": [
-        {
-          "name": "s: Pistol Weapon Training",
-          "specialization": "Universal",
-          "uuid": ""
-        },
-        {
-          "name": "Heightened Senses",
-          "specialization": "Sound",
-          "uuid": ""
-        },
-        {
-          "name": "Psy Rating 2",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "Psychic Technique",
-          "specialization": "x2",
-          "uuid": ""
-        },
-        {
-          "name": "Psychic Discipline",
-          "specialization": "Telepathy",
-          "uuid": ""
-        },
-        {
-          "name": "psychic powers",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "abilities",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "or other effects from a daemon",
-          "specialization": "",
-          "uuid": ""
-        }
+        "s: Pistol Weapon Training (Universal)",
+        "Heightened Senses (Sound)",
+        "Psy Rating 2",
+        "Psychic Technique (x2)",
+        "Psychic Discipline (Telepathy)",
+        "psychic powers",
+        "abilities",
+        "or other effects from a daemon"
       ],
       "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [
         {

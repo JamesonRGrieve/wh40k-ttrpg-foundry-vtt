@@ -14,42 +14,34 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": -5,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 5,
-        "perception": 0,
-        "willpower": 0,
-        "fellowship": 0,
-        "influence": 0
+    "grants": {
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": -5,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 5,
+          "perception": 0,
+          "willpower": 0,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
       },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
+      "skills": [
+        {
+          "name": "Technical Knock",
+          "trainingModifier": 1,
+          "specialization": ""
+        }
+      ],
       "talents": [
         "Technical Knock"
       ],
       "traits": [],
-      "other": []
-    },
-    "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "Technical Knock",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [],
-      "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

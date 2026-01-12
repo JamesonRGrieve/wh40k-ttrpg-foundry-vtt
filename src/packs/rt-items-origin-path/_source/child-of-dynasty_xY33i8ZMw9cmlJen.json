@@ -14,71 +14,51 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": -3,
-        "agility": 0,
-        "intelligence": 3,
-        "perception": 0,
-        "willpower": -5,
-        "fellowship": 5,
-        "influence": 0
-      },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "other": []
-    },
     "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": -3,
+          "agility": 0,
+          "intelligence": 3,
+          "perception": 0,
+          "willpower": -5,
+          "fellowship": 5,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
+      },
       "skills": [
         {
           "name": "Literacy",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Speak (High Gothic) as trained",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Imperial Nobility",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "an appropriate Enemy",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         }
       ],
       "talents": [
-        {
-          "name": "as an unseen foe seeks the character&#x27",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "s position",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "wealth",
-          "specialization": "",
-          "uuid": ""
-        }
+        "as an unseen foe seeks the character&#x27",
+        "s position",
+        "wealth"
       ],
       "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

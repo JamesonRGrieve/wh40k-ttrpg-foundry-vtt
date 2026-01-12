@@ -14,146 +14,86 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 0,
-        "willpower": 0,
-        "fellowship": 0,
-        "influence": 0
-      },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "other": []
-    },
     "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 0,
+          "willpower": 0,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
+      },
       "skills": [
         {
           "name": "Common Lore (Imperial Navy",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "War)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Forbidden Lore (Xenos)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Navigation (Stellar)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Pilot (Space Craft",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Flyers)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Scholastic Lore (Astromancy)",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Speak Language (Low Gothic)<br>",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         },
         {
           "name": "Universal",
-          "specialization": "",
-          "level": "trained"
+          "trainingModifier": 1,
+          "specialization": ""
         }
       ],
       "talents": [
-        {
-          "name": "s: Pistol Weapon Training",
-          "specialization": "Universal",
-          "uuid": ""
-        },
-        {
-          "name": "Melee Wepaon Training",
-          "specialization": "Universal",
-          "uuid": ""
-        },
-        {
-          "name": "Best Hand-cannon or Common Bolt Pistol",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "Guard Flak Armour",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "Micro-bead",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "Void Suit",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "blessed ship token",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "re-breather",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "Imperial Navy Uniform or Beggar&#x27",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "s Cloak",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "2 bottles of Amasec",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "pict-recorder",
-          "specialization": "",
-          "uuid": ""
-        },
-        {
-          "name": "vox-caster",
-          "specialization": "",
-          "uuid": ""
-        }
+        "s: Pistol Weapon Training (Universal)",
+        "Melee Wepaon Training (Universal)",
+        "Best Hand-cannon or Common Bolt Pistol",
+        "Guard Flak Armour",
+        "Micro-bead",
+        "Void Suit",
+        "blessed ship token",
+        "re-breather",
+        "Imperial Navy Uniform or Beggar&#x27",
+        "s Cloak",
+        "2 bottles of Amasec",
+        "pict-recorder",
+        "vox-caster"
       ],
       "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [
         {

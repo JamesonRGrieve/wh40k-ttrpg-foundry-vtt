@@ -14,57 +14,49 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 3,
-        "ballisticSkill": 3,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 3,
-        "willpower": 3,
-        "fellowship": 3,
-        "influence": 0
+    "grants": {
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 3,
+          "ballisticSkill": 3,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 3,
+          "willpower": 3,
+          "fellowship": 3,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
       },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
+      "skills": [
+        {
+          "name": "either 1d5 Corruption or 1d5 Insanity",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "either Leap Up or Sprint",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "either Paranoia or Light Sleeper",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Enemy",
+          "trainingModifier": 1,
+          "specialization": ""
+        }
+      ],
       "talents": [
         "Enemy"
       ],
       "traits": [],
-      "other": []
-    },
-    "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "either 1d5 Corruption or 1d5 Insanity",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "either Leap Up or Sprint",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "either Paranoia or Light Sleeper",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Enemy",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [],
-      "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": [

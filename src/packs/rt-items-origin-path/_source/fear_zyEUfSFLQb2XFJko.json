@@ -14,87 +14,79 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "perception": 3,
-        "willpower": 0,
-        "fellowship": 0,
-        "influence": 0
+    "grants": {
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 0,
+          "perception": 3,
+          "willpower": 0,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
       },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
+      "skills": [
+        {
+          "name": "Paranoia",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Dark Soul",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Frenzy",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Flagellant",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "one Untrained Forbidden Lore",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "1d10 Corruption",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Light Sleeper",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Jaded",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Resistance (Fear)",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "2d10 Insanity",
+          "trainingModifier": 1,
+          "specialization": ""
+        }
+      ],
       "talents": [
         "Paranoia"
       ],
       "traits": [],
-      "other": []
-    },
-    "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "Paranoia",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Dark Soul",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Frenzy",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Flagellant",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "one Untrained Forbidden Lore",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "1d10 Corruption",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Light Sleeper",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Jaded",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Resistance (Fear)",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "2d10 Insanity",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [],
-      "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []

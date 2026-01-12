@@ -14,63 +14,55 @@
       "previousSteps": [],
       "excludedSteps": []
     },
-    "modifiers": {
-      "characteristics": {
-        "weaponSkill": 0,
-        "ballisticSkill": 0,
-        "strength": 0,
-        "toughness": 0,
-        "agility": 0,
-        "intelligence": 3,
-        "perception": 3,
-        "willpower": 0,
-        "fellowship": 0,
-        "influence": 0
+    "grants": {
+      "modifiers": {
+        "characteristics": {
+          "weaponSkill": 0,
+          "ballisticSkill": 0,
+          "strength": 0,
+          "toughness": 0,
+          "agility": 0,
+          "intelligence": 3,
+          "perception": 3,
+          "willpower": 0,
+          "fellowship": 0,
+          "influence": 0
+        },
+        "wounds": 0,
+        "fate": 0
       },
-      "wounds": 0,
-      "fate": 0,
-      "skills": [],
+      "skills": [
+        {
+          "name": "any two Trained Scholastic Lore",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Total Recall",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "any one Trained Forbidden Lore",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "any one Trained Common or Scholastic Lore",
+          "trainingModifier": 1,
+          "specialization": ""
+        },
+        {
+          "name": "Foresight",
+          "trainingModifier": 1,
+          "specialization": ""
+        }
+      ],
       "talents": [
         "Total Recall",
         "Foresight"
       ],
       "traits": [],
-      "other": []
-    },
-    "grants": {
-      "wounds": 0,
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "any two Trained Scholastic Lore",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Total Recall",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "any one Trained Forbidden Lore",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "any one Trained Common or Scholastic Lore",
-          "specialization": "",
-          "level": "trained"
-        },
-        {
-          "name": "Foresight",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [],
-      "traits": [],
-      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
       "choices": []
