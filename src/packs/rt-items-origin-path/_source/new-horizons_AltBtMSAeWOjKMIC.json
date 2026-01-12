@@ -6,61 +6,149 @@
     "identifier": "new-horizons",
     "step": "lureOfTheVoid",
     "stepIndex": 3,
+    "xpCost": 0,
+    "isAdvancedOrigin": true,
+    "replacesOrigins": ["high-vendetta", "fortune"],
     "description": {
-      "value": "<p>1. Seeker of Truth (100xp): +3 Intelligence. Gain any one Scholastic Lore Trained Skill. Gain +1 Corruption Point.<br>2. Xeno-Archanist (200xp): +3 Intelligence or +3 Willpower. Gain Peer (Academics) or Forbidden Lore (Xenos) as a Trained skill.<br>3. Archeotechnologist (250xp): +3 Intelligence or +3 Perception. Gain one random item from noted list (Heirlooms). Gain Scholastic Lore (Archeotech) as a Trained Skill.</p>"
+      "value": "<h2>New Horizons</h2><blockquote><p><em>\"Beyond the edges of the Imperium's maps lie mysteries that could illuminate—or damn—all of humanity. Some are drawn to these horizons by curiosity, others by greed or necessity.\"</em></p></blockquote><p>You are driven by the lure of the unknown. Perhaps you seek forbidden knowledge hidden in ancient texts and ruins, willing to risk corruption for the chance to understand the universe's deepest secrets. Or you may have devoted yourself to studying the xenos—their technology, their cultures, their history—walking the dangerous line between academic inquiry and heresy. Some pursue the lost treasures of the Dark Age of Technology, seeking archeotech artifacts that could reshape the Imperium.</p><p>Your pursuit of new horizons has brought you both knowledge and peril. You have seen things that most Imperial citizens never dream of, learned truths that the Ecclesiarchy would condemn. Yet this knowledge comes at a price—suspicion, corruption, or worse. Now you travel with a Rogue Trader, where the boundaries of acceptable inquiry stretch further than anywhere else in the Imperium.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
-      "text": "Origin Path: Lure of the Void",
+      "text": "Origin Path: Lure of the Void (Advanced)",
       "previousSteps": [],
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 3,
-          "perception": 3,
-          "willpower": 3,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "any one Scholastic Lore Trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Corruption Point",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "one random item from noted list (Heirlooms)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Scholastic Lore (Archeotech) as a Trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "new_horizons_path",
+          "label": "Choose one New Horizons path",
+          "options": [
+            {
+              "label": "Seeker of Truth (100 XP)",
+              "value": "seeker",
+              "xpCost": 100,
+              "description": "You seek truth in forbidden places, studying texts and lore that most consider dangerous. Your quest for knowledge has opened your mind—but also exposed you to corrupting influences.",
+              "grants": {
+                "characteristics": {
+                  "intelligence": 3
+                },
+                "corruption": 1
+              },
+              "choices": [
+                {
+                  "type": "skill",
+                  "label": "Choose one Scholastic Lore skill (Trained)",
+                  "options": [
+                    {"label": "Scholastic Lore (Archeotech)", "value": "scholasticLore_archeotech"},
+                    {"label": "Scholastic Lore (Astromancy)", "value": "scholasticLore_astromancy"},
+                    {"label": "Scholastic Lore (Beasts)", "value": "scholasticLore_beasts"},
+                    {"label": "Scholastic Lore (Bureaucracy)", "value": "scholasticLore_bureaucracy"},
+                    {"label": "Scholastic Lore (Chymistry)", "value": "scholasticLore_chymistry"},
+                    {"label": "Scholastic Lore (Cryptology)", "value": "scholasticLore_cryptology"},
+                    {"label": "Scholastic Lore (Heraldry)", "value": "scholasticLore_heraldry"},
+                    {"label": "Scholastic Lore (Imperial Creed)", "value": "scholasticLore_creed"},
+                    {"label": "Scholastic Lore (Judgment)", "value": "scholasticLore_judgment"},
+                    {"label": "Scholastic Lore (Legend)", "value": "scholasticLore_legend"},
+                    {"label": "Scholastic Lore (Numerology)", "value": "scholasticLore_numerology"},
+                    {"label": "Scholastic Lore (Occult)", "value": "scholasticLore_occult"},
+                    {"label": "Scholastic Lore (Philosophy)", "value": "scholasticLore_philosophy"}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Xeno-Arcanist (200 XP)",
+              "value": "xeno_arcanist",
+              "xpCost": 200,
+              "description": "You have devoted yourself to studying the xenos—their technology, biology, and cultures. This forbidden knowledge makes you invaluable to a Rogue Trader, though it also marks you as a heretic in the eyes of many.",
+              "grants": {},
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one mental characteristic bonus",
+                  "options": [
+                    {"label": "+3 Intelligence", "value": "intelligence"},
+                    {"label": "+3 Willpower", "value": "willpower"}
+                  ],
+                  "count": 1
+                },
+                {
+                  "type": "skill_talent",
+                  "label": "Choose one xenos expertise",
+                  "options": [
+                    {"label": "Peer (Academics) talent", "value": "peer_academics"},
+                    {"label": "Forbidden Lore (Xenos) skill (Trained)", "value": "forbiddenLore_xenos"}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Archeotechnologist (250 XP)",
+              "value": "archeotechnologist",
+              "xpCost": 250,
+              "description": "You hunt for the lost technologies of the Dark Age, seeking archeotech that could change the fate of worlds. Your studies have borne fruit—you possess a precious heirloom from humanity's golden age.",
+              "grants": {
+                "skills": [
+                  {"name": "Scholastic Lore (Archeotech)", "specialization": "", "level": "trained"}
+                ]
+              },
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one mental characteristic bonus",
+                  "options": [
+                    {"label": "+3 Intelligence", "value": "intelligence"},
+                    {"label": "+3 Perception", "value": "perception"}
+                  ],
+                  "count": 1
+                },
+                {
+                  "type": "equipment_random",
+                  "label": "Gain one random heirloom (roll or choose with GM approval)",
+                  "options": [
+                    {"label": "Heirloom item (see Rogue Trader Core p.364)", "value": "heirloom"}
+                  ],
+                  "count": 1
+                }
+              ]
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. Seeker of Truth (100xp): +3 Intelligence. Gain any one Scholastic Lore Trained Skill. Gain +1 Corruption Point.\n2. Xeno-Archanist (200xp): +3 Intelligence or +3 Willpower. Gain Peer (Academics) or Forbidden Lore (Xenos) as a Trained skill.\n3. Archeotechnologist (250xp): +3 Intelligence or +3 Perception. Gain one random item from noted list (Heirlooms). Gain Scholastic Lore (Archeotech) as a Trained Skill.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Seeker of Truth (100 XP):</strong> Gain +3 Intelligence and any one Scholastic Lore skill as Trained. Gain 1 Corruption Point.</li><li><strong>Xeno-Arcanist (200 XP):</strong> Choose +3 Intelligence or +3 Willpower. Choose either Peer (Academics) talent or Forbidden Lore (Xenos) as a Trained skill.</li><li><strong>Archeotechnologist (250 XP):</strong> Choose +3 Intelligence or +3 Perception. Gain Scholastic Lore (Archeotech) as a Trained skill. Gain one random heirloom item from the Rogue Trader Core Rulebook (p.364).</li></ul>",
     "notes": "",
+    "source": {
+      "book": "Into The Storm",
+      "page": "22-23",
+      "custom": "Archeotechnologist option appears to be from additional source material"
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

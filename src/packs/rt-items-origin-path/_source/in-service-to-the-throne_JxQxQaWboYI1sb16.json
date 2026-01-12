@@ -6,73 +6,179 @@
     "identifier": "in-service-to-the-throne",
     "step": "birthright",
     "stepIndex": 2,
+    "xpCost": 0,
+    "isAdvancedOrigin": true,
+    "replacesOrigins": ["stubjack", "vaunted"],
     "description": {
-      "value": "<p>1. Tithed (350xp): +3 Willpower or +3 Ballistic Skill. Gain any one noted Trained Common Lore Skill and any two from noted list of Trained Skills and Talents.<br>2. Born to Lead (200xp): +3 Intelligence or Fellowship, -3 Toughness. Gain Command, Literacy, and one listed Scholastic Lore as Trained Skills. <br>3. One Amongst Billions (200xp): +3 Perception or Intelligence, -3 Strength. Gain Paranoia and Unremarkable Talents, and any one Trade or Common Lore Trained Skill.</p>"
+      "value": "<h2>In Service to the Throne</h2><blockquote><p><em>\"The Imperium demands much of its citizens—tithes of grain, of ore, of men and women. For some, service to the Golden Throne is not a choice, but a destiny written in ledgers and manifests.\"</em></p></blockquote><p>Your life has been defined by service to the Imperium. Perhaps you were tithed as part of your world's obligation—selected for military service, sent to the Schola Progenium, or conscripted into one of the endless bureaucratic organs of Imperial administration. Or you may have been born into a family of administrators and leaders, raised from birth to command and organize in the Emperor's name. Some come from the faceless billions who toil in obscurity, learning to survive through caution and the ability to blend into crowds.</p><p>Whether you served willingly or not, the experience shaped you. You learned discipline, loyalty, and the skills needed to function within the vast machinery of the Imperium. You know the prayers, the protocols, and the proper forms. Yet now you find yourself aboard a Rogue Trader vessel—a place where the strict hierarchies of the Imperium give way to something more flexible, more dangerous, and infinitely more rewarding.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
-      "text": "Origin Path: Birthright",
+      "text": "Origin Path: Birthright (Advanced)",
       "previousSteps": [],
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 3,
-          "strength": -3,
-          "toughness": -3,
-          "agility": 0,
-          "intelligence": 3,
-          "perception": 3,
-          "willpower": 3,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "any one noted Trained Common Lore",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Command",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Literacy",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "one listed Scholastic Lore as Trained",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Paranoia",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Unremarkable",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "any one Trade or Common Lore Trained"
-      ],
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "service_throne_path",
+          "label": "Choose one Service to the Throne path",
+          "options": [
+            {
+              "label": "Tithed (350 XP)",
+              "value": "tithed",
+              "xpCost": 350,
+              "description": "You were selected from your homeworld as part of the Imperial tithe. Whether for military service, the Schola Progenium, or another branch of the Adeptus, you received comprehensive training in the ways of the Imperium.",
+              "grants": {},
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one characteristic bonus",
+                  "options": [
+                    {"label": "+3 Willpower", "value": "willpower"},
+                    {"label": "+3 Ballistic Skill", "value": "ballisticSkill"}
+                  ],
+                  "count": 1
+                },
+                {
+                  "type": "skill",
+                  "label": "Choose one Common Lore skill (Trained)",
+                  "options": [
+                    {"label": "Common Lore (Adeptus Arbites)", "value": "commonLore_arbites"},
+                    {"label": "Common Lore (Ecclesiarchy)", "value": "commonLore_ecclesiarchy"},
+                    {"label": "Common Lore (Imperial Navy)", "value": "commonLore_navy"},
+                    {"label": "Common Lore (Imperium)", "value": "commonLore_imperium"},
+                    {"label": "Common Lore (Tech)", "value": "commonLore_tech"},
+                    {"label": "Common Lore (War)", "value": "commonLore_war"}
+                  ],
+                  "count": 1
+                },
+                {
+                  "type": "skills_talents_multi",
+                  "label": "Choose any two from the following",
+                  "options": [
+                    {"label": "Athletics (Trained)", "value": "athletics"},
+                    {"label": "Awareness (Trained)", "value": "awareness"},
+                    {"label": "Climb (Trained)", "value": "climb"},
+                    {"label": "Dodge (Trained)", "value": "dodge"},
+                    {"label": "Drive (Any) (Trained)", "value": "drive"},
+                    {"label": "Forbidden Lore (Any) (Trained)", "value": "forbiddenLore"},
+                    {"label": "Medicae (Trained)", "value": "medicae"},
+                    {"label": "Scholastic Lore (Any) (Trained)", "value": "scholasticLore"},
+                    {"label": "Swim (Trained)", "value": "swim"},
+                    {"label": "Basic Weapon Training (Any)", "value": "basicWeaponTraining"},
+                    {"label": "Melee Weapon Training (Any)", "value": "meleeWeaponTraining"},
+                    {"label": "Pistol Weapon Training (Any)", "value": "pistolWeaponTraining"}
+                  ],
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Born to Lead (200 XP)",
+              "value": "born_to_lead",
+              "xpCost": 200,
+              "description": "You come from a family of Imperial administrators, officers, or officials. From birth, you were groomed for command, taught to read and write, and educated in the lore needed to lead others in the Emperor's name.",
+              "grants": {
+                "characteristics": {
+                  "toughness": -3
+                },
+                "skills": [
+                  {"name": "Command", "specialization": "", "level": "trained"},
+                  {"name": "Literacy", "specialization": "", "level": "trained"}
+                ]
+              },
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one characteristic bonus",
+                  "options": [
+                    {"label": "+3 Intelligence", "value": "intelligence"},
+                    {"label": "+3 Fellowship", "value": "fellowship"}
+                  ],
+                  "count": 1
+                },
+                {
+                  "type": "skill",
+                  "label": "Choose one Scholastic Lore skill (Trained)",
+                  "options": [
+                    {"label": "Scholastic Lore (Bureaucracy)", "value": "scholasticLore_bureaucracy"},
+                    {"label": "Scholastic Lore (Heraldry)", "value": "scholasticLore_heraldry"},
+                    {"label": "Scholastic Lore (Imperial Creed)", "value": "scholasticLore_creed"},
+                    {"label": "Scholastic Lore (Judgment)", "value": "scholasticLore_judgment"},
+                    {"label": "Scholastic Lore (Legend)", "value": "scholasticLore_legend"},
+                    {"label": "Scholastic Lore (Philosophy)", "value": "scholasticLore_philosophy"}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "One Amongst Billions (200 XP)",
+              "value": "one_amongst_billions",
+              "xpCost": 200,
+              "description": "You are one of the faceless masses who serve the Imperium in obscurity. You have learned to be watchful, to blend in, and to survive by not drawing attention—skills that serve you well in the dangerous void.",
+              "grants": {
+                "characteristics": {
+                  "strength": -3
+                },
+                "talents": ["Paranoia", "Unremarkable"]
+              },
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one characteristic bonus",
+                  "options": [
+                    {"label": "+3 Perception", "value": "perception"},
+                    {"label": "+3 Intelligence", "value": "intelligence"}
+                  ],
+                  "count": 1
+                },
+                {
+                  "type": "skill",
+                  "label": "Choose one Trade or Common Lore skill (Trained)",
+                  "options": [
+                    {"label": "Trade (Any)", "value": "trade"},
+                    {"label": "Common Lore (Any)", "value": "commonLore"}
+                  ],
+                  "count": 1
+                }
+              ]
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. Tithed (350xp): +3 Willpower or +3 Ballistic Skill. Gain any one noted Trained Common Lore Skill and any two from noted list of Trained Skills and Talents.\n2. Born to Lead (200xp): +3 Intelligence or Fellowship, -3 Toughness. Gain Command, Literacy, and one listed Scholastic Lore as Trained Skills. \n3. One Amongst Billions (200xp): +3 Perception or Intelligence, -3 Strength. Gain Paranoia and Unremarkable Talents, and any one Trade or Common Lore Trained Skill.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Tithed (350 XP):</strong> Choose +3 Willpower or +3 Ballistic Skill. Gain one Common Lore skill as Trained. Choose any two from: Athletics, Awareness, Climb, Dodge, Drive (Any), Forbidden Lore (Any), Medicae, Scholastic Lore (Any), Swim (all Trained), or Basic/Melee/Pistol Weapon Training (Any).</li><li><strong>Born to Lead (200 XP):</strong> Choose +3 Intelligence or +3 Fellowship, suffer -3 Toughness. Gain Command and Literacy as Trained skills. Choose one Scholastic Lore skill as Trained.</li><li><strong>One Amongst Billions (200 XP):</strong> Choose +3 Perception or +3 Intelligence, suffer -3 Strength. Gain Paranoia and Unremarkable talents. Choose one Trade or Common Lore skill as Trained.</li></ul>",
     "notes": "",
+    "source": {
+      "book": "Into The Storm",
+      "page": "19-20",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

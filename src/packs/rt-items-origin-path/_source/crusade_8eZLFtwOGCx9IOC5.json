@@ -6,84 +6,135 @@
     "identifier": "crusade",
     "step": "lureOfTheVoid",
     "stepIndex": 3,
+    "xpCost": 0,
+    "isAdvancedOrigin": true,
+    "replacesOrigins": ["darkness", "calamity"],
     "description": {
-      "value": "<p>1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.<br>2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)<br>3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.</p>"
+      "value": "<h2>Crusade</h2><blockquote><p><em>\"War is the crucible that forges the Imperium's finest. In the fires of battle, some discover purpose—others discover only death.\"</em></p></blockquote><p>You have known war. Perhaps you answered the call to crusade, joining a righteous campaign to reclaim lost worlds or punish the Emperor's foes. Or you may have spent years hunting a specific enemy across the stars, driven by vengeance or duty. Some become so immersed in the art of war that they can no longer imagine another life—they are warriors born, and combat is their only truth.</p><p>The crusade has marked you indelibly. You have witnessed horrors that would break lesser souls and survived battles that claimed thousands. You know the smell of promethium and blood, the sound of bolter fire, and the feeling of the Emperor's judgment rendered through your hands. Yet now you find yourself aboard a Rogue Trader vessel, where war is but one tool among many—and where the battles you fight may not always be righteous.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
-      "text": "Origin Path: Lure of the Void",
+      "text": "Origin Path: Lure of the Void (Advanced)",
       "previousSteps": [],
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 5,
-          "ballisticSkill": 5,
-          "strength": 0,
-          "toughness": 5,
-          "agility": 5,
-          "intelligence": 3,
-          "perception": 0,
-          "willpower": 3,
-          "fellowship": -5,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Peer (Military)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "one of Hatred(Eldar",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Orks",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Kroot",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Chaos or other appropriate)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d10 Insanity Points from war horrors",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Hatred",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Meditation",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
-      "talents": [
-        "Hatred",
-        "Meditation"
-      ],
+      "skills": [],
+      "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "crusade_path",
+          "label": "Choose one Crusade path",
+          "options": [
+            {
+              "label": "Call to War (150 XP)",
+              "value": "call_to_war",
+              "xpCost": 150,
+              "description": "You answered the call to holy war, joining a crusade against the Imperium's enemies. The experience hardened your resolve and your aim, though the horrors of war have left their mark on your psyche.",
+              "grants": {
+                "characteristics": {
+                  "ballisticSkill": 5
+                },
+                "talents": ["Peer (Military)"],
+                "insanity": "1d10"
+              },
+              "choices": [
+                {
+                  "type": "talent",
+                  "label": "Choose Hatred target (subject to GM approval)",
+                  "options": [
+                    {"label": "Hatred (Eldar)", "value": "hatred_eldar"},
+                    {"label": "Hatred (Orks)", "value": "hatred_orks"},
+                    {"label": "Hatred (Kroot)", "value": "hatred_kroot"},
+                    {"label": "Hatred (Chaos)", "value": "hatred_chaos"},
+                    {"label": "Hatred (Other, GM approval required)", "value": "hatred_other"}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Chasing the Enemy (150 XP)",
+              "value": "chasing_enemy",
+              "xpCost": 150,
+              "description": "You have devoted yourself to hunting a specific foe across the stars. Whether pursuing xenos raiders, heretic warlords, or traitors to the Throne, your singular focus has sharpened your mind and will.",
+              "grants": {},
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one characteristic bonus",
+                  "options": [
+                    {"label": "+3 Intelligence", "value": "intelligence"},
+                    {"label": "+3 Willpower", "value": "willpower"}
+                  ],
+                  "count": 1
+                },
+                {
+                  "type": "talent_custom",
+                  "label": "Gain Hatred talent for the group you hunt (subject to GM approval)",
+                  "options": [
+                    {"label": "Hatred (specify enemy group)", "value": "hatred_custom"}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Warrior (250 XP)",
+              "value": "warrior",
+              "xpCost": 250,
+              "description": "You are a warrior to your core. Combat is your purpose, your art, and your meditation. You have trained your body to peak efficiency, though your single-minded focus on war has left you lacking in social graces.",
+              "grants": {
+                "characteristics": {
+                  "weaponSkill": 5,
+                  "fellowship": -5
+                },
+                "talents": ["Meditation"]
+              },
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one physical characteristic bonus",
+                  "options": [
+                    {"label": "+5 Toughness", "value": "toughness"},
+                    {"label": "+5 Agility", "value": "agility"}
+                  ],
+                  "count": 1
+                }
+              ]
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. Call to War (150xp): +5 Ballistic Skill. Gain Peer (Military) and one of Hatred(Eldar, Orks, Kroot, Chaos or other appropriate). Gain 1d10 Insanity Points from war horrors.\n2. Chasing the Enemy (150xp): +3 Intelligence or +3 Willpower. Gain Hatred Talent for a group the character is chasing through the cosmos (Subject to GM Approval)\n3. Warrior (250xp): +5 Weapon Skill, +5 Toughness or +5 Agility, -5 Fellowship. Gain Meditation Talent.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Call to War (150 XP):</strong> Gain +5 Ballistic Skill and Peer (Military) talent. Choose Hatred talent for Eldar, Orks, Kroot, Chaos, or other appropriate foe (GM approval). Gain 1d10 Insanity Points from war horrors.</li><li><strong>Chasing the Enemy (150 XP):</strong> Choose +3 Intelligence or +3 Willpower. Gain Hatred talent for the enemy group you are hunting (subject to GM approval).</li><li><strong>Warrior (250 XP):</strong> Gain +5 Weapon Skill, choose +5 Toughness or +5 Agility, suffer -5 Fellowship. Gain Meditation talent.</li></ul>",
     "notes": "",
+    "source": {
+      "book": "Into The Storm",
+      "page": "20-21",
+      "custom": ""
+    },
     "selectedChoices": {},
     "activeModifiers": []
   },

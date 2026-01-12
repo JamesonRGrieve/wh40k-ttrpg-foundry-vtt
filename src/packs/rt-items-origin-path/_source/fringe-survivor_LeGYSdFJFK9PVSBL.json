@@ -6,86 +6,135 @@
     "identifier": "fringe-survivor",
     "step": "birthright",
     "stepIndex": 2,
+    "xpCost": 0,
+    "isAdvancedOrigin": true,
+    "replacesOrigins": ["scavenger", "savant"],
     "description": {
-      "value": "<p>1. Survivalist (300xp): +3 Toughness or +3 Perception, gain Survival as Trained Basic Skill, gain 1 Additional Fate Point and 1d5+1 Insanity.<br>2. Heretek (100xp): Gain +3 Intelligence and two untrained basic skills from noted list. Gain 1d5 Corruption and hatred of the Mechanicus. <br>3. Pit-Fighter (200xp): +3 Toughness or +3 Strength, +3 Weapon Skill. Gain Rival (Underworld) and 1 Corruption</p>"
+      "value": "<h2>Fringe Survivor</h2><blockquote><p><em>\"The Imperium's reach is vast, but its grip is not absolute. Between the iron fist of law and the cold void of space lie the borderlands—places where survival demands more than faith alone.\"</em></p></blockquote><p>Life in the Imperium is constrictive and stifling for most, but you and yours found ways to endure on society's fringes. Each day was a battle for survival, yet somehow you persevered against impossible odds, honing skills that would serve you well beyond the borders of civilization.</p><p>Perhaps you hail from nomadic families who moved across worlds and systems, following trade routes or resources, never staying long enough for the Imperium's bureaucracy to take firm hold. Or you may have grown up among those who trafficked in forbidden knowledge—tech-heretics who salvaged and rebuilt what the Adeptus Mechanicus deemed lost or forbidden. Some fringe survivors learned their craft in the blood-soaked arenas, where death and glory were dealt in equal measure for the entertainment of crowds and the profit of patrons.</p><p>Whatever your origins, the fringe taught you to be resourceful, alert, and uncompromising. You know how to read danger, to survive in hostile environments, and to do whatever it takes to see another sunrise. The God-Emperor may watch over all humanity, but on the fringes, you learned that survival is earned, not granted.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess (or will possess from your Career), you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
-      "text": "Origin Path: Birthright",
+      "text": "Origin Path: Birthright (Advanced)",
       "previousSteps": [],
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 3,
-          "ballisticSkill": 0,
-          "strength": 3,
-          "toughness": 3,
-          "agility": 0,
-          "intelligence": 3,
-          "perception": 3,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
-      "skills": [
-        {
-          "name": "Survival as Trained Basic",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1 Additional Fate Point",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d5 Insanity",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Intelligence",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "two untrained basic",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1d5 Corruption",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "hatred of the Mechanicus",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Rival (Underworld)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "1 Corruption</p>",
-          "trainingModifier": 1,
-          "specialization": ""
-        }
-      ],
+      "skills": [],
       "talents": [],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
       "specialAbilities": [],
-      "choices": []
+      "choices": [
+        {
+          "type": "fringe_survivor_path",
+          "label": "Choose one Fringe Survivor path",
+          "options": [
+            {
+              "label": "Survivalist (300 XP)",
+              "value": "survivalist",
+              "xpCost": 300,
+              "description": "Nomadic wanderers who move from place to place, following herds, resources, or trade. You have honed instincts for survival in hostile climates and developed an alertness to danger—but the horrors you've witnessed haunt you still.",
+              "grants": {
+                "skills": [
+                  {"name": "Survival", "specialization": "", "level": "trained"}
+                ],
+                "fate": 1,
+                "insanity": "1d5+1"
+              },
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one characteristic bonus",
+                  "options": [
+                    {"label": "+3 Toughness", "value": "toughness"},
+                    {"label": "+3 Perception", "value": "perception"}
+                  ],
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Heretek (100 XP)",
+              "value": "heretek",
+              "xpCost": 100,
+              "description": "Tech-heretics branded as criminals, versed in forbidden arts of technology gained outside the Priesthood of Mars. You salvage, rebuild, and understand machines through intuition and dark knowledge—always one step ahead of the Mechanicus hunters.",
+              "grants": {
+                "characteristics": {
+                  "intelligence": 3
+                },
+                "corruption": "1d5"
+              },
+              "choices": [
+                {
+                  "type": "skills_multi",
+                  "label": "Select two skills (untrained Basic)",
+                  "options": [
+                    "Chem-Use",
+                    "Common Lore (Tech)",
+                    "Forbidden Lore (Archeotech)",
+                    "Tech-Use",
+                    "Medicae",
+                    "Scholastic Lore (Any)"
+                  ],
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Pit-Fighter (200 XP)",
+              "value": "pit_fighter",
+              "xpCost": 200,
+              "description": "Hereditary gladiators who fight for glory and wealth in underground blood-sport arenas. You have trained and honed your body since birth, becoming champion more than once. You have studied under great pugilists and faced grotesque xenos and mutants.",
+              "grants": {
+                "characteristics": {
+                  "weaponSkill": 3
+                },
+                "traits": [
+                  {"name": "Rival (Underworld)", "level": null}
+                ],
+                "corruption": 1
+              },
+              "choices": [
+                {
+                  "type": "characteristic",
+                  "label": "Choose one physical characteristic bonus",
+                  "options": [
+                    {"label": "+3 Toughness", "value": "toughness"},
+                    {"label": "+3 Strength", "value": "strength"}
+                  ],
+                  "count": 1
+                }
+              ]
+            }
+          ],
+          "count": 1
+        }
+      ]
     },
-    "effectText": "1. Survivalist (300xp): +3 Toughness or +3 Perception, gain Survival as Trained Basic Skill, gain 1 Additional Fate Point and 1d5+1 Insanity.\n2. Heretek (100xp): Gain +3 Intelligence and two untrained basic skills from noted list. Gain 1d5 Corruption and hatred of the Mechanicus. \n3. Pit-Fighter (200xp): +3 Toughness or +3 Strength, +3 Weapon Skill. Gain Rival (Underworld) and 1 Corruption",
-    "notes": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "source": {
+      "book": "Into The Storm",
+      "page": "18-19",
+      "custom": ""
+    },
+    "effectText": "<p><strong>Select one of the following paths:</strong></p><ul><li><strong>Survivalist (300 XP):</strong> +3 Toughness OR +3 Perception, Survival skill (trained), +1 Fate Point, 1d5+1 Insanity Points</li><li><strong>Heretek (100 XP):</strong> +3 Intelligence, select 2 skills from: Chem-Use, Common Lore (Tech), Forbidden Lore (Archeotech), Tech-Use, Medicae, Scholastic Lore (any) as untrained Basic skills, 1d5 Corruption Points</li><li><strong>Pit-Fighter (200 XP):</strong> +3 Toughness OR +3 Strength, +3 Weapon Skill, Rival (Underworld) trait, 1 Corruption Point</li></ul>",
+    "notes": "Advanced origin from Into The Storm. Each path has an XP cost deducted from starting experience.",
     "selectedChoices": {},
     "activeModifiers": []
   },
