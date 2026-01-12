@@ -52,10 +52,16 @@ export default class OriginPathData extends ItemDataModel.mixin(
       grants: new fields.SchemaField({
         // Characteristic modifiers (already in ModifiersTemplate)
         
-        // Wound modifier
+        // Wound formula - supports dice notation like "2xTB+1d5+2"
+        woundsFormula: new fields.StringField({ required: false, blank: true, initial: "" }),
+        
+        // Legacy wound modifier (kept for backward compatibility)
         wounds: new fields.NumberField({ required: true, initial: 0, integer: true }),
         
-        // Fate threshold modifier
+        // Fate formula - supports conditional notation like "(1-5|=2),(6-10|=3)"
+        fateFormula: new fields.StringField({ required: false, blank: true, initial: "" }),
+        
+        // Legacy fate threshold modifier (kept for backward compatibility)
         fateThreshold: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
         
         // Blessed by Emperor (fate points on critical success)
