@@ -79,7 +79,53 @@ export default class TalentData extends ItemDataModel.mixin(
       specialization: new fields.StringField({ required: false, blank: true }),
       
       // Notes
-      notes: new fields.StringField({ required: false, blank: true })
+      notes: new fields.StringField({ required: false, blank: true }),
+      
+      // What this talent grants (for talents that grant other abilities)
+      grants: new fields.SchemaField({
+        // Skills granted (with training level)
+        skills: new fields.ArrayField(
+          new fields.SchemaField({
+            name: new fields.StringField({ required: true }),
+            specialization: new fields.StringField({ required: false, blank: true }),
+            level: new fields.StringField({
+              required: true,
+              initial: "trained",
+              choices: ["trained", "plus10", "plus20"]
+            })
+          }),
+          { required: true, initial: [] }
+        ),
+        
+        // Talents granted
+        talents: new fields.ArrayField(
+          new fields.SchemaField({
+            name: new fields.StringField({ required: true }),
+            specialization: new fields.StringField({ required: false, blank: true }),
+            uuid: new fields.StringField({ required: false, blank: true })
+          }),
+          { required: true, initial: [] }
+        ),
+        
+        // Traits granted
+        traits: new fields.ArrayField(
+          new fields.SchemaField({
+            name: new fields.StringField({ required: true }),
+            level: new fields.NumberField({ required: false, initial: null }),
+            uuid: new fields.StringField({ required: false, blank: true })
+          }),
+          { required: true, initial: [] }
+        ),
+        
+        // Special abilities (text descriptions for non-item grants)
+        specialAbilities: new fields.ArrayField(
+          new fields.SchemaField({
+            name: new fields.StringField({ required: true }),
+            description: new fields.HTMLField({ required: true })
+          }),
+          { required: true, initial: [] }
+        )
+      })
     };
   }
 
@@ -193,6 +239,46 @@ export default class TalentData extends ItemDataModel.mixin(
     return parts.join(", ");
   }
 
+  /**
+   * Does this talent grant anything?
+   * @type {boolean}
+   */
+  get hasGrants() {
+    const grants = this.grants;
+    if ( grants.skills.length ) return true;
+    if ( grants.talents.length ) return true;
+    if ( grants.traits.length ) return true;
+    if ( grants.specialAbilities.length ) return true;
+    return false;
+  }
+
+  /**
+   * Get a summary of what this talent grants.
+   * @type {string[]}
+   */
+  get grantsSummary() {
+    const grants = this.grants;
+    const summary = [];
+    
+    if ( grants.skills.length ) {
+      summary.push(`Skills: ${grants.skills.map(s => s.name + (s.specialization ? ` (${s.specialization})` : "")).join(", ")}`);
+    }
+    
+    if ( grants.talents.length ) {
+      summary.push(`Talents: ${grants.talents.map(t => t.name + (t.specialization ? ` (${t.specialization})` : "")).join(", ")}`);
+    }
+    
+    if ( grants.traits.length ) {
+      summary.push(`Traits: ${grants.traits.map(t => t.name).join(", ")}`);
+    }
+    
+    if ( grants.specialAbilities.length ) {
+      summary.push(`Special Abilities: ${grants.specialAbilities.map(a => a.name).join(", ")}`);
+    }
+    
+    return summary;
+  }
+
   /* -------------------------------------------- */
   /*  Chat Properties                             */
   /* -------------------------------------------- */
@@ -214,6 +300,11 @@ export default class TalentData extends ItemDataModel.mixin(
     
     if ( this.cost ) {
       props.push(`Cost: ${this.cost} XP`);
+    }
+    
+    // Add grants summary
+    if ( this.hasGrants ) {
+      props.push(...this.grantsSummary);
     }
     
     return props;
