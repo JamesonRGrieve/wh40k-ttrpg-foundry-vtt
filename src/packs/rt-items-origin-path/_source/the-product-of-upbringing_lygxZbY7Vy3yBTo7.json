@@ -113,7 +113,7 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": [2, 5]
   },
   "effects": [],
   "flags": {},

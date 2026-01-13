@@ -299,7 +299,7 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 4
+    "position": [4, 6]
   },
   "effects": [],
   "flags": {},

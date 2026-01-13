@@ -235,7 +235,7 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": [1, 6]
   },
   "effects": [],
   "flags": {},
