@@ -1,7 +1,7 @@
 {
   "name": "Fringe Survivor",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/lantern-flame.svg",
   "system": {
     "identifier": "fringe-survivor",
     "step": "birthright",
@@ -155,11 +155,20 @@
       "page": "18-19",
       "custom": ""
     },
-    "effectText": "<p><strong>Select one of the following paths:</strong></p><ul><li><strong>Survivalist (300 XP):</strong> +3 Toughness OR +3 Perception, Survival skill (trained), +1 Fate Point, 1d5+1 Insanity Points</li><li><strong>Heretek (100 XP):</strong> +3 Intelligence, select 2 skills from: Chem-Use, Common Lore (Tech), Forbidden Lore (Archeotech), Tech-Use, Medicae, Scholastic Lore (any) as untrained Basic skills, 1d5 Corruption Points</li><li><strong>Pit-Fighter (200 XP):</strong> +3 Toughness OR +3 Strength, +3 Weapon Skill, Rival (Underworld) trait, 1 Corruption Point</li></ul>",
+    "effectText": "",
     "notes": "Advanced origin from Into The Storm. Each path has an XP cost deducted from starting experience.",
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

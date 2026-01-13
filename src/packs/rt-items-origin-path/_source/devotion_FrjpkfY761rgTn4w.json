@@ -1,7 +1,7 @@
 {
   "name": "Devotion",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/prayer.svg",
   "system": {
     "identifier": "devotion",
     "step": "motivation",
@@ -140,7 +140,7 @@
         ]
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Creed (200 XP):</strong> Gain Charm and Common Lore (Imperial Creed) as trained Skills. In addition, gain the Inspire Wrath Talent.</li><li><strong>Duty (100 XP):</strong> Gain either the Armour of Contempt Talent or the Unshakeable Faith Talent. In addition, gain +3 Willpower.</li><li><strong>Loyalty (100 XP):</strong> Gain Trade (Voidfarer) as a Trained Basic Skill, and gain a +5 bonus to all Willpower and Fellowship tests made while aboard the ship the character lives on.</li></ul>",
+    "effectText": "",
     "notes": "Advanced Motivation option from Into The Storm, pages 26-27.",
     "source": {
       "book": "Into The Storm",
@@ -149,7 +149,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

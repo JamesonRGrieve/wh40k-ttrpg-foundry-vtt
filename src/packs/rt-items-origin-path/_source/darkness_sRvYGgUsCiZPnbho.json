@@ -1,7 +1,7 @@
 {
   "name": "Darkness",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/evil-moon.svg",
   "system": {
     "identifier": "darkness",
     "step": "trialsAndTravails",
@@ -226,7 +226,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Forbidden Knowledge (200 XP):</strong> Gain one Common Lore and one Forbidden Lore as Trained Skills. Also, gain the Paranoia and Enemy Talents; the Enemy is the group the character took the knowledge from.</li><li><strong>Warp Incursion (100 XP):</strong> Gain Resistance (Psychic Powers) and Light Sleeper Talents. Also gain +1d5 Corruption Points from the exposure to the incursion.</li><li><strong>Dark Secret (200 XP):</strong> Add +6 to any one Characteristic. However, the character also harbours a dark secret he struggles to be rid of. Gain +1d5 Insanity Points and work with the GM to determine what this is and what circumstances are required to remove it. It should be something difficult, rare, esoteric, and very dangerous for the Explorer.</li></ul>",
+    "effectText": "",
     "notes": "Advanced Trials and Travails option from Into The Storm, page 24-25.",
     "source": {
       "book": "Into The Storm",
@@ -235,7 +235,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

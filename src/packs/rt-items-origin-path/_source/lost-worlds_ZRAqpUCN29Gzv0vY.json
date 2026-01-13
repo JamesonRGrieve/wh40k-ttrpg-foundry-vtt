@@ -1,7 +1,7 @@
 {
   "name": "Lost Worlds",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/exploding-planet.svg",
   "system": {
     "identifier": "lost-worlds",
     "step": "trialsAndTravails",
@@ -104,7 +104,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Lost Dynasty (400 XP):</strong> Add +1 Profit to the group's total Profit Factor, and gain +1 Fate Point. The player and the GM should work out the details of this lost resource so it can be worked into the campaign story, as needed.</li><li><strong>Rogue Planet (200 XP):</strong> Gain +3 Willpower and a single Exploration skill of your choice as a Trained Skill. However, travelling to this lost world is an unnerving experience. Gain +1d5 Insanity Points. It's up to the player and the GM to work out the details of this lost world and determine what it contains.</li><li><strong>Beyond the Pale (100 XP):</strong> Gain +1d5 Corruption Points and +1d5 Insanity Points. In addition, select two Forbidden Lore Skills (or gain +10 to two Forbidden Lore Skills already possessed).</li></ul>",
+    "effectText": "",
     "notes": "Advanced Trials and Travails option from Into The Storm, page 26.",
     "source": {
       "book": "Into The Storm",
@@ -113,7 +113,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 3
+    "position": 3,
+    "navigation": {
+      "connectsTo": [
+        2,
+        3,
+        4
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

@@ -33,7 +33,7 @@ export default class OriginPathData extends ItemDataModel.mixin(
       }),
       
       // Step order (for display)
-      stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, max: 5, integer: true }),
+      stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, max: 7, integer: true }),
       
       // Position in the step's row (1-8 for display ordering, some origins have multiple positions)
       position: new fields.NumberField({ required: true, initial: 0, min: 0, max: 8, integer: true }),
@@ -169,22 +169,51 @@ export default class OriginPathData extends ItemDataModel.mixin(
       notes: new fields.StringField({ required: false, blank: true }),
       
       // Choice tracking - records player's selections for grants.choices
-      selectedChoices: new fields.ObjectField({ 
-        required: true, 
-        initial: {} 
+      selectedChoices: new fields.ObjectField({
+        required: true,
+        initial: {}
         // Structure: { "choiceLabel": ["selected option 1", "selected option 2"] }
       }),
-      
-      // Active modifiers from choices
+
+      // Active modifiers from choices (calculated in prepareDerivedData)
       activeModifiers: new fields.ArrayField(
         new fields.SchemaField({
           source: new fields.StringField({ required: true }),  // Which choice this came from
           type: new fields.StringField({ required: true }),    // characteristic/skill/talent/equipment
           key: new fields.StringField({ required: true }),
-          value: new fields.NumberField({ required: false })
+          value: new fields.NumberField({ required: false }),
+          itemUuid: new fields.StringField({ required: false, blank: true }) // For fetching item details
         }),
         { required: true, initial: [] }
-      )
+      ),
+
+      // Roll results storage for interactive rolling
+      rollResults: new fields.SchemaField({
+        wounds: new fields.SchemaField({
+          formula: new fields.StringField({ required: false, blank: true }),
+          rolled: new fields.NumberField({ required: false, initial: null }),
+          breakdown: new fields.StringField({ required: false, blank: true }),
+          timestamp: new fields.NumberField({ required: false, initial: null })
+        }),
+        fate: new fields.SchemaField({
+          formula: new fields.StringField({ required: false, blank: true }),
+          rolled: new fields.NumberField({ required: false, initial: null }),
+          breakdown: new fields.StringField({ required: false, blank: true }),
+          timestamp: new fields.NumberField({ required: false, initial: null })
+        })
+      }),
+
+      // Navigation metadata for chart visualization
+      navigation: new fields.SchemaField({
+        // Which positions in next step this origin connects to
+        connectsTo: new fields.ArrayField(
+          new fields.NumberField({ required: true, min: 0, max: 8 }),
+          { required: true, initial: [] }
+        ),
+        // Visual hints
+        isEdgeLeft: new fields.BooleanField({ required: true, initial: false }),
+        isEdgeRight: new fields.BooleanField({ required: true, initial: false })
+      })
     };
   }
 
@@ -267,7 +296,7 @@ export default class OriginPathData extends ItemDataModel.mixin(
   get grantsSummary() {
     const grants = this.grants;
     const summary = [];
-    
+
     // Characteristics from modifiers
     const charMods = this.modifiers.characteristics;
     for ( const [char, value] of Object.entries(charMods) ) {
@@ -275,32 +304,171 @@ export default class OriginPathData extends ItemDataModel.mixin(
         summary.push(`${char}: ${value >= 0 ? "+" : ""}${value}`);
       }
     }
-    
+
     if ( grants.wounds !== 0 ) {
       summary.push(`Wounds: ${grants.wounds >= 0 ? "+" : ""}${grants.wounds}`);
     }
-    
+
     if ( grants.fateThreshold > 0 ) {
       summary.push(`Fate: +${grants.fateThreshold}`);
     }
-    
+
     if ( grants.skills.length ) {
       summary.push(`Skills: ${grants.skills.map(s => s.name).join(", ")}`);
     }
-    
+
     if ( grants.talents.length ) {
       summary.push(`Talents: ${grants.talents.map(t => t.name).join(", ")}`);
     }
-    
+
     if ( grants.traits.length ) {
       summary.push(`Traits: ${grants.traits.map(t => t.name).join(", ")}`);
     }
-    
+
     if ( grants.aptitudes.length ) {
       summary.push(`Aptitudes: ${grants.aptitudes.join(", ")}`);
     }
-    
+
     return summary;
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Preparation                            */
+  /* -------------------------------------------- */
+
+  /** @override */
+  prepareDerivedData() {
+    super.prepareDerivedData?.();
+    this._calculateActiveModifiers();
+    this._prepareNavigationData();
+  }
+
+  /**
+   * Calculate active modifiers from selected choices.
+   * This populates the activeModifiers array based on what the player has chosen.
+   * @private
+   */
+  _calculateActiveModifiers() {
+    const activeModifiers = [];
+
+    for (const choice of this.grants.choices) {
+      const selected = this.selectedChoices[choice.label] || [];
+
+      for (const selectedValue of selected) {
+        const option = choice.options.find(opt => opt.value === selectedValue);
+        if (!option?.grants) continue;
+
+        // Extract characteristic modifiers
+        if (option.grants.characteristics) {
+          for (const [char, value] of Object.entries(option.grants.characteristics)) {
+            if (value !== 0) {
+              activeModifiers.push({
+                source: choice.label,
+                type: "characteristic",
+                key: char,
+                value: value,
+                itemUuid: null
+              });
+            }
+          }
+        }
+
+        // Extract skill grants
+        if (option.grants.skills) {
+          for (const skill of option.grants.skills) {
+            activeModifiers.push({
+              source: choice.label,
+              type: "skill",
+              key: skill.name,
+              value: null,
+              itemUuid: null
+            });
+          }
+        }
+
+        // Extract talent grants
+        if (option.grants.talents) {
+          for (const talent of option.grants.talents) {
+            activeModifiers.push({
+              source: choice.label,
+              type: "talent",
+              key: talent.name,
+              value: null,
+              itemUuid: talent.uuid || null
+            });
+          }
+        }
+
+        // Extract trait grants
+        if (option.grants.traits) {
+          for (const trait of option.grants.traits) {
+            activeModifiers.push({
+              source: choice.label,
+              type: "trait",
+              key: trait.name,
+              value: trait.level,
+              itemUuid: trait.uuid || null
+            });
+          }
+        }
+
+        // Extract equipment grants
+        if (option.grants.equipment) {
+          for (const equip of option.grants.equipment) {
+            activeModifiers.push({
+              source: choice.label,
+              type: "equipment",
+              key: equip.name,
+              value: equip.quantity,
+              itemUuid: equip.uuid || null
+            });
+          }
+        }
+      }
+    }
+
+    // Store the calculated modifiers
+    // Note: This is safe because prepareDerivedData is called after the item is initialized
+    // and we're just updating a derived field, not modifying source data
+    if (JSON.stringify(this.activeModifiers) !== JSON.stringify(activeModifiers)) {
+      this.activeModifiers = activeModifiers;
+    }
+  }
+
+  /**
+   * Prepare navigation metadata for chart visualization.
+   * Calculates which positions in the next step this origin connects to.
+   * @private
+   */
+  _prepareNavigationData() {
+    const position = this.position;
+
+    // Calculate connections based on position
+    // Rule: Each choice connects to position-1, position, and position+1 in next step
+    // Edge cases: leftmost (0) and rightmost (7+) have only 2 connections
+    let connectsTo = [];
+
+    if (position === 0) {
+      // Left edge - can only go to 0 and 1
+      connectsTo = [0, 1];
+      this.navigation.isEdgeLeft = true;
+      this.navigation.isEdgeRight = false;
+    } else if (position >= 7) {
+      // Right edge - can only go to position-1 and position
+      connectsTo = [position - 1, position];
+      this.navigation.isEdgeLeft = false;
+      this.navigation.isEdgeRight = true;
+    } else {
+      // Middle - connects to position-1, position, and position+1
+      connectsTo = [position - 1, position, position + 1];
+      this.navigation.isEdgeLeft = false;
+      this.navigation.isEdgeRight = false;
+    }
+
+    // Only update if changed
+    if (JSON.stringify(this.navigation.connectsTo) !== JSON.stringify(connectsTo)) {
+      this.navigation.connectsTo = connectsTo;
+    }
   }
 
   /* -------------------------------------------- */

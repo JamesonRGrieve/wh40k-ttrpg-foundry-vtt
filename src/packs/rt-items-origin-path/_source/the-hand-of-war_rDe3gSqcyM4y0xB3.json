@@ -1,7 +1,7 @@
 {
   "name": "The Hand of War",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/war-axe.svg",
   "system": {
     "identifier": "the-hand-of-war",
     "step": "trialsAndTravails",
@@ -178,7 +178,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>The Ashes of War:</strong> You gain one Weapon Training Talent of your choice, or the Leap Up Talent, as well as the Hatred Talent against your foe in the war that defined your past. Choose from among: Orks, Eldar, mutants, Chaos worshipers, the Imperial Guard, the Imperial Navy or void pirates.</p><p><strong>The Face of the Enemy:</strong> You will never willingly have dealings with your sworn enemy except under the direst circumstances, and if you must do so, you suffer −10 to all Fellowship Tests in those dealings. Also, if given the slightest provocation, you will react violently towards them. (You may take a Willpower Test to avert this, modified by the provocation and the consequences of succumbing to your hatred.)</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -187,7 +187,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Exhilaration",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/fireball.svg",
   "system": {
     "identifier": "exhilaration",
     "step": "motivation",
@@ -185,7 +185,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>New Horizons (200 XP):</strong> Gain Common Lore (Koronus Expanse) and either Scholastic Lore (Astromancy) or Trade (Explorator) as trained Skills.</li><li><strong>The Thrill of War (250 XP):</strong> Gain +3 Weapon Skill or Ballistic Skill (choose one), but suffer −3 Fellowship. Gain Scholastic Lore (Tactica Imperialis) as a Trained Skill. Additionally gain the Nerves of Steel and Quick Draw Talents.</li><li><strong>No Joy Unexplored (200 XP):</strong> Gain +3 Toughness or Fellowship (choose one), but suffer −3 Willpower. Gain the Decadence Talent, Carouse as a trained Skill. However, diverse and possibly ill-advised experiences have left their mark, tainting the character and making him incautious of further risks. Gain 1d5 Corruption Points.</li></ul>",
+    "effectText": "",
     "notes": "Advanced Motivation option from Into The Storm, page 29.",
     "source": {
       "book": "Into The Storm",
@@ -194,7 +194,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": 2,
+    "navigation": {
+      "connectsTo": [
+        1,
+        2,
+        3
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Knowledge",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/book-aura.svg",
   "system": {
     "identifier": "knowledge",
     "step": "motivation",
@@ -276,7 +276,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Knowledge is Life, Life is Knowledge (300 XP):</strong> Gain any two Scholastic Lore Skills as trained Skills, and the Total Recall Talent. You may purchase a third Scholastic Lore as a trained Skill for an additional 200 XP.</li><li><strong>Know Thy Foe (200 XP):</strong> Gain any one Forbidden Lore as a Trained Basic Skill, and the character may purchase a second for an additional 200 XP.</li><li><strong>Knowledge is Power, Guard It Well (300 XP):</strong> Gain any one Common Lore or Scholastic Lore as a trained Skill, and gain the Foresight Talent. Additionally, gain +3 Intelligence or Perception.</li></ul>",
+    "effectText": "",
     "notes": "Advanced Motivation option from Into The Storm, pages 27-28.",
     "source": {
       "book": "Into The Storm",
@@ -285,7 +285,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 3
+    "position": 3,
+    "navigation": {
+      "connectsTo": [
+        2,
+        3,
+        4
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

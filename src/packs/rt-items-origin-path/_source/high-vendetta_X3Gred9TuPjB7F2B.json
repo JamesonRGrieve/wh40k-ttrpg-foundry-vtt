@@ -1,7 +1,7 @@
 {
   "name": "High Vendetta",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/crossed-swords.svg",
   "system": {
     "identifier": "high-vendetta",
     "step": "trialsAndTravails",
@@ -87,7 +87,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Blood Will Have Blood:</strong> You gain your choice of the Die Hard or Paranoia Talent, and gain the Inquiry Skill (or, if you already possess it, increase it by one level).</p><p><strong>Brook No Insult:</strong> You will allow no serious offence to your honour and person or those under your protection to pass unchallenged, meeting threat with threat and violence with violence. You may take a Willpower Test to avert this if you wish, modified by the provocation and the consequences (set by the GM) of succumbing to your rage.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -96,7 +96,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 6
+    "position": 6,
+    "navigation": {
+      "connectsTo": [
+        5,
+        6
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

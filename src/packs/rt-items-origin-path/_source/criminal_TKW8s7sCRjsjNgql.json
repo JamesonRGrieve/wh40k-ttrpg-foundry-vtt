@@ -1,7 +1,7 @@
 {
   "name": "Criminal",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/robber.svg",
   "system": {
     "identifier": "criminal",
     "step": "lureOfTheVoid",
@@ -90,7 +90,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Wanted Fugitive:</strong> You gain the Enemy (Adeptus Arbites) and Peer (Underworld) Talents.</li><li><strong>Hunted by a Crime Baron:</strong> You gain +3 Perception and the Enemy (Underworld) Talent.</li><li><strong>Judged and Found Wanting:</strong> You suffer −5 Fellowship. You gain one poor-Craftsmanship bionic limb or implant (you may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship).</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -99,7 +99,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": 2,
+    "navigation": {
+      "connectsTo": [
+        1,
+        2,
+        3
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

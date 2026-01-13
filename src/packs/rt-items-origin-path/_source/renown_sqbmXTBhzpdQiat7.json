@@ -1,7 +1,7 @@
 {
   "name": "Renown",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/trumpet-flag.svg",
   "system": {
     "identifier": "renown",
     "step": "motivation",
@@ -76,7 +76,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> You gain your choice of the Air of Authority or the Peer (choose one) Talent.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -85,7 +85,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 4
+    "position": 4,
+    "navigation": {
+      "connectsTo": [
+        3,
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

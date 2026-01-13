@@ -1,7 +1,7 @@
 {
   "name": "A Product of Upbringing",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/graduate-cap.svg",
   "system": {
     "identifier": "the-product-of-upbringing",
     "step": "trialsAndTravails",
@@ -104,7 +104,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>New Blood (200 XP):</strong> The character is considered part of an upstart family and as such gains the Rival (Nobility) Talent. However, their wealth adds +1 Profit Factor to the group's starting Profit Factor.</li><li><strong>Rivals (100 XP):</strong> Gain +3 Fellowship. Also, gain the Rival Talent (the rival being the group that the character has a rivalry with, subject to GM's approval). Whenever you encounter a member of this rival faction, the character attempts to visit retribution upon them. A Difficult (-10) Willpower Test can be made to prevent this from happening once per scene. In addition, the character gains the Peer Talent: these peers consist of an allied group that supports him in his rivalry.</li><li><strong>Decadent (150 XP):</strong> Gain +3 Willpower, the Decadence Talent and a +5 bonus to Charm Tests. Additionally, gain 1d5 Corruption Points.</li></ul>",
+    "effectText": "",
     "notes": "Advanced Trials and Travails option from Into The Storm, page 25.",
     "source": {
       "book": "Into The Storm",
@@ -113,7 +113,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": 2,
+    "navigation": {
+      "connectsTo": [
+        1,
+        2,
+        3
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

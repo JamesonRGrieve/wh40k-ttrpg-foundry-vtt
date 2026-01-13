@@ -1,7 +1,7 @@
 {
   "name": "Arch-Militant",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/warlord-helmet.svg",
   "system": {
     "identifier": "arch-militant",
     "step": "career",
@@ -111,7 +111,16 @@
     "notes": "",
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": 2,
+    "navigation": {
+      "connectsTo": [
+        1,
+        2,
+        3
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

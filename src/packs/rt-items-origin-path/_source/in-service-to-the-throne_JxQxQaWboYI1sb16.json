@@ -1,7 +1,7 @@
 {
   "name": "In Service to the Throne",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/templar-shield.svg",
   "system": {
     "identifier": "in-service-to-the-throne",
     "step": "birthright",
@@ -290,7 +290,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Tithed (350 XP):</strong> Choose +3 Willpower or +3 Ballistic Skill. Gain one Common Lore skill as Trained. Choose any two from: Athletics, Awareness, Climb, Dodge, Drive (Any), Forbidden Lore (Any), Medicae, Scholastic Lore (Any), Swim (all Trained), or Basic/Melee/Pistol Weapon Training (Any).</li><li><strong>Born to Lead (200 XP):</strong> Choose +3 Intelligence or +3 Fellowship, suffer -3 Toughness. Gain Command and Literacy as Trained skills. Choose one Scholastic Lore skill as Trained.</li><li><strong>One Amongst Billions (200 XP):</strong> Choose +3 Perception or +3 Intelligence, suffer -3 Strength. Gain Paranoia and Unremarkable talents. Choose one Trade or Common Lore skill as Trained.</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Into The Storm",
@@ -299,7 +299,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 4
+    "position": 4,
+    "navigation": {
+      "connectsTo": [
+        3,
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

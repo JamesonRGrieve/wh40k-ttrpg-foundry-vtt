@@ -1,7 +1,7 @@
 {
   "name": "Seneschal",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/key.svg",
   "system": {
     "identifier": "seneschal",
     "step": "career",
@@ -121,7 +121,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 6
+    "position": 6,
+    "navigation": {
+      "connectsTo": [
+        5,
+        6,
+        7
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,287 @@
+{{!-- Origin Detail Dialog Template --}}
+<div class="origin-detail-wrapper">
+    <div class="origin-detail-content">
+
+        {{!-- Header --}}
+        <header class="origin-detail-header">
+        <img src="{{img}}" alt="{{name}}" class="origin-detail-img" />
+        <div class="origin-detail-info">
+            <h1 class="origin-detail-name">{{name}}</h1>
+            <div class="origin-detail-meta">
+                <span class="origin-step-badge">
+                    <i class="fa-solid fa-route"></i>
+                    {{stepLabel}}
+                </span>
+                {{#if isAdvanced}}
+                    <span class="origin-advanced-badge">
+                        <i class="fa-solid fa-star"></i>
+                        {{localize "RT.OriginPath.Advanced"}}
+                    </span>
+                {{/if}}
+                {{#if xpCost}}
+                    <span class="origin-xp-badge">
+                        <i class="fa-solid fa-gem"></i>
+                        {{xpCost}} XP
+                    </span>
+                {{/if}}
+            </div>
+            {{#if hasSource}}
+                <div class="origin-source">
+                    <i class="fa-solid fa-book"></i>
+                    {{#if source.book}}{{source.book}}{{/if}}
+                    {{#if source.page}}, p.{{source.page}}{{/if}}
+                </div>
+            {{/if}}
+        </div>
+    </header>
+
+    {{!-- Description --}}
+    {{#if hasDescription}}
+        <section class="origin-detail-section origin-description">
+            <div class="description-content">
+                {{{description}}}
+            </div>
+        </section>
+    {{/if}}
+
+    {{!-- Grants Summary --}}
+    <section class="origin-detail-section origin-grants">
+        <h2 class="section-header">
+            <i class="fa-solid fa-gift"></i>
+            {{localize "RT.OriginPath.Grants"}}
+        </h2>
+        
+        <div class="grants-grid">
+            {{!-- Characteristics --}}
+            {{#if hasCharacteristics}}
+                <div class="grants-category">
+                    <h3 class="category-header">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        {{localize "RT.Characteristics"}}
+                    </h3>
+                    <div class="grants-items">
+                        {{#each characteristics}}
+                            <div class="grant-tag {{#if positive}}positive{{else}}negative{{/if}}" 
+                                 data-tooltip="{{label}}: {{#if positive}}+{{/if}}{{value}}">
+                                <span class="tag-label">{{short}}</span>
+                                <span class="tag-value">{{#if positive}}+{{/if}}{{value}}</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Starting Stats Formulas --}}
+            {{#if hasFormulas}}
+                <div class="grants-category">
+                    <h3 class="category-header">
+                        <i class="fa-solid fa-dice"></i>
+                        {{localize "RT.OriginPath.StartingStats"}}
+                    </h3>
+                    <div class="grants-items formula-items">
+                        {{#if woundsFormula}}
+                            <div class="formula-tag" data-tooltip="Roll this formula to determine starting Wounds">
+                                <i class="fa-solid fa-heart"></i>
+                                <span class="formula-label">{{localize "RT.Wounds"}}:</span>
+                                <code class="formula-value">{{woundsFormula}}</code>
+                            </div>
+                        {{/if}}
+                        {{#if fateFormula}}
+                            <div class="formula-tag" data-tooltip="Roll this formula to determine starting Fate Points">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="formula-label">{{localize "RT.Fate"}}:</span>
+                                <code class="formula-value">{{fateFormula}}</code>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Skills --}}
+            {{#if hasSkills}}
+                <div class="grants-category">
+                    <h3 class="category-header">
+                        <i class="fa-solid fa-book-open"></i>
+                        {{localize "RT.Skills"}}
+                    </h3>
+                    <div class="grants-items">
+                        {{#each skills}}
+                            <div class="grant-tag skill-tag" data-tooltip="{{displayName}} ({{levelLabel}})">
+                                <span class="tag-label">{{displayName}}</span>
+                                <span class="tag-level">{{levelLabel}}</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Talents --}}
+            {{#if hasTalents}}
+                <div class="grants-category">
+                    <h3 class="category-header">
+                        <i class="fa-solid fa-star"></i>
+                        {{localize "RT.Talents"}}
+                    </h3>
+                    <div class="grants-items">
+                        {{#each talents}}
+                            <div class="grant-tag talent-tag {{#if hasItem}}clickable{{/if}}" 
+                                 {{#if uuid}}data-action="openItem" data-uuid="{{uuid}}"{{/if}}
+                                 data-tooltip="{{#if description}}{{{description}}}{{else}}{{name}}{{/if}}">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="tag-label">{{name}}</span>
+                                {{#if hasItem}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Traits --}}
+            {{#if hasTraits}}
+                <div class="grants-category">
+                    <h3 class="category-header">
+                        <i class="fa-solid fa-dna"></i>
+                        {{localize "RT.Traits"}}
+                    </h3>
+                    <div class="grants-items">
+                        {{#each traits}}
+                            <div class="grant-tag trait-tag {{#if hasItem}}clickable{{/if}}"
+                                 {{#if uuid}}data-action="openItem" data-uuid="{{uuid}}"{{/if}}
+                                 data-tooltip="{{#if description}}{{{description}}}{{else}}{{name}}{{/if}}">
+                                <i class="fa-solid fa-dna"></i>
+                                <span class="tag-label">{{name}}{{#if level}} ({{level}}){{/if}}</span>
+                                {{#if hasItem}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{!-- Equipment --}}
+            {{#if hasEquipment}}
+                <div class="grants-category">
+                    <h3 class="category-header">
+                        <i class="fa-solid fa-box"></i>
+                        {{localize "RT.Equipment"}}
+                    </h3>
+                    <div class="grants-items">
+                        {{#each equipment}}
+                            <div class="grant-tag equipment-tag {{#if uuid}}clickable{{/if}}"
+                                 {{#if uuid}}data-action="openItem" data-uuid="{{uuid}}"{{/if}}
+                                 data-tooltip="{{name}}{{#if (gt quantity 1)}} (×{{quantity}}){{/if}}">
+                                <i class="fa-solid fa-box"></i>
+                                <span class="tag-label">{{name}}</span>
+                                {{#if (gt quantity 1)}}<span class="tag-qty">×{{quantity}}</span>{{/if}}
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+    </section>
+
+    {{!-- Special Abilities --}}
+    {{#if hasSpecialAbilities}}
+        <section class="origin-detail-section origin-abilities">
+            <h2 class="section-header">
+                <i class="fa-solid fa-bolt"></i>
+                {{localize "RT.OriginPath.SpecialAbilities"}}
+            </h2>
+            <div class="abilities-list">
+                {{#each specialAbilities}}
+                    <div class="ability-item">
+                        <h4 class="ability-name">{{name}}</h4>
+                        <div class="ability-description">{{{description}}}</div>
+                    </div>
+                {{/each}}
+            </div>
+        </section>
+    {{/if}}
+
+    {{!-- Choices --}}
+    {{#if hasChoices}}
+        <section class="origin-detail-section origin-choices-preview">
+            <h2 class="section-header">
+                <i class="fa-solid fa-list-check"></i>
+                {{localize "RT.OriginPath.ChoicesRequired"}}
+            </h2>
+            <div class="choices-list">
+                {{#each choices}}
+                    <div class="choice-preview">
+                        <div class="choice-header">
+                            <span class="choice-type-badge">{{typeLabel}}</span>
+                            <span class="choice-label">{{label}}</span>
+                            <span class="choice-count">({{localize "RT.OriginPath.Choose"}} {{count}})</span>
+                        </div>
+                        <div class="choice-options-preview">
+                            {{#each options}}
+                                <div class="choice-option-preview">
+                                    <span class="option-label">{{label}}</span>
+                                    {{#if description}}
+                                        <p class="option-description">{{description}}</p>
+                                    {{/if}}
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </section>
+    {{/if}}
+
+    {{!-- Requirements --}}
+    {{#if hasRequirements}}
+        <section class="origin-detail-section origin-requirements">
+            <h2 class="section-header">
+                <i class="fa-solid fa-lock"></i>
+                {{localize "RT.OriginPath.Requirements"}}
+            </h2>
+            <div class="requirements-content">
+                {{#if requirements.text}}
+                    <p class="requirement-text">{{requirements.text}}</p>
+                {{/if}}
+                {{#if requirements.previousSteps.length}}
+                    <p class="requirement-item">
+                        <strong>{{localize "RT.OriginPath.RequiresPrevious"}}:</strong>
+                        {{#each requirements.previousSteps}}
+                            <span class="req-tag">{{this}}</span>
+                        {{/each}}
+                    </p>
+                {{/if}}
+                {{#if requirements.excludedSteps.length}}
+                    <p class="requirement-item">
+                        <strong>{{localize "RT.OriginPath.Excludes"}}:</strong>
+                        {{#each requirements.excludedSteps}}
+                            <span class="req-tag excluded">{{this}}</span>
+                        {{/each}}
+                    </p>
+                {{/if}}
+            </div>
+        </section>
+    {{/if}}
+
+    </div>{{!-- .origin-detail-content --}}
+
+    {{!-- Footer Actions (Always Visible) --}}
+    <footer class="origin-detail-footer">
+        <button type="button" class="detail-btn cancel-btn" data-action="cancel">
+            <i class="fa-solid fa-times"></i>
+            {{localize "RT.Close"}}
+        </button>
+        
+        {{#if allowSelection}}
+            {{#if isSelected}}
+                <button type="button" class="detail-btn selected-btn" disabled>
+                    <i class="fa-solid fa-check"></i>
+                    {{localize "RT.OriginPath.AlreadySelected"}}
+                </button>
+            {{else}}
+                <button type="button" class="detail-btn confirm-btn" data-action="confirm">
+                    <i class="fa-solid fa-check"></i>
+                    {{localize "RT.OriginPath.SelectThisOrigin"}}
+                </button>
+            {{/if}}
+        {{/if}}
+    </footer>
+
+</div>{{!-- .origin-detail-wrapper --}}

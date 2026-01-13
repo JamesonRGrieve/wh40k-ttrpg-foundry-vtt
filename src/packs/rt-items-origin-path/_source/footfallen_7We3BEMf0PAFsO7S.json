@@ -1,7 +1,7 @@
 {
   "name": "Footfallen",
   "type": "originPath",
-  "img": "systems/rogue-trader/icons/origins/footfallen.webp",
+  "img": "modules/game-icons-net/whitetransparent/barefoot.svg",
   "system": {
     "identifier": "footfallen",
     "step": "homeWorld",
@@ -77,7 +77,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Characteristic Modifiers:</strong> −5 Ballistic Skill, −5 Toughness, +5 Agility, +5 Fellowship</p><p><strong>Starting Wounds:</strong> Footfallen characters double their starting Toughness Bonus and add 1d5 to the result to determine their starting Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–4, begin with 2 Fate Points; on a 5–7, begin with 3 Fate Points; on an 8–10, begin with 4 Fate Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Into the Storm",
@@ -86,7 +86,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": 2,
+    "navigation": {
+      "connectsTo": [
+        1,
+        2,
+        3
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

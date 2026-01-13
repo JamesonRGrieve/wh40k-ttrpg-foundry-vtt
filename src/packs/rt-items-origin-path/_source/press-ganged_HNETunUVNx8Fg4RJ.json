@@ -1,7 +1,7 @@
 {
   "name": "Press-Ganged",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/manacles.svg",
   "system": {
     "identifier": "press-ganged",
     "step": "trialsAndTravails",
@@ -49,7 +49,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Unwilling Accomplice:</strong> Thanks to your shadowed past, you have picked up some knowledge on the way that you would not normally have access to. You gain a single Skill (as long as it has no prerequisites) for your character. You may also either select a single additional Common Lore Skill or improve a Common Lore Skill you already have by one level.</p><p><strong>Jealous Freedom:</strong> Having endured captivity once, you have no intention of doing so again. You react violently towards the prospect of imprisonment or loss of your freedom. You may take a Willpower Test to avert this, modified by the provocation and the consequences (set by the GM) of succumbing to your dread.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -58,7 +58,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": 2,
+    "navigation": {
+      "connectsTo": [
+        1,
+        2,
+        3
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

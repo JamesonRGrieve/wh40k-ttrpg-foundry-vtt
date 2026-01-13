@@ -1,7 +1,7 @@
 {
   "name": "Calamity",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/meteor-impact.svg",
   "system": {
     "identifier": "calamity",
     "step": "trialsAndTravails",
@@ -88,7 +88,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Inured to Adversity:</strong> You gain the Light Sleeper Talent and your choice of the Hardy Talent or Nerves of Steel Talent.</p><p><strong>Echo of Hard Times:</strong> Thanks to the adversities of the past and a sense of priority that promotes caution and the needs of the present over acquisition and risk, you reduce your group's starting Profit Factor by −1.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -97,7 +97,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 3
+    "position": 3,
+    "navigation": {
+      "connectsTo": [
+        2,
+        3,
+        4
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

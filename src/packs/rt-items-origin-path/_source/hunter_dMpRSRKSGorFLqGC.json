@@ -1,7 +1,7 @@
 {
   "name": "Hunter",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/hunter-eyes.svg",
   "system": {
     "identifier": "hunter",
     "step": "lureOfTheVoid",
@@ -183,7 +183,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Bounty Hunter (250 XP):</strong> Gain +3 Willpower, +3 Fellowship, and Bloodtracker talent. Gain either 1d5 Corruption Points or 1d5 Insanity Points.</li><li><strong>Xenos Hunter (200 XP):</strong> Choose +3 Weapon Skill or +3 Ballistic Skill. Choose either Leap Up or Sprint talent. Choose either Scholastic Lore (Beasts) or Tracking as a Trained skill.</li><li><strong>Hunted (100 XP):</strong> Gain +3 Perception. Choose either Paranoia or Light Sleeper talent. Gain Enemy talent for the group hunting you (subject to GM approval).</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Into The Storm",
@@ -192,7 +192,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

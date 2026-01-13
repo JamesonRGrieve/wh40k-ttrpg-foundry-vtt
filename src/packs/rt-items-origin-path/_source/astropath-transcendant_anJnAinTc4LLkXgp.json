@@ -1,7 +1,7 @@
 {
   "name": "Astropath Transcendant",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/psychic-waves.svg",
   "system": {
     "identifier": "astropath-transcendant",
     "step": "career",
@@ -111,7 +111,16 @@
     "notes": "",
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

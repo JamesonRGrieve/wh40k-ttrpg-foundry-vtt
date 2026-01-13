@@ -1,7 +1,7 @@
 {
   "name": "Vengeance",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/piercing-sword.svg",
   "system": {
     "identifier": "vengeance",
     "step": "motivation",
@@ -62,7 +62,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> You gain the Hatred (choose one) Talent.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -71,7 +71,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 3
+    "position": 3,
+    "navigation": {
+      "connectsTo": [
+        2,
+        3,
+        4
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

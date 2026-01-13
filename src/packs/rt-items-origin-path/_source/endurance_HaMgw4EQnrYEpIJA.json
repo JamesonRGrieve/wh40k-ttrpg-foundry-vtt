@@ -1,7 +1,7 @@
 {
   "name": "Endurance",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/strongbox.svg",
   "system": {
     "identifier": "endurance",
     "step": "motivation",
@@ -40,7 +40,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> +1 Wound.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -49,7 +49,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

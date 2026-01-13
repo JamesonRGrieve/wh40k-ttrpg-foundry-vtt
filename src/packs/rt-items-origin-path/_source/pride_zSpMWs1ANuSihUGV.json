@@ -1,7 +1,7 @@
 {
   "name": "Pride",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/lion.svg",
   "system": {
     "identifier": "pride",
     "step": "motivation",
@@ -69,7 +69,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> You gain an Heirloom Item (see Table 1-2: Heirloom Items) or +3 Toughness (your choice).</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -78,7 +78,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 5
+    "position": 5,
+    "navigation": {
+      "connectsTo": [
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

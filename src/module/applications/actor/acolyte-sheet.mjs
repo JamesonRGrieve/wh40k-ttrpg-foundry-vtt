@@ -290,6 +290,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         // Prepare origin path
         context.originPathSteps = this._prepareOriginPathSteps();
+        context.originPathSummary = this._getOriginPathSummary();
 
         // Prepare navigator powers and ship roles (compute fresh)
         const categorized = this._getCategorizedItems();
@@ -553,23 +554,111 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     _prepareOriginPathSteps() {
         const steps = CONFIG.rt.originPath?.steps || [
-            { key: "homeWorld", label: "Home World", choiceGroup: "origin.home-world" },
-            { key: "birthright", label: "Birthright", choiceGroup: "origin.birthright" },
-            { key: "lureOfTheVoid", label: "Lure of the Void", choiceGroup: "origin.lure-of-the-void" },
-            { key: "trialsAndTravails", label: "Trials and Travails", choiceGroup: "origin.trials-and-travails" },
-            { key: "motivation", label: "Motivation", choiceGroup: "origin.motivation" },
-            { key: "career", label: "Career", choiceGroup: "origin.career" }
+            { key: "homeWorld", label: "Home World", choiceGroup: "origin.home-world", icon: "fa-globe" },
+            { key: "birthright", label: "Birthright", choiceGroup: "origin.birthright", icon: "fa-baby" },
+            { key: "lureOfTheVoid", label: "Lure of the Void", choiceGroup: "origin.lure-of-the-void", icon: "fa-meteor" },
+            { key: "trialsAndTravails", label: "Trials and Travails", choiceGroup: "origin.trials-and-travails", icon: "fa-skull" },
+            { key: "motivation", label: "Motivation", choiceGroup: "origin.motivation", icon: "fa-fire" },
+            { key: "career", label: "Career", choiceGroup: "origin.career", icon: "fa-user-tie" }
         ];
 
         const originItems = this.actor.items.filter(
-            item => item.isOriginPath || (item.type === "trait" && item.flags?.rt?.kind === "origin")
+            item => item.isOriginPath || (item.type === "originPath")
         );
 
-        return steps.map(step => {
+        // Calculate totals from all origins
+        const charTotals = {};
+        const skillSet = new Set();
+        const talentSet = new Set();
+        const traitSet = new Set();
+        let completedSteps = 0;
+
+        const preparedSteps = steps.map(step => {
             const item = originItems.find(i => {
-                const itemStep = i.flags?.rt?.step || i.system?.step || "";
-                return itemStep === step.label || i.flags?.rt?.choiceGroup === step.choiceGroup;
+                const itemStep = i.system?.step || "";
+                return itemStep === step.key || itemStep === step.label;
             });
+
+            if (item) {
+                completedSteps++;
+                const system = item.system;
+                const grants = system?.grants || {};
+                const modifiers = system?.modifiers?.characteristics || {};
+                const selectedChoices = system?.selectedChoices || {};
+
+                // Accumulate base characteristics
+                for (const [key, value] of Object.entries(modifiers)) {
+                    if (value !== 0) {
+                        charTotals[key] = (charTotals[key] || 0) + value;
+                    }
+                }
+
+                // Collect base skills
+                if (grants.skills) {
+                    for (const skill of grants.skills) {
+                        const skillName = skill.specialization 
+                            ? `${skill.name} (${skill.specialization})`
+                            : (skill.name || skill);
+                        skillSet.add(skillName);
+                    }
+                }
+
+                // Collect base talents
+                if (grants.talents) {
+                    for (const talent of grants.talents) {
+                        talentSet.add(talent.name || talent);
+                    }
+                }
+
+                // Collect base traits
+                if (grants.traits) {
+                    for (const trait of grants.traits) {
+                        traitSet.add(trait.name || trait);
+                    }
+                }
+
+                // Process choice grants
+                if (grants.choices) {
+                    for (const choice of grants.choices) {
+                        const selectedValues = selectedChoices[choice.label] || [];
+                        for (const selectedValue of selectedValues) {
+                            const option = choice.options?.find(o => o.value === selectedValue);
+                            if (!option?.grants) continue;
+
+                            const choiceGrants = option.grants;
+
+                            if (choiceGrants.characteristics) {
+                                for (const [key, value] of Object.entries(choiceGrants.characteristics)) {
+                                    if (value !== 0) {
+                                        charTotals[key] = (charTotals[key] || 0) + value;
+                                    }
+                                }
+                            }
+
+                            if (choiceGrants.skills) {
+                                for (const skill of choiceGrants.skills) {
+                                    const skillName = skill.specialization 
+                                        ? `${skill.name} (${skill.specialization})`
+                                        : (skill.name || skill);
+                                    skillSet.add(skillName);
+                                }
+                            }
+
+                            if (choiceGrants.talents) {
+                                for (const talent of choiceGrants.talents) {
+                                    talentSet.add(talent.name || talent);
+                                }
+                            }
+
+                            if (choiceGrants.traits) {
+                                for (const trait of choiceGrants.traits) {
+                                    traitSet.add(trait.name || trait);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             return {
                 ...step,
@@ -581,6 +670,56 @@ export default class AcolyteSheet extends BaseActorSheet {
                 } : null
             };
         });
+
+        // Build characteristic summary array
+        const charShorts = {
+            weaponSkill: "WS", ballisticSkill: "BS", strength: "S", toughness: "T",
+            agility: "Ag", intelligence: "Int", perception: "Per", willpower: "WP",
+            fellowship: "Fel", influence: "Inf"
+        };
+
+        const characteristicBonuses = [];
+        for (const [key, value] of Object.entries(charTotals)) {
+            if (value !== 0) {
+                characteristicBonuses.push({
+                    key: key,
+                    short: charShorts[key] || key.substring(0, 3).toUpperCase(),
+                    value: value,
+                    positive: value > 0
+                });
+            }
+        }
+
+        // Store summary in context for the template
+        this._originPathSummary = {
+            steps: preparedSteps,
+            completedSteps: completedSteps,
+            totalSteps: 6,
+            isComplete: completedSteps === 6,
+            characteristics: characteristicBonuses,
+            skills: Array.from(skillSet),
+            talents: Array.from(talentSet),
+            traits: Array.from(traitSet)
+        };
+
+        return preparedSteps;
+    }
+
+    /**
+     * Get the origin path summary (call after _prepareOriginPathSteps)
+     * @returns {object}
+     */
+    _getOriginPathSummary() {
+        return this._originPathSummary || {
+            steps: [],
+            completedSteps: 0,
+            totalSteps: 6,
+            isComplete: false,
+            characteristics: [],
+            skills: [],
+            talents: [],
+            traits: []
+        };
     }
 
     /* -------------------------------------------- */

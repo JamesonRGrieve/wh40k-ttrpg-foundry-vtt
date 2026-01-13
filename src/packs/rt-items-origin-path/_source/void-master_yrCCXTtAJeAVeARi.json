@@ -1,7 +1,7 @@
 {
   "name": "Void-Master",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/steering-wheel.svg",
   "system": {
     "identifier": "void-master",
     "step": "career",
@@ -116,7 +116,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 3
+    "position": 3,
+    "navigation": {
+      "connectsTo": [
+        2,
+        3,
+        4
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

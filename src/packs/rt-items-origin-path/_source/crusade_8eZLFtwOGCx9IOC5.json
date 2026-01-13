@@ -1,7 +1,7 @@
 {
   "name": "Crusade",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/knight-banner.svg",
   "system": {
     "identifier": "crusade",
     "step": "lureOfTheVoid",
@@ -173,7 +173,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Call to War (150 XP):</strong> Gain +5 Ballistic Skill and Peer (Military) talent. Choose Hatred talent for Eldar, Orks, Kroot, Chaos, or other appropriate foe (GM approval). Gain 1d10 Insanity Points from war horrors.</li><li><strong>Chasing the Enemy (150 XP):</strong> Choose +3 Intelligence or +3 Willpower. Gain Hatred talent for the enemy group you are hunting (subject to GM approval).</li><li><strong>Warrior (250 XP):</strong> Gain +5 Weapon Skill, choose +5 Toughness or +5 Agility, suffer -5 Fellowship. Gain Meditation talent.</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Into The Storm",
@@ -182,7 +182,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": 2,
+    "navigation": {
+      "connectsTo": [
+        1,
+        2,
+        3
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

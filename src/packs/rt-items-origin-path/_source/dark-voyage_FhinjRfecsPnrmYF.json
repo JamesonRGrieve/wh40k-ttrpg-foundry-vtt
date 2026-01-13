@@ -1,7 +1,7 @@
 {
   "name": "Dark Voyage",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/eclipse.svg",
   "system": {
     "identifier": "dark-voyage",
     "step": "trialsAndTravails",
@@ -113,7 +113,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Things Man Was Not Meant to Know:</strong> You may gain a single Forbidden Lore Skill pertaining to your experiences (or may increase a Forbidden Lore Skill you already possess by one level), or may gain the Resistance (Fear) Talent.</p><p><strong>Marked by Darkness:</strong> Haunted by your experiences, you gain 1d5 Insanity Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -122,7 +122,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 5
+    "position": 5,
+    "navigation": {
+      "connectsTo": [
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

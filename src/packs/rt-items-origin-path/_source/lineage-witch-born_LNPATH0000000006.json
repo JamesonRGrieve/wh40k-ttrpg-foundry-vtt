@@ -1,7 +1,7 @@
 {
   "name": "Lineage: Witch-Born",
   "type": "originPath",
-  "img": "systems/rogue-trader/icons/origins/lineage-witch-born.webp",
+  "img": "modules/game-icons-net/whitetransparent/warlock-eye.svg",
   "system": {
     "identifier": "lineage-witch-born",
     "step": "lineage",
@@ -95,7 +95,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Lineage Benefits:</strong> Choose one option that defines your relationship to your family's psychic heritage. Each option has a different XP cost that must be paid from starting XP at character creation.</p><p><strong>Warning:</strong> Perilous Choice makes you an unsanctioned psyker, which is a capital crime in the Imperium. Astropath and Navigator characters cannot take this option.</p>",
+    "effectText": "",
     "notes": "Optional lineage step. Must be purchased with starting XP. Perilous Choice cannot be taken by Astropaths or Navigators.",
     "source": {
       "book": "Into the Storm",
@@ -104,7 +104,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 7
+    "position": 7,
+    "navigation": {
+      "connectsTo": [
+        6,
+        7
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

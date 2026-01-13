@@ -1,7 +1,7 @@
 {
   "name": "Renegade",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/breaking-chain.svg",
   "system": {
     "identifier": "renegade",
     "step": "lureOfTheVoid",
@@ -90,7 +90,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Recidivist:</strong> You gain the Enemy (Adeptus Arbites) and the Resistance (Interrogation) Talents. You also gain Concealment as a trained Basic Skill.</li><li><strong>Free-thinker:</strong> You gain your choice of +3 Intelligence or +3 Perception. You suffer −3 Willpower and gain the Enemy (Ecclesiarchy) Talent.</li><li><strong>Dark Visionary:</strong> You suffer your choice of 1d5+1 Corruption Points or 1d5+1 Insanity Points. In return, you gain the Dark Soul Talent and Forbidden Lore (choose one) as a trained Basic Skill.</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -99,7 +99,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 3
+    "position": 3,
+    "navigation": {
+      "connectsTo": [
+        2,
+        3,
+        4
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

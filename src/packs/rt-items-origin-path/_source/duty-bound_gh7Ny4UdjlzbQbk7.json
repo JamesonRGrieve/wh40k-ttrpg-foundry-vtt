@@ -1,7 +1,7 @@
 {
   "name": "Duty Bound",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/shieldcomb.svg",
   "system": {
     "identifier": "duty-bound",
     "step": "lureOfTheVoid",
@@ -90,7 +90,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Duty to the Throne:</strong> You gain +3 Willpower and (if you meet the WP 40 prerequisite) the Armour of Contempt Talent. You suffer a −10 penalty to Interaction Skill Tests when dealing with any source outside of the Imperium (e.g., aliens and traitors).</li><li><strong>Duty to Humanity:</strong> You gain your choice of +3 Perception or +3 Intelligence. You suffer a −1 to your group's beginning Profit Factor.</li><li><strong>Duty to Your Dynasty:</strong> You gain the Rival (Rogue Trader family) Talent and suffer −3 Toughness. You gain a bonus of +1 to your group's beginning Profit Factor.</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -99,7 +99,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 4
+    "position": 4,
+    "navigation": {
+      "connectsTo": [
+        3,
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

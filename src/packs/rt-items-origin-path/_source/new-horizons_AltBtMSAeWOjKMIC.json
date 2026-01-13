@@ -1,7 +1,7 @@
 {
   "name": "New Horizons",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/sunrise.svg",
   "system": {
     "identifier": "new-horizons",
     "step": "lureOfTheVoid",
@@ -209,7 +209,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Seeker of Truth (100 XP):</strong> Gain +3 Intelligence and any one Scholastic Lore skill as Trained. Gain 1 Corruption Point.</li><li><strong>Xeno-Arcanist (200 XP):</strong> Choose +3 Intelligence or +3 Willpower. Choose either Peer (Academics) talent or Forbidden Lore (Xenos) as a Trained skill.</li><li><strong>Archeotechnologist (250 XP):</strong> Choose +3 Intelligence or +3 Perception. Gain Scholastic Lore (Archeotech) as a Trained skill. Gain one random heirloom item from the Rogue Trader Core Rulebook (p.364).</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Into The Storm",
@@ -218,7 +218,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 5
+    "position": 5,
+    "navigation": {
+      "connectsTo": [
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Hive World",
   "type": "originPath",
-  "img": "systems/rogue-trader/icons/origins/hive-world.webp",
+  "img": "modules/game-icons-net/whitetransparent/hive.svg",
   "system": {
     "identifier": "hive-world",
     "step": "homeWorld",
@@ -75,7 +75,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Characteristic Modifiers:</strong> −5 Toughness, +5 Fellowship</p><p><strong>Starting Skills:</strong> Speak Language (Hive Dialect) is an untrained Basic Skill.</p><p><strong>Starting Wounds:</strong> Hive world characters double their starting Toughness Bonus and add 1d5+1 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–5, begin with 2 Fate Points; on a 6–8, begin with 3 Fate Points; on a 9-10, begin with 4 Fate Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -84,7 +84,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 4
+    "position": 4,
+    "navigation": {
+      "connectsTo": [
+        3,
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

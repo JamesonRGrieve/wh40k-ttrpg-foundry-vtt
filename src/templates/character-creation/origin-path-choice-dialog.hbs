@@ -14,38 +14,52 @@
     <div class="choices-list">
         {{#each choices as |choice|}}
             <div class="choice-group">
-                <div class="choice-label">
-                    <span class="choice-type">{{capitalize choice.type}}</span>
+                <div class="choice-group-header">
+                    <span class="choice-type-badge">{{choice.typeLabel}}</span>
                     <span class="choice-text">{{choice.label}}</span>
                     {{#if (gt choice.remaining 0)}}
                         <span class="choice-remaining">
-                            ({{localize "RT.OriginPath.ChoicesRemaining" count=choice.remaining}})
+                            ({{choice.remaining}} {{localize "RT.OriginPath.Remaining"}})
                         </span>
                     {{else}}
                         <i class="fa-solid fa-check-circle choice-complete"></i>
                     {{/if}}
                 </div>
                 
-                <div class="choice-options">
+                {{!-- Card-based options --}}
+                <div class="choice-options-cards">
                     {{#each choice.options as |option|}}
-                        <button 
-                            type="button" 
-                            class="choice-option {{#if option.selected}}selected{{/if}} {{#if option.disabled}}disabled{{/if}}"
-                            data-action="toggleOption"
-                            data-choice="{{../label}}"
-                            data-option="{{option.value}}"
-                            {{#if option.disabled}}disabled{{/if}}>
+                        <div class="choice-card {{#if option.selected}}selected{{/if}} {{#if option.disabled}}disabled{{/if}}"
+                             data-action="toggleOption"
+                             data-choice="{{../label}}"
+                             data-option="{{option.value}}"
+                             {{#if option.disabled}}disabled{{/if}}>
                             
-                            <span class="option-checkbox">
+                            <div class="choice-card-header">
+                                <span class="option-checkbox">
+                                    {{#if option.selected}}
+                                        <i class="fa-solid fa-check-square"></i>
+                                    {{else}}
+                                        <i class="fa-regular fa-square"></i>
+                                    {{/if}}
+                                </span>
+                                <h4 class="option-label">{{option.label}}</h4>
                                 {{#if option.selected}}
-                                    <i class="fa-solid fa-check-square"></i>
-                                {{else}}
-                                    <i class="fa-regular fa-square"></i>
+                                    <i class="fa-solid fa-check choice-checkmark"></i>
                                 {{/if}}
-                            </span>
+                            </div>
                             
-                            <span class="option-label">{{option.label}}</span>
-                        </button>
+                            {{#if option.description}}
+                                <p class="option-description">{{option.description}}</p>
+                            {{/if}}
+                            
+                            {{!-- View Item Sheet Button (if applicable) --}}
+                            {{#if option.uuid}}
+                                <button type="button" class="view-item-btn" data-action="viewItem" data-uuid="{{option.uuid}}" data-tooltip="View details">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            {{/if}}
+                        </div>
                     {{/each}}
                 </div>
             </div>

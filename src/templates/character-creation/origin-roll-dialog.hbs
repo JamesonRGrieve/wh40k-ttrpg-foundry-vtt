@@ -1,0 +1,109 @@
+{{!-- Origin Roll Dialog Template --}}
+<div class="origin-roll-dialog-content">
+
+    {{!-- Header Info --}}
+    <div class="roll-header">
+        <div class="origin-info">
+            <img src="{{originImg}}" alt="{{originName}}" class="origin-icon" />
+            <div class="origin-details">
+                <h3>{{originName}}</h3>
+                <p class="character-name">{{actorName}}</p>
+            </div>
+        </div>
+        <div class="roll-type-badge">
+            <i class="fa-solid {{#if (eq rollType 'wounds')}}fa-heart{{else}}fa-star{{/if}}"></i>
+            <span>{{rollTypeLabel}}</span>
+        </div>
+    </div>
+
+    {{!-- Description --}}
+    <div class="roll-description">
+        <p>{{description}}</p>
+    </div>
+
+    {{!-- Formula Display --}}
+    <div class="formula-display">
+        <label><i class="fa-solid fa-calculator"></i> Formula:</label>
+        <div class="formula-text">
+            <code>{{formula}}</code>
+            {{#if actorTB}}
+                <span class="formula-expanded">
+                    = <code>{{expandedFormula}}</code>
+                    <span class="tb-note">(TB: {{actorTB}})</span>
+                </span>
+            {{/if}}
+        </div>
+    </div>
+
+    {{!-- Roll Result --}}
+    {{#if hasRolled}}
+        <div class="roll-result-container">
+            <div class="roll-result {{rollType}}">
+                <div class="result-value">
+                    <span class="result-number">{{rollResult.total}}</span>
+                    <span class="result-label">{{rollTypeLabel}}</span>
+                </div>
+                <div class="result-breakdown">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>{{rollResult.breakdown}}</span>
+                </div>
+            </div>
+
+            {{!-- Roll History --}}
+            {{#if showHistory}}
+                <div class="roll-history">
+                    <label>Previous Attempts:</label>
+                    <ul class="history-list">
+                        {{#each rollHistory}}
+                            <li class="history-item {{#if @last}}current{{/if}}">
+                                <span class="history-result">{{this.result}}</span>
+                                <span class="history-breakdown">{{this.breakdown}}</span>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
+        </div>
+    {{else}}
+        <div class="roll-placeholder">
+            <i class="fa-solid fa-dice-d20 fa-3x"></i>
+            <p>Choose how you want to determine your {{rollTypeLabel}}:</p>
+        </div>
+    {{/if}}
+
+    {{!-- Actions --}}
+    <div class="dialog-actions">
+        <div class="left-actions">
+            {{#unless hasRolled}}
+                <button type="button" class="primary-button roll-button" data-action="roll">
+                    <i class="fa-solid fa-dice"></i>
+                    <span>Roll For Me</span>
+                </button>
+                <button type="button" class="secondary-button" data-action="manual">
+                    <i class="fa-solid fa-keyboard"></i>
+                    <span>I'll Roll Myself</span>
+                </button>
+            {{else}}
+                <button type="button" class="secondary-button" data-action="reroll">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Re-roll</span>
+                </button>
+            {{/unless}}
+        </div>
+
+        <div class="right-actions">
+            <button type="button" class="secondary-button" data-action="cancel">
+                <i class="fa-solid fa-times"></i>
+                <span>Cancel</span>
+            </button>
+
+            {{#if hasRolled}}
+                <button type="submit" class="primary-button accept-button" data-action="accept">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Accept</span>
+                </button>
+            {{/if}}
+        </div>
+    </div>
+
+</div>

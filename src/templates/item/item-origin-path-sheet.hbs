@@ -88,7 +88,7 @@
         {{!-- Characteristic Modifiers --}}
         <div class="rt-origin-section">
           <h3 class="rt-section-title">
-            <i class="fas fa-dumbbell"></i> Characteristic Modifiers
+            <i class="fas fa-dumbbell"></i> {{localize "RT.CharacteristicModifiers"}}
           </h3>
           
           <div class="rt-characteristics-grid">
@@ -134,7 +134,7 @@
         {{!-- Other Bonuses --}}
         <div class="rt-origin-section">
           <h3 class="rt-section-title">
-            <i class="fas fa-heart"></i> Other Bonuses
+            <i class="fas fa-heart"></i> {{localize "RT.OtherBonuses"}}
           </h3>
           
           <div class="rt-bonuses-grid">
@@ -160,7 +160,7 @@
         {{!-- Skills Granted --}}
         <div class="rt-origin-section">
           <h3 class="rt-section-title">
-            <i class="fas fa-graduation-cap"></i> Skills Granted
+            <i class="fas fa-graduation-cap"></i> {{localize "RT.SkillsGranted"}}
           </h3>
           
           {{#if item.system.grants.skills.length}}
@@ -192,7 +192,7 @@
         {{!-- Talents Granted --}}
         <div class="rt-origin-section">
           <h3 class="rt-section-title">
-            <i class="fas fa-star"></i> Talents Granted
+            <i class="fas fa-star"></i> {{localize "RT.TalentsGranted"}}
           </h3>
           
           {{#if item.system.grants.talents.length}}
@@ -220,7 +220,7 @@
         {{!-- Traits Granted --}}
         <div class="rt-origin-section">
           <h3 class="rt-section-title">
-            <i class="fas fa-shield-alt"></i> Traits Granted
+            <i class="fas fa-shield-alt"></i> {{localize "RT.TraitsGranted"}}
           </h3>
           
           {{#if item.system.grants.traits.length}}
@@ -248,7 +248,7 @@
         {{!-- Aptitudes Granted --}}
         <div class="rt-origin-section">
           <h3 class="rt-section-title">
-            <i class="fas fa-brain"></i> Aptitudes Granted
+            <i class="fas fa-brain"></i> {{localize "RT.AptitudesGranted"}}
           </h3>
           
           {{#if item.system.grants.aptitudes.length}}
@@ -269,7 +269,7 @@
         {{#if item.system.grants.equipment.length}}
         <div class="rt-origin-section">
           <h3 class="rt-section-title">
-            <i class="fas fa-toolbox"></i> Equipment Granted
+            <i class="fas fa-toolbox"></i> {{localize "RT.EquipmentGranted"}}
           </h3>
           
           <div class="rt-grants-list">
@@ -292,7 +292,7 @@
         {{#if item.system.grants.specialAbilities.length}}
         <div class="rt-origin-section">
           <h3 class="rt-section-title">
-            <i class="fas fa-bolt"></i> Special Abilities
+            <i class="fas fa-bolt"></i> {{localize "RT.SpecialAbilities"}}
           </h3>
           
           {{#each item.system.grants.specialAbilities as |ability index|}}

@@ -1,7 +1,7 @@
 {
   "name": "Chosen by Destiny",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/star-cycle.svg",
   "system": {
     "identifier": "chosen-by-destiny",
     "step": "lureOfTheVoid",
@@ -90,7 +90,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Seeker of Truth:</strong> You gain the Foresight Talent and the Enemy (Academics or Ecclesiarchy) Talent. You suffer −3 Willpower.</li><li><strong>Xenophile:</strong> You gain a bonus of +10 to Fellowship Tests when dealing with alien races or cultures. You suffer a −5 penalty to Willpower Tests involving alien artefacts and alien psychic powers.</li><li><strong>Fated for Greatness:</strong> You gain +1 Fate Point, but you also suffer 1d10+1 Insanity Points.</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -99,7 +99,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 6
+    "position": 6,
+    "navigation": {
+      "connectsTo": [
+        5,
+        6
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

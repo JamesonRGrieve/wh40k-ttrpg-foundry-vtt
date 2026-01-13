@@ -1,7 +1,7 @@
 {
   "name": "Missionary",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/crucifix.svg",
   "system": {
     "identifier": "missionary",
     "step": "career",
@@ -106,7 +106,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 5
+    "position": 5,
+    "navigation": {
+      "connectsTo": [
+        4,
+        5,
+        6
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

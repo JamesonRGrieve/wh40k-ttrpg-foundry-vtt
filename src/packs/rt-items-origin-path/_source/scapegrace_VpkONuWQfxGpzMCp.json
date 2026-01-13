@@ -1,7 +1,7 @@
 {
   "name": "Scapegrace",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/rogue.svg",
   "system": {
     "identifier": "scapegrace",
     "step": "birthright",
@@ -97,7 +97,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> You gain Sleight of Hand as a trained Basic Skill, plus a bonus of +3 to your choice of Intelligence or Perception. You suffer your choice of 1d5 Corruption Points or 1d5 Insanity Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -106,7 +106,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": 2,
+    "navigation": {
+      "connectsTo": [
+        1,
+        2,
+        3
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

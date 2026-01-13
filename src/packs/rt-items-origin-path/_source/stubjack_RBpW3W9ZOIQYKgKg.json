@@ -1,7 +1,7 @@
 {
   "name": "Stubjack",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/anchor.svg",
   "system": {
     "identifier": "stubjack",
     "step": "birthright",
@@ -87,7 +87,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> You gain the Quick Draw Talent and gain Intimidate as a trained Basic Skill. You gain a bonus of +5 to your choice of Weapon Skill or Ballistic Skill, but you suffer both −5 Fellowship and 1d5 Insanity Points.</p>",
+    "effectText": "",
     "notes": "Note: This origin path always applies 1d5 Insanity Points upon selection.",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -96,7 +96,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 3
+    "position": 3,
+    "navigation": {
+      "connectsTo": [
+        2,
+        3,
+        4
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

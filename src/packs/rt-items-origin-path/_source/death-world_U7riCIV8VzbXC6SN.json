@@ -1,7 +1,7 @@
 {
   "name": "Death World",
   "type": "originPath",
-  "img": "systems/rogue-trader/icons/origins/death-world.webp",
+  "img": "modules/game-icons-net/whitetransparent/death-skull.svg",
   "system": {
     "identifier": "death-world",
     "step": "homeWorld",
@@ -108,7 +108,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Characteristic Modifiers:</strong> +5 Strength, +5 Toughness, −5 Willpower, −5 Fellowship</p><p><strong>Starting Wounds:</strong> Death world characters double their starting Toughness Bonus and add 1d5+2 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–5, begin with 2 Fate Points; on a 6-10, begin with 3 Fate Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -117,7 +117,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Zealot",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/torch.svg",
   "system": {
     "identifier": "zealot",
     "step": "lureOfTheVoid",
@@ -90,7 +90,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Blessed Scars:</strong> You gain +10 to Intimidate Tests and −10 to Charm Tests, and one poor-Craftsmanship bionic (you may spend 200 xp to upgrade it to common-Craftsmanship or a total of 300 xp to upgrade it to good-Craftsmanship).</li><li><strong>Unnerving Clarity:</strong> You gain +5 Willpower. You also suffer your choice of −5 Fellowship or 1d10 Insanity Points.</li><li><strong>Favoured of the Faithful:</strong> You gain +5 Fellowship and the Peer (Ecclesiarchy) Talent. You suffer −5 Toughness.</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -99,7 +99,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 5
+    "position": 5,
+    "navigation": {
+      "connectsTo": [
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

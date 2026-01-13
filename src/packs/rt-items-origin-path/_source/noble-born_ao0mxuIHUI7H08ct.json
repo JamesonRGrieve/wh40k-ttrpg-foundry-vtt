@@ -1,7 +1,7 @@
 {
   "name": "Noble Born",
   "type": "originPath",
-  "img": "systems/rogue-trader/icons/origins/noble-born.webp",
+  "img": "modules/game-icons-net/whitetransparent/jewel-crown.svg",
   "system": {
     "identifier": "noble-born",
     "step": "homeWorld",
@@ -85,7 +85,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Characteristic Modifiers:</strong> −5 Willpower, +5 Fellowship</p><p><strong>Starting Skills:</strong> Literacy, Speak Language (High Gothic), and Speak Language (Low Gothic) are untrained Basic Skills.</p><p><strong>Starting Wounds:</strong> Noble born characters double their starting Toughness Bonus and add 1d5 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–3, begin with 2 Fate Points; on a 4–9, begin with 3 Fate Points; on a 10, begin with 4 Fate Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -94,7 +94,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 6
+    "position": 6,
+    "navigation": {
+      "connectsTo": [
+        5,
+        6,
+        7
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Unnatural Origin",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/tentacle-heart.svg",
   "system": {
     "identifier": "unnatural-origin",
     "step": "birthright",
@@ -96,7 +96,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Contaminated Environs (100 XP):</strong> Choose +3 Toughness or +3 Willpower, suffer -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons) talents. Optional: Pay +100 XP to roll for 1 mutation (reroll 75+).</li><li><strong>False-Man (300 XP):</strong> Gain Ambidextrous, Autosanguine, and Chem-Geld talents. Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity Points or lose 1 Fate Point.</li><li><strong>Tainted by the Warp (200 XP):</strong> Choose +3 Perception or +3 Willpower, suffer -3 Fellowship. Gain Dark Soul and Jaded talents, Forbidden Lore (Warp) as untrained skill, and 1d10 Corruption Points. Optional: Pay +300 XP for Favoured by the Warp talent and +1d10 Corruption.</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Into The Storm",
@@ -105,7 +105,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2
+    "position": 2,
+    "navigation": {
+      "connectsTo": [
+        1,
+        2,
+        3
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Child of the Creed",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/holy-symbol.svg",
   "system": {
     "identifier": "child-of-the-creed",
     "step": "birthright",
@@ -76,7 +76,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> You gain the Unshakeable Faith Talent and a bonus of +3 to your choice of Willpower or Fellowship. However, you suffer −3 Weapon Skill.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -85,7 +85,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 4
+    "position": 4,
+    "navigation": {
+      "connectsTo": [
+        3,
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

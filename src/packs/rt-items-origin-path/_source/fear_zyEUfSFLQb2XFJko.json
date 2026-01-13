@@ -1,7 +1,7 @@
 {
   "name": "Fear",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/dread.svg",
   "system": {
     "identifier": "fear",
     "step": "motivation",
@@ -161,7 +161,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following paths and pay its XP cost:</p><ul><li><strong>Enemy in Ascendance (100 XP):</strong> Gain the Paranoia Talent, and gain +3 Perception.</li><li><strong>Haunted by Thy Own Sins (300 XP):</strong> Gain the Dark Soul, Frenzy and Flagellant Talents. In addition, gain any one Forbidden Lore as an untrained Basic Skill. However, the character also gains 1d10 Corruption Points from his past sins.</li><li><strong>Tormented by the Unspeakable (200 XP):</strong> Gain the Light Sleeper, Jaded, and Resistance (Fear) Talents. However, also gain 2d10 Insanity Points to represent the mental scars left from mental torment.</li></ul>",
+    "effectText": "",
     "notes": "Advanced Motivation option from Into The Storm, page 28.",
     "source": {
       "book": "Into The Storm",
@@ -170,7 +170,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 0
+    "position": 0,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1
+      ],
+      "isEdgeLeft": true,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

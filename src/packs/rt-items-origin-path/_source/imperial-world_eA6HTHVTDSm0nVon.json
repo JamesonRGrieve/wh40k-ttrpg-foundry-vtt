@@ -1,7 +1,7 @@
 {
   "name": "Imperial World",
   "type": "originPath",
-  "img": "systems/rogue-trader/icons/origins/imperial-world.webp",
+  "img": "modules/game-icons-net/whitetransparent/throne-king.svg",
   "system": {
     "identifier": "imperial-world",
     "step": "homeWorld",
@@ -63,7 +63,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Characteristic Modifiers:</strong> +3 Willpower</p><p><strong>Starting Wounds:</strong> Imperial world characters double their starting Toughness Bonus and add 1d5 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–8, begin with 3 Fate Points; on a 9-10, begin with 4 Fate Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -72,7 +72,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 5
+    "position": 5,
+    "navigation": {
+      "connectsTo": [
+        4,
+        5,
+        6
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

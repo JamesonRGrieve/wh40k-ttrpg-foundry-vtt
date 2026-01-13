@@ -1,7 +1,7 @@
 {
   "name": "Battlefleet",
   "type": "originPath",
-  "img": "systems/rogue-trader/icons/origins/battlefleet.webp",
+  "img": "modules/game-icons-net/whitetransparent/battleship.svg",
   "system": {
     "identifier": "battlefleet",
     "step": "homeWorld",
@@ -76,7 +76,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Characteristic Modifiers:</strong> +5 Willpower, +3 Fellowship, −5 Perception</p><p><strong>Starting Wounds:</strong> Battlefleet characters double their starting Toughness Bonus and add 1d5 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–6, begin with 3 Fate Points; on a 7–10, begin with 4 Fate Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Into the Storm",
@@ -85,7 +85,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 4
+    "position": 4,
+    "navigation": {
+      "connectsTo": [
+        3,
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

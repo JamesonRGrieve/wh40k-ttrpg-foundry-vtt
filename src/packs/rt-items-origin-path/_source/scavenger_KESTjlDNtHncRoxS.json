@@ -1,7 +1,7 @@
 {
   "name": "Scavenger",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/vulture.svg",
   "system": {
     "identifier": "scavenger",
     "step": "birthright",
@@ -126,7 +126,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> You gain the Unremarkable Talent or the Resistance (Fear) Talent, plus you gain a +3 bonus to your choice of Willpower or Agility. You suffer your choice of 1d5 Corruption Points or 1d5 Insanity Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -135,7 +135,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

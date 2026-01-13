@@ -1,7 +1,7 @@
 {
   "name": "Savant",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/brain.svg",
   "system": {
     "identifier": "savant",
     "step": "birthright",
@@ -105,7 +105,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> You gain your choice of Logic (Int) as a trained Basic skill or the Peer (Academic) Talent. You also gain your choice of +3 Intelligence or +3 Fellowship, but you suffer −3 Toughness.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -114,7 +114,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 5
+    "position": 5,
+    "navigation": {
+      "connectsTo": [
+        4,
+        5
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

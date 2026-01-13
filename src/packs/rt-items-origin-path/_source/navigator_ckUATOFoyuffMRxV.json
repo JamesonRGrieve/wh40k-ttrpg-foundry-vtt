@@ -1,7 +1,7 @@
 {
   "name": "Navigator",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/third-eye.svg",
   "system": {
     "identifier": "navigator",
     "step": "career",
@@ -121,7 +121,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 7
+    "position": 7,
+    "navigation": {
+      "connectsTo": [
+        6,
+        7
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

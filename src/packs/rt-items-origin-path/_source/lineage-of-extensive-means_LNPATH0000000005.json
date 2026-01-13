@@ -1,7 +1,7 @@
 {
   "name": "Lineage: Of Extensive Means",
   "type": "originPath",
-  "img": "systems/rogue-trader/icons/origins/lineage-wealth.webp",
+  "img": "modules/game-icons-net/whitetransparent/gold-stack.svg",
   "system": {
     "identifier": "lineage-extensive-means",
     "step": "lineage",
@@ -95,7 +95,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Lineage Benefits:</strong> Choose one option that defines how your family's extensive means manifest. Each option has a different XP cost that must be paid from starting XP at character creation.</p>",
+    "effectText": "",
     "notes": "Optional lineage step. Must be purchased with starting XP. Three choices representing different aspects of wealth and power.",
     "source": {
       "book": "Into the Storm",
@@ -104,7 +104,15 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 7
+    "position": 7,
+    "navigation": {
+      "connectsTo": [
+        6,
+        7
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

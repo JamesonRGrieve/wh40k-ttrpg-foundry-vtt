@@ -1,7 +1,7 @@
 {
   "name": "Tainted",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/biohazard.svg",
   "system": {
     "identifier": "tainted",
     "step": "lureOfTheVoid",
@@ -90,7 +90,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Effect:</strong> Choose one of the following results and apply it to your character:</p><ul><li><strong>Mutant:</strong> You must roll once on Table 14-3: Mutations (see page 369). If you choose, you may spend 200 xp to select one result from the table (must be a result of lower than 76-00) instead of rolling randomly.</li><li><strong>Insane:</strong> You suffer your choice of either −3 Fellowship or −1 Fate point. You gain +3 Toughness, the Peer (The Insane) Talent, and suffer 2d10 Insanity Points.</li><li><strong>Deviant Philosophy:</strong> You gain +3 Willpower and the Enemy (Ecclesiarchy) Talent.</li></ul>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -99,7 +99,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1
+    "position": 1,
+    "navigation": {
+      "connectsTo": [
+        0,
+        1,
+        2
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},

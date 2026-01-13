@@ -1,7 +1,7 @@
 {
   "name": "Rogue Trader",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "modules/game-icons-net/whitetransparent/captain-hat-profile.svg",
   "system": {
     "identifier": "rogue-trader",
     "step": "career",
@@ -116,7 +116,15 @@
     "notes": "",
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 8
+    "position": 8,
+    "navigation": {
+      "connectsTo": [
+        7,
+        8
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": true
+    }
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Forge World",
   "type": "originPath",
-  "img": "systems/rogue-trader/icons/origins/forge-world.webp",
+  "img": "modules/game-icons-net/whitetransparent/anvil.svg",
   "system": {
     "identifier": "forge-world",
     "step": "homeWorld",
@@ -69,7 +69,7 @@
         "combat": []
       }
     },
-    "effectText": "<p><strong>Characteristic Modifiers:</strong> −5 Weapon Skill, +5 Intelligence</p><p><strong>Starting Skills:</strong> Common Lore (Tech) and Common Lore (Machine Cult) are untrained Basic Skills.</p><p><strong>Starting Wounds:</strong> Forge world characters double their starting Toughness Bonus and add 1d5+1 to the result to determine their starting number of Wounds.</p><p><strong>Starting Fate Points:</strong> Roll 1d10 to determine starting Fate Points. On a 1–5, begin with 2 Fate Points; on a 6-9, begin with 3 Fate Points; on a 10, begin with 4 Fate Points.</p>",
+    "effectText": "",
     "notes": "",
     "source": {
       "book": "Rogue Trader Core Rulebook",
@@ -78,7 +78,16 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 3
+    "position": 3,
+    "navigation": {
+      "connectsTo": [
+        2,
+        3,
+        4
+      ],
+      "isEdgeLeft": false,
+      "isEdgeRight": false
+    }
   },
   "effects": [],
   "flags": {},
