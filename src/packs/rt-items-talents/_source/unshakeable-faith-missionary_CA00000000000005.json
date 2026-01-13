@@ -1,0 +1,63 @@
+{
+  "name": "Unshakeable Faith (Missionary)",
+  "type": "talent",
+  "img": "icons/svg/holy-shield.svg",
+  "system": {
+    "identifier": "unshakeable-faith-missionary",
+    "category": "career",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "64"
+    },
+    "description": {
+      "value": "<p><strong>Unshakeable Faith:</strong> The Missionary's devotion to the God-Emperor is absolute and unwavering. Their faith is a shield against the predations of Chaos and the terrors of the void, protecting their soul from corruption and their mind from madness. This pure belief in the Emperor's divine will grants them extraordinary resistance to the forces of darkness.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Pure Faith talent.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Missionary Career",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Pure Faith talent",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Pure Faith",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FKYw2XzF4dyiNDYw"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CA00000000000005"
+}

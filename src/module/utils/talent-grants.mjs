@@ -11,11 +11,19 @@
  * 
  * @param {RogueTraderItem} talent - The talent item that was added
  * @param {RogueTraderActor} actor - The actor receiving the talent
+ * @param {number} [depth=0] - Current recursion depth (prevents infinite loops)
  * @returns {Promise<void>}
  */
-export async function processTalentGrants(talent, actor) {
+export async function processTalentGrants(talent, actor, depth = 0) {
     if (!talent || talent.type !== 'talent') return;
     if (!actor) return;
+    
+    // Prevent infinite recursion
+    const MAX_DEPTH = 3;
+    if (depth >= MAX_DEPTH) {
+        console.warn(`Maximum grant recursion depth (${MAX_DEPTH}) reached for talent: ${talent.name}`);
+        return;
+    }
     
     const grants = talent.system?.grants;
     if (!grants) return;
@@ -23,18 +31,21 @@ export async function processTalentGrants(talent, actor) {
     // Check if this talent grants anything
     if (!talent.system.hasGrants) return;
     
-    game.rt.log(`Processing grants from talent: ${talent.name}`, grants);
+    game.rt.log(`Processing grants from talent: ${talent.name} (depth: ${depth})`, grants);
     
     const grantedItems = [];
     const skillUpdates = {};
     const notifications = [];
     
-    // Process talent grants
+    // Process talent grants (may trigger recursive grants)
     for (const talentGrant of grants.talents || []) {
         const granted = await grantTalent(actor, talentGrant, talent);
         if (granted) {
             grantedItems.push(granted);
             notifications.push(`Talent: ${granted.name}`);
+            
+            // Recursively process grants from the granted talent
+            await processTalentGrants(granted, actor, depth + 1);
         }
     }
     
@@ -46,22 +57,27 @@ export async function processTalentGrants(talent, actor) {
         }
     }
     
-    // Process trait grants
+    // Process trait grants (may trigger recursive grants)
     for (const traitGrant of grants.traits || []) {
         const granted = await grantTrait(actor, traitGrant, talent);
         if (granted) {
             grantedItems.push(granted);
             notifications.push(`Trait: ${granted.name}`);
+            
+            // Recursively process grants from the granted trait (if it has them)
+            if (granted.type === 'talent') {
+                await processTalentGrants(granted, actor, depth + 1);
+            }
         }
     }
     
-    // Apply skill updates
+    // Apply skill updates in batch
     if (Object.keys(skillUpdates).length > 0) {
         await actor.update(skillUpdates);
     }
     
-    // Show notification if anything was granted
-    if (notifications.length > 0) {
+    // Show notification if anything was granted (only at top level)
+    if (depth === 0 && notifications.length > 0) {
         const message = `<strong>${talent.name}</strong> granted:<br/>• ${notifications.join('<br/>• ')}`;
         ui.notifications.info(message, { permanent: false });
     }
@@ -94,8 +110,22 @@ async function grantTalent(actor, talentGrant, sourceTalent) {
     if (talentGrant.uuid) {
         try {
             talentItem = await fromUuid(talentGrant.uuid);
+            if (!talentItem) {
+                console.error(
+                    `Failed to resolve talent UUID: ${talentGrant.uuid}`,
+                    `\nTalent name: ${talentGrant.name}`,
+                    `\nGranted by: ${sourceTalent.name}`
+                );
+                ui.notifications.error(`Could not find talent: ${talentGrant.name} (UUID: ${talentGrant.uuid})`);
+            }
         } catch (err) {
-            console.warn(`Could not load talent from UUID: ${talentGrant.uuid}`, err);
+            console.error(
+                `Error loading talent from UUID: ${talentGrant.uuid}`,
+                `\nTalent name: ${talentGrant.name}`,
+                `\nGranted by: ${sourceTalent.name}`,
+                err
+            );
+            ui.notifications.error(`Error loading talent: ${talentGrant.name}`);
         }
     }
     
@@ -107,7 +137,15 @@ async function grantTalent(actor, talentGrant, sourceTalent) {
             const entry = index.find(i => i.name === talentGrant.name);
             if (entry) {
                 talentItem = await pack.getDocument(entry._id);
+            } else {
+                console.error(
+                    `Talent not found in compendium: ${talentGrant.name}`,
+                    `\nGranted by: ${sourceTalent.name}`,
+                    `\nSearched pack: rogue-trader.rt-items-talents`
+                );
             }
+        } else {
+            console.error('Talent compendium pack not found: rogue-trader.rt-items-talents');
         }
     }
     
@@ -247,8 +285,22 @@ async function grantTrait(actor, traitGrant, sourceTalent) {
     if (traitGrant.uuid) {
         try {
             traitItem = await fromUuid(traitGrant.uuid);
+            if (!traitItem) {
+                console.error(
+                    `Failed to resolve trait UUID: ${traitGrant.uuid}`,
+                    `\nTrait name: ${traitGrant.name}`,
+                    `\nGranted by: ${sourceTalent.name}`
+                );
+                ui.notifications.error(`Could not find trait: ${traitGrant.name} (UUID: ${traitGrant.uuid})`);
+            }
         } catch (err) {
-            console.warn(`Could not load trait from UUID: ${traitGrant.uuid}`, err);
+            console.error(
+                `Error loading trait from UUID: ${traitGrant.uuid}`,
+                `\nTrait name: ${traitGrant.name}`,
+                `\nGranted by: ${sourceTalent.name}`,
+                err
+            );
+            ui.notifications.error(`Error loading trait: ${traitGrant.name}`);
         }
     }
     
@@ -260,7 +312,15 @@ async function grantTrait(actor, traitGrant, sourceTalent) {
             const entry = index.find(i => i.name === traitGrant.name);
             if (entry) {
                 traitItem = await pack.getDocument(entry._id);
+            } else {
+                console.error(
+                    `Trait not found in compendium: ${traitGrant.name}`,
+                    `\nGranted by: ${sourceTalent.name}`,
+                    `\nSearched pack: rogue-trader.rt-items-traits`
+                );
             }
+        } else {
+            console.error('Trait compendium pack not found: rogue-trader.rt-items-traits');
         }
     }
     

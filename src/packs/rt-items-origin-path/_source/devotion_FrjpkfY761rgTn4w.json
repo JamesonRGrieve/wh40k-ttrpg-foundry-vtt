@@ -8,7 +8,10 @@
     "stepIndex": 5,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["endurance", "renown"],
+    "replacesOrigins": [
+      "endurance",
+      "renown"
+    ],
     "description": {
       "value": "<h2>Devotion</h2><blockquote><p><em>\"You go into the unknown not for yourself, but for something greater. You believe, and whether your belief is a religious one, a matter of personal loyalty, an absolute dedication to duty, or something else entirely, it gives you the strength to persevere when all seems lost.\"</em></p></blockquote><p>You will not rest, nor will you falter, while your faith remains intact. Others may question your devotion, unable to understand how someone could cleave so tightly to something as distant and abstract as duty, loyalty, honour, or faith, when other paths grant so much more...but you know better. You will not be swayed by those who comprehend nothing beyond themselves and their own ambitions.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay its XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
@@ -41,11 +44,23 @@
               "description": "Faith is your shield and your sword, it is the strength in your muscles and the life in your veins, and the power that drives you ever onwards. While stars exist beyond the reaches of the Emperor's light, there can be no rest, for it is Mankind's destiny to rule the stars and you will permit no exception to that. You look with scorn upon those who crave material things, for their deeds are tainted by their impure desires, no matter how great those deeds may be. If you seek any remembrance or legacy of your own, it is as an implement of the Emperor's will, the blade in His right hand and the mouthpiece for His voice. You seek to inspire and rally others to your cause, to instil fervour and zeal and drive your fellow man to righteousness.",
               "grants": {
                 "skills": [
-                  {"name": "Charm", "specialization": "", "level": "trained"},
-                  {"name": "Common Lore", "specialization": "Imperial Creed", "level": "trained"}
+                  {
+                    "name": "Charm",
+                    "specialization": "",
+                    "level": "trained"
+                  },
+                  {
+                    "name": "Common Lore",
+                    "specialization": "Imperial Creed",
+                    "level": "trained"
+                  }
                 ],
                 "talents": [
-                  {"name": "Inspire Wrath", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.m4ByYYPM9jVtcy3f"}
+                  {
+                    "name": "Inspire Wrath",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.m4ByYYPM9jVtcy3f"
+                  }
                 ]
               },
               "choices": []
@@ -65,8 +80,14 @@
                   "type": "talent",
                   "label": "Choose one devotion talent",
                   "options": [
-                    {"label": "Armour of Contempt", "uuid": "Compendium.rogue-trader.rt-items-talents.KX2Dp1gAZcPXbZMI"},
-                    {"label": "Unshakeable Faith", "uuid": "Compendium.rogue-trader.rt-items-talents.iOEQr0ljJ5zJdofj"}
+                    {
+                      "label": "Armour of Contempt",
+                      "uuid": "Compendium.rogue-trader.rt-items-talents.KX2Dp1gAZcPXbZMI"
+                    },
+                    {
+                      "label": "Unshakeable Faith",
+                      "uuid": "Compendium.rogue-trader.rt-items-talents.iOEQr0ljJ5zJdofj"
+                    }
                   ],
                   "count": 1
                 }
@@ -79,7 +100,11 @@
               "description": "The ship is home, the crew is family, and the captain is its ruler. To those who ply the void, this is an indisputable truth, a notion so strong that in some people it provides a sense of purpose great enough to brave any risk. There may be disputes between different parts of the crew, but such things are all in the family, not for the concern of outsiders. You would do anything for your captain, and will go anywhere the ship goes. You burn with pride at the sight of her and at the triumphs of her crew, and to shame or mock the her is the gravest mistake an outsider can make. You care not where you go or what you face, so long as you do it with that familiar deck plating beneath your feet, surrounded by men and women whose abilities you trust without hesitation.",
               "grants": {
                 "skills": [
-                  {"name": "Trade", "specialization": "Voidfarer", "level": "trained"}
+                  {
+                    "name": "Trade",
+                    "specialization": "Voidfarer",
+                    "level": "trained"
+                  }
                 ]
               },
               "choices": []
@@ -107,7 +132,10 @@
           {
             "condition": "Loyalty: Aboard your home ship",
             "modifier": 5,
-            "appliesTo": ["willpower", "fellowship"]
+            "appliesTo": [
+              "willpower",
+              "fellowship"
+            ]
           }
         ]
       }
@@ -120,7 +148,8 @@
       "custom": ""
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 1
   },
   "effects": [],
   "flags": {},

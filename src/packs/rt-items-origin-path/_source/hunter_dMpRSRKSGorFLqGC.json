@@ -8,7 +8,10 @@
     "stepIndex": 3,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["exhilaration", "endurance"],
+    "replacesOrigins": [
+      "exhilaration",
+      "endurance"
+    ],
     "description": {
       "value": "<h2>Hunter</h2><blockquote><p><em>\"In the void between stars, hunter and hunted are separated only by circumstance. The predator of one moment becomes the prey of the next.\"</em></p></blockquote><p>You have lived as both hunter and hunted. Perhaps you made your living tracking down criminals, heretics, or rogue psykers—following blood-trails across worlds and systems. Or you may have specialized in hunting the xenos threats that plague the Imperium's borders, learning the ways of alien beasts and monsters. Some know the terror of being the prey, constantly looking over their shoulder, always one step ahead of those who wish them dead.</p><p>The hunt has shaped you. You have learned to read tracks, to anticipate your quarry's moves, and to strike with precision when the moment comes. Whether you hunt for bounty, duty, or survival, you understand that in the end, only the cunning survive. Yet the void offers new prey—and new hunters—unlike anything you have faced before.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
@@ -52,8 +55,14 @@
                   "type": "consequence",
                   "label": "Choose one consequence of your work",
                   "options": [
-                    {"label": "Gain 1d5 Corruption Points", "value": "corruption"},
-                    {"label": "Gain 1d5 Insanity Points", "value": "insanity"}
+                    {
+                      "label": "Gain 1d5 Corruption Points",
+                      "value": "corruption"
+                    },
+                    {
+                      "label": "Gain 1d5 Insanity Points",
+                      "value": "insanity"
+                    }
                   ],
                   "count": 1
                 }
@@ -70,8 +79,14 @@
                   "type": "characteristic",
                   "label": "Choose one combat characteristic bonus",
                   "options": [
-                    {"label": "+3 Weapon Skill", "value": "weaponSkill"},
-                    {"label": "+3 Ballistic Skill", "value": "ballisticSkill"}
+                    {
+                      "label": "+3 Weapon Skill",
+                      "value": "weaponSkill"
+                    },
+                    {
+                      "label": "+3 Ballistic Skill",
+                      "value": "ballisticSkill"
+                    }
                   ],
                   "count": 1
                 },
@@ -79,8 +94,14 @@
                   "type": "talent",
                   "label": "Choose one mobility talent",
                   "options": [
-                    {"label": "Leap Up", "value": "leapUp"},
-                    {"label": "Sprint", "value": "sprint"}
+                    {
+                      "label": "Leap Up",
+                      "value": "leapUp"
+                    },
+                    {
+                      "label": "Sprint",
+                      "value": "sprint"
+                    }
                   ],
                   "count": 1
                 },
@@ -88,8 +109,14 @@
                   "type": "skill",
                   "label": "Choose one tracking skill (Trained)",
                   "options": [
-                    {"label": "Scholastic Lore (Beasts)", "value": "scholasticLore_beasts"},
-                    {"label": "Tracking", "value": "tracking"}
+                    {
+                      "label": "Scholastic Lore (Beasts)",
+                      "value": "scholasticLore_beasts"
+                    },
+                    {
+                      "label": "Tracking",
+                      "value": "tracking"
+                    }
                   ],
                   "count": 1
                 }
@@ -110,8 +137,14 @@
                   "type": "talent",
                   "label": "Choose one vigilance talent",
                   "options": [
-                    {"label": "Paranoia", "value": "paranoia"},
-                    {"label": "Light Sleeper", "value": "lightSleeper"}
+                    {
+                      "label": "Paranoia",
+                      "value": "paranoia"
+                    },
+                    {
+                      "label": "Light Sleeper",
+                      "value": "lightSleeper"
+                    }
                   ],
                   "count": 1
                 },
@@ -119,7 +152,10 @@
                   "type": "talent_custom",
                   "label": "Gain Enemy talent for the group hunting you (subject to GM approval)",
                   "options": [
-                    {"label": "Enemy (specify hunter group)", "value": "enemy_custom"}
+                    {
+                      "label": "Enemy (specify hunter group)",
+                      "value": "enemy_custom"
+                    }
                   ],
                   "count": 1
                 }
@@ -155,7 +191,8 @@
       "custom": ""
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 1
   },
   "effects": [],
   "flags": {},

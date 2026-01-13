@@ -7,7 +7,7 @@
     "step": "career",
     "stepIndex": 6,
     "description": {
-      "value": "<p>The Weapons Masters, Body Guards, and Leaders of soldiers. Warriors without peer.<br>Skills: Common Lore (War), Dodge, Intimidate, Scholastic Lore (Tactica Imperialis), Secret Tongue (Military), Speak Language (Low Gothic).<br>Talents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal), Melee Weapon Training (Universal), Thrown Weapon Training (Universal), Sound Constitution.<br>Gear: Good Hellgun or Best Longlas or two Common Boltpistols, one Good Primitive Melee Weapon of choice with mono upgrade, Micro-bead, void suit, Enforcer Light Carapace Armour, Bolt Shell Keepsake, Medikit, Manacles, Dataslate full of Wanted Bounties or Arms coffer or 3 doses of Stimm.<br>Special Ability: Weapon Master: Choose one class of weapon (SP, Bolt, etc), gain +10 to hit, +2 damage, and +2 initiative when using any weapon of chosen class.</p>"
+      "value": "<h2>Arch-Militant</h2><p>The Arch-Militant is the master of arms aboard a Rogue Trader's vessel, a warrior without peer who serves as bodyguard, weapons master, and leader of soldiers. Through countless battles and endless training, they have honed their combat skills to perfection. Whether leading boarding actions, defending the ship from invaders, or standing at their lord's side in the most dire circumstances, the Arch-Militant is death incarnate.</p><h3>Starting Skills</h3><p>Common Lore (War) (Int), Dodge (Ag), Intimidate (S), Scholastic Lore (Tactica Imperialis) (Int), Secret Tongue (Military) (Int), Speak Language (Low Gothic) (Int)</p><h3>Starting Talents</h3><p>Basic Weapon Training (Universal), Pistol Weapon Training (Universal), Melee Weapon Training (Universal), Thrown Weapon Training (Universal), Sound Constitution, Weapon Master</p><h3>Starting Gear</h3><p>Good-craftsmanship hellgun or best-craftsmanship hunting rifle or two bolt pistols, plus one good-craftsmanship primitive melee weapon of choice with the mono upgrade. Micro-bead, void suit, enforcer light carapace armour, bolt shell keepsake, medikit, manacles. Data-slate full of wanted bounties or arms coffer or 3 doses of stimm.</p><h3>Special Ability</h3><p><strong>Weapon Master:</strong> Choose one (and only one!) class of weapon. The Arch-militant gains a +10% bonus to hit, +2 to damage, and +2 initiative when using a weapon of his chosen class in Combat.</p>"
     },
     "requirements": {
       "text": "Origin Path: Career",
@@ -15,104 +15,103 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
-          "name": "Common Lore (War)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "War",
+          "level": "trained"
         },
         {
           "name": "Dodge",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
           "name": "Intimidate",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Scholastic Lore (Tactica Imperialis)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Scholastic Lore",
+          "specialization": "Tactica Imperialis",
+          "level": "trained"
         },
         {
-          "name": "Secret Tongue (Military)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Secret Tongue",
+          "specialization": "Military",
+          "level": "trained"
         },
         {
-          "name": "Speak Language (Low Gothic)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "to hit",
-          "trainingModifier": 2,
-          "specialization": ""
-        },
-        {
-          "name": "damage",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Universal",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Low Gothic",
+          "level": "trained"
         }
       ],
       "talents": [
-        "s: Basic Weapon Training (Universal)",
-        "Pistol Weapon Training (Universal)",
-        "Melee Weapon Training (Universal)",
-        "Thrown Weapon Training (Universal)",
-        "Sound Constitution"
+        {
+          "name": "Basic Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.oVPo5SB4q7rTwLRt"
+        },
+        {
+          "name": "Pistol Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.o76kP0Y85FTEcS7G"
+        },
+        {
+          "name": "Melee Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.IA7IeKuu9Sura3tN"
+        },
+        {
+          "name": "Thrown Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.gYpDFdS0smKX5a8N"
+        },
+        {
+          "name": "Sound Constitution",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.O9dROL3l0TgpQCqy"
+        },
+        {
+          "name": "Weapon Master (Arch-Militant)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CA00000000000002"
+        }
       ],
       "traits": [],
+      "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [
-        {
-          "name": "Special Ability",
-          "description": "Weapon Master: Choose one class of weapon (SP, Bolt, etc), gain +10 to hit, +2 damage, and +2 initiative when using any weapon of chosen class.</p>"
-        }
-      ],
-      "choices": [
-        {
-          "type": "equipment",
-          "label": "Choose from: class of weapon (SP, Bolt, etc), gain +10 to hit, +2 damage, and +2 initiative when using any weapon of chosen class",
-          "options": [
-            "class of weapon (SP",
-            "Bolt",
-            "etc)",
-            "gain +10 to hit",
-            "+2 damage",
-            "and +2 initiative when using any weapon of chosen class"
-          ],
-          "count": 1
-        }
-      ]
+      "specialAbilities": [],
+      "choices": []
     },
-    "effectText": "The Weapons Masters, Body Guards, and Leaders of soldiers. Warriors without peer.\nSkills: Common Lore (War), Dodge, Intimidate, Scholastic Lore (Tactica Imperialis), Secret Tongue (Military), Speak Language (Low Gothic).\nTalents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal), Melee Weapon Training (Universal), Thrown Weapon Training (Universal), Sound Constitution.\nGear: Good Hellgun or Best Longlas or two Common Boltpistols, one Good Primitive Melee Weapon of choice with mono upgrade, Micro-bead, void suit, Enforcer Light Carapace Armour, Bolt Shell Keepsake, Medikit, Manacles, Dataslate full of Wanted Bounties or Arms coffer or 3 doses of Stimm.\nSpecial Ability: Weapon Master: Choose one class of weapon (SP, Bolt, etc), gain +10 to hit, +2 damage, and +2 initiative when using any weapon of chosen class.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
     "notes": "",
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 2
   },
   "effects": [],
   "flags": {},

@@ -35,6 +35,9 @@ export default class OriginPathData extends ItemDataModel.mixin(
       // Step order (for display)
       stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, max: 5, integer: true }),
       
+      // Position in the step's row (1-8 for display ordering, some origins have multiple positions)
+      position: new fields.NumberField({ required: true, initial: 0, min: 0, max: 8, integer: true }),
+      
       // XP cost (for Into The Storm advanced origins)
       xpCost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
       
@@ -298,6 +301,68 @@ export default class OriginPathData extends ItemDataModel.mixin(
     }
     
     return summary;
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Migration & Cleanup                    */
+  /* -------------------------------------------- */
+
+  /** @override */
+  static migrateData(source) {
+    // Let parent handle its migration first
+    super.migrateData?.(source);
+    
+    const grants = source.grants || {};
+    
+    // Migration 1: Warn about legacy wounds/fate fields if formulas are missing
+    if (grants.wounds && !grants.woundsFormula) {
+      console.warn(
+        `Origin Path "${source.name}" uses legacy grants.wounds field (${grants.wounds}). ` +
+        `Consider adding a woundsFormula instead.`
+      );
+    }
+    
+    if (grants.fateThreshold && !grants.fateFormula) {
+      console.warn(
+        `Origin Path "${source.name}" uses legacy grants.fateThreshold field (${grants.fateThreshold}). ` +
+        `Consider adding a fateFormula instead.`
+      );
+    }
+    
+    // Migration 2: Deprecate effectText field
+    if (source.effectText && !source.description?.value) {
+      console.warn(
+        `Origin Path "${source.name}" has effectText but no description. ` +
+        `Migrating effectText to description.`
+      );
+      // Convert plain text to HTML paragraph
+      source.description = source.description || {};
+      source.description.value = `<p>${source.effectText.replace(/\n/g, '<br>')}</p>`;
+    }
+    
+    if (source.effectText && source.description?.value) {
+      console.info(
+        `Origin Path "${source.name}" has both effectText and description. ` +
+        `effectText is deprecated and should be removed from JSON.`
+      );
+    }
+    
+    return source;
+  }
+
+  /** @override */
+  static cleanData(source, options) {
+    // Ensure numeric fields are properly typed
+    if (source.grants) {
+      if (typeof source.grants.wounds === 'string') {
+        source.grants.wounds = parseInt(source.grants.wounds) || 0;
+      }
+      if (typeof source.grants.fateThreshold === 'string') {
+        source.grants.fateThreshold = parseInt(source.grants.fateThreshold) || 0;
+      }
+    }
+    
+    return super.cleanData?.(source, options) || source;
   }
 
   /* -------------------------------------------- */

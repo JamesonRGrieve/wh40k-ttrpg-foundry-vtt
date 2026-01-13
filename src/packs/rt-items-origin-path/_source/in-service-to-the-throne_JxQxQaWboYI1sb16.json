@@ -8,7 +8,10 @@
     "stepIndex": 2,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["stubjack", "vaunted"],
+    "replacesOrigins": [
+      "stubjack",
+      "vaunted"
+    ],
     "description": {
       "value": "<h2>In Service to the Throne</h2><blockquote><p><em>\"The Imperium demands much of its citizens—tithes of grain, of ore, of men and women. For some, service to the Golden Throne is not a choice, but a destiny written in ledgers and manifests.\"</em></p></blockquote><p>Your life has been defined by service to the Imperium. Perhaps you were tithed as part of your world's obligation—selected for military service, sent to the Schola Progenium, or conscripted into one of the endless bureaucratic organs of Imperial administration. Or you may have been born into a family of administrators and leaders, raised from birth to command and organize in the Emperor's name. Some come from the faceless billions who toil in obscurity, learning to survive through caution and the ability to blend into crowds.</p><p>Whether you served willingly or not, the experience shaped you. You learned discipline, loyalty, and the skills needed to function within the vast machinery of the Imperium. You know the prayers, the protocols, and the proper forms. Yet now you find yourself aboard a Rogue Trader vessel—a place where the strict hierarchies of the Imperium give way to something more flexible, more dangerous, and infinitely more rewarding.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
@@ -40,8 +43,14 @@
                   "type": "characteristic",
                   "label": "Choose one characteristic bonus",
                   "options": [
-                    {"label": "+3 Willpower", "value": "willpower"},
-                    {"label": "+3 Ballistic Skill", "value": "ballisticSkill"}
+                    {
+                      "label": "+3 Willpower",
+                      "value": "willpower"
+                    },
+                    {
+                      "label": "+3 Ballistic Skill",
+                      "value": "ballisticSkill"
+                    }
                   ],
                   "count": 1
                 },
@@ -49,12 +58,30 @@
                   "type": "skill",
                   "label": "Choose one Common Lore skill (Trained)",
                   "options": [
-                    {"label": "Common Lore (Adeptus Arbites)", "value": "commonLore_arbites"},
-                    {"label": "Common Lore (Ecclesiarchy)", "value": "commonLore_ecclesiarchy"},
-                    {"label": "Common Lore (Imperial Navy)", "value": "commonLore_navy"},
-                    {"label": "Common Lore (Imperium)", "value": "commonLore_imperium"},
-                    {"label": "Common Lore (Tech)", "value": "commonLore_tech"},
-                    {"label": "Common Lore (War)", "value": "commonLore_war"}
+                    {
+                      "label": "Common Lore (Adeptus Arbites)",
+                      "value": "commonLore_arbites"
+                    },
+                    {
+                      "label": "Common Lore (Ecclesiarchy)",
+                      "value": "commonLore_ecclesiarchy"
+                    },
+                    {
+                      "label": "Common Lore (Imperial Navy)",
+                      "value": "commonLore_navy"
+                    },
+                    {
+                      "label": "Common Lore (Imperium)",
+                      "value": "commonLore_imperium"
+                    },
+                    {
+                      "label": "Common Lore (Tech)",
+                      "value": "commonLore_tech"
+                    },
+                    {
+                      "label": "Common Lore (War)",
+                      "value": "commonLore_war"
+                    }
                   ],
                   "count": 1
                 },
@@ -62,18 +89,54 @@
                   "type": "skills_talents_multi",
                   "label": "Choose any two from the following",
                   "options": [
-                    {"label": "Athletics (Trained)", "value": "athletics"},
-                    {"label": "Awareness (Trained)", "value": "awareness"},
-                    {"label": "Climb (Trained)", "value": "climb"},
-                    {"label": "Dodge (Trained)", "value": "dodge"},
-                    {"label": "Drive (Any) (Trained)", "value": "drive"},
-                    {"label": "Forbidden Lore (Any) (Trained)", "value": "forbiddenLore"},
-                    {"label": "Medicae (Trained)", "value": "medicae"},
-                    {"label": "Scholastic Lore (Any) (Trained)", "value": "scholasticLore"},
-                    {"label": "Swim (Trained)", "value": "swim"},
-                    {"label": "Basic Weapon Training (Any)", "value": "basicWeaponTraining"},
-                    {"label": "Melee Weapon Training (Any)", "value": "meleeWeaponTraining"},
-                    {"label": "Pistol Weapon Training (Any)", "value": "pistolWeaponTraining"}
+                    {
+                      "label": "Athletics (Trained)",
+                      "value": "athletics"
+                    },
+                    {
+                      "label": "Awareness (Trained)",
+                      "value": "awareness"
+                    },
+                    {
+                      "label": "Climb (Trained)",
+                      "value": "climb"
+                    },
+                    {
+                      "label": "Dodge (Trained)",
+                      "value": "dodge"
+                    },
+                    {
+                      "label": "Drive (Any) (Trained)",
+                      "value": "drive"
+                    },
+                    {
+                      "label": "Forbidden Lore (Any) (Trained)",
+                      "value": "forbiddenLore"
+                    },
+                    {
+                      "label": "Medicae (Trained)",
+                      "value": "medicae"
+                    },
+                    {
+                      "label": "Scholastic Lore (Any) (Trained)",
+                      "value": "scholasticLore"
+                    },
+                    {
+                      "label": "Swim (Trained)",
+                      "value": "swim"
+                    },
+                    {
+                      "label": "Basic Weapon Training (Any)",
+                      "value": "basicWeaponTraining"
+                    },
+                    {
+                      "label": "Melee Weapon Training (Any)",
+                      "value": "meleeWeaponTraining"
+                    },
+                    {
+                      "label": "Pistol Weapon Training (Any)",
+                      "value": "pistolWeaponTraining"
+                    }
                   ],
                   "count": 2
                 }
@@ -89,8 +152,16 @@
                   "toughness": -3
                 },
                 "skills": [
-                  {"name": "Command", "specialization": "", "level": "trained"},
-                  {"name": "Literacy", "specialization": "", "level": "trained"}
+                  {
+                    "name": "Command",
+                    "specialization": "",
+                    "level": "trained"
+                  },
+                  {
+                    "name": "Literacy",
+                    "specialization": "",
+                    "level": "trained"
+                  }
                 ]
               },
               "choices": [
@@ -98,8 +169,14 @@
                   "type": "characteristic",
                   "label": "Choose one characteristic bonus",
                   "options": [
-                    {"label": "+3 Intelligence", "value": "intelligence"},
-                    {"label": "+3 Fellowship", "value": "fellowship"}
+                    {
+                      "label": "+3 Intelligence",
+                      "value": "intelligence"
+                    },
+                    {
+                      "label": "+3 Fellowship",
+                      "value": "fellowship"
+                    }
                   ],
                   "count": 1
                 },
@@ -107,12 +184,30 @@
                   "type": "skill",
                   "label": "Choose one Scholastic Lore skill (Trained)",
                   "options": [
-                    {"label": "Scholastic Lore (Bureaucracy)", "value": "scholasticLore_bureaucracy"},
-                    {"label": "Scholastic Lore (Heraldry)", "value": "scholasticLore_heraldry"},
-                    {"label": "Scholastic Lore (Imperial Creed)", "value": "scholasticLore_creed"},
-                    {"label": "Scholastic Lore (Judgment)", "value": "scholasticLore_judgment"},
-                    {"label": "Scholastic Lore (Legend)", "value": "scholasticLore_legend"},
-                    {"label": "Scholastic Lore (Philosophy)", "value": "scholasticLore_philosophy"}
+                    {
+                      "label": "Scholastic Lore (Bureaucracy)",
+                      "value": "scholasticLore_bureaucracy"
+                    },
+                    {
+                      "label": "Scholastic Lore (Heraldry)",
+                      "value": "scholasticLore_heraldry"
+                    },
+                    {
+                      "label": "Scholastic Lore (Imperial Creed)",
+                      "value": "scholasticLore_creed"
+                    },
+                    {
+                      "label": "Scholastic Lore (Judgment)",
+                      "value": "scholasticLore_judgment"
+                    },
+                    {
+                      "label": "Scholastic Lore (Legend)",
+                      "value": "scholasticLore_legend"
+                    },
+                    {
+                      "label": "Scholastic Lore (Philosophy)",
+                      "value": "scholasticLore_philosophy"
+                    }
                   ],
                   "count": 1
                 }
@@ -145,8 +240,14 @@
                   "type": "characteristic",
                   "label": "Choose one characteristic bonus",
                   "options": [
-                    {"label": "+3 Perception", "value": "perception"},
-                    {"label": "+3 Intelligence", "value": "intelligence"}
+                    {
+                      "label": "+3 Perception",
+                      "value": "perception"
+                    },
+                    {
+                      "label": "+3 Intelligence",
+                      "value": "intelligence"
+                    }
                   ],
                   "count": 1
                 },
@@ -154,8 +255,14 @@
                   "type": "skill",
                   "label": "Choose one Trade or Common Lore skill (Trained)",
                   "options": [
-                    {"label": "Trade (Any)", "value": "trade"},
-                    {"label": "Common Lore (Any)", "value": "commonLore"}
+                    {
+                      "label": "Trade (Any)",
+                      "value": "trade"
+                    },
+                    {
+                      "label": "Common Lore (Any)",
+                      "value": "commonLore"
+                    }
                   ],
                   "count": 1
                 }
@@ -191,7 +298,8 @@
       "custom": ""
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 4
   },
   "effects": [],
   "flags": {},

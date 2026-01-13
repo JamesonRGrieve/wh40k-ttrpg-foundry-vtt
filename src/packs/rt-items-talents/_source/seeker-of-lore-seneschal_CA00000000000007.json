@@ -1,0 +1,68 @@
+{
+  "name": "Seeker of Lore (Seneschal)",
+  "type": "talent",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "identifier": "seeker-of-lore-seneschal",
+    "category": "career",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "66"
+    },
+    "description": {
+      "value": "<p><strong>Seeker of Lore:</strong> The Seneschal is a master of information and intelligence, possessing an encyclopedic knowledge and the skills to uncover any fact or secret. Their dedication to acquiring and cataloging knowledge makes them invaluable advisors and administrators. When the situation demands it, they can draw upon their vast reserves of learning to achieve superhuman feats of research and deduction.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You may spend a Fate Point to automatically succeed at any Ciphers, Lore, or Logic Test (resolving in minimum time required). Additionally, you add +1 Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Seneschal Career",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "condition": "Commerce, Inquiry, or Evaluate Tests",
+            "modifier": 1,
+            "type": "Degrees of Success"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "Spend Fate Point: auto-succeed Ciphers/Lore/Logic; +1 DoS on Commerce/Inquiry/Evaluate",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Master of Knowledge",
+          "description": "Spend a Fate Point to automatically succeed at any Ciphers, Lore, or Logic Test (minimum time). Add +1 Degree of Success to successful Commerce, Inquiry, or Evaluate Tests."
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CA00000000000007"
+}

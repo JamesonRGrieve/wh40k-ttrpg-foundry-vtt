@@ -8,7 +8,10 @@
     "stepIndex": 4,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["calamity", "dark-voyage"],
+    "replacesOrigins": [
+      "calamity",
+      "dark-voyage"
+    ],
     "description": {
       "value": "<h2>Lost Worlds</h2><blockquote><p><em>\"There are long-lost worlds being discovered all the time by members of the Imperium. The Explorator fleets of the Adeptus Mechanicus chart and record planets, sending that information back to be analysed.\"</em></p></blockquote><p>Some are worlds that were once part of a Rogue Trader dynasty, now lost to antiquity. Some are bizarre and upset the laws of physics: rogue worlds torn from their stars to float in the voids, alien constructs, space hulks of enormous size, and other equally strange phenomena. Those who choose to catalogue and explore these lost worlds sometimes return with wealth or knowledge undreamt of; others come back changed, as if they passed beyond the material universe.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
@@ -109,7 +112,8 @@
       "custom": ""
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 3
   },
   "effects": [],
   "flags": {},

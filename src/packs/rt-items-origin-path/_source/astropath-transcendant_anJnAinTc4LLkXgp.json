@@ -7,7 +7,7 @@
     "step": "career",
     "stepIndex": 6,
     "description": {
-      "value": "<p>Sanctioned Psykers who allow for communication across the galaxy and who can bend reality with the power of the warp. (See Psychic Powers Page to choose Psychic Powers)<br>Skills: Awareness, Common Lore (Adeptus Astra Telepathica), Forbidden Lore (Psykers), Invocation, Psyniscience, Scholastic Lore (Crytography), Speak Language (High Gothic, Low Gothic).<br>Talents: Pistol Weapon Training (Universal), Heightened Senses (Sound), Psy Rating 2, Psychic Technique (x2)(200xp), Psychic Discipline (Telepathy). Psychic Technique (Astral Telepathy).<br>Gear: Best Laspistol or Best Stub Automatic, Best Mono-sword or Common Shock Staff, Guard Flak Armour, Charm, Void Suit, Microbead, Psy-Focus.<br>Special Abilities: Soul-Bound: Gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test  to resist talents, psychic powers, abilities, or other effects from a daemon. Roll additional d10 when rolling Perils of the Warp, then discard one of choice. See Without Eyes: Are blind, see with psychic senses, ignore effects that target vision such as blind grenades or cameleoline, cannot see Untouchables. Power of Fate: Can spend 1 Fate Point to add +1 to Psy Rating for a single Focus Power Test.</p>"
+      "value": "<h2>Astropath Transcendent</h2><p>Astropath Transcendents are sanctioned psykers who have undergone the Soul-Binding ritual before the Golden Throne on Terra. This sacred rite binds their soul to the Emperor Himself, protecting them from daemonic predation while allowing them to send telepathic messages across the vast distances of space. Though the ritual costs them their physical sight, they gain the ability to perceive the world through psychic senses and wield formidable mental powers.</p><h3>Starting Skills</h3><p>Awareness (Per), Common Lore (Adeptus Astra Telepathica) (Int), Forbidden Lore (Psykers) (Int), Invocation (WP), Psyniscience (Per), Scholastic Lore (Cryptology) (Int), Speak Language (High Gothic, Low Gothic) (Int)</p><h3>Starting Talents</h3><p>Pistol Weapon Training (Universal), Heightened Senses (Sound), Psy Rating 2, Soul-Bound</p><h3>Starting Gear</h3><p>Best-craftsmanship laspistol or best-craftsmanship stub automatic. Best-craftsmanship mono-sword or common-craftsmanship shock staff. Guard flak armour. Charm, void suit, micro-bead, psy-focus.</p><h3>Special Abilities</h3><p><strong>Soul-Bound to the Emperor:</strong> An Astropath Transcendent is soul-bound to the Emperor during a complex ritual on Terra. An Astropath Transcendent gains +20 to his Willpower when resisting Possession, in any opposed Willpower Test against a daemon, or whenever making a Willpower Test to resist any Talent, Psychic Power, special ability, or other effect originating from a daemon. An Astropath Transcendent rolls an additional d10 when rolling on the Perils of the Warp table and may discard any one d10 for a more favourable result.</p><p><strong>Psychic Powers:</strong> An Astropath Transcendent begins play with access to techniques from the Telepathic Discipline. Astropath Transcendent characters also begin play with the technique Astral Telepathy (see page 162) and may select two additional techniques from the Telepathic Discipline. Astropaths Transcendent begin with a Psy Rating of 2.</p><p><strong>See Without Eyes:</strong> An Astropath Transcendent is blind yet at the same time has a strange ability to perceive without using his physical senses. An Astropath Transcendent is functionally treated as if he can see normally (including seeing colours and being limited by walls, etc.). However, Astropaths Transcendent are not affected by effects that target their vision, such as blind grenades and cameleoline. They are, however, completely incapable of seeing Untouchables.</p>"
     },
     "requirements": {
       "text": "Origin Path: Career",
@@ -15,93 +15,103 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 1
-      },
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
           "name": "Awareness",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Common Lore (Adeptus Astra Telepathica)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "Adeptus Astra Telepathica",
+          "level": "trained"
         },
         {
-          "name": "Forbidden Lore (Psykers)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Forbidden Lore",
+          "specialization": "Psykers",
+          "level": "trained"
         },
         {
           "name": "Invocation",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
           "name": "Psyniscience",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Scholastic Lore (Crytography)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Scholastic Lore",
+          "specialization": "Cryptography",
+          "level": "trained"
         },
         {
-          "name": "Speak Language (High Gothic",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "High Gothic",
+          "level": "trained"
         },
         {
-          "name": "Low Gothic)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Universal",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Low Gothic",
+          "level": "trained"
         }
       ],
       "talents": [
-        "s: Pistol Weapon Training (Universal)",
-        "Heightened Senses (Sound)",
-        "Psy Rating 2",
-        "Psychic Technique (x2)",
-        "Psychic Discipline (Telepathy)",
-        "psychic powers",
-        "abilities",
-        "or other effects from a daemon"
-      ],
-      "traits": [],
-      "equipment": [],
-      "specialAbilities": [
         {
-          "name": "Special Ability",
-          "description": "Abilities: Soul-Bound: Gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test  to resist talents, psychic powers, abilities, or other effects from a daemon. Roll additional d10 when rolling Perils of the Warp, then discard one of choice"
+          "name": "Pistol Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.o76kP0Y85FTEcS7G"
+        },
+        {
+          "name": "Heightened Senses (Sound)",
+          "specialization": "Sound",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.z1ZHZJ2cqBMLnmEk"
+        },
+        {
+          "name": "Psy Rating",
+          "specialization": "2",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.X7aVPgM8DvBEDRkC"
+        },
+        {
+          "name": "Soul-Bound (Astropath Transcendent)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CA00000000000003"
         }
       ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": []
     },
-    "effectText": "Sanctioned Psykers who allow for communication across the galaxy and who can bend reality with the power of the warp. (See Psychic Powers Page to choose Psychic Powers)\nSkills: Awareness, Common Lore (Adeptus Astra Telepathica), Forbidden Lore (Psykers), Invocation, Psyniscience, Scholastic Lore (Crytography), Speak Language (High Gothic, Low Gothic).\nTalents: Pistol Weapon Training (Universal), Heightened Senses (Sound), Psy Rating 2, Psychic Technique (x2)(200xp), Psychic Discipline (Telepathy). Psychic Technique (Astral Telepathy).\nGear: Best Laspistol or Best Stub Automatic, Best Mono-sword or Common Shock Staff, Guard Flak Armour, Charm, Void Suit, Microbead, Psy-Focus.\nSpecial Abilities: Soul-Bound: Gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test  to resist talents, psychic powers, abilities, or other effects from a daemon. Roll additional d10 when rolling Perils of the Warp, then discard one of choice. See Without Eyes: Are blind, see with psychic senses, ignore effects that target vision such as blind grenades or cameleoline, cannot see Untouchables. Power of Fate: Can spend 1 Fate Point to add +1 to Psy Rating for a single Focus Power Test.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
     "notes": "",
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 1
   },
   "effects": [],
   "flags": {},

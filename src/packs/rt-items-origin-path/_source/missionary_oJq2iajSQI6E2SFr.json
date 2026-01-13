@@ -7,7 +7,7 @@
     "step": "career",
     "stepIndex": 6,
     "description": {
-      "value": "<p>Emmisaries of the Emperor&#x27;s Light as well as the carriers of the Burning Flames of righteous hatred, who may inspire the masses to acts of faith to destroy the alien, heretic, and worse.<br>Skills: Common Lore (Imperial Creed, Imperium), Forbidden Lore (Heresy), Medicae, Scholastic Lore (Imperial Creed), Speak Language (High Gothic, Low Gothic).<br>Talents: Basic Wepaon Training (Universal), Melee Weapon Training (Universal), Pure Faith, Unshakeable Faith.<br>Gear: Good Chainsword or Best Staff, Good Flamer or Best Lasgun, Best Guard Flak Armour, Ecclesiarchal Robes, Aquila Pendant, Sepulchre, Censer, and Incense, Micro-bead.<br>Special Ability: Start with Pure Faith Talent.</p>"
+      "value": "<h2>Missionary</h2><p>Missionaries are emissaries of the Emperor's divine light and carriers of the burning flames of righteous hatred. They spread the Imperial Creed to the far reaches of the galaxy, converting the masses and purging the taint of heresy wherever they find it. Through fire and faith, they inspire ordinary men to acts of extraordinary courage, turning rabble into zealots who will gladly die for the God-Emperor.</p><h3>Starting Skills</h3><p>Common Lore (Imperial Creed, Imperium) (Int), Forbidden Lore (Heresy) (Int), Medicae (Int), Scholastic Lore (Imperial Creed) (Int), Speak Language (High Gothic, Low Gothic) (Int)</p><h3>Starting Talents</h3><p>Basic Weapon Training (Universal), Melee Weapon Training (Universal), Pure Faith, Unshakeable Faith</p><h3>Starting Gear</h3><p>Good-craftsmanship chainsword or best-craftsmanship staff, good-craftsmanship flamer or best-craftsmanship lasgun, best-craftsmanship guard flak armour, Ecclesiarchal robes, aquila pendant, sepulchre, censer and incense, micro-bead.</p><h3>Special Ability</h3><p><strong>Pure Faith:</strong> The Missionary begins play with the Pure Faith Talent. See page 104 for more details.</p>"
     },
     "requirements": {
       "text": "Origin Path: Career",
@@ -15,84 +15,98 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
-          "name": "Common Lore (Imperial Creed",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "Imperial Creed",
+          "level": "trained"
         },
         {
-          "name": "Imperium)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "Imperium",
+          "level": "trained"
         },
         {
-          "name": "Forbidden Lore (Heresy)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Forbidden Lore",
+          "specialization": "Heresy",
+          "level": "trained"
         },
         {
           "name": "Medicae",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Scholastic Lore (Imperial Creed)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Scholastic Lore",
+          "specialization": "Imperial Creed",
+          "level": "trained"
         },
         {
-          "name": "Speak Language (High Gothic",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "High Gothic",
+          "level": "trained"
         },
         {
-          "name": "Low Gothic)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Universal",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Low Gothic",
+          "level": "trained"
         }
       ],
       "talents": [
-        "s: Basic Wepaon Training (Universal)",
-        "Melee Weapon Training (Universal)",
-        "Pure Faith",
-        "Unshakeable Faith"
-      ],
-      "traits": [],
-      "equipment": [],
-      "specialAbilities": [
         {
-          "name": "Special Ability",
-          "description": "Start with Pure Faith Talent.</p>"
+          "name": "Basic Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.oVPo5SB4q7rTwLRt"
+        },
+        {
+          "name": "Melee Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.IA7IeKuu9Sura3tN"
+        },
+        {
+          "name": "Unshakeable Faith (Missionary)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CA00000000000005"
         }
       ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": []
     },
-    "effectText": "Emmisaries of the Emperor's Light as well as the carriers of the Burning Flames of righteous hatred, who may inspire the masses to acts of faith to destroy the alien, heretic, and worse.\nSkills: Common Lore (Imperial Creed, Imperium), Forbidden Lore (Heresy), Medicae, Scholastic Lore (Imperial Creed), Speak Language (High Gothic, Low Gothic).\nTalents: Basic Wepaon Training (Universal), Melee Weapon Training (Universal), Pure Faith, Unshakeable Faith.\nGear: Good Chainsword or Best Staff, Good Flamer or Best Lasgun, Best Guard Flak Armour, Ecclesiarchal Robes, Aquila Pendant, Sepulchre, Censer, and Incense, Micro-bead.\nSpecial Ability: Start with Pure Faith Talent.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "64",
+      "custom": ""
+    },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 5
   },
   "effects": [],
   "flags": {},

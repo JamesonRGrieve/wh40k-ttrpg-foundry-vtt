@@ -8,7 +8,10 @@
     "stepIndex": 4,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["press-ganged", "ship-lorn"],
+    "replacesOrigins": [
+      "press-ganged",
+      "ship-lorn"
+    ],
     "description": {
       "value": "<h2>A Product of Upbringing</h2><blockquote><p><em>\"There are many different types of nobility within the Imperium. Some might be part of the Commercia Houses, others are Imperial Officers, and still others are members of the Rogue Trader Dynasties and clans. It's a confusing and often tangled web of intrigue and fealty.\"</em></p></blockquote><p>Only the High Lords of Terra can declare a family line to be nobility, but planetary lords, Imperial Commanders, and sector Governors can all declare lesser vassals to be raised in status under them. Some families are given titles as a reward for service to the Golden Throne; these family members are often looked down upon as upstarts until they have proven themselves over the course of many generations.</p><p>Of course, noble families are always trying to gain the advantage over one another, and thus earn the favour of their lords. They scheme and plot in the hopes that one day their plans will come to fruition and they will be elevated in status and gain even more power and wealth. Aside from the direct bloodlines and heirs, there are those family members who are associated by marriage, and those who have been brought into the family for some potent ability they possess. These scions typically form the backbone of the nobility and help keep the lines viable for future generations.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
@@ -109,7 +112,8 @@
       "custom": ""
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 2
   },
   "effects": [],
   "flags": {},

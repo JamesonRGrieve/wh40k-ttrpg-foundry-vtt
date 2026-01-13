@@ -7,7 +7,7 @@
     "step": "career",
     "stepIndex": 6,
     "description": {
-      "value": "<p>Masters of Machinery and Seekers of ancient technology. Intent to continue replacing their flesh with metal, and discover ancient archeotech.<br>Skills: Common Lore (Machine Cult, Tech), Forbidden Lore (Archeotech, Adeptus Mechanicus), Literacy, Logic, Speak Language (Explorator Binary, Low Gothic, Techna Lingua), Tech-Use, Trade (Technomat).<br>Traits/Talents: Mechanicus Implants [Trait], Basic Weapon Training (Universal), Melee Weapon Training (Universal), Logis Implant<br>Gear: Common Boltgun or Best Lasgun, Good Hellgun or Best Shock Staff or Good Power Axe, Enforcer Light carapace, Multikey, Void Suit, Injector, Sacred Unguents, Micro-bead, combi-tool, dataslate, servo skull familiar.<br>Special Ability: Start with Mechanicus Implants Trait, and two common Craftsmanship bionics, can spend 200xp to increase craftsmanship of one bionic by one level, can do multiple times but only at character creation.</p>"
+      "value": "<h2>Explorator</h2><p>Explorators are Tech-Priests of the Adeptus Mechanicus who have chosen the path of exploration and discovery over the rigid hierarchy of forge worlds. They are masters of machinery and seekers of ancient technology, intent on recovering lost archeotech and expanding the Machine God's domain. Having replaced much of their flesh with sacred augmetics, they walk the line between human and machine, questing endlessly for the secrets of the Omnissiah.</p><h3>Starting Skills</h3><p>Common Lore (Machine Cult, Tech) (Int), Forbidden Lore (Archeotech, Adeptus Mechanicus) (Int), Literacy (Int), Logic (Int), Speak Language (Explorator Binary, Low Gothic, Techna-lingua) (Int), Tech-Use (Int), Trade (Technomat) (Int)</p><h3>Starting Talents</h3><p>Basic Weapon Training (Universal), Melee Weapon Training (Universal), Logis Implant, Mechanicus Implants</p><h3>Starting Gear</h3><p>Boltgun or best-craftsmanship lasgun or good-craftsmanship hellgun, best-craftsmanship shock staff or good-craftsmanship power axe, Enforcer light carapace, multikey, void suit, injector, sacred unguents, micro-bead, combi-tool, data-slate. The Explorator also begins play owning and controlling one servo-skull familiar.</p><h3>Special Ability</h3><p><strong>Explorator Implants:</strong> The Explorator begins play with the Mechanicus Implants Trait and may select up to two additional common-craftsmanship bionic implants. He may spend 200 XP to increase the Craftsmanship of one of his bionic implants by one level (i.e., increasing from common to good costs 200 XP). The Explorator may increase the Craftsmanship up to twice (i.e, taking a common-craftsmanship to good, then good to best) in this manner, and may only do so at character creation.</p>"
     },
     "requirements": {
       "text": "Origin Path: Career",
@@ -15,114 +15,123 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
-          "name": "Common Lore (Machine Cult",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "Machine Cult",
+          "level": "trained"
         },
         {
-          "name": "Tech)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "Tech",
+          "level": "trained"
         },
         {
-          "name": "Forbidden Lore (Archeotech",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Forbidden Lore",
+          "specialization": "Archeotech",
+          "level": "trained"
         },
         {
-          "name": "Adeptus Mechanicus)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Forbidden Lore",
+          "specialization": "Adeptus Mechanicus",
+          "level": "trained"
         },
         {
           "name": "Literacy",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
           "name": "Logic",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Speak Language (Explorator Binary",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Explorator Binary",
+          "level": "trained"
         },
         {
-          "name": "Low Gothic",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Low Gothic",
+          "level": "trained"
         },
         {
-          "name": "Techna Lingua)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Techna Lingua",
+          "level": "trained"
         },
         {
           "name": "Tech-Use",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Trade (Technomat)",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Universal",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Trade",
+          "specialization": "Technomat",
+          "level": "trained"
         }
       ],
       "talents": [
-        "s: Mechanicus Implants ["
-      ],
-      "traits": [
-        "Basic Weapon Training (Universal)",
-        "Melee Weapon Training (Universal)",
-        "Enforcer Light carapace",
-        "Multikey",
-        "Void Suit",
-        "Injector",
-        "Sacred Unguents",
-        "Micro-bead",
-        "combi-tool",
-        "dataslate",
-        "servo skull familiar",
-        "two common Craftsmanship bionics"
-      ],
-      "equipment": [],
-      "specialAbilities": [
         {
-          "name": "Special Ability",
-          "description": "Start with Mechanicus Implants Trait, and two common Craftsmanship bionics, can spend 200xp to increase craftsmanship of one bionic by one level, can do multiple times but only at character creation.</p>"
+          "name": "Basic Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.oVPo5SB4q7rTwLRt"
+        },
+        {
+          "name": "Melee Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.IA7IeKuu9Sura3tN"
+        },
+        {
+          "name": "Logis Implant",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CSp8aV5M5I41Eiem"
+        },
+        {
+          "name": "Mechanicus Implants (Explorator)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CA00000000000004"
         }
       ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": []
     },
-    "effectText": "Masters of Machinery and Seekers of ancient technology. Intent to continue replacing their flesh with metal, and discover ancient archeotech.\nSkills: Common Lore (Machine Cult, Tech), Forbidden Lore (Archeotech, Adeptus Mechanicus), Literacy, Logic, Speak Language (Explorator Binary, Low Gothic, Techna Lingua), Tech-Use, Trade (Technomat).\nTraits/Talents: Mechanicus Implants [Trait], Basic Weapon Training (Universal), Melee Weapon Training (Universal), Logis Implant\nGear: Common Boltgun or Best Lasgun, Good Hellgun or Best Shock Staff or Good Power Axe, Enforcer Light carapace, Multikey, Void Suit, Injector, Sacred Unguents, Micro-bead, combi-tool, dataslate, servo skull familiar.\nSpecial Ability: Start with Mechanicus Implants Trait, and two common Craftsmanship bionics, can spend 200xp to increase craftsmanship of one bionic by one level, can do multiple times but only at character creation.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "63",
+      "custom": ""
+    },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 4
   },
   "effects": [],
   "flags": {},

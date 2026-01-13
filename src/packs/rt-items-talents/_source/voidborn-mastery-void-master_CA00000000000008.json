@@ -1,0 +1,62 @@
+{
+  "name": "Voidborn Mastery (Void-Master)",
+  "type": "talent",
+  "img": "icons/svg/helm.svg",
+  "system": {
+    "identifier": "voidborn-mastery-void-master",
+    "category": "career",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "67"
+    },
+    "description": {
+      "value": "<p><strong>Voidborn Mastery:</strong> The Void-Master has spent their entire life aboard starships, mastering the intricacies of void travel and ship operations. Whether guiding a vessel through treacherous asteroid fields or coordinating devastating broadsides, they possess an almost supernatural connection to their ship. This innate understanding allows them to push vessels beyond their normal capabilities.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Choose one specialty at character creation: <strong>Mastery of Space</strong> (reroll all failed Starship Manoeuvre Action Tests) or <strong>Mastery of Gunnery</strong> (reroll all failed Starship Shooting Action Tests).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Void-Master Career",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Choose at creation: reroll failed Manoeuvre tests OR reroll failed Shooting tests",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Master of the Void",
+          "description": "Choose one at character creation:\n• Mastery of Space: Reroll all failed Tests for Starship Manoeuvre Actions.\n• Mastery of Gunnery: Reroll all failed Tests for Starship Shooting Actions."
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CA00000000000008"
+}

@@ -8,7 +8,10 @@
     "stepIndex": 3,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["high-vendetta", "fortune"],
+    "replacesOrigins": [
+      "high-vendetta",
+      "fortune"
+    ],
     "description": {
       "value": "<h2>New Horizons</h2><blockquote><p><em>\"Beyond the edges of the Imperium's maps lie mysteries that could illuminate—or damn—all of humanity. Some are drawn to these horizons by curiosity, others by greed or necessity.\"</em></p></blockquote><p>You are driven by the lure of the unknown. Perhaps you seek forbidden knowledge hidden in ancient texts and ruins, willing to risk corruption for the chance to understand the universe's deepest secrets. Or you may have devoted yourself to studying the xenos—their technology, their cultures, their history—walking the dangerous line between academic inquiry and heresy. Some pursue the lost treasures of the Dark Age of Technology, seeking archeotech artifacts that could reshape the Imperium.</p><p>Your pursuit of new horizons has brought you both knowledge and peril. You have seen things that most Imperial citizens never dream of, learned truths that the Ecclesiarchy would condemn. Yet this knowledge comes at a price—suspicion, corruption, or worse. Now you travel with a Rogue Trader, where the boundaries of acceptable inquiry stretch further than anywhere else in the Imperium.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
@@ -45,19 +48,58 @@
                   "type": "skill",
                   "label": "Choose one Scholastic Lore skill (Trained)",
                   "options": [
-                    {"label": "Scholastic Lore (Archeotech)", "value": "scholasticLore_archeotech"},
-                    {"label": "Scholastic Lore (Astromancy)", "value": "scholasticLore_astromancy"},
-                    {"label": "Scholastic Lore (Beasts)", "value": "scholasticLore_beasts"},
-                    {"label": "Scholastic Lore (Bureaucracy)", "value": "scholasticLore_bureaucracy"},
-                    {"label": "Scholastic Lore (Chymistry)", "value": "scholasticLore_chymistry"},
-                    {"label": "Scholastic Lore (Cryptology)", "value": "scholasticLore_cryptology"},
-                    {"label": "Scholastic Lore (Heraldry)", "value": "scholasticLore_heraldry"},
-                    {"label": "Scholastic Lore (Imperial Creed)", "value": "scholasticLore_creed"},
-                    {"label": "Scholastic Lore (Judgment)", "value": "scholasticLore_judgment"},
-                    {"label": "Scholastic Lore (Legend)", "value": "scholasticLore_legend"},
-                    {"label": "Scholastic Lore (Numerology)", "value": "scholasticLore_numerology"},
-                    {"label": "Scholastic Lore (Occult)", "value": "scholasticLore_occult"},
-                    {"label": "Scholastic Lore (Philosophy)", "value": "scholasticLore_philosophy"}
+                    {
+                      "label": "Scholastic Lore (Archeotech)",
+                      "value": "scholasticLore_archeotech"
+                    },
+                    {
+                      "label": "Scholastic Lore (Astromancy)",
+                      "value": "scholasticLore_astromancy"
+                    },
+                    {
+                      "label": "Scholastic Lore (Beasts)",
+                      "value": "scholasticLore_beasts"
+                    },
+                    {
+                      "label": "Scholastic Lore (Bureaucracy)",
+                      "value": "scholasticLore_bureaucracy"
+                    },
+                    {
+                      "label": "Scholastic Lore (Chymistry)",
+                      "value": "scholasticLore_chymistry"
+                    },
+                    {
+                      "label": "Scholastic Lore (Cryptology)",
+                      "value": "scholasticLore_cryptology"
+                    },
+                    {
+                      "label": "Scholastic Lore (Heraldry)",
+                      "value": "scholasticLore_heraldry"
+                    },
+                    {
+                      "label": "Scholastic Lore (Imperial Creed)",
+                      "value": "scholasticLore_creed"
+                    },
+                    {
+                      "label": "Scholastic Lore (Judgment)",
+                      "value": "scholasticLore_judgment"
+                    },
+                    {
+                      "label": "Scholastic Lore (Legend)",
+                      "value": "scholasticLore_legend"
+                    },
+                    {
+                      "label": "Scholastic Lore (Numerology)",
+                      "value": "scholasticLore_numerology"
+                    },
+                    {
+                      "label": "Scholastic Lore (Occult)",
+                      "value": "scholasticLore_occult"
+                    },
+                    {
+                      "label": "Scholastic Lore (Philosophy)",
+                      "value": "scholasticLore_philosophy"
+                    }
                   ],
                   "count": 1
                 }
@@ -74,8 +116,14 @@
                   "type": "characteristic",
                   "label": "Choose one mental characteristic bonus",
                   "options": [
-                    {"label": "+3 Intelligence", "value": "intelligence"},
-                    {"label": "+3 Willpower", "value": "willpower"}
+                    {
+                      "label": "+3 Intelligence",
+                      "value": "intelligence"
+                    },
+                    {
+                      "label": "+3 Willpower",
+                      "value": "willpower"
+                    }
                   ],
                   "count": 1
                 },
@@ -83,8 +131,14 @@
                   "type": "skill_talent",
                   "label": "Choose one xenos expertise",
                   "options": [
-                    {"label": "Peer (Academics) talent", "value": "peer_academics"},
-                    {"label": "Forbidden Lore (Xenos) skill (Trained)", "value": "forbiddenLore_xenos"}
+                    {
+                      "label": "Peer (Academics) talent",
+                      "value": "peer_academics"
+                    },
+                    {
+                      "label": "Forbidden Lore (Xenos) skill (Trained)",
+                      "value": "forbiddenLore_xenos"
+                    }
                   ],
                   "count": 1
                 }
@@ -97,7 +151,11 @@
               "description": "You hunt for the lost technologies of the Dark Age, seeking archeotech that could change the fate of worlds. Your studies have borne fruit—you possess a precious heirloom from humanity's golden age.",
               "grants": {
                 "skills": [
-                  {"name": "Scholastic Lore (Archeotech)", "specialization": "", "level": "trained"}
+                  {
+                    "name": "Scholastic Lore (Archeotech)",
+                    "specialization": "",
+                    "level": "trained"
+                  }
                 ]
               },
               "choices": [
@@ -105,8 +163,14 @@
                   "type": "characteristic",
                   "label": "Choose one mental characteristic bonus",
                   "options": [
-                    {"label": "+3 Intelligence", "value": "intelligence"},
-                    {"label": "+3 Perception", "value": "perception"}
+                    {
+                      "label": "+3 Intelligence",
+                      "value": "intelligence"
+                    },
+                    {
+                      "label": "+3 Perception",
+                      "value": "perception"
+                    }
                   ],
                   "count": 1
                 },
@@ -114,7 +178,10 @@
                   "type": "equipment_random",
                   "label": "Gain one random heirloom (roll or choose with GM approval)",
                   "options": [
-                    {"label": "Heirloom item (see Rogue Trader Core p.364)", "value": "heirloom"}
+                    {
+                      "label": "Heirloom item (see Rogue Trader Core p.364)",
+                      "value": "heirloom"
+                    }
                   ],
                   "count": 1
                 }
@@ -150,7 +217,8 @@
       "custom": "Archeotechnologist option appears to be from additional source material"
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 5
   },
   "effects": [],
   "flags": {},

@@ -8,7 +8,10 @@
     "stepIndex": 5,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["fortune", "prestige"],
+    "replacesOrigins": [
+      "fortune",
+      "prestige"
+    ],
     "description": {
       "value": "<h2>Exhilaration</h2><blockquote><p><em>\"What joy is there in the mundane? What pleasure can be found in experiences already oft-tasted? To your mind, there is little if any excitement left in civilised realms.\"</em></p></blockquote><p>For you, the unexplored is a source of endless amusement, the rush of battle a sensation to be relished anew each time. New horizons and thrills are your aim and your goal, and everything else is simply a means to that end. But you grow worried, in the quiet moments, for what will you do once you've had it all? What joys remain for one who has seen and done everything?</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay its XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
@@ -41,7 +44,11 @@
               "description": "To see the stars, the suns and the moons of worlds already claimed by Man is of no interest to you. Only the hidden promise of strange and distant worlds entices you, and you desire only to push on and see as many new horizons and unique skies as possible. To mark unknown worlds with your presence and see things the likes of which no man has ever seen before is what drives you, and such a desire leaves no time for laxity, nor any room for complacency. You must go forward, for there is nothing unseen in your wake.",
               "grants": {
                 "skills": [
-                  {"name": "Common Lore", "specialization": "Koronus Expanse", "level": "trained"}
+                  {
+                    "name": "Common Lore",
+                    "specialization": "Koronus Expanse",
+                    "level": "trained"
+                  }
                 ]
               },
               "choices": [
@@ -49,8 +56,14 @@
                   "type": "skill",
                   "label": "Choose one exploration skill (Trained)",
                   "options": [
-                    {"label": "Scholastic Lore (Astromancy)", "value": "scholasticLore_astromancy"},
-                    {"label": "Trade (Explorator)", "value": "trade_explorator"}
+                    {
+                      "label": "Scholastic Lore (Astromancy)",
+                      "value": "scholasticLore_astromancy"
+                    },
+                    {
+                      "label": "Trade (Explorator)",
+                      "value": "trade_explorator"
+                    }
                   ],
                   "count": 1
                 }
@@ -66,11 +79,23 @@
                   "fellowship": -3
                 },
                 "skills": [
-                  {"name": "Scholastic Lore", "specialization": "Tactica Imperialis", "level": "trained"}
+                  {
+                    "name": "Scholastic Lore",
+                    "specialization": "Tactica Imperialis",
+                    "level": "trained"
+                  }
                 ],
                 "talents": [
-                  {"name": "Nerves of Steel", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.ew2l7tuorQ7fCJD8"},
-                  {"name": "Quick Draw", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.qdn5GQvS11uRvnIO"}
+                  {
+                    "name": "Nerves of Steel",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.ew2l7tuorQ7fCJD8"
+                  },
+                  {
+                    "name": "Quick Draw",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.qdn5GQvS11uRvnIO"
+                  }
                 ]
               },
               "choices": [
@@ -78,8 +103,16 @@
                   "type": "characteristic",
                   "label": "Choose one combat characteristic bonus",
                   "options": [
-                    {"label": "+3 Weapon Skill", "characteristic": "weaponSkill", "value": 3},
-                    {"label": "+3 Ballistic Skill", "characteristic": "ballisticSkill", "value": 3}
+                    {
+                      "label": "+3 Weapon Skill",
+                      "characteristic": "weaponSkill",
+                      "value": 3
+                    },
+                    {
+                      "label": "+3 Ballistic Skill",
+                      "characteristic": "ballisticSkill",
+                      "value": 3
+                    }
                   ],
                   "count": 1
                 }
@@ -96,10 +129,18 @@
                 },
                 "corruption": "1d5",
                 "skills": [
-                  {"name": "Carouse", "specialization": "", "level": "trained"}
+                  {
+                    "name": "Carouse",
+                    "specialization": "",
+                    "level": "trained"
+                  }
                 ],
                 "talents": [
-                  {"name": "Decadence", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.8rzBqEoffSgKTAp3"}
+                  {
+                    "name": "Decadence",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.8rzBqEoffSgKTAp3"
+                  }
                 ]
               },
               "choices": [
@@ -107,8 +148,16 @@
                   "type": "characteristic",
                   "label": "Choose one physical/social characteristic bonus",
                   "options": [
-                    {"label": "+3 Toughness", "characteristic": "toughness", "value": 3},
-                    {"label": "+3 Fellowship", "characteristic": "fellowship", "value": 3}
+                    {
+                      "label": "+3 Toughness",
+                      "characteristic": "toughness",
+                      "value": 3
+                    },
+                    {
+                      "label": "+3 Fellowship",
+                      "characteristic": "fellowship",
+                      "value": 3
+                    }
                   ],
                   "count": 1
                 }
@@ -144,7 +193,8 @@
       "custom": ""
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 2
   },
   "effects": [],
   "flags": {},

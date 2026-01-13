@@ -8,7 +8,10 @@
     "stepIndex": 2,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["scavenger", "savant"],
+    "replacesOrigins": [
+      "scavenger",
+      "savant"
+    ],
     "description": {
       "value": "<h2>Fringe Survivor</h2><blockquote><p><em>\"The Imperium's reach is vast, but its grip is not absolute. Between the iron fist of law and the cold void of space lie the borderlands—places where survival demands more than faith alone.\"</em></p></blockquote><p>Life in the Imperium is constrictive and stifling for most, but you and yours found ways to endure on society's fringes. Each day was a battle for survival, yet somehow you persevered against impossible odds, honing skills that would serve you well beyond the borders of civilization.</p><p>Perhaps you hail from nomadic families who moved across worlds and systems, following trade routes or resources, never staying long enough for the Imperium's bureaucracy to take firm hold. Or you may have grown up among those who trafficked in forbidden knowledge—tech-heretics who salvaged and rebuilt what the Adeptus Mechanicus deemed lost or forbidden. Some fringe survivors learned their craft in the blood-soaked arenas, where death and glory were dealt in equal measure for the entertainment of crowds and the profit of patrons.</p><p>Whatever your origins, the fringe taught you to be resourceful, alert, and uncompromising. You know how to read danger, to survive in hostile environments, and to do whatever it takes to see another sunrise. The God-Emperor may watch over all humanity, but on the fringes, you learned that survival is earned, not granted.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess (or will possess from your Career), you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
@@ -36,7 +39,11 @@
               "description": "Nomadic wanderers who move from place to place, following herds, resources, or trade. You have honed instincts for survival in hostile climates and developed an alertness to danger—but the horrors you've witnessed haunt you still.",
               "grants": {
                 "skills": [
-                  {"name": "Survival", "specialization": "", "level": "trained"}
+                  {
+                    "name": "Survival",
+                    "specialization": "",
+                    "level": "trained"
+                  }
                 ],
                 "fate": 1,
                 "insanity": "1d5+1"
@@ -46,8 +53,14 @@
                   "type": "characteristic",
                   "label": "Choose one characteristic bonus",
                   "options": [
-                    {"label": "+3 Toughness", "value": "toughness"},
-                    {"label": "+3 Perception", "value": "perception"}
+                    {
+                      "label": "+3 Toughness",
+                      "value": "toughness"
+                    },
+                    {
+                      "label": "+3 Perception",
+                      "value": "perception"
+                    }
                   ],
                   "count": 1
                 }
@@ -90,7 +103,10 @@
                   "weaponSkill": 3
                 },
                 "traits": [
-                  {"name": "Rival (Underworld)", "level": null}
+                  {
+                    "name": "Rival (Underworld)",
+                    "level": null
+                  }
                 ],
                 "corruption": 1
               },
@@ -99,8 +115,14 @@
                   "type": "characteristic",
                   "label": "Choose one physical characteristic bonus",
                   "options": [
-                    {"label": "+3 Toughness", "value": "toughness"},
-                    {"label": "+3 Strength", "value": "strength"}
+                    {
+                      "label": "+3 Toughness",
+                      "value": "toughness"
+                    },
+                    {
+                      "label": "+3 Strength",
+                      "value": "strength"
+                    }
                   ],
                   "count": 1
                 }
@@ -136,7 +158,8 @@
     "effectText": "<p><strong>Select one of the following paths:</strong></p><ul><li><strong>Survivalist (300 XP):</strong> +3 Toughness OR +3 Perception, Survival skill (trained), +1 Fate Point, 1d5+1 Insanity Points</li><li><strong>Heretek (100 XP):</strong> +3 Intelligence, select 2 skills from: Chem-Use, Common Lore (Tech), Forbidden Lore (Archeotech), Tech-Use, Medicae, Scholastic Lore (any) as untrained Basic skills, 1d5 Corruption Points</li><li><strong>Pit-Fighter (200 XP):</strong> +3 Toughness OR +3 Strength, +3 Weapon Skill, Rival (Underworld) trait, 1 Corruption Point</li></ul>",
     "notes": "Advanced origin from Into The Storm. Each path has an XP cost deducted from starting experience.",
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 1
   },
   "effects": [],
   "flags": {},

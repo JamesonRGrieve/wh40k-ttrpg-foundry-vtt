@@ -1,0 +1,68 @@
+{
+  "name": "Mechanicus Implants (Explorator)",
+  "type": "talent",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "identifier": "mechanicus-implants-explorator",
+    "category": "career",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "63"
+    },
+    "description": {
+      "value": "<p><strong>Mechanicus Implants:</strong> The Explorator has received extensive bionic augmentation as part of their training within the Adeptus Mechanicus. These sacred machine parts have become part of their flesh, granting them capabilities beyond those of unaugmented humanity. The Explorator's familiarity with these systems allows them to maintain and upgrade their bionics with exceptional skill.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You start with the Mechanicus Implants trait and two Common Craftsmanship bionics of your choice. At character creation only, you may spend 200 XP to increase the Craftsmanship level of one bionic by one step (Common to Good, or Good to Best). This may be done multiple times for different bionics.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Explorator Career",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Mechanicus Implants trait + 2 Common bionics; can upgrade bionics at creation (200 XP each)",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [
+        {
+          "name": "Mechanicus Implants",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-traits.CmZGDaC6HKYLh2Q1"
+        }
+      ],
+      "specialAbilities": [
+        {
+          "name": "Starting Bionics",
+          "description": "Choose two Common Craftsmanship bionics. At character creation, you may spend 200 XP per bionic to upgrade its Craftsmanship by one level (Common → Good, or Good → Best). This can be done multiple times for different bionics."
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CA00000000000004"
+}

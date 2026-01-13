@@ -1,0 +1,78 @@
+{
+  "name": "Weapon Master (Arch-Militant)",
+  "type": "talent",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "weapon-master-arch-militant",
+    "category": "career",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "61"
+    },
+    "description": {
+      "value": "<p><strong>Weapon Master:</strong> The Arch-Militant has dedicated their life to mastery of arms, becoming exceptionally skilled with one particular class of weaponry. Through countless hours of training and combat experience, they have achieved an almost supernatural proficiency with their chosen weapons.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Choose one weapon class (SP, Bolt, Las, Melta, Plasma, etc.). When using any weapon of the chosen class, you gain +10 to Hit, +2 Damage, and +2 Initiative.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Arch-Militant Career",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "condition": "Using chosen weapon class",
+            "modifier": 10,
+            "type": "To Hit"
+          },
+          {
+            "condition": "Using chosen weapon class",
+            "modifier": 2,
+            "type": "Damage"
+          },
+          {
+            "condition": "Using chosen weapon class",
+            "modifier": 2,
+            "type": "Initiative"
+          }
+        ]
+      }
+    },
+    "notes": "Choose weapon class at character creation: +10 Hit, +2 Damage, +2 Initiative with that class",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Master of Arms",
+          "description": "Choose one weapon class (SP, Bolt, Las, Melta, Plasma, Exotic, etc.) at character creation. When using any weapon of that class, gain +10 to Hit, +2 Damage, and +2 Initiative."
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CA00000000000002"
+}

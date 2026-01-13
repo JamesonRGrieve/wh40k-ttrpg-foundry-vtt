@@ -7,7 +7,7 @@
     "step": "career",
     "stepIndex": 6,
     "description": {
-      "value": "<p>Keeper of knowledge, subtle investigators and spymasters. They act as eyes, ears, contacts, and dealers of business legal or not.<br>Skills: Barter, Commerce, Common Lore (Underworld), Deceive, Evaluate, Forbidden Lore (Archeotech), Inquiry, Literacy, Speak Language (Low Gothic, Trader&#x27;s Cant)<br>Talents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal).<br>Gear: Best Hellpistol or Common Inferno Pistol, Best Hellgun or common Boltgun, Xeno-mesh Armour, Autoquill, Dataslate, Micro-bead, Multikey, two robes, synskin, chrono, cameleoline cloak.<br>Special Ability: Seeker of Lore: Can spend a Fate Point to automatically suceed Ciphers, Lore, or Logic Test. Doing so resolves the test in the minimum time required, the character adds one Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.</p>"
+      "value": "<h2>Seneschal</h2><p>The Seneschal is the master administrator, spymaster, and advisor to the Rogue Trader. They are keepers of secrets and masters of information, skilled in the arts of commerce, negotiation, and intrigue. Whether managing the dynasty's vast holdings, negotiating trade deals, or gathering intelligence on rivals, the Seneschal ensures that their lord's empire runs smoothly and profitably.</p><h3>Starting Skills</h3><p>Barter (Fel), Commerce (Fel), Common Lore (Underworld) (Int), Deceive (Fel), Evaluate (Int), Forbidden Lore (Archeotech) (Int), Inquiry (Fel), Literacy (Int), Speak Language (Low Gothic, Trader's Cant) (Int)</p><h3>Starting Talents</h3><p>Basic Weapon Training (Universal), Pistol Weapon Training (Universal), Seeker of Lore</p><h3>Starting Gear</h3><p>Best-craftsmanship hellpistol or common-craftsmanship inferno pistol. Best-craftsmanship hellgun or common-craftsmanship boltgun. Xeno-mesh armour. Autoquill, dataslate, micro-bead, multikey, two sets of robes, synskin, chrono, cameleoline cloak.</p><h3>Special Ability</h3><p><strong>Seeker of Lore:</strong> The Seneschal may spend a Fate Point to automatically succeed at any Ciphers, Lore, or Logic Test. Doing so means that the Test is resolved in the minimum time required. In addition, the Seneschal adds one bonus Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.</p>"
     },
     "requirements": {
       "text": "Origin Path: Career",
@@ -15,102 +15,113 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
           "name": "Barter",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
           "name": "Commerce",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Common Lore (Underworld)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "Underworld",
+          "level": "trained"
         },
         {
           "name": "Deceive",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
           "name": "Evaluate",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Forbidden Lore (Archeotech)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Forbidden Lore",
+          "specialization": "Archeotech",
+          "level": "trained"
         },
         {
           "name": "Inquiry",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
           "name": "Literacy",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Speak Language (Low Gothic",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Low Gothic",
+          "level": "trained"
         },
         {
-          "name": "Trader&#x27",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "s Cant)<br>",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Universal",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Trader's Cant",
+          "level": "trained"
         }
       ],
       "talents": [
-        "s: Basic Weapon Training (Universal)",
-        "Pistol Weapon Training (Universal)"
-      ],
-      "traits": [],
-      "equipment": [],
-      "specialAbilities": [
         {
-          "name": "Special Ability",
-          "description": "Seeker of Lore: Can spend a Fate Point to automatically suceed Ciphers, Lore, or Logic Test. Doing so resolves the test in the minimum time required, the character adds one Degree of Success to any successful Commerce, Inquiry, or Evaluate Test"
+          "name": "Basic Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.oVPo5SB4q7rTwLRt"
+        },
+        {
+          "name": "Pistol Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.o76kP0Y85FTEcS7G"
+        },
+        {
+          "name": "Seeker of Lore (Seneschal)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CA00000000000007"
         }
       ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": []
     },
-    "effectText": "Keeper of knowledge, subtle investigators and spymasters. They act as eyes, ears, contacts, and dealers of business legal or not.\nSkills: Barter, Commerce, Common Lore (Underworld), Deceive, Evaluate, Forbidden Lore (Archeotech), Inquiry, Literacy, Speak Language (Low Gothic, Trader's Cant)\nTalents: Basic Weapon Training (Universal), Pistol Weapon Training (Universal).\nGear: Best Hellpistol or Common Inferno Pistol, Best Hellgun or common Boltgun, Xeno-mesh Armour, Autoquill, Dataslate, Micro-bead, Multikey, two robes, synskin, chrono, cameleoline cloak.\nSpecial Ability: Seeker of Lore: Can spend a Fate Point to automatically suceed Ciphers, Lore, or Logic Test. Doing so resolves the test in the minimum time required, the character adds one Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "66",
+      "custom": ""
+    },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 6
   },
   "effects": [],
   "flags": {},

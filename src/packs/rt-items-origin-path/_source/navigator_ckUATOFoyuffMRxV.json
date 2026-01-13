@@ -7,7 +7,7 @@
     "step": "career",
     "stepIndex": 6,
     "description": {
-      "value": "<p>Mutants of ancient noble lines, whose third eyes allow them to pilot vessels through the warp.<br>Skills: Common Lore (Navis Nobilite), Forbidden Lore (Navigators, Warp), Literacy, Navigation (Stellar, Warp), Psyniscience, Scholastic Lore (Astromancy), Speak Language (High Gothic, Low Gothic)<br>Talents: Navigator, Pistol Weapon Training (Universal)<br>Gear: Best Hellpistol or Good Hand-cannon, Best Metal Staff, Best Xeno-mesh Armour, Emperor&#x27;s Tarot deck, Silk Headscarf, Nobilite Robes, Charm, Micro-bead.<br>Special Ability: Warp Eye: Start with Warp Eye Navigator Power and one other Navigator Power. Gain boons and mutations based upon the Navigator&#x27;s Lineage. (See Psychic Powers Page)</p>"
+      "value": "<h2>Navigator</h2><p>Navigators are mutant psykers who possess the legendary Warp Eye, a third eye that allows them to perceive the currents of the Immaterium and guide ships safely through the Warp. They are members of ancient Navigator Houses who jealously guard their bloodlines, for their unique mutation is both their greatest blessing and their darkest curse. Without Navigators, humanity's galactic empire would crumble, as interstellar travel would take centuries instead of weeks.</p><h3>Starting Skills</h3><p>Common Lore (Navis Nobilite) (Int), Forbidden Lore (Navigators, Warp) (Int), Literacy (Int), Navigation (Stellar, Warp) (Int), Psyniscience (Per), Scholastic Lore (Astromancy) (Int), Speak Language (High Gothic, Low Gothic) (Int)</p><h3>Starting Talents</h3><p>Navigator, Pistol Weapon Training (Universal), Warp Eye</p><h3>Starting Gear</h3><p>Best-craftsmanship hellpistol or good-craftsmanship hand cannon, best-craftsmanship metal staff, best-craftsmanship xeno-mesh armour, Emperor's tarot deck, silk headscarf, Nobilite robes, charm, micro-bead.</p><h3>Special Abilities</h3><p><strong>Warp Eye:</strong> All Navigators begin with the Lidless Stare Navigator power as detailed in Chapter VII: Navigator Powers and may either select one additional power or improve an existing power. As the Navigator develops, he may select more powers or improve existing powers by selecting the Navigator Power Advance.</p><p><strong>The Boons of Lineage:</strong> A Navigator hails from a lineage of a particular type that grants him a number of advantages and quirks. The Lineages which a Navigator may hail from are Nomadic Houses, Magisterial Houses, Shrouded Houses, or Renegade Houses. The details and effects of each of these lineages may be found on pages 176 to 178 in Chapter VII: Navigator Powers.</p><p><strong>Navigator Mutations:</strong> The Navigator begins play with a number of Navigator Mutations determined by the nature of his Lineage.</p>"
     },
     "requirements": {
       "text": "Origin Path: Career",
@@ -15,114 +15,113 @@
       "excludedSteps": []
     },
     "grants": {
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
-        },
-        "wounds": 0,
-        "fate": 0
-      },
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
       "skills": [
         {
-          "name": "Common Lore (Navis Nobilite)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Common Lore",
+          "specialization": "Navis Nobilite",
+          "level": "trained"
         },
         {
-          "name": "Forbidden Lore (Navigators",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Forbidden Lore",
+          "specialization": "Navigators",
+          "level": "trained"
         },
         {
-          "name": "Warp)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Forbidden Lore",
+          "specialization": "Warp",
+          "level": "trained"
         },
         {
           "name": "Literacy",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Navigation (Stellar",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Navigation",
+          "specialization": "Stellar",
+          "level": "trained"
+        },
+        {
+          "name": "Navigation",
+          "specialization": "Warp",
+          "level": "trained"
         },
         {
           "name": "Psyniscience",
-          "trainingModifier": 1,
-          "specialization": ""
+          "specialization": "",
+          "level": "trained"
         },
         {
-          "name": "Scholastic Lore (Astromancy)",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Scholastic Lore",
+          "specialization": "Astromancy",
+          "level": "trained"
         },
         {
-          "name": "Speak Language (High Gothic",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "High Gothic",
+          "level": "trained"
         },
         {
-          "name": "Low Gothic)<br>",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "boons",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "mutations based upon the Navigator&#x27",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "s Lineage",
-          "trainingModifier": 1,
-          "specialization": ""
-        },
-        {
-          "name": "Universal",
-          "trainingModifier": 1,
-          "specialization": ""
+          "name": "Speak Language",
+          "specialization": "Low Gothic",
+          "level": "trained"
         }
       ],
       "talents": [
-        "s: Navigator",
-        "Best Metal Staff",
-        "Best Xeno-mesh Armour",
-        "Emperor&#x27",
-        "s Tarot deck",
-        "Silk Headscarf",
-        "Nobilite Robes",
-        "Charm",
-        "Micro-bead"
-      ],
-      "traits": [],
-      "equipment": [],
-      "specialAbilities": [
         {
-          "name": "Special Ability",
-          "description": "Warp Eye: Start with Warp Eye Navigator Power and one other Navigator Power. Gain boons and mutations based upon the Navigator&#x27;s Lineage"
+          "name": "Navigator",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.liZDH1Rwc0jTW6cb"
+        },
+        {
+          "name": "Pistol Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.o76kP0Y85FTEcS7G"
+        },
+        {
+          "name": "Warp Eye (Navigator)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CA00000000000006"
         }
       ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": []
     },
-    "effectText": "Mutants of ancient noble lines, whose third eyes allow them to pilot vessels through the warp.\nSkills: Common Lore (Navis Nobilite), Forbidden Lore (Navigators, Warp), Literacy, Navigation (Stellar, Warp), Psyniscience, Scholastic Lore (Astromancy), Speak Language (High Gothic, Low Gothic)\nTalents: Navigator, Pistol Weapon Training (Universal)\nGear: Best Hellpistol or Good Hand-cannon, Best Metal Staff, Best Xeno-mesh Armour, Emperor's Tarot deck, Silk Headscarf, Nobilite Robes, Charm, Micro-bead.\nSpecial Ability: Warp Eye: Start with Warp Eye Navigator Power and one other Navigator Power. Gain boons and mutations based upon the Navigator's Lineage. (See Psychic Powers Page)",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
     "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "65",
+      "custom": ""
+    },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 7
   },
   "effects": [],
   "flags": {},

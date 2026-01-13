@@ -8,7 +8,10 @@
     "stepIndex": 4,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["the-hand-of-war", "high-vendetta"],
+    "replacesOrigins": [
+      "the-hand-of-war",
+      "high-vendetta"
+    ],
     "description": {
       "value": "<h2>Darkness</h2><blockquote><p><em>\"The galaxy is a dark and unforgiving place; anyone who says otherwise is a fool! As happens in the universe, some are selected by things dark and terrible. Their exposure to such things has left its mark upon their souls.\"</em></p></blockquote><p>Some study forbidden tomes and texts in the hopes of learning some arcane or esoteric lore. Others have been victim to a warp-incursion, a tear in the barrier between the material universe and the Realm of Chaos. A rare few have been touched by something wicked, even possessed by it, and now carry the burden of that encounter—seeking to rid themselves of the affliction before they either succumb to it or are found out by their peers or the authorities.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
@@ -41,7 +44,11 @@
               "description": "You are drawn to the esoteric like a moth to a flame. Perhaps your study was intentional; you found a mysterious tome or other work. Maybe it was accidental. It could have been spoken to you through the cracked lips of a dying man, or perhaps you spied a document that should have been sealed and the knowledge burned itself into your brain. Whatever the reason or circumstance, you bear forbidden knowledge. It might be part of the name of a daemon, or the location of some barbaric fane where human sacrifices are made in the name of the Ruinous Powers. It might also be something a bit more mundane, such as a proscribed experiment being conducted by a Magus-Biologis of the Adeptus Mechanicus. Whatever it is, you're sure that if the powers that be were to learn that you know, they would stop at nothing to purge it from you.",
               "grants": {
                 "talents": [
-                  {"name": "Paranoia", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.MXViwrGcKNBtNZjx"}
+                  {
+                    "name": "Paranoia",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.MXViwrGcKNBtNZjx"
+                  }
                 ]
               },
               "choices": [
@@ -49,10 +56,22 @@
                   "type": "skill",
                   "label": "Choose one Common Lore (Trained)",
                   "options": [
-                    {"label": "Common Lore (Imperium)", "value": "commonLore_imperium"},
-                    {"label": "Common Lore (Koronus Expanse)", "value": "commonLore_koronus"},
-                    {"label": "Common Lore (Machine Cult)", "value": "commonLore_machine"},
-                    {"label": "Common Lore (War)", "value": "commonLore_war"}
+                    {
+                      "label": "Common Lore (Imperium)",
+                      "value": "commonLore_imperium"
+                    },
+                    {
+                      "label": "Common Lore (Koronus Expanse)",
+                      "value": "commonLore_koronus"
+                    },
+                    {
+                      "label": "Common Lore (Machine Cult)",
+                      "value": "commonLore_machine"
+                    },
+                    {
+                      "label": "Common Lore (War)",
+                      "value": "commonLore_war"
+                    }
                   ],
                   "count": 1
                 },
@@ -60,12 +79,30 @@
                   "type": "skill",
                   "label": "Choose one Forbidden Lore (Trained)",
                   "options": [
-                    {"label": "Forbidden Lore (Archeotech)", "value": "forbiddenLore_archeotech"},
-                    {"label": "Forbidden Lore (Daemonology)", "value": "forbiddenLore_daemonology"},
-                    {"label": "Forbidden Lore (Heresy)", "value": "forbiddenLore_heresy"},
-                    {"label": "Forbidden Lore (Psykers)", "value": "forbiddenLore_psykers"},
-                    {"label": "Forbidden Lore (The Warp)", "value": "forbiddenLore_warp"},
-                    {"label": "Forbidden Lore (Xenos)", "value": "forbiddenLore_xenos"}
+                    {
+                      "label": "Forbidden Lore (Archeotech)",
+                      "value": "forbiddenLore_archeotech"
+                    },
+                    {
+                      "label": "Forbidden Lore (Daemonology)",
+                      "value": "forbiddenLore_daemonology"
+                    },
+                    {
+                      "label": "Forbidden Lore (Heresy)",
+                      "value": "forbiddenLore_heresy"
+                    },
+                    {
+                      "label": "Forbidden Lore (Psykers)",
+                      "value": "forbiddenLore_psykers"
+                    },
+                    {
+                      "label": "Forbidden Lore (The Warp)",
+                      "value": "forbiddenLore_warp"
+                    },
+                    {
+                      "label": "Forbidden Lore (Xenos)",
+                      "value": "forbiddenLore_xenos"
+                    }
                   ],
                   "count": 1
                 },
@@ -73,7 +110,10 @@
                   "type": "talent",
                   "label": "Enemy faction (GM and player determine)",
                   "options": [
-                    {"label": "Enemy (group knowledge was taken from)", "value": "enemy_custom"}
+                    {
+                      "label": "Enemy (group knowledge was taken from)",
+                      "value": "enemy_custom"
+                    }
                   ],
                   "count": 1
                 }
@@ -87,8 +127,16 @@
               "grants": {
                 "corruption": "1d5",
                 "talents": [
-                  {"name": "Resistance (Psychic Powers)", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"},
-                  {"name": "Light Sleeper", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.5zWJdxMlWz5X4Dvx"}
+                  {
+                    "name": "Resistance (Psychic Powers)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"
+                  },
+                  {
+                    "name": "Light Sleeper",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.5zWJdxMlWz5X4Dvx"
+                  }
                 ]
               },
               "choices": []
@@ -106,15 +154,51 @@
                   "type": "characteristic",
                   "label": "Choose one characteristic to gain +6",
                   "options": [
-                    {"label": "+6 Weapon Skill", "characteristic": "weaponSkill", "value": 6},
-                    {"label": "+6 Ballistic Skill", "characteristic": "ballisticSkill", "value": 6},
-                    {"label": "+6 Strength", "characteristic": "strength", "value": 6},
-                    {"label": "+6 Toughness", "characteristic": "toughness", "value": 6},
-                    {"label": "+6 Agility", "characteristic": "agility", "value": 6},
-                    {"label": "+6 Intelligence", "characteristic": "intelligence", "value": 6},
-                    {"label": "+6 Perception", "characteristic": "perception", "value": 6},
-                    {"label": "+6 Willpower", "characteristic": "willpower", "value": 6},
-                    {"label": "+6 Fellowship", "characteristic": "fellowship", "value": 6}
+                    {
+                      "label": "+6 Weapon Skill",
+                      "characteristic": "weaponSkill",
+                      "value": 6
+                    },
+                    {
+                      "label": "+6 Ballistic Skill",
+                      "characteristic": "ballisticSkill",
+                      "value": 6
+                    },
+                    {
+                      "label": "+6 Strength",
+                      "characteristic": "strength",
+                      "value": 6
+                    },
+                    {
+                      "label": "+6 Toughness",
+                      "characteristic": "toughness",
+                      "value": 6
+                    },
+                    {
+                      "label": "+6 Agility",
+                      "characteristic": "agility",
+                      "value": 6
+                    },
+                    {
+                      "label": "+6 Intelligence",
+                      "characteristic": "intelligence",
+                      "value": 6
+                    },
+                    {
+                      "label": "+6 Perception",
+                      "characteristic": "perception",
+                      "value": 6
+                    },
+                    {
+                      "label": "+6 Willpower",
+                      "characteristic": "willpower",
+                      "value": 6
+                    },
+                    {
+                      "label": "+6 Fellowship",
+                      "characteristic": "fellowship",
+                      "value": 6
+                    }
                   ],
                   "count": 1
                 }
@@ -150,7 +234,8 @@
       "custom": ""
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 1
   },
   "effects": [],
   "flags": {},

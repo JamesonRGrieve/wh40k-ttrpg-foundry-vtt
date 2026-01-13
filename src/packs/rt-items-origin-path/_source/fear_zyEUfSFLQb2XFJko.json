@@ -44,7 +44,11 @@
                   "perception": 3
                 },
                 "talents": [
-                  {"name": "Paranoia", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.MXViwrGcKNBtNZjx"}
+                  {
+                    "name": "Paranoia",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.MXViwrGcKNBtNZjx"
+                  }
                 ]
               },
               "choices": []
@@ -57,9 +61,21 @@
               "grants": {
                 "corruption": "1d10",
                 "talents": [
-                  {"name": "Dark Soul", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.UOSAYwEb4x3AyrQ4"},
-                  {"name": "Frenzy", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.h0r6im1YDlmrxdAC"},
-                  {"name": "Flagellant", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.vk2BLAEVdV1l6EgE"}
+                  {
+                    "name": "Dark Soul",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.UOSAYwEb4x3AyrQ4"
+                  },
+                  {
+                    "name": "Frenzy",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.h0r6im1YDlmrxdAC"
+                  },
+                  {
+                    "name": "Flagellant",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.vk2BLAEVdV1l6EgE"
+                  }
                 ]
               },
               "choices": [
@@ -67,12 +83,30 @@
                   "type": "skill",
                   "label": "Gain one Forbidden Lore (Untrained - Basic skill)",
                   "options": [
-                    {"label": "Forbidden Lore (Archeotech)", "value": "forbiddenLore_archeotech"},
-                    {"label": "Forbidden Lore (Daemonology)", "value": "forbiddenLore_daemonology"},
-                    {"label": "Forbidden Lore (Heresy)", "value": "forbiddenLore_heresy"},
-                    {"label": "Forbidden Lore (Psykers)", "value": "forbiddenLore_psykers"},
-                    {"label": "Forbidden Lore (The Warp)", "value": "forbiddenLore_warp"},
-                    {"label": "Forbidden Lore (Xenos)", "value": "forbiddenLore_xenos"}
+                    {
+                      "label": "Forbidden Lore (Archeotech)",
+                      "value": "forbiddenLore_archeotech"
+                    },
+                    {
+                      "label": "Forbidden Lore (Daemonology)",
+                      "value": "forbiddenLore_daemonology"
+                    },
+                    {
+                      "label": "Forbidden Lore (Heresy)",
+                      "value": "forbiddenLore_heresy"
+                    },
+                    {
+                      "label": "Forbidden Lore (Psykers)",
+                      "value": "forbiddenLore_psykers"
+                    },
+                    {
+                      "label": "Forbidden Lore (The Warp)",
+                      "value": "forbiddenLore_warp"
+                    },
+                    {
+                      "label": "Forbidden Lore (Xenos)",
+                      "value": "forbiddenLore_xenos"
+                    }
                   ],
                   "count": 1
                 }
@@ -86,9 +120,21 @@
               "grants": {
                 "insanity": "2d10",
                 "talents": [
-                  {"name": "Light Sleeper", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.5zWJdxMlWz5X4Dvx"},
-                  {"name": "Jaded", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.ldTw7wC9T3dPeOig"},
-                  {"name": "Resistance", "specialization": "Fear", "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"}
+                  {
+                    "name": "Light Sleeper",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.5zWJdxMlWz5X4Dvx"
+                  },
+                  {
+                    "name": "Jaded",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.ldTw7wC9T3dPeOig"
+                  },
+                  {
+                    "name": "Resistance",
+                    "specialization": "Fear",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"
+                  }
                 ]
               },
               "choices": []
@@ -123,7 +169,8 @@
       "custom": ""
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 0
   },
   "effects": [],
   "flags": {},

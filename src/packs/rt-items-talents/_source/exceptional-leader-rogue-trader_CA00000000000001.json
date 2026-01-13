@@ -1,0 +1,62 @@
+{
+  "name": "Exceptional Leader (Rogue Trader)",
+  "type": "talent",
+  "img": "icons/svg/angel.svg",
+  "system": {
+    "identifier": "exceptional-leader-rogue-trader",
+    "category": "career",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "60"
+    },
+    "description": {
+      "value": "<p><strong>Exceptional Leader:</strong> The Rogue Trader is a natural leader whose commands inspire confidence and determination in their followers. Through force of personality and tactical acumen, they can rally their allies in the most dire circumstances.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>As a Free Action once per round, you may grant one ally within line of sight and hearing a +10 bonus to any one Test. You cannot use this ability on yourself.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Rogue Trader Career",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Free Action: Grant one visible ally +10 to any Test (cannot self-target)",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Inspiring Leadership",
+          "description": "Once per round as a Free Action, grant one ally you can see and who can hear you +10 to any one Test. Cannot be used on yourself."
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CA00000000000001"
+}

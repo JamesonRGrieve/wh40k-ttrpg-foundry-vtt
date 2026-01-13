@@ -1,0 +1,68 @@
+{
+  "name": "Soul-Bound (Astropath Transcendent)",
+  "type": "talent",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "identifier": "soul-bound-astropath",
+    "category": "career",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "62"
+    },
+    "description": {
+      "value": "<p><strong>Soul-Bound:</strong> The Astropath Transcendent has undergone the Soul-Binding ritual before the Golden Throne on Terra, forging an unbreakable connection to the Emperor Himself. This sacred bond protects the psyker's soul from daemonic predation, though at great personal cost (blindness). The ritual grants extraordinary resistance against possession and provides a measure of protection when channeling the perils of the Warp.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain +20 to Willpower Tests to resist daemonic possession in any opposed Willpower Test against daemons. When rolling on the Perils of the Warp table, roll an additional d10 and discard one die of your choice.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Astropath Transcendent Career",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "condition": "Resisting daemonic possession",
+            "modifier": 20,
+            "type": "Willpower Test"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "+20 WP vs daemonic possession; roll extra d10 for Perils of the Warp (discard one)",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Emperor's Protection",
+          "description": "+20 to Willpower Tests to resist daemonic possession or daemonic effects. When rolling Perils of the Warp, roll 2d10 and choose which result to use."
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CA00000000000003"
+}

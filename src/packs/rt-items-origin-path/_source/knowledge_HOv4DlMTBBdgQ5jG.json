@@ -8,7 +8,10 @@
     "stepIndex": 5,
     "xpCost": 0,
     "isAdvancedOrigin": true,
-    "replacesOrigins": ["vengeance", "pride"],
+    "replacesOrigins": [
+      "vengeance",
+      "pride"
+    ],
     "description": {
       "value": "<h2>Knowledge</h2><blockquote><p><em>\"You crave understanding, desire comprehension, and value knowledge above all else. It is not something to be shared or given freely, but something to be unearthed and drawn close, held secure within the vaults of your mind.\"</em></p></blockquote><p>In a very real sense, knowledge is power, for those who possess it have the means to overcome things against which the ignorant would falter. It can be a shield against the greatest of foes, or a tool to uncover yet greater secrets, or even a holy thing in its own right... but it can also be damning. Those who seek knowledge must be wary, for their greed and curiosity can lead them down treacherous paths. Some things, after all, are not meant to be known.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay its XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
@@ -41,7 +44,11 @@
               "description": "Lore is all-important to you; it is your purpose and your reason, it is your goal and your desire, and it is the one thing above all else that you aspire to possess. There is no ulterior motive to your drive to understand, no hidden purpose to give that curiosity a focus. You simply crave knowledge with every fibre of your being, and you cannot stand the idea of not knowing or not understanding something. Though new insights and revelations cannot hope to sate this bottomless urge, new understanding brings with it new power and new means with which to find yet more knowledge. Each answer leads to still more questions, and every new vista promises a variety of secrets yet to be uncovered.",
               "grants": {
                 "talents": [
-                  {"name": "Total Recall", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.5w4MtzbhmNP9VKbQ"}
+                  {
+                    "name": "Total Recall",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.5w4MtzbhmNP9VKbQ"
+                  }
                 ]
               },
               "choices": [
@@ -49,20 +56,62 @@
                   "type": "skill_multi",
                   "label": "Choose TWO Scholastic Lore skills (Trained)",
                   "options": [
-                    {"label": "Scholastic Lore (Archeotech)", "value": "scholasticLore_archeotech"},
-                    {"label": "Scholastic Lore (Astromancy)", "value": "scholasticLore_astromancy"},
-                    {"label": "Scholastic Lore (Beasts)", "value": "scholasticLore_beasts"},
-                    {"label": "Scholastic Lore (Bureaucracy)", "value": "scholasticLore_bureaucracy"},
-                    {"label": "Scholastic Lore (Chymistry)", "value": "scholasticLore_chymistry"},
-                    {"label": "Scholastic Lore (Cryptology)", "value": "scholasticLore_cryptology"},
-                    {"label": "Scholastic Lore (Heraldry)", "value": "scholasticLore_heraldry"},
-                    {"label": "Scholastic Lore (Imperial Creed)", "value": "scholasticLore_creed"},
-                    {"label": "Scholastic Lore (Judgment)", "value": "scholasticLore_judgment"},
-                    {"label": "Scholastic Lore (Legend)", "value": "scholasticLore_legend"},
-                    {"label": "Scholastic Lore (Numerology)", "value": "scholasticLore_numerology"},
-                    {"label": "Scholastic Lore (Occult)", "value": "scholasticLore_occult"},
-                    {"label": "Scholastic Lore (Philosophy)", "value": "scholasticLore_philosophy"},
-                    {"label": "Scholastic Lore (Tactica Imperialis)", "value": "scholasticLore_tactica"}
+                    {
+                      "label": "Scholastic Lore (Archeotech)",
+                      "value": "scholasticLore_archeotech"
+                    },
+                    {
+                      "label": "Scholastic Lore (Astromancy)",
+                      "value": "scholasticLore_astromancy"
+                    },
+                    {
+                      "label": "Scholastic Lore (Beasts)",
+                      "value": "scholasticLore_beasts"
+                    },
+                    {
+                      "label": "Scholastic Lore (Bureaucracy)",
+                      "value": "scholasticLore_bureaucracy"
+                    },
+                    {
+                      "label": "Scholastic Lore (Chymistry)",
+                      "value": "scholasticLore_chymistry"
+                    },
+                    {
+                      "label": "Scholastic Lore (Cryptology)",
+                      "value": "scholasticLore_cryptology"
+                    },
+                    {
+                      "label": "Scholastic Lore (Heraldry)",
+                      "value": "scholasticLore_heraldry"
+                    },
+                    {
+                      "label": "Scholastic Lore (Imperial Creed)",
+                      "value": "scholasticLore_creed"
+                    },
+                    {
+                      "label": "Scholastic Lore (Judgment)",
+                      "value": "scholasticLore_judgment"
+                    },
+                    {
+                      "label": "Scholastic Lore (Legend)",
+                      "value": "scholasticLore_legend"
+                    },
+                    {
+                      "label": "Scholastic Lore (Numerology)",
+                      "value": "scholasticLore_numerology"
+                    },
+                    {
+                      "label": "Scholastic Lore (Occult)",
+                      "value": "scholasticLore_occult"
+                    },
+                    {
+                      "label": "Scholastic Lore (Philosophy)",
+                      "value": "scholasticLore_philosophy"
+                    },
+                    {
+                      "label": "Scholastic Lore (Tactica Imperialis)",
+                      "value": "scholasticLore_tactica"
+                    }
                   ],
                   "count": 2
                 },
@@ -70,7 +119,11 @@
                   "type": "skill_optional",
                   "label": "Optional: Purchase a third Scholastic Lore (Trained) for an additional 200 XP",
                   "options": [
-                    {"label": "Third Scholastic Lore (200 XP)", "value": "scholastic_lore_third", "xpCost": 200}
+                    {
+                      "label": "Third Scholastic Lore (200 XP)",
+                      "value": "scholastic_lore_third",
+                      "xpCost": 200
+                    }
                   ],
                   "count": 1
                 }
@@ -87,12 +140,30 @@
                   "type": "skill",
                   "label": "Choose one Forbidden Lore (Trained)",
                   "options": [
-                    {"label": "Forbidden Lore (Archeotech)", "value": "forbiddenLore_archeotech"},
-                    {"label": "Forbidden Lore (Daemonology)", "value": "forbiddenLore_daemonology"},
-                    {"label": "Forbidden Lore (Heresy)", "value": "forbiddenLore_heresy"},
-                    {"label": "Forbidden Lore (Psykers)", "value": "forbiddenLore_psykers"},
-                    {"label": "Forbidden Lore (The Warp)", "value": "forbiddenLore_warp"},
-                    {"label": "Forbidden Lore (Xenos)", "value": "forbiddenLore_xenos"}
+                    {
+                      "label": "Forbidden Lore (Archeotech)",
+                      "value": "forbiddenLore_archeotech"
+                    },
+                    {
+                      "label": "Forbidden Lore (Daemonology)",
+                      "value": "forbiddenLore_daemonology"
+                    },
+                    {
+                      "label": "Forbidden Lore (Heresy)",
+                      "value": "forbiddenLore_heresy"
+                    },
+                    {
+                      "label": "Forbidden Lore (Psykers)",
+                      "value": "forbiddenLore_psykers"
+                    },
+                    {
+                      "label": "Forbidden Lore (The Warp)",
+                      "value": "forbiddenLore_warp"
+                    },
+                    {
+                      "label": "Forbidden Lore (Xenos)",
+                      "value": "forbiddenLore_xenos"
+                    }
                   ],
                   "count": 1
                 },
@@ -100,7 +171,11 @@
                   "type": "skill_optional",
                   "label": "Optional: Purchase a second Forbidden Lore (Trained) for an additional 200 XP",
                   "options": [
-                    {"label": "Second Forbidden Lore (200 XP)", "value": "forbidden_lore_second", "xpCost": 200}
+                    {
+                      "label": "Second Forbidden Lore (200 XP)",
+                      "value": "forbidden_lore_second",
+                      "xpCost": 200
+                    }
                   ],
                   "count": 1
                 }
@@ -113,7 +188,11 @@
               "description": "There is no worth in knowledge if everyone possesses it; if knowledge is commonplace, then it bestows no power upon its keepers. You understand this better than most, because you possess much knowledge. It is a tool to greater power, a means of fulfilling other ambitions, bringing ruin to enemies and elevating allies, and in all ways an advantage over those less knowledgeable. You gather information to wield in these ways, bolstering your arsenal of insights with every passing day and every new encounter. Few are those who think to cross you, for you are knowledgeable and willing to use that to your advantage in all things.",
               "grants": {
                 "talents": [
-                  {"name": "Foresight", "specialization": "", "uuid": "Compendium.rogue-trader.rt-items-talents.OJFzaZs0NhmI5ySC"}
+                  {
+                    "name": "Foresight",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.OJFzaZs0NhmI5ySC"
+                  }
                 ]
               },
               "choices": [
@@ -121,8 +200,16 @@
                   "type": "characteristic",
                   "label": "Choose one mental characteristic bonus",
                   "options": [
-                    {"label": "+3 Intelligence", "characteristic": "intelligence", "value": 3},
-                    {"label": "+3 Perception", "characteristic": "perception", "value": 3}
+                    {
+                      "label": "+3 Intelligence",
+                      "characteristic": "intelligence",
+                      "value": 3
+                    },
+                    {
+                      "label": "+3 Perception",
+                      "characteristic": "perception",
+                      "value": 3
+                    }
                   ],
                   "count": 1
                 },
@@ -130,14 +217,38 @@
                   "type": "skill",
                   "label": "Choose one Common Lore or Scholastic Lore (Trained)",
                   "options": [
-                    {"label": "Common Lore (Imperium)", "value": "commonLore_imperium"},
-                    {"label": "Common Lore (Koronus Expanse)", "value": "commonLore_koronus"},
-                    {"label": "Common Lore (Machine Cult)", "value": "commonLore_machine"},
-                    {"label": "Common Lore (War)", "value": "commonLore_war"},
-                    {"label": "Scholastic Lore (Archeotech)", "value": "scholasticLore_archeotech"},
-                    {"label": "Scholastic Lore (Astromancy)", "value": "scholasticLore_astromancy"},
-                    {"label": "Scholastic Lore (Legend)", "value": "scholasticLore_legend"},
-                    {"label": "Scholastic Lore (Philosophy)", "value": "scholasticLore_philosophy"}
+                    {
+                      "label": "Common Lore (Imperium)",
+                      "value": "commonLore_imperium"
+                    },
+                    {
+                      "label": "Common Lore (Koronus Expanse)",
+                      "value": "commonLore_koronus"
+                    },
+                    {
+                      "label": "Common Lore (Machine Cult)",
+                      "value": "commonLore_machine"
+                    },
+                    {
+                      "label": "Common Lore (War)",
+                      "value": "commonLore_war"
+                    },
+                    {
+                      "label": "Scholastic Lore (Archeotech)",
+                      "value": "scholasticLore_archeotech"
+                    },
+                    {
+                      "label": "Scholastic Lore (Astromancy)",
+                      "value": "scholasticLore_astromancy"
+                    },
+                    {
+                      "label": "Scholastic Lore (Legend)",
+                      "value": "scholasticLore_legend"
+                    },
+                    {
+                      "label": "Scholastic Lore (Philosophy)",
+                      "value": "scholasticLore_philosophy"
+                    }
                   ],
                   "count": 1
                 }
@@ -173,7 +284,8 @@
       "custom": ""
     },
     "selectedChoices": {},
-    "activeModifiers": []
+    "activeModifiers": [],
+    "position": 3
   },
   "effects": [],
   "flags": {},

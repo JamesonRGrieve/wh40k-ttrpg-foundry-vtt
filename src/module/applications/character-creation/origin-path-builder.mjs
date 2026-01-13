@@ -10,6 +10,7 @@
 
 import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
 import OriginPathChoiceDialog from "./origin-path-choice-dialog.mjs";
+import { evaluateWoundsFormula, evaluateFateFormula, describeWoundsFormula, describeFateFormula } from "../../utils/formula-evaluator.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -325,7 +326,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             talents: [],
             traits: [],
             aptitudes: [],
-            specialAbilities: []
+            specialAbilities: [],
+            woundsFormulas: [],
+            fateFormulas: []
         };
 
         // Iterate over all selections
@@ -343,14 +346,40 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Grants
             const grants = item.system?.grants || {};
 
-            // Wounds
-            if (grants.wounds) {
+            // Wounds - prefer formula over legacy field
+            if (grants.woundsFormula) {
+                preview.woundsFormulas.push({
+                    source: item.name,
+                    formula: grants.woundsFormula,
+                    description: describeWoundsFormula(grants.woundsFormula)
+                });
+                // Evaluate formula for preview (using current actor state)
+                const evaluated = evaluateWoundsFormula(grants.woundsFormula, this.actor);
+                preview.characteristics.wounds = (preview.characteristics.wounds || 0) + evaluated;
+            } else if (grants.wounds) {
+                // Legacy field - still support it
                 preview.characteristics.wounds = (preview.characteristics.wounds || 0) + grants.wounds;
+                if (grants.wounds !== 0) {
+                    console.warn(`Origin "${item.name}" uses legacy grants.wounds field. Consider migrating to woundsFormula.`);
+                }
             }
 
-            // Fate
-            if (grants.fateThreshold) {
+            // Fate - prefer formula over legacy field
+            if (grants.fateFormula) {
+                preview.fateFormulas.push({
+                    source: item.name,
+                    formula: grants.fateFormula,
+                    description: describeFateFormula(grants.fateFormula)
+                });
+                // Evaluate formula for preview
+                const evaluated = evaluateFateFormula(grants.fateFormula);
+                preview.characteristics.fate = (preview.characteristics.fate || 0) + evaluated;
+            } else if (grants.fateThreshold) {
+                // Legacy field - still support it
                 preview.characteristics.fate = (preview.characteristics.fate || 0) + grants.fateThreshold;
+                if (grants.fateThreshold !== 0) {
+                    console.warn(`Origin "${item.name}" uses legacy grants.fateThreshold field. Consider migrating to fateFormula.`);
+                }
             }
 
             // Skills
@@ -766,6 +795,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Apply characteristic advances
         const charUpdates = {};
+        let totalWoundsBonus = 0;
+        let totalFateBonus = 0;
+        
         for (const item of createdItems) {
             const charMods = item.system?.modifiers?.characteristics || {};
             for (const [char, value] of Object.entries(charMods)) {
@@ -777,6 +809,45 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         (this.actor.system.characteristics[char]?.base || 0) + value;
                 }
             }
+            
+            // Evaluate wounds formula (prefer formula over legacy field)
+            const grants = item.system?.grants || {};
+            if (grants.woundsFormula) {
+                const evaluated = evaluateWoundsFormula(grants.woundsFormula, this.actor);
+                totalWoundsBonus += evaluated;
+                game.rt.log(`Origin "${item.name}" wounds formula "${grants.woundsFormula}" evaluated to ${evaluated}`);
+            } else if (grants.wounds) {
+                totalWoundsBonus += grants.wounds;
+                if (grants.wounds !== 0) {
+                    console.warn(`Origin "${item.name}" uses legacy grants.wounds field (${grants.wounds}). Consider migrating to woundsFormula.`);
+                }
+            }
+            
+            // Evaluate fate formula (prefer formula over legacy field)
+            if (grants.fateFormula) {
+                const evaluated = evaluateFateFormula(grants.fateFormula);
+                totalFateBonus += evaluated;
+                game.rt.log(`Origin "${item.name}" fate formula "${grants.fateFormula}" evaluated to ${evaluated}`);
+            } else if (grants.fateThreshold) {
+                totalFateBonus += grants.fateThreshold;
+                if (grants.fateThreshold !== 0) {
+                    console.warn(`Origin "${item.name}" uses legacy grants.fateThreshold field (${grants.fateThreshold}). Consider migrating to fateFormula.`);
+                }
+            }
+        }
+        
+        // Apply wounds bonus to max wounds
+        if (totalWoundsBonus !== 0) {
+            const currentMaxWounds = this.actor.system.wounds?.max || 0;
+            charUpdates['system.wounds.max'] = currentMaxWounds + totalWoundsBonus;
+            game.rt.log(`Applied ${totalWoundsBonus} total wounds from origin path (new max: ${charUpdates['system.wounds.max']})`);
+        }
+        
+        // Apply fate bonus to fate threshold
+        if (totalFateBonus !== 0) {
+            const currentFateThreshold = this.actor.system.fate?.threshold || 0;
+            charUpdates['system.fate.threshold'] = currentFateThreshold + totalFateBonus;
+            game.rt.log(`Applied ${totalFateBonus} total fate from origin path (new threshold: ${charUpdates['system.fate.threshold']})`);
         }
 
         // Apply updates
