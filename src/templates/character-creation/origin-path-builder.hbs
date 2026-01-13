@@ -59,21 +59,39 @@
         </div>
     </header>
 
-    {{!-- Step Navigation --}}
+    {{!-- Step Navigation with Visual Progress --}}
     <nav class="step-navigation">
         {{#each steps as |step|}}
             <div class="step-nav-item {{#if step.isActive}}active{{/if}} {{#if step.isComplete}}complete{{/if}} {{#if step.isDisabled}}disabled{{/if}}" 
                  data-action="goToStep" 
-                 data-step-index="{{step.index}}">
-                <span class="step-number">{{add step.index 1}}</span>
+                 data-step-index="{{step.index}}"
+                 data-tooltip="{{step.label}}{{#if step.selection}}: {{step.selection.name}}{{/if}}">
+                <div class="step-number">
+                    {{#if step.selection}}
+                        <img src="{{step.selection.img}}" alt="{{step.selection.name}}" class="step-icon-img" />
+                    {{else}}
+                        {{add step.index 1}}
+                    {{/if}}
+                </div>
                 <span class="step-label">{{step.shortLabel}}</span>
             </div>
+            {{#unless @last}}
+                <div class="step-connector {{#if step.isComplete}}active{{/if}}"></div>
+            {{/unless}}
         {{/each}}
         {{!-- Lineage Step (shown after all 6 steps are complete) --}}
         {{#if status.stepsComplete}}
+            <div class="step-connector {{#if hasLineageSelection}}active{{/if}}"></div>
             <div class="step-nav-item lineage-step {{#if showLineage}}active{{/if}} {{#if hasLineageSelection}}complete{{/if}}" 
-                 data-action="goToLineage">
-                <span class="step-number"><i class="fa-solid fa-crown"></i></span>
+                 data-action="goToLineage"
+                 data-tooltip="{{localize 'RT.OriginPath.Lineage'}}{{#if hasLineageSelection}}: {{lineageSelection.name}}{{/if}}">
+                <div class="step-number">
+                    {{#if hasLineageSelection}}
+                        <img src="{{lineageSelection.img}}" alt="{{lineageSelection.name}}" class="step-icon-img" />
+                    {{else}}
+                        <i class="fa-solid fa-crown"></i>
+                    {{/if}}
+                </div>
                 <span class="step-label">{{localize "RT.OriginPath.Lineage"}}</span>
             </div>
         {{/if}}
@@ -97,27 +115,6 @@
                     {{/if}}
                 </div>
             </div>
-            
-            {{!-- Visual Progress Tracker (similar to BIO tab) --}}
-            {{#unless currentStep.isLineage}}
-                <div class="builder-visual-progress">
-                    {{#each steps as |step|}}
-                        <div class="builder-progress-node {{#if step.isComplete}}filled{{else}}empty{{/if}} {{#if step.isActive}}active{{/if}}"
-                             data-tooltip="{{step.label}}{{#if step.selection}}: {{step.selection.name}}{{/if}}">
-                            <div class="progress-node-circle">
-                                {{#if step.selection}}
-                                    <img src="{{step.selection.img}}" alt="{{step.selection.name}}" class="progress-node-img" />
-                                {{else}}
-                                    <i class="fas {{step.icon}}"></i>
-                                {{/if}}
-                            </div>
-                        </div>
-                        {{#unless @last}}
-                            <div class="progress-connector {{#if step.isComplete}}active{{/if}}"></div>
-                        {{/unless}}
-                    {{/each}}
-                </div>
-            {{/unless}}
 
             {{!-- Origin Cards --}}
             <div class="origin-cards-grid">

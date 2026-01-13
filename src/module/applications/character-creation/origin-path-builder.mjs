@@ -583,14 +583,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             };
         }
         
-        // Prepare skills with tooltips
-        const skills = (grants.skills || []).map(skill => ({
-            name: skill.name,
-            specialization: skill.specialization || null,
-            displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
-            level: skill.level || "trained",
-            levelLabel: this._getTrainingLabel(skill.level)
-        }));
+        // Prepare skills with tooltips and UUIDs
+        const skills = [];
+        for (const skill of (grants.skills || [])) {
+            const displayName = skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name;
+            skills.push({
+                name: skill.name,
+                specialization: skill.specialization || null,
+                displayName: displayName,
+                level: skill.level || "trained",
+                levelLabel: this._getTrainingLabel(skill.level),
+                uuid: await this._findSkillUuid(skill.name, skill.specialization)
+            });
+        }
         
         // Prepare talents with item lookup for tooltips
         const talents = await this._prepareTalentsWithTooltips(grants.talents || []);
@@ -761,9 +766,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         };
         
         const charTotals = {};
-        const skillSet = new Set();
-        const talentSet = new Set();
-        const traitSet = new Set();
+        const skillMap = new Map(); // name -> {name, uuid}
+        const talentMap = new Map(); // name -> {name, uuid}
+        const traitMap = new Map(); // name -> {name, uuid}
         const equipmentList = [];
         
         for (const [step, selection] of this.selections) {
@@ -779,33 +784,49 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 }
             }
             
-            // Collect base skills
+            // Collect base skills with UUIDs
             if (grants.skills) {
                 for (const skill of grants.skills) {
                     const skillName = skill.specialization 
                         ? `${skill.name} (${skill.specialization})`
                         : (skill.name || skill);
-                    skillSet.add(skillName);
-                }
-            }
-            
-            // Collect base talents and their modifiers
-            if (grants.talents) {
-                for (const talent of grants.talents) {
-                    const talentName = talent.name || talent;
-                    talentSet.add(talentName);
-                    
-                    // Look up talent modifiers from UUID if available
-                    if (talent.uuid) {
-                        await this._addTalentModifiers(talent.uuid, charTotals, skillSet);
+                    if (!skillMap.has(skillName)) {
+                        skillMap.set(skillName, {
+                            name: skillName,
+                            uuid: await this._findSkillUuid(skill.name, skill.specialization)
+                        });
                     }
                 }
             }
             
-            // Collect base traits
+            // Collect base talents with UUIDs
+            if (grants.talents) {
+                for (const talent of grants.talents) {
+                    const talentName = talent.name || talent;
+                    if (!talentMap.has(talentName)) {
+                        talentMap.set(talentName, {
+                            name: talentName,
+                            uuid: talent.uuid || null
+                        });
+                    }
+                    
+                    // Look up talent modifiers from UUID if available
+                    if (talent.uuid) {
+                        await this._addTalentModifiers(talent.uuid, charTotals, skillMap);
+                    }
+                }
+            }
+            
+            // Collect base traits with UUIDs
             if (grants.traits) {
                 for (const trait of grants.traits) {
-                    traitSet.add(trait.name || trait);
+                    const traitName = trait.name || trait;
+                    if (!traitMap.has(traitName)) {
+                        traitMap.set(traitName, {
+                            name: traitName,
+                            uuid: trait.uuid || null
+                        });
+                    }
                 }
             }
             
@@ -835,33 +856,52 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                             }
                         }
                         
-                        // Choice skills
+                        // Choice skills with UUIDs
                         if (choiceGrants.skills) {
                             for (const skill of choiceGrants.skills) {
                                 const skillName = skill.specialization 
                                     ? `${skill.name} (${skill.specialization})`
                                     : (skill.name || skill);
-                                skillSet.add(skillName);
-                            }
-                        }
-                        
-                        // Choice talents and their modifiers
-                        if (choiceGrants.talents) {
-                            for (const talent of choiceGrants.talents) {
-                                const talentName = talent.name || talent;
-                                talentSet.add(talentName);
-                                
-                                // Look up talent modifiers from UUID if available
-                                if (talent.uuid) {
-                                    await this._addTalentModifiers(talent.uuid, charTotals, skillSet);
+                                if (!skillMap.has(skillName)) {
+                                    skillMap.set(skillName, {
+                                        name: skillName,
+                                        uuid: await this._findSkillUuid(skill.name, skill.specialization),
+                                        fromChoice: true
+                                    });
                                 }
                             }
                         }
                         
-                        // Choice traits
+                        // Choice talents with UUIDs
+                        if (choiceGrants.talents) {
+                            for (const talent of choiceGrants.talents) {
+                                const talentName = talent.name || talent;
+                                if (!talentMap.has(talentName)) {
+                                    talentMap.set(talentName, {
+                                        name: talentName,
+                                        uuid: talent.uuid || null,
+                                        fromChoice: true
+                                    });
+                                }
+                                
+                                // Look up talent modifiers from UUID if available
+                                if (talent.uuid) {
+                                    await this._addTalentModifiers(talent.uuid, charTotals, skillMap);
+                                }
+                            }
+                        }
+                        
+                        // Choice traits with UUIDs
                         if (choiceGrants.traits) {
                             for (const trait of choiceGrants.traits) {
-                                traitSet.add(trait.name || trait);
+                                const traitName = trait.name || trait;
+                                if (!traitMap.has(traitName)) {
+                                    traitMap.set(traitName, {
+                                        name: traitName,
+                                        uuid: trait.uuid || null,
+                                        fromChoice: true
+                                    });
+                                }
                             }
                         }
                         
@@ -900,24 +940,52 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             });
         }
         
-        // Convert sets to arrays
-        preview.skills = Array.from(skillSet).map(name => ({ name }));
-        preview.talents = Array.from(talentSet).map(name => ({ name }));
-        preview.traits = Array.from(traitSet).map(name => ({ name }));
+        // Convert maps to arrays (preserving UUIDs)
+        preview.skills = Array.from(skillMap.values());
+        preview.talents = Array.from(talentMap.values());
+        preview.traits = Array.from(traitMap.values());
         preview.equipment = equipmentList.map(name => ({ name }));
         
         return preview;
+    }
+    
+    /**
+     * Find skill UUID by looking up in compendium
+     * @param {string} skillName
+     * @param {string} specialization
+     * @returns {Promise<string|null>}
+     * @private
+     */
+    async _findSkillUuid(skillName, specialization = null) {
+        try {
+            const skillPack = game.packs.find(p => p.metadata.name === "rt-items-skills");
+            if (!skillPack) return null;
+            
+            const index = skillPack.index;
+            const searchName = specialization ? `${skillName} (${specialization})` : skillName;
+            
+            // Try exact match first
+            for (const [id, entry] of index.entries()) {
+                if (entry.name === searchName || entry.name === skillName) {
+                    return `Compendium.${skillPack.metadata.id}.${id}`;
+                }
+            }
+            
+            return null;
+        } catch (error) {
+            return null;
+        }
     }
 
     /**
      * Look up a talent by UUID and add its modifiers to the totals
      * @param {string} uuid - Compendium UUID for the talent
      * @param {object} charTotals - Characteristic totals accumulator
-     * @param {Set} skillSet - Skill set accumulator
+     * @param {Map} skillMap - Skill map accumulator (name -> {name, uuid})
      * @returns {Promise<void>}
      * @private
      */
-    async _addTalentModifiers(uuid, charTotals, skillSet) {
+    async _addTalentModifiers(uuid, charTotals, skillMap) {
         try {
             const talent = await fromUuid(uuid);
             if (!talent) return;
@@ -939,7 +1007,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     const skillName = skill.specialization 
                         ? `${skill.name} (${skill.specialization})`
                         : (skill.name || skill);
-                    skillSet.add(skillName);
+                    if (!skillMap.has(skillName)) {
+                        skillMap.set(skillName, {
+                            name: skillName,
+                            uuid: await this._findSkillUuid(skill.name, skill.specialization)
+                        });
+                    }
                 }
             }
             
@@ -947,7 +1020,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (talentGrants.talents) {
                 for (const nestedTalent of talentGrants.talents) {
                     if (nestedTalent.uuid) {
-                        await this._addTalentModifiers(nestedTalent.uuid, charTotals, skillSet);
+                        await this._addTalentModifiers(nestedTalent.uuid, charTotals, skillMap);
                     }
                 }
             }
