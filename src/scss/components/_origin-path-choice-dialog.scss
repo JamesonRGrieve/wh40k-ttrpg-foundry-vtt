@@ -238,12 +238,12 @@
     position: absolute;
     top: var(--rt-space-xs);
     right: var(--rt-space-xs);
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.7);
     border: 1px solid var(--rt-bronze);
     border-radius: 50%;
     color: var(--rt-gold);
@@ -256,6 +256,11 @@
         background: var(--rt-gold);
         color: var(--rt-bg-dark);
         border-color: var(--rt-gold);
+        transform: scale(1.1);
+    }
+    
+    i {
+        font-size: 0.85rem;
     }
 }
 
