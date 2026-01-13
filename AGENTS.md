@@ -1375,11 +1375,25 @@ const result = await OriginGrantsProcessor.processOriginGrants(originItems, acto
 
 ### Builder Workflow
 
-1. **Drag origins** from compendium onto the 6 step slots
-2. **Make choices** when prompted (skill selection, talent picks, etc.)
-3. **Roll stats** if the origin has wounds/fate formulas
-4. **Preview bonuses** in the right-side panel
-5. **Commit path** to apply all grants to the character
+1. **Drag origins** from compendium onto the 6 step slots OR click an origin card to preview it
+2. **Click "Confirm Selection"** button to lock in the previewed origin
+   - If changing an already-selected step, user is warned which later steps will be reset
+3. **Make choices** when prompted (skill selection, talent picks, etc.)
+   - All choice options now have "View Item Sheet" buttons (talents, traits, equipment, skills)
+   - Skill UUIDs are looked up automatically using the Skill UUID Helper
+4. **Roll stats** if the origin has wounds/fate formulas
+5. **Preview bonuses** in the right-side panel
+6. **Navigate steps** freely without warnings (warnings only appear on confirmation)
+7. **Commit path** to apply all grants to the character
+
+### Navigation Behavior
+
+- **Click step indicator**: Jump to that step (no warning)
+- **Click origin card**: Preview in panel (no selection yet)
+- **Click "Confirm Selection"**: Lock in preview, check for cascade resets, warn if needed
+- **Change existing selection**: Warns about resetting later steps before confirming
+
+This flow is more intuitive: users can browse freely, but get warned before making destructive changes.
 
 ### Key Methods
 
@@ -1613,7 +1627,80 @@ this.fatigue.max = this.characteristics.toughness.bonus;  // Auto-calculated
 
 ---
 
-## Appendix D: Recent Changes Log
+## Appendix D: Skill UUID Helper
+
+**Location**: `src/module/helpers/skill-uuid-helper.mjs`
+
+Utility for looking up skill UUIDs from compendium packs. See [SKILL_UUID_HELPER.md](SKILL_UUID_HELPER.md) for full documentation.
+
+### Key Functions
+
+| Function | Purpose |
+|----------|---------|
+| `findSkillUuid(name, spec?)` | Find UUID for a skill by name and optional specialization |
+| `batchFindSkillUuids(skills)` | Batch lookup multiple skills |
+| `parseSkillName(fullName)` | Parse "Common Lore (Imperium)" into name + spec |
+| `getSkillFromUuid(uuid)` | Load skill Item from UUID |
+| `clearSkillUuidCache()` | Clear internal cache |
+
+### Usage in Origin Path Builder
+
+The choice dialog uses this helper to enable "View Item Sheet" buttons for skill grants:
+
+```javascript
+// Parse skill name and lookup UUID
+const skillName = skillData.name || skillData;
+const specialization = skillData.specialization || null;
+const uuid = await findSkillUuid(skillName, specialization);
+
+// Template can now show view button
+{{#if option.uuid}}
+    <button data-action="viewItem" data-uuid="{{option.uuid}}">
+        <i class="fa-solid fa-eye"></i>
+    </button>
+{{/if}}
+```
+
+Handles specialist skills with specializations:
+- `"Awareness"` → looks up standard skill
+- `"Common Lore (Imperium)"` → parses and looks up specialist skill
+- `"Common Lore", "Imperium"` → same result as above
+
+Results are cached for performance.
+
+---
+
+## Appendix E: Recent Changes Log
+
+### January 13, 2026 - Origin Path Builder Improvements
+
+**Skill UUID Helper:**
+- Created `src/module/helpers/skill-uuid-helper.mjs` with comprehensive skill lookup utilities
+- Handles standard skills ("Awareness") and specialist skills ("Common Lore (Imperium)")
+- Caches results for performance, supports batch lookups
+- Full documentation in [SKILL_UUID_HELPER.md](SKILL_UUID_HELPER.md)
+
+**Origin Path Choice Dialog:**
+- Added skill UUID lookup for choice grants
+- View item sheet buttons now work for all grant types: talents, traits, equipment, AND skills
+- Handles specialist skills with specializations properly
+- Uses async context preparation for UUID resolution
+
+**Navigation Flow Improvements:**
+- Removed "Going back will reset..." warning when clicking previous steps
+- Added "Changing this selection will reset..." warning when CONFIRMING a change to an already-selected step
+- Warning now shows which specific later steps will be reset
+- More intuitive: warning appears when user is about to make a destructive change, not when just browsing
+
+**Biography Tab Cleanup:**
+- Removed redundant `rt-origin-selection-card` list from biography tab
+- Kept only `rt-origin-steps-visual` (the flowchart display)
+- Cleaner, less repetitive UI
+
+**Localization Updates:**
+- Added `RT.OriginPath.StepHomeWorld`, `StepBirthright`, `StepLureOfTheVoid`, `StepTrialsAndTravails`, `StepMotivation`, `StepCareer`
+- Added `RT.OriginPath.ChangeSelection` and `ChangeSelectionWarning`
+- Added `RT.OriginPath.NoPreviewedOrigin` and `ViewDetails`
 
 ### January 10, 2026 - Template & Caching Simplification
 

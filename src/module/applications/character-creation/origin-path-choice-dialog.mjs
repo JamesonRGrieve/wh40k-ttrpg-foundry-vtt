@@ -5,6 +5,8 @@
  * has multiple options (e.g., "Choose 1 of 3 talents").
  */
 
+import { findSkillUuid } from "../../helpers/skill-uuid-helper.mjs";
+
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -102,7 +104,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         context.itemImg = this.item.img;
         
         // Prepare choices with selection state
-        context.choices = this.pendingChoices.map(choice => {
+        context.choices = await Promise.all(this.pendingChoices.map(async choice => {
             const selections = this.selections.get(choice.label) || new Set();
             const remaining = choice.count - selections.size;
             
@@ -112,12 +114,36 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                 label: choice.label,
                 count: choice.count,
                 remaining: remaining,
-                options: (choice.options || []).map(option => {
+                options: await Promise.all((choice.options || []).map(async option => {
                     // Handle both string and object option formats
                     const optValue = typeof option === "string" ? option : (option.value || option.label);
                     const optLabel = typeof option === "string" ? option : (option.label || option.value);
                     const optDesc = typeof option === "object" ? option.description : null;
-                    const optUuid = typeof option === "object" ? option.uuid : null;
+                    
+                    // Extract UUID from option.uuid OR from grants (talents/skills/traits/equipment)
+                    let optUuid = typeof option === "object" ? option.uuid : null;
+                    if (!optUuid && typeof option === "object" && option.grants) {
+                        // Check grants for items with UUIDs
+                        const grants = option.grants;
+                        if (grants.talents?.length > 0 && grants.talents[0].uuid) {
+                            optUuid = grants.talents[0].uuid;
+                        } else if (grants.skills?.length > 0) {
+                            // Handle skills - they may need UUID lookup
+                            const skillData = grants.skills[0];
+                            if (skillData.uuid) {
+                                optUuid = skillData.uuid;
+                            } else {
+                                // Parse skill name and specialization, then look up UUID
+                                const skillName = skillData.name || skillData;
+                                const specialization = skillData.specialization || null;
+                                optUuid = await findSkillUuid(skillName, specialization);
+                            }
+                        } else if (grants.traits?.length > 0 && grants.traits[0].uuid) {
+                            optUuid = grants.traits[0].uuid;
+                        } else if (grants.equipment?.length > 0 && grants.equipment[0].uuid) {
+                            optUuid = grants.equipment[0].uuid;
+                        }
+                    }
                     
                     return {
                         value: optValue,
@@ -127,9 +153,9 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                         selected: selections.has(optValue),
                         disabled: !selections.has(optValue) && remaining <= 0
                     };
-                })
+                }))
             };
-        });
+        }));
 
         // Check if all choices are complete
         context.allChoicesComplete = context.choices.every(c => c.remaining === 0);
@@ -256,6 +282,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     static async #viewItem(event, target) {
         event.stopPropagation(); // Don't trigger parent card click
+        event.preventDefault();  // Prevent default button behavior
         
         const uuid = target.dataset.uuid;
         if (!uuid) return;

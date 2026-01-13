@@ -75,7 +75,6 @@
     justify-content: space-between;
     gap: 0;
     padding: $rt-space-lg $rt-space-sm;
-    margin-bottom: $rt-space-md;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), transparent);
     border-radius: $rt-radius-md;
 }
@@ -158,8 +157,8 @@
     height: 3px;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
     margin: 0 2px;
-    position: relative;
-    top: -20px;
+    align-self: center;
+    margin-bottom: 20px; // Offset by half the label height to align with circles
     border-radius: 2px;
 
     &.rt-active {
@@ -168,72 +167,116 @@
 }
 
 // ----------------------------------------
-// SELECTED ORIGINS LIST
+// ORIGIN PATH BUILDER BUTTON (PROMINENT CTA)
 // ----------------------------------------
-.rt-origin-selections-modern {
-    display: flex;
-    flex-direction: column;
-    gap: $rt-space-sm;
-    margin-bottom: $rt-space-md;
+.rt-origin-builder-cta {
+    margin-top: $rt-space-md;
+    padding: 0 $rt-space-sm;
 }
 
-.rt-origin-selection-card {
+.rt-btn-origin-builder {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: $rt-space-md;
-    padding: $rt-space-sm $rt-space-md;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: $rt-space-md $rt-space-lg;
+    background: linear-gradient(135deg, $rt-color-gold, darken($rt-color-gold, 8%));
+    border: 2px solid darken($rt-color-gold, 15%);
     border-radius: $rt-radius-md;
-    transition: all $rt-transition-fast;
-
-    &:hover {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
-        border-color: rgba($rt-color-gold, 0.3);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    }
-}
-
-.rt-selection-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid rgba($rt-color-gold, 0.3);
-    flex-shrink: 0;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-}
-
-.rt-selection-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex: 1;
-    min-width: 0;
-}
-
-.rt-selection-step-label {
-    font-size: $rt-font-size-xs;
-    font-weight: 600;
+    color: rgba(0, 0, 0, 0.9);
+    font-family: var(--rt-font-heading, 'Modesto Condensed', serif);
+    font-size: $rt-font-size-lg;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: rgba(0, 0, 0, 0.5);
-}
-
-.rt-selection-name {
-    font-size: $rt-font-size-base;
-    font-weight: 600;
-    color: rgba(0, 0, 0, 0.85);
     cursor: pointer;
-    transition: color $rt-transition-fast;
+    box-shadow: 0 4px 12px rgba($rt-color-gold, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all $rt-transition-base;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
 
     &:hover {
-        color: $rt-color-gold;
+        background: linear-gradient(135deg, lighten($rt-color-gold, 5%), $rt-color-gold);
+        border-color: darken($rt-color-gold, 10%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($rt-color-gold, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+
+        &::before {
+            left: 100%;
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba($rt-color-gold, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    i {
+        font-size: 1.5rem;
+        color: rgba(0, 0, 0, 0.8);
+    }
+
+    .rt-btn-text {
+        flex: 1;
+        text-align: center;
+    }
+
+    .rt-builder-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: $rt-radius-md;
+        font-size: $rt-font-size-xs;
+        font-weight: 700;
+        font-family: var(--rt-font-numeric, 'Roboto Mono', monospace);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+        &.rt-complete {
+            background: rgba($rt-color-success, 0.9);
+            color: white;
+            
+            i {
+                color: white;
+                font-size: 0.9em;
+            }
+        }
+
+        &.rt-incomplete {
+            background: rgba(0, 0, 0, 0.3);
+            color: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.4);
+        }
+    }
+}
+
+// ----------------------------------------
+// EMPTY STATE MESSAGE
+// ----------------------------------------
+.rt-origin-empty-state {
+    padding: $rt-space-xl;
+    text-align: center;
+    
+    .rt-empty-text {
+        color: rgba(0, 0, 0, 0.4);
+        font-style: italic;
+        margin: 0;
+        
+        i {
+            color: $rt-color-gold;
+        }
     }
 }
 

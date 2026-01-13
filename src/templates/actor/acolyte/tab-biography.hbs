@@ -45,19 +45,10 @@
                 <div class="rt-origin-header-left">
                     <i class="fas fa-route"></i>
                     <span class="rt-panel-title">Origin Path</span>
-                    <div class="rt-origin-progress-badge {{#if originPathSummary.isComplete}}rt-complete{{/if}}">
-                        <span class="rt-progress-text">{{originPathSummary.completedSteps}}/{{originPathSummary.totalSteps}}</span>
-                        {{#if originPathSummary.isComplete}}
-                            <i class="fas fa-check-circle"></i>
-                        {{/if}}
-                    </div>
                 </div>
-                <button type="button" class="rt-btn-icon rt-btn-icon--primary" data-action="openOriginPathBuilder" data-tooltip="Build Path">
-                    <i class="fas fa-diagram-project"></i>
-                </button>
             </div>
             <div class="rt-panel-body">
-                {{!-- Visual Step Indicators --}}
+                {{!-- Visual Step Indicators (always shown) --}}
                 <div class="rt-origin-steps-visual">
                     {{#each originPathSteps as |step|}}
                     <div class="rt-origin-step-node {{#if step.item}}rt-filled{{else}}rt-empty{{/if}}" 
@@ -79,29 +70,33 @@
                     {{/each}}
                 </div>
 
-                {{!-- Selected Origins List --}}
-                {{#if originPathSummary.completedSteps}}
-                <div class="rt-origin-selections-modern">
-                    {{#each originPathSteps as |step|}}
-                    {{#if step.item}}
-                    <div class="rt-origin-selection-card" data-item-id="{{step.item._id}}">
-                        <div class="rt-selection-icon">
-                            <img src="{{step.item.img}}" alt="{{step.item.name}}" />
-                        </div>
-                        <div class="rt-selection-content">
-                            <span class="rt-selection-step-label">{{step.label}}</span>
-                            <span class="rt-selection-name" data-action="itemEdit" data-item-id="{{step.item._id}}">{{step.item.name}}</span>
-                        </div>
-                        <button type="button" class="rt-btn-icon rt-btn-icon--delete" data-action="itemDelete" data-item-id="{{step.item._id}}" data-tooltip="Remove">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    {{/if}}
-                    {{/each}}
+                {{!-- Origin Path Builder Button - Prominent Call-to-Action --}}
+                <div class="rt-origin-builder-cta">
+                    <button type="button" class="rt-btn-origin-builder" data-action="openOriginPathBuilder" data-tooltip="Open the Origin Path Builder to construct your character's journey">
+                        <i class="fas fa-diagram-project"></i>
+                        <span class="rt-btn-text">Build Origin Path</span>
+                        {{#if originPathSummary.isComplete}}
+                            <span class="rt-builder-badge rt-complete">
+                                <i class="fas fa-check-circle"></i>
+                                Complete
+                            </span>
+                        {{else}}
+                            <span class="rt-builder-badge rt-incomplete">
+                                {{originPathSummary.completedSteps}}/{{originPathSummary.totalSteps}}
+                            </span>
+                        {{/if}}
+                    </button>
                 </div>
-                {{/if}}
 
-                {{!-- Accumulated Bonuses (Collapsible - Start Collapsed) --}}
+                {{!-- Empty State Message (only if no steps completed) --}}
+                {{#unless originPathSummary.completedSteps}}
+                <div class="rt-origin-empty-state">
+                    <p class="rt-empty-text">No origin path selected yet. Click the button above to begin your journey.</p>
+                </div>
+                {{/unless}}
+            </div>
+
+            {{!-- Accumulated Bonuses (Collapsible - Start Collapsed) --}}
                 {{#if originPathSummary.isComplete}}
                 <div class="rt-origin-bonuses-modern collapsed" data-panel-id="origin-bonuses" data-collapsed="true">
                     <button type="button" class="rt-bonuses-toggle" data-action="togglePanel" data-panel-id="origin-bonuses">
