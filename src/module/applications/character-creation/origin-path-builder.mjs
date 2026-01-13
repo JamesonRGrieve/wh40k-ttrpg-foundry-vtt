@@ -42,11 +42,6 @@ const DIRECTION = {
     BACKWARD: "backward"  // Start at Career, end at Home World
 };
 
-/**
- * Legacy compatibility alias - some code may reference STEPS directly
- */
-const STEPS = CORE_STEPS;
-
 export default class OriginPathBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
 
     /** @override */
@@ -1094,7 +1089,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         
         const chartLayout = OriginChartLayout.computeFullChart(this.allOrigins, this.selections, false);
         
-        for (let i = 0; i < STEPS.length; i++) {
+        for (let i = 0; i < CORE_STEPS.length; i++) {
             const stepLayout = chartLayout.steps[i];
             const validOrigins = stepLayout.cards.filter(c => c.isSelectable);
             
@@ -1104,7 +1099,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 
                 // Store as plain data object (not Item instance)
                 const originData = this._itemToSelectionData(selected.origin);
-                this.selections.set(STEPS[i].step, originData);
+                this.selections.set(CORE_STEPS[i].step, originData);
             }
         }
         
@@ -1261,27 +1256,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
         
-        // If going back to a previous step, warn about cascade reset
-        const oldIndex = this.currentStepIndex;
-        if (stepIndex < oldIndex && this.guidedMode) {
-            const stepsToReset = this.orderedSteps.slice(stepIndex + 1);
-            const hasSelections = stepsToReset.some(s => this.selections.has(s.step));
-            
-            if (hasSelections) {
-                const confirmed = await Dialog.confirm({
-                    title: game.i18n.localize("RT.OriginPath.GoBack"),
-                    content: game.i18n.localize("RT.OriginPath.GoBackWarning")
-                });
-                
-                if (confirmed) {
-                    // Reset subsequent steps
-                    for (const step of stepsToReset) {
-                        this.selections.delete(step.step);
-                    }
-                }
-            }
-        }
-        
+        // NOTE: No warning when navigating to steps - warning happens on confirmation instead
         this.currentStepIndex = stepIndex;
         this.render();
     }
@@ -1323,6 +1298,33 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (!this.previewedOrigin) {
             ui.notifications.warn(game.i18n.localize("RT.OriginPath.NoPreviewedOrigin"));
             return;
+        }
+        
+        const currentStep = this.currentStep;
+        
+        // Check if we're changing an existing selection in guided mode
+        if (this.guidedMode && this.selections.has(currentStep.step)) {
+            // Find steps that would be reset
+            const currentIndex = this.orderedSteps.findIndex(s => s.key === currentStep.key);
+            const stepsToReset = this.orderedSteps.slice(currentIndex + 1);
+            const hasSelections = stepsToReset.some(s => this.selections.has(s.step));
+            
+            if (hasSelections) {
+                // Build list of steps that will be reset
+                const stepNames = stepsToReset
+                    .filter(s => this.selections.has(s.step))
+                    .map(s => game.i18n.localize(`RT.OriginPath.Step${s.key.charAt(0).toUpperCase() + s.key.slice(1)}`))
+                    .join(", ");
+                
+                const confirmed = await Dialog.confirm({
+                    title: game.i18n.localize("RT.OriginPath.ChangeSelection"),
+                    content: game.i18n.format("RT.OriginPath.ChangeSelectionWarning", { steps: stepNames })
+                });
+                
+                if (!confirmed) {
+                    return; // User cancelled
+                }
+            }
         }
         
         // Now actually select and confirm
