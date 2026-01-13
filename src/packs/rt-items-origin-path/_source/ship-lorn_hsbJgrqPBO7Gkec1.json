@@ -17,19 +17,16 @@
     "grants": {
       "skills": [],
       "talents": [],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [
+      "traits": [
         {
-          "name": "Against All Odds",
-          "description": "<p>You gain the Survival Skill (or increase it by one level if you already possess it) or the Dark Soul Talent. Additionally, whenever you spend a Fate Point to recover Wounds (see page 233), you may re-roll the dice if you wish but must accept the second result even if it is worse.</p>"
-        },
-        {
-          "name": "Ill-starred",
-          "description": "<p>Reduce your starting number of Fate Points permanently by −1. Additionally, you suffer −5 on Fellowship Tests when interacting with the void born, Rogue Traders, and other voidfarers who are not personal friends, if they have heard of your background and reputation.</p>"
+          "name": "Ill-Starred",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-traits.SLD0000000000001"
         }
       ],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "survival_path",

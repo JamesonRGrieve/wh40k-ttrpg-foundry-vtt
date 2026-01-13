@@ -21,17 +21,17 @@
           "name": "Light Sleeper",
           "specialization": "",
           "uuid": "Compendium.rogue-trader.rt-items-talents.5zWJdxMlWz5X4Dvx"
+        },
+        {
+          "name": "Echo of Hard Times (Calamity)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CAL0000000000001"
         }
       ],
       "traits": [],
       "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [
-        {
-          "name": "Echo of Hard Times",
-          "description": "<p>Thanks to the adversities of the past and a sense of priority that promotes caution and the needs of the present over acquisition and risk, you reduce your group's starting Profit Factor by −1.</p>"
-        }
-      ],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "adversity_talent",

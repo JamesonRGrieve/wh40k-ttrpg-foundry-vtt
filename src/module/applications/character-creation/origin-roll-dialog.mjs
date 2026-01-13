@@ -235,6 +235,10 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
     /**
      * Re-roll the dice - returns to initial state so player can choose roll or manual.
+     * 
+     * This clears the current result and re-renders the dialog to show the initial state
+     * with both "Roll For Me" and "I'll Roll Myself" options available again.
+     * 
      * @param {Event} event - The triggering event
      * @param {HTMLElement} target - The target element
      * @private

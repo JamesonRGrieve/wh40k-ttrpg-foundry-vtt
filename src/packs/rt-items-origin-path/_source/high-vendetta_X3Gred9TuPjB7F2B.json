@@ -23,15 +23,16 @@
         }
       ],
       "talents": [],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [
+      "traits": [
         {
           "name": "Brook No Insult",
-          "description": "<p>You will allow no serious offence to your honour and person or those under your protection to pass unchallenged, meeting threat with threat and violence with violence. You may take a Willpower Test to avert this if you wish, modified by the provocation and the consequences (set by the GM) of succumbing to your rage.</p>"
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-traits.HVD0000000000001"
         }
       ],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "vendetta_talent",

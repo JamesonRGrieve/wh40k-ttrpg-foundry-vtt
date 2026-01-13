@@ -17,15 +17,16 @@
     "grants": {
       "skills": [],
       "talents": [],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [
+      "traits": [
         {
           "name": "The Face of the Enemy",
-          "description": "<p>You will never willingly have dealings with your sworn enemy except under the direst circumstances, and if you must do so, you suffer −10 to all Fellowship Tests in those dealings. Also, if given the slightest provocation, you will react violently towards them. (You may take a Willpower Test to avert this, modified by the provocation and the consequences of succumbing to your hatred.)</p>"
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-traits.HWD0000000000001"
         }
       ],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "war_training",

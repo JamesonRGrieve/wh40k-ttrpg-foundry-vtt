@@ -17,19 +17,16 @@
     "grants": {
       "skills": [],
       "talents": [],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [
-        {
-          "name": "Unwilling Accomplice",
-          "description": "<p>Thanks to your shadowed past, you have picked up some knowledge on the way that you would not normally have access to. You gain a single Skill (as long as it has no prerequisites) for your character. You may also either select a single additional Common Lore Skill or improve a Common Lore Skill you already have by one level.</p>"
-        },
+      "traits": [
         {
           "name": "Jealous Freedom",
-          "description": "<p>Having endured captivity once, you have no intention of doing so again. You react violently towards the prospect of imprisonment or loss of your freedom. You may take a Willpower Test to avert this, modified by the provocation and the consequences (set by the GM) of succumbing to your dread.</p>"
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-traits.PGD0000000000001"
         }
       ],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": []
     },
     "modifiers": {

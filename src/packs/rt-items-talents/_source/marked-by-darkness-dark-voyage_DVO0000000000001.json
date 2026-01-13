@@ -1,0 +1,59 @@
+{
+  "name": "Marked by Darkness (Dark Voyage)",
+  "type": "talent",
+  "img": "icons/svg/daze.svg",
+  "system": {
+    "identifier": "marked-by-darkness-dark-voyage",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "32"
+    },
+    "description": {
+      "value": "<h2>Marked by Darkness</h2><p>Haunted by your experiences during a dark voyage, you gain 1d5 Insanity Points.</p><p>The horrors you witnessed have left permanent scars on your psyche that no medicae can heal.</p>"
+    },
+    "isPassive": true,
+    "isRollable": true,
+    "tier": 1,
+    "benefit": "<p>Gain 1d5 Insanity Points (rolled during character creation)</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Dark Voyage origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "rollInsanity": "1d5"
+    }
+  },
+  "_id": "DVO0000000000001"
+}

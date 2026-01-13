@@ -38,15 +38,16 @@
           "uuid": "Compendium.rogue-trader.rt-items-talents.FW00000000000003"
         }
       ],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [
+      "traits": [
         {
-          "name": "Starting Skills",
-          "description": "<p>Common Lore (Tech) (Int) and Common Lore (Machine Cult) (Int) are untrained Basic Skills for forge world characters.</p>"
+          "name": "Forge World Techna-Linguist",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-traits.FWD0000000000001"
         }
       ],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
       "choices": []
     },
     "modifiers": {

@@ -21,17 +21,17 @@
           "name": "Decadence",
           "specialization": "",
           "uuid": "Compendium.rogue-trader.rt-items-talents.8rzBqEoffSgKTAp3"
+        },
+        {
+          "name": "Overindulgence (Vaunted)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.VAU0000000000001"
         }
       ],
       "traits": [],
       "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [
-        {
-          "name": "Overindulgence",
-          "description": "<p>You suffer 1d5 Corruption Points from your life of decadence.</p>"
-        }
-      ],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "characteristic",

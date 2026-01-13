@@ -39,112 +39,141 @@
             </div>
         </div>
         
-        {{!-- Origin Path Panel - Modern Compact Design --}}
-        <div class="rt-panel rt-origin-panel">
+        {{!-- Origin Path Panel - Modern Sleek Design --}}
+        <div class="rt-panel rt-panel--bio rt-origin-panel-modern" data-panel-id="origin-path">
             <div class="rt-panel-header">
-                <span class="rt-panel-title"><i class="fas fa-route"></i> Origin Path</span>
-                <div class="rt-origin-status">
-                    <span class="rt-origin-progress">{{originPathSummary.completedSteps}}/{{originPathSummary.totalSteps}}</span>
-                    {{#if originPathSummary.isComplete}}
-                        <i class="fas fa-check-circle rt-complete-icon" title="Path Complete"></i>
-                    {{/if}}
+                <div class="rt-origin-header-left">
+                    <i class="fas fa-route"></i>
+                    <span class="rt-panel-title">Origin Path</span>
+                    <div class="rt-origin-progress-badge {{#if originPathSummary.isComplete}}rt-complete{{/if}}">
+                        <span class="rt-progress-text">{{originPathSummary.completedSteps}}/{{originPathSummary.totalSteps}}</span>
+                        {{#if originPathSummary.isComplete}}
+                            <i class="fas fa-check-circle"></i>
+                        {{/if}}
+                    </div>
                 </div>
-                <button type="button" class="rt-panel-action-btn" data-action="openOriginPathBuilder" data-tooltip="Build your character's origin path visually">
-                    <i class="fas fa-diagram-project"></i> Build
+                <button type="button" class="rt-btn-icon rt-btn-icon--primary" data-action="openOriginPathBuilder" data-tooltip="Build Path">
+                    <i class="fas fa-diagram-project"></i>
                 </button>
             </div>
             <div class="rt-panel-body">
-                {{!-- Compact Step Row with Icons --}}
-                <div class="rt-origin-step-row">
+                {{!-- Visual Step Indicators --}}
+                <div class="rt-origin-steps-visual">
                     {{#each originPathSteps as |step|}}
-                    <div class="rt-origin-step-compact {{#if step.item}}rt-filled{{else}}rt-empty{{/if}}" 
+                    <div class="rt-origin-step-node {{#if step.item}}rt-filled{{else}}rt-empty{{/if}}" 
                          data-step="{{step.key}}"
                          {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
-                         title="{{step.label}}{{#if step.item}}: {{step.item.name}}{{/if}}">
-                        {{#if step.item}}
-                            <img src="{{step.item.img}}" alt="{{step.item.name}}" class="rt-step-icon-img" />
-                        {{else}}
-                            <i class="fas {{step.icon}} rt-step-icon-empty"></i>
-                        {{/if}}
-                        <span class="rt-step-indicator"></span>
+                         data-tooltip="{{step.label}}{{#if step.item}}: {{step.item.name}}{{/if}}">
+                        <div class="rt-step-circle">
+                            {{#if step.item}}
+                                <img src="{{step.item.img}}" alt="{{step.item.name}}" class="rt-step-img" />
+                            {{else}}
+                                <i class="fas {{step.icon}}"></i>
+                            {{/if}}
+                        </div>
+                        <span class="rt-step-label">{{step.shortLabel}}</span>
                     </div>
-                    {{#unless @last}}<span class="rt-step-connector"></span>{{/unless}}
+                    {{#unless @last}}
+                        <div class="rt-step-connector {{#if step.item}}rt-active{{/if}}"></div>
+                    {{/unless}}
                     {{/each}}
                 </div>
 
-                {{!-- Selected Origins Summary --}}
-                <div class="rt-origin-selections">
+                {{!-- Selected Origins List --}}
+                {{#if originPathSummary.completedSteps}}
+                <div class="rt-origin-selections-modern">
                     {{#each originPathSteps as |step|}}
                     {{#if step.item}}
-                    <div class="rt-origin-selection-row" data-item-id="{{step.item._id}}">
-                        <span class="rt-selection-step">{{step.label}}</span>
-                        <span class="rt-selection-name" data-action="itemEdit" data-item-id="{{step.item._id}}">{{step.item.name}}</span>
-                        <button type="button" class="rt-selection-remove" data-action="itemDelete" data-item-id="{{step.item._id}}" title="Remove">
+                    <div class="rt-origin-selection-card" data-item-id="{{step.item._id}}">
+                        <div class="rt-selection-icon">
+                            <img src="{{step.item.img}}" alt="{{step.item.name}}" />
+                        </div>
+                        <div class="rt-selection-content">
+                            <span class="rt-selection-step-label">{{step.label}}</span>
+                            <span class="rt-selection-name" data-action="itemEdit" data-item-id="{{step.item._id}}">{{step.item.name}}</span>
+                        </div>
+                        <button type="button" class="rt-btn-icon rt-btn-icon--delete" data-action="itemDelete" data-item-id="{{step.item._id}}" data-tooltip="Remove">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                     {{/if}}
                     {{/each}}
                 </div>
+                {{/if}}
 
-                {{!-- Accumulated Bonuses Summary (only show if there are bonuses) --}}
+                {{!-- Accumulated Bonuses (Collapsible - Start Collapsed) --}}
                 {{#if originPathSummary.isComplete}}
-                <div class="rt-origin-bonuses">
-                    <div class="rt-bonuses-header">
-                        <i class="fas fa-plus-circle"></i>
-                        <span>Total Bonuses from Origin Path</span>
-                    </div>
+                <div class="rt-origin-bonuses-modern collapsed" data-panel-id="origin-bonuses" data-collapsed="true">
+                    <button type="button" class="rt-bonuses-toggle" data-action="togglePanel" data-panel-id="origin-bonuses">
+                        <i class="fas fa-gift"></i>
+                        <span>Accumulated Bonuses</span>
+                        <i class="fas fa-chevron-down rt-toggle-icon"></i>
+                    </button>
                     
-                    {{!-- Characteristics --}}
-                    {{#if originPathSummary.characteristics.length}}
-                    <div class="rt-bonus-section">
-                        <span class="rt-bonus-label">Characteristics</span>
-                        <div class="rt-bonus-chips">
-                            {{#each originPathSummary.characteristics}}
-                            <span class="rt-char-chip {{#if positive}}rt-positive{{else}}rt-negative{{/if}}">
-                                <span class="rt-chip-stat">{{short}}</span>
-                                <span class="rt-chip-value">{{#if positive}}+{{/if}}{{value}}</span>
+                    <div class="rt-bonuses-content">
+                        {{!-- Characteristics --}}
+                        {{#if originPathSummary.characteristics.length}}
+                        <div class="rt-bonus-group">
+                            <span class="rt-bonus-category-label">
+                                <i class="fas fa-chart-bar"></i>
+                                Characteristics
                             </span>
-                            {{/each}}
+                            <div class="rt-bonus-chips">
+                                {{#each originPathSummary.characteristics}}
+                                <span class="rt-char-chip {{#if positive}}rt-positive{{else}}rt-negative{{/if}}">
+                                    <span class="rt-chip-stat">{{short}}</span>
+                                    <span class="rt-chip-value">{{#if positive}}+{{/if}}{{value}}</span>
+                                </span>
+                                {{/each}}
+                            </div>
                         </div>
-                    </div>
-                    {{/if}}
-                    
-                    {{!-- Skills --}}
-                    {{#if originPathSummary.skills.length}}
-                    <div class="rt-bonus-section">
-                        <span class="rt-bonus-label">Skills</span>
-                        <div class="rt-bonus-tags">
-                            {{#each originPathSummary.skills}}
-                            <span class="rt-bonus-tag rt-skill-tag">{{this}}</span>
-                            {{/each}}
+                        {{/if}}
+                        
+                        {{!-- Skills --}}
+                        {{#if originPathSummary.skills.length}}
+                        <div class="rt-bonus-group">
+                            <span class="rt-bonus-category-label">
+                                <i class="fas fa-book"></i>
+                                Skills
+                            </span>
+                            <div class="rt-bonus-tags">
+                                {{#each originPathSummary.skills}}
+                                <span class="rt-bonus-tag rt-tag-skill">{{this}}</span>
+                                {{/each}}
+                            </div>
                         </div>
-                    </div>
-                    {{/if}}
-                    
-                    {{!-- Talents --}}
-                    {{#if originPathSummary.talents.length}}
-                    <div class="rt-bonus-section">
-                        <span class="rt-bonus-label">Talents</span>
-                        <div class="rt-bonus-tags">
-                            {{#each originPathSummary.talents}}
-                            <span class="rt-bonus-tag rt-talent-tag">{{this}}</span>
-                            {{/each}}
+                        {{/if}}
+                        
+                        {{!-- Talents --}}
+                        {{#if originPathSummary.talents.length}}
+                        <div class="rt-bonus-group">
+                            <span class="rt-bonus-category-label">
+                                <i class="fas fa-star"></i>
+                                Talents
+                            </span>
+                            <div class="rt-bonus-tags">
+                                {{#each originPathSummary.talents}}
+                                <span class="rt-bonus-tag rt-tag-talent">{{this}}</span>
+                                {{/each}}
+                            </div>
                         </div>
-                    </div>
-                    {{/if}}
-                    
-                    {{!-- Traits --}}
-                    {{#if originPathSummary.traits.length}}
-                    <div class="rt-bonus-section">
-                        <span class="rt-bonus-label">Traits</span>
-                        <div class="rt-bonus-tags">
-                            {{#each originPathSummary.traits}}
-                            <span class="rt-bonus-tag rt-trait-tag">{{this}}</span>
-                            {{/each}}
+                        {{/if}}
+                        
+                        {{!-- Traits --}}
+                        {{#if originPathSummary.traits.length}}
+                        <div class="rt-bonus-group">
+                            <span class="rt-bonus-category-label">
+                                <i class="fas fa-dna"></i>
+                                Traits
+                            </span>
+                            <div class="rt-bonus-tags">
+                                {{#each originPathSummary.traits}}
+                                <span class="rt-bonus-tag rt-tag-trait">{{this}}</span>
+                                {{/each}}
+                            </div>
                         </div>
+                        {{/if}}
                     </div>
-                    {{/if}}
                 </div>
                 {{/if}}
             </div>

@@ -1,0 +1,59 @@
+{
+  "name": "Battle-Scarred (Stubjack)",
+  "type": "talent",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "battle-scarred-stubjack",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "29"
+    },
+    "description": {
+      "value": "<h2>Battle-Scarred</h2><p>You suffer 1d5 Insanity Points from your violent past.</p><p>A life of violence has taken its toll on your mind, leaving you with psychological scars that never fully heal.</p>"
+    },
+    "isPassive": true,
+    "isRollable": true,
+    "tier": 1,
+    "benefit": "<p>Gain 1d5 Insanity Points (rolled during character creation)</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Stubjack origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "rollInsanity": "1d5"
+    }
+  },
+  "_id": "STJ0000000000001"
+}

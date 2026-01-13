@@ -1,79 +1,61 @@
 /**
- * @file OriginPathSheet - ApplicationV2 sheet for origin path items
- * Opens the OriginDetailDialog for viewing/editing origin path items
+ * @file OriginPathSheet - Item sheet for origin path items
+ * Extends BaseItemSheet for proper V13 ApplicationV2 integration
  */
 
-import OriginDetailDialog from "../character-creation/origin-detail-dialog.mjs";
-
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+import BaseItemSheet from "./base-item-sheet.mjs";
 
 /**
- * Sheet for origin path items - opens detail dialog instead of traditional sheet
- * @extends ApplicationV2
+ * Sheet for origin path items
+ * @extends BaseItemSheet
  */
-export default class OriginPathSheet extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class OriginPathSheet extends BaseItemSheet {
     
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "origin-path-sheet"],
-        tag: "div",
-        window: {
-            title: "Origin Path",
-            icon: "fa-solid fa-route",
-            resizable: true,
-            minimizable: true
-        },
+        classes: ["rogue-trader", "sheet", "item", "origin-path-sheet"],
         position: {
             width: 700,
             height: 600
+        },
+        window: {
+            resizable: true,
+            icon: "fa-solid fa-route"
         }
     };
 
     /** @override */
     static PARTS = {
         content: {
-            template: "systems/rogue-trader/templates/character-creation/origin-detail-dialog.hbs",
+            template: "systems/rogue-trader/templates/item/item-origin-path-sheet.hbs",
             scrollable: [""]
         }
     };
 
-    /**
-     * @param {Item} item - The origin path item
-     * @param {object} options - Sheet options
-     */
-    constructor(item, options = {}) {
-        // Merge options but set document
-        const mergedOptions = foundry.utils.mergeObject({
-            document: item
-        }, options);
-        super(mergedOptions);
-        
-        /**
-         * The origin path item
-         * @type {Item}
-         */
-        this.item = item;
-    }
+    /** @override */
+    tabGroups = {
+        primary: "details"
+    };
     
     /** @override */
     get title() {
-        return this.item?.name || "Origin Path";
+        return this.document?.name || "Origin Path";
     }
     
     /** @override */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        const system = this.item.system;
+        const system = this.document.system;
         const grants = system?.grants || {};
         const modifiers = system?.modifiers?.characteristics || {};
 
-        context.origin = this.item;
+        context.origin = this.document;
         context.allowSelection = false;
         context.isSelected = false;
 
         // Basic info
-        context.name = this.item.name;
-        context.img = this.item.img;
+        context.name = this.document.name;
+        context.img = this.document.img;
         context.step = system?.step;
         context.stepLabel = this._getStepLabel(system?.step);
         context.xpCost = system?.xpCost || 0;

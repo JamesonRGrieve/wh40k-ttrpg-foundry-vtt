@@ -117,11 +117,13 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                     const optValue = typeof option === "string" ? option : (option.value || option.label);
                     const optLabel = typeof option === "string" ? option : (option.label || option.value);
                     const optDesc = typeof option === "object" ? option.description : null;
+                    const optUuid = typeof option === "object" ? option.uuid : null;
                     
                     return {
                         value: optValue,
                         label: optLabel,
                         description: optDesc,
+                        uuid: optUuid,
                         selected: selections.has(optValue),
                         disabled: !selections.has(optValue) && remaining <= 0
                     };

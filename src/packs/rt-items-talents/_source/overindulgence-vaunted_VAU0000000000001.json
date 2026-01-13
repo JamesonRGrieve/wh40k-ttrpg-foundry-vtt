@@ -1,0 +1,59 @@
+{
+  "name": "Overindulgence (Vaunted)",
+  "type": "talent",
+  "img": "icons/svg/poison.svg",
+  "system": {
+    "identifier": "overindulgence-vaunted",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30"
+    },
+    "description": {
+      "value": "<h2>Overindulgence</h2><p>You suffer 1d5 Corruption Points from your life of decadence.</p><p>Your pampered upbringing exposed you to many temptations and excesses, leaving marks upon your soul that cannot be easily cleansed.</p>"
+    },
+    "isPassive": true,
+    "isRollable": true,
+    "tier": 1,
+    "benefit": "<p>Gain 1d5 Corruption Points (rolled during character creation)</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Vaunted origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin",
+      "rollCorruption": "1d5"
+    }
+  },
+  "_id": "VAU0000000000001"
+}

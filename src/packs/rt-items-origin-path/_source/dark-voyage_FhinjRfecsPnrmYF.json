@@ -16,20 +16,17 @@
     },
     "grants": {
       "skills": [],
-      "talents": [],
+      "talents": [
+        {
+          "name": "Marked by Darkness (Dark Voyage)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.DVO0000000000001"
+        }
+      ],
       "traits": [],
       "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [
-        {
-          "name": "Things Man Was Not Meant to Know",
-          "description": "<p>You may gain a single Forbidden Lore Skill pertaining to your experiences (or may increase a Forbidden Lore Skill you already possess by one level), or may gain the Resistance (Fear) Talent.</p>"
-        },
-        {
-          "name": "Marked by Darkness",
-          "description": "<p>Haunted by your experiences, you gain 1d5 Insanity Points.</p>"
-        }
-      ],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "forbidden_knowledge",

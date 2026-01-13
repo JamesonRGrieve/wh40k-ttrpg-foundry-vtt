@@ -1,0 +1,50 @@
+{
+  "name": "Brook No Insult",
+  "type": "trait",
+  "img": "modules/game-icons-net/whitetransparent/shield.svg",
+  "system": {
+    "identifier": "brook-no-insult",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "32"
+    },
+    "description": {
+      "value": "<h2>Brook No Insult</h2><p>You will allow no serious offence to your honour and person or those under your protection to pass unchallenged, meeting threat with threat and violence with violence.</p><p>You may take a Willpower Test to avert this if you wish, modified by the provocation and the consequences (set by the GM) of succumbing to your rage.</p>"
+    },
+    "isPassive": false,
+    "isRollable": true,
+    "benefit": "<p>Compulsion to respond to insults with violence (Willpower Test to resist)</p>",
+    "level": 1,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "HVD0000000000001"
+}

@@ -27,17 +27,17 @@
           "name": "Quick Draw",
           "specialization": "",
           "uuid": "Compendium.rogue-trader.rt-items-talents.qdn5GQvS11uRvnIO"
+        },
+        {
+          "name": "Battle-Scarred (Stubjack)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.STJ0000000000001"
         }
       ],
       "traits": [],
       "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [
-        {
-          "name": "Battle-Scarred",
-          "description": "<p>You suffer 1d5 Insanity Points from your violent past.</p>"
-        }
-      ],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "characteristic",

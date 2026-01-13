@@ -20,12 +20,7 @@
       "traits": [],
       "aptitudes": [],
       "equipment": [],
-      "specialAbilities": [
-        {
-          "name": "Heirloom",
-          "description": "<p>You gain an Heirloom Item (see Table 1-2: Heirloom Items) or +3 Toughness (your choice).</p><p><strong>Table 1-2: Heirloom Items</strong></p><ul><li>01-20: Archeotech Laspistol (best-Craftsmanship)</li><li>21-40: Angevin Era Chainsword (best-Craftsmanship with Crusade purity seals)</li><li>41-60: Ancestral Seal (+10% bonus to all Interaction Skill Tests when displaying the seal with Imperial citizens/organisations)</li><li>61-80: Saint-blessed Carapace Armour (best-Craftsmanship, inscribed with saint's teachings)</li><li>81-00: Reliquary of Saint Drusus (+20% bonus to all Interaction Skill Tests when displaying with Ministorum members)</li></ul>"
-        }
-      ],
+      "specialAbilities": [],
       "choices": [
         {
           "type": "pride_choice",

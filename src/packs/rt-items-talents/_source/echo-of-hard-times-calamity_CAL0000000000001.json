@@ -1,0 +1,59 @@
+{
+  "name": "Echo of Hard Times (Calamity)",
+  "type": "talent",
+  "img": "icons/svg/ruins.svg",
+  "system": {
+    "identifier": "echo-of-hard-times-calamity",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "31"
+    },
+    "description": {
+      "value": "<h2>Echo of Hard Times</h2><p>Thanks to the adversities of the past and a sense of priority that promotes caution and the needs of the present over acquisition and risk, you reduce your group's starting Profit Factor by −1.</p><p>This is a permanent reduction that reflects your cautious approach to resource management and risk-taking.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "tier": 1,
+    "benefit": "<p>Reduce starting Profit Factor by −1 (permanent)</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Calamity origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": -1
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "CAL0000000000001"
+}
