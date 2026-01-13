@@ -9,6 +9,7 @@
 @import 'skills';          // Skills tab layout
 @import 'status';          // Gothic quick status display
 @import 'origin-path';     // Origin path styles
+// NOTE: biography-origin-panel imported at root level (outside rt-wrapper) for ApplicationV2
 @import 'characteristics'; // Characteristics panel (abilities tab)
 @import 'ship';            // Ship & dynasty styles
 @import 'combat';          // Combat tab styles

@@ -101,6 +101,16 @@ export class OriginChartLayout {
 
   /**
    * Compute layout for a single step.
+   * 
+   * Navigation Direction Logic:
+   * - FORWARD (homeWorld → career): stepIndex 0-5 in that order
+   *   - When at step N, check against selection at step N-1 (already selected)
+   *   - Previous selection's connectsTo must include current origin's position
+   * 
+   * - BACKWARD (career → homeWorld): stepIndex 5-0 in reverse order
+   *   - When at step N, check against selection at step N+1 (already selected in backward nav)
+   *   - Current origin's connectsTo must include next step's position
+   * 
    * @param {Array<Item>} origins - Origins in this step
    * @param {number} stepIndex - Step index (0-5)
    * @param {Map<string, Item>} currentSelections - Current selections
@@ -113,16 +123,17 @@ export class OriginChartLayout {
     const stepKey = this._getStepOrder()[stepIndex];
     const selectedOrigin = currentSelections.get(stepKey);
     
-    // For connectivity checking, we need to look at the "previous" step in navigation order
-    // Forward: previous = stepIndex - 1 (homeWorld before birthright)
-    // Backward: previous = stepIndex + 1 (career before motivation)
+    // For connectivity checking, we need to look at the adjacent step in navigation order
+    // Forward: previous in array = stepIndex - 1 (e.g., homeWorld before birthright)
+    // Backward: next in array = stepIndex + 1 (e.g., motivation after career in backward nav)
     let adjacentStep = null;
     let adjacentSelection = null;
     
     if (direction === DIRECTION.FORWARD) {
+      // Forward: look at the previous step in the step array
       adjacentStep = stepIndex > 0 ? this._getStepOrder()[stepIndex - 1] : null;
     } else {
-      // Backward: the "previous" step in navigation is the next step index
+      // Backward: look at the next step in the step array (the one selected earlier in backward nav)
       adjacentStep = stepIndex < 5 ? this._getStepOrder()[stepIndex + 1] : null;
     }
     adjacentSelection = adjacentStep ? currentSelections.get(adjacentStep) : null;
@@ -235,11 +246,17 @@ export class OriginChartLayout {
 
   /**
    * Check if origin is valid based on position connectivity.
-   * For forward navigation: check if adjacent (previous) selection connects TO this origin
-   * For backward navigation: check if THIS origin connects TO the adjacent (next) selection
-   * @param {Item} origin
-   * @param {Item|null} adjacentSelection
-   * @param {string} direction
+   * 
+   * Connectivity Rules:
+   * - FORWARD navigation: Check if the PREVIOUS selection's connectsTo includes THIS origin's position
+   *   Example: If Birthright (pos 3) was selected, it can connect to homeWorld at positions 2, 3, or 4
+   * 
+   * - BACKWARD navigation: Check if THIS origin's connectsTo includes the NEXT selection's position
+   *   Example: If selecting Motivation (pos 4), check if it can connect to already-selected Career (pos 3)
+   * 
+   * @param {Item} origin - The origin being checked for validity
+   * @param {Item|null} adjacentSelection - The adjacent selection (previous in forward, next in backward)
+   * @param {string} direction - Navigation direction
    * @returns {boolean}
    * @private
    */
@@ -250,13 +267,12 @@ export class OriginChartLayout {
     const adjacentPos = adjacentSelection.system?.position || 0;
     
     if (direction === DIRECTION.FORWARD) {
-      // Forward: check if the previous selection's connectsTo includes this origin's position
+      // Forward: check if the adjacent (previous) selection's connectsTo includes this origin's position
       const adjacentConnections = adjacentSelection.system?.navigation?.connectsTo ||
                                   this._calculateConnections(adjacentPos);
       return adjacentConnections.includes(originPos);
     } else {
       // Backward: check if THIS origin's connectsTo includes the adjacent (next step) position
-      // Because when going backward, we're selecting the "previous" step that must connect to what we already chose
       const originConnections = origin.system?.navigation?.connectsTo ||
                                 this._calculateConnections(originPos);
       return originConnections.includes(adjacentPos);
@@ -356,6 +372,11 @@ export class OriginChartLayout {
   /**
    * Get valid next options for a given selection.
    * Used for highlighting in guided mode.
+   * 
+   * Navigation Direction Logic:
+   * - FORWARD: Current selection's connectsTo determines valid next positions
+   * - BACKWARD: Target origin's connectsTo must include current selection's position
+   * 
    * @param {Item} currentSelection - The current selection in navigation order
    * @param {Array<Item>} targetStepOrigins - Origins in the target step
    * @param {string} direction - Direction of navigation
@@ -386,7 +407,7 @@ export class OriginChartLayout {
       
       if (!isConnected) continue;
 
-      // Check requirements
+      // Check requirements (previousSteps/excludedSteps)
       const requirements = origin.system?.requirements;
       const currentId = currentSelection.system?.identifier;
 

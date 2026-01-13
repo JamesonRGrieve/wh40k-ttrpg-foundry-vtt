@@ -554,12 +554,12 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     _prepareOriginPathSteps() {
         const steps = CONFIG.rt.originPath?.steps || [
-            { key: "homeWorld", label: "Home World", choiceGroup: "origin.home-world", icon: "fa-globe" },
-            { key: "birthright", label: "Birthright", choiceGroup: "origin.birthright", icon: "fa-baby" },
-            { key: "lureOfTheVoid", label: "Lure of the Void", choiceGroup: "origin.lure-of-the-void", icon: "fa-meteor" },
-            { key: "trialsAndTravails", label: "Trials and Travails", choiceGroup: "origin.trials-and-travails", icon: "fa-skull" },
-            { key: "motivation", label: "Motivation", choiceGroup: "origin.motivation", icon: "fa-fire" },
-            { key: "career", label: "Career", choiceGroup: "origin.career", icon: "fa-user-tie" }
+            { key: "homeWorld", label: "Home World", shortLabel: "Home", choiceGroup: "origin.home-world", icon: "fa-globe" },
+            { key: "birthright", label: "Birthright", shortLabel: "Birth", choiceGroup: "origin.birthright", icon: "fa-baby" },
+            { key: "lureOfTheVoid", label: "Lure of the Void", shortLabel: "Lure", choiceGroup: "origin.lure-of-the-void", icon: "fa-meteor" },
+            { key: "trialsAndTravails", label: "Trials and Travails", shortLabel: "Trials", choiceGroup: "origin.trials-and-travails", icon: "fa-skull" },
+            { key: "motivation", label: "Motivation", shortLabel: "Drive", choiceGroup: "origin.motivation", icon: "fa-fire" },
+            { key: "career", label: "Career", shortLabel: "Career", choiceGroup: "origin.career", icon: "fa-user-tie" }
         ];
 
         const originItems = this.actor.items.filter(

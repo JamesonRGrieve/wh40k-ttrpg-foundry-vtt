@@ -97,6 +97,27 @@
                     {{/if}}
                 </div>
             </div>
+            
+            {{!-- Visual Progress Tracker (similar to BIO tab) --}}
+            {{#unless currentStep.isLineage}}
+                <div class="builder-visual-progress">
+                    {{#each steps as |step|}}
+                        <div class="builder-progress-node {{#if step.isComplete}}filled{{else}}empty{{/if}} {{#if step.isActive}}active{{/if}}"
+                             data-tooltip="{{step.label}}{{#if step.selection}}: {{step.selection.name}}{{/if}}">
+                            <div class="progress-node-circle">
+                                {{#if step.selection}}
+                                    <img src="{{step.selection.img}}" alt="{{step.selection.name}}" class="progress-node-img" />
+                                {{else}}
+                                    <i class="fas {{step.icon}}"></i>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{#unless @last}}
+                            <div class="progress-connector {{#if step.isComplete}}active{{/if}}"></div>
+                        {{/unless}}
+                    {{/each}}
+                </div>
+            {{/unless}}
 
             {{!-- Origin Cards --}}
             <div class="origin-cards-grid">
@@ -106,6 +127,11 @@
                          data-origin-id="{{origin.id}}"
                          data-origin-uuid="{{origin.uuid}}"
                          data-tooltip="{{origin.name}}: {{origin.shortDescription}}">
+                        {{#if origin.isSelected}}
+                            <div class="selection-indicator">
+                                <i class="fa-solid fa-check-circle"></i>
+                            </div>
+                        {{/if}}
                         <img src="{{origin.img}}" alt="{{origin.name}}" class="card-img" />
                         <h4 class="card-name">{{origin.name}}</h4>
                         {{#if origin.badges}}
@@ -181,10 +207,13 @@
                                     <span class="category-label">{{localize "RT.Skills"}}</span>
                                     <div class="category-items">
                                         {{#each selectedOrigin.grants.skills as |skill|}}
-                                            <div class="grant-tag skill-tag" data-tooltip="{{skill.displayName}} ({{skill.levelLabel}})">
+                                            <div class="grant-tag skill-tag clickable" 
+                                                  {{#if skill.uuid}}data-action="openItem" data-uuid="{{skill.uuid}}"{{/if}}
+                                                  data-tooltip="{{skill.displayName}} ({{skill.levelLabel}})">
                                                 <i class="fa-solid fa-book-open"></i>
                                                 <span class="tag-label">{{skill.displayName}}</span>
                                                 <span class="tag-level">{{skill.levelLabel}}</span>
+                                                {{#if skill.uuid}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
                                             </div>
                                         {{/each}}
                                     </div>
@@ -371,9 +400,12 @@
                     <div class="category-title">{{localize "RT.Skills"}}</div>
                     <div class="category-items">
                         {{#each preview.skills as |skill|}}
-                            <div class="grant-tag skill-tag {{#if skill.fromChoice}}from-choice{{/if}}">
+                            <div class="grant-tag skill-tag {{#if skill.uuid}}clickable{{/if}} {{#if skill.fromChoice}}from-choice{{/if}}"
+                                  {{#if skill.uuid}}data-action="openItem" data-uuid="{{skill.uuid}}"{{/if}}
+                                  data-tooltip="{{skill.name}}">
                                 <i class="fa-solid fa-book-open"></i>
                                 <span class="tag-label">{{skill.name}}</span>
+                                {{#if skill.uuid}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
                             </div>
                         {{/each}}
                     </div>

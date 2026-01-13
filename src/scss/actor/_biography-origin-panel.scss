@@ -1,0 +1,462 @@
+// ============================================
+// BIOGRAPHY TAB - ORIGIN PANEL MODERN DESIGN
+// ============================================
+// Sleek, compact redesign of the origin path panel
+// Features: visual step indicators, clean selections list, collapsible bonuses
+
+// ----------------------------------------
+// ORIGIN PANEL BASE
+// ----------------------------------------
+.rt-origin-panel-modern {
+    .rt-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: $rt-space-md;
+        padding: $rt-space-md;
+        background: linear-gradient(135deg, rgba($rt-color-gold, 0.08), rgba($rt-color-gold, 0.03));
+        border-bottom: 2px solid rgba($rt-color-gold, 0.2);
+    }
+
+    .rt-origin-header-left {
+        display: flex;
+        align-items: center;
+        gap: $rt-space-sm;
+        flex: 1;
+    }
+
+    .rt-panel-title {
+        font-family: var(--rt-font-heading, 'Modesto Condensed', serif);
+        font-size: $rt-font-size-lg;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: $rt-color-gold;
+    }
+
+    .rt-origin-progress-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        background: rgba($rt-color-gold, 0.1);
+        border: 1px solid rgba($rt-color-gold, 0.3);
+        border-radius: $rt-radius-lg;
+        font-size: $rt-font-size-xs;
+        font-weight: 700;
+        color: $rt-color-gold;
+
+        &.rt-complete {
+            background: rgba($rt-color-success, 0.15);
+            border-color: rgba($rt-color-success, 0.4);
+            color: darken($rt-color-success, 10%);
+
+            i {
+                color: $rt-color-success;
+            }
+        }
+
+        .rt-progress-text {
+            font-family: var(--rt-font-numeric, 'Roboto Mono', monospace);
+        }
+
+        i {
+            font-size: 0.9em;
+        }
+    }
+}
+
+// ----------------------------------------
+// VISUAL STEP INDICATORS
+// ----------------------------------------
+.rt-origin-steps-visual {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+    padding: $rt-space-lg $rt-space-sm;
+    margin-bottom: $rt-space-md;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), transparent);
+    border-radius: $rt-radius-md;
+}
+
+.rt-origin-step-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform $rt-transition-fast;
+
+    &.rt-filled {
+        .rt-step-circle {
+            background: linear-gradient(135deg, $rt-color-gold, darken($rt-color-gold, 10%));
+            border-color: darken($rt-color-gold, 15%);
+            box-shadow: 0 2px 8px rgba($rt-color-gold, 0.3);
+            
+            i {
+                display: none;
+            }
+        }
+
+        &:hover {
+            transform: translateY(-3px);
+        }
+    }
+
+    &.rt-empty {
+        .rt-step-circle {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.15);
+
+            i {
+                color: rgba(0, 0, 0, 0.3);
+            }
+        }
+    }
+}
+
+.rt-step-circle {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all $rt-transition-base;
+    overflow: hidden;
+
+    .rt-step-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    i {
+        font-size: 1.5rem;
+        transition: color $rt-transition-fast;
+    }
+}
+
+.rt-step-label {
+    font-size: $rt-font-size-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(0, 0, 0, 0.6);
+    text-align: center;
+    max-width: 60px;
+    line-height: 1.2;
+}
+
+.rt-step-connector {
+    flex: 1;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
+    margin: 0 2px;
+    position: relative;
+    top: -20px;
+    border-radius: 2px;
+
+    &.rt-active {
+        background: linear-gradient(90deg, rgba($rt-color-gold, 0.6), rgba($rt-color-gold, 0.3));
+    }
+}
+
+// ----------------------------------------
+// SELECTED ORIGINS LIST
+// ----------------------------------------
+.rt-origin-selections-modern {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+    margin-bottom: $rt-space-md;
+}
+
+.rt-origin-selection-card {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-md;
+    padding: $rt-space-sm $rt-space-md;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: $rt-radius-md;
+    transition: all $rt-transition-fast;
+
+    &:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+        border-color: rgba($rt-color-gold, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+}
+
+.rt-selection-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba($rt-color-gold, 0.3);
+    flex-shrink: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.rt-selection-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.rt-selection-step-label {
+    font-size: $rt-font-size-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.rt-selection-name {
+    font-size: $rt-font-size-base;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+    cursor: pointer;
+    transition: color $rt-transition-fast;
+
+    &:hover {
+        color: $rt-color-gold;
+    }
+}
+
+// ----------------------------------------
+// ACCUMULATED BONUSES (COLLAPSIBLE)
+// ----------------------------------------
+.rt-origin-bonuses-modern {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: $rt-space-md;
+    margin-top: $rt-space-md;
+
+    &.collapsed {
+        .rt-bonuses-content {
+            max-height: 0;
+            opacity: 0;
+            padding: 0;
+        }
+
+        .rt-bonuses-toggle .rt-toggle-icon {
+            transform: rotate(-90deg);
+        }
+    }
+}
+
+.rt-bonuses-toggle {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    width: 100%;
+    padding: $rt-space-sm $rt-space-md;
+    background: linear-gradient(135deg, rgba($rt-color-gold, 0.08), rgba($rt-color-gold, 0.03));
+    border: 1px solid rgba($rt-color-gold, 0.2);
+    border-radius: $rt-radius-md;
+    font-size: $rt-font-size-sm;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $rt-color-gold;
+    cursor: pointer;
+    transition: all $rt-transition-fast;
+
+    &:hover {
+        background: linear-gradient(135deg, rgba($rt-color-gold, 0.12), rgba($rt-color-gold, 0.06));
+        border-color: rgba($rt-color-gold, 0.3);
+    }
+
+    i:first-child {
+        font-size: 1rem;
+    }
+
+    span {
+        flex: 1;
+    }
+
+    .rt-toggle-icon {
+        font-size: 0.8em;
+        transition: transform $rt-transition-fast;
+    }
+}
+
+.rt-bonuses-content {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-md;
+    padding: $rt-space-md;
+    margin-top: $rt-space-sm;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: $rt-radius-md;
+    max-height: 800px;
+    opacity: 1;
+    overflow: hidden;
+    transition: all $rt-transition-base;
+}
+
+// Bonus group styling
+.rt-bonus-group {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+}
+
+.rt-bonus-category-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: $rt-font-size-xs;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-gold, $rt-color-gold);
+
+    i {
+        font-size: 0.9em;
+        color: var(--rt-gold, rgba($rt-color-gold, 0.7));
+        opacity: 0.7;
+    }
+}
+
+// ----------------------------------------
+// CHARACTERISTIC CHIPS
+// ----------------------------------------
+.rt-bonus-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rt-char-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: $rt-radius-lg;
+    font-size: $rt-font-size-xs;
+    font-weight: 700;
+    font-family: var(--rt-font-numeric, 'Roboto Mono', monospace);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+    &.rt-positive {
+        background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(76, 175, 80, 0.15));
+        border: 1px solid rgba(76, 175, 80, 0.4);
+        color: #81c784;
+    }
+
+    &.rt-negative {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.25), rgba(231, 76, 60, 0.15));
+        border: 1px solid rgba(231, 76, 60, 0.4);
+        color: #e57373;
+    }
+
+    .rt-chip-stat {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .rt-chip-value {
+        font-weight: 900;
+    }
+}
+
+// ----------------------------------------
+// BONUS TAGS (Skills, Talents, Traits)
+// ----------------------------------------
+.rt-bonus-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rt-bonus-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: $rt-radius-md;
+    font-size: $rt-font-size-xs;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    color: var(--rt-text-light, rgba(255, 255, 255, 0.9));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: all $rt-transition-fast;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: var(--rt-gold, $rt-color-gold);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    &.rt-tag-skill {
+        border-left: 3px solid #3498db;
+    }
+
+    &.rt-tag-talent {
+        border-left: 3px solid #f39c12;
+    }
+
+    &.rt-tag-trait {
+        border-left: 3px solid #9b59b6;
+    }
+}
+
+// ----------------------------------------
+// RESPONSIVE ADJUSTMENTS
+// ----------------------------------------
+@media (max-width: 900px) {
+    .rt-origin-steps-visual {
+        padding: $rt-space-md $rt-space-xs;
+    }
+
+    .rt-origin-step-node {
+        .rt-step-circle {
+            width: 44px;
+            height: 44px;
+
+            i {
+                font-size: 1.2rem;
+            }
+        }
+
+        .rt-step-label {
+            font-size: 0.65rem;
+            max-width: 50px;
+        }
+    }
+
+    .rt-step-connector {
+        top: -16px;
+        height: 2px;
+    }
+}
+
+@media (max-width: 600px) {
+    .rt-origin-step-label {
+        display: none;
+    }
+
+    .rt-origin-steps-visual {
+        gap: 4px;
+    }
+
+    .rt-bonus-chips,
+    .rt-bonus-tags {
+        gap: 4px;
+    }
+}

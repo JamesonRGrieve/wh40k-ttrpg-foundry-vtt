@@ -33,6 +33,9 @@
 // Armour panel - needs to work both inside rt-wrapper and in ApplicationV2 sheets
 @import 'src/scss/components/armour';
 
+// Biography origin panel - ApplicationV2 sheet (outside rt-wrapper)
+@import 'src/scss/actor/biography-origin-panel';
+
 .rt-material {
     font-family: 'Material Icons';
     font-weight: normal;

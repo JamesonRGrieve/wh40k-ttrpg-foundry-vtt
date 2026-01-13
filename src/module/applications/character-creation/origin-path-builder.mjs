@@ -410,6 +410,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return orderedSteps.map((step, index) => {
             const hasSelection = this.selections.has(step.step);
             const isAccessible = this._isStepAccessible(index);
+            const selection = hasSelection ? this.selections.get(step.step) : null;
             
             return {
                 index: index,
@@ -419,7 +420,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 icon: step.icon,
                 isActive: !this.showLineage && index === this.currentStepIndex,
                 isComplete: hasSelection,
-                isDisabled: this.guidedMode && !isAccessible
+                isDisabled: this.guidedMode && !isAccessible,
+                selection: selection ? {
+                    name: selection.name,
+                    img: selection.img
+                } : null
             };
         });
     }
@@ -784,10 +789,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 }
             }
             
-            // Collect base talents
+            // Collect base talents and their modifiers
             if (grants.talents) {
                 for (const talent of grants.talents) {
-                    talentSet.add(talent.name || talent);
+                    const talentName = talent.name || talent;
+                    talentSet.add(talentName);
+                    
+                    // Look up talent modifiers from UUID if available
+                    if (talent.uuid) {
+                        await this._addTalentModifiers(talent.uuid, charTotals, skillSet);
+                    }
                 }
             }
             
@@ -834,10 +845,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                             }
                         }
                         
-                        // Choice talents
+                        // Choice talents and their modifiers
                         if (choiceGrants.talents) {
                             for (const talent of choiceGrants.talents) {
-                                talentSet.add(talent.name || talent);
+                                const talentName = talent.name || talent;
+                                talentSet.add(talentName);
+                                
+                                // Look up talent modifiers from UUID if available
+                                if (talent.uuid) {
+                                    await this._addTalentModifiers(talent.uuid, charTotals, skillSet);
+                                }
                             }
                         }
                         
@@ -890,6 +907,53 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         preview.equipment = equipmentList.map(name => ({ name }));
         
         return preview;
+    }
+
+    /**
+     * Look up a talent by UUID and add its modifiers to the totals
+     * @param {string} uuid - Compendium UUID for the talent
+     * @param {object} charTotals - Characteristic totals accumulator
+     * @param {Set} skillSet - Skill set accumulator
+     * @returns {Promise<void>}
+     * @private
+     */
+    async _addTalentModifiers(uuid, charTotals, skillSet) {
+        try {
+            const talent = await fromUuid(uuid);
+            if (!talent) return;
+            
+            const talentSystem = talent.system;
+            
+            // Add characteristic modifiers from talent
+            const charMods = talentSystem?.modifiers?.characteristics || {};
+            for (const [key, value] of Object.entries(charMods)) {
+                if (value !== 0) {
+                    charTotals[key] = (charTotals[key] || 0) + value;
+                }
+            }
+            
+            // Add skill modifiers from talent grants (e.g., nested skills)
+            const talentGrants = talentSystem?.grants || {};
+            if (talentGrants.skills) {
+                for (const skill of talentGrants.skills) {
+                    const skillName = skill.specialization 
+                        ? `${skill.name} (${skill.specialization})`
+                        : (skill.name || skill);
+                    skillSet.add(skillName);
+                }
+            }
+            
+            // Recursively process nested talents (e.g., Enemy grants from Hunted talent)
+            if (talentGrants.talents) {
+                for (const nestedTalent of talentGrants.talents) {
+                    if (nestedTalent.uuid) {
+                        await this._addTalentModifiers(nestedTalent.uuid, charTotals, skillSet);
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn(`OriginPathBuilder | Failed to resolve talent UUID ${uuid}:`, error);
+        }
     }
 
     /**
