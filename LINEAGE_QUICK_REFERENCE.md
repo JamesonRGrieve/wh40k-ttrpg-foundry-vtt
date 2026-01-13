@@ -3,9 +3,9 @@
 ## Overview
 - **Source:** Into the Storm, pages 29-32
 - **Type:** Optional 7th origin path step
-- **Cost:** Variable XP (100-400) paid from starting XP only
+- **Cost:** Variable XP (100-500) paid from starting XP only
 - **Timing:** Character creation only (cannot be acquired later)
-- **Files:** 13 talents + 5 origin path items
+- **Files:** 18 talents + 6 origin path items (ALL 6 LINEAGES COMPLETE)
 
 ---
 
@@ -53,8 +53,19 @@
 | Option | Cost | Grants | Drawback |
 |--------|------|--------|----------|
 | A Powerful Legacy | 350 XP | Talented (Intimidate) + Talented (Command) + Air of Authority | None |
+| Born to Wealth ✨ NEW | 300 XP | +2 Profit Factor | None |
+| Far-Reaching Contacts ✨ NEW | 300 XP | 3 Peer talents (choice) | None |
 
-*(No choice - this lineage has only one path)*
+### 6. Witch-Born ✨ COMPLETELY NEW ✨
+**Theme:** Psychic heritage, family touched by the warp
+
+| Option | Cost | Grants | Drawback |
+|--------|------|--------|----------|
+| Perilous Choice | 500 XP | Psy Rating 1 + Discipline + Technique + Psyniscience | Unsanctioned! Renegade table |
+| Proven to be Pure | 200 XP | Resistance (Psychic Powers) | None |
+| Witch-knowledge | 300 XP | Forbidden Lore (Psykers/Warp) + Peer (Astropaths/Insane) | None |
+
+**Special:** Perilous Choice cannot be taken by Astropaths or Navigators
 
 ---
 
@@ -62,14 +73,15 @@
 
 ### Skills Granted
 - **Social:** Deceive (4×), Carouse (2×), Barter, Commerce
-- **Knowledge:** Scrutiny, Scholastic Lore (2×), Forbidden Lore (7× choices)
+- **Knowledge:** Scrutiny, Scholastic Lore (2×), Forbidden Lore (10× choices), Psyniscience
 - **Trade:** One Trade skill (choice)
+- **Psychic:** Psyniscience (Perilous Choice)
 
 ### Talents Granted
 - **Leadership:** Air of Authority, Talented (Command), Talented (Intimidate)
-- **Social:** Peer (3× choices), Decadence
+- **Social:** Peer (6× choices total), Decadence
 - **Mental:** Paranoia, Talented (career skill)
-- **Defensive:** Armour of Contempt, Dark Soul
+- **Defensive:** Armour of Contempt, Dark Soul, Resistance (Psychic Powers)
 
 ### Characteristic Bonuses
 - +3 Intelligence or Perception (Uncertain Inheritance)
@@ -82,14 +94,18 @@
 - 2d5 Insanity + 2d5 Corruption (Vile Insight)
 
 ### Profit Factor
-- **Gains:** My Great-Grandfather (+1)
+- **Gains:** Born to Wealth (+2), My Great-Grandfather (+1)
 - **Losses:** Dark Secret (-1), Another Generation (-2), Last Child (-3), Redeemer (-1)
+
+### Psychic Powers
+- **Perilous Choice:** Grants Psy Rating 1, one discipline, one technique ≤100xp
+- **WARNING:** Unsanctioned psyker - uses Renegade Psyker table
 
 ---
 
 ## File Locations
 
-### Talents
+### Talents (18 total)
 `/src/packs/rt-items-talents/_source/`
 - `a-dark-secret-lineage_LN00000000000001.json`
 - `my-great-grandfather-built-this-colony-lineage_LN00000000000002.json`
@@ -104,14 +120,20 @@
 - `the-last-child-lineage_LN00000000000011.json`
 - `the-one-to-redeem-them-lineage_LN00000000000012.json`
 - `a-powerful-legacy-lineage_LN00000000000013.json`
+- `born-to-wealth-lineage_LN00000000000014.json` ✨ NEW
+- `far-reaching-contacts-lineage_LN00000000000015.json` ✨ NEW
+- `perilous-choice-lineage_LN00000000000016.json` ✨ NEW
+- `proven-to-be-pure-lineage_LN00000000000017.json` ✨ NEW
+- `witch-knowledge-lineage_LN00000000000018.json` ✨ NEW
 
-### Origin Paths
+### Origin Paths (6 total)
 `/src/packs/rt-items-origin-path/_source/`
 - `lineage-a-long-and-glorious-history_LNPATH0000000001.json`
 - `lineage-a-proud-tradition_LNPATH0000000002.json`
 - `lineage-accursed-be-thy-name_LNPATH0000000003.json`
 - `lineage-disgraced_LNPATH0000000004.json`
-- `lineage-of-extensive-means_LNPATH0000000005.json`
+- `lineage-of-extensive-means_LNPATH0000000005.json` ✨ UPDATED (now 3 choices)
+- `lineage-witch-born_LNPATH0000000006.json` ✨ NEW
 
 ---
 
@@ -194,8 +216,11 @@ This system can be extended with:
 
 ## Status
 
-✅ **Data Complete** - All 18 files created  
-✅ **Flavor Text Complete** - Full sourcebook descriptions  
+✅ **ALL 6 LINEAGES COMPLETE** - 100% source material coverage  
+✅ **Data Complete** - 18 talents + 6 origin paths  
+✅ **Flavor Text Complete** - Full Into the Storm descriptions  
+✅ **Witch-Born Implemented** - Complete new lineage with psychic heritage  
+✅ **Of Extensive Means Complete** - All 3 choices now available  
 ✅ **Documentation Complete** - Full guide written  
 ⏳ **Runtime Needed** - XP system, choice dialogs, UI integration  
 

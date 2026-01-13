@@ -1,0 +1,75 @@
+{
+  "name": "Proven to be Pure (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/holy-symbol.svg",
+  "system": {
+    "identifier": "proven-to-be-pure-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"You are pure, either lacking psychic powers altogether, or possessing sufficient strength of soul and mind to be of use to the Imperium.\"</em></p></blockquote><p>In either case, long years of growing up amongst a family known for producing psykers have made you well-able to resist the power of the witch and the daemonic. You have seen firsthand what psychic power can do, both in service to the Emperor and when it runs wild. You understand the dangers of the Warp in ways that most Imperial citizens never will.</p><h3>Growing Up Different</h3><p>While your siblings, cousins, or parents manifested psychic abilities, you did not. Perhaps you were tested by the Black Ships and found wanting—or perhaps you were tested and found strong enough to resist their probing. Either way, you grew up watching psychic power at work, learning to recognize its signs, and developing an instinctive wariness of its use.</p><p>Your family's psychic heritage meant constant scrutiny from the Inquisition, regular visits from sanctioned psykers, and the ever-present fear that someone would succumb to daemonic possession. You learned to spot the signs of warp-taint, to recognize when a psyker was struggling to maintain control, and to protect your mind from unwanted intrusions.</p><h3>Natural Resistance</h3><p>Whether through genetics, divine providence, or simple strength of will, you have developed a natural resistance to psychic powers. When a telepath tries to read your thoughts, they find only static. When a biomancer tries to influence your body, your flesh resists. You are a null zone in a family of psychic brilliance, and this has made you invaluable.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the <strong>Resistance (Psychic Powers)</strong> Talent, granting you a +10 bonus to all Tests to resist psychic powers used against you.</p><p><strong>If you are an Astropath-Transcendent:</strong> You may spend an additional 200xp to gain one Psychic Technique of your choice. This represents your family's accumulated knowledge of psychic disciplines, passed down through generations.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Witch-Born lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 200,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "name": "Willpower Tests",
+            "context": "vs. Psychic Powers",
+            "modifier": 10
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "Grants Resistance (Psychic Powers). Astropaths may purchase one additional Psychic Technique for 200xp.",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Resistance (Psychic Powers)",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Family Legacy of Psychic Knowledge",
+          "description": "<p>You have grown up surrounded by psykers and have developed keen insight into their abilities and limitations. You gain a +10 bonus to Psyniscience Tests to identify psychic powers being used or to sense psychic disturbances.</p><p><strong>For Astropath-Transcendent Characters Only:</strong> You may purchase one additional Psychic Technique by spending an additional 200xp during character creation. This technique can be from any discipline you have access to and represents knowledge passed down through your family's psychic lineage.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000017"
+}

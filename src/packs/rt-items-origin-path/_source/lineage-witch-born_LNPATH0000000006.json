@@ -1,0 +1,112 @@
+{
+  "name": "Lineage: Witch-Born",
+  "type": "originPath",
+  "img": "systems/rogue-trader/icons/origins/lineage-witch-born.webp",
+  "system": {
+    "identifier": "lineage-witch-born",
+    "step": "lineage",
+    "stepIndex": 7,
+    "description": {
+      "value": "<h2>Witch-Born</h2><blockquote><p><em>\"The taint of the Witch is strong within your family, and many of your ancestors could wield the energies of the Warp. Whether they bore this taint openly, travelling to Terra aboard the Blackships to be tested and Sanctioned, or kept it secret is another matter entirely, but one thing is certain—whether or not you possess psychic powers, your heritage has influenced you in some way.\"</em></p></blockquote><h3>A Legacy Written in the Warp</h3><p>Psychic ability runs in bloodlines. When one family member manifests powers, more often follow in subsequent generations. Your family tree is marked with the witch-sight: grandmothers who spoke prophecies, uncles who heard voices, cousins who moved objects with their minds, siblings who vanished aboard the Black Ships never to return.</p><p>Perhaps your family embraced this heritage, viewing their psychic members as blessed by the Emperor and destined for service as sanctioned psykers or astropaths. Or perhaps they lived in terror, knowing that each child might manifest the powers that would doom them to the Black Ships—or worse, to daemonic possession if their powers emerged uncontrolled.</p><h3>The Black Ships</h3><p>The League of Blackships patrols Imperial space, their mission eternal and merciless: find every psyker, test every suspected witch, and bring them to Terra for sanctioning or sacrifice. Your family knows the Black Ships well. You have watched them take relatives away. You have heard the screaming as the soul-bound probed minds for taint. You have seen the few who returned, changed forever by their ordeal.</p><p>Some families see the Black Ships as salvation—better a sanctioned life in service than death or damnation. Others see them as a curse, tearing families apart and claiming the young for the Emperor's endless hunger. Either way, when those black-hulled ships enter the system, your family holds its breath and prays.</p><h3>Living with the Gift</h3><p>Growing up in a witch-touched family means understanding dangers that most Imperial citizens never face. You know that uncontrolled psychic powers can tear reality apart. You know that daemons are real and hunger for psychic souls. You know the signs of possession, the symptoms of warp-sickness, and the precautions that must be taken around those who touch the immaterium.</p><p>This knowledge has shaped you, regardless of whether you inherited the psychic gift yourself. You may possess untrained powers kept hidden from the authorities—a perilous secret that could doom you and your family. You may have been tested and found pure, your mind strong enough to resist warp-influence. Or you may have developed a scholarly fascination with psychic phenomena, studying the warp from the relative safety of theory and observation.</p><h3>The Cost of Knowledge</h3><p>Whatever path you have taken, your family's heritage has given you insights into the warp that few possess. This knowledge is dangerous. Too much understanding of psychic powers can draw unwanted attention from the Inquisition. Too much contact with psykers can mark you as suspicious. Too much curiosity about the warp can lead you down dark paths from which there is no return.</p><p>Yet this same knowledge can be invaluable. Understanding psychic powers means recognizing threats that others cannot see. Knowing warp phenomena means surviving encounters that would destroy the ignorant. And having connections among psykers means access to abilities and information beyond the reach of most Explorers.</p><p><strong>Cost:</strong> This lineage option costs XP to be taken from starting XP at character creation. Choose one of three paths that define your relationship to your family's psychic heritage.</p>"
+    },
+    "requirements": {
+      "text": "Optional lineage choice (costs XP)",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose your relationship to your family's psychic heritage",
+          "options": [
+            {
+              "label": "Perilous Choice",
+              "value": "perilous_choice",
+              "description": "You possess unsanctioned psychic powers, hidden from the authorities. Gain Psy Rating 1, one Psychic Discipline, one Technique (≤100xp), and Psyniscience. You use the Renegade Psyker table. WARNING: This is highly illegal. Cost: 500xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Perilous Choice (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000016"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Proven to be Pure",
+              "value": "proven_pure",
+              "description": "You lack psychic powers or have been tested and found pure. Gain Resistance (Psychic Powers). Astropaths may purchase one additional Psychic Technique for +200xp. Cost: 200xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Proven to be Pure (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000017"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Witch-knowledge",
+              "value": "witch_knowledge",
+              "description": "Your family's fascination with the warp has made you a scholar of psychic phenomena. Gain one Forbidden Lore (Psykers or Warp) and one Peer (Astropaths or the Insane). Cost: 300xp",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Witch-knowledge (Lineage)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.LN00000000000018"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "<p><strong>Lineage Benefits:</strong> Choose one option that defines your relationship to your family's psychic heritage. Each option has a different XP cost that must be paid from starting XP at character creation.</p><p><strong>Warning:</strong> Perilous Choice makes you an unsanctioned psyker, which is a capital crime in the Imperium. Astropath and Navigator characters cannot take this option.</p>",
+    "notes": "Optional lineage step. Must be purchased with starting XP. Perilous Choice cannot be taken by Astropaths or Navigators.",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "position": 7
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LNPATH0000000006"
+}
