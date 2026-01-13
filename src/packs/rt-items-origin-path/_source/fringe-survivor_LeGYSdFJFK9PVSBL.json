@@ -159,7 +159,7 @@
     "notes": "Advanced origin from Into The Storm. Each path has an XP cost deducted from starting experience.",
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": [1, 5]
+    "position": 1
   },
   "effects": [],
   "flags": {},
