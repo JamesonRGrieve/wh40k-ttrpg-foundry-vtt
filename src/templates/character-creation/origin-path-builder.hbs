@@ -50,8 +50,21 @@
                             </div>
                         </div>
                     {{else}}
-                        <div class="origin-step-slot filled" data-step="{{step.step}}" draggable="true">
+                        <div class="origin-step-slot filled {{#if step.hasChoices}}has-choices{{/if}} {{#unless step.choicesComplete}}choices-pending{{/unless}}" data-step="{{step.step}}" draggable="true">
                             <div class="item-card">
+                                {{#if step.hasChoices}}
+                                    {{#unless step.choicesComplete}}
+                                        <div class="choice-badge pending">
+                                            <i class="fa-solid fa-exclamation-triangle"></i>
+                                            <span>{{localize "RT.OriginPath.ChoicesRequired"}}</span>
+                                        </div>
+                                    {{else}}
+                                        <div class="choice-badge complete">
+                                            <i class="fa-solid fa-check-circle"></i>
+                                            <span>{{localize "RT.OriginPath.ChoicesComplete"}}</span>
+                                        </div>
+                                    {{/unless}}
+                                {{/if}}
                                 <div class="item-header">
                                     <img src="{{step.item.img}}" alt="{{step.item.name}}" class="item-img" />
                                     <div class="item-actions">
@@ -173,6 +186,46 @@
                                 <span class="preview-value">{{#if (gt value 0)}}+{{/if}}{{value}}</span>
                             </div>
                         {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+            
+            {{!-- Wounds Formula Preview --}}
+            {{#if preview.woundsFormulas.length}}
+                <div class="preview-section preview-formula">
+                    <h4>{{localize "RT.Wounds"}}</h4>
+                    <div class="formula-preview">
+                        {{#each preview.woundsFormulas as |formulaInfo|}}
+                            <div class="formula-item">
+                                <span class="formula-source">{{formulaInfo.source}}:</span>
+                                <span class="formula-display">{{formulaInfo.description}}</span>
+                            </div>
+                        {{/each}}
+                        {{#if preview.characteristics.wounds}}
+                            <div class="formula-result">
+                                <strong>Total: {{preview.characteristics.wounds}}</strong>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/if}}
+            
+            {{!-- Fate Formula Preview --}}
+            {{#if preview.fateFormulas.length}}
+                <div class="preview-section preview-formula">
+                    <h4>{{localize "RT.Fate"}}</h4>
+                    <div class="formula-preview">
+                        {{#each preview.fateFormulas as |formulaInfo|}}
+                            <div class="formula-item">
+                                <span class="formula-source">{{formulaInfo.source}}:</span>
+                                <span class="formula-display">{{formulaInfo.description}}</span>
+                            </div>
+                        {{/each}}
+                        {{#if preview.characteristics.fate}}
+                            <div class="formula-result">
+                                <strong>Total: {{preview.characteristics.fate}}</strong>
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
             {{/if}}
