@@ -1247,6 +1247,178 @@ Foundry V13 requires exactly 16 alphanumeric characters for document IDs.
 
 ---
 
+## Origin Path System
+
+The Origin Path System is a character creation feature that walks players through a 6-step flowchart to define their character's background. Each step grants characteristics, skills, talents, traits, equipment, and special abilities.
+
+### Architecture Overview
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| **Data Model** | `src/module/data/item/origin-path.mjs` | Schema, validation, navigation data |
+| **Builder UI** | `src/module/applications/character-creation/origin-path-builder.mjs` | Main ApplicationV2 interface |
+| **Grants Processor** | `src/module/utils/origin-grants-processor.mjs` | Applies grants to characters |
+| **Formula Evaluator** | `src/module/utils/formula-evaluator.mjs` | Evaluates wounds/fate formulas |
+| **Roll Dialog** | `src/module/applications/character-creation/origin-roll-dialog.mjs` | Interactive rolling |
+| **Choice Dialog** | `src/module/applications/character-creation/origin-path-choice-dialog.mjs` | Choice selection |
+| **Chart Layout** | `src/module/utils/origin-chart-layout.mjs` | Visual flowchart positioning |
+
+### The 6 Steps
+
+| Index | Step | Description |
+|-------|------|-------------|
+| 0 | `homeWorld` | Origin world (Forge World, Hive World, etc.) |
+| 1 | `birthright` | Social position at birth |
+| 2 | `lureOfTheVoid` | What drew the character to space |
+| 3 | `trialsAndTravails` | Significant event in their past |
+| 4 | `motivation` | Core drive or ambition |
+| 5 | `career` | Starting career path |
+
+### Data Model Schema
+
+```javascript
+// Core fields
+{
+  stepIndex: NumberField,        // 0-5, which step this origin represents
+  position: NumberField,         // 0-8, chart position (center=4, extremes=0/8)
+  
+  grants: {
+    characteristics: {},         // { weaponSkill: 5, toughness: 5, ... }
+    skills: {},                  // { athletics: 1, awareness: 1, ... }
+    talents: [],                 // ["Weapon Training (Chain)"]
+    traits: [],                  // ["Hive-Bound"]
+    equipment: [],               // ["Laspistol", "Guard Flak Armour"]
+    specialAbilities: [],        // ["Night Vision"]
+    aptitudes: [],               // ["Agility", "Finesse"]
+    woundsFormula: "",           // "2xTB+1d5" or ""
+    fateFormula: "",             // "(1-5|=2),(6-10|=3)" or ""
+    corruption: 0,
+    insanity: 0,
+    choices: []                  // Choice grants (see below)
+  },
+  
+  navigation: {
+    connectsTo: []               // Valid next positions [0,1,2,3,4,5,6,7,8]
+  },
+  
+  selectedChoices: {},           // Player's selections { "Choose Skill": ["Awareness"] }
+  
+  rollResults: {
+    wounds: { formula, rolled, breakdown, timestamp },
+    fate: { formula, rolled, breakdown, timestamp }
+  },
+  
+  activeModifiers: {}            // Computed from selectedChoices
+}
+```
+
+### Choice Grants Structure
+
+Origins can offer choices to players. Each choice has a label, selection count, and options:
+
+```javascript
+grants.choices: [
+  {
+    label: "Choose a Skill",
+    count: 1,                    // How many options to pick
+    options: [
+      {
+        label: "Awareness +10",
+        grants: {
+          skills: { awareness: 1 },
+          talents: [],
+          traits: [],
+          equipment: [],
+          corruption: 0,
+          insanity: 0
+        }
+      },
+      // ... more options
+    ]
+  }
+]
+```
+
+### Formula Syntax
+
+**Wounds Formulas** (`grants.woundsFormula`):
+- `2xTB+1d5` - 2 × Toughness Bonus + 1d5
+- `TB+5` - Toughness Bonus + 5
+- Supports: `TB` (Toughness), `WB` (Willpower), `SB` (Strength), `AB` (Agility), `IB` (Intelligence), `PB` (Perception), `FB` (Fellowship)
+
+**Fate Formulas** (`grants.fateFormula`):
+- `(1-5|=2),(6-10|=3)` - Roll 1d10; 1-5 = 2 Fate, 6-10 = 3 Fate
+- `(1-4|=2),(5-8|=3),(9-10|=4)` - Three-tier conditional
+- Format: `(min-max|=value)` segments separated by commas
+
+### Grants Processor
+
+The `OriginGrantsProcessor` utility processes all selected origins and applies their grants:
+
+```javascript
+import { OriginGrantsProcessor } from "../utils/origin-grants-processor.mjs";
+
+// Process all origin items for an actor
+const result = await OriginGrantsProcessor.processOriginGrants(originItems, actor);
+
+// Result contains:
+{
+  characteristics: { weaponSkill: 10, toughness: 5, ... },
+  itemsToCreate: [ /* skill, talent, trait Item data */ ],
+  woundsBonus: 12,               // From woundsFormula evaluation
+  fateBonus: 3,                  // From fateFormula evaluation
+  corruptionBonus: 5,
+  insanityBonus: 0,
+  aptitudes: ["Agility", "Finesse", ...]
+}
+```
+
+### Builder Workflow
+
+1. **Drag origins** from compendium onto the 6 step slots
+2. **Make choices** when prompted (skill selection, talent picks, etc.)
+3. **Roll stats** if the origin has wounds/fate formulas
+4. **Preview bonuses** in the right-side panel
+5. **Commit path** to apply all grants to the character
+
+### Key Methods
+
+**OriginPathData (Data Model)**:
+- `prepareBaseData()` - Initializes tracking objects
+- `prepareDerivedData()` - Calculates activeModifiers from selectedChoices
+- `_calculateActiveModifiers()` - Iterates choices and sums grants
+- `_prepareNavigationData()` - Sets valid chart connections
+
+**OriginPathBuilder (ApplicationV2)**:
+- `#commitPath()` - Processes all origins and updates actor
+- `#rollStat()` - Opens OriginRollDialog for wounds/fate
+- `#makeChoice()` - Opens OriginPathChoiceDialog
+- `_calculateBonuses()` - Computes preview panel data
+
+**OriginGrantsProcessor**:
+- `processOriginGrants()` - Main entry point
+- `_processChoiceGrants()` - Extracts grants from selectedChoices
+- `_collectItems()` - Creates talent/skill/trait item data
+
+### Templates
+
+| Template | Purpose |
+|----------|---------|
+| `origin-path-builder.hbs` | Main builder with 6-step flowchart |
+| `origin-roll-dialog.hbs` | Interactive roll dialog |
+| `origin-path-choice-dialog.hbs` | Choice selection modal |
+| `origin-roll-chat-card.hbs` | Chat message for roll results |
+
+### SCSS Files
+
+| File | Purpose |
+|------|---------|
+| `_origin-path-builder.scss` | Builder layout, steps, controls |
+| `_origin-path-modern.scss` | Modern item sheet styling |
+| `_origin-roll-dialog.scss` | Roll dialog styling |
+
+---
+
 ## Appendix A: Handlebars Helpers Reference
 
 Located in `src/module/handlebars/handlebars-helpers.mjs`

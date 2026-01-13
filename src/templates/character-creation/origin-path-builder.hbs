@@ -1,349 +1,469 @@
-{{!-- Origin Path Builder Template --}}
-<div class="origin-path-builder-content">
-    
-    {{!-- Header Toolbar --}}
-    <div class="builder-toolbar">
-        <div class="toolbar-left">
-            <button type="button" class="builder-button" data-action="randomize" data-tooltip="RT.OriginPath.RandomizeHint">
+{{!-- Origin Path Builder Template - Refactored Design --}}
+<div class="origin-builder">
+
+    {{!-- Unified Header: Toolbar + Mode + Direction --}}
+    <header class="builder-toolbar">
+        <div class="toolbar-group">
+            <button type="button" class="toolbar-btn" data-action="randomize" data-tooltip="{{localize 'RT.OriginPath.RandomizeHint'}}">
                 <i class="fa-solid fa-dice"></i>
                 <span>{{localize "RT.OriginPath.Randomize"}}</span>
             </button>
-            <button type="button" class="builder-button" data-action="reset" data-tooltip="RT.OriginPath.ResetHint">
+            <button type="button" class="toolbar-btn" data-action="reset" data-tooltip="{{localize 'RT.OriginPath.ResetHint'}}">
                 <i class="fa-solid fa-rotate-left"></i>
                 <span>{{localize "RT.OriginPath.Reset"}}</span>
             </button>
         </div>
+
         <div class="toolbar-center">
-            <h3 class="path-title">{{localize "RT.OriginPath.YourJourney"}}</h3>
+            <h1 class="toolbar-title">{{localize "RT.OriginPath.YourJourney"}}</h1>
+            
+            {{!-- Mode and Direction Controls (inline with title) --}}
+            <div class="toolbar-controls">
+                {{!-- Guided/Free Mode Toggle --}}
+                <div class="mode-toggle">
+                    <label class="mode-option {{#if guidedMode}}active{{/if}}" data-tooltip="{{localize 'RT.OriginPath.GuidedHint'}}">
+                        <input type="radio" name="mode" value="guided" {{#if guidedMode}}checked{{/if}} data-action="setMode">
+                        <i class="fa-solid fa-route"></i>
+                        <span>{{localize "RT.OriginPath.Guided"}}</span>
+                    </label>
+                    <label class="mode-option {{#unless guidedMode}}active{{/unless}}" data-tooltip="{{localize 'RT.OriginPath.FreeHint'}}">
+                        <input type="radio" name="mode" value="free" {{#unless guidedMode}}checked{{/unless}} data-action="setMode">
+                        <i class="fa-solid fa-unlock"></i>
+                        <span>{{localize "RT.OriginPath.Free"}}</span>
+                    </label>
+                </div>
+
+                {{!-- Direction Toggle --}}
+                <div class="direction-toggle">
+                    <label class="direction-option {{#if isBackward}}active{{/if}}" data-tooltip="{{localize 'RT.OriginPath.DirectionBackwardHint'}}">
+                        <input type="radio" name="direction" value="backward" {{#if isBackward}}checked{{/if}} data-action="setDirection">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>{{localize "RT.OriginPath.DirectionBackward"}}</span>
+                    </label>
+                    <label class="direction-option {{#if isForward}}active{{/if}}" data-tooltip="{{localize 'RT.OriginPath.DirectionForwardHint'}}">
+                        <input type="radio" name="direction" value="forward" {{#if isForward}}checked{{/if}} data-action="setDirection">
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <span>{{localize "RT.OriginPath.DirectionForward"}}</span>
+                    </label>
+                </div>
+            </div>
         </div>
-        <div class="toolbar-right">
-            <button type="button" class="builder-button" data-action="export" data-tooltip="RT.OriginPath.ExportHint">
+
+        <div class="toolbar-group">
+            <button type="button" class="toolbar-btn" data-action="export" data-tooltip="{{localize 'RT.OriginPath.ExportHint'}}">
                 <i class="fa-solid fa-download"></i>
             </button>
-            <button type="button" class="builder-button" data-action="import" data-tooltip="RT.OriginPath.ImportHint">
+            <button type="button" class="toolbar-btn" data-action="import" data-tooltip="{{localize 'RT.OriginPath.ImportHint'}}">
                 <i class="fa-solid fa-upload"></i>
             </button>
         </div>
-    </div>
+    </header>
 
-    {{!-- Path Canvas - Flowchart Area --}}
-    <div class="path-canvas">
-        
-        {{!-- Row 1: First 3 Steps --}}
-        <div class="path-row">
-            {{#each (slice steps 0 3) as |step|}}
-                <div class="origin-step" data-step="{{step.step}}">
-                    <div class="step-header">
-                        <i class="fa-solid {{step.icon}}"></i>
-                        <span class="step-label">{{step.label}}</span>
-                    </div>
-                    
-                    {{#if step.isEmpty}}
-                        <div class="origin-step-slot empty" data-step="{{step.step}}" draggable="false">
-                            <div class="empty-state">
-                                <i class="fa-solid fa-plus-circle"></i>
-                                <p>{{localize "RT.OriginPath.DragHere"}}</p>
-                                <button type="button" class="browse-button" data-action="openCompendium">
-                                    <i class="fa-solid fa-book"></i>
-                                    {{localize "RT.OriginPath.Browse"}}
-                                </button>
-                            </div>
-                        </div>
+    {{!-- Step Navigation --}}
+    <nav class="step-navigation">
+        {{#each steps as |step|}}
+            <div class="step-nav-item {{#if step.isActive}}active{{/if}} {{#if step.isComplete}}complete{{/if}} {{#if step.isDisabled}}disabled{{/if}}" 
+                 data-action="goToStep" 
+                 data-step-index="{{step.index}}">
+                <span class="step-number">{{add step.index 1}}</span>
+                <span class="step-label">{{step.shortLabel}}</span>
+            </div>
+        {{/each}}
+        {{!-- Lineage Step (shown after all 6 steps are complete) --}}
+        {{#if status.stepsComplete}}
+            <div class="step-nav-item lineage-step {{#if showLineage}}active{{/if}} {{#if hasLineageSelection}}complete{{/if}}" 
+                 data-action="goToLineage">
+                <span class="step-number"><i class="fa-solid fa-crown"></i></span>
+                <span class="step-label">{{localize "RT.OriginPath.Lineage"}}</span>
+            </div>
+        {{/if}}
+    </nav>
+
+    {{!-- Main Content --}}
+    <main class="builder-main">
+        {{!-- Step Content (Left) --}}
+        <section class="step-content">
+            <div class="step-header">
+                <div class="step-icon">
+                    <i class="fa-solid {{currentStep.icon}}"></i>
+                </div>
+                <div class="step-info">
+                    {{#if currentStep.isLineage}}
+                        <h2>{{localize "RT.OriginPath.Lineage"}} <span class="optional-badge">{{localize "RT.OriginPath.Optional"}}</span></h2>
+                        <p>{{localize "RT.OriginPath.LineageDesc"}}</p>
                     {{else}}
-                        <div class="origin-step-slot filled {{#if step.hasChoices}}has-choices{{/if}} {{#unless step.choicesComplete}}choices-pending{{/unless}}" data-step="{{step.step}}" draggable="true">
-                            <div class="item-card">
-                                {{#if step.hasChoices}}
-                                    {{#unless step.choicesComplete}}
-                                        <div class="choice-badge pending">
-                                            <i class="fa-solid fa-exclamation-triangle"></i>
-                                            <span>{{localize "RT.OriginPath.ChoicesRequired"}}</span>
-                                        </div>
+                        <h2>{{localize "RT.OriginPath.Step"}} {{add currentStep.index 1}}: {{currentStep.label}}</h2>
+                        <p>{{currentStep.description}}</p>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{!-- Origin Cards --}}
+            <div class="origin-cards-grid">
+                {{#each currentStep.origins as |origin|}}
+                    <div class="origin-card {{#if origin.isSelected}}selected{{/if}} {{#if origin.isDisabled}}disabled{{/if}} {{#if origin.isValidNext}}valid-next{{/if}}"
+                         data-action="selectOriginCard"
+                         data-origin-id="{{origin.id}}"
+                         data-origin-uuid="{{origin.uuid}}"
+                         data-tooltip="{{origin.name}}: {{origin.shortDescription}}">
+                        <img src="{{origin.img}}" alt="{{origin.name}}" class="card-img" />
+                        <h4 class="card-name">{{origin.name}}</h4>
+                        {{#if origin.badges}}
+                            <div class="card-badges">
+                                {{#if origin.hasChoices}}
+                                    <span class="card-badge choices">{{localize "RT.OriginPath.HasChoices"}}</span>
+                                {{/if}}
+                                {{#if origin.isAdvanced}}
+                                    <span class="card-badge advanced">{{localize "RT.OriginPath.Advanced"}}</span>
+                                {{/if}}
+                                {{#if origin.xpCost}}
+                                    <span class="card-badge xp">{{origin.xpCost}} XP</span>
+                                {{/if}}
+                            </div>
+                        {{/if}}
+                        {{!-- Preview button for detailed view --}}
+                        <button type="button" class="card-preview-btn" data-action="viewOriginCard" data-origin-id="{{origin.id}}" data-origin-uuid="{{origin.uuid}}" data-tooltip="{{localize 'RT.OriginPath.ViewDetails'}}">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                {{else}}
+                    <p class="no-origins">{{localize "RT.OriginPath.NoOriginsAvailable"}}</p>
+                {{/each}}
+            </div>
+        </section>
+
+        {{!-- Selection Detail Panel (Right) --}}
+        <aside class="selection-panel">
+            {{#if selectedOrigin}}
+                {{!-- Header --}}
+                <div class="selection-header">
+                    <img src="{{selectedOrigin.img}}" alt="{{selectedOrigin.name}}" class="selection-img" />
+                    <div class="selection-info">
+                        <h3>{{selectedOrigin.name}}</h3>
+                    </div>
+                    <div class="selection-actions">
+                        <button type="button" class="toolbar-btn" data-action="viewOrigin" data-tooltip="{{localize 'RT.OriginPath.ViewDetails'}}">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        {{#unless selectedOrigin.isConfirmed}}
+                            <button type="button" class="toolbar-btn toolbar-btn--confirm" data-action="confirmSelection" data-tooltip="{{localize 'RT.OriginPath.ConfirmSelection'}}">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        {{/unless}}
+                    </div>
+                </div>
+
+                {{!-- Grants Section --}}
+                {{#if selectedOrigin.grants}}
+                    <div class="selection-section">
+                        <h4 class="section-title">
+                            <i class="fa-solid fa-gift"></i>
+                            {{localize "RT.OriginPath.Grants"}}
+                        </h4>
+                        <div class="grants-list">
+                            {{!-- Characteristics --}}
+                            {{#if selectedOrigin.grants.hasCharacteristics}}
+                                <div class="grants-category">
+                                    <span class="category-label">{{localize "RT.Characteristics"}}</span>
+                                    <div class="category-items">
+                                        {{#each selectedOrigin.grants.characteristics as |char|}}
+                                            <span class="grant-item characteristic {{#if char.positive}}positive{{else}}negative{{/if}}">
+                                                {{char.short}}: {{#if char.positive}}+{{/if}}{{char.value}}
+                                            </span>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                            
+                            {{!-- Skills (clickable) --}}
+                            {{#if selectedOrigin.grants.hasSkills}}
+                                <div class="grants-category">
+                                    <span class="category-label">{{localize "RT.Skills"}}</span>
+                                    <div class="category-items">
+                                        {{#each selectedOrigin.grants.skills as |skill|}}
+                                            <div class="grant-tag skill-tag" data-tooltip="{{skill.displayName}} ({{skill.levelLabel}})">
+                                                <i class="fa-solid fa-book-open"></i>
+                                                <span class="tag-label">{{skill.displayName}}</span>
+                                                <span class="tag-level">{{skill.levelLabel}}</span>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                            
+                            {{!-- Talents (clickable if they have uuid) --}}
+                            {{#if selectedOrigin.grants.hasTalents}}
+                                <div class="grants-category">
+                                    <span class="category-label">{{localize "RT.Talents"}}</span>
+                                    <div class="category-items">
+                                        {{#each selectedOrigin.grants.talents as |talent|}}
+                                            <div class="grant-tag talent-tag {{#if talent.hasItem}}clickable{{/if}}" 
+                                                  {{#if talent.uuid}}data-action="openItem" data-uuid="{{talent.uuid}}"{{/if}}
+                                                  data-tooltip="{{talent.tooltip}}">
+                                                <i class="fa-solid fa-star"></i>
+                                                <span class="tag-label">{{talent.name}}</span>
+                                                {{#if talent.hasItem}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                            
+                            {{!-- Traits (clickable if they have uuid) --}}
+                            {{#if selectedOrigin.grants.hasTraits}}
+                                <div class="grants-category">
+                                    <span class="category-label">{{localize "RT.Traits"}}</span>
+                                    <div class="category-items">
+                                        {{#each selectedOrigin.grants.traits as |trait|}}
+                                            <div class="grant-tag trait-tag {{#if trait.hasItem}}clickable{{/if}}"
+                                                  {{#if trait.uuid}}data-action="openItem" data-uuid="{{trait.uuid}}"{{/if}}
+                                                  data-tooltip="{{trait.tooltip}}">
+                                                <i class="fa-solid fa-dna"></i>
+                                                <span class="tag-label">{{trait.name}}{{#if trait.level}} ({{trait.level}}){{/if}}</span>
+                                                {{#if trait.hasItem}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                            
+                            {{!-- Equipment --}}
+                            {{#if selectedOrigin.grants.hasEquipment}}
+                                <div class="grants-category">
+                                    <span class="category-label">{{localize "RT.Equipment"}}</span>
+                                    <div class="category-items">
+                                        {{#each selectedOrigin.grants.equipment as |item|}}
+                                            <div class="grant-tag equipment-tag">
+                                                <i class="fa-solid fa-box"></i>
+                                                <span class="tag-label">{{item}}</span>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{!-- Choices Section --}}
+                {{#if selectedOrigin.hasChoices}}
+                    <div class="selection-section choices-section">
+                        <h4 class="section-title">
+                            <i class="fa-solid fa-list-check"></i>
+                            {{localize "RT.OriginPath.ChoicesRequired"}}
+                        </h4>
+                        {{#each selectedOrigin.choices as |choice|}}
+                            <div class="choice-item {{#if choice.isComplete}}complete{{/if}}">
+                                <div class="choice-header">
+                                    {{#if choice.isComplete}}
+                                        <i class="fa-solid fa-check-circle choice-complete-icon"></i>
                                     {{else}}
-                                        <div class="choice-badge complete">
-                                            <i class="fa-solid fa-check-circle"></i>
-                                            <span>{{localize "RT.OriginPath.ChoicesComplete"}}</span>
-                                        </div>
-                                    {{/unless}}
-                                {{/if}}
-                                <div class="item-header">
-                                    <img src="{{step.item.img}}" alt="{{step.item.name}}" class="item-img" />
-                                    <div class="item-actions">
-                                        <button type="button" class="item-action" data-action="viewItem" data-tooltip="RT.OriginPath.ViewDetails">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-                                        <button type="button" class="item-action" data-action="clearSlot" data-tooltip="RT.OriginPath.Clear">
-                                            <i class="fa-solid fa-times"></i>
-                                        </button>
-                                    </div>
+                                        <i class="fa-regular fa-circle choice-incomplete-icon"></i>
+                                    {{/if}}
+                                    <span class="choice-type-badge">{{choice.typeLabel}}</span>
+                                    <span class="choice-label">{{choice.label}}</span>
+                                    <span class="choice-count">{{choice.count}}x</span>
                                 </div>
-                                <h4 class="item-name">{{step.item.name}}</h4>
-                                
-                                {{#if step.item.bonuses}}
-                                    <div class="item-bonuses">
-                                        {{#each step.item.bonuses as |bonus|}}
-                                            <span class="bonus-badge bonus-{{bonus.type}}">
-                                                {{bonus.label}}: {{bonus.value}}
-                                            </span>
-                                        {{/each}}
+                                {{#if choice.selection}}
+                                    <div class="choice-selection">
+                                        <i class="fa-solid fa-check"></i> {{choice.selection}}
                                     </div>
                                 {{/if}}
-                            </div>
-                        </div>
-                    {{/if}}
-                </div>
-
-                {{!-- Arrow connector (not after last step in row) --}}
-                {{#unless @last}}
-                    <div class="path-connector">
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </div>
-                {{/unless}}
-            {{/each}}
-        </div>
-
-        {{!-- Vertical connector --}}
-        <div class="path-connector-vertical">
-            <i class="fa-solid fa-arrow-down"></i>
-        </div>
-
-        {{!-- Row 2: Last 3 Steps (reversed for visual flow) --}}
-        <div class="path-row path-row-reverse">
-            {{#each (slice steps 3 6) as |step|}}
-                <div class="origin-step" data-step="{{step.step}}">
-                    <div class="step-header">
-                        <i class="fa-solid {{step.icon}}"></i>
-                        <span class="step-label">{{step.label}}</span>
-                    </div>
-                    
-                    {{#if step.isEmpty}}
-                        <div class="origin-step-slot empty" data-step="{{step.step}}" draggable="false">
-                            <div class="empty-state">
-                                <i class="fa-solid fa-plus-circle"></i>
-                                <p>{{localize "RT.OriginPath.DragHere"}}</p>
-                                <button type="button" class="browse-button" data-action="openCompendium">
-                                    <i class="fa-solid fa-book"></i>
-                                    {{localize "RT.OriginPath.Browse"}}
+                                <button type="button" class="choice-btn" data-action="editChoice" data-choice-label="{{choice.label}}">
+                                    <i class="fa-solid fa-pen"></i>
+                                    {{#if choice.isComplete}}{{localize "RT.OriginPath.ChangeChoice"}}{{else}}{{localize "RT.OriginPath.MakeChoice"}}{{/if}}
                                 </button>
                             </div>
-                        </div>
-                    {{else}}
-                        <div class="origin-step-slot filled" data-step="{{step.step}}" draggable="true">
-                            <div class="item-card">
-                                <div class="item-header">
-                                    <img src="{{step.item.img}}" alt="{{step.item.name}}" class="item-img" />
-                                    <div class="item-actions">
-                                        <button type="button" class="item-action" data-action="viewItem" data-tooltip="RT.OriginPath.ViewDetails">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-                                        <button type="button" class="item-action" data-action="clearSlot" data-tooltip="RT.OriginPath.Clear">
-                                            <i class="fa-solid fa-times"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <h4 class="item-name">{{step.item.name}}</h4>
-                                
-                                {{#if step.item.bonuses}}
-                                    <div class="item-bonuses">
-                                        {{#each step.item.bonuses as |bonus|}}
-                                            <span class="bonus-badge bonus-{{bonus.type}}">
-                                                {{bonus.label}}: {{bonus.value}}
-                                            </span>
-                                        {{/each}}
-                                    </div>
-                                {{/if}}
-                            </div>
-                        </div>
-                    {{/if}}
-                </div>
-
-                {{!-- Arrow connector (except after last) --}}
-                {{#unless @last}}
-                    <div class="path-connector">
-                        <i class="fa-solid fa-arrow-left"></i>
+                        {{/each}}
                     </div>
-                {{/unless}}
-            {{/each}}
-        </div>
+                {{/if}}
 
-    </div>
+                {{!-- Roll Section --}}
+                {{#if selectedOrigin.hasRolls}}
+                    <div class="selection-section rolls-section">
+                        <h4 class="section-title">
+                            <i class="fa-solid fa-dice"></i>
+                            {{localize "RT.OriginPath.StartingStats"}}
+                        </h4>
+                        {{#if selectedOrigin.rolls.wounds}}
+                            <div class="roll-item {{#if selectedOrigin.rolls.wounds.hasValue}}has-value{{/if}}">
+                                <div class="roll-info">
+                                    <div class="roll-label">
+                                        <i class="fa-solid fa-heart"></i> {{localize "RT.Wounds"}}
+                                    </div>
+                                    {{#if selectedOrigin.rolls.wounds.hasValue}}
+                                        <div class="roll-result">{{selectedOrigin.rolls.wounds.value}} <span class="roll-breakdown">({{selectedOrigin.rolls.wounds.breakdown}})</span></div>
+                                    {{else}}
+                                        <div class="roll-formula">{{selectedOrigin.rolls.wounds.formula}}</div>
+                                    {{/if}}
+                                </div>
+                                <div class="roll-actions">
+                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="wounds" data-tooltip="{{localize 'RT.OriginPath.RollTooltip'}}">
+                                        <i class="fa-solid fa-dice"></i>
+                                        {{#if selectedOrigin.rolls.wounds.hasValue}}{{localize "RT.OriginPath.Reroll"}}{{else}}{{localize "RT.Roll"}}{{/if}}
+                                    </button>
+                                </div>
+                            </div>
+                        {{/if}}
+                        {{#if selectedOrigin.rolls.fate}}
+                            <div class="roll-item {{#if selectedOrigin.rolls.fate.hasValue}}has-value{{/if}}">
+                                <div class="roll-info">
+                                    <div class="roll-label">
+                                        <i class="fa-solid fa-star"></i> {{localize "RT.Fate"}}
+                                    </div>
+                                    {{#if selectedOrigin.rolls.fate.hasValue}}
+                                        <div class="roll-result">{{selectedOrigin.rolls.fate.value}} <span class="roll-breakdown">({{selectedOrigin.rolls.fate.breakdown}})</span></div>
+                                    {{else}}
+                                        <div class="roll-formula">{{selectedOrigin.rolls.fate.formula}}</div>
+                                    {{/if}}
+                                </div>
+                                <div class="roll-actions">
+                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="fate" data-tooltip="{{localize 'RT.OriginPath.RollTooltip'}}">
+                                        <i class="fa-solid fa-dice"></i>
+                                        {{#if selectedOrigin.rolls.fate.hasValue}}{{localize "RT.OriginPath.Reroll"}}{{else}}{{localize "RT.Roll"}}{{/if}}
+                                    </button>
+                                </div>
+                            </div>
+                        {{/if}}
+                    </div>
+                {{/if}}
+
+                {{!-- Confirm Selection Button --}}
+                <div class="selection-confirm">
+                    <button type="button" class="confirm-selection-btn" data-action="confirmSelection" data-tooltip="{{localize 'RT.OriginPath.ConfirmSelectionHint'}}">
+                        <i class="fa-solid fa-check"></i>
+                        <span>{{localize "RT.OriginPath.ConfirmSelection"}}</span>
+                    </button>
+                </div>
+            {{else}}
+                {{!-- Empty State --}}
+                <div class="selection-empty">
+                    <i class="fa-solid fa-hand-pointer"></i>
+                    <p>{{localize "RT.OriginPath.SelectOriginPrompt"}}</p>
+                </div>
+            {{/if}}
+        </aside>
+    </main>
 
     {{!-- Preview Panel --}}
-    <div class="preview-panel">
-        <h3 class="preview-title">
-            <i class="fa-solid fa-chart-line"></i>
-            {{localize "RT.OriginPath.TotalBonuses"}}
-        </h3>
-        
-        <div class="preview-content">
-            {{!-- Characteristics --}}
-            {{#if preview.characteristics}}
-                <div class="preview-section">
-                    <h4>{{localize "RT.Characteristics"}}</h4>
-                    <div class="preview-grid">
-                        {{#each preview.characteristics as |value key|}}
-                            <div class="preview-item {{#if (gt value 0)}}positive{{else}}negative{{/if}}">
-                                <span class="preview-label">{{key}}</span>
-                                <span class="preview-value">{{#if (gt value 0)}}+{{/if}}{{value}}</span>
-                            </div>
+    <section class="preview-panel">
+        <div class="preview-header">
+            <h3>
+                <i class="fa-solid fa-eye"></i>
+                {{localize "RT.OriginPath.TotalBonuses"}}
+            </h3>
+        </div>
+        <div class="preview-grid">
+            {{#if preview.characteristics.length}}
+                <div class="preview-category">
+                    <div class="category-title">{{localize "RT.Characteristics"}}</div>
+                    <div class="category-items">
+                        {{#each preview.characteristics as |char|}}
+                            <span class="preview-item {{#if (gt char.value 0)}}positive{{else}}negative{{/if}} {{#if char.fromChoice}}from-choice{{/if}}">
+                                {{char.short}}: {{#if (gt char.value 0)}}+{{/if}}{{char.value}}
+                            </span>
                         {{/each}}
                     </div>
                 </div>
             {{/if}}
-            
-            {{!-- Wounds Formula Preview --}}
-            {{#if preview.woundsFormulas.length}}
-                <div class="preview-section preview-formula">
-                    <h4>{{localize "RT.Wounds"}}</h4>
-                    <div class="formula-preview">
-                        {{#each preview.woundsFormulas as |formulaInfo|}}
-                            <div class="formula-item">
-                                <span class="formula-source">{{formulaInfo.source}}:</span>
-                                <span class="formula-display">{{formulaInfo.description}}</span>
-                            </div>
-                        {{/each}}
-                        {{#if preview.characteristics.wounds}}
-                            <div class="formula-result">
-                                <strong>Total: {{preview.characteristics.wounds}}</strong>
-                            </div>
-                        {{/if}}
-                    </div>
-                </div>
-            {{/if}}
-            
-            {{!-- Fate Formula Preview --}}
-            {{#if preview.fateFormulas.length}}
-                <div class="preview-section preview-formula">
-                    <h4>{{localize "RT.Fate"}}</h4>
-                    <div class="formula-preview">
-                        {{#each preview.fateFormulas as |formulaInfo|}}
-                            <div class="formula-item">
-                                <span class="formula-source">{{formulaInfo.source}}:</span>
-                                <span class="formula-display">{{formulaInfo.description}}</span>
-                            </div>
-                        {{/each}}
-                        {{#if preview.characteristics.fate}}
-                            <div class="formula-result">
-                                <strong>Total: {{preview.characteristics.fate}}</strong>
-                            </div>
-                        {{/if}}
-                    </div>
-                </div>
-            {{/if}}
-
-            {{!-- Skills --}}
             {{#if preview.skills.length}}
-                <div class="preview-section">
-                    <h4>{{localize "RT.Skills"}}</h4>
-                    <div class="preview-list">
+                <div class="preview-category">
+                    <div class="category-title">{{localize "RT.Skills"}}</div>
+                    <div class="category-items">
                         {{#each preview.skills as |skill|}}
-                            <div class="preview-item">
-                                <span class="preview-label">{{skill.name}}{{#if skill.specialization}} ({{skill.specialization}}){{/if}}</span>
-                                <span class="preview-badge">{{capitalize skill.level}}</span>
+                            <div class="grant-tag skill-tag {{#if skill.fromChoice}}from-choice{{/if}}">
+                                <i class="fa-solid fa-book-open"></i>
+                                <span class="tag-label">{{skill.name}}</span>
                             </div>
                         {{/each}}
                     </div>
                 </div>
             {{/if}}
-
-            {{!-- Talents --}}
             {{#if preview.talents.length}}
-                <div class="preview-section">
-                    <h4>{{localize "RT.Talents"}}</h4>
-                    <div class="preview-list">
+                <div class="preview-category">
+                    <div class="category-title">{{localize "RT.Talents"}}</div>
+                    <div class="category-items">
                         {{#each preview.talents as |talent|}}
-                            <div class="preview-item">
-                                <span class="preview-label">{{talent.name}}{{#if talent.specialization}} ({{talent.specialization}}){{/if}}</span>
+                            <div class="grant-tag talent-tag {{#if talent.uuid}}clickable{{/if}} {{#if talent.fromChoice}}from-choice{{/if}}"
+                                  {{#if talent.uuid}}data-action="openItem" data-uuid="{{talent.uuid}}"{{/if}}
+                                  data-tooltip="{{talent.name}}">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="tag-label">{{talent.name}}</span>
+                                {{#if talent.uuid}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
                             </div>
                         {{/each}}
                     </div>
                 </div>
             {{/if}}
-
-            {{!-- Traits --}}
-            {{#if preview.traits.length}}
-                <div class="preview-section">
-                    <h4>{{localize "RT.Traits"}}</h4>
-                    <div class="preview-list">
-                        {{#each preview.traits as |trait|}}
-                            <div class="preview-item">
-                                <span class="preview-label">{{trait.name}}{{#if trait.level}} ({{trait.level}}){{/if}}</span>
-                            </div>
-                        {{/each}}
-                    </div>
-                </div>
-            {{/if}}
-
-            {{!-- Aptitudes --}}
-            {{#if preview.aptitudes.length}}
-                <div class="preview-section">
-                    <h4>{{localize "RT.Aptitudes"}}</h4>
-                    <div class="preview-list">
-                        {{#each preview.aptitudes as |aptitude|}}
-                            <div class="preview-item">
-                                <span class="preview-label">{{aptitude}}</span>
-                            </div>
-                        {{/each}}
-                    </div>
-                </div>
-            {{/if}}
-
-            {{!-- Special Abilities --}}
-            {{#if preview.specialAbilities.length}}
-                <div class="preview-section">
-                    <h4>{{localize "RT.OriginPath.SpecialAbilities"}}</h4>
-                    <div class="abilities-list">
-                        {{#each preview.specialAbilities as |ability|}}
-                            <div class="ability-item">
-                                <strong>{{ability.source}}:</strong> {{ability.name}} - {{{ability.description}}}
-                            </div>
-                        {{/each}}
-                    </div>
-                </div>
-            {{/if}}
-
-            {{!-- Empty state --}}
-            {{#unless preview.characteristics}}
-                {{#unless preview.skills.length}}
-                    {{#unless preview.specialAbilities.length}}
-                        <div class="preview-empty">
-                            <i class="fa-solid fa-info-circle"></i>
-                            <p>{{localize "RT.OriginPath.NoBonusesYet"}}</p>
+            {{#if preview.wounds}}
+                <div class="preview-category">
+                    <div class="category-title">{{localize "RT.Wounds"}}</div>
+                    <div class="category-items">
+                        <div class="grant-tag positive">
+                            <i class="fa-solid fa-heart"></i>
+                            <span class="tag-label">{{preview.wounds}}</span>
                         </div>
-                    {{/unless}}
-                {{/unless}}
-            {{/unless}}
+                    </div>
+                </div>
+            {{/if}}
+            {{#if preview.fate}}
+                <div class="preview-category">
+                    <div class="category-title">{{localize "RT.Fate"}}</div>
+                    <div class="category-items">
+                        <div class="grant-tag positive">
+                            <i class="fa-solid fa-star"></i>
+                            <span class="tag-label">{{preview.fate}}</span>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
         </div>
-    </div>
+    </section>
 
-    {{!-- Footer Actions --}}
-    <div class="builder-footer">
-        <div class="footer-info">
-            {{#if isComplete}}
-                <span class="complete-badge">
-                    <i class="fa-solid fa-check-circle"></i>
-                    {{localize "RT.OriginPath.PathComplete"}}
-                </span>
-            {{else}}
-                <span class="incomplete-badge">
-                    <i class="fa-solid fa-exclamation-circle"></i>
-                    {{localize "RT.OriginPath.PathIncomplete"}}
-                </span>
-            {{/if}}
-            
-            {{#if hasChanges}}
-                <span class="changes-badge">
-                    <i class="fa-solid fa-pencil"></i>
-                    {{localize "RT.OriginPath.UnsavedChanges"}}
+    {{!-- Footer --}}
+    <footer class="builder-footer">
+        <div class="footer-status">
+            <span class="status-item {{#if status.stepsComplete}}complete{{else}}pending{{/if}}">
+                <i class="fa-solid {{#if status.stepsComplete}}fa-check-circle{{else}}fa-circle-half-stroke{{/if}}"></i>
+                {{status.stepsCount}}/6 {{localize "RT.OriginPath.Steps"}}
+            </span>
+            <span class="status-item {{#if status.choicesComplete}}complete{{else}}pending{{/if}}">
+                <i class="fa-solid {{#if status.choicesComplete}}fa-check-circle{{else}}fa-exclamation-triangle{{/if}}"></i>
+                {{#if status.choicesComplete}}
+                    {{localize "RT.OriginPath.AllChoicesComplete"}}
+                {{else}}
+                    {{status.pendingChoices}} {{localize "RT.OriginPath.ChoicesPending"}}
+                {{/if}}
+            </span>
+            {{#if status.pendingRolls}}
+                <span class="status-item warning">
+                    <i class="fa-solid fa-dice"></i>
+                    {{status.pendingRolls}} {{localize "RT.OriginPath.RollsPending"}}
                 </span>
             {{/if}}
         </div>
-        
         <div class="footer-actions">
-            <button type="button" class="commit-button" data-action="commitPath" {{#unless hasChanges}}disabled{{/unless}}>
+            {{!-- Lineage controls when on lineage step --}}
+            {{#if showLineage}}
+                <button type="button" class="skip-lineage-btn" data-action="skipLineage">
+                    <i class="fa-solid fa-forward"></i>
+                    {{localize "RT.OriginPath.SkipLineage"}}
+                </button>
+            {{/if}}
+            {{!-- Go to Lineage button when all 6 steps are complete but not on lineage step --}}
+            {{#if status.stepsComplete}}
+                {{#unless showLineage}}
+                    <button type="button" class="lineage-btn" data-action="goToLineage">
+                        <i class="fa-solid fa-crown"></i>
+                        {{localize "RT.OriginPath.GoToLineage"}}
+                    </button>
+                {{/unless}}
+            {{/if}}
+            <button type="button" class="commit-btn" data-action="commit" {{#unless status.canCommit}}disabled{{/unless}}>
                 <i class="fa-solid fa-save"></i>
                 {{localize "RT.OriginPath.CommitToCharacter"}}
             </button>
         </div>
-    </div>
+    </footer>
 
 </div>

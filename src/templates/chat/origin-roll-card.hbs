@@ -1,0 +1,267 @@
+{{!-- Origin Roll Chat Card Template --}}
+<div class="origin-roll-card chat-card">
+
+    {{!-- Header --}}
+    <div class="card-header">
+        <div class="header-left">
+            <img src="{{actorImg}}" alt="{{actor}}" class="actor-portrait" />
+            <div class="header-info">
+                <h3 class="actor-name">{{actor}}</h3>
+                <p class="origin-name">
+                    <i class="fa-solid fa-scroll"></i>
+                    {{origin}}
+                </p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="roll-type-icon {{rollType}}">
+                <i class="fa-solid {{#if (eq rollType 'wounds')}}fa-heart{{else}}fa-star{{/if}}"></i>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Roll Title --}}
+    <div class="card-title">
+        <h4>Rolling for {{rollTypeLabel}}</h4>
+        <span class="timestamp">{{timestamp}}</span>
+    </div>
+
+    {{!-- Formula --}}
+    <div class="card-formula">
+        <label>Formula:</label>
+        <code>{{formula}}</code>
+    </div>
+
+    {{!-- Result --}}
+    <div class="card-result {{rollType}}">
+        <div class="result-value">
+            <span class="result-number">{{result}}</span>
+            <span class="result-label">{{rollTypeLabel}}</span>
+        </div>
+        <div class="result-breakdown">
+            <i class="fa-solid fa-calculator"></i>
+            <span>{{breakdown}}</span>
+        </div>
+    </div>
+
+    {{!-- Footer --}}
+    <div class="card-footer">
+        <p class="flavor-text">
+            {{#if (eq rollType 'wounds')}}
+                <i class="fa-solid fa-shield-heart"></i>
+                Added to character's starting Wounds
+            {{else}}
+                <i class="fa-solid fa-hand-sparkles"></i>
+                Fate guides your path through the void
+            {{/if}}
+        </p>
+    </div>
+
+</div>
+
+<style>
+/* Origin Roll Chat Card Styles */
+.origin-roll-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border: 2px solid #c9a063;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(201, 160, 99, 0.1);
+    border-bottom: 1px solid #c9a063;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.actor-portrait {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #c9a063;
+}
+
+.header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.actor-name {
+    margin: 0;
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+
+.origin-name {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #c9a063;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.roll-type-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
+.roll-type-icon.wounds {
+    background: radial-gradient(circle, #8b0000 0%, #4a0000 100%);
+    color: #ff6b6b;
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+}
+
+.roll-type-icon.fate {
+    background: radial-gradient(circle, #ffd700 0%, #b8860b 100%);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.card-title {
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.card-title h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.timestamp {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.card-formula {
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(201, 160, 99, 0.3);
+    border-bottom: 1px solid rgba(201, 160, 99, 0.3);
+}
+
+.card-formula label {
+    display: inline-block;
+    margin-right: 0.5rem;
+    font-weight: bold;
+    color: #c9a063;
+}
+
+.card-formula code {
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    color: #ffd700;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+}
+
+.card-result {
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-result::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(201, 160, 99, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.card-result.wounds {
+    background: linear-gradient(135deg, rgba(139, 0, 0, 0.2) 0%, transparent 100%);
+}
+
+.card-result.fate {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
+}
+
+.result-value {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.result-number {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #c9a063;
+    text-shadow: 0 0 20px rgba(201, 160, 99, 0.5);
+    animation: numberPulse 2s ease-in-out infinite;
+}
+
+@keyframes numberPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.result-label {
+    font-size: 1rem;
+    color: #e0e0e0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.result-breakdown {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(201, 160, 99, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: 'Courier New', monospace;
+    color: #c9a063;
+    position: relative;
+    z-index: 1;
+}
+
+.card-footer {
+    padding: 0.75rem;
+    background: rgba(201, 160, 99, 0.1);
+    border-top: 1px solid #c9a063;
+    text-align: center;
+}
+
+.flavor-text {
+    margin: 0;
+    font-style: italic;
+    color: #c9a063;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.flavor-text i {
+    color: #ffd700;
+}
+</style>

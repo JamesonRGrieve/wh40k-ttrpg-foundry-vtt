@@ -17,16 +17,17 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             title: "RT.OriginPath.MakeChoices",
             icon: "fa-solid fa-list-check",
             minimizable: false,
-            resizable: false
+            resizable: true
         },
         position: {
-            width: 600,
+            width: 700,
             height: "auto"
         },
         actions: {
             toggleOption: OriginPathChoiceDialog.#toggleOption,
             confirm: OriginPathChoiceDialog.#confirm,
-            cancel: OriginPathChoiceDialog.#cancel
+            cancel: OriginPathChoiceDialog.#cancel,
+            viewItem: OriginPathChoiceDialog.#viewItem
         },
         form: {
             handler: OriginPathChoiceDialog.#onSubmit,
@@ -107,15 +108,24 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             
             return {
                 type: choice.type,
+                typeLabel: this._getChoiceTypeLabel(choice.type),
                 label: choice.label,
                 count: choice.count,
                 remaining: remaining,
-                options: choice.options.map(option => ({
-                    value: option,
-                    label: option,
-                    selected: selections.has(option),
-                    disabled: !selections.has(option) && remaining <= 0
-                }))
+                options: (choice.options || []).map(option => {
+                    // Handle both string and object option formats
+                    const optValue = typeof option === "string" ? option : (option.value || option.label);
+                    const optLabel = typeof option === "string" ? option : (option.label || option.value);
+                    const optDesc = typeof option === "object" ? option.description : null;
+                    
+                    return {
+                        value: optValue,
+                        label: optLabel,
+                        description: optDesc,
+                        selected: selections.has(optValue),
+                        disabled: !selections.has(optValue) && remaining <= 0
+                    };
+                })
             };
         });
 
@@ -123,6 +133,23 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         context.allChoicesComplete = context.choices.every(c => c.remaining === 0);
 
         return context;
+    }
+
+    /**
+     * Get choice type label
+     * @param {string} type
+     * @returns {string}
+     * @private
+     */
+    _getChoiceTypeLabel(type) {
+        const labels = {
+            talent: "Talent",
+            skill: "Skill",
+            characteristic: "Characteristic",
+            equipment: "Equipment",
+            trait: "Trait"
+        };
+        return labels[type] || type || "Choice";
     }
 
     /* -------------------------------------------- */
@@ -220,6 +247,29 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     }
 
     /**
+     * View an item's sheet (for choices with UUIDs)
+     * @param {Event} event - The triggering event
+     * @param {HTMLElement} target - The target element
+     * @private
+     */
+    static async #viewItem(event, target) {
+        event.stopPropagation(); // Don't trigger parent card click
+        
+        const uuid = target.dataset.uuid;
+        if (!uuid) return;
+        
+        try {
+            const item = await fromUuid(uuid);
+            if (item) {
+                item.sheet.render(true);
+            }
+        } catch (error) {
+            console.warn("Could not load item:", uuid, error);
+            ui.notifications.warn("Could not find that item.");
+        }
+    }
+
+    /**
      * Form submit handler
      * @param {Event} event - The form submit event
      * @param {HTMLFormElement} form - The form element
@@ -227,8 +277,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @private
      */
     static async #onSubmit(event, form, formData) {
-        // Same as confirm
-        return this.#confirm(event, form);
+        // Same as confirm - call directly on instance
+        return OriginPathChoiceDialog.#confirm.call(this, event, form);
     }
 
     /* -------------------------------------------- */

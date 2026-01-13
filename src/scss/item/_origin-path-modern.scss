@@ -286,11 +286,25 @@
 // TAB CONTENT BODY
 // ============================================
 
-.rt-origin-body {
+.rt-origin-content {
+  flex: 1;
+  overflow: hidden;  // Let panels handle their own scrolling
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.rt-origin-panel {
+  display: none;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  position: relative;
+  padding: $rt-space-md;
+  
+  &.active {
+    display: flex;
+    flex-direction: column;
+  }
   
   // Custom scrollbar
   &::-webkit-scrollbar {
@@ -308,15 +322,6 @@
     &:hover {
       background: var(--color-border-highlight);
     }
-  }
-}
-
-.rt-origin-panel {
-  display: none;
-  padding: $rt-space-md;
-  
-  &.active {
-    display: block;
   }
 }
 
@@ -807,7 +812,7 @@
 }
 
 // ============================================
-// EDITOR CONTAINER
+// EDITOR CONTAINER (Description section)
 // ============================================
 
 .rt-editor-container {
@@ -815,9 +820,43 @@
   border: 1px solid var(--color-border-secondary);
   border-radius: $rt-radius-md;
   padding: $rt-space-sm;
+  min-height: 200px;
+  max-height: 500px;  // Constrain height
+  max-width: 100%;   // Prevent horizontal overflow
+  overflow-y: auto;
+  overflow-x: hidden; // Prevent horizontal scroll
   
   .editor {
-    min-height: 150px;
+    min-height: 180px;
+    max-height: 480px;
+    max-width: 100%;   // Constrain editor width
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+  
+  // Prevent ProseMirror from expanding too wide
+  .ProseMirror {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--color-bg-tertiary);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border-secondary);
+    border-radius: $rt-radius-sm;
+    
+    &:hover {
+      background: var(--color-border-highlight);
+    }
   }
 }
 
