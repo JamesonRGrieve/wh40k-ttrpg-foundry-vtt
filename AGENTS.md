@@ -1280,7 +1280,8 @@ The Origin Path System is a character creation feature that walks players throug
 // Core fields
 {
   stepIndex: NumberField,        // 0-5, which step this origin represents
-  position: NumberField,         // 0-8, chart position (center=4, extremes=0/8)
+  position: NumberField,         // 0-8, primary chart position (center=4, extremes=0/8)
+  positions: ArrayField,         // Additional positions for multi-parent origins (e.g., [5] means also at pos 5)
   
   grants: {
     characteristics: {},         // { weaponSkill: 5, toughness: 5, ... }
@@ -1298,7 +1299,7 @@ The Origin Path System is a character creation feature that walks players throug
   },
   
   navigation: {
-    connectsTo: []               // Valid next positions [0,1,2,3,4,5,6,7,8]
+    connectsTo: []               // Calculated automatically as [pos-1, pos, pos+1]
   },
   
   selectedChoices: {},           // Player's selections { "Choose Skill": ["Awareness"] }
@@ -1311,6 +1312,44 @@ The Origin Path System is a character creation feature that walks players throug
   activeModifiers: {}            // Computed from selectedChoices
 }
 ```
+
+### Multi-Position Origins (Multiple Parents)
+
+Some origins can be reached from multiple paths in the flowchart. These use the `positions` array:
+
+```javascript
+// Example: Fringe Survivor can be reached from positions 1 and 5
+{
+  position: 1,          // Primary position (where the card displays)
+  positions: [5],       // Also reachable from position 5
+  step: "birthright"
+}
+```
+
+**Navigation Rule**: Each position connects to ±1 positions in adjacent steps:
+- Position N connects to: [N-1, N, N+1] (clamped to 0-8 range)
+- Multi-position origins display ONCE at their primary position
+- The card shows `isMultiPosition: true` and `allPositions: [1, 5]` for UI indicators
+- Validation checks if ANY of the origin's positions can connect
+
+**13 Multi-Position Origins**:
+| Origin | Step | Primary Pos | Additional Pos | Reachable From |
+|--------|------|-------------|----------------|----------------|
+| Fringe Survivor | Birthright | 1 | 5 | Positions 0-2 OR 4-6 |
+| Unnatural Origin | Birthright | 2 | 3 | Positions 1-3 OR 2-4 |
+| In Service to the Throne | Birthright | 4 | 6 | Positions 3-5 OR 5-7 |
+| Hunter | Lure of the Void | 1 | 4 | Positions 0-2 OR 3-5 |
+| Crusade | Lure of the Void | 2 | 3 | Positions 1-3 OR 2-4 |
+| New Horizons | Lure of the Void | 5 | 6 | Positions 4-6 OR 5-7 |
+| Darkness | Trials and Travails | 1 | 6 | Positions 0-2 OR 5-7 |
+| The Product of Upbringing | Trials and Travails | 2 | 5 | Positions 1-3 OR 4-6 |
+| Lost Worlds | Trials and Travails | 3 | 5 | Positions 2-4 OR 4-6 |
+| Devotion | Motivation | 1 | 4 | Positions 0-2 OR 3-5 |
+| Exhilaration | Motivation | 2 | 6 | Positions 1-3 OR 5-7 |
+| Knowledge | Motivation | 3 | 5 | Positions 2-4 OR 4-6 |
+| Fear | Motivation | 0 | 1,2,3,4,5,6 | ANY Trials position |
+
+**UI Display**: Multi-position origins show once with an optional indicator (badge, icon, or tooltip) showing they're accessible from multiple paths.
 
 ### Choice Grants Structure
 
@@ -1386,14 +1425,27 @@ const result = await OriginGrantsProcessor.processOriginGrants(originItems, acto
 6. **Navigate steps** freely without warnings (warnings only appear on confirmation)
 7. **Commit path** to apply all grants to the character
 
-### Navigation Behavior
+### Navigation System
 
-- **Click step indicator**: Jump to that step (no warning)
-- **Click origin card**: Preview in panel (no selection yet)
-- **Click "Confirm Selection"**: Lock in preview, check for cascade resets, warn if needed
-- **Change existing selection**: Warns about resetting later steps before confirming
+**Simple ±1 Connectivity Rule**:
+- Each position N connects to positions [N-1, N, N+1] in adjacent steps
+- Edge positions: 0 connects to [0, 1], position 8 connects to [7, 8]
+- Bidirectional: works the same forward (homeWorld → career) and backward (career → homeWorld)
 
-This flow is more intuitive: users can browse freely, but get warned before making destructive changes.
+**Multi-Position Origins**:
+- Origins with multiple parents appear at multiple positions
+- Validation checks if ANY of the origin's positions can connect
+- Each position creates a separate card in the UI
+- Example: Fringe Survivor appears at both positions 1 and 5
+
+**Guided Mode**:
+- Only origins with valid connections to previous selection are selectable
+- Also respects `requirements.previousSteps` and `requirements.excludedSteps`
+- Grays out invalid options but still shows them for reference
+
+**Free Mode**:
+- All origins selectable regardless of connectivity
+- Useful for custom/houserule paths
 
 ### Key Methods
 

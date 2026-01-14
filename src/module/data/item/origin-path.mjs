@@ -35,8 +35,15 @@ export default class OriginPathData extends ItemDataModel.mixin(
       // Step order (for display)
       stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, max: 7, integer: true }),
       
-      // Position in the step's row (1-8 for display ordering, some origins have multiple positions)
+      // Position(s) in the step's row (0-8)
+      // Single value for most origins, or array for multi-position origins (multiple parents)
       position: new fields.NumberField({ required: true, initial: 0, min: 0, max: 8, integer: true }),
+      
+      // Additional positions for multi-parent origins (e.g., Fringe Survivor appears at pos 1 AND 5)
+      positions: new fields.ArrayField(
+        new fields.NumberField({ required: true, min: 0, max: 8 }),
+        { required: true, initial: [] }
+      ),
       
       // XP cost (for Into The Storm advanced origins)
       xpCost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
@@ -204,8 +211,9 @@ export default class OriginPathData extends ItemDataModel.mixin(
       }),
 
       // Navigation metadata for chart visualization
+      // Note: connectsTo is now calculated automatically from position(s) using ±1 rule
       navigation: new fields.SchemaField({
-        // Which positions in next step this origin connects to
+        // Which positions in next step this origin connects to (calculated as position ±1)
         connectsTo: new fields.ArrayField(
           new fields.NumberField({ required: true, min: 0, max: 8 }),
           { required: true, initial: [] }
@@ -220,6 +228,19 @@ export default class OriginPathData extends ItemDataModel.mixin(
   /* -------------------------------------------- */
   /*  Properties                                  */
   /* -------------------------------------------- */
+
+  /**
+   * Get all positions this origin occupies (for multi-parent support).
+   * Returns array with primary position and any additional positions.
+   * @type {number[]}
+   */
+  get allPositions() {
+    const positions = [this.position];
+    if (this.positions && this.positions.length > 0) {
+      positions.push(...this.positions);
+    }
+    return [...new Set(positions)].sort((a, b) => a - b);
+  }
 
   /**
    * Get the step label.
