@@ -289,10 +289,18 @@ export default class CreatureTemplate extends CommonTemplate {
           skill.basic = true;
         }
         
-        // Apply same fix to specialist entries
+        // Fix specialist skill entries - inherit characteristic and advanced/basic from parent
         if (Array.isArray(skill.entries)) {
+          const parentChar = skill.characteristic;
           const parentIsAdvanced = SKILL_TYPES.hasOwnProperty(key) ? SKILL_TYPES[key] : skill.advanced;
+          
           for (const entry of skill.entries) {
+            // Inherit characteristic from parent if missing
+            if (!entry.characteristic) {
+              entry.characteristic = parentChar;
+            }
+            
+            // Inherit advanced/basic from parent
             entry.advanced = parentIsAdvanced;
             entry.basic = !parentIsAdvanced;
           }
@@ -388,6 +396,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
   /**
    * Initialize tracking objects for modifiers from various sources.
+   * Must match schema in modifiers-template.mjs
    * @protected
    */
   _initializeModifierTracking() {
@@ -395,10 +404,12 @@ export default class CreatureTemplate extends CommonTemplate {
       characteristics: {},
       skills: {},
       combat: {
-        toHit: [],
-        damage: [],
-        initiative: [],
-        defence: []
+        attack: [],       // Matches schema: modifiers.combat.attack
+        damage: [],       // Matches schema: modifiers.combat.damage
+        penetration: [],  // Matches schema: modifiers.combat.penetration
+        defense: [],      // Matches schema: modifiers.combat.defense (US spelling)
+        initiative: [],   // Matches schema: modifiers.combat.initiative
+        speed: []         // Matches schema: modifiers.combat.speed
       },
       wounds: [],
       fate: [],
@@ -456,8 +467,11 @@ export default class CreatureTemplate extends CommonTemplate {
       // Process specialist entries
       if (Array.isArray(skill.entries)) {
         for (const entry of skill.entries) {
-          const entryChar = entry.characteristic ? this.getCharacteristic(entry.characteristic) : char;
+          // Use entry's characteristic if set, otherwise inherit from parent skill
+          const entryCharKey = entry.characteristic || skill.characteristic;
+          const entryChar = this.getCharacteristic(entryCharKey);
           const entryCharTotal = entryChar?.total ?? 0;
+          
           const entryLevel = entry.plus20 ? 3 : entry.plus10 ? 2 : entry.trained ? 1 : 0;
           const entryBaseValue = entryLevel > 0 ? entryCharTotal : Math.floor(entryCharTotal / 2);
           const entryTrainingBonus = entryLevel >= 3 ? 20 : entryLevel >= 2 ? 10 : 0;
@@ -559,19 +573,24 @@ export default class CreatureTemplate extends CommonTemplate {
       }
     }
 
-    // Wounds modifier
-    if (mods.wounds && typeof mods.wounds === 'number') {
-      this.modifierSources.wounds.push({ ...source, value: mods.wounds });
+    // Resources modifiers (wounds, fate, insanity, corruption)
+    if (mods.resources) {
+      if (mods.resources.wounds && typeof mods.resources.wounds === 'number') {
+        this.modifierSources.wounds.push({ ...source, value: mods.resources.wounds });
+      }
+      if (mods.resources.fate && typeof mods.resources.fate === 'number') {
+        this.modifierSources.fate.push({ ...source, value: mods.resources.fate });
+      }
+      // Note: insanity and corruption modifiers are defined in schema but not yet implemented
     }
 
-    // Fate modifier
-    if (mods.fate && typeof mods.fate === 'number') {
-      this.modifierSources.fate.push({ ...source, value: mods.fate });
-    }
-
-    // Movement modifier
-    if (mods.movement && typeof mods.movement === 'number') {
-      this.modifierSources.movement.push({ ...source, value: mods.movement });
+    // Movement modifier (from other modifiers array)
+    if (mods.other && Array.isArray(mods.other)) {
+      for (const mod of mods.other) {
+        if (mod.key === 'movement' && typeof mod.value === 'number') {
+          this.modifierSources.movement.push({ ...source, value: mod.value, label: mod.label });
+        }
+      }
     }
   }
 
@@ -607,10 +626,12 @@ export default class CreatureTemplate extends CommonTemplate {
 
     // Store combat modifiers for display
     this.combatModifiers = {
-      toHit: this._getTotalCombatModifier('toHit'),
+      attack: this._getTotalCombatModifier('attack'),     // Schema key: attack
       damage: this._getTotalCombatModifier('damage'),
+      penetration: this._getTotalCombatModifier('penetration'),
+      defense: this._getTotalCombatModifier('defense'),   // Schema key: defense (US spelling)
       initiative: initMod,
-      defence: this._getTotalCombatModifier('defence')
+      speed: this._getTotalCombatModifier('speed')
     };
   }
 

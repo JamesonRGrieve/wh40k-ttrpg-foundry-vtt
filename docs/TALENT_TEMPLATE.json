@@ -1,0 +1,107 @@
+{
+  "_id": "ExampleTalentID001",
+  "name": "Example Combat Talent (X)",
+  "type": "talent",
+  "img": "systems/rogue-trader/assets/icons/talents/example.svg",
+  "system": {
+    "identifier": "exampleCombatTalent",
+    "description": "<p>General lore and background about this talent. This field provides context and flavor text that helps players understand the talent's place in the Rogue Trader universe.</p>",
+    "category": "combat",
+    "tier": 2,
+    "cost": 500,
+    "benefit": "<p>When you make a ranged attack, you gain +10 to your Ballistic Skill test. Additionally, you deal +2 damage with all ranged weapons.</p><p>When searching for hidden enemies, you gain +10 to Awareness tests.</p>",
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "prerequisites": {
+      "text": "Agility 35, Awareness +10, Lightning Reflexes",
+      "characteristics": {
+        "agility": 35
+      },
+      "skills": {
+        "awareness": 2
+      },
+      "talents": ["Lightning Reflexes"]
+    },
+    "aptitudes": ["Agility", "Finesse"],
+    "rollConfig": {
+      "characteristic": "agility",
+      "skill": "",
+      "modifier": 0,
+      "description": "Roll Agility to perform a special combat maneuver"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "ballisticSkill": 10
+      },
+      "combat": {
+        "attack": 0,
+        "damage": 2,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 5,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "awareness",
+            "value": 10,
+            "condition": "When searching for hidden enemies",
+            "icon": "fa-solid fa-eye"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [
+        {
+          "name": "Dodge",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Lightning Reflexes",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.Item.xxx"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Quick Draw",
+          "description": "<p>You may draw a weapon as a free action once per round.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "rogue-trader",
+    "systemVersion": "1.0.0",
+    "coreVersion": "11.0.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}
