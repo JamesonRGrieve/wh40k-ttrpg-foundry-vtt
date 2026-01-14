@@ -41,7 +41,7 @@ export default class OriginPathData extends ItemDataModel.mixin(
       // Connectivity is automatically calculated as ±1 from each position
       positions: new fields.ArrayField(
         new fields.NumberField({ required: true, min: 0, max: 8 }),
-        { required: true, initial: [4] }
+        { required: true, initial: [] }
       ),
       
       // XP cost (for Into The Storm advanced origins)
