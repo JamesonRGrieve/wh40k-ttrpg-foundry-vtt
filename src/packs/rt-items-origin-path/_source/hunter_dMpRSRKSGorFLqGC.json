@@ -13,7 +13,7 @@
       "endurance"
     ],
     "description": {
-      "value": "<h2>Hunter</h2><blockquote><p><em>\"In the void between stars, hunter and hunted are separated only by circumstance. The predator of one moment becomes the prey of the next.\"</em></p></blockquote><p>You have lived as both hunter and hunted. Perhaps you made your living tracking down criminals, heretics, or rogue psykers\u2014following blood-trails across worlds and systems. Or you may have specialized in hunting the xenos threats that plague the Imperium's borders, learning the ways of alien beasts and monsters. Some know the terror of being the prey, constantly looking over their shoulder, always one step ahead of those who wish them dead.</p><p>The hunt has shaped you. You have learned to read tracks, to anticipate your quarry's moves, and to strike with precision when the moment comes. Whether you hunt for bounty, duty, or survival, you understand that in the end, only the cunning survive. Yet the void offers new prey\u2014and new hunters\u2014unlike anything you have faced before.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
+      "value": "<h2>Hunter</h2><blockquote><p><em>\"In the void between stars, hunter and hunted are separated only by circumstance. The predator of one moment becomes the prey of the next.\"</em></p></blockquote><p>You have lived as both hunter and hunted. Perhaps you made your living tracking down criminals, heretics, or rogue psykers—following blood-trails across worlds and systems. Or you may have specialized in hunting the xenos threats that plague the Imperium's borders, learning the ways of alien beasts and monsters. Some know the terror of being the prey, constantly looking over their shoulder, always one step ahead of those who wish them dead.</p><p>The hunt has shaped you. You have learned to read tracks, to anticipate your quarry's moves, and to strike with precision when the moment comes. Whether you hunt for bounty, duty, or survival, you understand that in the end, only the cunning survive. Yet the void offers new prey—and new hunters—unlike anything you have faced before.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
       "text": "Origin Path: Lure of the Void (Advanced)",
@@ -36,7 +36,7 @@
               "label": "Bounty Hunter (250 XP)",
               "value": "bounty_hunter",
               "xpCost": 250,
-              "description": "You hunt the enemies of the Imperium\u2014or anyone with a price on their head. Years of tracking blood-trails and reading crime scenes have made you an expert at finding people who don't want to be found.",
+              "description": "You hunt the enemies of the Imperium—or anyone with a price on their head. Years of tracking blood-trails and reading crime scenes have made you an expert at finding people who don't want to be found.",
               "grants": {
                 "characteristics": {
                   "willpower": 3,
@@ -126,7 +126,7 @@
               "label": "Hunted (100 XP)",
               "value": "hunted",
               "xpCost": 100,
-              "description": "You are the prey. Whether fleeing from assassins, vengeful enemies, or the long arm of Imperial justice, you have learned to stay alert and sleep with one eye open\u2014if you sleep at all.",
+              "description": "You are the prey. Whether fleeing from assassins, vengeful enemies, or the long arm of Imperial justice, you have learned to stay alert and sleep with one eye open—if you sleep at all.",
               "grants": {
                 "characteristics": {
                   "perception": 3
@@ -192,17 +192,8 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 1,
-    "navigation": {
-      "connectsTo": [
-        0,
-        1,
-        2
-      ],
-      "isEdgeLeft": false,
-      "isEdgeRight": false
-    },
     "positions": [
+      1,
       4
     ]
   },

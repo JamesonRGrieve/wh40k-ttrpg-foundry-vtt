@@ -122,7 +122,7 @@
               "label": "No Joy Unexplored (200 XP)",
               "value": "no_joy",
               "xpCost": 200,
-              "description": "Whatever the pleasure, you have indulged in it. Your hedonism defines you, your reputation is dark and sordid, and you are not sated yet. Amongst the unknown must be sights and sounds and experiences as yet undreamt of by mankind, and you cannot stop until you have found and sampled them! The world around you grows dull and grey as you begin to tire of the mundane pleasures your culture provides. Even the most extreme delights that would horrify the average Imperial citizen are becoming increasingly tempting in your desperate search for something new to satisfy you. Whatever you find, you may not escape it unscathed\u2014or unchanged.",
+              "description": "Whatever the pleasure, you have indulged in it. Your hedonism defines you, your reputation is dark and sordid, and you are not sated yet. Amongst the unknown must be sights and sounds and experiences as yet undreamt of by mankind, and you cannot stop until you have found and sampled them! The world around you grows dull and grey as you begin to tire of the mundane pleasures your culture provides. Even the most extreme delights that would horrify the average Imperial citizen are becoming increasingly tempting in your desperate search for something new to satisfy you. Whatever you find, you may not escape it unscathed—or unchanged.",
               "grants": {
                 "characteristics": {
                   "willpower": -3
@@ -194,17 +194,8 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2,
-    "navigation": {
-      "connectsTo": [
-        1,
-        2,
-        3
-      ],
-      "isEdgeLeft": false,
-      "isEdgeRight": false
-    },
     "positions": [
+      2,
       6
     ]
   },

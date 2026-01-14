@@ -36,13 +36,12 @@ export default class OriginPathData extends ItemDataModel.mixin(
       stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, max: 7, integer: true }),
       
       // Position(s) in the step's row (0-8)
-      // Single value for most origins, or array for multi-position origins (multiple parents)
-      position: new fields.NumberField({ required: true, initial: 0, min: 0, max: 8, integer: true }),
-      
-      // Additional positions for multi-parent origins (e.g., Fringe Survivor appears at pos 1 AND 5)
+      // Array of positions this origin occupies in the flowchart
+      // Most origins have a single position [4], multi-position origins have multiple [1, 5]
+      // Connectivity is automatically calculated as ±1 from each position
       positions: new fields.ArrayField(
         new fields.NumberField({ required: true, min: 0, max: 8 }),
-        { required: true, initial: [] }
+        { required: true, initial: [4] }
       ),
       
       // XP cost (for Into The Storm advanced origins)
@@ -208,19 +207,6 @@ export default class OriginPathData extends ItemDataModel.mixin(
           breakdown: new fields.StringField({ required: false, blank: true }),
           timestamp: new fields.NumberField({ required: false, initial: null })
         })
-      }),
-
-      // Navigation metadata for chart visualization
-      // Note: connectsTo is now calculated automatically from position(s) using ±1 rule
-      navigation: new fields.SchemaField({
-        // Which positions in next step this origin connects to (calculated as position ±1)
-        connectsTo: new fields.ArrayField(
-          new fields.NumberField({ required: true, min: 0, max: 8 }),
-          { required: true, initial: [] }
-        ),
-        // Visual hints
-        isEdgeLeft: new fields.BooleanField({ required: true, initial: false }),
-        isEdgeRight: new fields.BooleanField({ required: true, initial: false })
       })
     };
   }
@@ -231,15 +217,22 @@ export default class OriginPathData extends ItemDataModel.mixin(
 
   /**
    * Get all positions this origin occupies (for multi-parent support).
-   * Returns array with primary position and any additional positions.
+   * Returns array of positions where this origin appears in the chart.
    * @type {number[]}
    */
   get allPositions() {
-    const positions = [this.position];
-    if (this.positions && this.positions.length > 0) {
-      positions.push(...this.positions);
-    }
-    return [...new Set(positions)].sort((a, b) => a - b);
+    return this.positions && this.positions.length > 0 
+      ? [...this.positions].sort((a, b) => a - b)
+      : [4]; // Default to center position if not set
+  }
+
+  /**
+   * Get the primary (first) position for this origin.
+   * Used for card placement in the chart.
+   * @type {number}
+   */
+  get primaryPosition() {
+    return this.allPositions[0] || 4;
   }
 
   /**
@@ -361,7 +354,6 @@ export default class OriginPathData extends ItemDataModel.mixin(
   prepareDerivedData() {
     super.prepareDerivedData?.();
     this._calculateActiveModifiers();
-    this._prepareNavigationData();
   }
 
   /**
@@ -456,42 +448,6 @@ export default class OriginPathData extends ItemDataModel.mixin(
     }
   }
 
-  /**
-   * Prepare navigation metadata for chart visualization.
-   * Calculates which positions in the next step this origin connects to.
-   * @private
-   */
-  _prepareNavigationData() {
-    const position = this.position;
-
-    // Calculate connections based on position
-    // Rule: Each choice connects to position-1, position, and position+1 in next step
-    // Edge cases: leftmost (0) and rightmost (7+) have only 2 connections
-    let connectsTo = [];
-
-    if (position === 0) {
-      // Left edge - can only go to 0 and 1
-      connectsTo = [0, 1];
-      this.navigation.isEdgeLeft = true;
-      this.navigation.isEdgeRight = false;
-    } else if (position >= 7) {
-      // Right edge - can only go to position-1 and position
-      connectsTo = [position - 1, position];
-      this.navigation.isEdgeLeft = false;
-      this.navigation.isEdgeRight = true;
-    } else {
-      // Middle - connects to position-1, position, and position+1
-      connectsTo = [position - 1, position, position + 1];
-      this.navigation.isEdgeLeft = false;
-      this.navigation.isEdgeRight = false;
-    }
-
-    // Only update if changed
-    if (JSON.stringify(this.navigation.connectsTo) !== JSON.stringify(connectsTo)) {
-      this.navigation.connectsTo = connectsTo;
-    }
-  }
-
   /* -------------------------------------------- */
   /*  Data Migration & Cleanup                    */
   /* -------------------------------------------- */
@@ -501,9 +457,31 @@ export default class OriginPathData extends ItemDataModel.mixin(
     // Let parent handle its migration first
     super.migrateData?.(source);
     
+    // Migration: Convert old position + positions to single positions array
+    if (source.position !== undefined && source.positions !== undefined) {
+      const oldPosition = source.position;
+      const oldPositions = source.positions || [];
+      
+      // Combine into single positions array
+      const newPositions = [oldPosition, ...oldPositions];
+      source.positions = [...new Set(newPositions)].sort((a, b) => a - b);
+      
+      // Remove old position field
+      delete source.position;
+    } else if (source.position !== undefined) {
+      // Only position exists, convert to positions array
+      source.positions = [source.position];
+      delete source.position;
+    }
+    
+    // Remove old navigation field
+    if (source.navigation !== undefined) {
+      delete source.navigation;
+    }
+    
     const grants = source.grants || {};
     
-    // Migration 1: Warn about legacy wounds/fate fields if formulas are missing
+    // Migration: Warn about legacy wounds/fate fields if formulas are missing
     if (grants.wounds && !grants.woundsFormula) {
       console.warn(
         `Origin Path "${source.name}" uses legacy grants.wounds field (${grants.wounds}). ` +

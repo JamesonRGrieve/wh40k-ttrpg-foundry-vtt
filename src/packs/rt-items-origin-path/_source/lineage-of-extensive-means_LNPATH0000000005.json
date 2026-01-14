@@ -104,15 +104,9 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 7,
-    "navigation": {
-      "connectsTo": [
-        6,
-        7
-      ],
-      "isEdgeLeft": false,
-      "isEdgeRight": true
-    }
+    "positions": [
+      7
+    ]
   },
   "effects": [],
   "flags": {},

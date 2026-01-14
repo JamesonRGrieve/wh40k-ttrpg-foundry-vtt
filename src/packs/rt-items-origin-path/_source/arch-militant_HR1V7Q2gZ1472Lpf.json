@@ -111,16 +111,9 @@
     "notes": "",
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2,
-    "navigation": {
-      "connectsTo": [
-        1,
-        2,
-        3
-      ],
-      "isEdgeLeft": false,
-      "isEdgeRight": false
-    }
+    "positions": [
+      2
+    ]
   },
   "effects": [],
   "flags": {},

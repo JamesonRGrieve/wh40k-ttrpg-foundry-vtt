@@ -170,16 +170,8 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 0,
-    "navigation": {
-      "connectsTo": [
-        0,
-        1
-      ],
-      "isEdgeLeft": true,
-      "isEdgeRight": false
-    },
     "positions": [
+      0,
       1,
       2,
       3,

@@ -13,7 +13,7 @@
       "calamity"
     ],
     "description": {
-      "value": "<h2>Crusade</h2><blockquote><p><em>\"War is the crucible that forges the Imperium's finest. In the fires of battle, some discover purpose\u2014others discover only death.\"</em></p></blockquote><p>You have known war. Perhaps you answered the call to crusade, joining a righteous campaign to reclaim lost worlds or punish the Emperor's foes. Or you may have spent years hunting a specific enemy across the stars, driven by vengeance or duty. Some become so immersed in the art of war that they can no longer imagine another life\u2014they are warriors born, and combat is their only truth.</p><p>The crusade has marked you indelibly. You have witnessed horrors that would break lesser souls and survived battles that claimed thousands. You know the smell of promethium and blood, the sound of bolter fire, and the feeling of the Emperor's judgment rendered through your hands. Yet now you find yourself aboard a Rogue Trader vessel, where war is but one tool among many\u2014and where the battles you fight may not always be righteous.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
+      "value": "<h2>Crusade</h2><blockquote><p><em>\"War is the crucible that forges the Imperium's finest. In the fires of battle, some discover purpose—others discover only death.\"</em></p></blockquote><p>You have known war. Perhaps you answered the call to crusade, joining a righteous campaign to reclaim lost worlds or punish the Emperor's foes. Or you may have spent years hunting a specific enemy across the stars, driven by vengeance or duty. Some become so immersed in the art of war that they can no longer imagine another life—they are warriors born, and combat is their only truth.</p><p>The crusade has marked you indelibly. You have witnessed horrors that would break lesser souls and survived battles that claimed thousands. You know the smell of promethium and blood, the sound of bolter fire, and the feeling of the Emperor's judgment rendered through your hands. Yet now you find yourself aboard a Rogue Trader vessel, where war is but one tool among many—and where the battles you fight may not always be righteous.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
       "text": "Origin Path: Lure of the Void (Advanced)",
@@ -182,17 +182,8 @@
     },
     "selectedChoices": {},
     "activeModifiers": [],
-    "position": 2,
-    "navigation": {
-      "connectsTo": [
-        1,
-        2,
-        3
-      ],
-      "isEdgeLeft": false,
-      "isEdgeRight": false
-    },
     "positions": [
+      2,
       3
     ]
   },
