@@ -13,7 +13,7 @@
       "vaunted"
     ],
     "description": {
-      "value": "<h2>In Service to the Throne</h2><blockquote><p><em>\"The Imperium demands much of its citizens—tithes of grain, of ore, of men and women. For some, service to the Golden Throne is not a choice, but a destiny written in ledgers and manifests.\"</em></p></blockquote><p>Your life has been defined by service to the Imperium. Perhaps you were tithed as part of your world's obligation—selected for military service, sent to the Schola Progenium, or conscripted into one of the endless bureaucratic organs of Imperial administration. Or you may have been born into a family of administrators and leaders, raised from birth to command and organize in the Emperor's name. Some come from the faceless billions who toil in obscurity, learning to survive through caution and the ability to blend into crowds.</p><p>Whether you served willingly or not, the experience shaped you. You learned discipline, loyalty, and the skills needed to function within the vast machinery of the Imperium. You know the prayers, the protocols, and the proper forms. Yet now you find yourself aboard a Rogue Trader vessel—a place where the strict hierarchies of the Imperium give way to something more flexible, more dangerous, and infinitely more rewarding.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
+      "value": "<h2>In Service to the Throne</h2><blockquote><p><em>\"The Imperium demands much of its citizens\u2014tithes of grain, of ore, of men and women. For some, service to the Golden Throne is not a choice, but a destiny written in ledgers and manifests.\"</em></p></blockquote><p>Your life has been defined by service to the Imperium. Perhaps you were tithed as part of your world's obligation\u2014selected for military service, sent to the Schola Progenium, or conscripted into one of the endless bureaucratic organs of Imperial administration. Or you may have been born into a family of administrators and leaders, raised from birth to command and organize in the Emperor's name. Some come from the faceless billions who toil in obscurity, learning to survive through caution and the ability to blend into crowds.</p><p>Whether you served willingly or not, the experience shaped you. You learned discipline, loyalty, and the skills needed to function within the vast machinery of the Imperium. You know the prayers, the protocols, and the proper forms. Yet now you find yourself aboard a Rogue Trader vessel\u2014a place where the strict hierarchies of the Imperium give way to something more flexible, more dangerous, and infinitely more rewarding.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
       "text": "Origin Path: Birthright (Advanced)",
@@ -217,7 +217,7 @@
               "label": "One Amongst Billions (200 XP)",
               "value": "one_amongst_billions",
               "xpCost": 200,
-              "description": "You are one of the faceless masses who serve the Imperium in obscurity. You have learned to be watchful, to blend in, and to survive by not drawing attention—skills that serve you well in the dangerous void.",
+              "description": "You are one of the faceless masses who serve the Imperium in obscurity. You have learned to be watchful, to blend in, and to survive by not drawing attention\u2014skills that serve you well in the dangerous void.",
               "grants": {
                 "characteristics": {
                   "strength": -3
@@ -308,7 +308,10 @@
       ],
       "isEdgeLeft": false,
       "isEdgeRight": false
-    }
+    },
+    "positions": [
+      6
+    ]
   },
   "effects": [],
   "flags": {},

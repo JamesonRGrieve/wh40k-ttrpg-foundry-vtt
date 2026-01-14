@@ -13,7 +13,7 @@
       "fortune"
     ],
     "description": {
-      "value": "<h2>New Horizons</h2><blockquote><p><em>\"Beyond the edges of the Imperium's maps lie mysteries that could illuminate—or damn—all of humanity. Some are drawn to these horizons by curiosity, others by greed or necessity.\"</em></p></blockquote><p>You are driven by the lure of the unknown. Perhaps you seek forbidden knowledge hidden in ancient texts and ruins, willing to risk corruption for the chance to understand the universe's deepest secrets. Or you may have devoted yourself to studying the xenos—their technology, their cultures, their history—walking the dangerous line between academic inquiry and heresy. Some pursue the lost treasures of the Dark Age of Technology, seeking archeotech artifacts that could reshape the Imperium.</p><p>Your pursuit of new horizons has brought you both knowledge and peril. You have seen things that most Imperial citizens never dream of, learned truths that the Ecclesiarchy would condemn. Yet this knowledge comes at a price—suspicion, corruption, or worse. Now you travel with a Rogue Trader, where the boundaries of acceptable inquiry stretch further than anywhere else in the Imperium.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
+      "value": "<h2>New Horizons</h2><blockquote><p><em>\"Beyond the edges of the Imperium's maps lie mysteries that could illuminate\u2014or damn\u2014all of humanity. Some are drawn to these horizons by curiosity, others by greed or necessity.\"</em></p></blockquote><p>You are driven by the lure of the unknown. Perhaps you seek forbidden knowledge hidden in ancient texts and ruins, willing to risk corruption for the chance to understand the universe's deepest secrets. Or you may have devoted yourself to studying the xenos\u2014their technology, their cultures, their history\u2014walking the dangerous line between academic inquiry and heresy. Some pursue the lost treasures of the Dark Age of Technology, seeking archeotech artifacts that could reshape the Imperium.</p><p>Your pursuit of new horizons has brought you both knowledge and peril. You have seen things that most Imperial citizens never dream of, learned truths that the Ecclesiarchy would condemn. Yet this knowledge comes at a price\u2014suspicion, corruption, or worse. Now you travel with a Rogue Trader, where the boundaries of acceptable inquiry stretch further than anywhere else in the Imperium.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
       "text": "Origin Path: Lure of the Void (Advanced)",
@@ -36,7 +36,7 @@
               "label": "Seeker of Truth (100 XP)",
               "value": "seeker",
               "xpCost": 100,
-              "description": "You seek truth in forbidden places, studying texts and lore that most consider dangerous. Your quest for knowledge has opened your mind—but also exposed you to corrupting influences.",
+              "description": "You seek truth in forbidden places, studying texts and lore that most consider dangerous. Your quest for knowledge has opened your mind\u2014but also exposed you to corrupting influences.",
               "grants": {
                 "characteristics": {
                   "intelligence": 3
@@ -109,7 +109,7 @@
               "label": "Xeno-Arcanist (200 XP)",
               "value": "xeno_arcanist",
               "xpCost": 200,
-              "description": "You have devoted yourself to studying the xenos—their technology, biology, and cultures. This forbidden knowledge makes you invaluable to a Rogue Trader, though it also marks you as a heretic in the eyes of many.",
+              "description": "You have devoted yourself to studying the xenos\u2014their technology, biology, and cultures. This forbidden knowledge makes you invaluable to a Rogue Trader, though it also marks you as a heretic in the eyes of many.",
               "grants": {},
               "choices": [
                 {
@@ -148,7 +148,7 @@
               "label": "Archeotechnologist (250 XP)",
               "value": "archeotechnologist",
               "xpCost": 250,
-              "description": "You hunt for the lost technologies of the Dark Age, seeking archeotech that could change the fate of worlds. Your studies have borne fruit—you possess a precious heirloom from humanity's golden age.",
+              "description": "You hunt for the lost technologies of the Dark Age, seeking archeotech that could change the fate of worlds. Your studies have borne fruit\u2014you possess a precious heirloom from humanity's golden age.",
               "grants": {
                 "skills": [
                   {
@@ -226,7 +226,10 @@
       ],
       "isEdgeLeft": false,
       "isEdgeRight": true
-    }
+    },
+    "positions": [
+      6
+    ]
   },
   "effects": [],
   "flags": {},

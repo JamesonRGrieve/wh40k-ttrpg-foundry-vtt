@@ -13,7 +13,7 @@
       "high-vendetta"
     ],
     "description": {
-      "value": "<h2>Darkness</h2><blockquote><p><em>\"The galaxy is a dark and unforgiving place; anyone who says otherwise is a fool! As happens in the universe, some are selected by things dark and terrible. Their exposure to such things has left its mark upon their souls.\"</em></p></blockquote><p>Some study forbidden tomes and texts in the hopes of learning some arcane or esoteric lore. Others have been victim to a warp-incursion, a tear in the barrier between the material universe and the Realm of Chaos. A rare few have been touched by something wicked, even possessed by it, and now carry the burden of that encounter—seeking to rid themselves of the affliction before they either succumb to it or are found out by their peers or the authorities.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
+      "value": "<h2>Darkness</h2><blockquote><p><em>\"The galaxy is a dark and unforgiving place; anyone who says otherwise is a fool! As happens in the universe, some are selected by things dark and terrible. Their exposure to such things has left its mark upon their souls.\"</em></p></blockquote><p>Some study forbidden tomes and texts in the hopes of learning some arcane or esoteric lore. Others have been victim to a warp-incursion, a tear in the barrier between the material universe and the Realm of Chaos. A rare few have been touched by something wicked, even possessed by it, and now carry the burden of that encounter\u2014seeking to rid themselves of the affliction before they either succumb to it or are found out by their peers or the authorities.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
     },
     "requirements": {
       "text": "Origin Path: Trials and Travails (Advanced)",
@@ -123,7 +123,7 @@
               "label": "Warp Incursion (100 XP)",
               "value": "warp_incursion",
               "xpCost": 100,
-              "description": "You have been witness to a singular event: the opening of a portal between the material universe and the warp. You were the survivor of a Geller Field failure, or witness to (or victim of) a daemonic possession or another warp entity—somehow you lived through the incident, but it has scarred you forever. You suffer from nightmares, but in return you have gained a degree of protection from warp entities. This might manifest as a type of invisibility to these entities, or maybe they find your 'smell' to be intolerable. Whatever the reason, you thank the God-Emperor every day for the protection He has imparted unto you.",
+              "description": "You have been witness to a singular event: the opening of a portal between the material universe and the warp. You were the survivor of a Geller Field failure, or witness to (or victim of) a daemonic possession or another warp entity\u2014somehow you lived through the incident, but it has scarred you forever. You suffer from nightmares, but in return you have gained a degree of protection from warp entities. This might manifest as a type of invisibility to these entities, or maybe they find your 'smell' to be intolerable. Whatever the reason, you thank the God-Emperor every day for the protection He has imparted unto you.",
               "grants": {
                 "corruption": "1d5",
                 "talents": [
@@ -244,7 +244,10 @@
       ],
       "isEdgeLeft": false,
       "isEdgeRight": false
-    }
+    },
+    "positions": [
+      6
+    ]
   },
   "effects": [],
   "flags": {},

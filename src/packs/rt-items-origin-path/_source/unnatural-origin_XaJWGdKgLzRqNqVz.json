@@ -13,7 +13,7 @@
       "tainted"
     ],
     "description": {
-      "value": "<h2>Unnatural Origin</h2><blockquote><p><em>\"Some are born under ill stars, touched by forces that should remain nameless. They carry marks that set them apart—not by choice, but by fate's cruel hand.\"</em></p></blockquote><p>Whether by accident of birth, exposure to forbidden energies, or the touch of the Warp itself, you bear the stigma of the unnatural. Perhaps you were raised in environments so toxic that your very flesh mutated to survive. Or maybe you are the product of heretical gene-crafting, a \"false-man\" created for purposes now lost to time. Some bear the taint of Chaos, touched by the Warp in ways that cannot be undone.</p><p>Whatever the source, your nature sets you apart from normal humanity. Some view you with fear, others with disgust. Yet the very forces that marked you have also granted you unusual capabilities—gifts that come at terrible cost. In the Imperium, such origins are grounds for execution, but in the vastness of the void, there are places where the desperate and the damned can find purpose.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
+      "value": "<h2>Unnatural Origin</h2><blockquote><p><em>\"Some are born under ill stars, touched by forces that should remain nameless. They carry marks that set them apart\u2014not by choice, but by fate's cruel hand.\"</em></p></blockquote><p>Whether by accident of birth, exposure to forbidden energies, or the touch of the Warp itself, you bear the stigma of the unnatural. Perhaps you were raised in environments so toxic that your very flesh mutated to survive. Or maybe you are the product of heretical gene-crafting, a \"false-man\" created for purposes now lost to time. Some bear the taint of Chaos, touched by the Warp in ways that cannot be undone.</p><p>Whatever the source, your nature sets you apart from normal humanity. Some view you with fear, others with disgust. Yet the very forces that marked you have also granted you unusual capabilities\u2014gifts that come at terrible cost. In the Imperium, such origins are grounds for execution, but in the vastness of the void, there are places where the desperate and the damned can find purpose.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess, you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
       "text": "Origin Path: Birthright (Advanced)",
@@ -114,7 +114,10 @@
       ],
       "isEdgeLeft": false,
       "isEdgeRight": false
-    }
+    },
+    "positions": [
+      3
+    ]
   },
   "effects": [],
   "flags": {},

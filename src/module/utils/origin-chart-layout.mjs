@@ -140,8 +140,17 @@ export class OriginChartLayout {
 
     const cards = [];
     let maxPosition = 0;
+    const seenOrigins = new Set(); // Track which origins we've already added
 
     for (const origin of origins) {
+      // Skip if we've already added this origin (prevent duplicates)
+      if (seenOrigins.has(origin.id)) continue;
+      seenOrigins.add(origin.id);
+
+      // Get all positions for this origin (primary + additional for multi-parent support)
+      const positions = origin.system?.allPositions || [origin.system?.position || 0];
+      
+      // Use the primary position for the card placement
       const position = origin.system?.position || 0;
       maxPosition = Math.max(maxPosition, position);
 
@@ -165,16 +174,20 @@ export class OriginChartLayout {
         isSelectable: isSelectable,
         isValidNext: isValidNext,
         isDisabled: guidedMode && !isSelectable,
+        
+        // Multi-position indicator
+        isMultiPosition: positions.length > 1,
+        allPositions: positions,
 
         // Metadata
         xpCost: origin.system?.xpCost || 0,
         isAdvanced: origin.system?.isAdvancedOrigin || false,
         hasChoices: origin.system?.hasChoices || false,
 
-        // Navigation
+        // Navigation (calculate for all positions)
         connectsTo: origin.system?.navigation?.connectsTo || this._calculateConnections(position),
         isEdgeLeft: position === 0,
-        isEdgeRight: position >= 7
+        isEdgeRight: position >= 8
       });
     }
 
@@ -190,20 +203,24 @@ export class OriginChartLayout {
 
   /**
    * Calculate which positions this origin connects to in the next step.
+   * Simple rule: position ±1 (with edge clamping to 0-8 range)
    * @param {number} position
    * @returns {Array<number>}
    * @private
    */
   static _calculateConnections(position) {
-    // Rule from the book: connects to position-1, position, position+1
-    // Edge cases: edges have only 2 connections
-    if (position === 0) {
-      return [0, 1];
-    } else if (position >= 7) {
-      return [position - 1, position];
-    } else {
-      return [position - 1, position, position + 1];
-    }
+    const connections = [];
+    
+    // Add position - 1 (if valid)
+    if (position > 0) connections.push(position - 1);
+    
+    // Add position itself
+    connections.push(position);
+    
+    // Add position + 1 (if valid)
+    if (position < 8) connections.push(position + 1);
+    
+    return connections;
   }
 
   /**
@@ -247,12 +264,12 @@ export class OriginChartLayout {
   /**
    * Check if origin is valid based on position connectivity.
    * 
-   * Connectivity Rules:
-   * - FORWARD navigation: Check if the PREVIOUS selection's connectsTo includes THIS origin's position
-   *   Example: If Birthright (pos 3) was selected, it can connect to homeWorld at positions 2, 3, or 4
+   * Simple ±1 Rule:
+   * - Each position connects to [pos-1, pos, pos+1] in both directions
+   * - For multi-position origins, check if ANY position can connect
    * 
-   * - BACKWARD navigation: Check if THIS origin's connectsTo includes the NEXT selection's position
-   *   Example: If selecting Motivation (pos 4), check if it can connect to already-selected Career (pos 3)
+   * FORWARD: Can the previous selection connect to any of this origin's positions?
+   * BACKWARD: Can any of this origin's positions connect to the next selection?
    * 
    * @param {Item} origin - The origin being checked for validity
    * @param {Item|null} adjacentSelection - The adjacent selection (previous in forward, next in backward)
@@ -263,19 +280,24 @@ export class OriginChartLayout {
   static _isValidNext(origin, adjacentSelection, direction = DIRECTION.FORWARD) {
     if (!adjacentSelection) return true;
 
-    const originPos = origin.system?.position || 0;
     const adjacentPos = adjacentSelection.system?.position || 0;
     
+    // Get all positions for this origin (primary + additional)
+    const originPositions = origin.system?.allPositions || [origin.system?.position || 0];
+    
     if (direction === DIRECTION.FORWARD) {
-      // Forward: check if the adjacent (previous) selection's connectsTo includes this origin's position
+      // Forward: check if adjacent (previous) can connect to ANY of our positions
       const adjacentConnections = adjacentSelection.system?.navigation?.connectsTo ||
                                   this._calculateConnections(adjacentPos);
-      return adjacentConnections.includes(originPos);
+      
+      return originPositions.some(pos => adjacentConnections.includes(pos));
     } else {
-      // Backward: check if THIS origin's connectsTo includes the adjacent (next step) position
-      const originConnections = origin.system?.navigation?.connectsTo ||
-                                this._calculateConnections(originPos);
-      return originConnections.includes(adjacentPos);
+      // Backward: check if ANY of our positions can connect to adjacent (next)
+      return originPositions.some(pos => {
+        const connections = origin.system?.navigation?.connectsTo ||
+                           this._calculateConnections(pos);
+        return connections.includes(adjacentPos);
+      });
     }
   }
 
@@ -373,9 +395,9 @@ export class OriginChartLayout {
    * Get valid next options for a given selection.
    * Used for highlighting in guided mode.
    * 
-   * Navigation Direction Logic:
-   * - FORWARD: Current selection's connectsTo determines valid next positions
-   * - BACKWARD: Target origin's connectsTo must include current selection's position
+   * Simple ±1 Rule:
+   * - FORWARD: Current position connects to [pos-1, pos, pos+1]
+   * - BACKWARD: Target must be able to connect to current position
    * 
    * @param {Item} currentSelection - The current selection in navigation order
    * @param {Array<Item>} targetStepOrigins - Origins in the target step
@@ -391,18 +413,19 @@ export class OriginChartLayout {
                                this._calculateConnections(currentPos);
 
     for (const origin of targetStepOrigins) {
-      const originPos = origin.system?.position || 0;
-      const originConnections = origin.system?.navigation?.connectsTo ||
-                                this._calculateConnections(originPos);
+      const originPositions = origin.system?.allPositions || [origin.system?.position || 0];
 
       // Check position connectivity based on direction
       let isConnected = false;
       if (direction === DIRECTION.FORWARD) {
-        // Forward: current selection's connectsTo includes target origin's position
-        isConnected = currentConnections.includes(originPos);
+        // Forward: current position's connectsTo includes ANY of target's positions
+        isConnected = originPositions.some(pos => currentConnections.includes(pos));
       } else {
-        // Backward: target origin's connectsTo includes current selection's position
-        isConnected = originConnections.includes(currentPos);
+        // Backward: ANY of target's positions can connect to current
+        isConnected = originPositions.some(pos => {
+          const connections = this._calculateConnections(pos);
+          return connections.includes(currentPos);
+        });
       }
       
       if (!isConnected) continue;

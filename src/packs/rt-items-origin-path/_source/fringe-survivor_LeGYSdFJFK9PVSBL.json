@@ -13,7 +13,7 @@
       "savant"
     ],
     "description": {
-      "value": "<h2>Fringe Survivor</h2><blockquote><p><em>\"The Imperium's reach is vast, but its grip is not absolute. Between the iron fist of law and the cold void of space lie the borderlands—places where survival demands more than faith alone.\"</em></p></blockquote><p>Life in the Imperium is constrictive and stifling for most, but you and yours found ways to endure on society's fringes. Each day was a battle for survival, yet somehow you persevered against impossible odds, honing skills that would serve you well beyond the borders of civilization.</p><p>Perhaps you hail from nomadic families who moved across worlds and systems, following trade routes or resources, never staying long enough for the Imperium's bureaucracy to take firm hold. Or you may have grown up among those who trafficked in forbidden knowledge—tech-heretics who salvaged and rebuilt what the Adeptus Mechanicus deemed lost or forbidden. Some fringe survivors learned their craft in the blood-soaked arenas, where death and glory were dealt in equal measure for the entertainment of crowds and the profit of patrons.</p><p>Whatever your origins, the fringe taught you to be resourceful, alert, and uncompromising. You know how to read danger, to survive in hostile environments, and to do whatever it takes to see another sunrise. The God-Emperor may watch over all humanity, but on the fringes, you learned that survival is earned, not granted.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess (or will possess from your Career), you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
+      "value": "<h2>Fringe Survivor</h2><blockquote><p><em>\"The Imperium's reach is vast, but its grip is not absolute. Between the iron fist of law and the cold void of space lie the borderlands\u2014places where survival demands more than faith alone.\"</em></p></blockquote><p>Life in the Imperium is constrictive and stifling for most, but you and yours found ways to endure on society's fringes. Each day was a battle for survival, yet somehow you persevered against impossible odds, honing skills that would serve you well beyond the borders of civilization.</p><p>Perhaps you hail from nomadic families who moved across worlds and systems, following trade routes or resources, never staying long enough for the Imperium's bureaucracy to take firm hold. Or you may have grown up among those who trafficked in forbidden knowledge\u2014tech-heretics who salvaged and rebuilt what the Adeptus Mechanicus deemed lost or forbidden. Some fringe survivors learned their craft in the blood-soaked arenas, where death and glory were dealt in equal measure for the entertainment of crowds and the profit of patrons.</p><p>Whatever your origins, the fringe taught you to be resourceful, alert, and uncompromising. You know how to read danger, to survive in hostile environments, and to do whatever it takes to see another sunrise. The God-Emperor may watch over all humanity, but on the fringes, you learned that survival is earned, not granted.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p><p><strong>Note:</strong> If an option grants you training in a skill or talent you already possess (or will possess from your Career), you may instead gain +10 to that skill OR reduce the XP cost by 50 (for duplicate talents).</p>"
     },
     "requirements": {
       "text": "Origin Path: Birthright (Advanced)",
@@ -36,7 +36,7 @@
               "label": "Survivalist (300 XP)",
               "value": "survivalist",
               "xpCost": 300,
-              "description": "Nomadic wanderers who move from place to place, following herds, resources, or trade. You have honed instincts for survival in hostile climates and developed an alertness to danger—but the horrors you've witnessed haunt you still.",
+              "description": "Nomadic wanderers who move from place to place, following herds, resources, or trade. You have honed instincts for survival in hostile climates and developed an alertness to danger\u2014but the horrors you've witnessed haunt you still.",
               "grants": {
                 "skills": [
                   {
@@ -70,7 +70,7 @@
               "label": "Heretek (100 XP)",
               "value": "heretek",
               "xpCost": 100,
-              "description": "Tech-heretics branded as criminals, versed in forbidden arts of technology gained outside the Priesthood of Mars. You salvage, rebuild, and understand machines through intuition and dark knowledge—always one step ahead of the Mechanicus hunters.",
+              "description": "Tech-heretics branded as criminals, versed in forbidden arts of technology gained outside the Priesthood of Mars. You salvage, rebuild, and understand machines through intuition and dark knowledge\u2014always one step ahead of the Mechanicus hunters.",
               "grants": {
                 "characteristics": {
                   "intelligence": 3
@@ -168,7 +168,10 @@
       ],
       "isEdgeLeft": false,
       "isEdgeRight": false
-    }
+    },
+    "positions": [
+      5
+    ]
   },
   "effects": [],
   "flags": {},
