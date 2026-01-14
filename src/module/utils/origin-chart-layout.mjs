@@ -87,11 +87,11 @@ export class OriginChartLayout {
       groups[step].push(origin);
     }
 
-    // Sort each group by position
+    // Sort each group by primary position
     for (const step in groups) {
       groups[step].sort((a, b) => {
-        const posA = a.system?.position || 0;
-        const posB = b.system?.position || 0;
+        const posA = a.system?.primaryPosition || 4;
+        const posB = b.system?.primaryPosition || 4;
         return posA - posB;
       });
     }
@@ -147,11 +147,11 @@ export class OriginChartLayout {
       if (seenOrigins.has(origin.id)) continue;
       seenOrigins.add(origin.id);
 
-      // Get all positions for this origin (primary + additional for multi-parent support)
-      const positions = origin.system?.allPositions || [origin.system?.position || 0];
+      // Get all positions for this origin (single or multiple for multi-parent support)
+      const positions = origin.system?.allPositions || [4];
       
       // Use the primary position for the card placement
-      const position = origin.system?.position || 0;
+      const position = origin.system?.primaryPosition || 4;
       maxPosition = Math.max(maxPosition, position);
 
       // Determine if this origin is selectable
@@ -182,12 +182,7 @@ export class OriginChartLayout {
         // Metadata
         xpCost: origin.system?.xpCost || 0,
         isAdvanced: origin.system?.isAdvancedOrigin || false,
-        hasChoices: origin.system?.hasChoices || false,
-
-        // Navigation (calculate for all positions)
-        connectsTo: origin.system?.navigation?.connectsTo || this._calculateConnections(position),
-        isEdgeLeft: position === 0,
-        isEdgeRight: position >= 8
+        hasChoices: origin.system?.hasChoices || false
       });
     }
 
@@ -257,48 +252,54 @@ export class OriginChartLayout {
       }
     }
 
-    // Check position connectivity
-    return this._isValidNext(origin, adjacentSelection, direction);
+    // Check positional connectivity using ±1 rule
+    return this._canConnect(origin, adjacentSelection, direction);
   }
 
   /**
-   * Check if origin is valid based on position connectivity.
+   * Check if an origin is a valid next step (used for visual indicators).
+   * Simple ±1 connectivity check for any of the origin's positions.
    * 
-   * Simple ±1 Rule:
-   * - Each position connects to [pos-1, pos, pos+1] in both directions
-   * - For multi-position origins, check if ANY position can connect
-   * 
-   * FORWARD: Can the previous selection connect to any of this origin's positions?
-   * BACKWARD: Can any of this origin's positions connect to the next selection?
-   * 
-   * @param {Item} origin - The origin being checked for validity
-   * @param {Item|null} adjacentSelection - The adjacent selection (previous in forward, next in backward)
+   * @param {Item} origin - The origin being checked
+   * @param {Item|null} adjacentSelection - The adjacent selection
    * @param {string} direction - Navigation direction
    * @returns {boolean}
    * @private
    */
   static _isValidNext(origin, adjacentSelection, direction = DIRECTION.FORWARD) {
     if (!adjacentSelection) return true;
+    return this._canConnect(origin, adjacentSelection, direction);
+  }
 
-    const adjacentPos = adjacentSelection.system?.position || 0;
-    
-    // Get all positions for this origin (primary + additional)
-    const originPositions = origin.system?.allPositions || [origin.system?.position || 0];
-    
-    if (direction === DIRECTION.FORWARD) {
-      // Forward: check if adjacent (previous) can connect to ANY of our positions
-      const adjacentConnections = adjacentSelection.system?.navigation?.connectsTo ||
-                                  this._calculateConnections(adjacentPos);
+  /**
+   * Check if two origins can connect based on positions using ±1 rule.
+   * For multi-position origins, checks if ANY position can connect.
+   * 
+   * @param {Item} origin - The origin to check
+   * @param {Item} adjacentSelection - The adjacent step selection
+   * @param {string} direction - Direction of navigation (not used - connectivity is bidirectional)
+   * @returns {boolean}
+   * @private
+   */
+  static _canConnect(origin, adjacentSelection, direction) {
+    if (!adjacentSelection) return true;
+
+    const originPositions = origin.system?.allPositions || [4];
+    const adjacentPositions = adjacentSelection.system?.allPositions || [4];
+
+    // For each position the origin occupies, check if it can connect to any adjacent position
+    // Using ±1 rule: position N connects to [N-1, N, N+1]
+    for (const originPos of originPositions) {
+      const connectsTo = this._calculateConnections(originPos);
       
-      return originPositions.some(pos => adjacentConnections.includes(pos));
-    } else {
-      // Backward: check if ANY of our positions can connect to adjacent (next)
-      return originPositions.some(pos => {
-        const connections = origin.system?.navigation?.connectsTo ||
-                           this._calculateConnections(pos);
-        return connections.includes(adjacentPos);
-      });
+      for (const adjacentPos of adjacentPositions) {
+        if (connectsTo.includes(adjacentPos)) {
+          return true; // Found a valid connection
+        }
+      }
     }
+
+    return false; // No valid connections found
   }
 
   /**
@@ -333,8 +334,11 @@ export class OriginChartLayout {
         if (!showFromThis) continue;
 
         for (const toCard of toStep.cards) {
+          // Calculate connectsTo dynamically from fromCard's position
+          const fromConnections = this._calculateConnections(fromCard.position);
+          
           // Check if connection exists
-          if (fromCard.connectsTo.includes(toCard.position)) {
+          if (fromConnections.includes(toCard.position)) {
             connections.push({
               id: `conn-${fromCard.id}-${toCard.id}`,
               fromStep: fromStep.stepIndex,
@@ -395,9 +399,9 @@ export class OriginChartLayout {
    * Get valid next options for a given selection.
    * Used for highlighting in guided mode.
    * 
-   * Simple ±1 Rule:
-   * - FORWARD: Current position connects to [pos-1, pos, pos+1]
-   * - BACKWARD: Target must be able to connect to current position
+   * Uses ±1 connectivity rule:
+   * - Each position connects to [pos-1, pos, pos+1] in both directions
+   * - Multi-position origins check if ANY of their positions can connect
    * 
    * @param {Item} currentSelection - The current selection in navigation order
    * @param {Array<Item>} targetStepOrigins - Origins in the target step
@@ -408,24 +412,19 @@ export class OriginChartLayout {
     if (!currentSelection) return targetStepOrigins;
 
     const validOptions = [];
-    const currentPos = currentSelection.system?.position || 0;
-    const currentConnections = currentSelection.system?.navigation?.connectsTo ||
-                               this._calculateConnections(currentPos);
+    const currentPositions = currentSelection.system?.allPositions || [4];
 
     for (const origin of targetStepOrigins) {
-      const originPositions = origin.system?.allPositions || [origin.system?.position || 0];
+      const originPositions = origin.system?.allPositions || [4];
 
-      // Check position connectivity based on direction
+      // Check if ANY combination of positions can connect using ±1 rule
       let isConnected = false;
-      if (direction === DIRECTION.FORWARD) {
-        // Forward: current position's connectsTo includes ANY of target's positions
-        isConnected = originPositions.some(pos => currentConnections.includes(pos));
-      } else {
-        // Backward: ANY of target's positions can connect to current
-        isConnected = originPositions.some(pos => {
-          const connections = this._calculateConnections(pos);
-          return connections.includes(currentPos);
-        });
+      for (const currentPos of currentPositions) {
+        const currentConnections = this._calculateConnections(currentPos);
+        if (originPositions.some(pos => currentConnections.includes(pos))) {
+          isConnected = true;
+          break;
+        }
       }
       
       if (!isConnected) continue;

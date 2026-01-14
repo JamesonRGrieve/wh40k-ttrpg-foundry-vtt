@@ -1280,8 +1280,7 @@ The Origin Path System is a character creation feature that walks players throug
 // Core fields
 {
   stepIndex: NumberField,        // 0-5, which step this origin represents
-  position: NumberField,         // 0-8, primary chart position (center=4, extremes=0/8)
-  positions: ArrayField,         // Additional positions for multi-parent origins (e.g., [5] means also at pos 5)
+  positions: ArrayField,         // [0-8] positions in chart (e.g., [4] for single, [1,5] for multi-position)
   
   grants: {
     characteristics: {},         // { weaponSkill: 5, toughness: 5, ... }
@@ -1298,10 +1297,6 @@ The Origin Path System is a character creation feature that walks players throug
     choices: []                  // Choice grants (see below)
   },
   
-  navigation: {
-    connectsTo: []               // Calculated automatically as [pos-1, pos, pos+1]
-  },
-  
   selectedChoices: {},           // Player's selections { "Choose Skill": ["Awareness"] }
   
   rollResults: {
@@ -1313,43 +1308,48 @@ The Origin Path System is a character creation feature that walks players throug
 }
 ```
 
+**Navigation/Connectivity**:
+- **Automatic ±1 Rule**: Each position N connects to [N-1, N, N+1] in adjacent steps
+- No stored navigation data - all connectivity computed dynamically
+- Edge positions (0 and 8) automatically handled (0→[0,1], 8→[7,8])
+- Multi-position origins check if ANY of their positions can connect
+
 ### Multi-Position Origins (Multiple Parents)
 
-Some origins can be reached from multiple paths in the flowchart. These use the `positions` array:
+Some origins can be reached from multiple paths in the flowchart. These use multiple values in the `positions` array:
 
 ```javascript
 // Example: Fringe Survivor can be reached from positions 1 and 5
 {
-  position: 1,          // Primary position (where the card displays)
-  positions: [5],       // Also reachable from position 5
+  positions: [1, 5],     // Appears at both positions in the chart
   step: "birthright"
 }
 ```
 
 **Navigation Rule**: Each position connects to ±1 positions in adjacent steps:
 - Position N connects to: [N-1, N, N+1] (clamped to 0-8 range)
-- Multi-position origins display ONCE at their primary position
-- The card shows `isMultiPosition: true` and `allPositions: [1, 5]` for UI indicators
-- Validation checks if ANY of the origin's positions can connect
+- Multi-position origins appear once in UI at their first position
+- Validation checks if ANY of the origin's positions can connect to previous selection
+- Connectivity is bidirectional and computed dynamically
 
 **13 Multi-Position Origins**:
-| Origin | Step | Primary Pos | Additional Pos | Reachable From |
-|--------|------|-------------|----------------|----------------|
-| Fringe Survivor | Birthright | 1 | 5 | Positions 0-2 OR 4-6 |
-| Unnatural Origin | Birthright | 2 | 3 | Positions 1-3 OR 2-4 |
-| In Service to the Throne | Birthright | 4 | 6 | Positions 3-5 OR 5-7 |
-| Hunter | Lure of the Void | 1 | 4 | Positions 0-2 OR 3-5 |
-| Crusade | Lure of the Void | 2 | 3 | Positions 1-3 OR 2-4 |
-| New Horizons | Lure of the Void | 5 | 6 | Positions 4-6 OR 5-7 |
-| Darkness | Trials and Travails | 1 | 6 | Positions 0-2 OR 5-7 |
-| The Product of Upbringing | Trials and Travails | 2 | 5 | Positions 1-3 OR 4-6 |
-| Lost Worlds | Trials and Travails | 3 | 5 | Positions 2-4 OR 4-6 |
-| Devotion | Motivation | 1 | 4 | Positions 0-2 OR 3-5 |
-| Exhilaration | Motivation | 2 | 6 | Positions 1-3 OR 5-7 |
-| Knowledge | Motivation | 3 | 5 | Positions 2-4 OR 4-6 |
-| Fear | Motivation | 0 | 1,2,3,4,5,6 | ANY Trials position |
+| Origin | Step | Positions | Reachable From |
+|--------|------|-----------|----------------|
+| Fringe Survivor | Birthright | [1, 5] | Positions 0-2 OR 4-6 |
+| Unnatural Origin | Birthright | [2, 3] | Positions 1-4 |
+| In Service to the Throne | Birthright | [4, 6] | Positions 3-5 OR 5-7 |
+| Hunter | Lure of the Void | [1, 4] | Positions 0-2 OR 3-5 |
+| Crusade | Lure of the Void | [2, 3] | Positions 1-4 |
+| New Horizons | Lure of the Void | [5, 6] | Positions 4-7 |
+| Darkness | Trials and Travails | [1, 6] | Positions 0-2 OR 5-7 |
+| The Product of Upbringing | Trials and Travails | [2, 5] | Positions 1-3 OR 4-6 |
+| Lost Worlds | Trials and Travails | [3, 5] | Positions 2-4 OR 4-6 |
+| Devotion | Motivation | [1, 4] | Positions 0-2 OR 3-5 |
+| Exhilaration | Motivation | [2, 6] | Positions 1-3 OR 5-7 |
+| Knowledge | Motivation | [3, 5] | Positions 2-4 OR 4-6 |
+| Fear | Motivation | [0,1,2,3,4,5,6] | ANY Trials position |
 
-**UI Display**: Multi-position origins show once with an optional indicator (badge, icon, or tooltip) showing they're accessible from multiple paths.
+**UI Display**: Multi-position origins show once with an optional indicator showing they're accessible from multiple paths.
 
 ### Choice Grants Structure
 
@@ -1431,12 +1431,13 @@ const result = await OriginGrantsProcessor.processOriginGrants(originItems, acto
 - Each position N connects to positions [N-1, N, N+1] in adjacent steps
 - Edge positions: 0 connects to [0, 1], position 8 connects to [7, 8]
 - Bidirectional: works the same forward (homeWorld → career) and backward (career → homeWorld)
+- **No stored navigation data** - all connectivity computed dynamically at runtime
 
 **Multi-Position Origins**:
-- Origins with multiple parents appear at multiple positions
-- Validation checks if ANY of the origin's positions can connect
-- Each position creates a separate card in the UI
-- Example: Fringe Survivor appears at both positions 1 and 5
+- Origins with multiple positions (e.g., `positions: [1, 5]`) appear at their first position
+- Validation checks if ANY of the origin's positions can connect to selected path
+- Each position independently uses the ±1 rule
+- Example: Fringe Survivor at [1, 5] can connect from 0-2 OR 4-6
 
 **Guided Mode**:
 - Only origins with valid connections to previous selection are selectable
@@ -1453,7 +1454,8 @@ const result = await OriginGrantsProcessor.processOriginGrants(originItems, acto
 - `prepareBaseData()` - Initializes tracking objects
 - `prepareDerivedData()` - Calculates activeModifiers from selectedChoices
 - `_calculateActiveModifiers()` - Iterates choices and sums grants
-- `_prepareNavigationData()` - Sets valid chart connections
+- `get allPositions()` - Returns sorted array of all positions for this origin
+- `get primaryPosition()` - Returns first position (used for card placement)
 
 **OriginPathBuilder (ApplicationV2)**:
 - `#commitPath()` - Processes all origins and updates actor
@@ -1465,6 +1467,11 @@ const result = await OriginGrantsProcessor.processOriginGrants(originItems, acto
 - `processOriginGrants()` - Main entry point
 - `_processChoiceGrants()` - Extracts grants from selectedChoices
 - `_collectItems()` - Creates talent/skill/trait item data
+
+**OriginChartLayout**:
+- `computeFullChart()` - Generates complete chart layout with connectivity
+- `_calculateConnections()` - Computes ±1 connectivity for a position
+- `_canConnect()` - Checks if two origins can connect (any position matches)
 
 ### Templates
 
