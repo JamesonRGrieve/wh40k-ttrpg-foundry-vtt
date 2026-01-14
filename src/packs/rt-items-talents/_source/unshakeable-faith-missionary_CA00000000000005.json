@@ -9,9 +9,7 @@
       "book": "Rogue Trader Core Rulebook",
       "page": "64"
     },
-    "description": {
-      "value": "<p><strong>Unshakeable Faith:</strong> The Missionary's devotion to the God-Emperor is absolute and unwavering. Their faith is a shield against the predations of Chaos and the terrors of the void, protecting their soul from corruption and their mind from madness. This pure belief in the Emperor's divine will grants them extraordinary resistance to the forces of darkness.</p>"
-    },
+    "description": "<p><strong>Unshakeable Faith:</strong> The Missionary's devotion to the God-Emperor is absolute and unwavering. Their faith is a shield against the predations of Chaos and the terrors of the void, protecting their soul from corruption and their mind from madness. This pure belief in the Emperor's divine will grants them extraordinary resistance to the forces of darkness.</p>",
     "tier": 0,
     "benefit": "<p>You gain the Pure Faith talent.</p>",
     "aptitudes": [],
@@ -55,6 +53,12 @@
       ],
       "traits": [],
       "specialAbilities": []
+    },
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
     }
   },
   "effects": [],

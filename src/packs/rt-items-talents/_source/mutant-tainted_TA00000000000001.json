@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You must roll once on the Mutations table (or spend 200 XP to select one result below 76).</p>",
     "aptitudes": [],
     "prerequisites": {

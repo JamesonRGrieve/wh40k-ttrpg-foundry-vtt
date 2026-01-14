@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "discipleOfKauyon",
     "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
@@ -10,15 +11,51 @@
     },
     "tier": 1,
     "benefit": "<p>The Tau can perform the following special action. Perfect Lure: Full Action, Movement: Make +0 Fellowship Test, if successful one enemy within 30 metres gains +10 to Weapon Skill and Ballistic Skill tests to hit the character, but suffer -30 to hit any of the explorer's allies. For every degree of success, one additional enemy within range may be affected.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Fellowship",
+      "Defence"
+    ],
     "prerequisites": {
       "text": "Tau, Bonding Ritual",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Bonding Ritual"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "fellowship",
+      "skill": "",
+      "modifier": 0,
+      "description": "Fellowship test to perform Perfect Lure tactical action"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Perfect Lure",
+          "description": "<p>Full Action: Make +0 Fellowship Test. On success, one enemy within 30m gains +10 to WS/BS to hit you, but suffers -30 to hit your allies. Each DoS affects one additional enemy.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

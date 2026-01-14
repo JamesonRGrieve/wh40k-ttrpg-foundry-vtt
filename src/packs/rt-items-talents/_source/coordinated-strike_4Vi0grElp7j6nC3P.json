@@ -3,22 +3,59 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "coordinatedStrike",
     "category": "combat",
     "source": "RT: Faith and Coin",
-    "description": {
-      "value": "<p>As a Reaction, after hitting a ranged or melee attack, character can make +0 Wrangling Test. If successful one of their Bestial Minions gain +20 to the next Attack Action made against that target until the end of its next turn.</p>"
-    },
+    "description": "<p>The character can direct their bestial minions to attack vulnerable targets they've already engaged.</p>",
     "tier": 1,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
     "benefit": "<p>As a Reaction, after hitting a ranged or melee attack, character can make +0 Wrangling Test. If successful one of their Bestial Minions gain +20 to the next Attack Action made against that target until the end of its next turn.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Beastmaster Alternative Advance, 500xp",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "fellowship",
+      "skill": "wrangling",
+      "modifier": 0,
+      "description": "Wrangling Test to coordinate minion attack"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Minion Coordination",
+          "description": "<p>As a Reaction after hitting an attack, make a Wrangling Test. On success, one Bestial Minion gains +20 to attack that target until end of its next turn.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

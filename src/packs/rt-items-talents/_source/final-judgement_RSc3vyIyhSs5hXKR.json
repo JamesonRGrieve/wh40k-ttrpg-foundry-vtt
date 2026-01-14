@@ -3,7 +3,8 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "finalJudgement",
+    "category": "leadership",
     "source": "OW: Hammer of the Emperor",
     "description": {
       "value": "<p>Once per Combat Encounter, after killing a target with a Ranged Attack (Ally or Enemy), character can spend a Fate Point and make a +0 Command Test. If successful, each of their allies within 10 metres gain +5xDoS to their next Ballistic Skill or Weapon Skill Test made before the end of the encounter, meanwhile each enemy within 10 metres suffers a -5xDoS penalty to their next Ballistic Skill or Weapon Skil Test made before the end of the encounter.</p>"
@@ -17,13 +18,46 @@
     "prerequisites": {
       "text": "Fel 45, Air of Authority, Deadeye Shot",
       "characteristics": {
-        "fel": 45
+        "fellowship": 45
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Air of Authority", "Deadeye Shot"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "command",
+      "modifier": 0,
+      "description": "Command test to inspire/demoralize after kill"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Dramatic Execution",
+          "description": "<p>Once per encounter, after ranged kill, spend Fate Point and make Command test. Success: Allies within 10m gain +5xDoS, enemies within 10m suffer -5xDoS to next WS/BS test.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

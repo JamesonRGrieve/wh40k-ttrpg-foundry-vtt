@@ -3,10 +3,11 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "swiftSuture",
     "category": "knowledge",
     "source": "OW: Hammer of the Emperor",
     "description": {
-      "value": "<p>Whenever character succeeds on a Test to use First Aid Special Use of the Medicae Skill, they also end the Blood Loss Condition if the Patient is suffering it.</p>"
+      "value": "<p>The character has mastered advanced first aid techniques that allow them to quickly stabilize wounded patients and stop bleeding.</p>"
     },
     "tier": 1,
     "benefit": "<p>Whenever character succeeds on a Test to use First Aid Special Use of the Medicae Skill, they also end the Blood Loss Condition if the Patient is suffering it.</p>",
@@ -21,7 +22,52 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Stop Bleeding",
+          "description": "<p>When you successfully use the First Aid special use of Medicae, you automatically end the Blood Loss condition on the patient if they are suffering from it.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

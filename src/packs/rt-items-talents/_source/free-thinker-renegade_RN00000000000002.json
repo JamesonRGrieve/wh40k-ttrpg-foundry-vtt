@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain +3 Intelligence or +3 Perception. You suffer −3 Willpower and gain Enemy (Ecclesiarchy).</p>",
     "aptitudes": [],
     "prerequisites": {

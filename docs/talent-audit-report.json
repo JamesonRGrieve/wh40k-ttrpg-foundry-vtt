@@ -1,0 +1,35 @@
+{
+  "total": 652,
+  "filtered": 12,
+  "withIssues": 2,
+  "byCategory": {
+    "tech": 12
+  },
+  "issueTypes": {
+    "skillGrantMissing": 2
+  },
+  "talentsWithIssues": [
+    {
+      "file": "mechadendrite-use-x_AC76EdCkMO7I3Yvs.json",
+      "name": "Mechadendrite Use (X)",
+      "category": "tech",
+      "issues": [
+        {
+          "check": "skillGrantMissing",
+          "message": "Benefit mentions skill training but grants.skills empty"
+        }
+      ]
+    },
+    {
+      "file": "technological-initiate_0ehbCX4GLUHpckSx.json",
+      "name": "Technological Initiate",
+      "category": "tech",
+      "issues": [
+        {
+          "check": "skillGrantMissing",
+          "message": "Benefit mentions skill training but grants.skills empty"
+        }
+      ]
+    }
+  ]
+}

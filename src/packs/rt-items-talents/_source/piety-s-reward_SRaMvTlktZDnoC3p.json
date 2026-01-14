@@ -3,23 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "pietysReward",
+    "category": "leadership",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Whenever an ally within communication range of the character spends a Fate Point, the character can immediately make a -20 Command Test as a Free Action. If successful they immediately issue the \"Righteous Oration\" Order that lasts until the end of the Turn, even if it had already been used by their Comrade this encounter. Righetous Oration, Order: All Player Characters within comms range can Re-roll Damage Rolls for duration.</p>"
-    },
-    "isPassive": false,
-    "isRollable": true,
+    "description": "<p>Your faith inspires others to acts of valor, turning moments of sacrifice into rallying cries for righteous fury.</p>",
     "tier": 1,
-    "benefit": "<p>Whenever an ally within communication range of the character spends a Fate Point, the character can immediately make a -20 Command Test as a Free Action. If successful they immediately issue the \"Righteous Oration\" Order that lasts until the end of the Turn, even if it had already been used by their Comrade this encounter. Righetous Oration, Order: All Player Characters within comms range can Re-roll Damage Rolls for duration.</p>",
+    "cost": 300,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Whenever an ally within communication range of the character spends a Fate Point, the character can immediately make a -20 Command Test as a Free Action. If successful they immediately issue the \"Righteous Oration\" Order that lasts until the end of the Turn, even if it had already been used by their Comrade this encounter.</p><p><strong>Righteous Oration Order:</strong> All Player Characters within comms range can Re-roll Damage Rolls for duration.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Prelate-At-Arms Advanced Specialty(300xp)",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "command",
+      "modifier": -20,
+      "description": "Command Test as Free Action when ally spends Fate Point"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Righteous Oration",
+          "description": "<p>When an ally spends a Fate Point, make a Command -20 Test as a Free Action. Success: Issue Righteous Oration Order (all allies within comms can re-roll damage until end of turn).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

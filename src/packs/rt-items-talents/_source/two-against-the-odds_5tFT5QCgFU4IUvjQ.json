@@ -3,13 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "twoAgainstTheOdds",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>As long as the Character's Comrade is in Cohesion, enemies gain no bonus for outnumbering them, and they can aso react to Melee Attacks even if Unaware or Suprised. </p>"
-    },
+    "description": "<p>The character and their comrade fight as one inseparable unit, covering each other's blind spots and preventing enemies from overwhelming them with numbers.</p>",
     "tier": 1,
-    "benefit": "<p>As long as the Character's Comrade is in Cohesion, enemies gain no bonus for outnumbering them, and they can aso react to Melee Attacks even if Unaware or Suprised. </p>",
+    "benefit": "<p>As long as the Character's Comrade is in Cohesion, enemies gain no bonus for outnumbering them, and they can also react to Melee Attacks even if Unaware or Surprised.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Brawler Advanced Speciality",
@@ -18,7 +17,45 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Brawler Advanced Speciality",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Comrade Defense",
+          "description": "<p>While your Comrade is in Cohesion: enemies gain no outnumbering bonuses against you, and you can react to melee attacks even if Unaware or Surprised.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

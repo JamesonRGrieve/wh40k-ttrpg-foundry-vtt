@@ -3,23 +3,58 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "kabaliteWeaponTraining",
     "category": "combat",
     "source": "RT: The Soul Reaver",
-    "description": {
-      "value": "<p>The Dark Eldar is proficient with Kabalite Weapons, including Splinter Weapons and all Primitive Melee Weapons.</p>"
-    },
+    "description": "<p>The Dark Eldar is proficient with Kabalite Weapons, including Splinter Weapons and all Primitive Melee Weapons.</p>",
     "isPassive": true,
     "isRollable": false,
     "tier": 1,
     "benefit": "<p>The Dark Eldar is proficient with Kabalite Weapons, including Splinter Weapons and all Primitive Melee Weapons.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Weapon Skill",
+      "Ballistic Skill"
+    ],
     "prerequisites": {
       "text": "Dark Eldar (Kabalite Warrior)",
       "characteristics": {},
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Kabalite Weapon Proficiency",
+          "description": "<p>You are proficient with Kabalite weapons including Splinter weapons and all Primitive melee weapons. Can use without untrained penalty.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

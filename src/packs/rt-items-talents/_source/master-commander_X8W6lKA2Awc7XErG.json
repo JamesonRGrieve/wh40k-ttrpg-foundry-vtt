@@ -14,14 +14,40 @@
     "prerequisites": {
       "text": "Int 35, Fel 35",
       "characteristics": {
-        "int": 35,
-        "fel": 35
+        "intelligence": 35,
+        "fellowship": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "masterCommander",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "command": 20
+      },
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Master of Command",
+          "description": "<p>Can issue two orders per Round as a Full Action instead of one.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -17,13 +17,34 @@
     "prerequisites": {
       "text": "Coordinated Interrogation, Fellowship 50.",
       "characteristics": {
-        "fel": 50
+        "fellowship": 50
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "delicateInterrogation",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "interrogation": 10
+      },
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

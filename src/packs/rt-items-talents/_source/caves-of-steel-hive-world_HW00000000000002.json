@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "Tech-Use becomes untrained Basic Skill"
+    "notes": "Tech-Use becomes untrained Basic Skill",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

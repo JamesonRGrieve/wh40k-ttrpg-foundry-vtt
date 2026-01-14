@@ -3,14 +3,11 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "righteousBlow",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When the character inflicts Righteous Fury with an Attack or Psychic Power that they achieved 3+ Degrees of Success on the Test for, they roll twice to etermine the amount of Critical damage inflicted with Righteous Fury, and take the higher result.</p>"
-    },
+    "description": "<p>When the character strikes with righteous fury and great skill, their critical blows are especially devastating.</p>",
     "tier": 3,
-    "isPassive": true,
-    "isRollable": true,
     "benefit": "<p>When the character inflicts Righteous Fury with an Attack or Psychic Power that they achieved 3+ Degrees of Success on the Test for, they roll twice to etermine the amount of Critical damage inflicted with Righteous Fury, and take the higher result.</p>",
     "aptitudes": [
       "Offence",
@@ -19,14 +16,53 @@
     "prerequisites": {
       "text": "BS 45 or WS 45 or Willpower 45",
       "characteristics": {
-        "bs": 45,
-        "ws": 45,
-        "wp": 45
+        "ballisticSkill": 45,
+        "weaponSkill": 45,
+        "willpower": 45
       },
       "skills": [],
       "talents": []
     },
-    "cost": 900
+    "cost": 900,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Righteous Fury",
+          "description": "<p>When you inflict Righteous Fury with 3+ Degrees of Success, roll twice for Critical damage and take the higher result.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

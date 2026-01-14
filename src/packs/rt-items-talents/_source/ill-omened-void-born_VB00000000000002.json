@@ -50,7 +50,13 @@
         "combat": []
       }
     },
-    "notes": "-5 Fellowship with non-void born humans"
+    "notes": "-5 Fellowship with non-void born humans",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

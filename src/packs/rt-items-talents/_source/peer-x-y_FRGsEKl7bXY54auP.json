@@ -18,13 +18,42 @@
     "prerequisites": {
       "text": "Fellowship 30",
       "characteristics": {
-        "fel": 30
+        "fellowship": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "peer",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": 10,
+            "condition": "When dealing with chosen group",
+            "icon": "fa-solid fa-handshake"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "stackable": true,
+    "rank": 1,
+    "specialization": ""
   },
   "effects": [],
   "flags": {},

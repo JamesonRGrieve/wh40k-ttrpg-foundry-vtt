@@ -74,7 +74,13 @@
         "combat": []
       }
     },
-    "notes": "+10 to Interaction Skills with high authority or in formal situations"
+    "notes": "+10 to Interaction Skills with high authority or in formal situations",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

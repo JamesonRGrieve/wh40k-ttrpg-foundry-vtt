@@ -3,25 +3,69 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "ambidextrous",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can use either hand equally well for any task, and does not suffer -20 for using their offhand. When combined with Two-Weapon Wielder Talent, reduces the penalty for making an attack with both weapons to -10.</p>"
-    },
+    "description": "<p>Character can use either hand equally well for any task, and does not suffer -20 for using their offhand. When combined with Two-Weapon Wielder Talent, reduces the penalty for making an attack with both weapons to -10.</p>",
     "tier": 1,
     "isPassive": true,
     "isRollable": false,
     "benefit": "<p>Character can use either hand equally well for any task, and does not suffer -20 for using their offhand. When combined with Two-Weapon Wielder Talent, reduces the penalty for making an attack with both weapons to -10.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Agility", "Finesse"],
     "prerequisites": {
       "text": "Agility 30",
       "characteristics": {
-        "ag": 30
+        "agility": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Eliminates off-hand penalty. Synergizes with Two-Weapon Wielder.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ambidextrous",
+          "description": "<p>No -20 penalty for using off-hand. With Two-Weapon Wielder, reduce dual-wielding penalty to -10 instead of -20.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

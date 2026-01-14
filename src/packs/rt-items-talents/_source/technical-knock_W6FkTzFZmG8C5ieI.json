@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "technicalKnock",
+    "category": "tech",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can Un-Jam any gun they can touch as a Half Action, but only to one weapon per round.</p>"
-    },
+    "description": "<p>The character knows the right spot to strike machinery to clear jams and restore function.</p>",
     "tier": 1,
     "benefit": "<p>Character can Un-Jam any gun they can touch as a Half Action, but only to one weapon per round.</p>",
     "aptitudes": [
@@ -18,13 +17,46 @@
     "prerequisites": {
       "text": "Intelligence 30",
       "characteristics": {
-        "int": 30
+        "intelligence": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Percussive Maintenance",
+          "description": "<p>As a Half Action, un-jam any gun you can touch. One weapon per round.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

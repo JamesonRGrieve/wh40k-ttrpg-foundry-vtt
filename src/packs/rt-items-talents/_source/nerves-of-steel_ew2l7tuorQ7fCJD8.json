@@ -22,7 +22,33 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "nervesOfSteel",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "willpower",
+            "value": 10,
+            "condition": "When resisting Fear, Pinning, or Intimidation",
+            "icon": "fa-solid fa-shield"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

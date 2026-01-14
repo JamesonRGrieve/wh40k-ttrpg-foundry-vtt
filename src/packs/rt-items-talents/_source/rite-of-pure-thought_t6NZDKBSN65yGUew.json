@@ -3,22 +3,59 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "riteOfPureThought",
     "category": "leadership",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Remove the creative, emotional part of the brain. Become immune to fear, pinning, and any effect as a result of emotional disturbance including relevent mental disorders (which are replaced with new ones of equal severity). </p>"
-    },
-    "tier": 1,
-    "benefit": "<p>Remove the creative, emotional part of the brain. Become immune to fear, pinning, and any effect as a result of emotional disturbance including relevent mental disorders (which are replaced with new ones of equal severity). </p>",
-    "aptitudes": [],
+    "description": "<p>Through sacred ritual, the emotional centers of your brain have been removed, granting immunity to fear and emotional disturbance at the cost of your creativity and humanity.</p>",
+    "tier": 2,
+    "benefit": "<p>Remove the creative, emotional part of the brain. Become immune to fear, pinning, and any effect as a result of emotional disturbance including relevant mental disorders (which are replaced with new ones of equal severity).</p>",
+    "aptitudes": ["Willpower", "Tech"],
     "prerequisites": {
       "text": "Mechanicus Implants",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Mechanicus Implants"]
     },
-    "cost": 300,
-    "isPassive": true
+    "cost": 500,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Replaces emotional disorders with new ones of equal severity",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Emotionless Logic",
+          "description": "<p>You are immune to fear, pinning, and any effect from emotional disturbance. Emotional mental disorders are replaced with new ones of equal severity.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

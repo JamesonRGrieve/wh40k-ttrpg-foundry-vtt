@@ -3,24 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "advancedBattlesuitTraining",
     "category": "leadership",
     "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>The Character's Increased Size whilst piloting a Battlesuit provides no bonus to enemies attempting to hit them.</p>"
-    },
+    "description": "<p>Through intensive training, you have mastered the art of maneuvering a battlesuit to negate the disadvantages of its bulk.</p>",
     "tier": 1,
     "benefit": "<p>The Character's Increased Size whilst piloting a Battlesuit provides no bonus to enemies attempting to hit them.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Agility", "Tech"],
     "prerequisites": {
-      "text": "Tau Battlesuit Pilot Alternative Advance, 300xp",
+      "text": "Tau Battlesuit Pilot Alternative Advance, 300xp, Ag 40",
       "characteristics": {
-        "ag": 40
+        "agility": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Tau Battlesuit Pilot",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Negate Size Penalty",
+          "description": "<p>While piloting a Battlesuit, enemies gain no bonus to hit you due to your increased size.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

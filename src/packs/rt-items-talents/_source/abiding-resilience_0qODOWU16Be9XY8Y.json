@@ -3,27 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "abidingResilience",
     "category": "defense",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When the character expends a Fate Point to regain wounds, they regain 1d5+Toughness Bonus Wounds and removes 1 Fatigue (instead of just 1d5 Wounds)</p>"
-    },
+    "description": "<p>Your exceptional resilience allows you to recover more effectively when drawing upon your fate to survive.</p>",
     "tier": 3,
     "benefit": "<p>When the character expends a Fate Point to regain wounds, they regain 1d5+Toughness Bonus Wounds and removes 1 Fatigue (instead of just 1d5 Wounds)</p>",
-    "aptitudes": [
-      "Toughness",
-      "Defence"
-    ],
+    "aptitudes": ["Toughness", "Defence"],
     "prerequisites": {
       "text": "Toughness 40",
       "characteristics": {
-        "t": 40
+        "toughness": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Recovery",
+          "description": "<p>When spending Fate Point to regain wounds, recover 1d5+TB wounds and remove 1 Fatigue.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

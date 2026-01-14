@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "fireSupport",
     "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
@@ -10,18 +11,54 @@
     },
     "tier": 1,
     "benefit": "<p>Once per encounter, assuming appropriate fire-support assets are available and the character is equipped with a marker light, they may make a +0 Ballistic Skill Test as a Full Action. If successful, 1d5 Rounds later, -1 round per Degree of Success on Test (min. 1 Round). A Seeker Missile strikes the target, dealing 3d10+5 E Damage with PEN 10.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Ballistic Skill",
+      "Tech"
+    ],
     "prerequisites": {
       "text": "Tau, Ballistic Skill 40, Fellowship 35",
       "characteristics": {
-        "bs": 40,
-        "fel": 35
+        "ballisticSkill": 40,
+        "fellowship": 35
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "ballisticSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Ballistic Skill test to call fire support"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Call Seeker Missile",
+          "description": "<p>Once per encounter with marker light: Full Action BS test. Success: 1d5-DoS rounds later (min 1), Seeker Missile hits target for 3d10+5 E damage, PEN 10.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

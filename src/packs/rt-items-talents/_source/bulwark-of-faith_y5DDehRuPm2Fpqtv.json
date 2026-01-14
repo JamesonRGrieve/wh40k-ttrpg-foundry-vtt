@@ -3,13 +3,17 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "bulwarkOfFaith",
     "category": "combat",
     "source": "DH 2E: Enemies Beyond",
-    "description": {
-      "value": "<p>Whenever the Character passes a Fear Test caused by a Daemon, the Daemon suffers 1 Energy Damage ignoring Armour and Toughness for each Degree of Success on the Daemon</p>"
-    },
+    "description": "<p>The character's faith is a weapon against the unholy, causing daemons to suffer from their spiritual fortitude.</p>",
     "tier": 2,
-    "benefit": "<p>Whenever the Character passes a Fear Test caused by a Daemon, the Daemon suffers 1 Energy Damage ignoring Armour and Toughness for each Degree of Success on the Daemon</p>",
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Whenever the Character passes a Fear Test caused by a Daemon, the Daemon suffers 1 Energy Damage ignoring Armour and Toughness for each Degree of Success.</p>",
     "aptitudes": [
       "Defence",
       "Willpower"
@@ -17,13 +21,46 @@
     "prerequisites": {
       "text": "Tier 2: Willpower 45, Iron Faith",
       "characteristics": {
-        "wp": 45
+        "willpower": 45
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Iron Faith"]
     },
     "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Faithful Retribution",
+          "description": "<p>Whenever the Character passes a Fear Test caused by a Daemon, the Daemon suffers 1 Energy Damage ignoring Armour and Toughness for each Degree of Success.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

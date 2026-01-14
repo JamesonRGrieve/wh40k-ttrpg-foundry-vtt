@@ -3,13 +3,14 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "xenosavant",
     "category": "knowledge",
     "source": "DH 2E: Enemies Without",
     "description": {
-      "value": "<p>Character can attempt any Forbidden Lore (Xenos) Test in which they are not trained in as if it were an untrained, non-specialist skill (Base -20 Test)</p>"
+      "value": "<p>Through extensive study and dangerous research, the character has become an expert on alien species, able to draw upon general xenos knowledge even without specific training.</p>"
     },
     "tier": 2,
-    "benefit": "<p>Character can attempt any Forbidden Lore (Xenos) Test in which they are not trained in as if it were an untrained, non-specialist skill (Base -20 Test)</p>",
+    "benefit": "<p>Character can attempt any Forbidden Lore (Xenos) Test in which they are not trained in as if it were an untrained, non-specialist skill (Base -20 Test).</p>",
     "aptitudes": [
       "Intelligence",
       "Knowledge"
@@ -21,7 +22,52 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Broad Xenos Knowledge",
+          "description": "<p>You can attempt any Forbidden Lore (Xenos) Test for species you are not specifically trained in as an untrained, non-specialist skill (at -20 penalty rather than being unable to attempt it).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

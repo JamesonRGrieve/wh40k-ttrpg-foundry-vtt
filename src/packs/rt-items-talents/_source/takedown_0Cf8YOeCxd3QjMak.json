@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "takedown",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>As a Half Action, or when making a Charge Action, the character can declare they are making a Takedown Action against an opponent in melee. They roll to hit using any normal modifiers for weapons and Talents (including +20 for charging). If character hits, and would have done at least 1 Point of Damage after Armour/Toughness Reduction with their attack, they instead do no damage, and target makes +0 Toughness Test or is stunned for 1 Round and Knocked Prone.\nAdditionally, character does not suffer -20 penalty to Weapon Skill when performing the Stun Action.</p>"
-    },
+    "description": "<p>The character knows how to use controlled strikes to stun and disable opponents without killing them.</p>",
     "tier": 1,
     "benefit": "<p>As a Half Action, or when making a Charge Action, the character can declare they are making a Takedown Action against an opponent in melee. They roll to hit using any normal modifiers for weapons and Talents (including +20 for charging). If character hits, and would have done at least 1 Point of Damage after Armour/Toughness Reduction with their attack, they instead do no damage, and target makes +0 Toughness Test or is stunned for 1 Round and Knocked Prone.\nAdditionally, character does not suffer -20 penalty to Weapon Skill when performing the Stun Action.</p>",
     "aptitudes": [
@@ -18,11 +17,51 @@
     "prerequisites": {
       "text": "None",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "weaponSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Takedown Action - melee attack to stun and knock prone"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "attack",
+            "value": 20,
+            "condition": "When performing Stun Actions (no -20 penalty)",
+            "icon": "fa-solid fa-hand-back-fist"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Takedown Action",
+          "description": "<p>Half Action or Charge. Attack normally. If hit would deal 1+ damage (after armor/toughness), target makes Toughness test or is stunned 1 round and knocked prone.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,22 +3,63 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "faithHealing",
+    "category": "general",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Whenever Character removes damage from an ally with the Medicae Skill, the ally gains +5 to the next test they make before the end of an encounter per point of damage removed. (Up to +30).</p>"
     },
     "tier": 1,
     "benefit": "<p>Whenever Character removes damage from an ally with the Medicae Skill, the ally gains +5 to the next test they make before the end of an encounter per point of damage removed. (Up to +30).</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Willpower",
+      "Knowledge"
+    ],
     "prerequisites": {
       "text": "Adherent of Aleynikov Alternative Advance, 600xp. Medicae +10, Pure Faith",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {
+        "medicae": 1
+      },
+      "talents": [
+        "Pure Faith"
+      ]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Heal with Faith",
+          "description": "<p>Once per day, you may restore 1d5 Wounds to a faithful ally by spending 10 minutes in prayer.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

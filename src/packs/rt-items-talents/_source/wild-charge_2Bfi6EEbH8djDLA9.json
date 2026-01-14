@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "wildCharge",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>When Character makes a Charge Action against a Target with a Size Trait Smaller than their own, they can make a +0 Opposed Strength Test against the target as a Free Action. If successful the target suffers -30 to Dodge or Parry the attack.</p>"
-    },
+    "description": "<p>The character uses their size and momentum to devastating effect when charging smaller opponents.</p>",
     "tier": 2,
     "benefit": "<p>When Character makes a Charge Action against a Target with a Size Trait Smaller than their own, they can make a +0 Opposed Strength Test against the target as a Free Action. If successful the target suffers -30 to Dodge or Parry the attack.</p>",
     "aptitudes": [
@@ -17,13 +16,51 @@
     "prerequisites": {
       "text": "Strength 45, Berserk Charge",
       "characteristics": {
-        "s": 45
+        "strength": 45
       },
       "skills": [],
-      "talents": []
+      "talents": ["Berserk Charge"]
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "strength",
+      "skill": "",
+      "modifier": 0,
+      "description": "Opposed Strength test when charging smaller foes"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Overwhelming Charge",
+          "description": "<p>When charging smaller foes, make Opposed Strength test as Free Action. On success, target suffers -30 to Dodge or Parry.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

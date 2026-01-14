@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "duelist",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
@@ -19,12 +20,45 @@
     "prerequisites": {
       "text": "WS 35, Sure Strike",
       "characteristics": {
-        "ws": 35
+        "weaponSkill": 35
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Sure Strike"]
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "One-on-One Advantage",
+          "description": "<p>When in melee vs single opponent (who is not fighting anyone else), gain +2 Degrees of Success on successful WS tests.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

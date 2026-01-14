@@ -16,14 +16,40 @@
     "prerequisites": {
       "text": "Tier 1: Strength 35, Willpower 35",
       "characteristics": {
-        "s": 35,
-        "wp": 35
+        "strength": 35,
+        "willpower": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "pityTheWeak",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "intimidate",
+            "value": 10,
+            "condition": "When intimidating weaker or inferior foes",
+            "icon": "fa-solid fa-skull"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

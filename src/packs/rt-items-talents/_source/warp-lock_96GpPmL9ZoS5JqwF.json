@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "warpLock",
+    "category": "psychic",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Once per Game Session, character can ignore a Psychic Phenomena result they have rolled, including a roll that would have caused Perils of the Warp. Character however suffers 1d5 Energy Damage that ignores Armour and Toughness in the process, and cannot make any Focus Power Tests or sustain Psychic Powers until the Beginning of their next turn.</p>"
-    },
+    "description": "<p>The psyker has learned to forcibly suppress dangerous warp phenomena through sheer willpower, though at great personal cost.</p>",
     "tier": 3,
     "benefit": "<p>Once per Game Session, character can ignore a Psychic Phenomena result they have rolled, including a roll that would have caused Perils of the Warp. Character however suffers 1d5 Energy Damage that ignores Armour and Toughness in the process, and cannot make any Focus Power Tests or sustain Psychic Powers until the Beginning of their next turn.</p>",
     "aptitudes": [
@@ -18,13 +17,58 @@
     "prerequisites": {
       "text": "Psy Rating, Strong Minded, WP 50",
       "characteristics": {
-        "wp": 50
+        "willpower": 50
       },
       "skills": [],
-      "talents": []
+      "talents": [
+        "Psy Rating",
+        "Strong Minded"
+      ]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Once per session",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Suppress Phenomena",
+          "description": "<p>Once per session, ignore a Psychic Phenomena result (including Perils). Suffer 1d5 Energy damage (ignoring armor/toughness) and cannot use psychic powers until your next turn.</p>"
+        },
+        {
+          "name": "Warp Lock",
+          "description": "<p>You can spend a Full Action to nullify one psyker's powers within 10 meters for 1d5 rounds.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

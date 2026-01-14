@@ -19,7 +19,31 @@
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "identifier": "encartaMaleficarum",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Heretical Knowledge",
+          "description": "<p>+20 to all tests involving knowledge of Chaos, heretics, and the Ruinous Powers. Others may view you with suspicion.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

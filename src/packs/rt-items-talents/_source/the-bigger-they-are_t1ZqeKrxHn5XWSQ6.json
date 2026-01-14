@@ -3,13 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "theBiggerTheyAre",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>When makin a Single-Shot Rnaged attack against a Target with a Size Trait larger than the character's, the character can modify the hit Location result by an amount up to twice the value of the target's size Triat.\nEG: Character hits a Leman Russ Tank (Size 7, Massive) with hit roll of 13, hit roll is reversed to 31, the Hull, but can be modified by up to +/- 14, in this instance, 31-->20 (Change of -11), which hits the motive system instead</p>"
-    },
+    "description": "<p>The character's precision allows them to target specific locations on large vehicles and creatures.</p>",
     "tier": 2,
-    "benefit": "<p>When makin a Single-Shot Rnaged attack against a Target with a Size Trait larger than the character's, the character can modify the hit Location result by an amount up to twice the value of the target's size Triat.\nEG: Character hits a Leman Russ Tank (Size 7, Massive) with hit roll of 13, hit roll is reversed to 31, the Hull, but can be modified by up to +/- 14, in this instance, 31-->20 (Change of -11), which hits the motive system instead</p>",
+    "benefit": "<p>When making a Single-Shot Ranged attack against a Target with a Size Trait larger than the character's, the character can modify the hit Location result by an amount up to twice the value of the target's size Trait.\nEG: Character hits a Leman Russ Tank (Size 7, Massive) with hit roll of 13, hit roll is reversed to 31, the Hull, but can be modified by up to +/- 14, in this instance, 31-->20 (Change of -11), which hits the motive system instead</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Finesse"
@@ -17,13 +16,46 @@
     "prerequisites": {
       "text": "Ballistic Skill 40",
       "characteristics": {
-        "bs": 40
+        "ballisticSkill": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Precision Against Large Targets",
+          "description": "<p>On Single-Shot attacks against larger targets, modify hit location by up to twice their Size trait value.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

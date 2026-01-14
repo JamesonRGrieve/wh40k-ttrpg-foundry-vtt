@@ -17,13 +17,37 @@
     "prerequisites": {
       "text": "Cover-Up, Intelligence 35",
       "characteristics": {
-        "int": 35
+        "intelligence": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "contactNetwork",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Fellowship Requisitions",
+          "description": "<p>Can use Fellowship instead of Influence for Requisition Tests.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

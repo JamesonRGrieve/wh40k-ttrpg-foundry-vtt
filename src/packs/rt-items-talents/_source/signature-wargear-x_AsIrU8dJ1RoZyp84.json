@@ -5,9 +5,7 @@
   "system": {
     "category": "technical",
     "source": "Deathwatch: Core",
-    "description": {
-      "value": "<p>Select one Requisitionable Item from the Armoury except Unusual Ammunition with a Requisition Cost of X or less (including upgrades/craftsmanship, etc), this item is permenantly in possession of the Character without need to be requisitioned. Can be purchased multiple times in accordance to career advances. Can come in the form of Signature Wargear Basic (X = 20), Master (X = 40), or Hero (X = 70).</p>"
-    },
+    "description": "<p>Select one Requisitionable Item from the Armoury except Unusual Ammunition with a Requisition Cost of X or less (including upgrades/craftsmanship, etc), this item is permenantly in possession of the Character without need to be requisitioned. Can be purchased multiple times in accordance to career advances. Can come in the form of Signature Wargear Basic (X = 20), Master (X = 40), or Hero (X = 70).</p>",
     "tier": 1,
     "benefit": "<p>Select one Requisitionable Item from the Armoury except Unusual Ammunition with a Requisition Cost of X or less (including upgrades/craftsmanship, etc), this item is permenantly in possession of the Character without need to be requisitioned. Can be purchased multiple times in accordance to career advances. Can come in the form of Signature Wargear Basic (X = 20), Master (X = 40), or Hero (X = 70).</p>",
     "aptitudes": [],
@@ -18,7 +16,41 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "signatureWargear(x)",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -23,7 +23,52 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "strengthInTheCreed",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "willpower",
+            "value": 10,
+            "condition": "When resisting Fear, Pinning, or Intimidation",
+            "icon": "fa-solid fa-cross"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Fate Bonus",
+          "description": "<p>Whenever you spend a Fate Point to gain a +10 bonus to a Test before rolling, you gain +30 instead.</p>"
+        }
+      ]
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

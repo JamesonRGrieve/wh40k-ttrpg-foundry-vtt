@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "underfootAssault",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>When making a Melee Attack against a Foe with a Size Trait greater than the Character's, the character imposes a -10xSize Difference Penalty to any Parry or Dodge Test to avoid their Melee Attacks.</p>"
-    },
+    "description": "<p>The character has mastered fighting larger opponents, using their smaller size to their advantage by darting between their defenses.</p>",
     "tier": 3,
     "benefit": "<p>When making a Melee Attack against a Foe with a Size Trait greater than the Character's, the character imposes a -10xSize Difference Penalty to any Parry or Dodge Test to avoid their Melee Attacks.</p>",
     "aptitudes": [
@@ -17,14 +16,52 @@
     "prerequisites": {
       "text": "Agility 40, Weapon Skill 40",
       "characteristics": {
-        "ag": 40,
-        "ws": 40
+        "agility": 40,
+        "weaponSkill": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Size Advantage",
+          "description": "<p>Against larger foes, they suffer -10 per size difference to Dodge or Parry your melee attacks.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

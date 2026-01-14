@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "prosanguine",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>The Character can spend 10 minutes in meditation and make a Tech-Use Tetst. If successful they heal 1d5 damage immediately, if they roll 96+, they lose the ability to use their Autosanguine and Prosanguine for one week.</p>"
-    },
+    "description": "<p>The character has enhanced cybernetic systems that allow for advanced bio-repair functions through meditation and machine communion.</p>",
     "tier": 2,
     "benefit": "<p>The Character can spend 10 minutes in meditation and make a Tech-Use Tetst. If successful they heal 1d5 damage immediately, if they roll 96+, they lose the ability to use their Autosanguine and Prosanguine for one week.</p>",
     "aptitudes": [
@@ -22,7 +21,45 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Autosanguine Trait/Implant and Mechanicus Implant",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "techUse",
+      "modifier": 0,
+      "description": "Make a Tech-Use Test after 10 minutes meditation to heal 1d5 damage"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Prosanguine Healing",
+          "description": "<p>Spend 10 minutes in meditation and make a Tech-Use Test. On success, heal 1d5 damage. On a roll of 96+, lose Autosanguine and Prosanguine abilities for one week.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

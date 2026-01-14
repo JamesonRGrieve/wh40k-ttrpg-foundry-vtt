@@ -3,23 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "lumigenDesecration",
     "category": "combat",
     "source": "RT: Hostile Acquisitions",
-    "description": {
-      "value": "<p>Character can make a +0 Ballistic Skill Test make a ranged attack that fires energy at a target within 10 metres. This attack can be dodged but not blocked by force fields or other such protective devices. Electrical devices the target is carrying cease to function for 1d5 Rounds as if drained of power. If target is in a vehicle it immediately suffers a Critical Hit as if Righteous Fury was generated, subtracting one from the Critical Hit result (result of 0 means no critical hit). </p>"
-    },
-    "isPassive": true,
-    "isRollable": true,
+    "description": "<p>You have learned to weaponize your electrical discharge to disrupt and disable electronic systems, frying circuits and draining power cells.</p>",
     "tier": 1,
-    "benefit": "<p>Character can make a +0 Ballistic Skill Test make a ranged attack that fires energy at a target within 10 metres. This attack can be dodged but not blocked by force fields or other such protective devices. Electrical devices the target is carrying cease to function for 1d5 Rounds as if drained of power. If target is in a vehicle it immediately suffers a Critical Hit as if Righteous Fury was generated, subtracting one from the Critical Hit result (result of 0 means no critical hit). </p>",
+    "cost": 300,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Character can make a +0 Ballistic Skill Test to make a ranged attack that fires energy at a target within 10 metres. This attack can be dodged but not blocked by force fields or other such protective devices.</p><p>Electrical devices the target is carrying cease to function for 1d5 Rounds as if drained of power. If target is in a vehicle it immediately suffers a Critical Hit as if Righteous Fury was generated, subtracting one from the Critical Hit result (result of 0 means no critical hit).</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Arch-Heretek Alternate Advance, 750xp",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300
+    "rollConfig": {
+      "characteristic": "ballisticSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Ballistic Skill Test to disrupt electronic systems within 10m"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Electronic Disruption",
+          "description": "<p>Make a Ballistic Skill Test to fire energy at a target within 10 metres. Can be dodged but not blocked by force fields. Target's electrical devices cease functioning for 1d5 Rounds. Vehicles suffer a Critical Hit (Righteous Fury) with -1 to result.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

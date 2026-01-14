@@ -3,28 +3,65 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "unarmedSpecialist",
     "category": "combat",
     "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>Character gains Deadly Natural Weapons Trait, and counts as armed even whilst facing a weapon wielding opponent whilst barehanded (or using their own natural weapons). Whilst fihgting barehanded they can re-roll the damage they inflict.</p>"
-    },
+    "description": "<p>The character is a specialist in hand-to-hand combat, able to fight effectively even when completely unarmed.</p>",
     "tier": 2,
-    "benefit": "<p>Character gains Deadly Natural Weapons Trait, and counts as armed even whilst facing a weapon wielding opponent whilst barehanded (or using their own natural weapons). Whilst fihgting barehanded they can re-roll the damage they inflict.</p>",
+    "benefit": "<p>Character gains Deadly Natural Weapons Trait, and counts as armed even whilst facing a weapon wielding opponent whilst barehanded (or using their own natural weapons). Whilst fighting barehanded they can re-roll the damage they inflict.</p>",
     "aptitudes": [
       "Strength",
       "Offence"
     ],
     "prerequisites": {
-      "text": "Agility 35, Ambidextrious, WS 35",
+      "text": "Agility 35, Ambidextrous, WS 35",
       "characteristics": {
-        "ag": 35,
-        "ws": 35
+        "agility": 35,
+        "weaponSkill": 35
       },
       "skills": [],
-      "talents": []
+      "talents": ["Ambidextrous"]
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Deadly Natural Weapons & Damage Reroll",
+          "description": "<p>Your unarmed attacks deal 1d10+SB damage without the Primitive quality. You count as armed when fighting unarmed, and can reroll damage.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

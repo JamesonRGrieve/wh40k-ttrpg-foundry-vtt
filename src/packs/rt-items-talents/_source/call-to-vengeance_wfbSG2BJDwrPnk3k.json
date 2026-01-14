@@ -14,13 +14,37 @@
     "prerequisites": {
       "text": "Astartes, Fellowship 40",
       "characteristics": {
-        "fel": 40
+        "fellowship": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "callToVengeance",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Vengeance Rally",
+          "description": "<p>When a squad member is killed, spend a Full Action and a Fate Point to restore all allies in Support Range to starting Cohesion.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

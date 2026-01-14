@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain the Enemy (Adeptus Arbites) and Peer (Underworld) Talents.</p>",
     "aptitudes": [],
     "prerequisites": {

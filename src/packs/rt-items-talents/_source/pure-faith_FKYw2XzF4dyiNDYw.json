@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "pureFaith",
     "category": "combat",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Immune to effects of Daemonic Presence, including negative Willpower Modifiers. Can spend a fate point to not take fear tests, not acquire insanity, and not gain corruption for the duration of an encounter. Can burn a fate point to resist any single daemonic or psychic attack and emerge unscathed.</p>"
-    },
+    "description": "<p>The character's unwavering faith in the Emperor shields them from the corrupting influence of Chaos and the horrors of the warp.</p>",
     "tier": 1,
     "benefit": "<p>Immune to effects of Daemonic Presence, including negative Willpower Modifiers. Can spend a fate point to not take fear tests, not acquire insanity, and not gain corruption for the duration of an encounter. Can burn a fate point to resist any single daemonic or psychic attack and emerge unscathed.</p>",
     "aptitudes": [],
@@ -18,7 +17,53 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Daemonic Immunity",
+          "description": "<p>You are immune to the effects of Daemonic Presence, including negative Willpower modifiers.</p>"
+        },
+        {
+          "name": "Faith Point (Spend)",
+          "description": "<p>You can spend a Fate Point to avoid taking Fear tests, acquiring Insanity, and gaining Corruption for the duration of an encounter.</p>"
+        },
+        {
+          "name": "Faith Point (Burn)",
+          "description": "<p>You can burn a Fate Point to completely resist any single daemonic or psychic attack and emerge unscathed.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

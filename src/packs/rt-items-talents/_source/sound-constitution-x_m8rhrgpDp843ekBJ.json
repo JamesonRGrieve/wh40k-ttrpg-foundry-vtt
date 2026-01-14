@@ -5,9 +5,7 @@
   "system": {
     "category": "defense",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character gains one additional Wound. They may purchase this talent multiple times, up to twice their Toughness Bonus.\nDisplay number of times this has been purchased as Sound Constitution (X), where X is number of times purchased.</p>"
-    },
+    "description": "<p>Character gains one additional Wound. They may purchase this talent multiple times, up to twice their Toughness Bonus.\nDisplay number of times this has been purchased as Sound Constitution (X), where X is number of times purchased.</p>",
     "tier": 1,
     "benefit": "<p>Character gains one additional Wound. They may purchase this talent multiple times, up to twice their Toughness Bonus.\nDisplay number of times this has been purchased as Sound Constitution (X), where X is number of times purchased.</p>",
     "aptitudes": [
@@ -22,7 +20,41 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "soundConstitution(x)",
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Can be taken multiple times, up to 2xTB",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 1,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

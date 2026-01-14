@@ -5,9 +5,7 @@
   "system": {
     "category": "unique",
     "source": "BC: Tome of Excess",
-    "description": {
-      "value": "<p>The Character is a master manipulator, they may attempt to seduce an NPC into becoming dependant on them. This requires the Character to defeat the NPC in a social confrontation and then offer them some kind of addictive substance they have access to. NPC must have a lower Infamy and not have Touched by the Fates trait, or be categorised as a \"Master\", or immune by GM Fiat (such as having From Beyond or Machine Trait). This seduced NPC does not count towards the character's Minion Limit.</p>"
-    },
+    "description": "<p>The Character is a master manipulator, they may attempt to seduce an NPC into becoming dependant on them. This requires the Character to defeat the NPC in a social confrontation and then offer them some kind of addictive substance they have access to. NPC must have a lower Infamy and not have Touched by the Fates trait, or be categorised as a \"Master\", or immune by GM Fiat (such as having From Beyond or Machine Trait). This seduced NPC does not count towards the character's Minion Limit.</p>",
     "tier": 3,
     "benefit": "<p>The Character is a master manipulator, they may attempt to seduce an NPC into becoming dependant on them. This requires the Character to defeat the NPC in a social confrontation and then offer them some kind of addictive substance they have access to. NPC must have a lower Infamy and not have Touched by the Fates trait, or be categorised as a \"Master\", or immune by GM Fiat (such as having From Beyond or Machine Trait). This seduced NPC does not count towards the character's Minion Limit.</p>",
     "aptitudes": [
@@ -16,13 +14,47 @@
     "prerequisites": {
       "text": "Fellowship 50, Charm +10",
       "characteristics": {
-        "fel": 50
+        "fellowship": 50
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "addictrix",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

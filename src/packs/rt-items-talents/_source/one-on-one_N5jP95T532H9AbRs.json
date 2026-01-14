@@ -3,13 +3,18 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "oneOnOne",
     "category": "combat",
     "source": "DH 2E: Enemies Beyond",
-    "description": {
-      "value": "<p>When fighting an enemy in single, one on one melee combat that no other individual has interfered within the last round, the character scores extra degrees of scucess on Weapon Skill Tests equal to half their Weapon Skill Bonus (rounded down)\nNote: Duelist Talent doesn't exist in DH 2E so this talent shouldn't stack with it.</p>"
-    },
+    "description": "<p>You excel in single combat, your focus and skill reaching their peak when facing a lone opponent in honorable duel.</p>",
     "tier": 2,
-    "benefit": "<p>When fighting an enemy in single, one on one melee combat that no other individual has interfered within the last round, the character scores extra degrees of scucess on Weapon Skill Tests equal to half their Weapon Skill Bonus (rounded down)\nNote: Duelist Talent doesn't exist in DH 2E so this talent shouldn't stack with it.</p>",
+    "cost": 600,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>When fighting an enemy in single, one on one melee combat that no other individual has interfered with in the last round, the character scores extra degrees of success on Weapon Skill Tests equal to half their Weapon Skill Bonus (rounded down).</p><p><strong>Note:</strong> Duelist Talent doesn't exist in DH 2E so this talent shouldn't stack with it.</p>",
     "aptitudes": [
       "Finesse",
       "Weapon Skill"
@@ -17,13 +22,52 @@
     "prerequisites": {
       "text": "Tier 2: Weapon Skill 40",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Duel Master",
+          "description": "<p>In one-on-one melee combat (no interference last round), gain extra Degrees of Success equal to half WS Bonus on all Weapon Skill Tests.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

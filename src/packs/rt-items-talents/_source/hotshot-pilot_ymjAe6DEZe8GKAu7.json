@@ -5,9 +5,7 @@
   "system": {
     "category": "technical",
     "source": "DH 2E: Enemies Without",
-    "description": {
-      "value": "<p>When character succeeds on an Operate Test (or Survival if riding a living steed), they can choose to suffer 1 Fatigue to increase their number of Degrees of Success by Agility Bonus / 2\nWhen character fails on such a test, can choose to suffer 1 Fatigue to reduce their number of Degrees of Failiure by Agility Bonus / 2 (min 1).</p>"
-    },
+    "description": "<p>When character succeeds on an Operate Test (or Survival if riding a living steed), they can choose to suffer 1 Fatigue to increase their number of Degrees of Success by Agility Bonus / 2\nWhen character fails on such a test, can choose to suffer 1 Fatigue to reduce their number of Degrees of Failiure by Agility Bonus / 2 (min 1).</p>",
     "tier": 2,
     "isPassive": true,
     "isRollable": true,
@@ -19,12 +17,46 @@
     "prerequisites": {
       "text": "Tier 2: Survival +10 or Operate (Any), Agility 35.",
       "characteristics": {
-        "ag": 35
+        "agility": 35
       },
       "skills": [],
       "talents": []
     },
-    "cost": 600
+    "cost": 600,
+    "identifier": "hotshotPilot",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

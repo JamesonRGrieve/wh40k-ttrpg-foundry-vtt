@@ -3,10 +3,11 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "totalRecall",
     "category": "knowledge",
     "source": "Only War Core",
     "description": {
-      "value": "<p>Character can automatically remember trivial facts or pieces of information the character may feasibly have picked up on in the past. For more detailed, complex, or obscure facts, such as exact defence layout networks, the GM may require a Successful Intelligence Test to recall the information.</p>"
+      "value": "<p>The character possesses an exceptional memory, able to recall vast amounts of information with perfect clarity, from trivial facts to complex data.</p>"
     },
     "tier": 1,
     "benefit": "<p>Character can automatically remember trivial facts or pieces of information the character may feasibly have picked up on in the past. For more detailed, complex, or obscure facts, such as exact defence layout networks, the GM may require a Successful Intelligence Test to recall the information.</p>",
@@ -18,13 +19,58 @@
     "prerequisites": {
       "text": "Intelligence 30",
       "characteristics": {
-        "int": 30
+        "intelligence": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "intelligence",
+      "skill": "",
+      "modifier": 0,
+      "description": "Roll Intelligence to recall complex or obscure information"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Perfect Memory",
+          "description": "<p>You automatically remember trivial facts or information you may have encountered. For complex or obscure information (such as exact defence layouts), the GM may require an Intelligence Test.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

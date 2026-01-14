@@ -3,13 +3,17 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "chainWeaponExpertise",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When character uses a chain weapon with the Tearing Quality, they roll two additional dice for damage and discard the lowest two (as opposed to Tearing's one dice)</p>"
-    },
+    "description": "<p>The character is exceptionally skilled at using chain weapons, maximizing the devastating rending power of their spinning teeth.</p>",
     "tier": 2,
-    "benefit": "<p>When character uses a chain weapon with the Tearing Quality, they roll two additional dice for damage and discard the lowest two (as opposed to Tearing's one dice)</p>",
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>When character uses a chain weapon with the Tearing Quality, they roll two additional dice for damage and discard the lowest two (as opposed to Tearing's normal one extra die).</p>",
     "aptitudes": [
       "Weapon Skill",
       "Offence"
@@ -17,13 +21,46 @@
     "prerequisites": {
       "text": "WS 40, Weapon Training (Chain)",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Weapon Training (Chain)"]
     },
     "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Tearing",
+          "description": "<p>When using a chain weapon with the Tearing Quality, roll two additional dice for damage and discard the lowest two (instead of the normal Tearing rule of one extra die).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

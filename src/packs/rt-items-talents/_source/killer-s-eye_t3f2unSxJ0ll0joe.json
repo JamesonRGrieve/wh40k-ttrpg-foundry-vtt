@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "killersEye",
     "category": "combat",
     "source": "RT: Hostile Acquisitions",
     "description": {
@@ -20,7 +21,40 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Killer's Eye",
+          "description": "<p>When you make a Called Shot Action and achieve more Degrees of Success than the target's Agility Bonus, immediately inflict 1d5 Critical Damage on the location hit.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

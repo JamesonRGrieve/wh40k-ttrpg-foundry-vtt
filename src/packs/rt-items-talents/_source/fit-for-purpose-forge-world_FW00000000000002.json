@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "Player chooses one characteristic to increase by +3 during character creation"
+    "notes": "Player chooses one characteristic to increase by +3 during character creation",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

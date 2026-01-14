@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "fleshRender",
     "category": "combat",
     "source": "Black Crusade Core",
     "description": {
@@ -11,16 +12,50 @@
     "tier": 1,
     "benefit": "<p>When inflicting damage with a melee weapon that has the Tearing Quality, roll two additional damage die rather than one and discard the lowest two.</p>",
     "aptitudes": [
-      "Khorne"
+      "Khorne",
+      "Offence"
     ],
     "prerequisites": {
       "text": "Tier 1: Weapon Training (Chain)",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Weapon Training"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Tearing",
+          "description": "<p>With melee weapons that have Tearing Quality, roll two additional damage dice (instead of one) and discard the lowest two.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

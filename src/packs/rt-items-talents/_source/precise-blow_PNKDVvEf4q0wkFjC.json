@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "preciseBlow",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>When making a Called Shot melee attack, the character reduces the penalty by 10 (-20 to -10, or to +0 if combined with Sure Strike)</p>"
-    },
+    "description": "<p>The character has learned to strike with surgical precision in melee combat, targeting weak points and vital areas with greater accuracy.</p>",
     "tier": 2,
     "benefit": "<p>When making a Called Shot melee attack, the character reduces the penalty by 10 (-20 to -10, or to +0 if combined with Sure Strike)</p>",
     "aptitudes": [
@@ -18,13 +17,51 @@
     "prerequisites": {
       "text": "Weapon Skill 40, Sure Strike",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
       "skills": [],
-      "talents": []
+      "talents": ["Sure Strike"]
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Reduced Called Shot Penalty (Melee)",
+          "description": "<p>When making a Called Shot melee attack, reduce the penalty by 10 (from -20 to -10).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

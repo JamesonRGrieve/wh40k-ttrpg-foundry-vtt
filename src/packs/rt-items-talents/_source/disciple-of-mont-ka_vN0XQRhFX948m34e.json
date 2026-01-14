@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "discipleOfMontKa",
     "category": "combat",
     "source": "RT: Tau Character Guide",
     "description": {
@@ -10,17 +11,57 @@
     },
     "tier": 1,
     "benefit": "<p>Whenever the character strikes an unaware target, they inflict additional damage equal to the Degrees of Success on their Weapon Skill or Ballistic Skill Test.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Finesse",
+      "Offence"
+    ],
     "prerequisites": {
       "text": "Tau, Agility 40, Silent Move +10",
       "characteristics": {
-        "ag": 40
+        "agility": 40
       },
-      "skills": [],
+      "skills": {
+        "stealth": 1
+      },
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 0,
+            "condition": "Against unaware targets, add Degrees of Success to damage",
+            "icon": "fa-solid fa-user-ninja"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

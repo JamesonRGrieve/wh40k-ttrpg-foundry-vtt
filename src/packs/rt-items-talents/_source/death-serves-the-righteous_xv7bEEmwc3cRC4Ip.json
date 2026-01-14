@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>Once per Combat Encounter, character can spend a Fate Point to change the result of a 1 on a single damage die from a ranged attack to a 10. This can then inflict Righteous Fury as normal.</p>"
-    },
+    "description": "<p>The character can channel their faith to turn near-misses into devastating strikes.</p>",
     "tier": 3,
     "benefit": "<p>Once per Combat Encounter, character can spend a Fate Point to change the result of a 1 on a single damage die from a ranged attack to a 10. This can then inflict Righteous Fury as normal.</p>",
     "aptitudes": [
@@ -17,13 +15,52 @@
     "prerequisites": {
       "text": "BS 50, Deadeye Shot, Sharpshooter",
       "characteristics": {
-        "bs": 50
+        "ballisticSkill": 50
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "deathServesTheRighteous",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Death Serves the Righteous",
+          "description": "<p>Once per Combat Encounter, you can spend a Fate Point to change the result of a 1 on a single damage die from a ranged attack to a 10. This can then inflict Righteous Fury as normal.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

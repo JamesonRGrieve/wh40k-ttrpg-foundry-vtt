@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>During any turn the Ork Character remains unseen by their enemies, they can choose to reveal themselves and attack. During which, they have Fear(+1) Trait.</p>"
-    },
+    "description": "<p>The Ork Kommando can use stealth to terrify enemies when revealing themselves from hiding.</p>",
     "tier": 1,
     "benefit": "<p>During any turn the Ork Character remains unseen by their enemies, they can choose to reveal themselves and attack. During which, they have Fear(+1) Trait.</p>",
     "aptitudes": [],
@@ -18,7 +16,46 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "dedSneaky",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Terror from Hiding",
+          "description": "<p>During any turn you remain unseen by enemies, you can reveal yourself and attack, gaining the Fear (1) trait during that turn.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

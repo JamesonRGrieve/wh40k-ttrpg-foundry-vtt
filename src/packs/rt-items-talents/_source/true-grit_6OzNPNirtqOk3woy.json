@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "trueGrit",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>When Character suffers Critical damage after reduction from Armour and Toughness, reduce that Critical damage by their Toughness Bonus to a minimum of 1.</p>"
-    },
+    "description": "<p>The character's exceptional fortitude allows them to shrug off injuries that would cripple lesser beings.</p>",
     "tier": 3,
     "benefit": "<p>When Character suffers Critical damage after reduction from Armour and Toughness, reduce that Critical damage by their Toughness Bonus to a minimum of 1.</p>",
     "aptitudes": [
@@ -18,13 +17,51 @@
     "prerequisites": {
       "text": "Toughness 40",
       "characteristics": {
-        "t": 40
+        "toughness": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Reduced Critical Damage",
+          "description": "<p>Reduce all Critical Damage you suffer by your Toughness Bonus (minimum 1).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

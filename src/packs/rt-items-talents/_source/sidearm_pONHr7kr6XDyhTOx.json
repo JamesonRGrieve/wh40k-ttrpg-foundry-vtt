@@ -3,29 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "sidearm",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character dual wielding a one-handed pistol and a melee weapon reduces the penalty for Two-Weapon Fighting by 10 (-20 to -10, or to +0 with Ambidextrous)</p>"
-    },
+    "description": "<p>The character has mastered fighting with a pistol in one hand and a melee weapon in the other, coordinating their attacks with exceptional skill.</p>",
     "tier": 3,
     "benefit": "<p>Character dual wielding a one-handed pistol and a melee weapon reduces the penalty for Two-Weapon Fighting by 10 (-20 to -10, or to +0 with Ambidextrous)</p>",
     "aptitudes": [
-      "WS",
-      "BS",
+      "Weapon Skill",
+      "Ballistic Skill",
       "Unaligned"
     ],
     "prerequisites": {
       "text": "WS 40, BS 40, Two-Weapon Wielder (Ranged and Melee)",
       "characteristics": {
-        "ws": 40,
-        "bs": 40
+        "weaponSkill": 40,
+        "ballisticSkill": 40
       },
       "skills": [],
-      "talents": []
+      "talents": ["Two-Weapon Wielder"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Reduced Two-Weapon Fighting Penalty",
+          "description": "<p>When dual wielding a one-handed pistol and a melee weapon, reduce the Two-Weapon Fighting penalty by 10 (from -20 to -10).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

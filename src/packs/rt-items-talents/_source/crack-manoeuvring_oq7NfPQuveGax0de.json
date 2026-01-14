@@ -5,9 +5,7 @@
   "system": {
     "category": "technical",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>As long as both Character and their Comrade are in the same Multi-Passenger Vehicle, the Vehicles Operator (Who can be the Character) can make a -20 Operate Test in response to incoming fire as a Free Action. If successful the incoming fire can strike any side of the vehicle of the Character's Choice instead of the armour that was facing the incoming fire. (EG: Chance Incoming fire that would hit the low-armoured rear to hit the high-armoured front)</p>"
-    },
+    "description": "<p>As long as both Character and their Comrade are in the same Multi-Passenger Vehicle, the Vehicles Operator (Who can be the Character) can make a -20 Operate Test in response to incoming fire as a Free Action. If successful the incoming fire can strike any side of the vehicle of the Character's Choice instead of the armour that was facing the incoming fire. (EG: Chance Incoming fire that would hit the low-armoured rear to hit the high-armoured front)</p>",
     "tier": 1,
     "benefit": "<p>As long as both Character and their Comrade are in the same Multi-Passenger Vehicle, the Vehicles Operator (Who can be the Character) can make a -20 Operate Test in response to incoming fire as a Free Action. If successful the incoming fire can strike any side of the vehicle of the Character's Choice instead of the armour that was facing the incoming fire. (EG: Chance Incoming fire that would hit the low-armoured rear to hit the high-armoured front)</p>",
     "aptitudes": [],
@@ -18,7 +16,41 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "crackManoeuvring",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "purgeTheUnclean",
     "category": "combat",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Can Spend a Fate Point to: Repel Daemon 2x WP Bonus Metres for 2d5 Rounds (Half Action, Opposed WP Test) or Exorcise possessed person, daemon appears next to them and cannot posess host for 2xWP Bonus Hours (Full Action, Opposed WP Test). \nCan Burn Fate Point to make WP Test, and deal WP Bonus damage + WP Bonus for each Degree of Success to warp entity you can see. Dmaage ignores armour and toughness (Full Action).</p>"
-    },
+    "description": "<p>The character's faith is so strong that they can turn back daemons and destroy creatures of the warp with the sheer power of their belief.</p>",
     "tier": 1,
     "benefit": "<p>Can Spend a Fate Point to: Repel Daemon 2x WP Bonus Metres for 2d5 Rounds (Half Action, Opposed WP Test) or Exorcise possessed person, daemon appears next to them and cannot posess host for 2xWP Bonus Hours (Full Action, Opposed WP Test). \nCan Burn Fate Point to make WP Test, and deal WP Bonus damage + WP Bonus for each Degree of Success to warp entity you can see. Dmaage ignores armour and toughness (Full Action).</p>",
     "aptitudes": [],
@@ -15,10 +14,56 @@
       "text": "Pure Faith",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Pure Faith"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "willpower",
+      "skill": "",
+      "modifier": 0,
+      "description": "Make opposed Willpower Test to repel daemons or exorcise possessed"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Repel Daemon (Spend Fate)",
+          "description": "<p>Spend a Fate Point as a Half Action and make an Opposed Willpower Test to repel a daemon 2 × WP Bonus metres for 2d5 Rounds.</p>"
+        },
+        {
+          "name": "Exorcise (Spend Fate)",
+          "description": "<p>Spend a Fate Point as a Full Action and make an Opposed Willpower Test to exorcise a possessed person. The daemon appears next to them and cannot possess the host for 2 × WP Bonus Hours.</p>"
+        },
+        {
+          "name": "Destroy Warp Entity (Burn Fate)",
+          "description": "<p>Burn a Fate Point as a Full Action and make a Willpower Test. Deal WP Bonus damage plus WP Bonus for each Degree of Success to a warp entity you can see. This damage ignores armour and toughness.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "quickDraw",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can draw and ready a weapon as a Free Action when armed with a Pistol or Basic ranged weapon, or a one-handed Melee Weapon.</p>"
-    },
+    "description": "<p>The character can ready their weapons with lightning speed, drawing and preparing to fire or strike in the blink of an eye.</p>",
     "tier": 1,
     "benefit": "<p>Character can draw and ready a weapon as a Free Action when armed with a Pistol or Basic ranged weapon, or a one-handed Melee Weapon.</p>",
     "aptitudes": [
@@ -22,7 +21,45 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Quick Draw",
+          "description": "<p>You can draw and ready a weapon as a Free Action. This applies to Pistol or Basic ranged weapons, or one-handed Melee Weapons.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

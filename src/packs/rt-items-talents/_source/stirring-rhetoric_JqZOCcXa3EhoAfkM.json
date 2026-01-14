@@ -17,13 +17,39 @@
     "prerequisites": {
       "text": "Fellowship 45, Heroic Inspiration",
       "characteristics": {
-        "fel": 45
+        "fellowship": 45
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "stirringRhetoric",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": 10,
+            "condition": "When making speeches or rallying allies",
+            "icon": "fa-solid fa-microphone"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

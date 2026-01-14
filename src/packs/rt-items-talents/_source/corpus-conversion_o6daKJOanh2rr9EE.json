@@ -3,24 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "corpusConversion",
     "category": "combat",
     "source": "Black Crusade Core",
-    "description": {
-      "value": "<p>Can choose to perform Corpus Conversion prior to manifesting a Psychic Power. The Psyker chooses to gain up to Toughness Bonus additional Degrees of Success on a Focus Power Test should they succeed on it, however they suffer 1d10 nonpermenant Toughness Damage per Degree of Success gained this way, and one Corruption Point. Note this doesn't guarantee the character passes the test, if they don't they don't gain anything but still take the damage.</p>"
-    },
+    "description": "<p>The psyker can sacrifice their physical form to enhance their psychic powers, converting bodily health into raw warp energy.</p>",
     "tier": 2,
-    "benefit": "<p>Can choose to perform Corpus Conversion prior to manifesting a Psychic Power. The Psyker chooses to gain up to Toughness Bonus additional Degrees of Success on a Focus Power Test should they succeed on it, however they suffer 1d10 nonpermenant Toughness Damage per Degree of Success gained this way, and one Corruption Point. Note this doesn't guarantee the character passes the test, if they don't they don't gain anything but still take the damage.</p>",
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Can choose to perform Corpus Conversion prior to manifesting a Psychic Power. The Psyker chooses to gain up to Toughness Bonus additional Degrees of Success on a Focus Power Test should they succeed on it, however they suffer 1d10 non-permanent Toughness Damage per Degree of Success gained this way, and one Corruption Point. Note this doesn't guarantee the character passes the test; if they don't they don't gain anything but still take the damage.</p>",
     "aptitudes": [
       "Nurgle"
     ],
     "prerequisites": {
       "text": "Tier 2: Psy Rating, Human (non Space Marine)",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Psy Rating"]
     },
     "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Sacrifice Flesh for Power",
+          "description": "<p>Prior to manifesting a Psychic Power, choose to gain up to Toughness Bonus additional Degrees of Success on successful Focus Power Test. Suffer 1d10 non-permanent Toughness Damage per DoS gained and 1 Corruption Point.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

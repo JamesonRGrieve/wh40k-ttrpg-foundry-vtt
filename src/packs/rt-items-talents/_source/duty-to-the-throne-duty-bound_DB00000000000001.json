@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain +3 Willpower and (if you meet the WP 40 prerequisite) the Armour of Contempt Talent. You suffer −10 to Interaction Tests with non-Imperium sources.</p>",
     "aptitudes": [],
     "prerequisites": {

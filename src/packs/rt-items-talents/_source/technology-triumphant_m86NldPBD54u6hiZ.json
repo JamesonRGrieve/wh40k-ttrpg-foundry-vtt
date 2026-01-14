@@ -3,13 +3,14 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "technologyTriumphant",
     "category": "knowledge",
     "source": "RT: Tau Character Guide",
     "description": {
-      "value": "<p>Once per game session, the character can enhance a single piece of technology with a -20 Tech-Use Test. If successful, they permentantly improve the craftsmanship of the item from Poor to Common, Common to Good, or Good to Best. The amount of time this takes varies with item and GM discretion. </p>"
+      "value": "<p>The character has achieved such mastery of technology that they can permanently enhance equipment, improving its quality through superior craftsmanship.</p>"
     },
     "tier": 1,
-    "benefit": "<p>Once per game session, the character can enhance a single piece of technology with a -20 Tech-Use Test. If successful, they permentantly improve the craftsmanship of the item from Poor to Common, Common to Good, or Good to Best. The amount of time this takes varies with item and GM discretion. </p>",
+    "benefit": "<p>Once per game session, the character can enhance a single piece of technology with a -20 Tech-Use Test. If successful, they permanently improve the craftsmanship of the item from Poor to Common, Common to Good, or Good to Best. The amount of time this takes varies with item and GM discretion.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Tau, Scholastic Lore (Tau Empire) +10, Tech-Use +20",
@@ -18,7 +19,52 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Once per game session",
+    "rollConfig": {
+      "characteristic": "intelligence",
+      "skill": "techUse",
+      "modifier": -20,
+      "description": "Roll Tech-Use at -20 to permanently improve item craftsmanship"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhance Equipment",
+          "description": "<p>Once per session, you can make a Challenging (-20) Tech-Use Test to permanently improve an item's craftsmanship by one step (Poor→Common, Common→Good, Good→Best). Time required is at GM discretion.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

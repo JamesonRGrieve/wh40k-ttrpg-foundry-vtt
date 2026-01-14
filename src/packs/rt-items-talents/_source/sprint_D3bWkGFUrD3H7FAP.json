@@ -5,9 +5,7 @@
   "system": {
     "category": "movement",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>When taking a Full Move Action, can move an additional Agility Bonus Metres. When taking the Run Action, can double their movement for one Round. Character gains one Fatigue if they use this Talent's benefits for two turns in a row.</p>"
-    },
+    "description": "<p>When taking a Full Move Action, can move an additional Agility Bonus Metres. When taking the Run Action, can double their movement for one Round. Character gains one Fatigue if they use this Talent's benefits for two turns in a row.</p>",
     "tier": 3,
     "benefit": "<p>When taking a Full Move Action, can move an additional Agility Bonus Metres. When taking the Run Action, can double their movement for one Round. Character gains one Fatigue if they use this Talent's benefits for two turns in a row.</p>",
     "aptitudes": [
@@ -22,7 +20,55 @@
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "sprint",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "speed": 1
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "movement",
+          "label": "Movement",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Movement",
+          "description": "<p>Full Move: Move +AB metres. Run Action: Double movement for 1 round. Using benefits 2 turns in a row causes 1 Fatigue.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

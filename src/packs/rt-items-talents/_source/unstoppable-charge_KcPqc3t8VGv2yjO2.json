@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "unstoppableCharge",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When the character makes a melee attack as part of a Charge Action or Crushing Charge Mounted Special Action, their attack gains Felling(Weapon Skill Bonus/2), rounded up.\nAdditionally, when character makes a melee attack as part of a Crushing Charge Mounted Special Action, they deal additional damage equal to the Mount's Strength Bonus.</p>"
-    },
+    "description": "<p>The character's charges are devastating, their momentum adding armor-piercing power and crushing impact to their strikes.</p>",
     "tier": 2,
     "benefit": "<p>When the character makes a melee attack as part of a Charge Action or Crushing Charge Mounted Special Action, their attack gains Felling(Weapon Skill Bonus/2), rounded up.\nAdditionally, when character makes a melee attack as part of a Crushing Charge Mounted Special Action, they deal additional damage equal to the Mount's Strength Bonus.</p>",
     "aptitudes": [
@@ -17,13 +16,53 @@
     "prerequisites": {
       "text": "Weapon Skill 40, Survival +10",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
-      "skills": [],
+      "skills": {
+        "survival": 1
+      },
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Crushing Charge",
+          "description": "<p>Charge attacks gain Felling (WS Bonus/2, rounded up). Mounted crushing charges add Mount's Strength Bonus to damage.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -16,13 +16,35 @@
     "prerequisites": {
       "text": "Tier 2: Fellowship 30, Charm or Inquiry",
       "characteristics": {
-        "fel": 30
+        "fellowship": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "eloquent",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "charm": 10,
+        "deceive": 10
+      },
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

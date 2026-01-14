@@ -3,15 +3,13 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "vengefulProtector",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Whenever an Ally within 10 metres suffers Critical Damge because of an Enemy, the character increases the damage they inflict by the value of their Size Trait.\nRatlings (Size 3, Scrawny), Humans (Size 4, Average), Ogryns (Size 5, Hulking)</p>"
-    },
+    "description": "<p>When an ally is grievously wounded, the character's rage fuels devastating retribution against the enemy responsible.</p>",
     "tier": 2,
     "isPassive": true,
-    "isRollable": false,
-    "benefit": "<p>Whenever an Ally within 10 metres suffers Critical Damge because of an Enemy, the character increases the damage they inflict by the value of their Size Trait.\nRatlings (Size 3, Scrawny), Humans (Size 4, Average), Ogryns (Size 5, Hulking)</p>",
+    "benefit": "<p>Whenever an Ally within 10 metres suffers Critical Damage because of an Enemy, the character increases the damage they inflict by the value of their Size Trait.\nRatlings (Size 3, Scrawny), Humans (Size 4, Average), Ogryns (Size 5, Hulking)</p>",
     "aptitudes": [
       "Strength",
       "Offence"
@@ -19,13 +17,53 @@
     "prerequisites": {
       "text": "Weapon Skill 45, Strength 45",
       "characteristics": {
-        "ws": 45,
-        "s": 45
+        "weaponSkill": 45,
+        "strength": 45
       },
       "skills": [],
       "talents": []
     },
-    "cost": 600
+    "cost": 600,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 0,
+            "condition": "Add your Size Trait value to damage when an ally within 10m suffers Critical Damage",
+            "icon": "fa-solid fa-shield-heart"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

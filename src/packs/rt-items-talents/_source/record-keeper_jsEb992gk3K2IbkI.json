@@ -3,22 +3,70 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "recordKeeper",
     "category": "knowledge",
     "source": "OW: Shield of Humanity",
     "description": {
-      "value": "<p>When Asissted by their Comrade, the character gains +20 to any Intelligence Test to remember specific and higly detailed information from their Total Recall Talent.</p>"
+      "value": "<p>The character's comrade maintains extensive records and files, enabling rapid recall of detailed information.</p>"
     },
     "tier": 1,
-    "benefit": "<p>When Asissted by their Comrade, the character gains +20 to any Intelligence Test to remember specific and higly detailed information from their Total Recall Talent.</p>",
+    "benefit": "<p>When Assisted by their Comrade, the character gains +20 to any Intelligence Test to remember specific and highly detailed information from their Total Recall Talent.</p>",
     "aptitudes": [],
     "prerequisites": {
-      "text": "Rector Erudite Advanced Specialty (300xp)",
+      "text": "Rector Erudite Advanced Specialty (300xp), Total Recall",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Total Recall"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "intelligence",
+            "value": 20,
+            "condition": "When Assisted by Comrade to remember specific detailed information",
+            "icon": "fa-solid fa-brain"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

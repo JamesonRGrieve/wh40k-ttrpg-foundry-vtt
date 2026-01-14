@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "doubleTap",
     "category": "combat",
     "source": "Dark Heresy 2E: Core",
     "description": {
@@ -17,11 +18,46 @@
     "prerequisites": {
       "text": "Two-Weapon Wielder",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Two-Weapon Wielder"]
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "attack",
+            "value": 20,
+            "condition": "Second dual-wield attack vs same target if first hit",
+            "icon": "fa-solid fa-gun"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

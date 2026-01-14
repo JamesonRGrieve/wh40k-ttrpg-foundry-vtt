@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "streetFighting",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character with a knife of any kind (included powered or chain knife), any similarly small weapon, or their bare hands, they add half their Weapon Skill Bonus to any Critical Damage they inflict.</p>"
-    },
+    "description": "<p>The character knows how to fight dirty, using small weapons and bare hands to inflict devastating injuries.</p>",
     "tier": 1,
     "benefit": "<p>Character with a knife of any kind (included powered or chain knife), any similarly small weapon, or their bare hands, they add half their Weapon Skill Bonus to any Critical Damage they inflict.</p>",
     "aptitudes": [
@@ -18,13 +17,48 @@
     "prerequisites": {
       "text": "Weapon Skill 30",
       "characteristics": {
-        "ws": 30
+        "weaponSkill": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "criticalDamage",
+            "value": 0,
+            "condition": "With knives, small weapons, or unarmed attacks - add half your WS Bonus to Critical Damage",
+            "icon": "fa-solid fa-hand-fist"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

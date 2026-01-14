@@ -3,22 +3,59 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "tormentersSupremacy",
     "category": "combat",
     "source": "RT: The Soul Reaver",
-    "description": {
-      "value": "<p>If the character has gained at least 4 Pain Tokens during an encounter, they may spend a Fate Point to gain the Stuff of Nightmares Trait for the remainder of the encounter.\nStuff of Nightmares: immune to Poison, disease, needing to breathe, most environmental hazards, bleeding, stunning, and any critical effect that would kill you if not dealt through a Psychic Power, Force Weapon, or Holy Attack.\n(Warning, while this does stop you from dying through most conventional means, it doesn't stop you being turned into a pile of broken limbs and meat).</p>"
-    },
+    "description": "<p>The Dark Eldar has reached such mastery of pain that they can transcend physical limitations, becoming a nightmare made flesh.</p>",
     "tier": 1,
     "benefit": "<p>If the character has gained at least 4 Pain Tokens during an encounter, they may spend a Fate Point to gain the Stuff of Nightmares Trait for the remainder of the encounter.\nStuff of Nightmares: immune to Poison, disease, needing to breathe, most environmental hazards, bleeding, stunning, and any critical effect that would kill you if not dealt through a Psychic Power, Force Weapon, or Holy Attack.\n(Warning, while this does stop you from dying through most conventional means, it doesn't stop you being turned into a pile of broken limbs and meat).</p>",
     "aptitudes": [],
     "prerequisites": {
-      "text": "Dark Eldar, Power Through Pain, Tormenter's Vigour.",
+      "text": "Dark Eldar, Power Through Pain, Tormenter's Vigour",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Power Through Pain", "Tormenter's Vigour"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires spending Fate Point and 4+ Pain Tokens",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Stuff of Nightmares",
+          "description": "<p>Spend a Fate Point when you have 4+ Pain Tokens to become immune to poison, disease, suffocation, bleeding, stunning, and critical effects (except from psychic powers, force weapons, or holy attacks) for the rest of the encounter.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

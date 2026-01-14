@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "exoticWeaponTraining",
     "category": "combat",
     "source": "Only War Core",
     "description": {
@@ -18,11 +19,44 @@
     "prerequisites": {
       "text": "None",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Exotic Weapon Proficiency",
+          "description": "<p>Choose one exotic weapon or exotic weapon type. You can use it without the -20 untrained penalty. Can be taken multiple times for different weapons.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

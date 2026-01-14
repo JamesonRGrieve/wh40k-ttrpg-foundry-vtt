@@ -3,24 +3,65 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "workyGubbinz",
+    "category": "tech",
     "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>The Ork Character treats all Ork-made weapons as Reliable. Additionally, they may make a Tech-Use Test to \"Kustomise\" any device they come across. For weapons this takes a number of minutes equal to the number of Half Actions the weapon takes to reload. If successful the weapon's Craftsmanship improves by one step until it needs to be reloaded, at which point it breaks and needs to be repaired. Kustomising Gear instead gives a +5 bonus to use it for Willpower Bonus hours, at which point it breaks. If the Tech-Use Test fails, the object breaks until repaired. These Kustomisations may have other effects decided between GM and Player</p>"
-    },
+    "description": "<p>The Ork Mek's innate understanding of technology allows them to 'kustomise' equipment through a combination of mechanical skill and psychic Waaagh! energy.</p>",
     "tier": 1,
     "benefit": "<p>The Ork Character treats all Ork-made weapons as Reliable. Additionally, they may make a Tech-Use Test to \"Kustomise\" any device they come across. For weapons this takes a number of minutes equal to the number of Half Actions the weapon takes to reload. If successful the weapon's Craftsmanship improves by one step until it needs to be reloaded, at which point it breaks and needs to be repaired. Kustomising Gear instead gives a +5 bonus to use it for Willpower Bonus hours, at which point it breaks. If the Tech-Use Test fails, the object breaks until repaired. These Kustomisations may have other effects decided between GM and Player</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Ork Mek Boy Alternate Advance, 500xp",
       "characteristics": {
-        "wp": 30
+        "willpower": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Ork Mek Boy Alternate Advance",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "techUse",
+      "modifier": 0,
+      "description": "Tech-Use test to Kustomise equipment"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ork-Made Reliability",
+          "description": "<p>All Ork-made weapons count as Reliable for you.</p>"
+        },
+        {
+          "name": "Kustomisation",
+          "description": "<p>Test Tech-Use to temporarily improve weapon craftsmanship by one step (until reload, then breaks) or give +5 to gear use for WP Bonus hours (then breaks). Failure breaks the item.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

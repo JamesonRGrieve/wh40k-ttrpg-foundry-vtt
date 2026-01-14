@@ -3,24 +3,68 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "agonyFromAfar",
     "category": "combat",
     "source": "RT: The Soul Reaver",
-    "description": {
-      "value": "<p>The Character gains a Pain Token whenever a Ranged Attack that originated from within Perception Bonus Metres of them inflicts Critical Damage upon, Stuns, kills, or causes the failing of a Fear/Pinning Test of a living creature. This is Cumulative with Pain Tokens gained from the Cruel Demise Vile Pleasure if both conditions are eligible.</p>"
-    },
+    "description": "<p>The Character gains a Pain Token whenever a Ranged Attack that originated from within Perception Bonus Metres of them inflicts Critical Damage upon, Stuns, kills, or causes the failing of a Fear/Pinning Test of a living creature. This is Cumulative with Pain Tokens gained from the Cruel Demise Vile Pleasure if both conditions are eligible.</p>",
     "tier": 1,
     "benefit": "<p>The Character gains a Pain Token whenever a Ranged Attack that originated from within Perception Bonus Metres of them inflicts Critical Damage upon, Stuns, kills, or causes the failing of a Fear/Pinning Test of a living creature. This is Cumulative with Pain Tokens gained from the Cruel Demise Vile Pleasure if both conditions are eligible.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Perception", "Fieldcraft"],
     "prerequisites": {
       "text": "Dark Eldar, Deadeye Shot, Perception 45, Power Through Pain",
       "characteristics": {
-        "per": 45
+        "perception": 45
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Deadeye Shot", "Power Through Pain"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Dark Eldar specific. Grants Pain Tokens from witnessing suffering caused by ranged attacks.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Agony from Afar",
+          "description": "<p>Gain a Pain Token when a ranged attack within Perception Bonus metres inflicts critical damage, stun, kill, or causes Fear/Pinning test failure on a living creature. Stacks with Cruel Demise Vile Pleasure.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

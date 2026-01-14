@@ -45,7 +45,13 @@
         "combat": []
       }
     },
-    "notes": "+1 Initiative"
+    "notes": "+1 Initiative",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

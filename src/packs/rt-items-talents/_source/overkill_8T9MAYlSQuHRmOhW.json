@@ -3,12 +3,17 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "overkill",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When the character hits with a ranged attack, they can make a +0 Perception Test as a Reaction. If successful, they add the Degrees of Success from the Perception Test to the original Ballistic Test for the attack.</p>"
-    },
+    "description": "<p>Your exceptional awareness allows you to identify and exploit weak points in your targets, turning good hits into devastating strikes.</p>",
     "tier": 3,
+    "cost": 900,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
     "benefit": "<p>When the character hits with a ranged attack, they can make a +0 Perception Test as a Reaction. If successful, they add the Degrees of Success from the Perception Test to the original Ballistic Test for the attack.</p>",
     "aptitudes": [
       "Perception",
@@ -17,13 +22,52 @@
     "prerequisites": {
       "text": "Perception 45, Bulging Biceps",
       "characteristics": {
-        "per": 45
+        "perception": 45
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Bulging Biceps"]
     },
-    "cost": 900,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "perception",
+      "skill": "",
+      "modifier": 0,
+      "description": "Perception Test as Reaction to add DoS to attack"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Critical",
+          "description": "<p>When you hit with a ranged attack, make a Perception Test as a Reaction. Add the DoS from Perception to your attack's DoS.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

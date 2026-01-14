@@ -3,22 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "masterOfTechnology",
     "category": "knowledge",
     "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>The explorer can spend a Fate Point to Automatically suceed on any Tech-Use Test with a number of Degrees of Success equal to their Intelligence Bonus.</p>"
-    },
+    "description": "<p>Your understanding of Tau technology has reached a level of mastery unmatched by most.</p>",
     "tier": 1,
-    "benefit": "<p>The explorer can spend a Fate Point to Automatically suceed on any Tech-Use Test with a number of Degrees of Success equal to their Intelligence Bonus.</p>",
-    "aptitudes": [],
+    "benefit": "<p>The explorer can spend a Fate Point to Automatically succeed on any Tech-Use Test with a number of Degrees of Success equal to their Intelligence Bonus.</p>",
+    "aptitudes": ["Intelligence", "Tech"],
     "prerequisites": {
       "text": "Tau, Scholastic Lore (Tau Empire), Common Lore (War)",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Fate-Fueled Mastery",
+          "description": "<p>You can spend a Fate Point to automatically succeed on any Tech-Use test with a number of Degrees of Success equal to your Intelligence Bonus.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

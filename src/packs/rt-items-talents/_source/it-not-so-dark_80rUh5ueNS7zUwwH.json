@@ -3,27 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "itNotSoDark",
     "category": "leadership",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Character no longer suffers a penalty to act in Confined Spaces as a result of \"But it Dark in Dere!\" Trait. \nAdditionally, they can make a -20 Willpower Test to enter a confined space of their own accord if their duties demand it. If they fail they must still be ordered to enter the space as normal.</p>"
-    },
+    "description": "<p>Through training and exposure, you have partially overcome your species' natural fear of confined spaces.</p>",
     "tier": 1,
-    "benefit": "<p>Character no longer suffers a penalty to act in Confined Spaces as a result of \"But it Dark in Dere!\" Trait. \nAdditionally, they can make a -20 Willpower Test to enter a confined space of their own accord if their duties demand it. If they fail they must still be ordered to enter the space as normal.</p>",
-    "aptitudes": [
-      "Willpower",
-      "General"
-    ],
+    "benefit": "<p>Character no longer suffers a penalty to act in Confined Spaces as a result of \"But it Dark in Dere!\" Trait. Additionally, they can make a -20 Willpower Test to enter a confined space of their own accord if their duties demand it. If they fail they must still be ordered to enter the space as normal.</p>",
+    "aptitudes": ["Willpower", "General"],
     "prerequisites": {
       "text": "Willpower 40, is an Ogryn",
       "characteristics": {
-        "wp": 40
+        "willpower": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Ogryn",
+    "rollConfig": {
+      "characteristic": "willpower",
+      "skill": "",
+      "modifier": -20,
+      "description": "Willpower test to enter confined space voluntarily"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Overcome Claustrophobia",
+          "description": "<p>You no longer suffer penalties for \"But it Dark in Dere!\" trait. Make -20 Willpower test to voluntarily enter confined spaces.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

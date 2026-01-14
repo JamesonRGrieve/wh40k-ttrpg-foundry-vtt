@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "inescapableAttack",
     "category": "combat",
     "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). Character imposes penalty of -10 x Degrees of Success on Evasion Tests when making listed actions.\nMelee: All Out Attack, Charge Attack, Melee Called Shot, Melee Standard Attack, or Stun Action. Ranged: Ranged Called Shot, Ranged Standard Attack.\nHas no effect on weapons with the Spray Quality.</p>"
-    },
+    "description": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). Character imposes penalty of -10 x Degrees of Success on Evasion Tests when making listed actions.\nMelee: All Out Attack, Charge Attack, Melee Called Shot, Melee Standard Attack, or Stun Action. Ranged: Ranged Called Shot, Ranged Standard Attack.\nHas no effect on weapons with the Spray Quality.</p>",
     "tier": 2,
     "benefit": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). Character imposes penalty of -10 x Degrees of Success on Evasion Tests when making listed actions.\nMelee: All Out Attack, Charge Attack, Melee Called Shot, Melee Standard Attack, or Stun Action. Ranged: Ranged Called Shot, Ranged Standard Attack.\nHas no effect on weapons with the Spray Quality.</p>",
     "aptitudes": [
@@ -17,15 +16,48 @@
     "prerequisites": {
       "text": "BS 40 or WS 40, Perception 35",
       "characteristics": {
-        "bs": 40,
-        "ws": 40,
-        "per": 35
+        "ballisticSkill": 40,
+        "weaponSkill": 40,
+        "perception": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Choose Ranged or Melee when taking this talent",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Precise Strike",
+          "description": "<p>Impose -10 per Degree of Success penalty on enemy Evasion tests against your attacks. Melee: All Out Attack, Charge, Called Shot, Standard Attack, Stun. Ranged: Called Shot, Standard Attack. No effect on Spray weapons.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

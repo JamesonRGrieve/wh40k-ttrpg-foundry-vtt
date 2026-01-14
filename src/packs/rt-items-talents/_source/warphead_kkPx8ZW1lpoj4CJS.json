@@ -3,22 +3,78 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "warphead",
     "category": "leadership",
     "source": "RT: The Navis Primer",
-    "description": {
-      "value": "<p>Whenever Rolling on the 'Eadbang or Powa Burst Effects, the character can modify the result up or down by an amount up to their Current Insanity Point Total. Additionally, they gain +20 to Interaction Skills when dealing with Ork Madboyz (any ork with 10+ Insanity who has a Mental Disorder). The Character gains a Minor Compulsion around the use of their powers at all opportunities, counting as a Mental Disorder.</p>"
-    },
-    "tier": 1,
+    "description": "<p>Your psychic potential has awakened to such a degree that you can manipulate the chaotic energies of the Warp, though at the cost of your sanity.</p>",
+    "tier": 2,
     "benefit": "<p>Whenever Rolling on the 'Eadbang or Powa Burst Effects, the character can modify the result up or down by an amount up to their Current Insanity Point Total. Additionally, they gain +20 to Interaction Skills when dealing with Ork Madboyz (any ork with 10+ Insanity who has a Mental Disorder). The Character gains a Minor Compulsion around the use of their powers at all opportunities, counting as a Mental Disorder.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Willpower", "Psyker"],
     "prerequisites": {
       "text": "Ork Weirdboy, Da Power of Waaagh!, Psy Rating 4, 20+ Insanity Points",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Da Power of Waaagh!"]
     },
-    "cost": 300,
-    "isPassive": true
+    "cost": 500,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Ork Weirdboy, grants mental disorder",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": 20,
+            "condition": "When interacting with Ork Madboyz",
+            "icon": "fa-solid fa-brain"
+          },
+          {
+            "key": "deceive",
+            "value": 20,
+            "condition": "When interacting with Ork Madboyz",
+            "icon": "fa-solid fa-brain"
+          },
+          {
+            "key": "intimidate",
+            "value": 20,
+            "condition": "When interacting with Ork Madboyz",
+            "icon": "fa-solid fa-brain"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Warp Manipulation",
+          "description": "<p>Modify 'Eadbang or Powa Burst roll by up to your current Insanity Points. Gain Minor Compulsion (use powers at all opportunities).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

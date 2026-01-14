@@ -3,25 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "combatFlair",
     "category": "combat",
     "source": "RT: Hostile Acquisitions",
-    "description": {
-      "value": "<p>Character can make Opposed +0 Charm vs Willpower Test as a Half Action against any enemies they are in close combat with. If they win they impose -10, + -5 per Degree of Success after first on the enemy's Weapon Skill for one Full Round. Effects are cumulative. Opponents that have Bestial, Daemonic, From Beyond, or Machine Traits  are immune to this talent at GM Discretion.</p>"
-    },
-    "isPassive": false,
-    "isRollable": true,
+    "description": "<p>The character uses showmanship and psychological warfare in close combat, unsettling opponents with their flamboyant fighting style.</p>",
     "tier": 1,
-    "benefit": "<p>Character can make Opposed +0 Charm vs Willpower Test as a Half Action against any enemies they are in close combat with. If they win they impose -10, + -5 per Degree of Success after first on the enemy's Weapon Skill for one Full Round. Effects are cumulative. Opponents that have Bestial, Daemonic, From Beyond, or Machine Traits  are immune to this talent at GM Discretion.</p>",
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Character can make Opposed +0 Charm vs Willpower Test as a Half Action against any enemies they are in close combat with. If they win they impose -10, plus -5 per Degree of Success after first on the enemy's Weapon Skill for one Full Round. Effects are cumulative. Opponents that have Bestial, Daemonic, From Beyond, or Machine Traits are immune to this talent at GM Discretion.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Swashbuckler Alternative Advance 600xp",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "rollConfig": {
+      "characteristic": "fellowship",
+      "skill": "charm",
+      "modifier": 0,
+      "description": "Opposed Charm vs Willpower Test to unsettle enemies in close combat"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Demoralizing Display",
+          "description": "<p>As a Half Action, make an Opposed Charm vs Willpower Test against enemies in close combat. On success, impose -10 plus -5 per Degree of Success (after first) to their Weapon Skill for one Full Round. Effects are cumulative.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

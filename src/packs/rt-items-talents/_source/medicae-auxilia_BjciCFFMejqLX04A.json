@@ -3,22 +3,70 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "medicaeAuxilia",
     "category": "knowledge",
     "source": "Only War Core",
-    "description": {
-      "value": "<p> Comrade counts as an assistant trained in Medicae during Extended Care Medicae Tests. Medicae Tests suffer no penalty for additional patients.</p>"
-    },
+    "description": "<p>Your comrade has been trained to assist you in medical procedures, enhancing your ability to treat multiple patients.</p>",
     "tier": 1,
-    "benefit": "<p> Comrade counts as an assistant trained in Medicae during Extended Care Medicae Tests. Medicae Tests suffer no penalty for additional patients.</p>",
-    "aptitudes": [],
+    "benefit": "<p>Comrade counts as an assistant trained in Medicae during Extended Care Medicae Tests. Medicae Tests suffer no penalty for additional patients.</p>",
+    "aptitudes": ["Intelligence", "Fieldcraft"],
     "prerequisites": {
       "text": "Medic Specialty",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Trained Medical Assistant",
+          "description": "<p>Your comrade counts as an assistant trained in Medicae during Extended Care Medicae tests.</p>"
+        },
+        {
+          "name": "Multiple Patient Care",
+          "description": "<p>Your Medicae tests suffer no penalty for additional patients.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

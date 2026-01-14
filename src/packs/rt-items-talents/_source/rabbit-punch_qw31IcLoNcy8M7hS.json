@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "rabbitPunch",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Character can add their Agility Bonus to Unarmed Attacks instead of their Strength Bonus.</p>"
-    },
+    "description": "<p>The character has learned to deliver swift, precise unarmed strikes using speed and finesse rather than raw strength.</p>",
     "tier": 1,
     "benefit": "<p>Character can add their Agility Bonus to Unarmed Attacks instead of their Strength Bonus.</p>",
     "aptitudes": [
@@ -17,14 +16,52 @@
     "prerequisites": {
       "text": "Agility 35, Weapon Skill 35",
       "characteristics": {
-        "ag": 35,
-        "ws": 35
+        "agility": 35,
+        "weaponSkill": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Agility-Based Unarmed Damage",
+          "description": "<p>You can add your Agility Bonus to Unarmed Attack damage instead of your Strength Bonus.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

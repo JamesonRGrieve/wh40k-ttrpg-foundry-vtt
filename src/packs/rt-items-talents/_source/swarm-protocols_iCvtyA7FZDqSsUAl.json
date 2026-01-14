@@ -3,25 +3,70 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "swarmProtocols",
     "category": "knowledge",
     "source": "RT: Tau Character Guide",
     "description": {
-      "value": "<p>Whenever the Character takes an action to give directions to one or more of their Drones, they can have it affect up to Intelligence Bonus Drones instead.</p>"
+      "value": "<p>The character has mastered the intricate control protocols required to direct multiple drones simultaneously, coordinating their actions with precision.</p>"
     },
     "isPassive": false,
-    "isRollable": false,
     "tier": 1,
-    "benefit": "<p>Whenever the Character takes an action to give directions to one or more of their Drones, they can have it affect up to Intelligence Bonus Drones instead.</p>",
+    "benefit": "<p>Whenever the character takes an action to give directions to one or more of their Drones, they can have it affect up to Intelligence Bonus Drones instead.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Tau Drone Handler Alternative Advance, 800xp, Intelligence 45+, Trade(Technomat)",
       "characteristics": {
-        "int": 45
+        "intelligence": 45
       },
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Multi-Drone Control",
+          "description": "<p>When you take an action to direct your drones, you can affect up to your Intelligence Bonus number of drones with a single action.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

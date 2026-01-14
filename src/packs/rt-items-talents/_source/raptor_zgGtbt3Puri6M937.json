@@ -3,14 +3,11 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "raptor",
     "category": "combat",
     "source": "Black Crusade Core",
-    "description": {
-      "value": "<p>When making a Charge Action whilst wearing a Jump Pack, melee attacks deal an extra 1d10 Damage per Two Degrees of Success on their Weapon Skill Test, up to 2d10.</p>"
-    },
+    "description": "<p>The character has mastered the art of aerial assault, using a jump pack to deliver devastating charges from above.</p>",
     "tier": 1,
-    "isPassive": false,
-    "isRollable": true,
     "benefit": "<p>When making a Charge Action whilst wearing a Jump Pack, melee attacks deal an extra 1d10 Damage per Two Degrees of Success on their Weapon Skill Test, up to 2d10.</p>",
     "aptitudes": [
       "Unaligned"
@@ -21,7 +18,53 @@
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "weaponSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Charge attack with Jump Pack"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 0,
+            "condition": "When charging with Jump Pack (+1d10 per 2 DoS, max 2d10)",
+            "icon": "fa-solid fa-plane-up"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Jump Pack Charge",
+          "description": "<p>When charging with a Jump Pack, deal an extra 1d10 damage per two Degrees of Success on your Weapon Skill Test (maximum 2d10).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

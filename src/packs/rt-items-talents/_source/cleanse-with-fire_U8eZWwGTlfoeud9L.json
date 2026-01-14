@@ -3,12 +3,16 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "cleanseWithFire",
     "category": "combat",
     "source": "DH 2E: Enemies Within",
-    "description": {
-      "value": "<p>When attacking with a weapon that has the Flame Quality, the Sister can re-roll any results lower than their Willpower Bonus on damage rolls.</p>"
-    },
+    "description": "<p>The Sister of Battle's unwavering faith empowers her flame weapons, ensuring that the fires of righteousness burn with divine intensity.</p>",
     "tier": 2,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
     "benefit": "<p>When attacking with a weapon that has the Flame Quality, the Sister can re-roll any results lower than their Willpower Bonus on damage rolls.</p>",
     "aptitudes": [
       "Willpower",
@@ -17,13 +21,46 @@
     "prerequisites": {
       "text": "Tier 2: Sister of Battle E.Adv, Ballistic Skill 40",
       "characteristics": {
-        "bs": 40
+        "ballisticSkill": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Faith-Empowered Flames",
+          "description": "<p>When attacking with a weapon that has the Flame Quality, re-roll any damage die results lower than Willpower Bonus.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -17,14 +17,35 @@
     "prerequisites": {
       "text": "Fellowship 45, Willpower 40;",
       "characteristics": {
-        "fel": 45,
-        "wp": 40
+        "fellowship": 45,
+        "willpower": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "imperialCommander",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "command": 20
+      },
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

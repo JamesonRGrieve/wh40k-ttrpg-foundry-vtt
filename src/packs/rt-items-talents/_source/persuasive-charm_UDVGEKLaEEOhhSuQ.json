@@ -21,7 +21,28 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "persuasiveCharm",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "charm": 10
+      },
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

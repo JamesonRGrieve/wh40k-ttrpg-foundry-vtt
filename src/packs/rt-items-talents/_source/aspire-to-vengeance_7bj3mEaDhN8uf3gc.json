@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "aspireToVengeance",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>When a Character, Comrade, or Allied NPC is killed within 50 metres by an enemy, the character adds +3 to all damage dealt with Righteous Fury until the end of the Encounter.</p>"
-    },
+    "description": "<p>When a Character, Comrade, or Allied NPC is killed within 50 metres by an enemy, the character adds +3 to all damage dealt with Righteous Fury until the end of the Encounter.</p>",
     "tier": 2,
     "benefit": "<p>When a Character, Comrade, or Allied NPC is killed within 50 metres by an enemy, the character adds +3 to all damage dealt with Righteous Fury until the end of the Encounter.</p>",
     "aptitudes": [
@@ -17,14 +16,61 @@
     "prerequisites": {
       "text": "Weapon Skill 40, Willpower 40",
       "characteristics": {
-        "ws": 40,
-        "wp": 40
+        "weaponSkill": 40,
+        "willpower": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Triggers when ally dies within 50m. Enhances Righteous Fury damage.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 3,
+            "condition": "With Righteous Fury after ally killed within 50m (lasts until end of encounter)",
+            "icon": "fa-solid fa-fire"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

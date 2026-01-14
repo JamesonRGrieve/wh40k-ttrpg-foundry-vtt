@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "frenzy",
     "category": "combat",
     "source": "Only War Core",
     "description": {
@@ -18,11 +19,87 @@
     "prerequisites": {
       "text": "None",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "weaponSkill",
+            "value": 10,
+            "condition": "While Frenzied",
+            "icon": "fa-solid fa-burst"
+          },
+          {
+            "key": "strength",
+            "value": 10,
+            "condition": "While Frenzied",
+            "icon": "fa-solid fa-burst"
+          },
+          {
+            "key": "toughness",
+            "value": 10,
+            "condition": "While Frenzied",
+            "icon": "fa-solid fa-burst"
+          },
+          {
+            "key": "willpower",
+            "value": 10,
+            "condition": "While Frenzied",
+            "icon": "fa-solid fa-burst"
+          },
+          {
+            "key": "ballisticSkill",
+            "value": -20,
+            "condition": "While Frenzied (penalty)",
+            "icon": "fa-solid fa-burst"
+          },
+          {
+            "key": "intelligence",
+            "value": -20,
+            "condition": "While Frenzied (penalty)",
+            "icon": "fa-solid fa-burst"
+          },
+          {
+            "key": "fellowship",
+            "value": -20,
+            "condition": "While Frenzied (penalty)",
+            "icon": "fa-solid fa-burst"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enter Frenzy",
+          "description": "<p>Full Round to enter Frenzy. Next round: +10 WS/S/T/WP, immune to Fear/Pinning/Stunning/Fatigue, -20 BS/Int/Fel, cannot Parry/Retreat/Flee or use Psychic Powers. Must attack nearest enemy. After combat, WP test to stop or continue vs allies.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

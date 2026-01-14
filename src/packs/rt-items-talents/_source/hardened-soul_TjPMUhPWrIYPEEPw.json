@@ -23,7 +23,39 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "hardenedSoul",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "corruption": 10
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

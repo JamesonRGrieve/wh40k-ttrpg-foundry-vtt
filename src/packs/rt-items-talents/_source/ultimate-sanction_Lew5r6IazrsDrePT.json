@@ -3,13 +3,11 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "ultimateSanction",
+    "category": "psychic",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>If Comrade in Cohesion, Character can take 1d5 Damage ignoring Armour and Toughness to Reroll Psychic Phenomena.</p>"
-    },
-    "isPassive": true,
-    "isRollable": true,
+    "description": "<p>The sanctioned psyker has learned to draw upon their comrade's life force to stabilize dangerous psychic phenomena.</p>",
+    "isPassive": false,
     "tier": 1,
     "benefit": "<p>If Comrade in Cohesion, Character can take 1d5 Damage ignoring Armour and Toughness to Reroll Psychic Phenomena.</p>",
     "aptitudes": [],
@@ -19,7 +17,45 @@
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Comrade in Cohesion",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Reroll Psychic Phenomena",
+          "description": "<p>When your Comrade is in Cohesion, you can suffer 1d5 Energy Damage (ignoring armor and toughness) to reroll a Psychic Phenomena result.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

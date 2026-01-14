@@ -3,15 +3,18 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "lightningAttack",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>The Character can make Lightning Attack Combat Actions.\nLightning Attack: Half Action, Attack, Make a -10 Weapon Skill Test with one melee weapon, if successful, hit one additional time per degree of success. Additional hits can be applied to same target, or anyone else not harder to hit within melee range.</p>"
-    },
+    "description": "<p>The character has mastered the art of multiple strikes, unleashing a devastating flurry of melee attacks faster than the eye can follow.</p>",
     "tier": 3,
+    "cost": 900,
     "isPassive": false,
-    "isRollable": true,
-    "benefit": "<p>The Character can make Lightning Attack Combat Actions.\nLightning Attack: Half Action, Attack, Make a -10 Weapon Skill Test with one melee weapon, if successful, hit one additional time per degree of success. Additional hits can be applied to same target, or anyone else not harder to hit within melee range.</p>",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>The character can make Lightning Attack Combat Actions.</p><p><strong>Lightning Attack:</strong> Half Action, Attack. Make a -10 Weapon Skill Test with one melee weapon. If successful, hit one additional time per degree of success. Additional hits can be applied to same target, or anyone else not harder to hit within melee range.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Finesse",
@@ -20,10 +23,50 @@
     "prerequisites": {
       "text": "Swift Attack",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Swift Attack"]
     },
-    "cost": 900
+    "rollConfig": {
+      "characteristic": "weaponSkill",
+      "skill": "",
+      "modifier": -10,
+      "description": "Lightning Attack with melee weapon - multiple hits per degree of success"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Lightning Attack",
+          "description": "<p><strong>Lightning Attack (Half Action):</strong> Make a -10 Weapon Skill Test with one melee weapon. If successful, hit one additional time per degree of success. Additional hits can be applied to same target, or anyone else not harder to hit within melee range.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

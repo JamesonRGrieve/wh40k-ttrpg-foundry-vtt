@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "slayerOfDaemons",
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": {
-      "value": "<p>Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting daemons.</p>"
-    },
+    "description": "<p>The character has trained extensively to fight creatures of the warp, their righteous fury making them especially deadly in melee against daemons.</p>",
     "tier": 1,
     "benefit": "<p>Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting daemons.</p>",
     "aptitudes": [],
@@ -18,7 +17,54 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "weaponSkill",
+            "value": 10,
+            "condition": "When fighting daemons",
+            "icon": "fa-solid fa-fist-raised"
+          }
+        ],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 2,
+            "condition": "With melee weapons against daemons",
+            "icon": "fa-solid fa-sword"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

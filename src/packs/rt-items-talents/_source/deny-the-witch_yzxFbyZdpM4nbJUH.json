@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>Character can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.</p>"
-    },
+    "description": "<p>The character's strong will allows them to resist psychic attacks, using willpower to evade such powers.</p>",
     "tier": 2,
     "benefit": "<p>Character can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.</p>",
     "aptitudes": [
@@ -17,13 +15,52 @@
     "prerequisites": {
       "text": "Willpower 35",
       "characteristics": {
-        "wp": 35
+        "willpower": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "denyTheWitch",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Psychic Resistance",
+          "description": "<p>You can use your Willpower characteristic when making Evasion reactions against psychic attacks (ranged or melee). You are not required to move when avoiding area of effect psychic attacks.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

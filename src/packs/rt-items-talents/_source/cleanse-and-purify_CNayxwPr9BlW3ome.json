@@ -3,13 +3,17 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "cleanseAndPurify",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>Targets of Weapons with the Flame Quality made by Character, suffer -20 to their Agility Test to avoid setting on fire.\nAdditionally, whenever the character inflicts Righteous Fury with a weapon with the Flame Quality, the target is automatically set on fire.\n(DW) When used Horde enemies, increases number of hits to the Horde by 1d5.</p>"
-    },
+    "description": "<p>The character is a master of flame weapons, using holy fire to purge the unclean with devastating effectiveness.</p>",
     "tier": 2,
-    "benefit": "<p>Targets of Weapons with the Flame Quality made by Character, suffer -20 to their Agility Test to avoid setting on fire.\nAdditionally, whenever the character inflicts Righteous Fury with a weapon with the Flame Quality, the target is automatically set on fire.\n(DW) When used Horde enemies, increases number of hits to the Horde by 1d5.</p>",
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Targets of Weapons with the Flame Quality made by Character, suffer -20 to their Agility Test to avoid setting on fire. Additionally, whenever the character inflicts Righteous Fury with a weapon with the Flame Quality, the target is automatically set on fire. (DW) When used against Horde enemies, increases number of hits to the Horde by 1d5.</p>",
     "aptitudes": [
       "Offence",
       "Willpower"
@@ -17,13 +21,46 @@
     "prerequisites": {
       "text": "WP 35, Weapon Training (Flame)",
       "characteristics": {
-        "wp": 35
+        "willpower": 35
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Weapon Training (Flame)"]
     },
     "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Flame",
+          "description": "<p>Targets of Weapons with the Flame Quality suffer -20 to their Agility Test to avoid setting on fire. Whenever the character inflicts Righteous Fury with a Flame weapon, the target is automatically set on fire. Against Hordes, increases hits by 1d5.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

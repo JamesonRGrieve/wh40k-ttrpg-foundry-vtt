@@ -14,13 +14,39 @@
     "prerequisites": {
       "text": "Tau, Fellowship 45, Charm +10",
       "characteristics": {
-        "fel": 45
+        "fellowship": 45
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "envoyOfTheGreaterGood",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": 10,
+            "condition": "When promoting the Greater Good or Tau philosophy",
+            "icon": "fa-solid fa-users"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>When making a Called Shot with a Ranged Weapon, reduce penalty by 10 (-20 to -10)</p>"
-    },
+    "description": "<p>The character has exceptional precision, able to target specific body parts with ease.</p>",
     "tier": 1,
     "benefit": "<p>When making a Called Shot with a Ranged Weapon, reduce penalty by 10 (-20 to -10)</p>",
     "aptitudes": [
@@ -18,13 +16,60 @@
     "prerequisites": {
       "text": "Ballistic Skill 30",
       "characteristics": {
-        "bs": 30
+        "ballisticSkill": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "deadeyeShot",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "calledShotPenalty",
+          "value": -10,
+          "description": "Reduces Called Shot penalty by 10 (from -20 to -10)"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

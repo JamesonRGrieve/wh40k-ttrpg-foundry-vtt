@@ -17,13 +17,39 @@
     "prerequisites": {
       "text": "Fellowship 35, Command",
       "characteristics": {
-        "fel": 35
+        "fellowship": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "heroicInspiration",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "command",
+            "value": 10,
+            "condition": "When inspiring allies before or during combat",
+            "icon": "fa-solid fa-flag"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

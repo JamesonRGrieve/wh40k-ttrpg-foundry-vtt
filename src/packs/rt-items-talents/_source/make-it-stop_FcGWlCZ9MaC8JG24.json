@@ -18,7 +18,43 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "makeItStop",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Make It Stop!",
+          "description": "<p>As a Full Action, Character Clutches their head or performs some other pained, forceful action to themselves. For that round, and Willpower Bonus Rounds afterwards, the Character does not gain any Psy Rating from others nearby.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

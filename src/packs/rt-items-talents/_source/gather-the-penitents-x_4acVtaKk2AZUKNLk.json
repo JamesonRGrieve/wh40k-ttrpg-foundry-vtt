@@ -18,7 +18,34 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "gatherThePenitents",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Penitent Followers",
+          "description": "<p>Gain X additional Comrades (up to Fellowship Bonus). This talent can be taken multiple times.</p>"
+        }
+      ]
+    },
+    "stackable": true,
+    "rank": 1,
+    "specialization": ""
   },
   "effects": [],
   "flags": {},

@@ -17,13 +17,37 @@
     "prerequisites": {
       "text": "Tier 2: Sister of Battle E.Adv, Cleanse with Fire, Ballistic Skill 45.",
       "characteristics": {
-        "bs": 45
+        "ballisticSkill": 45
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "divineVengeance",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Righteous Wrath",
+          "description": "<p>When facing enemies of the faith, gain +10 to Command and Intimidate tests. Allies within 10m gain +5 to Willpower tests.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "Literacy and Speak Language (High Gothic) become untrained Basic Skills"
+    "notes": "Literacy and Speak Language (High Gothic) become untrained Basic Skills",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

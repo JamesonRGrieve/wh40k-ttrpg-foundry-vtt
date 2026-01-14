@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "rangedWeaponExpert",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>Once per Combat Encounter, character can make an Aim Action as a Free Action for the chosen weapon group.\nFor this Talent, choose one weapon group character has Weapon Training in. Can take this talent multiple times, each time choosing a different group.\nExample Groups: Bolt, Flame, Las, Launcher, Melta, Plasma, Low Tech(Primitive), SP, or Heavy</p>"
-    },
+    "description": "<p>The character has become an expert with a specific type of ranged weapon, able to line up shots with exceptional speed.</p>",
     "tier": 3,
     "benefit": "<p>Once per Combat Encounter, character can make an Aim Action as a Free Action for the chosen weapon group.\nFor this Talent, choose one weapon group character has Weapon Training in. Can take this talent multiple times, each time choosing a different group.\nExample Groups: Bolt, Flame, Las, Launcher, Melta, Plasma, Low Tech(Primitive), SP, or Heavy</p>",
     "aptitudes": [
@@ -17,13 +16,51 @@
     "prerequisites": {
       "text": "BS 50, Weapon Training (Chosen One)",
       "characteristics": {
-        "bs": 50
+        "ballisticSkill": 50
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Choose one weapon group. Can be taken multiple times for different groups.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Free Aim Action",
+          "description": "<p>Once per combat encounter, you can make an Aim Action as a Free Action when using the chosen weapon group.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

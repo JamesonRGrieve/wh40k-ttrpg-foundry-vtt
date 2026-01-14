@@ -56,7 +56,13 @@
         "combat": []
       }
     },
-    "notes": "+10 to resist Pinning and Shock"
+    "notes": "+10 to resist Pinning and Shock",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "priorityFire",
     "category": "combat",
     "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>Once per round as a Half Action or Reaction, Character can have one Drone under their Command immiedately make an Attack Action against any foe within range as a Free Action.</p>"
-    },
+    "description": "<p>The Tau Drone Handler has trained to coordinate their drones' fire with exceptional speed and precision, allowing them to direct attacks in rapid succession.</p>",
     "tier": 1,
     "benefit": "<p>Once per round as a Half Action or Reaction, Character can have one Drone under their Command immiedately make an Attack Action against any foe within range as a Free Action.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Tau Drone Handler Alternative Advance, 300xp. Perception 35+, Quick Draw",
       "characteristics": {
-        "per": 35
+        "perception": 35
       },
       "skills": [],
-      "talents": []
+      "talents": ["Quick Draw"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Tau Drone Handler Alternative Advance",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Drone Command Fire",
+          "description": "<p>Once per round as a Half Action or Reaction, have one Drone under your command immediately make an Attack Action as a Free Action.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

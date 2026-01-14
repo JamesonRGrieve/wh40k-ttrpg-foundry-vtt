@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain +10 to Intimidate Tests, −10 to Charm Tests, and one poor-Craftsmanship bionic.</p>",
     "aptitudes": [],
     "prerequisites": {

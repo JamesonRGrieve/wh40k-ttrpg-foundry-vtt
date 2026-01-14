@@ -16,12 +16,41 @@
     "prerequisites": {
       "text": "Fel 50, Peer (X)",
       "characteristics": {
-        "fel": 50
+        "fellowship": 50
       },
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "identifier": "goodRepuation",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": 10,
+            "condition": "With chosen group (20 with Peer)",
+            "icon": "fa-solid fa-handshake"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "stackable": true,
+    "rank": 1,
+    "specialization": ""
   },
   "effects": [],
   "flags": {},

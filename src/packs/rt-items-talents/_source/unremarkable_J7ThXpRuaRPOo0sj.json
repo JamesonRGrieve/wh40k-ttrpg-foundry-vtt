@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "unremarkable",
+    "category": "social",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Attempts to Recall the character's face or spot them in a crowd suffer -20. Character gains +20 when using the Deceive Skill to either convince someone they have never seen or met them or trying to appear harmless and ordinary.\nIn a Social Conflict, character gains +20 to the Deceive Skill if using it in the Opposed Test, however halves their Infamy Reserves at the start of the Conflict.\nTalent doesn't work if the character wears distinctive clothes, armour, or carries unique weaponry or gear.</p>"
-    },
+    "description": "<p>The character has such an average, forgettable appearance that they can blend into crowds and slip past notice with ease.</p>",
     "tier": 1,
     "benefit": "<p>Attempts to Recall the character's face or spot them in a crowd suffer -20. Character gains +20 when using the Deceive Skill to either convince someone they have never seen or met them or trying to appear harmless and ordinary.\nIn a Social Conflict, character gains +20 to the Deceive Skill if using it in the Opposed Test, however halves their Infamy Reserves at the start of the Conflict.\nTalent doesn't work if the character wears distinctive clothes, armour, or carries unique weaponry or gear.</p>",
     "aptitudes": [
@@ -22,7 +21,52 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Does not work with distinctive clothing or equipment",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "deceive",
+            "value": 20,
+            "condition": "When appearing harmless or claiming you haven't met someone",
+            "icon": "fa-solid fa-mask"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Forgettable Appearance",
+          "description": "<p>Others have -20 to remember or describe you. Very difficult to track or identify.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

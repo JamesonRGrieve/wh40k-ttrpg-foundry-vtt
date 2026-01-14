@@ -17,13 +17,37 @@
     "prerequisites": {
       "text": "Fellowship 40, Command +10",
       "characteristics": {
-        "fel": 40
+        "fellowship": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "trademarkItem",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Trademark Recognition",
+          "description": "<p>Gain +1 DoS on successful social tests with those who recognize your trademark item. Can issue an additional Sweeping Order once per encounter with -10 Command test.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

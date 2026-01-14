@@ -25,7 +25,44 @@
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "preternaturalSpeed",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "initiative": 2
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "movement",
+          "label": "Movement",
+          "value": 2,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

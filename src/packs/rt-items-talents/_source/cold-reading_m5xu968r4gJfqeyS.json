@@ -18,7 +18,31 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "coldReading",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Information Extraction",
+          "description": "<p>Before Commerce, Barter, or Charm Test, make a Blather Test. If successful, gain +5 × Perception Bonus to next test against that target.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

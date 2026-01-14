@@ -3,13 +3,18 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "mightyShot",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>The Character adds half their Ballistic Skill Bonus to Damage inflicted by Ranged Weapons\nRT Alternative: Add flat +2 damage.</p>"
-    },
+    "description": "<p>Your exceptional skill and strength allow you to inflict devastating damage with ranged weapons, targeting vital areas and striking with overwhelming force.</p>",
     "tier": 3,
-    "benefit": "<p>The Character adds half their Ballistic Skill Bonus to Damage inflicted by Ranged Weapons\nRT Alternative: Add flat +2 damage.</p>",
+    "cost": 900,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "RT Alternative: Add flat +2 damage",
+    "benefit": "<p>The Character adds half their Ballistic Skill Bonus to Damage inflicted by Ranged Weapons.</p><p><strong>RT Alternative:</strong> Add flat +2 damage.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Offence",
@@ -18,13 +23,54 @@
     "prerequisites": {
       "text": "Ballistic Skill 40",
       "characteristics": {
-        "bs": 40
+        "ballisticSkill": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 900,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 2,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 0,
+            "condition": "With Ranged weapons - add half BS Bonus to damage (Only War version)",
+            "icon": "fa-solid fa-crosshairs"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

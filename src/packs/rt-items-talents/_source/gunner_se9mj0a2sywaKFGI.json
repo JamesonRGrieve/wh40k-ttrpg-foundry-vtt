@@ -3,22 +3,69 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "gunner",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>If character spends turn driving a vehicle, they can also make ranged attack as if they were manning whichever vehicle weapon their comrade mans, using Comrade's full action. </p>"
-    },
+    "description": "<p>Your training allows you to simultaneously drive and operate vehicle weapons, coordinating with your comrade to maximize firepower even while maneuvering.</p>",
     "tier": 1,
-    "benefit": "<p>If character spends turn driving a vehicle, they can also make ranged attack as if they were manning whichever vehicle weapon their comrade mans, using Comrade's full action. </p>",
-    "aptitudes": [],
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>If character spends turn driving a vehicle, they can also make ranged attack as if they were manning whichever vehicle weapon their comrade mans, using Comrade's full action.</p>",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Tech"
+    ],
     "prerequisites": {
       "text": "Operator Specialty",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Drive and Shoot",
+          "description": "<p>While driving a vehicle, you can also make a ranged attack with a vehicle weapon your comrade is manning.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

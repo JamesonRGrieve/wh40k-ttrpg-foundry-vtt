@@ -3,14 +3,16 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "electricalSuccour",
     "category": "knowledge",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>When in contact with powered machine, battery, or power cell, make +10 Tech-Use check, on success reduce one level of fatigue, +1 for each Degree of success. Process takes 1 minute.</p>"
-    },
+    "description": "<p>When in contact with powered machine, battery, or power cell, make +10 Tech-Use check, on success reduce one level of fatigue, +1 for each Degree of success. Process takes 1 minute.</p>",
     "tier": 1,
-    "benefit": "<p>When in contact with powered machine, battery, or power cell, make +10 Tech-Use check, on success reduce one level of fatigue, +1 for each Degree of success. Process takes 1 minute.</p>",
-    "aptitudes": [],
+    "benefit": "<p>When in contact with a powered machine, battery, or power cell, you can make a +10 Tech-Use check. On success, you reduce one level of fatigue, plus one additional level for each Degree of Success. The process takes 1 minute.</p>",
+    "aptitudes": [
+      "Intelligence",
+      "Tech"
+    ],
     "prerequisites": {
       "text": "Mechanicus Implants",
       "characteristics": {},
@@ -18,7 +20,47 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "techUse",
+      "modifier": 10,
+      "description": "Roll Tech-Use to absorb electrical energy and reduce fatigue"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

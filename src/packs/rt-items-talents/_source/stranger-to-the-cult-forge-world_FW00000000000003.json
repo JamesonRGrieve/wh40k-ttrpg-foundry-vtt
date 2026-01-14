@@ -56,7 +56,13 @@
         "combat": []
       }
     },
-    "notes": "-10 to Imperial Creed knowledge, -5 Fellowship with Ecclesiarchy"
+    "notes": "-10 to Imperial Creed knowledge, -5 Fellowship with Ecclesiarchy",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

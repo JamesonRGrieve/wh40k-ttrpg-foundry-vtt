@@ -3,24 +3,68 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "unhallowedDiscovery",
+    "category": "psychic",
     "source": "RT: Faith and Coin",
-    "description": {
-      "value": "<p>The Character Integrates a Psychically Charged Xenos Artifact into their form They gain Psy Rating 1 (or increase their Psy Rating by 1 if they already have Psy Rating) and learn 1 Psychic Technique of their choice that GM approves of. They use Renegade Psyker Rules. If the artifact is removed the psychic power is lost until returned. Each time an artifact is implanted or removed, roll on Perils of the Warp, gain 1d5 Corruption, and suffer 1d5 Energy damage that ignores Armour and Toughness.\nThis Talent can be taken up to three times. These strange Xenos devices may have other longer term effects on the character's mind and body.</p>"
-    },
+    "description": "<p>The character has integrated a dangerous xenos artifact into their body, granting them psychic powers at great risk to their soul.</p>",
     "tier": 1,
-    "benefit": "<p>The Character Integrates a Psychically Charged Xenos Artifact into their form They gain Psy Rating 1 (or increase their Psy Rating by 1 if they already have Psy Rating) and learn 1 Psychic Technique of their choice that GM approves of. They use Renegade Psyker Rules. If the artifact is removed the psychic power is lost until returned. Each time an artifact is implanted or removed, roll on Perils of the Warp, gain 1d5 Corruption, and suffer 1d5 Energy damage that ignores Armour and Toughness.\nThis Talent can be taken up to three times. These strange Xenos devices may have other longer term effects on the character's mind and body.</p>",
+    "benefit": "<p>The Character Integrates a Psychically Charged Xenos Artifact into their form. They gain Psy Rating 1 (or increase their Psy Rating by 1 if they already have Psy Rating) and learn 1 Psychic Technique of their choice that GM approves of. They use Renegade Psyker Rules. If the artifact is removed the psychic power is lost until returned. Each time an artifact is implanted or removed, roll on Perils of the Warp, gain 1d5 Corruption, and suffer 1d5 Energy damage that ignores Armour and Toughness.\nThis Talent can be taken up to three times. These strange Xenos devices may have other longer term effects on the character's mind and body.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Acolyte of Abraxis Alternative Advance, 500xp",
       "characteristics": {
-        "int": 40
+        "intelligence": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Can be taken up to 3 times. Each implantation triggers Perils.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "psyRating",
+          "label": "Psy Rating",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Xenos Psy-Artifact",
+          "description": "<p>Gain Psy Rating 1 (or +1 if already psyker) and learn 1 GM-approved psychic technique. Use Renegade Psyker rules. Implanting/removing triggers Perils, 1d5 Corruption, and 1d5 Energy Damage (ignoring armor/toughness).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

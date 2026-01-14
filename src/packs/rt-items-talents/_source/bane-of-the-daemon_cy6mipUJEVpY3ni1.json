@@ -23,7 +23,43 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "baneOfTheDaemon",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Anti-Daemon Aura",
+          "description": "<p>Creatures with the Warp Instability Trait within Willpower Bonus metres of the Untouchable suffer penalties to their Warp Instability Tests equal to 5 x Character's Willpower Bonus.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

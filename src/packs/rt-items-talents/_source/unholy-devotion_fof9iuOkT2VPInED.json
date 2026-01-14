@@ -3,14 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "unholyDevotion",
+    "category": "leadership",
     "source": "Black Crusade Core",
-    "description": {
-      "value": "<p>Character's Minions are Fanatically devoted to them, whenever the character would be hit with a ranged attack, they may make an Agility Test for any number of their Minions within Agility Bonus Metres, if successful the minion suffers the hit instead. Effectively using the minions as human shields. Only works on the Character's own Minions, not allied NPC's or other player character's minions.</p>"
-    },
+    "description": "<p>The character's minions are so fanatically devoted that they will throw themselves in harm's way to protect their master.</p>",
     "tier": 3,
-    "isPassive": true,
-    "isRollable": true,
+    "isPassive": false,
     "benefit": "<p>Character's Minions are Fanatically devoted to them, whenever the character would be hit with a ranged attack, they may make an Agility Test for any number of their Minions within Agility Bonus Metres, if successful the minion suffers the hit instead. Effectively using the minions as human shields. Only works on the Character's own Minions, not allied NPC's or other player character's minions.</p>",
     "aptitudes": [
       "Unaligned"
@@ -19,9 +17,47 @@
       "text": "Tier 3: Minion of Chaos",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Minion of Chaos"]
     },
-    "cost": 900
+    "cost": 900,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Only works on character's own minions",
+    "rollConfig": {
+      "characteristic": "agility",
+      "skill": "",
+      "modifier": 0,
+      "description": "Agility test for minion to intercept ranged attack"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Minion Shield",
+          "description": "<p>When hit by a ranged attack, test Agility for any minions within Agility Bonus metres. On success, the minion takes the hit instead.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

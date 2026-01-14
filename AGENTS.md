@@ -1598,16 +1598,54 @@ Items can apply modifiers to actor stats via the `modifiers` field:
     awareness: 5     // +5 to Awareness
   },
   combat: {
-    toHit: 5,        // +5 to hit rolls
+    attack: 5,       // +5 to hit rolls
     damage: 2,       // +2 damage
+    penetration: 1,  // +1 penetration
+    defense: 10,     // +10 to defence (dodge/parry)
     initiative: 1,   // +1 initiative
-    defence: 10      // +10 to defence (dodge/parry)
+    speed: 1         // +1 speed
   },
-  wounds: 2,         // +2 max wounds
-  fate: 1,           // +1 max fate
-  movement: 1        // +1 to movement rates
+  resources: {
+    wounds: 5,       // +5 max wounds
+    fate: 1,         // +1 max fate
+    insanity: 0,     // +0 max insanity
+    corruption: 0    // +0 max corruption
+  },
+  other: [           // Generic custom modifiers
+    {
+      key: "movement",
+      label: "Movement",
+      value: 2,
+      mode: "add"    // "add", "multiply", "override", "downgrade", "upgrade"
+    }
+  ],
+  situational: {     // Manual checkbox modifiers shown in roll dialogs
+    characteristics: [
+      { key: "strength", value: 10, condition: "When lifting heavy objects", icon: "fa-dumbbell" }
+    ],
+    skills: [
+      { key: "stealth", value: 10, condition: "In shadows or darkness", icon: "fa-moon" }
+    ],
+    combat: [
+      { key: "attack", value: 10, condition: "When fighting Orks", icon: "fa-skull" }
+    ]
+  }
 }
 ```
+
+### Modifier Types
+
+**Always-On Modifiers**: Automatically applied during `prepareEmbeddedData()`:
+- `characteristics`: Added to characteristic totals
+- `skills`: Added to skill.current
+- `combat`: Added to attack/damage/defense/initiative rolls
+- `resources`: Added to max wounds/fate/insanity/corruption
+- `other`: Generic modifiers (e.g., movement bonuses)
+
+**Situational Modifiers**: Displayed in roll dialogs as optional checkboxes:
+- Player chooses which apply based on circumstances
+- Not automatically applied to stats
+- Shown with condition text and icon
 
 ### Modifier Sources
 
@@ -1617,20 +1655,32 @@ Modifiers are tracked from multiple sources for transparency:
 actor.system.modifierSources = {
   characteristics: {
     strength: [
-      { name: "Power Armour", type: "armour", id: "xxx", value: 10 },
-      { name: "Unnatural Strength", type: "trait", id: "yyy", value: 5 }
+      { name: "Power Armour", type: "armour", id: "xxx", value: 20 },
+      { name: "Unnatural Strength", type: "trait", id: "yyy", value: 10 }
     ]
   },
-  skills: { ... },
-  combat: {
-    toHit: [...],
-    damage: [...],
-    initiative: [...],
-    defence: [...]
+  skills: {
+    dodge: [
+      { name: "Dodge Training", type: "talent", id: "zzz", value: 10 }
+    ]
   },
-  wounds: [...],
-  fate: [...],
-  movement: [...]
+  combat: {
+    attack: [...],      // +attack bonus (to hit)
+    damage: [...],      // +damage bonus
+    penetration: [...], // +armor penetration
+    defense: [...],     // +defense bonus (dodge/parry)
+    initiative: [...],  // +initiative bonus
+    speed: [...]        // +speed bonus
+  },
+  wounds: [
+    { name: "True Grit", type: "talent", id: "aaa", value: 5 }
+  ],
+  fate: [
+    { name: "Fate's Blessing", type: "trait", id: "bbb", value: 1 }
+  ],
+  movement: [
+    { name: "Fleet of Foot", type: "trait", id: "ccc", value: 2, label: "Movement" }
+  ]
 }
 ```
 
@@ -1648,19 +1698,24 @@ actor.system.modifierSources = {
 ### Getting Modifier Totals
 
 ```javascript
-// In Document class
+// In Document class (not currently implemented, but could be added)
 actor.getTotalCharacteristicModifier("strength")  // Returns total modifier
 actor.getTotalSkillModifier("dodge")
-actor.getTotalCombatModifier("toHit")
-actor.getTotalWoundsModifier()
-actor.getTotalFateModifier()
-actor.getTotalMovementModifier()
+actor.getTotalCombatModifier("attack")  // Use "attack", "damage", "penetration", "defense", "initiative", "speed"
 
-// In DataModel
-this._getTotalCharacteristicModifier(charKey)
-this._getTotalSkillModifier(skillKey)
-this._getTotalCombatModifier(combatKey)
+// In DataModel (internal methods)
+this._getTotalCharacteristicModifier(charKey)  // Called in prepareEmbeddedData
+this._getTotalSkillModifier(skillKey)          // Called in prepareEmbeddedData
+this._getTotalCombatModifier(combatKey)        // Called in prepareEmbeddedData
 ```
+
+**Combat Modifier Keys**:
+- `"attack"` - Bonus to hit rolls
+- `"damage"` - Bonus to damage
+- `"penetration"` - Bonus to armor penetration
+- `"defense"` - Bonus to dodge/parry
+- `"initiative"` - Bonus to initiative
+- `"speed"` - Bonus to speed/movement
 
 ---
 
@@ -1729,7 +1784,80 @@ Results are cached for performance.
 
 ---
 
-## Appendix E: Recent Changes Log
+## Appendix E: Skill Key Helper
+
+**Location**: `src/module/helpers/skill-key-helper.mjs`
+
+Comprehensive skill metadata utility for name/key conversion, validation, and metadata retrieval. See [SKILL_KEY_HELPER_GUIDE.md](SKILL_KEY_HELPER_GUIDE.md) for full documentation.
+
+### Key Methods
+
+| Method | Purpose | Example |
+|--------|---------|---------|
+| `nameToKey(name)` | Convert display name to key | `"Common Lore"` → `"commonLore"` |
+| `keyToName(key)` | Convert key to display name | `"commonLore"` → `"Common Lore"` |
+| `isSpecialist(keyOrName)` | Check if specialist skill | `"commonLore"` → `true` |
+| `getCharacteristic(keyOrName)` | Get characteristic | `"dodge"` → `"Ag"` |
+| `isAdvanced(keyOrName)` | Check if advanced | `"acrobatics"` → `true` |
+| `getSkillMetadata(keyOrName)` | Get complete metadata | Returns full object |
+| `validateKey(key, actor)` | Validate skill exists | Check against actor schema |
+
+### All 54 Skills Mapped
+
+- **Standard Basic (22)**: Awareness, Barter, Carouse, Charm, Climb, Command, Concealment, Contortionist, Deceive, Disguise, Dodge, Evaluate, Gamble, Inquiry, Intimidate, Literacy, Logic, Scrutiny, Search, Silent Move, Survival, Swim
+- **Standard Advanced (14)**: Acrobatics, Blather, Chem-Use, Commerce, Demolition, Interrogation, Invocation, Medicae, Psyniscience, Security, Shadowing, Sleight of Hand, Tracking, Wrangling
+- **Specialist Advanced (12)**: Ciphers, Common Lore, Drive, Forbidden Lore, Navigation, Performer, Pilot, Scholastic Lore, Secret Tongue, Speak Language, Tech-Use, Trade
+- **Compatibility Basic (3)**: Athletics, Parry, Stealth
+
+### Usage in Grants Processor
+
+Integrated into `GrantsProcessor._processSkillGrant()` to ensure:
+- Canonical skill name usage
+- Correct characteristic assignment
+- Proper advanced/basic classification
+- Specialist skill validation
+
+```javascript
+const metadata = SkillKeyHelper.getSkillMetadata("commonLore");
+// {
+//   key: "commonLore",
+//   name: "Common Lore",
+//   characteristic: "Int",
+//   isAdvanced: true,
+//   isSpecialist: true
+// }
+```
+
+---
+
+## Appendix F: Recent Changes Log
+
+### January 14, 2026 - Specialist Skills Inheritance Fix
+
+**Skill Key Helper:**
+- Created `src/module/helpers/skill-key-helper.mjs` with complete skill metadata
+- Maps all 54 skills: name↔key, characteristic, advanced/basic, specialist
+- Provides validation, conversion, and query utilities
+- Full documentation in [SKILL_KEY_HELPER_GUIDE.md](SKILL_KEY_HELPER_GUIDE.md)
+
+**Creature Template Migration Fix:**
+- Fixed `migrateData()` to inherit `characteristic` from parent to specialist entries
+- Fixed `migrateData()` to inherit `advanced`/`basic` flags to specialist entries
+- Fixed `prepareDerivedData()` to use proper fallback logic for entry characteristics
+- All specialist skill entries now calculate correctly
+
+**Grants Processor Integration:**
+- Integrated SkillKeyHelper into `_processSkillGrant()`
+- All skill grants now include proper characteristic metadata
+- Validates specialist skills require specialization
+- Uses canonical display names for consistency
+- Complete documentation in [SPECIALIST_SKILLS_FIX_COMPLETE.md](SPECIALIST_SKILLS_FIX_COMPLETE.md)
+
+**Benefits:**
+- ✅ Specialist skills (Common Lore, Forbidden Lore, etc.) now calculate correctly
+- ✅ All entries have proper characteristic reference
+- ✅ No more undefined characteristic errors
+- ✅ Single source of truth for skill metadata
 
 ### January 13, 2026 - Origin Path Builder Improvements
 

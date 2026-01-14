@@ -3,22 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "superiorSupplyChain",
+    "category": "social",
     "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>The Explorer gains +20 to Acquisition Tests to acquire Tau Weapons, wargear, and other equipment.</p>"
-    },
+    "description": "<p>The character has access to superior Tau Empire supply networks, making it easier to acquire Tau technology.</p>",
     "tier": 1,
     "benefit": "<p>The Explorer gains +20 to Acquisition Tests to acquire Tau Weapons, wargear, and other equipment.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Tau",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "commerce",
+            "value": 20,
+            "condition": "When acquiring Tau weapons, wargear, or equipment",
+            "icon": "fa-solid fa-shopping-cart"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Better Logistics",
+          "description": "<p>Reduce the time and difficulty of Requisition tests. Rare items are one step easier to acquire.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

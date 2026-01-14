@@ -3,22 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "enhancedIntellect",
     "category": "leadership",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>The Character gains an additional +10 to Tests to give Orders to their Comrade.</p>"
-    },
+    "description": "<p>Your augmented cognitive abilities make you an exceptionally effective leader, even among Ogryns.</p>",
     "tier": 1,
     "benefit": "<p>The Character gains an additional +10 to Tests to give Orders to their Comrade.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Intelligence", "Leadership"],
     "prerequisites": {
       "text": "Bone 'Ead Advanced Specialty (300xp)",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Bone 'Ead specialty",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "command",
+            "value": 10,
+            "condition": "When giving Orders to Comrade",
+            "icon": "fa-solid fa-users"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,70 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "assassinStrike",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Once per Round, after a melee attack, may make a +0 Acrobatics Skill Test as a Free Action. Success allows character to immediately make a Free Half Action Move which does not provoke attack from opponent.</p>"
-    },
+    "description": "<p>Once per Round, after a melee attack, may make a +0 Acrobatics Skill Test as a Free Action. Success allows character to immediately make a Free Half Action Move which does not provoke attack from opponent.</p>",
     "tier": 3,
     "benefit": "<p>Once per Round, after a melee attack, may make a +0 Acrobatics Skill Test as a Free Action. Success allows character to immediately make a Free Half Action Move which does not provoke attack from opponent.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Agility", "Finesse"],
     "prerequisites": {
       "text": "Agility 40, Acrobatics Skill",
       "characteristics": {
-        "ag": 40
+        "agility": 40
       },
-      "skills": [],
+      "skills": {
+        "acrobatics": 0
+      },
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Once per round. Requires successful Acrobatics test to disengage without attack of opportunity.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "acrobatics",
+      "modifier": 0,
+      "description": "Acrobatics Test to disengage after melee attack"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Assassin Strike",
+          "description": "<p>Once per round, after a melee attack, make +0 Acrobatics Test as Free Action. Success grants free Half Move that doesn't provoke attacks.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

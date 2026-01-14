@@ -25,7 +25,37 @@
       "skills": [],
       "talents": []
     },
-    "cost": 600
+    "cost": 600,
+    "identifier": "battlefieldAwareness",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "defense": 10
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

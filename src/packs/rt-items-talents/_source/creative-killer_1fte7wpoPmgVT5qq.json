@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When this character attacks with an Improvised Weapon, it uses the following profile: (1d10-1 I, Pen 0, Ogryn-Proof, Unbalanced)</p>"
-    },
+    "description": "<p>The character can turn anything into a weapon, using improvised items with deadly efficiency.</p>",
     "tier": 2,
     "benefit": "<p>When this character attacks with an Improvised Weapon, it uses the following profile: (1d10-1 I, Pen 0, Ogryn-Proof, Unbalanced)</p>",
     "aptitudes": [
@@ -21,7 +19,46 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "creativeKiller",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Creative Killer",
+          "description": "<p>When attacking with an Improvised Weapon, it uses the following profile: (1d10-1 I, Pen 0, Ogryn-Proof, Unbalanced).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "killingStrike",
     "category": "combat",
     "source": "Only War Core",
     "description": {
@@ -24,7 +25,40 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Unavoidable Strike",
+          "description": "<p>Spend a Fate Point to make all melee attacks you make this round unavoidable by Parry or Dodge skills. Other defenses (Shadow Fields, Displacement Fields) still function.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

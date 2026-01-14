@@ -3,14 +3,11 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "ripperCharge",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Character can spend a Full Action to make a Charge Movement Diretly at a Distant Enemy, as long as the Charge does not bring the character into melee range of another enemy, they can immeidately make a Full-Auto Burst Action with a Ranged Weapon as a Free Action, this has a +0 to the Ballistic Test instead of the normal -10.</p>"
-    },
+    "description": "<p>The character can combine a devastating charge with a full-auto fusillade, bringing overwhelming firepower to bear while closing with the enemy.</p>",
     "tier": 2,
-    "isPassive": false,
-    "isRollable": true,
     "benefit": "<p>Character can spend a Full Action to make a Charge Movement Diretly at a Distant Enemy, as long as the Charge does not bring the character into melee range of another enemy, they can immeidately make a Full-Auto Burst Action with a Ranged Weapon as a Free Action, this has a +0 to the Ballistic Test instead of the normal -10.</p>",
     "aptitudes": [
       "Ballistic Skill",
@@ -19,12 +16,51 @@
     "prerequisites": {
       "text": "Strength 45, Bulging Biceps",
       "characteristics": {
-        "s": 45
+        "strength": 45
       },
       "skills": [],
-      "talents": []
+      "talents": ["Bulging Biceps"]
     },
-    "cost": 600
+    "cost": 600,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "ballisticSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Full-Auto Burst during charge (no penalty)"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ripper Charge",
+          "description": "<p>As a Full Action, charge directly at a distant enemy. If the charge doesn't bring you into melee with another enemy, immediately make a Full-Auto Burst as a Free Action with +0 to Ballistic Skill (instead of -10).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

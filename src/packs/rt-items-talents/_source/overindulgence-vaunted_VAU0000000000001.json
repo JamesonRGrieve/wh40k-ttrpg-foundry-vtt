@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": true,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>Gain 1d5 Corruption Points (rolled during character creation)</p>",
     "aptitudes": [],
     "prerequisites": {

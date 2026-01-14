@@ -18,7 +18,43 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "tormentersWill",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Special Defense",
+          "description": "<p><p>If the character has gained at least 2 Pain Tokens during an encounter, they may spend a Fate Point to gain the From Beyond Trait for the rest of the encounter.\nFrom Beyond: Immune to Fear, Pinning...</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

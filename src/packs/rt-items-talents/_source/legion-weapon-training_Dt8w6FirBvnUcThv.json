@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "legionWeaponTraining",
     "category": "combat",
     "source": "Black Crusade Core",
     "description": {
@@ -20,7 +21,40 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Universal Weapon Proficiency",
+          "description": "<p>You are trained in all non-exotic weapon groups: Bolt, Chain, Melta, Plasma, Power, Flame, Primitive, Las, Solid Projectile, Thrown, and Launcher. You do not suffer the -20 untrained penalty when using these weapons.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,13 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "cyberneticBoost",
     "category": "knowledge",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>As a Half Action, character can spend Fate Point and make +0 Tech-Use Test. If succesful they gain Unnatural Agility (X) or Unnatural Strength (X) Trait, where X = 1, +1 per 2 DoS scored on Test. (if they have the trait, increase by X instead). The bonus lasts until the character decides to end it, which can be done at any time. However, at the end of each Round in which it persists, they gain 1 Fatigue.</p>"
-    },
+    "description": "<p>As a Half Action, character can spend Fate Point and make +0 Tech-Use Test. If successful they gain Unnatural Agility (X) or Unnatural Strength (X) Trait, where X = 1, +1 per 2 DoS scored on Test. (if they have the trait, increase by X instead). The bonus lasts until the character decides to end it, which can be done at any time. However, at the end of each Round in which it persists, they gain 1 Fatigue.</p>",
     "tier": 2,
-    "benefit": "<p>As a Half Action, character can spend Fate Point and make +0 Tech-Use Test. If succesful they gain Unnatural Agility (X) or Unnatural Strength (X) Trait, where X = 1, +1 per 2 DoS scored on Test. (if they have the trait, increase by X instead). The bonus lasts until the character decides to end it, which can be done at any time. However, at the end of each Round in which it persists, they gain 1 Fatigue.</p>",
+    "benefit": "<p>As a Half Action, you can spend a Fate Point and make a +0 Tech-Use Test. If successful, you gain the Unnatural Agility (X) or Unnatural Strength (X) Trait, where X = 1, +1 per 2 DoS scored on the Test. If you already have the trait, increase it by X instead. The bonus lasts until you decide to end it (at any time). However, at the end of each Round in which it persists, you gain 1 Fatigue.</p>",
     "aptitudes": [
       "Intelligence",
       "Tech"
@@ -21,7 +20,52 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "techUse",
+      "modifier": 0,
+      "description": "Roll Tech-Use to activate cybernetic boost"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Cybernetic Overdrive",
+          "description": "<p>As a Half Action, spend a Fate Point and make a Tech-Use Test. On success, gain Unnatural Agility (X) or Unnatural Strength (X), where X = 1, +1 per 2 DoS. Lasts until you end it, but you gain 1 Fatigue at the end of each Round while active.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

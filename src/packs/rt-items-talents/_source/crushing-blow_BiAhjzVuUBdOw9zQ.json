@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character adds Half their Weapon Skill Bonus rounded down to Damage inflicted with Melee Attacks.</p>"
-    },
+    "description": "<p>The character's melee attacks are incredibly powerful, delivering bone-shattering blows through sheer skill.</p>",
     "tier": 3,
     "benefit": "<p>Character adds Half their Weapon Skill Bonus rounded down to Damage inflicted with Melee Attacks.</p>",
     "aptitudes": [
@@ -18,13 +16,52 @@
     "prerequisites": {
       "text": "Weapon Skill 40",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "crushingBlow",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Crushing Blow",
+          "description": "<p>Add Half your Weapon Skill Bonus (rounded down) to Damage inflicted with Melee Attacks.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

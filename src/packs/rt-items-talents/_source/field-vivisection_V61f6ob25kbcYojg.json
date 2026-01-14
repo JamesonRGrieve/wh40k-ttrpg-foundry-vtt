@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "fieldVivisection",
     "category": "combat",
     "source": "DH 2E: Enemies Without",
     "description": {
@@ -11,19 +12,54 @@
     "tier": 2,
     "benefit": "<p>When selecting talent, character chooses either Ranged or Melee Specialisation (matching Aptitudes and Reqirements as appropriate). When making Called Shots of selected specialisation against targets the character has an appropriate Forbidden Lore (Xenos) Skill for, the character can replace Weapon Skill / Ballistic Skill with their Medicae Skill when making the test.</p>",
     "aptitudes": [
-      "BS or WS",
+      "Weapon Skill",
       "Knowledge"
     ],
     "prerequisites": {
       "text": "Tier 2: BS or WS 40, Forbidden Lore (Xenos - Any), Medicae +10",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
-      "skills": [],
+      "skills": {
+        "medicae": 1
+      },
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Choose Ranged or Melee specialization when taking this talent",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Anatomical Precision",
+          "description": "<p>When making Called Shots vs Xenos you have Forbidden Lore for, use Medicae skill instead of WS/BS.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

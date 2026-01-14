@@ -5,9 +5,7 @@
   "system": {
     "category": "technical",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>"
-    },
+    "description": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>",
     "tier": 2,
     "benefit": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>",
     "aptitudes": [
@@ -21,7 +19,41 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "aceOperator",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

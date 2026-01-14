@@ -3,26 +3,59 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "mimic",
     "category": "leadership",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>The character can study the voice patterns of a Non-Xenos target for one hour that they can speak the same language as to learn how to mimic their voice. Listeners must make a -10 Scrutiny Test to tell the difference, or +0 Test if the character only mainly used Vox Recordings or Comm-Link Conversations to learn how to mimic the voice. Character's Deception automatically fails if the listeners can see them and identify they are not who they sound like.\nIn a Social Conflict, if the character mimics their foe in order to riducle or disparage them, the foe loses 1d10 rather than 1d5 Willpower if the character wins the opposed test.</p>"
-    },
+    "description": "<p>You can perfectly replicate another person's voice patterns, allowing you to deceive and manipulate through vocal mimicry.</p>",
     "tier": 1,
-    "benefit": "<p>The character can study the voice patterns of a Non-Xenos target for one hour that they can speak the same language as to learn how to mimic their voice. Listeners must make a -10 Scrutiny Test to tell the difference, or +0 Test if the character only mainly used Vox Recordings or Comm-Link Conversations to learn how to mimic the voice. Character's Deception automatically fails if the listeners can see them and identify they are not who they sound like.\nIn a Social Conflict, if the character mimics their foe in order to riducle or disparage them, the foe loses 1d10 rather than 1d5 Willpower if the character wins the opposed test.</p>",
-    "aptitudes": [
-      "Fellowship",
-      "Social",
-      "Slaanesh"
-    ],
+    "benefit": "<p>The character can study the voice patterns of a Non-Xenos target for one hour that they can speak the same language as to learn how to mimic their voice. Listeners must make a -10 Scrutiny Test to tell the difference, or +0 Test if the character only mainly used Vox Recordings or Comm-Link Conversations to learn how to mimic the voice. Character's Deception automatically fails if the listeners can see them and identify they are not who they sound like. In a Social Conflict, if the character mimics their foe in order to ridicule or disparage them, the foe loses 1d10 rather than 1d5 Willpower if the character wins the opposed test.</p>",
+    "aptitudes": ["Fellowship", "Social"],
     "prerequisites": {
       "text": "None",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Voice Mimicry",
+          "description": "<p>Study a voice for 1 hour to mimic it. Listeners need -10 Scrutiny to detect (or +0 if learned from recordings). In social conflict, mimicking opponent causes 1d10 Willpower loss instead of 1d5.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

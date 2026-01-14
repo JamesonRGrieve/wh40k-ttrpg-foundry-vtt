@@ -5,9 +5,7 @@
   "system": {
     "category": "technical",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>The Character treats the test to operate a grav chute as a +40 Operate(Aeronautica) Test instead of the default +20. Additionally, if they fail the test, the character only counts as having fallen 1 metre per Degree of Failiure.</p>"
-    },
+    "description": "<p>The Character treats the test to operate a grav chute as a +40 Operate(Aeronautica) Test instead of the default +20. Additionally, if they fail the test, the character only counts as having fallen 1 metre per Degree of Failiure.</p>",
     "tier": 1,
     "benefit": "<p>The Character treats the test to operate a grav chute as a +40 Operate(Aeronautica) Test instead of the default +20. Additionally, if they fail the test, the character only counts as having fallen 1 metre per Degree of Failiure.</p>",
     "aptitudes": [
@@ -21,7 +19,41 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "dropTrooper",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "watchfulForBetrayal",
     "category": "combat",
     "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>You are constantly wary of attacks from all sides. As long as your senses are not impaired such as through a blindfold or drugs (GM Discretion), you cannot be Surprised.</p>"
-    },
+    "description": "<p>The character's paranoia and constant vigilance make it nearly impossible to catch them off guard.</p>",
     "tier": 1,
     "benefit": "<p>You are constantly wary of attacks from all sides. As long as your senses are not impaired such as through a blindfold or drugs (GM Discretion), you cannot be Surprised.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Legend of the Expanse Alternate Advance, 500xp. Awareness, Light Sleeper, Paranoia, Perception 40+",
       "characteristics": {
-        "per": 40
+        "perception": 40
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Light Sleeper", "Paranoia"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Legend of the Expanse Alternate Advance",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Cannot Be Surprised",
+          "description": "<p>As long as your senses are not impaired, you cannot be Surprised.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

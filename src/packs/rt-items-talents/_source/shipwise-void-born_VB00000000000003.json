@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "Navigation (Stellar) and Pilot (Spacecraft) become untrained Basic Skills"
+    "notes": "Navigation (Stellar) and Pilot (Spacecraft) become untrained Basic Skills",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

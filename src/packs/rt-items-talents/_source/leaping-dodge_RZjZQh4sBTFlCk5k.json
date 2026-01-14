@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "leapingDodge",
     "category": "combat",
     "source": "DH 2E: Enemies Without",
     "description": {
@@ -21,10 +22,45 @@
       "characteristics": {
         "ag": 35
       },
-      "skills": [],
+      "skills": {
+        "dodge": 1
+      },
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Evasive Leap",
+          "description": "<p>When avoiding Spray Weapon attacks, you may use your Dodge skill instead of an Agility test.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

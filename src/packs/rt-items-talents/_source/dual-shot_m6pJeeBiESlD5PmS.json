@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "dualShot",
     "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
@@ -10,17 +11,53 @@
     },
     "tier": 1,
     "benefit": "<p>When wielding two guns, can fire both at the same point as a Full Action, make one BS Test, on success, target's AP counts as normal, but toughness only counts once against the combined damage roll. A successful dodge avoids attack.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Agility",
+      "Offence"
+    ],
     "prerequisites": {
       "text": "AG 40, Two-Weapon Wielder (Ballistic)",
       "characteristics": {
-        "ag": 40
+        "agility": 40
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Two-Weapon Wielder"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Dual Shot",
+          "description": "<p>Full Action: Fire both pistols at same target with one BS test. Combined damage ignores TB once. Dodge avoids entire attack.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

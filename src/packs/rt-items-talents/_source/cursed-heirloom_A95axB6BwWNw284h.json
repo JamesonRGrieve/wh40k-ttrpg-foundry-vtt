@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "Black Crusade Core",
-    "description": {
-      "value": "<p>Character gains any one Melee/Ranged weapon or Armour of Very Rare Availability. however must roll 1d5, weapon gains this effect. The weapon will seemingly reappear even if lost, destroyed, or stolen, usually by the next game session. 1: Bloodthirsty, Character makes Willpower Test whenever killing a living enemy, if fail attack it again, possibly spending another action. 2: Unsettling, reroll character's first Fellowship-Related Test each session if it is successful. 3: Jinxed: If weapon jams (ranged), or does minimum damage (melee), all weapons of same type in 20m do the same on next use, if armour and hit with attack with higher PEN than armour's AP, AP of all armour within 20m is halved until start of Character's next turn. 4: Doomed: The first time an Infamy Point is spent roll 1d10, on a 9 it has no effect. 5: Toxic: reroll the character's first Toughness-Related Test each session if it is successful.</p>"
-    },
+    "description": "<p>The character possesses a powerful but cursed item of significant power, which grants great strength but carries dark consequences.</p>",
     "tier": 1,
     "benefit": "<p>Character gains any one Melee/Ranged weapon or Armour of Very Rare Availability. however must roll 1d5, weapon gains this effect. The weapon will seemingly reappear even if lost, destroyed, or stolen, usually by the next game session. 1: Bloodthirsty, Character makes Willpower Test whenever killing a living enemy, if fail attack it again, possibly spending another action. 2: Unsettling, reroll character's first Fellowship-Related Test each session if it is successful. 3: Jinxed: If weapon jams (ranged), or does minimum damage (melee), all weapons of same type in 20m do the same on next use, if armour and hit with attack with higher PEN than armour's AP, AP of all armour within 20m is halved until start of Character's next turn. 4: Doomed: The first time an Infamy Point is spent roll 1d10, on a 9 it has no effect. 5: Toxic: reroll the character's first Toughness-Related Test each session if it is successful.</p>",
     "aptitudes": [
@@ -20,7 +18,46 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "cursedHeirloom",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Cursed Heirloom",
+          "description": "<p>You gain any one Melee/Ranged weapon or Armour of Very Rare Availability. The item is cursed - roll 1d5 for effect: 1-Bloodthirsty (WP test after killing or attack again), 2-Unsettling (reroll first successful Fellowship test each session), 3-Jinxed (jam/minimum damage spreads to same type within 20m), 4-Doomed (first Infamy spend may fail on 9), 5-Toxic (reroll first successful Toughness test each session). Item reappears if lost or destroyed.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

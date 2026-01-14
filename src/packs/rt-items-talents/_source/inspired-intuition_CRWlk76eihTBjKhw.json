@@ -17,13 +17,37 @@
     "prerequisites": {
       "text": "Tier 2: Inquisitor E.Adv, Intelligence 50",
       "characteristics": {
-        "int": 50
+        "intelligence": 50
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "inspiredIntuition",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Fate Question",
+          "description": "<p>Spend a Fate Point to ask the GM a question about the current situation. GM should answer as helpfully as possible.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

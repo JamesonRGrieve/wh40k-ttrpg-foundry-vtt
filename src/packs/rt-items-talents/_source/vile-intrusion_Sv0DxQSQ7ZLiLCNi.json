@@ -3,10 +3,11 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "vileIntrusion",
     "category": "knowledge",
     "source": "RT: Hostile Acquisitions",
     "description": {
-      "value": "<p>Character gains +20 to Tech-Use and Security Tests to gain unauthorised access to electronic systems using a Cogitator or Electronic Lock as long as they can connect to it with their implants.</p>"
+      "value": "<p>Through dark knowledge and corrupted implants, the character can interface directly with technology to violate security systems and gain unauthorized access.</p>"
     },
     "tier": 1,
     "benefit": "<p>Character gains +20 to Tech-Use and Security Tests to gain unauthorised access to electronic systems using a Cogitator or Electronic Lock as long as they can connect to it with their implants.</p>",
@@ -18,7 +19,60 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "techUse",
+            "value": 20,
+            "condition": "When using implants to gain unauthorized access to electronic systems",
+            "icon": "fa-solid fa-microchip"
+          },
+          {
+            "key": "security",
+            "value": 20,
+            "condition": "When using implants to breach electronic locks or cogitators",
+            "icon": "fa-solid fa-lock"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

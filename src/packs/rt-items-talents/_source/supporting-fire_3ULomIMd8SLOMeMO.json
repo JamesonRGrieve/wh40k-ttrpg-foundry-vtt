@@ -3,22 +3,54 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "supportingFire",
     "category": "combat",
     "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>Any time an enemy makes a charge Action to engage in melee with an Allied Tau within 20 metres, the character can spend their reaction to make a standard ranged attack with -20 to the ballistic test to attack the enemy. This attack resolves prior to the target completing their charge action.</p>"
-    },
+    "description": "<p>Following Tau doctrine, the character provides covering fire to prevent enemies from engaging their allies in melee.</p>",
     "tier": 1,
     "benefit": "<p>Any time an enemy makes a charge Action to engage in melee with an Allied Tau within 20 metres, the character can spend their reaction to make a standard ranged attack with -20 to the ballistic test to attack the enemy. This attack resolves prior to the target completing their charge action.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Tau",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "ballisticSkill",
+      "skill": "",
+      "modifier": -20,
+      "description": "Reaction ranged attack against charging enemies"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Overwatch",
+          "description": "<p>As a Reaction, when an enemy charges an allied Tau within 20m, make a ranged attack at -20 BS before they complete the charge.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

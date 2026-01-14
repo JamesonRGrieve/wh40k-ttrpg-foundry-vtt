@@ -3,14 +3,16 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "coordinationAlgorithms",
     "category": "knowledge",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>When two or more servitors, such as the character's Servitor Comrades, assist them in a Tech-Use Test via the Servo-Arm Comrade Advance, they gain an additiional +5 to the test per servitor assisting beyond the first.</p>"
-    },
+    "description": "<p>When two or more servitors, such as the character's Servitor Comrades, assist them in a Tech-Use Test via the Servo-Arm Comrade Advance, they gain an additional +5 to the test per servitor assisting beyond the first.</p>",
     "tier": 1,
-    "benefit": "<p>When two or more servitors, such as the character's Servitor Comrades, assist them in a Tech-Use Test via the Servo-Arm Comrade Advance, they gain an additiional +5 to the test per servitor assisting beyond the first.</p>",
-    "aptitudes": [],
+    "benefit": "<p>When two or more servitors assist you in a Tech-Use Test via the Servo-Arm Comrade Advance, you gain an additional +5 to the test per servitor assisting beyond the first.</p>",
+    "aptitudes": [
+      "Intelligence",
+      "Tech"
+    ],
     "prerequisites": {
       "text": "Enginseer Prime Advanced Specialty (400xp)",
       "characteristics": {},
@@ -18,7 +20,54 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "techUse",
+            "value": 5,
+            "condition": "Per servitor assisting beyond the first (minimum 2 servitors)",
+            "icon": "fa-solid fa-robot"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

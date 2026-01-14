@@ -24,7 +24,47 @@
       "skills": [],
       "talents": []
     },
-    "cost": 600
+    "cost": 600,
+    "identifier": "coverup",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Trade Influence for Subtlety",
+          "description": "<p>At the GM's discretion, you can reduce your Influence by X to increase your Subtlety by Xd5.</p>"
+        }
+      ]
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

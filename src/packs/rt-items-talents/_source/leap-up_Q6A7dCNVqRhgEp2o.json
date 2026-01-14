@@ -5,9 +5,7 @@
   "system": {
     "category": "movement",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>The Character can Stand Up as a Free Action</p>"
-    },
+    "description": "<p>The Character can Stand Up as a Free Action</p>",
     "tier": 1,
     "benefit": "<p>The Character can Stand Up as a Free Action</p>",
     "aptitudes": [
@@ -18,13 +16,47 @@
     "prerequisites": {
       "text": "Agility 30",
       "characteristics": {
-        "ag": 30
+        "agility": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "leapUp",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

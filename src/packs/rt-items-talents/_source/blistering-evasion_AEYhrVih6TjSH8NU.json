@@ -17,13 +17,59 @@
     "prerequisites": {
       "text": "Perception 35, Dodge +10 or Parry +10",
       "characteristics": {
-        "per": 35
+        "perception": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "blisteringEvasion",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Blistering Evasion",
+          "description": "<p>When you make a successful Evasion Test against an attack, enemies take -10 to Ballistic and Weapon Skill Attacks to hit you until the start of your next turn.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

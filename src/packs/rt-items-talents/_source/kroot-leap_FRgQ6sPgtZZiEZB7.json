@@ -5,9 +5,7 @@
   "system": {
     "category": "movement",
     "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>When taking a charge action, the Kroot can ignore obstacles betwene themselves and the target of the charge by making a Running Vertical Leap as long as there is room for the Kroot to land next to their target, enough overhead space to leap over the obstacles, and the obstacles are not taller than their vertical leap height. If the Kroot strikes their target aftert making such a leap, they may make a Knock-Down Action vs the Target as a Free Action.</p>"
-    },
+    "description": "<p>When taking a charge action, the Kroot can ignore obstacles betwene themselves and the target of the charge by making a Running Vertical Leap as long as there is room for the Kroot to land next to their target, enough overhead space to leap over the obstacles, and the obstacles are not taller than their vertical leap height. If the Kroot strikes their target aftert making such a leap, they may make a Knock-Down Action vs the Target as a Free Action.</p>",
     "isPassive": false,
     "isRollable": false,
     "tier": 1,
@@ -16,13 +14,47 @@
     "prerequisites": {
       "text": "Kroot, Strength 45+, Agility 45+",
       "characteristics": {
-        "s": 45,
-        "ag": 45
+        "strength": 45,
+        "agility": 45
       },
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "identifier": "krootLeap",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

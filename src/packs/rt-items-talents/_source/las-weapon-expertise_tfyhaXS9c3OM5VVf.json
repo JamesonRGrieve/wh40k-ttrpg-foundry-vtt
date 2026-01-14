@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "lasWeaponExpertise",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
@@ -20,10 +21,43 @@
         "bs": 35
       },
       "skills": [],
-      "talents": []
+      "talents": ["Lasgun Volley"]
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Pinpoint Beams",
+          "description": "<p>When you attack with las weapons, impose -5 penalty to Dodge tests per Degree of Success beyond the first (max -30).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

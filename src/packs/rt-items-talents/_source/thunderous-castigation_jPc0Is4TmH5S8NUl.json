@@ -22,7 +22,33 @@
       "skills": [],
       "talents": []
     },
-    "cost": 900
+    "cost": 900,
+    "identifier": "thunderousCastigation",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "intimidate",
+            "value": 20,
+            "condition": "When verbally intimidating foes",
+            "icon": "fa-solid fa-bolt"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

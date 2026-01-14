@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "airOfAuthority",
     "category": "social",
     "source": "Only War Core",
     "description": {
@@ -16,12 +17,46 @@
     "prerequisites": {
       "text": "Fellowship 30",
       "characteristics": {
-        "fel": 30
+        "fellowship": 30
       },
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "command",
+            "value": 10,
+            "condition": "In Social Conflicts",
+            "icon": "fa-solid fa-gavel"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Expanded Command Radius",
+          "description": "<p>Can affect up to 100x Fellowship Bonus targets (instead of 10x) with Command tests. Squad orders have +100m range.</p>"
+        },
+        {
+          "name": "Loyal Minions",
+          "description": "<p>Minions have +10 Loyalty.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -18,7 +18,34 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "grandOratory",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "charm": 10,
+        "command": 10
+      },
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Grand Speeches",
+          "description": "<p>Can deliver inspiring or persuasive speeches to large audiences. Effects last for the duration of an encounter or scene.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

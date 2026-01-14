@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "Common Lore (Imperial Creed), (Imperium), and (War) become untrained Basic Skills"
+    "notes": "Common Lore (Imperial Creed), (Imperium), and (War) become untrained Basic Skills",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

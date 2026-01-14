@@ -16,12 +16,46 @@
     "prerequisites": {
       "text": "Fel 30",
       "characteristics": {
-        "fel": 30
+        "fellowship": 30
       },
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "identifier": "peer",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": 10,
+            "condition": "When dealing with chosen group",
+            "icon": "fa-solid fa-handshake"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Peer (X)",
+          "description": "<p>You have connections with a group or organization. Gain +10 to Fellowship tests with that group.</p>"
+        }
+      ]
+    },
+    "stackable": true,
+    "rank": 1,
+    "specialization": ""
   },
   "effects": [],
   "flags": {},

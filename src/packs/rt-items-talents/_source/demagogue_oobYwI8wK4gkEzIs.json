@@ -20,7 +20,35 @@
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "demagogue",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "charm": 10
+      },
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "command",
+            "value": 20,
+            "condition": "When commanding individuals with lower Fellowship",
+            "icon": "fa-solid fa-crown"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

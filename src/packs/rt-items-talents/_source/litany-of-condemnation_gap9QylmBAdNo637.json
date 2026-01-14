@@ -17,13 +17,39 @@
     "prerequisites": {
       "text": "WP 40, Scholastic Lore (Imperial Creed) +10.",
       "characteristics": {
-        "wp": 40
+        "willpower": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "litanyOfCondemnation",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "intimidate",
+            "value": 10,
+            "condition": "When condemning heretics or xenos",
+            "icon": "fa-solid fa-cross"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

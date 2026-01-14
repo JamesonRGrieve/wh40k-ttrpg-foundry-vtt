@@ -9,9 +9,7 @@
       "book": "Rogue Trader Core Rulebook",
       "page": "66"
     },
-    "description": {
-      "value": "<p><strong>Seeker of Lore:</strong> The Seneschal is a master of information and intelligence, possessing an encyclopedic knowledge and the skills to uncover any fact or secret. Their dedication to acquiring and cataloging knowledge makes them invaluable advisors and administrators. When the situation demands it, they can draw upon their vast reserves of learning to achieve superhuman feats of research and deduction.</p>"
-    },
+    "description": "<p><strong>Seeker of Lore:</strong> The Seneschal is a master of information and intelligence, possessing an encyclopedic knowledge and the skills to uncover any fact or secret. Their dedication to acquiring and cataloging knowledge makes them invaluable advisors and administrators. When the situation demands it, they can draw upon their vast reserves of learning to achieve superhuman feats of research and deduction.</p>",
     "tier": 0,
     "benefit": "<p>You may spend a Fate Point to automatically succeed at any Ciphers, Lore, or Logic Test (resolving in minimum time required). Additionally, you add +1 Degree of Success to any successful Commerce, Inquiry, or Evaluate Test.</p>",
     "aptitudes": [],
@@ -60,6 +58,12 @@
           "description": "Spend a Fate Point to automatically succeed at any Ciphers, Lore, or Logic Test (minimum time). Add +1 Degree of Success to successful Commerce, Inquiry, or Evaluate Tests."
         }
       ]
+    },
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
     }
   },
   "effects": [],

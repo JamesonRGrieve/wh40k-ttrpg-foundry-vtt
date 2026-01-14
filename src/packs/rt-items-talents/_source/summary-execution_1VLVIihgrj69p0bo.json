@@ -3,23 +3,54 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "summaryExecution",
+    "category": "leadership",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>If a Player Character within weapon range falls below 0 Wounds, can make +0 Ballistic Test to shoot that PC's Comrade, if successful, Comrade dies, motivating the wounded Player Character to regain 1d5 Wounds.</p>"
-    },
-    "isPassive": true,
-    "isRollable": true,
+    "description": "<p>The Commissar can execute a fallen soldier's comrade to inspire the wounded to fight on through sheer terror.</p>",
+    "isPassive": false,
     "tier": 1,
     "benefit": "<p>If a Player Character within weapon range falls below 0 Wounds, can make +0 Ballistic Test to shoot that PC's Comrade, if successful, Comrade dies, motivating the wounded Player Character to regain 1d5 Wounds.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Commissar Specialty",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "ballisticSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Ballistic Skill test to execute Comrade"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Motivational Execution",
+          "description": "<p>When a PC falls below 0 Wounds, make a BS test to shoot their Comrade. If successful, the Comrade dies and the wounded PC regains 1d5 Wounds.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

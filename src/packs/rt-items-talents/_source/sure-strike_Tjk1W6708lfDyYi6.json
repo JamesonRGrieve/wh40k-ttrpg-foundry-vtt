@@ -3,13 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "sureStrike",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>When character mades a Called Shot Action with a melee attack, they reduce the penalty by 10 (-20 to -10)</p>"
-    },
+    "description": "<p>The character's precision with melee weapons allows them to make called shots with reduced penalty.</p>",
     "tier": 1,
-    "benefit": "<p>When character mades a Called Shot Action with a melee attack, they reduce the penalty by 10 (-20 to -10)</p>",
+    "benefit": "<p>When character makes a Called Shot Action with a melee attack, they reduce the penalty by 10 (-20 to -10)</p>",
     "aptitudes": [
       "Weapon Skill",
       "Finesse",
@@ -18,13 +17,48 @@
     "prerequisites": {
       "text": "Weapon Skill 30",
       "characteristics": {
-        "ws": 30
+        "weaponSkill": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "attack",
+            "value": 10,
+            "condition": "When making Called Shot Actions with melee attacks",
+            "icon": "fa-solid fa-crosshairs"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -18,7 +18,43 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "daPowerOfWaaagh",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Da Power of Waaagh!",
+          "description": "<p>Ork Weirdboyz use different rules for Psychic Powers than normal Psykers. They do not have Fettered or Push Strength. Their Psy Rating increases by 1 per Ork within 10 Metres, up to a maximum of 10. If Rolling Doubles on Focus Power Tests, instead of Rolling on Psychic Phenomena and Perils of the Warp, they roll on Weird Fings and 'Eadbang Tables (See Psychic Powers). When Rolling on such tables, add +5 per point of Psy Rating above 3. Weirdboyz also struggle to suppress Waaagh! Energies for ...</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

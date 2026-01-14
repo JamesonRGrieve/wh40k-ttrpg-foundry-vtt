@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "hipShooting",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>As a Full Action, can move up to Full Move Rate and make a single attack with a ranged weapon, must be a single shot (or two single shots if dual wielding with Two-Weapon Wielder Talent).</p>"
-    },
+    "description": "<p>As a Full Action, can move up to Full Move Rate and make a single attack with a ranged weapon, must be a single shot (or two single shots if dual wielding with Two-Weapon Wielder Talent).</p>",
     "tier": 2,
     "benefit": "<p>As a Full Action, can move up to Full Move Rate and make a single attack with a ranged weapon, must be a single shot (or two single shots if dual wielding with Two-Weapon Wielder Talent).</p>",
     "aptitudes": [
@@ -18,14 +17,47 @@
     "prerequisites": {
       "text": "BS 40, Agility 40",
       "characteristics": {
-        "bs": 40,
-        "ag": 40
+        "ballisticSkill": 40,
+        "agility": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Move and Shoot",
+          "description": "<p>As a Full Action, move up to your Full Move and make a single ranged attack (or two single shots if dual wielding with Two-Weapon Wielder talent).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

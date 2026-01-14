@@ -3,24 +3,58 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "throughUnityDevastation",
+    "category": "leadership",
     "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>The character can spend a Fate Point to make a +0 Ballistic Skill Test as a Full Action. If they succeed, they choose a single target within range, that unit is marked for one round, +1 per Degree of Success on test. Allied Tau characters that hit the target with ranged attacks can roll twice for damage and choose the higher result.</p>"
-    },
+    "description": "<p>The character can designate priority targets for coordinated fire, allowing bonded allies to strike with devastating effect.</p>",
     "tier": 1,
     "benefit": "<p>The character can spend a Fate Point to make a +0 Ballistic Skill Test as a Full Action. If they succeed, they choose a single target within range, that unit is marked for one round, +1 per Degree of Success on test. Allied Tau characters that hit the target with ranged attacks can roll twice for damage and choose the higher result.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Tau, Ballistic Skill 45, Furious Fusillade, Command +20",
       "characteristics": {
-        "bs": 45
+        "ballisticSkill": 45
       },
-      "skills": [],
+      "skills": {
+        "command": 2
+      },
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "ballisticSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "BS test to mark target for coordinated fire"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Target Marking",
+          "description": "<p>Spend Fate Point and Full Action. Make BS test to mark target for 1 round (+1 per DoS). Allied Tau roll damage twice and take higher result.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "waaagh",
     "category": "combat",
     "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>If Ork succesfully hits their Target with a Charge Action, they can spend their reaction to make an additional attack using the same Bonuses or Penalties as the original attack.</p>"
-    },
+    "description": "<p>The Ork channels the collective psychic energy of the Waaagh!, allowing them to unleash brutal follow-up attacks when they charge.</p>",
     "tier": 1,
-    "benefit": "<p>If Ork succesfully hits their Target with a Charge Action, they can spend their reaction to make an additional attack using the same Bonuses or Penalties as the original attack.</p>",
+    "benefit": "<p>If Ork successfully hits their Target with a Charge Action, they can spend their reaction to make an additional attack using the same Bonuses or Penalties as the original attack.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Ork, Berserk Charge, Furious Assault, Weapon Skill 40",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
       "skills": [],
-      "talents": []
+      "talents": ["Berserk Charge", "Furious Assault"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Ork",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Waaagh! Energy",
+          "description": "<p>When you hit with a Charge Action, spend your Reaction to make an additional attack with the same bonuses/penalties.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

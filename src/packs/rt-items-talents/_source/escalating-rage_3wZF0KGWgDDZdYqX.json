@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "escalatingRage",
     "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
@@ -10,15 +11,51 @@
     },
     "tier": 1,
     "benefit": "<p>Whilst the Character is in a Frenzy, whenever an enemy inflicts Critical Damage on an ally or hits a comrade within 10 metres of the Character, they can increase their Unnatural Strength and Toughness Traits by +1 until the end of the encounter. These traits cannot exceed +8 each.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Strength",
+      "Offence"
+    ],
     "prerequisites": {
       "text": "Bulkwark Advanced Specialty (400xp)",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Rage Escalation",
+          "description": "<p>While Frenzied, when ally within 10m is hit or critically damaged, increase Unnatural S and T by +1 for encounter (max +8 each).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

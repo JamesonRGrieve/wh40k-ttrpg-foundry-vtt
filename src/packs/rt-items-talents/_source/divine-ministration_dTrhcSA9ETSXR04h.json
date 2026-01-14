@@ -3,22 +3,70 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "divineMinistration",
+    "category": "general",
     "source": "Rogue Trader Core",
     "description": {
       "value": "<p>When Testing Medicae, may spend a fate point to restore damage to a target equal to WP Bonus or WP Bonus + Int Bonus if Lightly Wounded, or alternatively to remove all Fatigue from 2xWP people. \nMay Burn a Fate point to allow a recently dead character to instead be critically wounded, within reason, you can't undecapitate someone.</p>"
     },
     "tier": 1,
     "benefit": "<p>When Testing Medicae, may spend a fate point to restore damage to a target equal to WP Bonus or WP Bonus + Int Bonus if Lightly Wounded, or alternatively to remove all Fatigue from 2xWP people. \nMay Burn a Fate point to allow a recently dead character to instead be critically wounded, within reason, you can't undecapitate someone.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Willpower",
+      "Knowledge"
+    ],
     "prerequisites": {
       "text": "Pure Faith",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": [
+        "Pure Faith"
+      ]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "medicae",
+      "modifier": 0,
+      "description": "Medicae test with divine blessing"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "skills": [
+          {
+            "key": "medicae",
+            "value": 10,
+            "condition": "When using Medicae on faithful Imperial citizens",
+            "icon": "fa-solid fa-hand-holding-medical"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Divine Healing",
+          "description": "<p>Spend Fate Point during Medicae test to restore WP Bonus damage (or WP+Int if lightly wounded), or remove all Fatigue from 2xWP people.</p>"
+        },
+        {
+          "name": "Resurrection",
+          "description": "<p>Burn a Fate Point to save a recently dead character, making them critically wounded instead (within reason).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

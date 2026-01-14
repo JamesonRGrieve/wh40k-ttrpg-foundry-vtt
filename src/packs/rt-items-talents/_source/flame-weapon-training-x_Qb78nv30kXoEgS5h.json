@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "flameWeaponTraining",
     "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
@@ -10,15 +11,51 @@
     },
     "tier": 1,
     "benefit": "<p>Allows use of Flame weapons without -20 Penalty: Groups: Universal (All non Exotic weapons with flame quality)</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Ballistic Skill",
+      "Offence"
+    ],
     "prerequisites": {
       "text": "-",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Flame Weapon Proficiency",
+          "description": "<p>You can use all non-Exotic weapons with the Flame quality without the -20 untrained penalty.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

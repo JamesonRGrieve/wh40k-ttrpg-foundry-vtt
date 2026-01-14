@@ -3,25 +3,71 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "furiousZeal",
     "category": "combat",
     "source": "DH 2E: Enemies Within",
-    "description": {
-      "value": "<p>The Sister adds their Insanity Bonus to the damage they inflict with melee attacks on targets they possess appropriate Hatred talents for.</p>"
-    },
+    "description": "<p>The righteous fury of the Emperor flows through you, channeling your madness into holy wrath against those you hate.</p>",
     "tier": 1,
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
     "benefit": "<p>The Sister adds their Insanity Bonus to the damage they inflict with melee attacks on targets they possess appropriate Hatred talents for.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Offence"
     ],
     "prerequisites": {
-      "text": "Tier 1: Sister of Battle E.Adv, Insanity 10+, Hatred (Any).",
+      "text": "Sister of Battle, Insanity 10+, Hatred (Any)",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Hatred (Any)"]
     },
-    "cost": 300,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 0,
+            "condition": "Add Insanity Bonus to melee damage against Hated targets",
+            "icon": "fa-solid fa-fire"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

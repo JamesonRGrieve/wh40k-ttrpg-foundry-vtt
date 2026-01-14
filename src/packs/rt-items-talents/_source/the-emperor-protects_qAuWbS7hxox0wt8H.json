@@ -3,22 +3,58 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "theEmperorProtects",
+    "category": "leadership",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Can spend a Fate Point to grant you and a WP Bonus Allies immunity to Fear and Pinning, and - 10 to be hit by ranged or melee attacks for the duration fo the encounter. Can Burn a Fate point to allow an ally to resist a single attack and take no damage, must be burnt after hit but prior to damage roll.</p>"
-    },
+    "description": "<p>Through their unwavering faith, the character can invoke divine protection for themselves and their allies.</p>",
     "tier": 1,
-    "benefit": "<p>Can spend a Fate Point to grant you and a WP Bonus Allies immunity to Fear and Pinning, and - 10 to be hit by ranged or melee attacks for the duration fo the encounter. Can Burn a Fate point to allow an ally to resist a single attack and take no damage, must be burnt after hit but prior to damage roll.</p>",
+    "benefit": "<p>Can spend a Fate Point to grant you and a WP Bonus Allies immunity to Fear and Pinning, and -10 to be hit by ranged or melee attacks for the duration of the encounter. Can Burn a Fate point to allow an ally to resist a single attack and take no damage, must be burnt after hit but prior to damage roll.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Pure Faith",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Divine Shield",
+          "description": "<p>Spend a Fate Point: You and WP Bonus allies gain immunity to Fear/Pinning and -10 to be hit for the encounter.</p>"
+        },
+        {
+          "name": "Miraculous Protection",
+          "description": "<p>Burn a Fate Point: An ally resists a single attack and takes no damage (after hit, before damage).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

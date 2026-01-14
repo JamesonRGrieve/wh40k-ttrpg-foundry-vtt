@@ -3,23 +3,58 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "sparkySquigs",
     "category": "combat",
     "source": "RT: The Navis Primer",
-    "description": {
-      "value": "<p>The Character has a small swarm of Mutant Buzzer Squigs that follow them everywhere. As a Free Action, the character can kill them all to absorb their Waaagh! Energy, adding +20 to their next focus Power Test. A New Swarm spawns after 2d5 Days. Whilst accompanied by the Swarm, the Character's Melee Attacks gain the Shocking Quality.</p>"
-    },
+    "description": "<p>The character possesses a small swarm of mutant Buzzer Squigs that serve as living batteries of Waaagh! energy.</p>",
     "isPassive": false,
-    "isRollable": true,
     "tier": 1,
     "benefit": "<p>The Character has a small swarm of Mutant Buzzer Squigs that follow them everywhere. As a Free Action, the character can kill them all to absorb their Waaagh! Energy, adding +20 to their next focus Power Test. A New Swarm spawns after 2d5 Days. Whilst accompanied by the Swarm, the Character's Melee Attacks gain the Shocking Quality.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Ork Weirdboy, Da Power of Waaagh!, Runtz",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Mutant Buzzer Squigs",
+          "description": "<p>As a Free Action, kill all squigs to gain +20 to your next Focus Power Test. A new swarm spawns after 2d5 days.</p>"
+        },
+        {
+          "name": "Shocking Melee Attacks",
+          "description": "<p>While accompanied by the swarm, your melee attacks gain the Shocking quality.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

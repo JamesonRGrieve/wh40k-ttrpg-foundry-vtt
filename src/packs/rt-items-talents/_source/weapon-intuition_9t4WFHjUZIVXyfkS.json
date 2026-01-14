@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "weaponIntuition",
     "category": "combat",
     "source": "DH 2E: Enemies Without",
-    "description": {
-      "value": "<p>Character reduces penalty for using a weapon without proper training by 10.</p>"
-    },
+    "description": "<p>The character has such extensive experience with weapons that they can use unfamiliar ones with reduced penalty.</p>",
     "tier": 3,
     "benefit": "<p>Character reduces penalty for using a weapon without proper training by 10.</p>",
     "aptitudes": [
@@ -18,10 +17,50 @@
       "text": "Tier 3: Exotic Weapon Training (Any)",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Exotic Weapon Training"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "attack",
+            "value": 10,
+            "condition": "When using untrained weapons (-20 becomes -10)",
+            "icon": "fa-solid fa-question"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

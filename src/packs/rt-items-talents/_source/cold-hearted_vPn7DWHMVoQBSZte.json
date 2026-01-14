@@ -22,7 +22,40 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "coldHearted",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "insanity": 1
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": 20,
+            "condition": "In Social Conflicts when opponents try to Charm you (Opposed Test)",
+            "icon": "fa-solid fa-shield-halved"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Immune to Seduction",
+          "description": "<p>Immune to Seduction. Charm Tests against you have -10. Gain 1 Insanity Point when taking this talent.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

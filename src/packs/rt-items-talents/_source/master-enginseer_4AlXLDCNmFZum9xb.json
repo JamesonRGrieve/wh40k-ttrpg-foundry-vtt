@@ -3,13 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "masterEnginseer",
     "category": "knowledge",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Gain +10 to all Tech-Use Skill Tests. The Character can spend a Fate Point to automatically succeed on a Tech-Use Skill Test for enhancement, repair, or upgrade of a machine's systems, taking the minimum amount of time possible for the task.\nAt GM discretion, the character can repair objects without all parts to hand by jury-rigging a working device as good as the original.</p>"
-    },
+    "description": "<p>You are a true master of the Machine God's arts, capable of performing miraculous repairs and understanding even the most complex technologies.</p>",
     "tier": 3,
-    "benefit": "<p>Gain +10 to all Tech-Use Skill Tests. The Character can spend a Fate Point to automatically succeed on a Tech-Use Skill Test for enhancement, repair, or upgrade of a machine's systems, taking the minimum amount of time possible for the task.\nAt GM discretion, the character can repair objects without all parts to hand by jury-rigging a working device as good as the original.</p>",
+    "benefit": "<p>Gain +10 to all Tech-Use Skill Tests. The Character can spend a Fate Point to automatically succeed on a Tech-Use Skill Test for enhancement, repair, or upgrade of a machine's systems, taking the minimum amount of time possible for the task. At GM discretion, the character can repair objects without all parts to hand by jury-rigging a working device as good as the original.</p>",
     "aptitudes": [
       "Intelligence",
       "Tech",
@@ -18,11 +17,64 @@
     "prerequisites": {
       "text": "Tech-Use +20, Mechanicus Implants",
       "characteristics": {},
-      "skills": [],
+      "skills": {
+        "techUse": 2
+      },
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "techUse": 10
+      },
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Miraculous Repair",
+          "description": "<p>You can spend a Fate Point to automatically succeed on a Tech-Use test for enhancement, repair, or upgrade of a machine's systems, taking the minimum amount of time possible for the task.</p>"
+        },
+        {
+          "name": "Jury-Rig Master",
+          "description": "<p>At GM discretion, you can repair objects without all parts to hand by jury-rigging a working device as good as the original.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

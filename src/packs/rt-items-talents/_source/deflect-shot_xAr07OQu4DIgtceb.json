@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>When the Character is wielding a Melee Weapon, they can add their Weapon Skill Bonus to their Armour Points on all Locations (even those unarmoured) when calculating damage from ranged weapons with the Primitive Quality, or Thrown Weapons.</p>"
-    },
+    "description": "<p>The character can use melee weapons to deflect incoming projectiles, adding their weapon skill to their armor.</p>",
     "tier": 2,
     "benefit": "<p>When the Character is wielding a Melee Weapon, they can add their Weapon Skill Bonus to their Armour Points on all Locations (even those unarmoured) when calculating damage from ranged weapons with the Primitive Quality, or Thrown Weapons.</p>",
     "aptitudes": [
@@ -18,13 +16,52 @@
     "prerequisites": {
       "text": "Agility 50",
       "characteristics": {
-        "ag": 50
+        "agility": 50
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "deflectShot",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Weapon Deflection",
+          "description": "<p>When wielding a melee weapon, add your Weapon Skill Bonus to Armour Points on all locations (including unarmoured) when calculating damage from ranged weapons with Primitive quality or Thrown weapons.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

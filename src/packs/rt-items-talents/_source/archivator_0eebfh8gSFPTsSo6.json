@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "archivator",
     "category": "knowledge",
     "source": "DH 2E: Enemies Without",
-    "description": {
-      "value": "<p>When making Scholastic Lore or Forbidden Lore tests using sources of recorded information of any sort, character can reroll a failed test once with a -10 penalty to the reroll. Tests to perform research or find information in such circumstances take half the time.</p>"
-    },
+    "description": "<p>When making Scholastic Lore or Forbidden Lore tests using sources of recorded information of any sort, character can reroll a failed test once with a -10 penalty to the reroll. Tests to perform research or find information in such circumstances take half the time.</p>",
     "tier": 2,
     "benefit": "<p>When making Scholastic Lore or Forbidden Lore tests using sources of recorded information of any sort, character can reroll a failed test once with a -10 penalty to the reroll. Tests to perform research or find information in such circumstances take half the time.</p>",
     "aptitudes": [
@@ -17,13 +16,62 @@
     "prerequisites": {
       "text": "Tier 2: Intelligence 40",
       "characteristics": {
-        "int": 40
+        "intelligence": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Research Reroll",
+          "description": "<p>When making Scholastic Lore or Forbidden Lore tests using sources of recorded information, you can reroll a failed test once with a -10 penalty to the reroll.</p>"
+        },
+        {
+          "name": "Rapid Research",
+          "description": "<p>Tests to perform research or find information using recorded sources take half the time.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

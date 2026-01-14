@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "desperateStrength",
     "category": "combat",
     "source": "OW: Shield of Humanity",
     "description": {
@@ -17,13 +18,66 @@
     "prerequisites": {
       "text": "Toughness 50, Frenzy",
       "characteristics": {
-        "t": 50
+        "toughness": 50
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Frenzy"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "strength",
+            "value": 10,
+            "condition": "When Heavily Damaged (more than 2x TB wounds)",
+            "icon": "fa-solid fa-heart-crack"
+          },
+          {
+            "key": "toughness",
+            "value": 10,
+            "condition": "When Heavily Damaged (more than 2x TB wounds)",
+            "icon": "fa-solid fa-heart-crack"
+          },
+          {
+            "key": "strength",
+            "value": 10,
+            "condition": "When suffering Critical Damage (additional bonus)",
+            "icon": "fa-solid fa-skull"
+          },
+          {
+            "key": "toughness",
+            "value": 10,
+            "condition": "When suffering Critical Damage (additional bonus)",
+            "icon": "fa-solid fa-skull"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

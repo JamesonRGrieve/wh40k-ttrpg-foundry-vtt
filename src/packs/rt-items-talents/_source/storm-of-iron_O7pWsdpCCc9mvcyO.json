@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "stormOfIron",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>When the character deals damage to a target using Semi or Full Auto Bursts, the character can allocate extra hits to any other target within 5 metres of the original target, instead of the normal 2 metres.</p>"
-    },
+    "description": "<p>The character's mastery of automatic fire allows them to spread hits over a wider area with devastating effect.</p>",
     "tier": 2,
     "benefit": "<p>When the character deals damage to a target using Semi or Full Auto Bursts, the character can allocate extra hits to any other target within 5 metres of the original target, instead of the normal 2 metres.</p>",
     "aptitudes": [
@@ -18,13 +17,48 @@
     "prerequisites": {
       "text": "BS 45, Weapon Training (Any Ranged)",
       "characteristics": {
-        "bs": 45
+        "ballisticSkill": 45
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [
+        {
+          "key": "autoFireSpread",
+          "label": "Auto Fire Spread Range",
+          "value": 3,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

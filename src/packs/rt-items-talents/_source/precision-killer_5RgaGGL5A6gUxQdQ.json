@@ -1,13 +1,12 @@
 {
-  "name": "Precision Killer",
+  "name": "Precision Killer (X)",
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "precisionKiller",
     "category": "combat",
     "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making a Called Shot, character does not suffer the usual -20 penalty. If X is Melee, this applies to melee attacks, if X is ranged, it applies to ranged attacks.</p>"
-    },
+    "description": "<p>The character has become a master of precise strikes, able to target specific weak points without difficulty.</p>",
     "tier": 2,
     "benefit": "<p>When taking this talent Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making a Called Shot, character does not suffer the usual -20 penalty. If X is Melee, this applies to melee attacks, if X is ranged, it applies to ranged attacks.</p>",
     "aptitudes": [
@@ -15,16 +14,54 @@
       "Finesse"
     ],
     "prerequisites": {
-      "text": "Ballistic Skill 40, Weapon Skill 40",
+      "text": "Ballistic Skill 40 or Weapon Skill 40",
       "characteristics": {
-        "bs": 40,
-        "ws": 40
+        "ballisticSkill": 40,
+        "weaponSkill": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Choose Ranged or Melee when taking this talent",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "No Called Shot Penalty",
+          "description": "<p>When making a Called Shot with the chosen attack type (Ranged or Melee), do not suffer the usual -20 penalty.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

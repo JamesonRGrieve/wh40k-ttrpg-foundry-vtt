@@ -17,13 +17,37 @@
     "prerequisites": {
       "text": "Clues from the Crowds, Fellowship 35",
       "characteristics": {
-        "fel": 35
+        "fellowship": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "faceInACrowd",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Blend Into Crowds",
+          "description": "<p>When in crowds or public places, become virtually unnoticeable. Others have -20 to Awareness tests to spot or recognize you.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

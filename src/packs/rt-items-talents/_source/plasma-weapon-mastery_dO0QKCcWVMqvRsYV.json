@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "plasmaWeaponMastery",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When this character makes a ranged attack with a Plasma Weapon with the Maximal Quality on Maximal Settings, they add an additional +2 to its Damage, Penetration, and Blast Quality. (for a total of +1d10+2 Damage, +4 Penetration, and +4 Blast)</p>"
-    },
+    "description": "<p>The character has mastered the use of plasma weapons at their most devastating settings, learning to maximize their already formidable power.</p>",
     "tier": 3,
     "benefit": "<p>When this character makes a ranged attack with a Plasma Weapon with the Maximal Quality on Maximal Settings, they add an additional +2 to its Damage, Penetration, and Blast Quality. (for a total of +1d10+2 Damage, +4 Penetration, and +4 Blast)</p>",
     "aptitudes": [
@@ -17,13 +16,59 @@
     "prerequisites": {
       "text": "BS 50, Plasma Weapon Expertise",
       "characteristics": {
-        "bs": 50
+        "ballisticSkill": 50
       },
       "skills": [],
-      "talents": []
+      "talents": ["Plasma Weapon Expertise"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 2,
+            "condition": "With Plasma Weapons on Maximal Settings",
+            "icon": "fa-solid fa-bolt"
+          },
+          {
+            "key": "penetration",
+            "value": 2,
+            "condition": "With Plasma Weapons on Maximal Settings",
+            "icon": "fa-solid fa-shield-halved"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

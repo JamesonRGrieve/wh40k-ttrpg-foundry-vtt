@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain +3 Toughness, Peer (The Insane), and suffer 2d10 Insanity. You suffer −3 Fellowship or −1 Fate.</p>",
     "aptitudes": [],
     "prerequisites": {

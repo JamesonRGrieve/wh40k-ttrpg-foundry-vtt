@@ -3,22 +3,54 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "stalwartDefence",
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": {
-      "value": "<p>Character can spend a Fate Point to adopt a Stalwart Defence as a Full Action. Whilst in this condition, character cannot move or dodge, however they may make the Parry Reaction against all strikes against them, and they suffer -2 damage. Additionally, enemies gain no bonus from outnumbering the character in close combat. These effects last until the character chooses to end the effect, or is rendered incapable of fighting.</p>"
-    },
+    "description": "<p>The Space Marine can adopt an unshakeable defensive stance, sacrificing mobility for ultimate protection.</p>",
     "tier": 1,
     "benefit": "<p>Character can spend a Fate Point to adopt a Stalwart Defence as a Full Action. Whilst in this condition, character cannot move or dodge, however they may make the Parry Reaction against all strikes against them, and they suffer -2 damage. Additionally, enemies gain no bonus from outnumbering the character in close combat. These effects last until the character chooses to end the effect, or is rendered incapable of fighting.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Astartes",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Stalwart Defence Stance",
+          "description": "<p>Spend a Fate Point as a Full Action to enter Stalwart Defence. Cannot move or dodge, but may Parry all strikes, suffer -2 damage, and enemies gain no bonus from outnumbering. Lasts until you choose to end it or are incapacitated.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

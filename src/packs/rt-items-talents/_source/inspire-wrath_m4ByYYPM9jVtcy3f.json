@@ -22,7 +22,31 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "inspireWrath",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Grant Hatred",
+          "description": "<p>As a Full Action, make a Charm Test to grant allies the Hatred Talent for an encounter. Affects 10x Fellowship Bonus people. In Social Conflicts, allies gain +10 to reserves.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,28 +3,74 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "mountedWarrior",
     "category": "combat",
     "source": "DH 2E: Enemies Within",
-    "description": {
-      "value": "<p>When taking Talent, select X as either \"Ranged\" or \"Melee\" Specialisation (changing Aptitudes as appropriate). When character an attack of that type from a vehicle or mount, reduce the penalty for that attack by 10*Y (Where Y = number of times Talent has been purchased for this specialisation). Applies to ordinary attacks and vehicle combat actions like Hit and Run. Talent can be purchased multiple times, to either select different specialisations, or to further reduce the attack penalty.</p>"
-    },
+    "description": "<p>You have trained extensively in mounted combat, able to fight effectively from the back of a mount or from within a moving vehicle.</p>",
     "tier": 1,
-    "benefit": "<p>When taking Talent, select X as either \"Ranged\" or \"Melee\" Specialisation (changing Aptitudes as appropriate). When character an attack of that type from a vehicle or mount, reduce the penalty for that attack by 10*Y (Where Y = number of times Talent has been purchased for this specialisation). Applies to ordinary attacks and vehicle combat actions like Hit and Run. Talent can be purchased multiple times, to either select different specialisations, or to further reduce the attack penalty.</p>",
+    "cost": 300,
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "X = Ranged or Melee, Y = number of times purchased",
+    "benefit": "<p>When taking Talent, select X as either \"Ranged\" or \"Melee\" Specialisation (changing Aptitudes as appropriate). When character makes an attack of that type from a vehicle or mount, reduce the penalty for that attack by 10×Y (Where Y = number of times Talent has been purchased for this specialisation). Applies to ordinary attacks and vehicle combat actions like Hit and Run. Talent can be purchased multiple times, to either select different specialisations, or to further reduce the attack penalty.</p>",
     "aptitudes": [
       "WS or BS",
       "Offence"
     ],
     "prerequisites": {
-      "text": "Tier 1: Operate(any) or Survival +10  , BS 30 or WS 30.",
+      "text": "Tier 1: Operate(any) or Survival +10, BS 30 or WS 30",
       "characteristics": {
-        "bs": 30,
-        "ws": 30
+        "ballisticSkill": 30,
+        "weaponSkill": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "attack",
+            "value": 10,
+            "condition": "When attacking from mount/vehicle - reduce penalty by 10×rank",
+            "icon": "fa-solid fa-horse"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

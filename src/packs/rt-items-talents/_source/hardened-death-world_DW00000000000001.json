@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "This talent represents the choice between Jaded or Resistance (Poisons). The specific choice should be noted in the specialization field."
+    "notes": "This talent represents the choice between Jaded or Resistance (Poisons). The specific choice should be noted in the specialization field.",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

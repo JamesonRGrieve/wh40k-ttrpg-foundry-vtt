@@ -3,26 +3,70 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "lumigenBlast",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can use their Luminen Capacitors to make a ranged attack: Half Action Ballistic Skill Test (counts as Single Attack Action). Character must then pass a Toughness Test or gain a level of Fatigue.\nProfile: 1d10+2xWP Bonus Energy Damage, 0 Penetration, Shock Quality.</p>"
-    },
+    "description": "<p>With advanced implants and mastery of the Luminen Capacitors, you can project crackling arcs of energy at range to strike down your foes.</p>",
     "tier": 3,
-    "benefit": "<p>Character can use their Luminen Capacitors to make a ranged attack: Half Action Ballistic Skill Test (counts as Single Attack Action). Character must then pass a Toughness Test or gain a level of Fatigue.\nProfile: 1d10+2xWP Bonus Energy Damage, 0 Penetration, Shock Quality.</p>",
+    "cost": 900,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Character can use their Luminen Capacitors to make a ranged attack: Half Action Ballistic Skill Test (counts as Single Attack Action). Character must then pass a Toughness Test or gain a level of Fatigue.</p><p><strong>Attack Profile:</strong> 1d10+2×WP Bonus Energy Damage, 0 Penetration, Shock Quality.</p>",
     "aptitudes": [
       "Ballistic Skill",
       "Tech",
       "Unaligned"
     ],
     "prerequisites": {
-      "text": "Luminen Shock/Capacitors, Mechanicus Implants.",
+      "text": "Luminen Shock/Capacitors, Mechanicus Implants",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Luminen Shock"]
     },
-    "cost": 900,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "ballisticSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Luminen Blast ranged attack - 1d10+2×WP Energy damage"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Luminen Blast",
+          "description": "<p><strong>Half Action:</strong> Make a Ballistic Skill Test to fire a bolt of energy from your Luminen Capacitors. If you hit, deal 1d10+2×Willpower Bonus Energy damage with 0 Penetration and Shock Quality. After using this ability, you must pass a Toughness Test or gain 1 level of Fatigue.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

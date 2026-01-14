@@ -3,22 +3,59 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "battleRage",
     "category": "defense",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can Parry whilst Frenzied. They can also re-roll a failed test to snap out of Frenzy or resist entering Frenzy if they choose to.</p>"
-    },
+    "description": "<p>You have learned to channel your frenzy more effectively, maintaining defensive capability even in your berserker rage.</p>",
     "tier": 2,
     "benefit": "<p>Character can Parry whilst Frenzied. They can also re-roll a failed test to snap out of Frenzy or resist entering Frenzy if they choose to.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Weapon Skill", "Offence"],
     "prerequisites": {
       "text": "Frenzy",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Frenzy"]
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Frenzy talent",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Controlled Frenzy",
+          "description": "<p>Can Parry while Frenzied. Can re-roll failed tests to snap out of or resist Frenzy.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

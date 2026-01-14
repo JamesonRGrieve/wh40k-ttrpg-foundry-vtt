@@ -3,22 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "ballisticFury",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>This Character can wield Heavy Ranged weapons that do not have the Ogryn-Proof Quality as if they did not have the Clumsy Trait. However if such a weapon Jams, the weapon will break unless the character's Comrade is within Cohesion of them. Broken weapons require a -20 Tech-Use Test and several minutes to repair.</p>"
-    },
+    "description": "<p>This Character can wield Heavy Ranged weapons that do not have the Ogryn-Proof Quality as if they did not have the Clumsy Trait. However if such a weapon Jams, the weapon will break unless the character's Comrade is within Cohesion of them. Broken weapons require a -20 Tech-Use Test and several minutes to repair.</p>",
     "tier": 1,
-    "benefit": "<p>This Character can wield Heavy Ranged weapons that do not have the Ogryn-Proof Quality as if they did not have the Clumsy Trait. However if such a weapon Jams, the weapon will break unless the character's Comrade is within Cohesion of them. Broken weapons require a -20 Tech-Use Test and several minutes to repair.</p>",
-    "aptitudes": [],
+    "benefit": "<p>This Character can wield Heavy Ranged weapons that do not have the Clumsy Trait. However if such a weapon Jams, the weapon will break unless the character's Comrade is within Cohesion of them. Broken weapons require a -20 Tech-Use Test and several minutes to repair.</p>",
+    "aptitudes": ["Ballistic Skill", "Strength"],
     "prerequisites": {
       "text": "Gun Lugger Advanced Specialty (300xp)",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Gun Lugger specialty only. Heavy weapons without Ogryn-Proof lose Clumsy trait. Risk of breaking on jam unless Comrade nearby.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ballistic Fury",
+          "description": "<p>Wield Heavy Ranged weapons without Ogryn-Proof as if they lack the Clumsy trait. Jammed weapons break unless Comrade is in Cohesion. Repairs require -20 Tech-Use and several minutes.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

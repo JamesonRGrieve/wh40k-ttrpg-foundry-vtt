@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "stealthSniper",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>Whenever character makes a Standard Ranged Attack or Ranged Called Shot Action against an enemy whilst they are in cover or otherwise concealed, they can make a +0 Opposed Stealth Test vs Awareness of any foes who may hear or see the shot. If successful, they remain hidden from enemies. Test may be easier or harder depending on the noise the weapon makes and the environment they are in.</p>"
-    },
+    "description": "<p>The character has mastered the art of striking from concealment without revealing their position.</p>",
     "tier": 2,
     "benefit": "<p>Whenever character makes a Standard Ranged Attack or Ranged Called Shot Action against an enemy whilst they are in cover or otherwise concealed, they can make a +0 Opposed Stealth Test vs Awareness of any foes who may hear or see the shot. If successful, they remain hidden from enemies. Test may be easier or harder depending on the noise the weapon makes and the environment they are in.</p>",
     "aptitudes": [
@@ -17,11 +16,46 @@
     "prerequisites": {
       "text": "Stealth +10",
       "characteristics": {},
-      "skills": [],
+      "skills": {
+        "stealth": 1
+      },
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "stealth",
+      "modifier": 0,
+      "description": "Opposed Stealth vs Awareness to remain hidden after shooting"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Hidden Strike",
+          "description": "<p>When shooting from cover or concealment, make an Opposed Stealth vs Awareness test to remain hidden after attacking.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

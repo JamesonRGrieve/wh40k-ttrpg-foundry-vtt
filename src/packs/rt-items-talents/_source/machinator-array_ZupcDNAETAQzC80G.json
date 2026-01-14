@@ -3,22 +3,86 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "machinatorArray",
+    "category": "tech",
     "source": "DH: Inquisitor's Handbook",
-    "description": {
-      "value": "<p>The Character's Cyber-Mantle and Potentia Coil are further upgraded. Gain +10 Strength and Toughness, but -5 Agility and Fellowship. Now weight three times as much, can no longer swim, and suffer -10 to tests to move silently.\nHowever, any Ballistic Mechadendrites the character equips can now mount any pistol (without requiring compact upgrade) or one-handed melee weapon.</p>"
-    },
+    "description": "<p>Your Cyber-Mantle and Potentia Coil have been extensively upgraded, turning you into a formidable combat platform bristling with augmetic enhancements.</p>",
     "tier": 1,
-    "benefit": "<p>The Character's Cyber-Mantle and Potentia Coil are further upgraded. Gain +10 Strength and Toughness, but -5 Agility and Fellowship. Now weight three times as much, can no longer swim, and suffer -10 to tests to move silently.\nHowever, any Ballistic Mechadendrites the character equips can now mount any pistol (without requiring compact upgrade) or one-handed melee weapon.</p>",
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>The character's Cyber-Mantle and Potentia Coil are further upgraded. Gain +10 Strength and Toughness, but -5 Agility and Fellowship. Now weight three times as much, can no longer swim, and suffer -10 to tests to move silently.</p><p>However, any Ballistic Mechadendrites the character equips can now mount any pistol (without requiring compact upgrade) or one-handed melee weapon.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Mechanicus Secutor Alternative Advance, 500xp, Tech-Priest, Mechadendrite Use (Ballistic)",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": [
+        "Mechadendrite Use (Ballistic)"
+      ]
     },
-    "cost": 300,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {
+        "strength": 10,
+        "toughness": 10,
+        "agility": -5,
+        "fellowship": -5
+      },
+      "skills": {
+        "stealth": -10
+      },
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "weight",
+          "label": "Weight Multiplier",
+          "value": 3,
+          "mode": "multiply"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Mechadendrite Mounting",
+          "description": "<p>Your Ballistic Mechadendrites can now mount any pistol (without compact upgrade) or one-handed melee weapon.</p>"
+        },
+        {
+          "name": "Cannot Swim",
+          "description": "<p>Due to your increased weight and bulk, you cannot swim and automatically sink in water.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

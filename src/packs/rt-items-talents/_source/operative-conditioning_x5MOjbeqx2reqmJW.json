@@ -14,13 +14,39 @@
     "prerequisites": {
       "text": "House Operative Alternate Advance, 750xp",
       "characteristics": {
-        "wp": 30
+        "willpower": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "operativeConditioning",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "willpower",
+            "value": 20,
+            "condition": "When resisting interrogation or torture",
+            "icon": "fa-solid fa-user-secret"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

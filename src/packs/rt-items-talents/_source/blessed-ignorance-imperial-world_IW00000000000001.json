@@ -50,7 +50,13 @@
         "combat": []
       }
     },
-    "notes": "-5 to all Forbidden Lore Tests"
+    "notes": "-5 to all Forbidden Lore Tests",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

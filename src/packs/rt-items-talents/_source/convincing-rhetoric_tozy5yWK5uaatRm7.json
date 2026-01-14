@@ -18,7 +18,31 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "convincingRhetoric",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Intelligence for Social Tests",
+          "description": "<p>Can use Intelligence instead of Fellowship for Charm, Command, Blather, and Performer (Storyteller) Tests.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

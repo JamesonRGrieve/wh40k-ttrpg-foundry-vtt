@@ -3,15 +3,18 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "nowhereToHide",
     "category": "combat",
     "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>When the character damages cover, they add their degrees of success from the attack to the reduction of the cover's Armour Value. If using a weapon that doesn't require a skill test, add 1 instead.\nIf making multiple attacks, calculate each one at a time as earlier attacks will degrade or destroy cover for later attacks.</p>"
-    },
+    "description": "<p>You have learned to exploit weaknesses in cover, using your skill to rapidly degrade and destroy the protection your enemies rely upon.</p>",
     "tier": 1,
+    "cost": 300,
     "isPassive": true,
-    "isRollable": true,
-    "benefit": "<p>When the character damages cover, they add their degrees of success from the attack to the reduction of the cover's Armour Value. If using a weapon that doesn't require a skill test, add 1 instead.\nIf making multiple attacks, calculate each one at a time as earlier attacks will degrade or destroy cover for later attacks.</p>",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>When the character damages cover, they add their degrees of success from the attack to the reduction of the cover's Armour Value. If using a weapon that doesn't require a skill test, add 1 instead.</p><p>If making multiple attacks, calculate each one at a time as earlier attacks will degrade or destroy cover for later attacks.</p>",
     "aptitudes": [
       "Perception",
       "Offence"
@@ -19,12 +22,52 @@
     "prerequisites": {
       "text": "Perception 30",
       "characteristics": {
-        "per": 30
+        "perception": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Cover Destruction",
+          "description": "<p>When damaging cover, add your Degrees of Success to the reduction of cover's Armour Value (+1 if weapon doesn't require a test).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,13 +3,18 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "mechadendriteUse",
+    "category": "tech",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character is trained in the use of a particular kind of Mechadendrite in much the same way Weapon Training allows the use of weapons. Groups: \nMechedendrite use (Weapon), used for any mechadendrite equippe with a melee or ranged weapon and have the appropriate strength to be used in combat\nMechadendrite Use (Utility), used for more varied mechadendrites, such as Machine Spirit Interfaces, Manipulators, Medicae, Utility, Optical, and so on.</p>"
-    },
+    "description": "<p>You have learned to interface with and control mechadendrites, using them as naturally as your own limbs.</p>",
     "tier": 2,
-    "benefit": "<p>Character is trained in the use of a particular kind of Mechadendrite in much the same way Weapon Training allows the use of weapons. Groups: \nMechedendrite use (Weapon), used for any mechadendrite equippe with a melee or ranged weapon and have the appropriate strength to be used in combat\nMechadendrite Use (Utility), used for more varied mechadendrites, such as Machine Spirit Interfaces, Manipulators, Medicae, Utility, Optical, and so on.</p>",
+    "cost": 600,
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Choose specialization: Weapon or Utility",
+    "benefit": "<p>Character is trained in the use of a particular kind of Mechadendrite in much the same way Weapon Training allows the use of weapons.</p><p><strong>Groups:</strong></p><ul><li><strong>Mechadendrite Use (Weapon):</strong> Used for any mechadendrite equipped with a melee or ranged weapon and have the appropriate strength to be used in combat.</li><li><strong>Mechadendrite Use (Utility):</strong> Used for more varied mechadendrites, such as Machine Spirit Interfaces, Manipulators, Medicae, Utility, Optical, and so on.</li></ul>",
     "aptitudes": [
       "Intelligence",
       "Tech",
@@ -18,11 +23,50 @@
     "prerequisites": {
       "text": "Mechanicus Implants",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Mechadendrite Training",
+          "description": "<p>You can use mechadendrites of the chosen type without penalty. This talent can be taken multiple times for different types.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -5,9 +5,7 @@
   "system": {
     "category": "willpower",
     "source": "DH 2E: Enemies Beyond",
-    "description": {
-      "value": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>"
-    },
+    "description": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>",
     "tier": 3,
     "isPassive": true,
     "isRollable": false,
@@ -22,7 +20,41 @@
       "skills": [],
       "talents": []
     },
-    "cost": 900
+    "cost": 900,
+    "identifier": "ironFaith",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,23 +3,60 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "firebrandsCall",
+    "category": "leadership",
     "source": "RT: Faith and Coin",
     "description": {
       "value": "<p>Whenever the character inflicts Righteous Fury on a foe, they can spend a Fate Point to make a +0 Fellowship Test. If successful all allies within 30 metres add the Character's Fellowship Bonus to all damage they deal until the Character's next turn.</p>"
     },
-    "isPassive": true,
+    "isPassive": false,
     "isRollable": true,
     "tier": 1,
     "benefit": "<p>Whenever the character inflicts Righteous Fury on a foe, they can spend a Fate Point to make a +0 Fellowship Test. If successful all allies within 30 metres add the Character's Fellowship Bonus to all damage they deal until the Character's next turn.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Fellowship",
+      "Leadership"
+    ],
     "prerequisites": {
       "text": "Red Consecrator Alternative Advance, 750xp",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "fellowship",
+      "skill": "",
+      "modifier": 0,
+      "description": "Fellowship test to inspire allies after Righteous Fury"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Inspiring Fury",
+          "description": "<p>After inflicting Righteous Fury, spend Fate Point and make Fellowship test. Success: Allies within 30m add your Fel Bonus to damage until your next turn.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

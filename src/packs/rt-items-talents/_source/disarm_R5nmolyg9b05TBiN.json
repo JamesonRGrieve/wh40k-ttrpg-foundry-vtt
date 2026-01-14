@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "disarm",
     "category": "combat",
     "source": "Only War Core",
     "description": {
@@ -18,13 +19,46 @@
     "prerequisites": {
       "text": "Agility 30",
       "characteristics": {
-        "ag": 30
+        "agility": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "weaponSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Opposed WS test to disarm opponent"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Disarm Maneuver",
+          "description": "<p>Full Action: Make opposed WS test. On success, opponent drops weapon. On 3+ DoS, you take the weapon.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

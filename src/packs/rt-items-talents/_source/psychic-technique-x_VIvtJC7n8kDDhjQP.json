@@ -3,22 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "psychicTechnique",
     "category": "knowledge",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Can select a new Psychic technique with an XP cost equal to or lower than this talent's XP stated cost, to then gain that technique, pay the cost of the psychic technique, not of this talent (EG, if \"Psychic Technique\" were to cost 200xp, selecting a 100xp Technique would only require spending 100xp, not 200xp). Talent can be taken multiple times to gain more techniques.\nIf there is a number after the Talent (EG Psychic Technique (x2)) it can be purchased that many times that rank, each purchase giving one extra technique.</p>"
-    },
+    "description": "<p>You may learn additional psychic techniques to expand your mental arsenal.</p>",
     "tier": 1,
-    "benefit": "<p>Can select a new Psychic technique with an XP cost equal to or lower than this talent's XP stated cost, to then gain that technique, pay the cost of the psychic technique, not of this talent (EG, if \"Psychic Technique\" were to cost 200xp, selecting a 100xp Technique would only require spending 100xp, not 200xp). Talent can be taken multiple times to gain more techniques.\nIf there is a number after the Talent (EG Psychic Technique (x2)) it can be purchased that many times that rank, each purchase giving one extra technique.</p>",
-    "aptitudes": [],
+    "benefit": "<p>Can select a new Psychic technique with an XP cost equal to or lower than this talent's XP stated cost, to then gain that technique, pay the cost of the psychic technique, not of this talent (EG, if \"Psychic Technique\" were to cost 200xp, selecting a 100xp Technique would only require spending 100xp, not 200xp). Talent can be taken multiple times to gain more techniques. If there is a number after the Talent (EG Psychic Technique (x2)) it can be purchased that many times that rank, each purchase giving one extra technique.</p>",
+    "aptitudes": ["Willpower", "Psyker"],
     "prerequisites": {
       "text": "Psy Rating",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Each purchase allows learning one additional psychic technique",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Learn Psychic Technique",
+          "description": "<p>You may select and learn a new Psychic Technique with an XP cost equal to or lower than this talent's stated cost. You pay the cost of the psychic technique itself, not the cost of this talent. This talent can be taken multiple times to gain more techniques.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

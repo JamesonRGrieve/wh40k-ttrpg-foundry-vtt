@@ -74,7 +74,13 @@
         "combat": []
       }
     },
-    "notes": "Applies to all Interaction skills in formal settings"
+    "notes": "Applies to all Interaction skills in formal settings",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

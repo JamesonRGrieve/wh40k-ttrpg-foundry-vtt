@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "psychicNull",
     "category": "combat",
     "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>The Untouchable gains the Deny the Witch Talent. Gains +20 to Evasion Tests against Psychic Attacks and to Opposed Tests to resist Psychic Powers. Stacks with Resistance (Psychic Powers).\nTalent can be purchased multiple times, each additional purchase increases the bonus by +5.\nDeny the Witch: The Untouchable can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.</p>"
-    },
+    "description": "<p>The Untouchable's soulless nature provides exceptional resistance to psychic powers, creating a dead zone in the warp around them.</p>",
     "tier": 2,
     "benefit": "<p>The Untouchable gains the Deny the Witch Talent. Gains +20 to Evasion Tests against Psychic Attacks and to Opposed Tests to resist Psychic Powers. Stacks with Resistance (Psychic Powers).\nTalent can be purchased multiple times, each additional purchase increases the bonus by +5.\nDeny the Witch: The Untouchable can use their Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and is not required to move when avoiding area of effect psychic attacks.</p>",
     "aptitudes": [
@@ -17,13 +16,66 @@
     "prerequisites": {
       "text": "Tier 2: Untouchable E.Adv, Willpower 40",
       "characteristics": {
-        "wp": 40
+        "willpower": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Each additional purchase increases psychic resistance bonus by +5",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "defense": 20
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "defense",
+            "value": 20,
+            "condition": "Against Psychic Attacks",
+            "icon": "fa-solid fa-brain"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Deny the Witch",
+          "specialization": "",
+          "uuid": ""
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Deny the Witch",
+          "description": "<p>You can use your Willpower Characteristic when making Evasion Reactions against Ranged or Melee Psychic Attacks, and are not required to move when avoiding area of effect psychic attacks.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

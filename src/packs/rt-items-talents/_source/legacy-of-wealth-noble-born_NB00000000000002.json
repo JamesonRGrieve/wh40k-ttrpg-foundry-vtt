@@ -50,7 +50,13 @@
         "combat": []
       }
     },
-    "notes": "+1 to group's starting Profit Factor"
+    "notes": "+1 to group's starting Profit Factor",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

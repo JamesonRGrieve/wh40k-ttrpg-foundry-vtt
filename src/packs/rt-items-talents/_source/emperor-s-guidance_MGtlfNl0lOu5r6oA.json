@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "emperorsGuidance",
     "category": "combat",
     "source": "DH 2E: Enemies Within",
     "description": {
@@ -17,11 +18,44 @@
     "prerequisites": {
       "text": "Tier 2: Sister of Battle E.Adv, Insanity 25+, Furious Zeal.",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Furious Zeal"]
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Divine Penetration",
+          "description": "<p>Free Action: Spend Fate Point to increase weapon penetration by Insanity Bonus until end of next turn.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

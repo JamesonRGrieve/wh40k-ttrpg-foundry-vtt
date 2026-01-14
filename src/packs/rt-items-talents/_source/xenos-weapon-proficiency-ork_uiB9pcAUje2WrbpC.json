@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "xenosWeaponProficiencyOrk",
     "category": "combat",
     "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>The Ork is proficient in the use of Shootas, Sluggas, Big Choppas, Choppas, and All Primitive Melee Weapons, and so can use them without -20 Penalty.</p>"
-    },
+    "description": "<p>The Ork is proficient with traditional Ork weaponry, able to wield the brutal tools of their kind with natural ease.</p>",
     "tier": 1,
     "benefit": "<p>The Ork is proficient in the use of Shootas, Sluggas, Big Choppas, Choppas, and All Primitive Melee Weapons, and so can use them without -20 Penalty.</p>",
     "aptitudes": [],
@@ -18,7 +17,45 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Ork",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ork Weapon Proficiency",
+          "description": "<p>Use Shootas, Sluggas, Big Choppas, Choppas, and all Primitive melee weapons without the -20 untrained penalty.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

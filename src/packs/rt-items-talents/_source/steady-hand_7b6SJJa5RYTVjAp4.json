@@ -3,13 +3,14 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "steadyHand",
     "category": "knowledge",
     "source": "OW: Hammer of the Emperor",
     "description": {
-      "value": "<p>As long as the Character's Comrade is in Cohesion, the Character reduces Degrees of Failiure on any Failed Tech-Use Test for the Demolitions Special Use by their Agility Bonus, to a minimum of 1.</p>"
+      "value": "<p>The character's comrade provides crucial assistance during delicate demolitions work, helping to minimize the consequences of errors.</p>"
     },
     "tier": 1,
-    "benefit": "<p>As long as the Character's Comrade is in Cohesion, the Character reduces Degrees of Failiure on any Failed Tech-Use Test for the Demolitions Special Use by their Agility Bonus, to a minimum of 1.</p>",
+    "benefit": "<p>As long as the character's Comrade is in Cohesion, the character reduces Degrees of Failure on any Failed Tech-Use Test for the Demolitions Special Use by their Agility Bonus, to a minimum of 1.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Breacher Advanced Speciality",
@@ -18,7 +19,52 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Demolitions Safety",
+          "description": "<p>When your Comrade is in Cohesion, reduce Degrees of Failure on failed Tech-Use Tests for Demolitions by your Agility Bonus (minimum 1 DoF remaining).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

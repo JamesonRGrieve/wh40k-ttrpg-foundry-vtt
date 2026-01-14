@@ -17,13 +17,39 @@
     "prerequisites": {
       "text": "Commerce, Perception 30",
       "characteristics": {
-        "per": 30
+        "perception": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "earsToTheGround",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "inquiry",
+            "value": 20,
+            "condition": "In familiar territory or among known contacts",
+            "icon": "fa-solid fa-ear-listen"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

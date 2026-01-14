@@ -20,7 +20,56 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "armourOfContempt",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "willpower",
+            "value": 10,
+            "condition": "When resisting psychic powers",
+            "icon": "fa-solid fa-shield"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Reduce Corruption Gained",
+          "description": "<p>Any time you gain Corruption Points, reduce the amount by 1 (minimum 0).</p>"
+        },
+        {
+          "name": "Ignore Corruption Effects",
+          "description": "<p>As a Free Action, you may ignore the accumulated effects of your Corruption Points for 1 round.</p>"
+        }
+      ]
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
   },
   "effects": [],
   "flags": {},

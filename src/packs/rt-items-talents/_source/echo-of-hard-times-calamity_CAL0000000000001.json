@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>Reduce starting Profit Factor by −1 (permanent)</p>",
     "aptitudes": [],
     "prerequisites": {

@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "discipleOfShiamesh",
     "category": "combat",
     "source": "RT: The Soul Reaver",
     "description": {
@@ -10,15 +11,64 @@
     },
     "tier": 1,
     "benefit": "<p>The character can spend a Fate Point to automatically pass a Chem-Use Test, succeeding by a number of Degrees of Success equal to their Intelligence Bonus.\nAdditionally when wielding a weapon with the Toxic Quality, the character adds their Intelligence Bonus to the Weapon's Damage, and adds Felling (1) to the weapon if it does not already have it, or increase its Felling Quality by 1 if it does have it.\nFelling X: Reduce Unnatural Toughness Trait of target by X for purpose of calculating damage.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Intelligence",
+      "Knowledge"
+    ],
     "prerequisites": {
       "text": "Dark Eldar,Chem Use + 20, Scholastic Lore (Chymistry) +20",
       "characteristics": {},
-      "skills": [],
+      "skills": {
+        "chemUse": 2
+      },
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 0,
+            "condition": "With Toxic weapons, add Intelligence Bonus to damage",
+            "icon": "fa-solid fa-biohazard"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Auto-Pass Chem-Use",
+          "description": "<p>Spend a Fate Point to automatically pass a Chem-Use Test with DoS equal to Intelligence Bonus.</p>"
+        },
+        {
+          "name": "Toxic Weapon Mastery",
+          "description": "<p>Weapons with Toxic Quality gain Felling (1) or increase existing Felling by 1. Add Intelligence Bonus to damage.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

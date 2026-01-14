@@ -3,22 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "maglevGrace",
+    "category": "tech",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>As a Half Action, can hover 20-30 Centimetres off of the ground for 1d10+TB Minutes. Must use Half Action each round to maintain. This can slow falls, reducing your fall damage to a maximum of 1d10+3 I. Exhausts Potentia Coil, cannot be used until it is recharged.</p>"
-    },
+    "description": "<p>Your Maglev Coils allow you to hover above the ground, gliding gracefully across terrain and slowing your falls.</p>",
     "tier": 1,
-    "benefit": "<p>As a Half Action, can hover 20-30 Centimetres off of the ground for 1d10+TB Minutes. Must use Half Action each round to maintain. This can slow falls, reducing your fall damage to a maximum of 1d10+3 I. Exhausts Potentia Coil, cannot be used until it is recharged.</p>",
+    "cost": 300,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>As a Half Action, can hover 20-30 centimetres off of the ground for 1d10+TB Minutes. Must use Half Action each round to maintain. This can slow falls, reducing your fall damage to a maximum of 1d10+3 Impact. Exhausts Potentia Coil and cannot be used until it is recharged.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Mechanicus Implants",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Hover",
+          "description": "<p><strong>Half Action:</strong> Activate your Maglev Coils to hover 20-30cm above the ground for 1d10+TB minutes. Requires a Half Action each round to maintain. Reduces fall damage to maximum 1d10+3 Impact. Exhausts Potentia Coil until recharged.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

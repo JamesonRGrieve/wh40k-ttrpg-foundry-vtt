@@ -18,7 +18,41 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "rival",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": -10,
+            "condition": "When dealing with rival (Rival also takes -10)",
+            "icon": "fa-solid fa-handshake-slash"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Rival (X)",
+          "description": "<p>You have a rival. Both of you take -10 to Fellowship tests with each other. Rival may actively oppose you.</p>"
+        }
+      ]
+    },
+    "stackable": true,
+    "rank": 1,
+    "specialization": ""
   },
   "effects": [],
   "flags": {},

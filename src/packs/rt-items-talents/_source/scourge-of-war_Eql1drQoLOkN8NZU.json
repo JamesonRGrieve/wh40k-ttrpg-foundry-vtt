@@ -17,14 +17,40 @@
     "prerequisites": {
       "text": "Fel 35, Strength 35, Hatred (Chosen One). ",
       "characteristics": {
-        "fel": 35,
-        "s": 35
+        "fellowship": 35,
+        "strength": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "scourgeOfWar",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "intimidate",
+            "value": 10,
+            "condition": "When intimidating through displays of martial prowess",
+            "icon": "fa-solid fa-fire"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

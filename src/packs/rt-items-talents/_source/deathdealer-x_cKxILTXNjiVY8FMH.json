@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making attacks of type X that deal Critical Damage, they can add their Perception Bonus to the result.</p>"
-    },
+    "description": "<p>The character is a master of dealing lethal critical hits, able to precisely target vital areas for maximum lethality.</p>",
     "tier": 3,
     "benefit": "<p>Character selects either Ranged or Melee to represent \"X\" (affects requirements appropriately). When making attacks of type X that deal Critical Damage, they can add their Perception Bonus to the result.</p>",
     "aptitudes": [
@@ -17,14 +15,53 @@
     "prerequisites": {
       "text": "Ballistic Skill 45 or Weapon Skill 45",
       "characteristics": {
-        "bs": 45,
-        "ws": 45
+        "ballisticSkill": 45,
+        "weaponSkill": 45
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "deathdealer",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Critical Hit Master",
+          "description": "<p>When your attacks deal Critical Damage, add your Perception Bonus to the Critical Hit result.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -18,7 +18,33 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "chemGeld",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "insanity": 1
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Immune to Seduction",
+          "description": "<p>Immune to Seduction. Charm Tests against you have -10. Gain 1 Insanity Point when taking this talent.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain +1 Fate Point. You suffer 1d10+1 Insanity Points.</p>",
     "aptitudes": [],
     "prerequisites": {

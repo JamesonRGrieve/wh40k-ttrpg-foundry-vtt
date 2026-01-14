@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "Roll 1d10 when spending Fate Point, on 9 it is not lost"
+    "notes": "Roll 1d10 when spending Fate Point, on 9 it is not lost",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

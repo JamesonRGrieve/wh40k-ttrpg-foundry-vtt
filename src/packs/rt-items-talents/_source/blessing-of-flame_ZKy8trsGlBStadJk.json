@@ -19,12 +19,58 @@
     "prerequisites": {
       "text": "WP 45, Scholastic Lore (Imperial Creed) +20.",
       "characteristics": {
-        "wp": 45
+        "willpower": 45
       },
       "skills": [],
       "talents": []
     },
-    "cost": 900
+    "cost": 900,
+    "identifier": "blessingOfFlame",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Blessing of Flame",
+          "description": "<p>As a Full Action, make a +0 Scholastic Lore (Imperial Creed) Test to bless a single weapon with the Flame Quality. If successful, for Willpower Bonus Rounds or until the weapon's Clip is depleted, the weapon gains the Sanctified Quality and automatically sets Daemons on Fire when it strikes them.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

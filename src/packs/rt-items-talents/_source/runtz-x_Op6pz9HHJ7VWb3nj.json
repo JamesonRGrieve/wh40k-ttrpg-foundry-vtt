@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "runtz",
     "category": "social",
     "source": "RT: Into the Storm",
     "description": {
@@ -18,7 +19,33 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Lesser Greenskin Followers",
+          "description": "<p>Gain X Lesser Greenskins (1 Squig, 1 Gretchin, or 2 Snotlings per level). Replaceable when appropriate.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,14 +3,16 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "integratedWeaponSystems",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Character chooses one Basic or Melee Weapon they possess which is then implemented into their body, becoming an Integrated Weapon. It can only be removed via a -20 Tech-Use Test. If the weapon required Ammunition it instead draws power from the character's Potentia Coil and does not need ammunition when reloaded. Instead, when the character reloads the weapon they gain 1 Fatigue.\nThis Trait can be taken multiple times, up to the Character's Toughness Bonus, indicated by \"X\".</p>"
-    },
+    "description": "<p>Character chooses one Basic or Melee Weapon they possess which is then implemented into their body, becoming an Integrated Weapon. It can only be removed via a -20 Tech-Use Test. If the weapon required Ammunition it instead draws power from the character's Potentia Coil and does not need ammunition when reloaded. Instead, when the character reloads the weapon they gain 1 Fatigue.\nThis Trait can be taken multiple times, up to the Character's Toughness Bonus, indicated by \"X\".</p>",
     "tier": 1,
     "benefit": "<p>Character chooses one Basic or Melee Weapon they possess which is then implemented into their body, becoming an Integrated Weapon. It can only be removed via a -20 Tech-Use Test. If the weapon required Ammunition it instead draws power from the character's Potentia Coil and does not need ammunition when reloaded. Instead, when the character reloads the weapon they gain 1 Fatigue.\nThis Trait can be taken multiple times, up to the Character's Toughness Bonus, indicated by \"X\".</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Tech",
+      "Toughness"
+    ],
     "prerequisites": {
       "text": "Crimson Exemplar Alternative Advance (300xp)",
       "characteristics": {},
@@ -18,7 +20,40 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Can be taken up to TB times",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Integrated Weapon",
+          "description": "<p>Choose one Basic or Melee weapon to integrate into your body. It draws power from Potentia Coil (no ammo needed, but gain 1 Fatigue when reloading). Removal requires -20 Tech-Use. Can take multiple times (up to TB).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

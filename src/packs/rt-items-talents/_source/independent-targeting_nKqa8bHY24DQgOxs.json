@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "independentTargeting",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>When Firing two weapons as part of a single action, the targets do not need to be within 10 metres</p>"
-    },
+    "description": "<p>When Firing two weapons as part of a single action, the targets do not need to be within 10 metres</p>",
     "tier": 2,
     "benefit": "<p>When Firing two weapons as part of a single action, the targets do not need to be within 10 metres</p>",
     "aptitudes": [
@@ -18,13 +17,46 @@
     "prerequisites": {
       "text": "Ballistic Skill 40",
       "characteristics": {
-        "bs": 40
+        "ballisticSkill": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Split Fire",
+          "description": "<p>When firing two weapons as part of a single action, the targets do not need to be within 10 metres of each other.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

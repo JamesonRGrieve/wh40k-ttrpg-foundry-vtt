@@ -17,13 +17,39 @@
     "prerequisites": {
       "text": "Clues from the Crowds, S 40 or WP 40, Interogation Skill.",
       "characteristics": {
-        "wp": 40
+        "willpower": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "coordinatedInterrogation",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "interrogation",
+            "value": 10,
+            "condition": "Per assisting ally (cumulative)",
+            "icon": "fa-solid fa-users"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -17,13 +17,37 @@
     "prerequisites": {
       "text": "Tier 1: Untouchable E.Adv, Willpower 30",
       "characteristics": {
-        "wp": 30
+        "willpower": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "soullessAura",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Unsettling Presence",
+          "description": "<p>Enemies within Willpower Bonus meters suffer -10 to Charm and Deceive tests.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

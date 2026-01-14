@@ -3,13 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "weaponTraining",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can use all weapons of Class Pistol, Basic, Melee, Throwing, and Vehicle within the group they select wihtout the -20 Penalty. Character requires Weapon Training (Heavy) and a weapon type training to wield heavy weapons without penalty.\nWeapon Types: Bolt, Chain, Flame, Las, Launcher, Melta, Plasma, Power, Low-Tech(Primitive), Shock, and SP\nOther: Heavy</p>"
-    },
+    "description": "<p>The character has trained extensively with a specific weapon group, allowing them to use those weapons effectively.</p>",
     "tier": 1,
-    "benefit": "<p>Character can use all weapons of Class Pistol, Basic, Melee, Throwing, and Vehicle within the group they select wihtout the -20 Penalty. Character requires Weapon Training (Heavy) and a weapon type training to wield heavy weapons without penalty.\nWeapon Types: Bolt, Chain, Flame, Las, Launcher, Melta, Plasma, Power, Low-Tech(Primitive), Shock, and SP\nOther: Heavy</p>",
+    "benefit": "<p>Character can use all weapons of Class Pistol, Basic, Melee, Throwing, and Vehicle within the group they select without the -20 Penalty. Character requires Weapon Training (Heavy) and a weapon type training to wield heavy weapons without penalty.\nWeapon Types: Bolt, Chain, Flame, Las, Launcher, Melta, Plasma, Power, Low-Tech(Primitive), Shock, and SP\nOther: Heavy</p>",
     "aptitudes": [
       "General",
       "Finesse",
@@ -22,7 +21,45 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Specify weapon group: Bolt, Chain, Flame, Las, Launcher, Melta, Plasma, Power, Low-Tech, Shock, SP, or Heavy",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Weapon Group Proficiency",
+          "description": "<p>Use all Pistol, Basic, Melee, Throwing, and Vehicle weapons in your chosen group without the -20 untrained penalty. Heavy weapons require both Heavy and type training.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

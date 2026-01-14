@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "tearEmTerBits",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Once per Encounter, when this character inflicts Critical Damage on an enemy by dealing damage in excess of the enemy's Wounds, they can Spend a Fate Point to instantly kill them in a gruesome manner.\nThe Character gains Fear(2) against all foes who witness this until the end of the encounter.</p>"
-    },
+    "description": "<p>The Ogryn's brutal finishing moves inspire terror in all who witness them.</p>",
     "tier": 3,
     "benefit": "<p>Once per Encounter, when this character inflicts Critical Damage on an enemy by dealing damage in excess of the enemy's Wounds, they can Spend a Fate Point to instantly kill them in a gruesome manner.\nThe Character gains Fear(2) against all foes who witness this until the end of the encounter.</p>",
     "aptitudes": [
@@ -17,13 +16,46 @@
     "prerequisites": {
       "text": "Strength 50, is an Ogryn",
       "characteristics": {
-        "s": 50
+        "strength": 50
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Gruesome Execution",
+          "description": "<p>Once per encounter, when inflicting Critical Damage that exceeds enemy Wounds, spend a Fate Point to instantly kill them. Gain Fear (2) against witnesses until end of encounter.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

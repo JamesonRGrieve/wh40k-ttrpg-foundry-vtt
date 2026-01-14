@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "targetSelection",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can shoot into melee with no penalty. If they aim beforehand they have no chance of hitting friendly targets.</p>"
-    },
+    "description": "<p>The character's supreme marksmanship allows them to shoot into melee combat without risk of hitting allies.</p>",
     "tier": 3,
     "benefit": "<p>Character can shoot into melee with no penalty. If they aim beforehand they have no chance of hitting friendly targets.</p>",
     "aptitudes": [
@@ -18,13 +17,46 @@
     "prerequisites": {
       "text": "Ballistic Skill 50",
       "characteristics": {
-        "bs": 50
+        "ballisticSkill": 50
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Precise Fire",
+          "description": "<p>No penalty for shooting into melee. If you aim first, no chance of hitting friendly targets.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

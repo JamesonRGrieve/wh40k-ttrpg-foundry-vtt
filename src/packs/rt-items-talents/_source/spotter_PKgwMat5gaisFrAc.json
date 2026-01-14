@@ -3,22 +3,54 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "spotter",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>As long as the Character's Comrade is in Cohesion, and the character is using a weapon with the Accurate Quality, the Comrade may use their actions to take the Aim Action on behalf of the Character, who gains the benefits for themselves.</p>"
-    },
+    "description": "<p>The character is trained to work in tandem with a comrade to enhance accuracy with precision weapons.</p>",
     "tier": 1,
     "benefit": "<p>As long as the Character's Comrade is in Cohesion, and the character is using a weapon with the Accurate Quality, the Comrade may use their actions to take the Aim Action on behalf of the Character, who gains the benefits for themselves.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Sharpshooter Advanced Speciality or Ratling",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Comrade Aim Assistance",
+          "description": "<p>Your comrade can take the Aim action on your behalf when you use Accurate weapons and they are in Cohesion.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

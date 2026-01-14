@@ -3,24 +3,56 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "theReaping",
     "category": "combat",
     "source": "DH: Inquisitor's Handbook",
-    "description": {
-      "value": "<p>Can spend a Full Action whilst wielding a sword or other edged weapon to perform a single melee attack against every enemy within close combat range of the character, moving in a clockwise or counter-clockwise direction. Test Weapon Skill and apply damage to each enemy seperately. these attacks can be dodged or parried as normaly but if any enemy successfully parries one of these attacks the action ends prematurely.</p>"
-    },
+    "description": "<p>The character can sweep their blade through multiple enemies in a single devastating motion.</p>",
     "tier": 1,
-    "benefit": "<p>Can spend a Full Action whilst wielding a sword or other edged weapon to perform a single melee attack against every enemy within close combat range of the character, moving in a clockwise or counter-clockwise direction. Test Weapon Skill and apply damage to each enemy seperately. these attacks can be dodged or parried as normaly but if any enemy successfully parries one of these attacks the action ends prematurely.</p>",
+    "benefit": "<p>Can spend a Full Action whilst wielding a sword or other edged weapon to perform a single melee attack against every enemy within close combat range of the character, moving in a clockwise or counter-clockwise direction. Test Weapon Skill and apply damage to each enemy separately. These attacks can be dodged or parried as normally but if any enemy successfully parries one of these attacks the action ends prematurely.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Moritat Reaper Alternative Advance, 300xp, WS 40, Combat Master Talent.",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "weaponSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Full Action sweep attack hitting all adjacent enemies"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Reaping Sweep",
+          "description": "<p>Full Action with edged weapon. Make one WS attack against each enemy in melee range in clockwise/counter-clockwise order. Stops if any enemy successfully parries.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

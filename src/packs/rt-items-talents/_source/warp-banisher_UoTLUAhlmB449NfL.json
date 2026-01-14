@@ -3,27 +3,64 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "warpBanisher",
+    "category": "psychic",
     "source": "OW: Enemies of the Imperium",
-    "description": {
-      "value": "<p>Veteran Talent Requirement: Character succeeds on an Opposed Willpower Test to resist the effects of a Psychic Power by 4+ Degrees of Success whilst on a mission.\nWhen Character succeeds on an Opposed Willpower Test to resist the effects on a Psychic Power, they may spend a Fate Point to cause the enemy who targeted them to be unable to use Psychic Powers until the end of its next turn. If the Enemy has the Daemonic Trait, it also suffers 1d5 Energy Damage with the Sanctified Quality that ignores its Armour and Toughness.</p>"
-    },
+    "description": "<p>The character has learned to turn their resistance to psychic powers into a weapon, suppressing enemy psykers with the force of their will.</p>",
     "tier": 3,
     "benefit": "<p>Veteran Talent Requirement: Character succeeds on an Opposed Willpower Test to resist the effects of a Psychic Power by 4+ Degrees of Success whilst on a mission.\nWhen Character succeeds on an Opposed Willpower Test to resist the effects on a Psychic Power, they may spend a Fate Point to cause the enemy who targeted them to be unable to use Psychic Powers until the end of its next turn. If the Enemy has the Daemonic Trait, it also suffers 1d5 Energy Damage with the Sanctified Quality that ignores its Armour and Toughness.</p>",
     "aptitudes": [
       "Psyker",
-      "Willpower\nVeteran Talent Requirement Fulfilled"
+      "Willpower"
     ],
     "prerequisites": {
-      "text": "WP 40, Resistance (Psychic Powers)",
+      "text": "WP 40, Resistance (Psychic Powers), Veteran Talent Requirement Fulfilled",
       "characteristics": {
-        "wp": 40
+        "willpower": 40
       },
       "skills": [],
-      "talents": []
+      "talents": ["Resistance (Psychic Powers)"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Veteran Talent - requires 4+ DoS on prior mission",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Psychic Suppression",
+          "description": "<p>When you resist a psychic power, spend a Fate Point to suppress the psyker until end of their next turn. Daemons also suffer 1d5 Sanctified Energy damage (ignoring armor/toughness).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

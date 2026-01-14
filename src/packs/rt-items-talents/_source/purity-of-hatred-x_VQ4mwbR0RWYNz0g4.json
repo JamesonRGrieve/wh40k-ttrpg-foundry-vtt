@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "purityOfHatred",
     "category": "combat",
     "source": "DH 2E: Enemies Within",
-    "description": {
-      "value": "<p>When selecting talent, character chooses one group that they possess a Hatred Talent for. Against those of that group, character's attacks gain Vengeful (9), if character's attacks already possess this quality, decrease its value by 1.</p>"
-    },
+    "description": "<p>The character's hatred for a specific foe burns with such intensity that their attacks carry devastating righteous fury.</p>",
     "tier": 2,
     "benefit": "<p>When selecting talent, character chooses one group that they possess a Hatred Talent for. Against those of that group, character's attacks gain Vengeful (9), if character's attacks already possess this quality, decrease its value by 1.</p>",
     "aptitudes": [
@@ -18,10 +17,48 @@
       "text": "Tier 2: Hatred (any)",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Hatred"]
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Choose one group you have Hatred for when taking this talent",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Vengeful (9)",
+          "description": "<p>Against the chosen hated group, your attacks gain the Vengeful (9) quality. If your attacks already have this quality, decrease its value by 1.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

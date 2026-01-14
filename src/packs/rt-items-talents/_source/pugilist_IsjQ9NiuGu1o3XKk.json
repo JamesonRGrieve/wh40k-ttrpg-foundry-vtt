@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "pugilist",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>Character can make a Fient Action as a Free Action when also making an Unarmed All-Out Attack or Standard Attack Action.\nAdditionally, they make Unarmed Called Shot Actions as Half Actions.</p>"
-    },
+    "description": "<p>The character is a skilled hand-to-hand combatant, able to deliver devastating unarmed strikes with speed and precision.</p>",
     "tier": 1,
     "benefit": "<p>Character can make a Fient Action as a Free Action when also making an Unarmed All-Out Attack or Standard Attack Action.\nAdditionally, they make Unarmed Called Shot Actions as Half Actions.</p>",
     "aptitudes": [
@@ -17,13 +16,51 @@
     "prerequisites": {
       "text": "Strength 30",
       "characteristics": {
-        "s": 30
+        "strength": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Pugilist Combat",
+          "description": "<p>You can make a Feint Action as a Free Action when making an Unarmed All-Out Attack or Standard Attack Action. Additionally, you make Unarmed Called Shot Actions as Half Actions instead of Full Actions.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

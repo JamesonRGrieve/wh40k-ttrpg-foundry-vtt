@@ -3,13 +3,18 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "masterChirurgeon",
+    "category": "general",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Gain +10 to all Medicae Skill Tests. If character fails a Medicae Skill Test whilst performing Extended Care, the can reduce the amount of damage suffered by their Patients by their Intelligence Bonus.\nIf their Patients are in danger of losing a Limb from a Critical Hit, the character provides their patient +20 to the Toughness Bonus to avoid losing the limb.</p>"
-    },
+    "description": "<p>You are a master of the medical arts, capable of performing miraculous surgeries and providing unparalleled care to the wounded.</p>",
     "tier": 3,
-    "benefit": "<p>Gain +10 to all Medicae Skill Tests. If character fails a Medicae Skill Test whilst performing Extended Care, the can reduce the amount of damage suffered by their Patients by their Intelligence Bonus.\nIf their Patients are in danger of losing a Limb from a Critical Hit, the character provides their patient +20 to the Toughness Bonus to avoid losing the limb.</p>",
+    "cost": 900,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Gain +10 to all Medicae Skill Tests. If character fails a Medicae Skill Test whilst performing Extended Care, they can reduce the amount of damage suffered by their Patients by their Intelligence Bonus.</p><p>If their Patients are in danger of losing a Limb from a Critical Hit, the character provides their patient +20 to the Toughness Test to avoid losing the limb.</p>",
     "aptitudes": [
       "Intelligence",
       "Fieldcraft",
@@ -18,11 +23,58 @@
     "prerequisites": {
       "text": "Medicae +10",
       "characteristics": {},
-      "skills": [],
+      "skills": {
+        "medicae": 1
+      },
       "talents": []
     },
-    "cost": 900,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "medicae": 20
+      },
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Damage Mitigation",
+          "description": "<p>When you fail a Medicae Test during Extended Care, reduce damage your patient takes by your Intelligence Bonus.</p>"
+        },
+        {
+          "name": "Limb Preservation",
+          "description": "<p>When your patient risks losing a limb from a Critical Hit, they gain +20 to their Toughness Test to avoid limb loss.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

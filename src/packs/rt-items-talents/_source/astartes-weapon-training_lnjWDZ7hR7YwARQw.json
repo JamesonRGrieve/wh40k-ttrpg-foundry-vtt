@@ -3,22 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "astartesWeaponTraining",
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": {
-      "value": "<p>Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.</p>"
-    },
+    "description": "<p>Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.</p>",
     "tier": 1,
     "benefit": "<p>Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Weapon Skill", "Ballistic Skill"],
     "prerequisites": {
       "text": "Astartes",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Astartes only. Grants training in all non-exotic weapons.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Astartes Weapon Training",
+          "description": "<p>Trained in all non-exotic weapon types: Bolt, Chain, Melta, Plasma, Power, Flame, Primitive, Las, Launcher, SP, and Thrown. No -20 untrained penalty for these weapons.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "Narrative trait - powerful enemies will act against character"
+    "notes": "Narrative trait - powerful enemies will act against character",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

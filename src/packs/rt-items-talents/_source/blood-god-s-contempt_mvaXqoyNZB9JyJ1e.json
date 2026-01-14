@@ -22,7 +22,43 @@
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "bloodGodsContempt",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Blood God's Contempt",
+          "description": "<p>Character may spend an Infamy Point to perform a one-hour Ritual of Contempt, after its completion for the rest of the session whenever the character is affectd by a Psychic, Daemonic, or other Warp-Basedf power or effect that either directly targets them or that they are in the area of effect of (can't use against indirect effects such as telekinetically fired rocks), they can make a Willpower Test prior to it affecting them. if they succeed they ignore its effects, if they fail the power af...</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "Crowds not Difficult Terrain, no penalty when Running/Charging through crowds"
+    "notes": "Crowds not Difficult Terrain, no penalty when Running/Charging through crowds",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

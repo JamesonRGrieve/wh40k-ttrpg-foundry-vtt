@@ -19,7 +19,43 @@
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "identifier": "throoDaKosmos",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Throo Da Kosmos",
+          "description": "<p>The Character can attempt to guide a vessel through the Warp using the normal rules for doing so. However they cannot estimate the journey dduration (counting as failed by 1 DoF), and cannot locate the Astronomicon (suffering -20 to all tests to Navigate the Warp), finally they do not use Navigate(Warp) whenever required to do so, instead making Survival Tests.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

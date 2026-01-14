@@ -22,7 +22,41 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "enemy",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": -10,
+            "condition": "When dealing with chosen enemy group",
+            "icon": "fa-solid fa-skull-crossbones"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enemy (X)",
+          "description": "<p>You have made an enemy of a group or organization. Take -10 to Fellowship tests with that group. They will act with hostility.</p>"
+        }
+      ]
+    },
+    "stackable": true,
+    "rank": 1,
+    "specialization": ""
   },
   "effects": [],
   "flags": {},

@@ -3,24 +3,79 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "psychicAwakening",
     "category": "knowledge",
     "source": "RT: Faith and Coin",
-    "description": {
-      "value": "<p>Character gains Psy Rating 1, or increases their Psy Rating by 1 if they already had it. They choose one Psychic Discipline or other group of Psychic Techniques and immediately learn one Psychic Technique of value 200xp or less which they meed the prerequisites for. They do not gain the Basic Technique of this Discipline (req. GM Approval). From then on, unless allowed otherwise by the GM they may only purchase Psychic Techniques from this Discipline. They may switch Disciplin, but in so doing lose any Techniques of the old Discipline.</p>"
-    },
+    "description": "<p>Your latent psychic potential has awakened, granting you access to the power of the Warp.</p>",
     "tier": 1,
-    "benefit": "<p>Character gains Psy Rating 1, or increases their Psy Rating by 1 if they already had it. They choose one Psychic Discipline or other group of Psychic Techniques and immediately learn one Psychic Technique of value 200xp or less which they meed the prerequisites for. They do not gain the Basic Technique of this Discipline (req. GM Approval). From then on, unless allowed otherwise by the GM they may only purchase Psychic Techniques from this Discipline. They may switch Disciplin, but in so doing lose any Techniques of the old Discipline.</p>",
-    "aptitudes": [],
+    "benefit": "<p>Character gains Psy Rating 1, or increases their Psy Rating by 1 if they already had it. They choose one Psychic Discipline or other group of Psychic Techniques and immediately learn one Psychic Technique of value 200xp or less which they meet the prerequisites for. They do not gain the Basic Technique of this Discipline (req. GM Approval). From then on, unless allowed otherwise by the GM they may only purchase Psychic Techniques from this Discipline. They may switch Discipline, but in so doing lose any Techniques of the old Discipline.</p>",
+    "aptitudes": ["Willpower", "Psyker"],
     "prerequisites": {
       "text": "Awakened Psyker Alternative Advance (Innate), WP 35+",
       "characteristics": {
-        "wp": 35
+        "willpower": 35
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "psyRating",
+          "label": "Psy Rating",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Awakened Mind",
+          "description": "<p>You gain Psy Rating 1 (or increase your existing Psy Rating by 1). You choose one Psychic Discipline and immediately learn one Psychic Technique of 200xp or less that you meet the prerequisites for (does not include the Basic Technique, requires GM approval).</p>"
+        },
+        {
+          "name": "Discipline Limitation",
+          "description": "<p>Unless allowed by the GM, you may only purchase Psychic Techniques from your chosen Discipline. You may switch Disciplines, but lose all Techniques from the old Discipline when you do.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

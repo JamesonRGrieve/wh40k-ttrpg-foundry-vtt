@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "DH 2E: Enemies Beyond",
-    "description": {
-      "value": "<p>Whenever a creature with the Warp Instability Trait makes a successful attack against the character, it must immediately test for Warp Instability after resolving the attack.</p>"
-    },
+    "description": "<p>The character's presence is anathema to creatures of the warp, causing them to struggle to maintain their hold on reality.</p>",
     "tier": 3,
     "isPassive": true,
     "isRollable": true,
@@ -18,12 +16,51 @@
     "prerequisites": {
       "text": "Tier 3: Bane of the Daemon, Willpower 50, Untouchable Elite Advance",
       "characteristics": {
-        "wp": 50
+        "willpower": 50
       },
       "skills": [],
       "talents": []
     },
-    "cost": 900
+    "cost": 900,
+    "identifier": "daemonicDisruption",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Daemonic Disruption",
+          "description": "<p>Whenever a creature with the Warp Instability Trait makes a successful attack against you, it must immediately test for Warp Instability after resolving the attack.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -5,9 +5,7 @@
   "system": {
     "category": "willpower",
     "source": "Dark Heresy: Core",
-    "description": {
-      "value": "<p>When rolling to determine the effects of Shock, can roll twice and take the better result</p>"
-    },
+    "description": "<p>When rolling to determine the effects of Shock, can roll twice and take the better result</p>",
     "tier": 1,
     "benefit": "<p>When rolling to determine the effects of Shock, can roll twice and take the better result</p>",
     "aptitudes": [],
@@ -18,7 +16,41 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "insanelyFaithful",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

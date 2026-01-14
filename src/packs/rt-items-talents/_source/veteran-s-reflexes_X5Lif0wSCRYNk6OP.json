@@ -3,25 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "veteransReflexes",
     "category": "leadership",
     "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>Whilst Piloting the Battlesuit, the Character can use the Pilot(Personal) Skill in place of Acrobatics, Dodge, and Parry Tests.</p>"
-    },
-    "isPassive": true,
-    "isRollable": true,
-    "tier": 1,
+    "description": "<p>Your extensive battlesuit training allows you to pilot with the same defensive reflexes you would use on foot.</p>",
+    "tier": 2,
     "benefit": "<p>Whilst Piloting the Battlesuit, the Character can use the Pilot(Personal) Skill in place of Acrobatics, Dodge, and Parry Tests.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Agility", "Tech"],
     "prerequisites": {
       "text": "Tau Battlesuit Pilot Alternative Advance, 1000xp, Agility 45+, Talented(Pilot)",
       "characteristics": {
-        "ag": 45
+        "agility": 45
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Talented"]
     },
-    "cost": 300
+    "cost": 500,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Tau Battlesuit Pilot",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Pilot Substitution",
+          "description": "<p>While piloting a Battlesuit, use Pilot(Personal) skill instead of Acrobatics, Dodge, or Parry tests.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

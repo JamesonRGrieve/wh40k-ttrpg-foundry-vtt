@@ -3,14 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "stepAside",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Can make one additional Evasion Attempt (Either a Dodge or Parry) once per round. Can still only make a single dodge or parry against an individual attack.</p>"
-    },
+    "description": "<p>The character's superior reflexes allow them to evade multiple attacks in rapid succession.</p>",
     "tier": 3,
     "isPassive": true,
-    "isRollable": false,
     "benefit": "<p>Can make one additional Evasion Attempt (Either a Dodge or Parry) once per round. Can still only make a single dodge or parry against an individual attack.</p>",
     "aptitudes": [
       "Agility",
@@ -20,12 +18,47 @@
     "prerequisites": {
       "text": "Agility 40, Dodge or Parry",
       "characteristics": {
-        "ag": 40
+        "agility": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 900
+    "cost": 900,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [
+        {
+          "key": "evasionAttempts",
+          "label": "Evasion Attempts per Round",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

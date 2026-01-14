@@ -21,7 +21,43 @@
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "boundToTheHighestPower",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Bound to the Highest Power",
+          "description": "<p>Astropath can spend a Fate Point to negate the result of a Psychic Phenomena they rolled, including a result of Perils of the Warp. However, they cannot use the Focus Power action or sustain any Psychic Powers until the start of their next turn.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

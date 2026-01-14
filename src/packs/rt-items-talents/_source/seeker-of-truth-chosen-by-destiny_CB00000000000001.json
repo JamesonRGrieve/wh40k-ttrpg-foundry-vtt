@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain Foresight and Enemy (Academics or Ecclesiarchy). You suffer −3 Willpower.</p>",
     "aptitudes": [],
     "prerequisites": {

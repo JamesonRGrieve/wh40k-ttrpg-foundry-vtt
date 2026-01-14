@@ -3,22 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "pistolWeaponTraining",
     "category": "combat",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Can use Pistol Weapons of relevent group without -20 penalty to WS/BS. Such as: Primitive, Universal (Bolt, Las, Launcher, Melta, Plasma, and SP).</p>"
-    },
+    "description": "<p>You have trained in the use of a specific group of pistol weapons, mastering their handling and accuracy.</p>",
     "tier": 1,
-    "benefit": "<p>Can use Pistol Weapons of relevent group without -20 penalty to WS/BS. Such as: Primitive, Universal (Bolt, Las, Launcher, Melta, Plasma, and SP).</p>",
+    "cost": 300,
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Choose weapon group: Primitive, Universal (Bolt, Las, Launcher, Melta, Plasma, SP), or other pistol type",
+    "benefit": "<p>Can use Pistol Weapons of relevant group without -20 penalty to BS. Such as: Primitive, Universal (Bolt, Las, Launcher, Melta, Plasma, and SP).</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "-",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Weapon Group Training",
+          "description": "<p>You can use pistol weapons of the chosen group without the -20 untrained penalty.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

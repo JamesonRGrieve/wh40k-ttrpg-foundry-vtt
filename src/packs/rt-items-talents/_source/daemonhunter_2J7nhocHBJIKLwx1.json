@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "DH 2E: Enemies Beyond",
-    "description": {
-      "value": "<p>Character can re-roll failed Awareness and Psyniscience tests to detect the presence of Daemons. Additionaly their attacks against Daemons gain the Proven (3) Quality.</p>"
-    },
+    "description": "<p>The character is trained in detecting and destroying daemonic entities, with enhanced senses and combat effectiveness against such foes.</p>",
     "tier": 2,
     "benefit": "<p>Character can re-roll failed Awareness and Psyniscience tests to detect the presence of Daemons. Additionaly their attacks against Daemons gain the Proven (3) Quality.</p>",
     "aptitudes": [
@@ -17,13 +15,52 @@
     "prerequisites": {
       "text": "Tier 2: Forbidden Lore (Daemonology), Willpower 40.",
       "characteristics": {
-        "wp": 40
+        "willpower": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "daemonhunter",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Daemonhunter",
+          "description": "<p>You can re-roll failed Awareness and Psyniscience tests to detect the presence of Daemons. Additionally, your attacks against Daemons gain the Proven (3) Quality.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

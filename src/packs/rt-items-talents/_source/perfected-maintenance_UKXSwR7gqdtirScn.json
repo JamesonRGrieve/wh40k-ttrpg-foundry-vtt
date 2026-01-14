@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "perfectedMaintenance",
     "category": "knowledge",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Once per game session, character can make a +0 Tech-Use Test as a Full Action to improve one functioning piece of personal equipment. If successful, the chosen item becomes one Craftsmanship Higher, +1 per three Degrees of Success, until the end of the game session. (max Best Craftsmanship)</p>"
-    },
+    "description": "<p>Through careful attention and sacred rituals, you can temporarily enhance equipment beyond its normal capabilities.</p>",
     "tier": 2,
     "benefit": "<p>Once per game session, character can make a +0 Tech-Use Test as a Full Action to improve one functioning piece of personal equipment. If successful, the chosen item becomes one Craftsmanship Higher, +1 per three Degrees of Success, until the end of the game session. (max Best Craftsmanship)</p>",
     "aptitudes": [
@@ -15,13 +14,60 @@
       "Tech"
     ],
     "prerequisites": {
-      "text": "Common Lore (Mechanicus) +20, Initiated Maintence.",
+      "text": "Common Lore (Mechanicus) +20, Initiated Maintenance.",
       "characteristics": {},
-      "skills": [],
+      "skills": {
+        "commonLore": 2
+      },
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "techUse",
+      "modifier": 0,
+      "description": "Tech-Use test to temporarily improve equipment craftsmanship"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Temporary Enhancement",
+          "description": "<p>Once per game session, you can make a +0 Tech-Use test as a Full Action to improve one functioning piece of personal equipment. If successful, the chosen item becomes one Craftsmanship level higher (+1 per three Degrees of Success) until the end of the game session (maximum Best Craftsmanship).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

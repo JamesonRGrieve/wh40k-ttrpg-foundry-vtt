@@ -23,7 +23,31 @@
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "identifier": "orthoproxy",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Speak for the Mechanicus",
+          "description": "<p>Can speak on behalf of the Adeptus Mechanicus. +10 to social tests with Tech-Priests and Imperial officials.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

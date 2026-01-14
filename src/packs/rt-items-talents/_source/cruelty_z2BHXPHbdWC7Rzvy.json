@@ -5,22 +5,59 @@
   "system": {
     "category": "combat",
     "source": "RT: The Soul Reaver",
-    "description": {
-      "value": "<p>When making a Melee or Ranged Attack at Point Blank range against a Stunned or Prone enemy, the attack gains the Proven (4) Quality\nProven X: If weapon damage die rolls less than X, treat as if X was rolled.</p>"
-    },
+    "description": "<p>The character takes sadistic pleasure in attacking helpless foes, ensuring maximum damage against vulnerable enemies.</p>",
     "tier": 1,
     "benefit": "<p>When making a Melee or Ranged Attack at Point Blank range against a Stunned or Prone enemy, the attack gains the Proven (4) Quality\nProven X: If weapon damage die rolls less than X, treat as if X was rolled.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Dark Eldar, Pity the Weak, Weapon Skill 40",
       "characteristics": {
-        "ws": 40
+        "weaponSkill": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "cruelty",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Cruelty",
+          "description": "<p>When making a Melee or Ranged Attack at Point Blank range against a Stunned or Prone enemy, the attack gains the Proven (4) Quality.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

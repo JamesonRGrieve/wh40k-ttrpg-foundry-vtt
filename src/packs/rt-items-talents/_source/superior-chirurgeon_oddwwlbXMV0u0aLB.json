@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "superiorChirurgeon",
+    "category": "knowledge",
     "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>Character gains +20 to all Medicae Skill Tests. When providing First Aid, they ignore penalties for Heavily Damaged patients, and only suffer a -10 penalty for those suffering Critical Damage.</p>"
-    },
+    "description": "<p>The character is a master of battlefield medicine, capable of treating even the most grievous wounds with exceptional skill.</p>",
     "tier": 3,
     "benefit": "<p>Character gains +20 to all Medicae Skill Tests. When providing First Aid, they ignore penalties for Heavily Damaged patients, and only suffer a -10 penalty for those suffering Critical Damage.</p>",
     "aptitudes": [
@@ -17,11 +16,48 @@
     "prerequisites": {
       "text": "Rank 2 in Medicae Skill",
       "characteristics": {},
-      "skills": [],
+      "skills": {
+        "medicae": 2
+      },
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "medicae": 20
+      },
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced First Aid",
+          "description": "<p>Ignore penalties for Heavily Damaged patients. Only suffer -10 penalty for Critical Damage.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

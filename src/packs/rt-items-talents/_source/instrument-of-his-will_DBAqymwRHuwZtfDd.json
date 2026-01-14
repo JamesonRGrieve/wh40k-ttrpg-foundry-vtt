@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "instrumentOfHisWill",
     "category": "combat",
     "source": "DH 2E: Enemies Beyond",
-    "description": {
-      "value": "<p>After making a successful attack against a Daemon (including striking it with a Psychic Power), the character can spend a Fate Point to increase the damage of the first hit they inflict as part of that attack by twice their Willpower Bonus. This additional damage ignores armour and toughness bonus.</p>"
-    },
+    "description": "<p>After making a successful attack against a Daemon (including striking it with a Psychic Power), the character can spend a Fate Point to increase the damage of the first hit they inflict as part of that attack by twice their Willpower Bonus. This additional damage ignores armour and toughness bonus.</p>",
     "tier": 3,
     "benefit": "<p>After making a successful attack against a Daemon (including striking it with a Psychic Power), the character can spend a Fate Point to increase the damage of the first hit they inflict as part of that attack by twice their Willpower Bonus. This additional damage ignores armour and toughness bonus.</p>",
     "aptitudes": [
@@ -17,13 +16,46 @@
     "prerequisites": {
       "text": "Tier 3: Willpower 50",
       "characteristics": {
-        "wp": 50
+        "willpower": 50
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Daemonbane Strike",
+          "description": "<p>After successful attack vs Daemon, spend Fate Point to add 2x Willpower Bonus to first hit damage. This bonus ignores armor and toughness.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

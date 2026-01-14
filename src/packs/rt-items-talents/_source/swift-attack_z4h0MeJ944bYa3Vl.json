@@ -3,15 +3,13 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "swiftAttack",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can make Swift Attack Melee Combat Action.\nSwift Attack, Half Action, make weapon skill test, make if successful hit once, and one additional time per two degrees of success. These additional attacks can hit the same target, or anyone else who isn't harder to hit within melee range.</p>"
-    },
+    "description": "<p>The character can make multiple melee attacks in rapid succession.</p>",
     "tier": 2,
     "isPassive": false,
-    "isRollable": true,
-    "benefit": "<p>Character can make Swift Attack Melee Combat Action.\nSwift Attack, Half Action, make weapon skill test, make if successful hit once, and one additional time per two degrees of success. These additional attacks can hit the same target, or anyone else who isn't harder to hit within melee range.</p>",
+    "benefit": "<p>Character can make Swift Attack Melee Combat Action.\nSwift Attack, Half Action, make weapon skill test, if successful hit once, and one additional time per two degrees of success. These additional attacks can hit the same target, or anyone else who isn't harder to hit within melee range.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Finesse",
@@ -20,12 +18,45 @@
     "prerequisites": {
       "text": "Weapon Skill 30",
       "characteristics": {
-        "ws": 30
+        "weaponSkill": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 600
+    "cost": 600,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "weaponSkill",
+      "skill": "",
+      "modifier": 0,
+      "description": "Swift Attack - Half Action melee attack with extra hits per 2 DoS"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Swift Attack Action",
+          "description": "<p>Half Action. Make a WS test. Hit once, plus once per 2 DoS. Extra hits can target same or different enemies within reach.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

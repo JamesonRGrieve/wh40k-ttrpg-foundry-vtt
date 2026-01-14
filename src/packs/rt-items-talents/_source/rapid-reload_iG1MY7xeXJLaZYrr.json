@@ -3,14 +3,11 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "rapidReload",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Halve reload time of all weapons, rounding down. Halving a Half Action reload makes it a Free Action.</p>"
-    },
+    "description": "<p>The character can reload their weapons with exceptional speed, cutting reload times in half through practiced motions.</p>",
     "tier": 1,
-    "isPassive": false,
-    "isRollable": false,
     "benefit": "<p>Halve reload time of all weapons, rounding down. Halving a Half Action reload makes it a Free Action.</p>",
     "aptitudes": [
       "Agility",
@@ -23,7 +20,46 @@
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Rapid Reload",
+          "description": "<p>Halve the reload time of all weapons, rounding down. A Half Action reload becomes a Free Action.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

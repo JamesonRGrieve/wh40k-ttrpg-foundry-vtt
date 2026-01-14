@@ -3,27 +3,64 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "sufferNotTheWorkOfHeretics",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>When Attacking an Enemy or a Vehicle/Structure/Object crafted by them that the Characted has the Hatred Talent for, they increase the Penetration of All Attacks made by their Willpower Bonus.\nIf Possessing the Inspire Wrath Talent, they pass this benefit along with any Hatred Talents whilst using it, other characters gaining increased Penetration of the character's Willpower Bonus rather than their own.</p>"
-    },
+    "description": "<p>The character's righteous fury allows them to pierce through the defenses of hated enemies with enhanced armor penetration.</p>",
     "tier": 3,
-    "benefit": "<p>When Attacking an Enemy or a Vehicle/Structure/Object crafted by them that the Characted has the Hatred Talent for, they increase the Penetration of All Attacks made by their Willpower Bonus.\nIf Possessing the Inspire Wrath Talent, they pass this benefit along with any Hatred Talents whilst using it, other characters gaining increased Penetration of the character's Willpower Bonus rather than their own.</p>",
+    "benefit": "<p>When Attacking an Enemy or a Vehicle/Structure/Object crafted by them that the Character has the Hatred Talent for, they increase the Penetration of All Attacks made by their Willpower Bonus.\nIf Possessing the Inspire Wrath Talent, they pass this benefit along with any Hatred Talents whilst using it, other characters gaining increased Penetration of the character's Willpower Bonus rather than their own.</p>",
     "aptitudes": [
       "Willpower",
       "Offence"
     ],
     "prerequisites": {
       "text": "Hatred (any one), is a Ministorum Priest or 20+ Insanity.",
-      "characteristics": {
-        "or": 20
-      },
-      "skills": [],
+      "characteristics": {},
+      "skills": {},
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "penetration",
+            "value": 0,
+            "condition": "Against enemies you have Hatred for - add your Willpower Bonus to Penetration",
+            "icon": "fa-solid fa-skull-crossbones"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Inspire Wrath Enhancement",
+          "description": "<p>If you have Inspire Wrath, allies gain your Willpower Bonus to Penetration against enemies you grant Hatred against.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

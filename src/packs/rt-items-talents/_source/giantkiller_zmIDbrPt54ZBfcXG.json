@@ -3,12 +3,17 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "giantkiller",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>When firing at a target with a Size Trait larger than the character's own, character adds the difference in Size Trait to their Damage.\nEG: A Ratling (Size 3, Scrawny) does +2 damage vs an Ork Nob (Size 5, Hulking)</p>"
-    },
+    "description": "<p>You have learned to exploit the inherent disadvantages of massive opponents, targeting structural weak points and vulnerable joints that larger foes cannot easily protect.</p>",
     "tier": 3,
+    "cost": 900,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
     "benefit": "<p>When firing at a target with a Size Trait larger than the character's own, character adds the difference in Size Trait to their Damage.\nEG: A Ratling (Size 3, Scrawny) does +2 damage vs an Ork Nob (Size 5, Hulking)</p>",
     "aptitudes": [
       "Ballistic Skill",
@@ -17,13 +22,54 @@
     "prerequisites": {
       "text": "BS 50, The Bigger They Are",
       "characteristics": {
-        "bs": 50
+        "ballisticSkill": 50
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["The Bigger They Are"]
     },
-    "cost": 900,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 0,
+            "condition": "Add Size difference vs larger targets (Size Trait difference)",
+            "icon": "fa-solid fa-mountain"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

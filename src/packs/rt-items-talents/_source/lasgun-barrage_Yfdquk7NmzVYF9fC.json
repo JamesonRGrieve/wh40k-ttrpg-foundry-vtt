@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "lasgunBarrage",
     "category": "combat",
     "source": "Only War Core",
     "description": {
@@ -20,10 +21,43 @@
         "bs": 40
       },
       "skills": [],
-      "talents": []
+      "talents": ["Weapon Training (Las)"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Sustained Fire",
+          "description": "<p>When firing Las Weapons on Semi or Full Auto without moving, gain +1 Degree of Success on successful attacks.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

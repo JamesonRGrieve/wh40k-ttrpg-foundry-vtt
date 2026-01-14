@@ -3,22 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "gunBlessing",
     "category": "knowledge",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>As a Full Action, make an Intelligence Test to unjam a number of guns equal to your Intelligence Bonus withinin a 10 metre radius</p>"
-    },
+    "description": "<p>Through sacred rites and knowledge of the Machine God, you can restore function to jammed weapons in combat.</p>",
     "tier": 1,
-    "benefit": "<p>As a Full Action, make an Intelligence Test to unjam a number of guns equal to your Intelligence Bonus withinin a 10 metre radius</p>",
-    "aptitudes": [],
+    "benefit": "<p>As a Full Action, make an Intelligence Test to unjam a number of guns equal to your Intelligence Bonus within a 10 metre radius</p>",
+    "aptitudes": ["Intelligence", "Tech"],
     "prerequisites": {
       "text": "Mechanicus Implants",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "intelligence",
+      "skill": "",
+      "modifier": 0,
+      "description": "Intelligence test to unjam weapons within 10m"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Unjam Guns",
+          "description": "<p>As a Full Action, you can make an Intelligence test to unjam a number of guns equal to your Intelligence Bonus within a 10 metre radius.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

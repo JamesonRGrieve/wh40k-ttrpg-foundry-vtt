@@ -17,13 +17,44 @@
     "prerequisites": {
       "text": "Fellowship 30, not an Ogryn",
       "characteristics": {
-        "fel": 30
+        "fellowship": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "littleUn",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": 20,
+            "condition": "When interacting with Ogryns (+2 DoS on success)",
+            "icon": "fa-solid fa-hand-fist"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ogryn Loyalty",
+          "description": "<p>Ogryn allies may reroll failed tests to resist coercion or betrayal against you.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

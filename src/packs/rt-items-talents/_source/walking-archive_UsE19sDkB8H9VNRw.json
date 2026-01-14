@@ -3,13 +3,14 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "walkingArchive",
     "category": "knowledge",
     "source": "OW: Shield of Humanity",
     "description": {
-      "value": "<p>When Asissted by their Comrade, the character gains +20 to all Common Lore, Forbidden Lore, Linguistics, and Scholastic Lore Tests.</p>"
+      "value": "<p>The character's comrade serves as a mobile library, carrying extensive reference materials and data-slates containing vast repositories of knowledge.</p>"
     },
     "tier": 1,
-    "benefit": "<p>When Asissted by their Comrade, the character gains +20 to all Common Lore, Forbidden Lore, Linguistics, and Scholastic Lore Tests.</p>",
+    "benefit": "<p>When Assisted by their Comrade, the character gains +20 to all Common Lore, Forbidden Lore, Linguistics, and Scholastic Lore Tests.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Rector Erudite Advanced Specialty (400xp)",
@@ -18,7 +19,72 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "commonLore",
+            "value": 20,
+            "condition": "When Assisted by Comrade",
+            "icon": "fa-solid fa-book"
+          },
+          {
+            "key": "forbiddenLore",
+            "value": 20,
+            "condition": "When Assisted by Comrade",
+            "icon": "fa-solid fa-book-skull"
+          },
+          {
+            "key": "linguistics",
+            "value": 20,
+            "condition": "When Assisted by Comrade",
+            "icon": "fa-solid fa-language"
+          },
+          {
+            "key": "scholasticLore",
+            "value": 20,
+            "condition": "When Assisted by Comrade",
+            "icon": "fa-solid fa-scroll"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

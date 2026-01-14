@@ -9,9 +9,7 @@
       "book": "Rogue Trader Core Rulebook",
       "page": "61"
     },
-    "description": {
-      "value": "<p><strong>Weapon Master:</strong> The Arch-Militant has dedicated their life to mastery of arms, becoming exceptionally skilled with one particular class of weaponry. Through countless hours of training and combat experience, they have achieved an almost supernatural proficiency with their chosen weapons.</p>"
-    },
+    "description": "<p><strong>Weapon Master:</strong> The Arch-Militant has dedicated their life to mastery of arms, becoming exceptionally skilled with one particular class of weaponry. Through countless hours of training and combat experience, they have achieved an almost supernatural proficiency with their chosen weapons.</p>",
     "tier": 0,
     "benefit": "<p>Choose one weapon class (SP, Bolt, Las, Melta, Plasma, etc.). When using any weapon of the chosen class, you gain +10 to Hit, +2 Damage, and +2 Initiative.</p>",
     "aptitudes": [],
@@ -70,6 +68,12 @@
           "description": "Choose one weapon class (SP, Bolt, Las, Melta, Plasma, Exotic, etc.) at character creation. When using any weapon of that class, gain +10 to Hit, +2 Damage, and +2 Initiative."
         }
       ]
+    },
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
     }
   },
   "effects": [],

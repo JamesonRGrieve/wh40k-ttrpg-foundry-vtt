@@ -3,22 +3,54 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "thrownWeaponTraining",
     "category": "combat",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Can use Thrown Weapons without a -20 Penalty to WS/BS. Such as: Universal(Primitive, Chain, Shock, and Power). Everyone can throw grenades without penalty by default.</p>"
-    },
+    "description": "<p>The character is trained in the use of thrown weapons of a specific type.</p>",
     "tier": 1,
     "benefit": "<p>Can use Thrown Weapons without a -20 Penalty to WS/BS. Such as: Universal(Primitive, Chain, Shock, and Power). Everyone can throw grenades without penalty by default.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "-",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Specify weapon group: Universal, Primitive, Chain, Shock, Power, etc.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Thrown Weapon Proficiency",
+          "description": "<p>No -20 penalty when using thrown weapons of the specified type. Grenades are automatically proficient for everyone.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

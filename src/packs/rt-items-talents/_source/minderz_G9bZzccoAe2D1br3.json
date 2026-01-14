@@ -18,7 +18,43 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "minderz",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Minderz",
+          "description": "<p>Character gains Ork Minderz to help keep them under control. Talent can be taken multiple times, each time gain one Minderz Ork as a companion who will follow their general directions within reason, if they die they can be replaced at an appropriate opportunity as determined by the GM. As Orks, they are Subject to Might Makes Right, Mob Rule, and Contribute to the Ork Weirdboyz' Power of Da Waaagh! Talent. (See Bestiary)\nIf the Character fails a Fear or Pinning Test, a Minder will attempt to ...</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

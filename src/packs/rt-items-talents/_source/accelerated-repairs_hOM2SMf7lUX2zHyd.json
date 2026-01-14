@@ -3,13 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "acceleratedRepairs",
     "category": "knowledge",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>The Character can make Repair Tests as a Rush Job and suffer a -10 Penalty instead of the normal -30. \nWhen making Careful Repairs, they increase repair time by 25% instead of 50% (IE, a 12 Hour repair takes 15 Hours instead of 18).\nEssential Repair Skill: Common Lore(Mechanicus) or Common Lore (Tech), or Forbidden Lore (Mechanicus)</p>"
-    },
+    "description": "<p>The Character can make Repair Tests as a Rush Job and suffer a -10 Penalty instead of the normal -30. When making Careful Repairs, they increase repair time by 25% instead of 50% (IE, a 12 Hour repair takes 15 Hours instead of 18). Essential Repair Skill: Common Lore(Mechanicus) or Common Lore (Tech), or Forbidden Lore (Mechanicus)</p>",
     "tier": 2,
-    "benefit": "<p>The Character can make Repair Tests as a Rush Job and suffer a -10 Penalty instead of the normal -30. \nWhen making Careful Repairs, they increase repair time by 25% instead of 50% (IE, a 12 Hour repair takes 15 Hours instead of 18).\nEssential Repair Skill: Common Lore(Mechanicus) or Common Lore (Tech), or Forbidden Lore (Mechanicus)</p>",
+    "benefit": "<p>The Character can make Repair Tests as a Rush Job and suffer a -10 Penalty instead of the normal -30. When making Careful Repairs, they increase repair time by 25% instead of 50% (IE, a 12 Hour repair takes 15 Hours instead of 18).</p>",
     "aptitudes": [
       "Intelligence",
       "Tech"
@@ -21,7 +20,56 @@
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Rush Job Mastery",
+          "description": "<p>When making Repair Tests as a Rush Job, you only suffer a -10 penalty instead of the normal -30 penalty.</p>"
+        },
+        {
+          "name": "Careful Repairs",
+          "description": "<p>When making Careful Repairs, you increase repair time by 25% instead of 50% (e.g., a 12 Hour repair takes 15 Hours instead of 18).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

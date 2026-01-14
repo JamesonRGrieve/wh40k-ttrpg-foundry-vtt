@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain +10 to Fellowship Tests with aliens. You suffer −5 to Willpower Tests involving alien artefacts and psychic powers.</p>",
     "aptitudes": [],
     "prerequisites": {

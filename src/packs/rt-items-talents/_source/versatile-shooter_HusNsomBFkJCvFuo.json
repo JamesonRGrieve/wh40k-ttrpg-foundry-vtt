@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "versatileShooter",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When Firing a Single Shot from a Pistol, Heavy, or Vehicle Weapon with the Accurate Quality whilst Benefiting from the Aim Action, character treats weapon as if it were a Basic Weapon (AKA, +1d10 Damage per Two Degrees of Success, up to 2d10, can't generate Righteous Fury)</p>"
-    },
+    "description": "<p>The character can use their expertise to make precise aimed shots with weapons not normally designed for such accuracy.</p>",
     "tier": 3,
     "benefit": "<p>When Firing a Single Shot from a Pistol, Heavy, or Vehicle Weapon with the Accurate Quality whilst Benefiting from the Aim Action, character treats weapon as if it were a Basic Weapon (AKA, +1d10 Damage per Two Degrees of Success, up to 2d10, can't generate Righteous Fury)</p>",
     "aptitudes": [
@@ -18,10 +17,48 @@
       "text": "Sharp Shooter, Target Selection",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Sharp Shooter", "Target Selection"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Accurate Non-Basic Weapons",
+          "description": "<p>When aiming with Accurate pistols, heavy, or vehicle weapons, treat as Basic weapon (+1d10 damage per 2 DoS, up to +2d10, no Righteous Fury).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

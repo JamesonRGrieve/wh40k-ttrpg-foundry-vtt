@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "initiatedMaintenance",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Weapons this character wields only Jam on the result of a 100, while Weapons with the Overheat Quality only overheat on a 96-100</p>"
-    },
+    "description": "<p>Weapons this character wields only Jam on the result of a 100, while Weapons with the Overheat Quality only overheat on a 96-100</p>",
     "tier": 1,
     "benefit": "<p>Weapons this character wields only Jam on the result of a 100, while Weapons with the Overheat Quality only overheat on a 96-100</p>",
     "aptitudes": [
@@ -17,11 +16,46 @@
     "prerequisites": {
       "text": "Common Lore (Mechanicus) +10",
       "characteristics": {},
-      "skills": [],
+      "skills": {
+        "commonLore": 1
+      },
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Weapon Maintenance Expert",
+          "description": "<p>Your weapons only Jam on a roll of 100 (instead of 96-100). Weapons with Overheat only overheat on 96-100 (instead of 91-00).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

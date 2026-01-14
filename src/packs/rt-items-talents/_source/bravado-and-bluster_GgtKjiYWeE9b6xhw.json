@@ -18,7 +18,45 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "bravadoAndBluster",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": 10,
+            "condition": "Per Comrade assisting (cumulative)",
+            "icon": "fa-solid fa-users"
+          },
+          {
+            "key": "deceive",
+            "value": 10,
+            "condition": "Per Comrade assisting (cumulative)",
+            "icon": "fa-solid fa-users"
+          },
+          {
+            "key": "intimidate",
+            "value": 10,
+            "condition": "Per Comrade assisting (cumulative)",
+            "icon": "fa-solid fa-users"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

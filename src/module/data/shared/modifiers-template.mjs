@@ -1,7 +1,166 @@
 import SystemDataModel from "../abstract/system-data-model.mjs";
 
 /**
- * Template for items that provide modifiers to characteristics, skills, etc.
+ * MODIFIER SYSTEM DOCUMENTATION
+ * 
+ * This template provides two types of modifiers for items that affect actor statistics:
+ * 
+ * ============================================================================
+ * 1. ALWAYS-ON MODIFIERS (Auto-Applied)
+ * ============================================================================
+ * 
+ * These modifiers are automatically applied during prepareEmbeddedData() and permanently
+ * affect the actor's statistics while the item is present/equipped.
+ * 
+ * ACTIVATION CONDITIONS:
+ * - Talents: Always active if item exists on actor
+ * - Traits: Always active if item exists on actor
+ * - Conditions: Always active if item exists on actor
+ * - Armour: Active when system.equipped === true
+ * - Cybernetics: Active when system.equipped === true
+ * - Gear: Active when system.equipped === true
+ * 
+ * MODIFIER FIELDS:
+ * 
+ * • modifiers.characteristics
+ *   → Adds to characteristic totals in prepareEmbeddedData()
+ *   → Applied before characteristic.bonus calculation
+ *   → Example: { strength: 10, agility: -5 }
+ *   → Usage: Unnatural Characteristics, Power Armour bonuses
+ * 
+ * • modifiers.skills
+ *   → Adds to skill.current in prepareEmbeddedData()
+ *   → Applied after training calculation
+ *   → Example: { dodge: 10, awareness: 5 }
+ *   → Usage: Skill bonuses from talents, equipment
+ * 
+ * • modifiers.combat
+ *   → Adds to attack/damage/defense/initiative rolls
+ *   → Fields: attack, damage, penetration, defense, initiative, speed
+ *   → Example: { attack: 10, damage: 2, initiative: 1 }
+ *   → Usage: Weapon attachments, combat talents, stance bonuses
+ * 
+ * • modifiers.resources
+ *   → Adds to maximum resource values
+ *   → Fields: wounds, fate, insanity, corruption
+ *   → Example: { wounds: 5, fate: 1 }
+ *   → Usage: Talents that increase max wounds, fate bonuses
+ * 
+ * • modifiers.other
+ *   → Generic modifier array for custom effects
+ *   → Each entry: { key, label, value, mode }
+ *   → Modes: "add", "multiply", "override", "downgrade", "upgrade"
+ *   → Example: [{ key: "movement", label: "Fleet of Foot", value: 2, mode: "add" }]
+ * 
+ * ============================================================================
+ * 2. SITUATIONAL MODIFIERS (Manual Application)
+ * ============================================================================
+ * 
+ * These modifiers are displayed in roll dialogs as optional checkboxes that players
+ * can enable/disable based on current circumstances. They are NOT auto-applied.
+ * 
+ * DISPLAY LOCATION:
+ * - Shown in characteristic/skill roll dialogs
+ * - Presented as checkboxes with condition text
+ * - Player chooses which apply to current roll
+ * 
+ * MODIFIER FIELDS:
+ * 
+ * • modifiers.situational.characteristics
+ *   → Array of conditional characteristic modifiers
+ *   → Each entry: { key, value, condition, icon }
+ *   → Example: [{ 
+ *       key: "strength", 
+ *       value: 10, 
+ *       condition: "When lifting or moving heavy objects",
+ *       icon: "fa-dumbbell" 
+ *     }]
+ * 
+ * • modifiers.situational.skills
+ *   → Array of conditional skill modifiers
+ *   → Each entry: { key, value, condition, icon }
+ *   → Example: [{ 
+ *       key: "stealth", 
+ *       value: 10, 
+ *       condition: "In shadows or darkness",
+ *       icon: "fa-moon" 
+ *     }]
+ * 
+ * • modifiers.situational.combat
+ *   → Array of conditional combat modifiers
+ *   → Each entry: { key, value, condition, icon }
+ *   → Example: [{ 
+ *       key: "attack", 
+ *       value: 10, 
+ *       condition: "When fighting xenos",
+ *       icon: "fa-skull-crossbones" 
+ *     }]
+ * 
+ * ============================================================================
+ * PRACTICAL EXAMPLES
+ * ============================================================================
+ * 
+ * TALENT: "Unnatural Strength (x2)"
+ * {
+ *   modifiers: {
+ *     characteristics: { strength: 10 }  // Always-on +10 Strength
+ *   }
+ * }
+ * 
+ * TALENT: "Hatred (Orks)"
+ * {
+ *   modifiers: {
+ *     situational: {
+ *       combat: [{
+ *         key: "attack",
+ *         value: 10,
+ *         condition: "When attacking Orks",
+ *         icon: "fa-skull"
+ *       }]
+ *     }
+ *   }
+ * }
+ * 
+ * ARMOUR: "Power Armour"
+ * {
+ *   modifiers: {
+ *     characteristics: { strength: 20 },  // Auto-applied when equipped
+ *     resources: { wounds: 5 }
+ *   }
+ * }
+ * 
+ * TRAIT: "Quadruped"
+ * {
+ *   modifiers: {
+ *     other: [{ 
+ *       key: "movement", 
+ *       label: "Movement", 
+ *       value: 2, 
+ *       mode: "add" 
+ *     }]
+ *   }
+ * }
+ * 
+ * ============================================================================
+ * MODIFIER TRACKING
+ * ============================================================================
+ * 
+ * All applied modifiers are tracked in actor.system.modifierSources for transparency:
+ * 
+ * actor.system.modifierSources = {
+ *   characteristics: {
+ *     strength: [
+ *       { name: "Power Armour", type: "armour", id: "xxx", value: 20 },
+ *       { name: "Unnatural Strength", type: "trait", id: "yyy", value: 10 }
+ *     ]
+ *   },
+ *   skills: { dodge: [{ name: "Dodge Training", ... }] },
+ *   combat: { attack: [...], damage: [...], initiative: [...] },
+ *   wounds: [{ name: "True Grit", type: "talent", value: 5 }],
+ *   fate: [...],
+ *   movement: [...]
+ * }
+ * 
  * @mixin
  */
 export default class ModifiersTemplate extends SystemDataModel {

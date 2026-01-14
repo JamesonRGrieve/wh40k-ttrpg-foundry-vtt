@@ -3,24 +3,63 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "wallOfSteel",
     "category": "combat",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Can make one additional parry per round. Can only attempt a single parry against one attack.</p>"
-    },
+    "description": "<p>The character's defensive skills allow them to parry multiple attacks in rapid succession.</p>",
     "tier": 1,
     "benefit": "<p>Can make one additional parry per round. Can only attempt a single parry against one attack.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Ag 35",
       "characteristics": {
-        "ag": 35
+        "agility": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "parryAttempts",
+          "label": "Parry Attempts per Round",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

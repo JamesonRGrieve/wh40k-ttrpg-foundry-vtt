@@ -3,15 +3,18 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "guardian",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>As a Reaction, character can spend a Fate Point and expand all their actions for their next Round to switch places within an ally within 2 metres so long as no physical obstruction would prevent it. The character becomes target of any attacks previously targeting the ally.</p>"
-    },
+    "description": "<p>Your reflexes and dedication allow you to throw yourself in harm's way to protect your allies, taking hits meant for others through sheer determination and speed.</p>",
     "tier": 2,
+    "cost": 600,
     "isPassive": false,
-    "isRollable": false,
-    "benefit": "<p>As a Reaction, character can spend a Fate Point and expand all their actions for their next Round to switch places within an ally within 2 metres so long as no physical obstruction would prevent it. The character becomes target of any attacks previously targeting the ally.</p>",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>As a Reaction, character can spend a Fate Point and expend all their actions for their next Round to switch places with an ally within 2 metres so long as no physical obstruction would prevent it. The character becomes target of any attacks previously targeting the ally.</p>",
     "aptitudes": [
       "Agility",
       "Defence"
@@ -19,12 +22,52 @@
     "prerequisites": {
       "text": "Agility 40",
       "characteristics": {
-        "ag": 40
+        "agility": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 600
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Protective Swap",
+          "description": "<p>As a Reaction, spend a Fate Point and your next turn's actions to swap places with an ally within 2m. You become the target of attacks aimed at them.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

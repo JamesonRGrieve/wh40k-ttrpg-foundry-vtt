@@ -3,26 +3,76 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "hammerBlow",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Whenever a character makes an All Out Attack Action to make a single melee attack. They may add half their Strength Bonus to the weapon's Penetration value, additionally, the attack counts as having Concussive(2) Special Quality.\nConcussive(2): Target makes -20 Toughness Test, failiure stuns for 1 round per degree of failiure. If damage is greater than Target's Strength bonus, knock them prone.</p>"
-    },
+    "description": "<p>You can channel your full strength into crushing all-out attacks that penetrate armor and stun your opponents with devastating concussive force.</p>",
     "tier": 3,
-    "benefit": "<p>Whenever a character makes an All Out Attack Action to make a single melee attack. They may add half their Strength Bonus to the weapon's Penetration value, additionally, the attack counts as having Concussive(2) Special Quality.\nConcussive(2): Target makes -20 Toughness Test, failiure stuns for 1 round per degree of failiure. If damage is greater than Target's Strength bonus, knock them prone.</p>",
+    "cost": 900,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Whenever a character makes an All Out Attack Action to make a single melee attack, they may add half their Strength Bonus to the weapon's Penetration value. Additionally, the attack counts as having Concussive(2) Special Quality.\nConcussive(2): Target makes -20 Toughness Test, failure stuns for 1 round per degree of failure. If damage is greater than Target's Strength bonus, knock them prone.</p>",
     "aptitudes": [
       "Strength",
-      "Offence",
-      "Khorne"
+      "Offence"
     ],
     "prerequisites": {
       "text": "Crushing Blow",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Crushing Blow"]
     },
-    "cost": 900,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "penetration",
+            "value": 0,
+            "condition": "Add half Strength Bonus to Penetration during All Out Attack (melee)",
+            "icon": "fa-solid fa-hammer"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Concussive Attack",
+          "description": "<p>All Out Attacks gain Concussive(2): Target makes -20 T Test, failure stuns 1 round/DoF. Damage > target's SB knocks prone.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

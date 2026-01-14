@@ -57,7 +57,13 @@
         "combat": []
       }
     },
-    "notes": "-10 Survival, -5 Int outside proper habs"
+    "notes": "-10 Survival, -5 Int outside proper habs",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

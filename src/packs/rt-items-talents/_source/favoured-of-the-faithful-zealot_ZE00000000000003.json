@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain +5 Fellowship and the Peer (Ecclesiarchy) Talent. You suffer −5 Toughness.</p>",
     "aptitudes": [],
     "prerequisites": {

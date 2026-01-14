@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "berserkCharge",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Charge Action Melee Attacks provide an additional +10 (+20 -> +30) to the WS Test.</p>"
-    },
+    "description": "<p>Charge Action Melee Attacks provide an additional +10 (+20 -> +30) to the WS Test.</p>",
     "tier": 1,
     "benefit": "<p>Charge Action Melee Attacks provide an additional +10 (+20 -> +30) to the WS Test.</p>",
     "aptitudes": [
@@ -18,11 +17,58 @@
     "prerequisites": {
       "text": "None",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Charge attacks gain +30 total bonus (+20 base +10 from talent).",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "attack",
+            "value": 10,
+            "condition": "When making Charge Action melee attacks (+10 on top of normal +20)",
+            "icon": "fa-solid fa-person-running"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

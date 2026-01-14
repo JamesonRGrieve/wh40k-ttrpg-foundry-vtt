@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain +5 Willpower. You suffer −5 Fellowship or 1d10 Insanity Points.</p>",
     "aptitudes": [],
     "prerequisites": {

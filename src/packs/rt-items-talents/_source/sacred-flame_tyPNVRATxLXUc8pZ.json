@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "sacredFlame",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>Character inflicts Righteous Fury on a result of 9 or 10 for Damage Rolls made with weapons with the Flame Quality.</p>"
-    },
+    "description": "<p>The character's faith sanctifies flame weapons they wield, making their purifying fire even more devastating against the enemies of the Emperor.</p>",
     "tier": 3,
     "benefit": "<p>Character inflicts Righteous Fury on a result of 9 or 10 for Damage Rolls made with weapons with the Flame Quality.</p>",
     "aptitudes": [
@@ -17,13 +16,51 @@
     "prerequisites": {
       "text": "Willpower 40, Cleanse and Purify",
       "characteristics": {
-        "wp": 40
+        "willpower": 40
       },
       "skills": [],
-      "talents": []
+      "talents": ["Cleanse and Purify"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Expanded Righteous Fury (Flame)",
+          "description": "<p>When using weapons with the Flame Quality, inflict Righteous Fury on damage rolls of 9 or 10 (instead of just 10).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

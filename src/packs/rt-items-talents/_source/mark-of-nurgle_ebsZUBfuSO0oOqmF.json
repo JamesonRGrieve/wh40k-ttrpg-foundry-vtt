@@ -5,9 +5,7 @@
   "system": {
     "category": "defense",
     "source": "Black Crusade Core",
-    "description": {
-      "value": "<p>Character is marked by the Plague Father upon their soul and possibly their body. They feel great warmth in the rot and everlasting disease, and wish to share Nurgle's Gifts with all.\nThe Character gains Stuff of Nightmares and Unnatural Toughness (+1) Traits. The Mark itself also may be required for some other abilities.\nLeaving the path of Nurgle will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.</p>"
-    },
+    "description": "<p>Character is marked by the Plague Father upon their soul and possibly their body. They feel great warmth in the rot and everlasting disease, and wish to share Nurgle's Gifts with all.\nThe Character gains Stuff of Nightmares and Unnatural Toughness (+1) Traits. The Mark itself also may be required for some other abilities.\nLeaving the path of Nurgle will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.</p>",
     "tier": 1,
     "benefit": "<p>Character is marked by the Plague Father upon their soul and possibly their body. They feel great warmth in the rot and everlasting disease, and wish to share Nurgle's Gifts with all.\nThe Character gains Stuff of Nightmares and Unnatural Toughness (+1) Traits. The Mark itself also may be required for some other abilities.\nLeaving the path of Nurgle will now trigger their retribution, doing so loses this talent and forces two rolls on the Gifts of the Gods table, choosing the worse result.</p>",
     "aptitudes": [],
@@ -18,7 +16,66 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "markOfNurgle",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {
+        "toughness": 1
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "unnaturalToughness",
+          "label": "Unnatural Toughness",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [
+        {
+          "name": "Stuff of Nightmares",
+          "level": 1,
+          "uuid": ""
+        },
+        {
+          "name": "Unnatural Toughness",
+          "level": 1,
+          "uuid": ""
+        }
+      ],
+      "specialAbilities": [
+        {
+          "name": "Nurgle's Mark",
+          "description": "<p>You are marked by Nurgle. Leaving his path causes 2 rolls on Gifts of the Gods table (worse result applies).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

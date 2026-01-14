@@ -16,13 +16,46 @@
     "prerequisites": {
       "text": "Any Minion of Chaos Talent, Fellowship 35.",
       "characteristics": {
-        "fel": 35
+        "fellowship": 35
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "tyrant",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": -10,
+            "condition": "When trying to gain allies or make friends (penalty)",
+            "icon": "fa-solid fa-skull"
+          }
+        ],
+        "skills": [
+          {
+            "key": "command",
+            "value": 20,
+            "condition": "When commanding through fear and intimidation",
+            "icon": "fa-solid fa-crown"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "eternalVigilance",
     "category": "combat",
     "source": "RT: Faith and Coin",
     "description": {
@@ -12,16 +13,52 @@
     "isRollable": true,
     "tier": 1,
     "benefit": "<p>Once per session, the character can choose a single target individual within line of sight as the target of their vigil. They may only target one such character at a time. Once per encounter they may make a Standard Attack against this target as a Reaction whilst gaining the benefits of a Full Action Aim (+20 to WS/BS Test) for this attack.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Perception",
+      "Offence"
+    ],
     "prerequisites": {
       "text": "Defender of the Fourth Cipher Alternative Advance, 500xp, Per 35+, Paranoia",
       "characteristics": {
-        "per": 35
+        "perception": 35
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Paranoia"]
     },
-    "cost": 300
+    "cost": 300,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 20,
+      "description": "Attack roll with +20 bonus from Aim"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Vigilant Strike",
+          "description": "<p>Once per session, designate a target within line of sight. Once per encounter, make Standard Attack vs that target as Reaction with +20 bonus from Aim.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -5,22 +5,59 @@
   "system": {
     "category": "combat",
     "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>Whenever suffering Blood Loss, only test to avoid death every five rounds, instead of every round. Additionally, can reroll any Toguhness Test to avoid instantly dying due to Critical Damage.</p>"
-    },
+    "description": "<p>The Ork is incredibly tough and resistant to injury, able to shrug off wounds that would kill lesser beings.</p>",
     "tier": 1,
     "benefit": "<p>Whenever suffering Blood Loss, only test to avoid death every five rounds, instead of every round. Additionally, can reroll any Toguhness Test to avoid instantly dying due to Critical Damage.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Ork, 'Ard, Toughness 50",
       "characteristics": {
-        "t": 50
+        "toughness": 50
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "dedArd",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Incredibly Tough",
+          "description": "<p>When suffering Blood Loss, only test to avoid death every five rounds instead of every round. Additionally, can reroll any Toughness Test to avoid instantly dying due to Critical Damage.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

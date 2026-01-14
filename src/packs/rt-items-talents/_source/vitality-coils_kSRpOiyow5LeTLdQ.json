@@ -3,25 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "vitalityCoils",
+    "category": "tech",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Once per Game Session when in the presence of a suitable power source, such as a Portable Generator or Regimental Vehicle Power Plant, they can make a +0 Toughness Tet as a Full Action. If Successful they remove 1d5 Wounds, +1 per Degree of Success. They cannot remove Critical Damage this way. If they Fail the test, they take 1 Damage, +1 per 3 Degress of Failiure, ignoring Armour and Toughness Bonus.</p>"
-    },
+    "description": "<p>The character's bionic implants can tap into external power sources to accelerate healing and tissue regeneration.</p>",
     "tier": 3,
-    "benefit": "<p>Once per Game Session when in the presence of a suitable power source, such as a Portable Generator or Regimental Vehicle Power Plant, they can make a +0 Toughness Tet as a Full Action. If Successful they remove 1d5 Wounds, +1 per Degree of Success. They cannot remove Critical Damage this way. If they Fail the test, they take 1 Damage, +1 per 3 Degress of Failiure, ignoring Armour and Toughness Bonus.</p>",
+    "benefit": "<p>Once per Game Session when in the presence of a suitable power source, such as a Portable Generator or Regimental Vehicle Power Plant, they can make a +0 Toughness Test as a Full Action. If Successful they remove 1d5 Wounds, +1 per Degree of Success. They cannot remove Critical Damage this way. If they Fail the test, they take 1 Damage, +1 per 3 Degrees of Failure, ignoring Armour and Toughness Bonus.</p>",
     "aptitudes": [
       "Toughness",
       "Tech"
     ],
     "prerequisites": {
-      "text": "T 45, Potentia Coil Induction, Implanted Potentia or Mechanicus Implants.",
-      "characteristics": {},
+      "text": "T 45, Potentia Coil Induction, Implanted Potentia or Mechanicus Implants",
+      "characteristics": {
+        "toughness": 45
+      },
       "skills": [],
-      "talents": []
+      "talents": [
+        "Potentia Coil Induction"
+      ]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Once per session, requires power source",
+    "rollConfig": {
+      "characteristic": "toughness",
+      "skill": "",
+      "modifier": 0,
+      "description": "Toughness test to heal from power source"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Power-Assisted Healing",
+          "description": "<p>Once per session, as Full Action near power source, test Toughness. Success: heal 1d5+DoS Wounds. Failure: take 1 damage +1 per 3 DoF (ignoring armor/toughness).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

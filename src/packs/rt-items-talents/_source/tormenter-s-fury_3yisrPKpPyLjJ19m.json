@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "tormentersFury",
     "category": "combat",
     "source": "RT: The Soul Reaver",
-    "description": {
-      "value": "<p>If the character has gained at least 1 Pain Token during an encounter, they may spend a Fate Point to gain the Berserk Charge Talent and Brutal Charge Traits for the rest of the encounter.\nBerserk Charge: When using the Charge Action, gain +20 to WS instead of the usual +10\nBrutal Charge: Deals 3 extra damage with attacks made while charging.</p>"
-    },
+    "description": "<p>The Dark Eldar feeds on the pain of their enemies, channeling it into a furious assault that makes them an unstoppable force in combat.</p>",
     "tier": 1,
     "benefit": "<p>If the character has gained at least 1 Pain Token during an encounter, they may spend a Fate Point to gain the Berserk Charge Talent and Brutal Charge Traits for the rest of the encounter.\nBerserk Charge: When using the Charge Action, gain +20 to WS instead of the usual +10\nBrutal Charge: Deals 3 extra damage with attacks made while charging.</p>",
     "aptitudes": [],
@@ -15,10 +14,48 @@
       "text": "Dark Eldar, Power Through Pain",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Power Through Pain"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires spending Fate Point and 1+ Pain Tokens",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Pain-Fueled Fury",
+          "description": "<p>Spend a Fate Point when you have 1+ Pain Tokens to gain Berserk Charge (+20 WS on Charge instead of +10) and Brutal Charge (+3 damage on Charge attacks) for the rest of the encounter.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

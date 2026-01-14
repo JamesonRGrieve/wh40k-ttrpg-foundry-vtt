@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "integratedWeaponsMastery",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>As a Free Action, character can gain up to Toughness Bonus Fatigue, for each Fatigue gained, they add +1 to Damage and Penetration for all of their Integrated Weapons for WP Bonus Rounds.</p>"
-    },
+    "description": "<p>As a Free Action, character can gain up to Toughness Bonus Fatigue, for each Fatigue gained, they add +1 to Damage and Penetration for all of their Integrated Weapons for WP Bonus Rounds.</p>",
     "tier": 3,
     "benefit": "<p>As a Free Action, character can gain up to Toughness Bonus Fatigue, for each Fatigue gained, they add +1 to Damage and Penetration for all of their Integrated Weapons for WP Bonus Rounds.</p>",
     "aptitudes": [
@@ -17,13 +16,47 @@
     "prerequisites": {
       "text": "T 40, WP 40, Implanted Potentia Coil or Mechanicus Implants, Integrated Weapon Expertise.",
       "characteristics": {
-        "wp": 40
+        "toughness": 40,
+        "willpower": 40
       },
       "skills": [],
-      "talents": []
+      "talents": ["Integrated Weapons Expertise"]
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Power Surge",
+          "description": "<p>Free Action: Gain up to TB Fatigue. For each Fatigue, add +1 Damage and +1 Penetration to all Integrated Weapons for WB rounds.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

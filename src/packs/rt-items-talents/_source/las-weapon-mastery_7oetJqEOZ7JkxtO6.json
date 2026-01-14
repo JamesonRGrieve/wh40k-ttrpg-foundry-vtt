@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "lasWeaponMastery",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": {
@@ -22,9 +23,42 @@
         "bs": 45
       },
       "skills": [],
-      "talents": []
+      "talents": ["Las Weapon Expertise"]
     },
-    "cost": 900
+    "cost": 900,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Focused Beams",
+          "description": "<p>When you attack with las weapons, deal +1 damage per two Degrees of Success beyond the first.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

@@ -3,22 +3,69 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "autosanguine",
+    "category": "general",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.</p>"
-    },
+    "description": "<p>Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.</p>",
     "tier": 1,
     "benefit": "<p>Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.</p>",
-    "aptitudes": [],
+    "aptitudes": [
+      "Toughness",
+      "Fieldcraft"
+    ],
     "prerequisites": {
       "text": "-",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Grants accelerated natural healing. Always treated as at least Lightly Wounded for recovery purposes.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Regeneration",
+          "description": "<p>At the start of each turn, you regain 1 Wound. This does not function if you are at 0 Wounds or lower.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

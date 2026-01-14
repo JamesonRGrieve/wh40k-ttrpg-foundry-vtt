@@ -17,14 +17,38 @@
     "prerequisites": {
       "text": "Fellowship 40, Willpower 40",
       "characteristics": {
-        "fel": 40,
-        "wp": 40
+        "fellowship": 40,
+        "willpower": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "haloOfCommand",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Command Aura",
+          "description": "<p>Double the radius of all Command-based auras and abilities.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

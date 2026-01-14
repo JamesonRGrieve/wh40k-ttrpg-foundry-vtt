@@ -19,7 +19,43 @@
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "identifier": "annuvaPower",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Annuva Power",
+          "description": "<p>When Determining Bonus Psy Rating from Power of Da Waaagh! Every two Friendly Non-Orks who do not have the Machine Trait, are not Wild Animals, or a Lesser Orkoid such as Squigs, Snotlings, or Gretchins, within 5 metres counts as a single Ork.\nAdditionally, any of the Character's Beneficial Psychic Powers that only affected Orks can now affect Non-Orks (But still not Lesser Orkoids).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

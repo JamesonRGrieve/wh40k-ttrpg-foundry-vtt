@@ -16,13 +16,44 @@
     "prerequisites": {
       "text": "Fellowship 40, Infamy 60, Air of Authority.",
       "characteristics": {
-        "fel": 40
+        "fellowship": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "lordOfChaos",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": 20,
+            "condition": "When dealing with Chaos worshippers",
+            "icon": "fa-solid fa-pentagram"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Chaos Authority",
+          "description": "<p>Recognized as a powerful Chaos lord. Chaos minions have +20 Loyalty.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

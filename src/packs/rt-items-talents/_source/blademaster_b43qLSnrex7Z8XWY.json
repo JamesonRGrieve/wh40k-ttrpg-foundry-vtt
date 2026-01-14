@@ -18,13 +18,59 @@
     "prerequisites": {
       "text": "WS 30, Weapon Training (any Melee)",
       "characteristics": {
-        "ws": 30
+        "weaponSkill": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "blademaster",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Blademaster",
+          "description": "<p>Once per round, you may reroll a missed attack with a bladed weapon (sword, chainaxe, power sword, etc.). You must accept the second result.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

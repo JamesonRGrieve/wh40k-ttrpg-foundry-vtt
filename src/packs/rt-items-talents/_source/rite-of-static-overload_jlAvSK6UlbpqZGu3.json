@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "riteOfStaticOverload",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>Character can make +0 Tech-Use Test as Half Action, if successful for Int Bonus Rounds, attacks made with their Cybernetic Limbs (Unarmed Attacks, Inbuilt Weapons or Mechadendrites) gain the Shocking Quality. If Test is failed by 4+ Degrees of Failiure, the cybernetic limb shuts down until the character can dedicate several minutes to fix it with a +20 Tech-Use Test.</p>"
-    },
+    "description": "<p>The character knows the sacred rites to overcharge their cybernetic limbs with crackling electricity, temporarily granting their attacks the power of the Machine God.</p>",
     "tier": 2,
     "benefit": "<p>Character can make +0 Tech-Use Test as Half Action, if successful for Int Bonus Rounds, attacks made with their Cybernetic Limbs (Unarmed Attacks, Inbuilt Weapons or Mechadendrites) gain the Shocking Quality. If Test is failed by 4+ Degrees of Failiure, the cybernetic limb shuts down until the character can dedicate several minutes to fix it with a +20 Tech-Use Test.</p>",
     "aptitudes": [
@@ -17,11 +16,49 @@
     "prerequisites": {
       "text": "1+ Cybernetic Limb, Tech-Use +10",
       "characteristics": {},
-      "skills": [],
+      "skills": [{ "name": "techUse", "level": 1 }],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires at least one cybernetic limb",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "techUse",
+      "modifier": 0,
+      "description": "Tech-Use Test to activate Static Overload"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Static Overload",
+          "description": "<p>As a Half Action, make a Tech-Use Test. On success, attacks with cybernetic limbs gain the Shocking Quality for Int Bonus rounds. On failure by 4+ DoF, the limb shuts down until repaired with a +20 Tech-Use Test.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

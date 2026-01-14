@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "eyeOfVengeance",
     "category": "combat",
     "source": "Only War Core",
     "description": {
@@ -18,13 +19,46 @@
     "prerequisites": {
       "text": "Ballistic Skill 50",
       "characteristics": {
-        "bs": 50
+        "ballisticSkill": 50
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Vengeful Strike",
+          "description": "<p>Before making a ranged attack, spend a Fate Point to add Degrees of Success to both Damage and Penetration.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

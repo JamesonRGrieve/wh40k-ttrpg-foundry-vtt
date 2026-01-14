@@ -3,28 +3,71 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "hardy",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Always treat character as Lightly Wounded regardless of the level of damage they have sustained for purposes of Medical Treatment or healing from injuries.</p>"
-    },
+    "description": "<p>Your robust constitution allows you to recover from injuries more quickly, always appearing less wounded than you actually are for medical purposes.</p>",
     "tier": 2,
+    "cost": 600,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
     "benefit": "<p>Always treat character as Lightly Wounded regardless of the level of damage they have sustained for purposes of Medical Treatment or healing from injuries.</p>",
     "aptitudes": [
       "Toughness",
-      "Defence",
-      "Nurgle"
+      "Defence"
     ],
     "prerequisites": {
       "text": "Toughness 40",
       "characteristics": {
-        "t": 40
+        "toughness": 40
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Fast Healer",
+          "description": "<p>Always counts as Lightly Wounded for medical treatment and healing, regardless of actual damage.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

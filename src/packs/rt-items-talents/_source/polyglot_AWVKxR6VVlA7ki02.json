@@ -3,13 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "polyglot",
     "category": "knowledge",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can derive basic meaning from languages they do not know, can also make Untrained Linguistics Skill Tests as if it were a non-specialist skill. (They can make the test, but at -20)\nIf Rogue Trader or Earlier, can treat unknown languages as Untrained Basic Skills with -10 instead.\nIn a Social Encounter, gain +20 to Opposed Tests when going against an opponent speaking in a different language.</p>"
-    },
+    "description": "<p>Your gift for languages allows you to understand and communicate across linguistic barriers with surprising ease.</p>",
     "tier": 1,
-    "benefit": "<p>Character can derive basic meaning from languages they do not know, can also make Untrained Linguistics Skill Tests as if it were a non-specialist skill. (They can make the test, but at -20)\nIf Rogue Trader or Earlier, can treat unknown languages as Untrained Basic Skills with -10 instead.\nIn a Social Encounter, gain +20 to Opposed Tests when going against an opponent speaking in a different language.</p>",
+    "benefit": "<p>Character can derive basic meaning from languages they do not know, can also make Untrained Linguistics Skill Tests as if it were a non-specialist skill. (They can make the test, but at -20) If Rogue Trader or Earlier, can treat unknown languages as Untrained Basic Skills with -10 instead. In a Social Encounter, gain +20 to Opposed Tests when going against an opponent speaking in a different language.</p>",
     "aptitudes": [
       "Intelligence",
       "Social",
@@ -18,14 +17,63 @@
     "prerequisites": {
       "text": "Intelligence 40, Fellowship 30",
       "characteristics": {
-        "int": 40,
-        "fel": 30
+        "intelligence": 40,
+        "fellowship": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Linguistic Intuition",
+          "description": "<p>You can derive basic meaning from languages you do not know. You can make untrained Linguistics skill tests as if it were a non-specialist skill (at -20 penalty, or -10 in Rogue Trader rules).</p>"
+        },
+        {
+          "name": "Language Barrier Advantage",
+          "description": "<p>In a Social Encounter, you gain +20 to Opposed tests when going against an opponent speaking in a different language.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

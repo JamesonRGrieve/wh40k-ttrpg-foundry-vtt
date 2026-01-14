@@ -3,22 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "ancestralBlessing",
     "category": "combat",
     "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>Once a day, A Kroot Shaper may target themselves and WP Bonus number of willing Kroot and give them +2 to Melee Damage Rolls for WP Bonus Rounds. This ability can also target willing Non-Kroot, but character must first pass a +0 Willpower Test to apply the benefit to non-Kroot target.</p>"
-    },
+    "description": "<p>Once a day, A Kroot Shaper may target themselves and WP Bonus number of willing Kroot and give them +2 to Melee Damage Rolls for WP Bonus Rounds. This ability can also target willing Non-Kroot, but character must first pass a +0 Willpower Test to apply the benefit to non-Kroot target.</p>",
     "tier": 1,
     "benefit": "<p>Once a day, A Kroot Shaper may target themselves and WP Bonus number of willing Kroot and give them +2 to Melee Damage Rolls for WP Bonus Rounds. This ability can also target willing Non-Kroot, but character must first pass a +0 Willpower Test to apply the benefit to non-Kroot target.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Willpower", "Fellowship"],
     "prerequisites": {
       "text": "Kroot, Shamanic Powers",
       "characteristics": {},
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Shamanic Powers"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Kroot Shaper only. Once per day. Requires Willpower test for non-Kroot targets.",
+    "rollConfig": {
+      "characteristic": "willpower",
+      "skill": "",
+      "modifier": 0,
+      "description": "Willpower Test to extend blessing to non-Kroot allies"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ancestral Blessing",
+          "description": "<p>Once per day, grant yourself and WP Bonus willing Kroot +2 melee damage for WP Bonus rounds. Can target non-Kroot with successful +0 Willpower Test.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

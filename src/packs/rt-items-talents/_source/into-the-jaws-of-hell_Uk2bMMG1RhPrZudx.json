@@ -21,7 +21,31 @@
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "intoTheJawsOfHell",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Fearless Leadership",
+          "description": "<p>Allies within Command radius gain +10 to resist Fear and Pinning while you are present and active.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

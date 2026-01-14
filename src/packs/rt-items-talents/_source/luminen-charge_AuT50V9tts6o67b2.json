@@ -3,22 +3,66 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "lumigenCharge",
+    "category": "tech",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Can take one minute charge various machines/devices, making a Toughness Test dependant on the scale. +10: Power Cell, Illuminator. +0, Weapon Charge Pack, Data Slate, Bridge Terminal. -10: Hotshot charge pack, shuttle electronics, servo skull. -20: Lascannon Charge Pack, Servitor, Bridge Hololith. -30: Ship Cogitator Core, Reactor Machine Spirit, Xenos Technology. GM judges viability, afterwards must pass Toughness or gain a level of fatigue.</p>"
-    },
+    "description": "<p>Your connection to the Motive Force allows you to channel electrical energy directly into machines and devices, charging depleted power cells and reviving dormant systems.</p>",
     "tier": 1,
-    "benefit": "<p>Can take one minute charge various machines/devices, making a Toughness Test dependant on the scale. +10: Power Cell, Illuminator. +0, Weapon Charge Pack, Data Slate, Bridge Terminal. -10: Hotshot charge pack, shuttle electronics, servo skull. -20: Lascannon Charge Pack, Servitor, Bridge Hololith. -30: Ship Cogitator Core, Reactor Machine Spirit, Xenos Technology. GM judges viability, afterwards must pass Toughness or gain a level of fatigue.</p>",
+    "cost": 300,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>You can take one minute to charge various machines and devices, making a Toughness Test dependent on the scale:</p><ul><li><strong>+10:</strong> Power Cell, Illuminator</li><li><strong>+0:</strong> Weapon Charge Pack, Data Slate, Bridge Terminal</li><li><strong>-10:</strong> Hotshot Charge Pack, Shuttle Electronics, Servo Skull</li><li><strong>-20:</strong> Lascannon Charge Pack, Servitor, Bridge Hololith</li><li><strong>-30:</strong> Ship Cogitator Core, Reactor Machine Spirit, Xenos Technology</li></ul><p>GM judges viability. Afterwards, you must pass a Toughness Test or gain a level of Fatigue.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Mechanicus Implants",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 300,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "toughness",
+      "skill": "",
+      "modifier": 0,
+      "description": "Toughness Test to channel energy (modifier varies by device scale)"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Charge Device",
+          "description": "<p>Take one minute and make a Toughness Test to charge a device. The modifier depends on scale: +10 (small), +0 (medium), -10 (large), -20 (huge), -30 (massive/complex). After charging, make another Toughness Test or gain 1 Fatigue.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

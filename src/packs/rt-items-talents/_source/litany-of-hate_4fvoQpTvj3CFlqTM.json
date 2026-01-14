@@ -18,7 +18,31 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "litanyOfHate",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Inspire Hatred",
+          "description": "<p>As a Full Action, recite litany to grant all allies within 30m the Hatred talent against a chosen enemy type for the encounter.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

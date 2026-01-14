@@ -3,13 +3,12 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "combatFormation",
     "category": "knowledge",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>All Squad Members, including the character, add +1 to Initiative Rolls.\nAny Squad Members may choose to use the Intelligence Bonus of this Character for their Initiative Rolls rather than their own Agility Bonus.</p>"
-    },
+    "description": "<p>All Squad Members, including the character, add +1 to Initiative Rolls. Any Squad Members may choose to use the Intelligence Bonus of this Character for their Initiative Rolls rather than their own Agility Bonus.</p>",
     "tier": 1,
-    "benefit": "<p>All Squad Members, including the character, add +1 to Initiative Rolls.\nAny Squad Members may choose to use the Intelligence Bonus of this Character for their Initiative Rolls rather than their own Agility Bonus.</p>",
+    "benefit": "<p>All Squad Members, including the character, add +1 to Initiative Rolls. Any Squad Members may choose to use the Intelligence Bonus of this Character for their Initiative Rolls rather than their own Agility Bonus.</p>",
     "aptitudes": [
       "Leadership",
       "Fieldcraft",
@@ -18,13 +17,58 @@
     "prerequisites": {
       "text": "Intelligence 40",
       "characteristics": {
-        "int": 40
+        "intelligence": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 1,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Squad Tactical Coordination",
+          "description": "<p>All Squad Members (including you) add +1 to Initiative Rolls. Additionally, any Squad Members may choose to use your Intelligence Bonus for their Initiative Rolls rather than their own Agility Bonus.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

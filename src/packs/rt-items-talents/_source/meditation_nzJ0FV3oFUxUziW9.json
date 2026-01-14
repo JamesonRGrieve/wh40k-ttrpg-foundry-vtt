@@ -22,7 +22,50 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "meditation",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "focusPower",
+            "value": 10,
+            "condition": "After spending 30 minutes in meditation",
+            "icon": "fa-solid fa-om"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Meditation",
+          "description": "<p>Character can spend 10 minutes in a meditative state without interruption to make a Willpower Test, on success they remove one level of Fatigue.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

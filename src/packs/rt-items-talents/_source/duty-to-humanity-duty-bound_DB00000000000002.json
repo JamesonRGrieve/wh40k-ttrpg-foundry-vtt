@@ -14,7 +14,7 @@
     },
     "isPassive": true,
     "isRollable": false,
-    "tier": 1,
+    "tier": 0,
     "benefit": "<p>You gain your choice of +3 Perception or +3 Intelligence. You suffer −1 to your group's beginning Profit Factor.</p>",
     "aptitudes": [],
     "prerequisites": {

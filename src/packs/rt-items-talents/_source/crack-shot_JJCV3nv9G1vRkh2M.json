@@ -5,9 +5,7 @@
   "system": {
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Whenever the Character's Ranged Attacks inflict Critical Damage, add +2 to the damage result.</p>"
-    },
+    "description": "<p>The character is exceptionally precise when attacking vital areas, making their critical hits even more devastating.</p>",
     "tier": 2,
     "benefit": "<p>Whenever the Character's Ranged Attacks inflict Critical Damage, add +2 to the damage result.</p>",
     "aptitudes": [
@@ -18,13 +16,61 @@
     "prerequisites": {
       "text": "Ballistic Skill 50",
       "characteristics": {
-        "bs": 50
+        "ballisticSkill": 50
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "crackShot",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 2,
+            "condition": "On Critical Hits with ranged weapons",
+            "icon": "fa-solid fa-bullseye"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

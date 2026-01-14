@@ -3,10 +3,11 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "tacticalFlexibility",
     "category": "knowledge",
     "source": "RT: Tau Character Guide",
     "description": {
-      "value": "<p>Once per encounter, the explorer can make a +0 Scholastic Lore (Tau Empire) Test. If successful, they and any other Tau allies within 20 metres may immediately disengage as a free action.</p>"
+      "value": "<p>The character has studied Tau military doctrine and can apply tactical knowledge to coordinate orderly retreats and tactical withdrawals.</p>"
     },
     "tier": 1,
     "benefit": "<p>Once per encounter, the explorer can make a +0 Scholastic Lore (Tau Empire) Test. If successful, they and any other Tau allies within 20 metres may immediately disengage as a free action.</p>",
@@ -15,10 +16,55 @@
       "text": "Tau, Sprint, Scholastic Lore (Tau Empire)",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Sprint"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Once per encounter",
+    "rollConfig": {
+      "characteristic": "intelligence",
+      "skill": "scholasticLore",
+      "modifier": 0,
+      "description": "Roll Scholastic Lore (Tau Empire) to coordinate tactical withdrawal"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Coordinated Withdrawal",
+          "description": "<p>Once per encounter, you can make a Scholastic Lore (Tau Empire) Test. On a success, you and all Tau allies within 20 metres may immediately disengage as a free action.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

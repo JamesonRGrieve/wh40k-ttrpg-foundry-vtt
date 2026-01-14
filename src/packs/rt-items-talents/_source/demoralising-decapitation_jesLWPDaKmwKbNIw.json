@@ -25,7 +25,43 @@
       "skills": [],
       "talents": []
     },
-    "cost": 900
+    "cost": 900,
+    "identifier": "demoralisingDecapitation",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Demoralising Decapitation",
+          "description": "<p>Veteran Talent Requirement: Character fights an Elite-Level or Master-Level Foe in hand-to-hand combat during a mission unaided and wins.\nOnce per Encounter when the character kills an Elite or Master Level foe who is in charge of a group or formation of enemies, all subordinates of the slain foe who witness them die must make a -20 Willpower Test (Orks do not apply their Mob Rule Trait to this test), any that fail suffers -10 to all Tests for the remainder of the encounter, shaken by the dea...</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

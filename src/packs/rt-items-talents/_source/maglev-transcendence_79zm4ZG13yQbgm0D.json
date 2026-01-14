@@ -3,13 +3,18 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "maglevTranscendence",
+    "category": "tech",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Character can hover for 1d10+2xToughness Bonus Minutes. While their Maglev Coils are active, they can move at Run Speed as a Half Action and suffer no damage from falling. Each use drains half the power stored in the coils (typically meaning they can be used twice before requiring recharge).</p>"
-    },
+    "description": "<p>You have perfected the use of your Maglev Coils, allowing you to hover effortlessly and move with preternatural grace while airborne.</p>",
     "tier": 2,
-    "benefit": "<p>Character can hover for 1d10+2xToughness Bonus Minutes. While their Maglev Coils are active, they can move at Run Speed as a Half Action and suffer no damage from falling. Each use drains half the power stored in the coils (typically meaning they can be used twice before requiring recharge).</p>",
+    "cost": 600,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Character can hover for 1d10+2\u00d7Toughness Bonus Minutes. While their Maglev Coils are active, they can move at Run Speed as a Half Action and suffer no damage from falling. Each use drains half the power stored in the coils (typically meaning they can be used twice before requiring recharge).</p>",
     "aptitudes": [
       "Intelligence",
       "Tech",
@@ -18,11 +23,50 @@
     "prerequisites": {
       "text": "Maglev Coils, Mechanicus Implants",
       "characteristics": {},
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Hover",
+          "description": "<p>Hover for 1d10+2\u00d7TB minutes. While hovering, move at Run Speed as a Half Action and take no fall damage. Each use drains 50% of coil power (typically 2 uses before recharge).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

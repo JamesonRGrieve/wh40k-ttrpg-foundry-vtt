@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "lastManStanding",
     "category": "combat",
     "source": "Rogue Trader Core",
     "description": {
@@ -15,10 +16,47 @@
       "text": "Nerves of Steel",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Nerves of Steel"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Pinning Immunity",
+          "description": "<p>You are immune to Pinning from Pistol and Basic weapons.</p>"
+        },
+        {
+          "name": "Enhanced Cover",
+          "description": "<p>Add +1 AP to any cover protecting you from ranged attacks.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

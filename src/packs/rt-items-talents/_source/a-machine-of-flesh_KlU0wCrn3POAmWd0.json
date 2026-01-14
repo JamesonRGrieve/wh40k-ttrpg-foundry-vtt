@@ -18,7 +18,43 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "aMachineOfFlesh",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "A Machine of Flesh",
+          "description": "<p>The Character gains either one of the following Traits: Regeneration, Sonar Sense, or Sturdy, or one of the following mutations: Brute, Clawed/Fanged, Feels No Pain, Nightstrider, Tough Hide, or Venomous.\nThese Mutations come about through deliberate genetic manipulation, so are not Warp-Caused Mutations that some would have issue with.\nThis Talent can be taken multiple times, choosing a different Mutation/Trait each time.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

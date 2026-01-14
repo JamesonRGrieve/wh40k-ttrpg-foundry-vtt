@@ -3,13 +3,17 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "combatMaster",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Opponents Fighting the character in Melee combat gain no bonuses for Ganging up on them.\nThe effects of the Double Team Talent still apply if the attackers have that however.</p>"
-    },
+    "description": "<p>The character is a supreme warrior in melee combat, able to defend against multiple opponents without being overwhelmed.</p>",
     "tier": 2,
-    "benefit": "<p>Opponents Fighting the character in Melee combat gain no bonuses for Ganging up on them.\nThe effects of the Double Team Talent still apply if the attackers have that however.</p>",
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Opponents Fighting the character in Melee combat gain no bonuses for Ganging up on them. The effects of the Double Team Talent still apply if the attackers have that however.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Defence",
@@ -18,13 +22,46 @@
     "prerequisites": {
       "text": "Weapon Skill 30",
       "characteristics": {
-        "ws": 30
+        "weaponSkill": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Negate Ganging Up",
+          "description": "<p>Opponents gain no bonuses for Ganging up on the character in Melee combat. Double Team Talent still applies.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

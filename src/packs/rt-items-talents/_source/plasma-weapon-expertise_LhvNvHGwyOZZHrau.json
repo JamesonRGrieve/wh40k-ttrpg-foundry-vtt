@@ -3,14 +3,17 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "plasmaWeaponExpertise",
     "category": "combat",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>When this character wields a Plasma Weapon with the Overheats Quality, the weapon only Overheats on a roll of 96+ or on a Jam.</p>"
-    },
+    "description": "<p>Your extensive experience with plasma weapons has taught you how to manage their volatile nature, significantly reducing the risk of catastrophic overheating.</p>",
     "tier": 2,
+    "cost": 600,
     "isPassive": true,
-    "isRollable": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
     "benefit": "<p>When this character wields a Plasma Weapon with the Overheats Quality, the weapon only Overheats on a roll of 96+ or on a Jam.</p>",
     "aptitudes": [
       "Ballistic Skill",
@@ -19,12 +22,52 @@
     "prerequisites": {
       "text": "BS 40, Weapon Training (Plasma)",
       "characteristics": {
-        "bs": 40
+        "ballisticSkill": 40
       },
-      "skills": [],
-      "talents": []
+      "skills": {},
+      "talents": ["Weapon Training (Plasma)"]
     },
-    "cost": 600
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Reduced Overheat Risk",
+          "description": "<p>Plasma weapons you wield only overheat on rolls of 96+ or on a Jam (instead of the normal 91+).</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

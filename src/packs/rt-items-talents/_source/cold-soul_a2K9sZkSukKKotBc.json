@@ -19,7 +19,57 @@
       "skills": [],
       "talents": []
     },
-    "cost": 300
+    "cost": 300,
+    "identifier": "coldSoul",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": 30,
+            "condition": "When opposing Fellowship or Interrogation Tests",
+            "icon": "fa-solid fa-shield"
+          }
+        ],
+        "skills": [
+          {
+            "key": "charm",
+            "value": -20,
+            "condition": "All Fellowship-based tests you make (penalty)",
+            "icon": "fa-solid fa-snowflake"
+          },
+          {
+            "key": "deceive",
+            "value": -20,
+            "condition": "All Fellowship-based tests you make (penalty)",
+            "icon": "fa-solid fa-snowflake"
+          },
+          {
+            "key": "command",
+            "value": -20,
+            "condition": "All Fellowship-based tests you make (penalty)",
+            "icon": "fa-solid fa-snowflake"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Cold Soul",
+          "description": "<p>Remove all Mental Disorders and never roll for Mental Traumas. Must pay double XP (200xp) to remove Insanity Points.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

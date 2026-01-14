@@ -18,7 +18,31 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "galvanisingPresence",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Rally Allies",
+          "description": "<p>As a Half Action, make a Challenging (+0) Command Test to remove Pinning from all allies within 20m.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

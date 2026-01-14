@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "shieldingFaith",
     "category": "combat",
     "source": "DH 2E: Enemies Within",
-    "description": {
-      "value": "<p>When using the Deny the Witch talent to make Evasion reactions against Psychic Powers, the Sister can spend a Fate Point to automatically pass the evasion test with Willpower Bonus Degrees of Success, as well as force the attacking psyker to make a Fear test against Fear 1 (+0 Fear Test).</p>"
-    },
+    "description": "<p>The Sister's faith is so strong that it can shield her from psychic powers and even terrify attacking psykers with its purity.</p>",
     "tier": 1,
     "benefit": "<p>When using the Deny the Witch talent to make Evasion reactions against Psychic Powers, the Sister can spend a Fate Point to automatically pass the evasion test with Willpower Bonus Degrees of Success, as well as force the attacking psyker to make a Fear test against Fear 1 (+0 Fear Test).</p>",
     "aptitudes": [
@@ -18,10 +17,48 @@
       "text": "Tier 1: Sister of Battle E.Adv, Deny the Witch",
       "characteristics": {},
       "skills": [],
-      "talents": []
+      "talents": ["Deny the Witch"]
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Sister of Battle Elite Advance",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Shielding Faith",
+          "description": "<p>When using Deny the Witch against psychic powers, you can spend a Fate Point to automatically pass with WP Bonus Degrees of Success and force the attacking psyker to make a Fear (1) test.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

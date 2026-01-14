@@ -43,7 +43,13 @@
         "combat": []
       }
     },
-    "notes": "Immune to space sickness, no difficult terrain in zero/low-G"
+    "notes": "Immune to space sickness, no difficult terrain in zero/low-G",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

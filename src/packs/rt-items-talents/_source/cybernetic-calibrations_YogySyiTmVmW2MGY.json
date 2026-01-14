@@ -5,9 +5,7 @@
   "system": {
     "category": "technical",
     "source": "OW: Hammer of the Emperor",
-    "description": {
-      "value": "<p>All Character's Cybernetics count as being one level of Craftsmanship Higher than that of their Base Craftsmanship (Poor-->Common-->Good-->Best)</p>"
-    },
+    "description": "<p>All Character's Cybernetics count as being one level of Craftsmanship Higher than that of their Base Craftsmanship (Poor-->Common-->Good-->Best)</p>",
     "tier": 3,
     "benefit": "<p>All Character's Cybernetics count as being one level of Craftsmanship Higher than that of their Base Craftsmanship (Poor-->Common-->Good-->Best)</p>",
     "aptitudes": [
@@ -21,7 +19,41 @@
       "talents": []
     },
     "cost": 900,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "cyberneticCalibrations",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

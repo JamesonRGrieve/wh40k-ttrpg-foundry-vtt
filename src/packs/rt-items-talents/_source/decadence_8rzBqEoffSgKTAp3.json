@@ -3,22 +3,68 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "decadence",
     "category": "defense",
     "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>When drinking alcohol or similar beverages, does not pass out until failing a number of toughness tests equal to 2xTB. Also gain +10 to resisting addition effects.</p>"
-    },
+    "description": "<p>Through excessive indulgence, you have developed an almost supernatural tolerance for intoxicants and addictive substances.</p>",
     "tier": 1,
-    "benefit": "<p>When drinking alcohol or similar beverages, does not pass out until failing a number of toughness tests equal to 2xTB. Also gain +10 to resisting addition effects.</p>",
-    "aptitudes": [],
+    "benefit": "<p>When drinking alcohol or similar beverages, does not pass out until failing a number of toughness tests equal to 2xTB. Also gain +10 to resisting addiction effects.</p>",
+    "aptitudes": ["Toughness", "General"],
     "prerequisites": {
       "text": "T 30",
-      "characteristics": {},
-      "skills": [],
+      "characteristics": {
+        "toughness": 30
+      },
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "toughness",
+            "value": 10,
+            "condition": "To resist addiction effects",
+            "icon": "fa-solid fa-flask"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Substance Tolerance",
+          "description": "<p>Requires 2xTB failed Toughness tests to pass out from alcohol. +10 to resist addiction.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

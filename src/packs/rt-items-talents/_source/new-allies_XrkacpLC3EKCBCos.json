@@ -3,24 +3,68 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "newAllies",
     "category": "knowledge",
     "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>The Explorer's \"For the Greater Good!\" and \"Classified Competency\" Traits, as well as any talent referencing Tau Characters, can be used with trusted allies of any race instead of only allied Tau.</p>"
-    },
+    "description": "<p>Your experience working with diverse species has taught you to extend your cooperation beyond your own kind.</p>",
     "tier": 1,
     "benefit": "<p>The Explorer's \"For the Greater Good!\" and \"Classified Competency\" Traits, as well as any talent referencing Tau Characters, can be used with trusted allies of any race instead of only allied Tau.</p>",
-    "aptitudes": [],
+    "aptitudes": ["Fellowship", "Social"],
     "prerequisites": {
       "text": "Tau, Fellowship 30",
       "characteristics": {
-        "fel": 30
+        "fellowship": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Universal Cooperation",
+          "description": "<p>Your \"For the Greater Good!\" and \"Classified Competency\" traits, as well as any talent referencing Tau characters, can be used with trusted allies of any race instead of only allied Tau.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

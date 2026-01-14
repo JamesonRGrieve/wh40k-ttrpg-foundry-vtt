@@ -9,9 +9,7 @@
       "book": "Rogue Trader Core Rulebook",
       "page": "65"
     },
-    "description": {
-      "value": "<p><strong>Warp Eye:</strong> The Navigator possesses the legendary third eye—a mutation that allows them to perceive the currents of the Immaterium and guide ships safely through the Warp. This remarkable organ grants them powers beyond mortal ken, though it marks them forever as different from baseline humanity. Each Navigator bloodline manifests unique characteristics, boons, and mutations inherited through their ancient lineage.</p>"
-    },
+    "description": "<p><strong>Warp Eye:</strong> The Navigator possesses the legendary third eye\u2014a mutation that allows them to perceive the currents of the Immaterium and guide ships safely through the Warp. This remarkable organ grants them powers beyond mortal ken, though it marks them forever as different from baseline humanity. Each Navigator bloodline manifests unique characteristics, boons, and mutations inherited through their ancient lineage.</p>",
     "tier": 0,
     "benefit": "<p>You begin with the Warp Eye Navigator Power and one other Navigator Power of your choice. You also gain boons and mutations based on your Navigator's Lineage (determined during character creation).</p>",
     "aptitudes": [],
@@ -54,6 +52,12 @@
           "description": "You possess the Warp Eye Navigator Power and one additional Navigator Power of your choice. You also receive boons and mutations according to your Navigator Lineage (see Navigator creation rules)."
         }
       ]
+    },
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
     }
   },
   "effects": [],

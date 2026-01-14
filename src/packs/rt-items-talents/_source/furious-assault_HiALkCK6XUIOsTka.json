@@ -3,6 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "furiousAssault",
     "category": "combat",
     "source": "Only War Core",
     "description": {
@@ -18,13 +19,46 @@
     "prerequisites": {
       "text": "Weapon Skill 35",
       "characteristics": {
-        "ws": 35
+        "weaponSkill": 35
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Bonus Attack",
+          "description": "<p>After successful All Out Attack, use Reaction to make another attack with same bonuses/penalties. You cannot Parry or Dodge until next turn.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

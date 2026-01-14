@@ -3,24 +3,61 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "combat",
+    "identifier": "unbowedAndUnbroken",
+    "category": "leadership",
     "source": "Deathwatch: Core",
-    "description": {
-      "value": "<p>If the Character's Squad has suffered Cohesion Damage in the current or previous round, the character can choose to declare that they will use this talent. In doing so, they either make a Melee Attack, Ranged Attack, or +0 Fellowship Test to roar in defiance. If this test succeeds, be it the attack or defiant roar, all characters within support range regain the Cohesion they lost to Cohesion lost in the current or prior round.</p>"
-    },
+    "description": "<p>The character's indomitable will and martial prowess inspires their squad to fight on even in the darkest moments.</p>",
     "tier": 1,
     "benefit": "<p>If the Character's Squad has suffered Cohesion Damage in the current or previous round, the character can choose to declare that they will use this talent. In doing so, they either make a Melee Attack, Ranged Attack, or +0 Fellowship Test to roar in defiance. If this test succeeds, be it the attack or defiant roar, all characters within support range regain the Cohesion they lost to Cohesion lost in the current or prior round.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Astartes, Fellowship 40",
       "characteristics": {
-        "fel": 40
+        "fellowship": 40
       },
       "skills": [],
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Astartes",
+    "rollConfig": {
+      "characteristic": "fellowship",
+      "skill": "",
+      "modifier": 0,
+      "description": "Fellowship test to restore squad cohesion"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Restore Cohesion",
+          "description": "<p>When your squad suffers Cohesion damage, you can make an attack or Fellowship test. On success, all allies in support range regain lost Cohesion.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

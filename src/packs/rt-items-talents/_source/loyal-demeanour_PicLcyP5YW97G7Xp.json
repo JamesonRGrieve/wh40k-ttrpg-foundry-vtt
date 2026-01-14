@@ -21,7 +21,31 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "loyalDemeanour",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ogryn Respect",
+          "description": "<p>Do not suffer penalties for being an Ogryn or not being taken seriously. Can re-roll one failed Charm Test per session.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

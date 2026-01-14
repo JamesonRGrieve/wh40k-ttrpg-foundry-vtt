@@ -3,15 +3,13 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "constantVigilance",
     "category": "knowledge",
     "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>Character uses \"X\" when rolling for initiative instead of their Agility vlaue, and rolls two dice for the roll, choosing the highest of the two.\nX may be either Intelligence or Perception, with the requirements matching the characteristic.</p>"
-    },
+    "description": "<p>Character uses X (Intelligence or Perception) when rolling for initiative instead of their Agility value, and rolls two dice for the roll, choosing the highest of the two. X may be either Intelligence or Perception, with the requirements matching the characteristic.</p>",
     "tier": 2,
     "isPassive": true,
-    "isRollable": true,
-    "benefit": "<p>Character uses \"X\" when rolling for initiative instead of their Agility vlaue, and rolls two dice for the roll, choosing the highest of the two.\nX may be either Intelligence or Perception, with the requirements matching the characteristic.</p>",
+    "benefit": "<p>Character uses X (Intelligence or Perception) when rolling for initiative instead of their Agility value, and rolls two dice for the roll, choosing the highest of the two.</p>",
     "aptitudes": [
       "Perception",
       "Defence"
@@ -19,13 +17,58 @@
     "prerequisites": {
       "text": "Awareness +10, Intelligence 35 or Perception 35",
       "characteristics": {
-        "int": 35,
-        "per": 35
+        "intelligence": 35,
+        "perception": 35
       },
       "skills": [],
       "talents": []
     },
-    "cost": 600
+    "cost": 600,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "Intelligence or Perception",
+    "notes": "Choose Intelligence or Perception when taking this talent",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Enhanced Initiative (Intelligence or Perception)",
+          "description": "<p>When rolling for initiative, you use your chosen characteristic (Intelligence or Perception) instead of Agility. Additionally, you roll two dice and choose the highest result.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

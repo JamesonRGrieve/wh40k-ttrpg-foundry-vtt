@@ -17,14 +17,40 @@
     "prerequisites": {
       "text": "Fel 30, WP 30 Unshakeable Faith",
       "characteristics": {
-        "fel": 30,
-        "wp": 30
+        "fellowship": 30,
+        "willpower": 30
       },
       "skills": [],
       "talents": []
     },
     "cost": 600,
-    "isPassive": true
+    "isPassive": true,
+    "identifier": "shieldOfPiety",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "willpower",
+            "value": 10,
+            "condition": "When resisting Corruption or Daemonic influence",
+            "icon": "fa-solid fa-cross"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
   },
   "effects": [],
   "flags": {},

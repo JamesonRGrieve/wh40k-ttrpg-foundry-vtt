@@ -9,9 +9,7 @@
       "book": "Rogue Trader Core Rulebook",
       "page": "67"
     },
-    "description": {
-      "value": "<p><strong>Voidborn Mastery:</strong> The Void-Master has spent their entire life aboard starships, mastering the intricacies of void travel and ship operations. Whether guiding a vessel through treacherous asteroid fields or coordinating devastating broadsides, they possess an almost supernatural connection to their ship. This innate understanding allows them to push vessels beyond their normal capabilities.</p>"
-    },
+    "description": "<p><strong>Voidborn Mastery:</strong> The Void-Master has spent their entire life aboard starships, mastering the intricacies of void travel and ship operations. Whether guiding a vessel through treacherous asteroid fields or coordinating devastating broadsides, they possess an almost supernatural connection to their ship. This innate understanding allows them to push vessels beyond their normal capabilities.</p>",
     "tier": 0,
     "benefit": "<p>Choose one specialty at character creation: <strong>Mastery of Space</strong> (reroll all failed Starship Manoeuvre Action Tests) or <strong>Mastery of Gunnery</strong> (reroll all failed Starship Shooting Action Tests).</p>",
     "aptitudes": [],
@@ -51,9 +49,15 @@
       "specialAbilities": [
         {
           "name": "Master of the Void",
-          "description": "Choose one at character creation:\n• Mastery of Space: Reroll all failed Tests for Starship Manoeuvre Actions.\n• Mastery of Gunnery: Reroll all failed Tests for Starship Shooting Actions."
+          "description": "Choose one at character creation:\n\u2022 Mastery of Space: Reroll all failed Tests for Starship Manoeuvre Actions.\n\u2022 Mastery of Gunnery: Reroll all failed Tests for Starship Shooting Actions."
         }
       ]
+    },
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
     }
   },
   "effects": [],

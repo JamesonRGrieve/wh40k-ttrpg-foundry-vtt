@@ -3,15 +3,17 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "bulgingBiceps",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty. \nAdditionally, add +20 when using the Heft Special Use of the Athletics Skill.</p>"
-    },
+    "description": "<p>The character's exceptional strength allows them to handle heavy weapons with ease, wielding them without the need for bracing.</p>",
     "tier": 2,
     "isPassive": true,
-    "isRollable": false,
-    "benefit": "<p>Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty. \nAdditionally, add +20 when using the Heft Special Use of the Athletics Skill.</p>",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty. Additionally, add +20 when using the Heft Special Use of the Athletics Skill.</p>",
     "aptitudes": [
       "Strength",
       "Offence",
@@ -20,12 +22,53 @@
     "prerequisites": {
       "text": "Strength 45",
       "characteristics": {
-        "s": 45
+        "strength": 45
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
-    "cost": 600
+    "cost": 600,
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "athletics",
+            "value": 20,
+            "condition": "When using the Heft Special Use",
+            "icon": "fa-solid fa-dumbbell"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Fire Without Bracing",
+          "description": "<p>Can Fire Heavy Weapons on Semi-Auto Burst or Full-Auto Burst without Bracing, not suffering the -30 penalty.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

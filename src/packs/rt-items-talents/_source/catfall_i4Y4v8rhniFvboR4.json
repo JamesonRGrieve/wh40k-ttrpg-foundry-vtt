@@ -3,12 +3,16 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "catfall",
     "category": "combat",
     "source": "Only War Core",
-    "description": {
-      "value": "<p>Reduce Distance of all falls by Agility Bonus Metres, ignoring it as if it didn't exist. Also add +20 to Acrobatics Skill Tests when using the Jump Special Use for the purpose of reducing Fall Damage.</p>"
-    },
+    "description": "<p>The character has an innate ability to land on their feet, reducing the danger of falls and improving their acrobatic abilities.</p>",
     "tier": 1,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
     "benefit": "<p>Reduce Distance of all falls by Agility Bonus Metres, ignoring it as if it didn't exist. Also add +20 to Acrobatics Skill Tests when using the Jump Special Use for the purpose of reducing Fall Damage.</p>",
     "aptitudes": [
       "Agility",
@@ -18,13 +22,53 @@
     "prerequisites": {
       "text": "Agility 30",
       "characteristics": {
-        "ag": 30
+        "agility": 30
       },
-      "skills": [],
+      "skills": {},
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "acrobatics",
+            "value": 20,
+            "condition": "When using the Jump Special Use to reduce Fall Damage",
+            "icon": "fa-solid fa-person-falling"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Reduce Fall Distance",
+          "description": "<p>Reduce Distance of all falls by Agility Bonus Metres, ignoring it as if it didn't exist.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},

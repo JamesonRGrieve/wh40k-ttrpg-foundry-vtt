@@ -3,11 +3,10 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
+    "identifier": "riteOfSynchronisedSteel",
     "category": "combat",
     "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Character can link to a vehicle via their Mind Impulse Unit, and in so doing be able to use their Intelligence Characteristic in place of Agility for Operate(Surface, Aeronautica, and Voidship) Tests. \nWhenever a vehicle suffers Critical damage whilst the character is linked in this way, they gain 1 Fatigue from the associated mental strain.</p>"
-    },
+    "description": "<p>The character can interface directly with a vehicle through their Mind Impulse Unit, using their mental prowess to pilot with machine precision.</p>",
     "tier": 1,
     "benefit": "<p>Character can link to a vehicle via their Mind Impulse Unit, and in so doing be able to use their Intelligence Characteristic in place of Agility for Operate(Surface, Aeronautica, and Voidship) Tests. \nWhenever a vehicle suffers Critical damage whilst the character is linked in this way, they gain 1 Fatigue from the associated mental strain.</p>",
     "aptitudes": [],
@@ -18,7 +17,45 @@
       "talents": []
     },
     "cost": 300,
-    "isPassive": true
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Requires Architectus Magna Advanced Specialty and Mind Impulse Unit",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Mind Impulse Vehicle Link",
+          "description": "<p>When linked to a vehicle via Mind Impulse Unit, use Intelligence instead of Agility for Operate Tests. Gain 1 Fatigue when the linked vehicle suffers Critical damage.</p>"
+        }
+      ]
+    }
   },
   "effects": [],
   "flags": {},
