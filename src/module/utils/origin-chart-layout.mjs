@@ -1,11 +1,22 @@
 /**
  * Origin Chart Layout Utility
  *
- * Computes CSS Grid layout for the origin path chart visualization.
- * Uses stepIndex and position from origin path items to create
- * a visual branching chart showing valid navigation paths.
+ * Computes CSS Grid layout for the origin path chart visualization using
+ * a simple ±1 connectivity rule for position-based navigation.
  * 
- * Supports bidirectional navigation (forward: homeWorld->career, backward: career->homeWorld)
+ * **Core Connectivity Rule**:
+ * Position N connects to positions [N-1, N, N+1] (clamped to 0-8 range).
+ * This rule is bidirectional - if A connects to B, then B connects to A.
+ * 
+ * **Multi-Position Origins**:
+ * Some origins occupy multiple positions (e.g., [1, 5]). They connect
+ * if ANY of their positions satisfy the ±1 rule with the last selection.
+ * 
+ * **Navigation Direction**:
+ * - FORWARD: homeWorld → career (check selections at lower stepIndex)
+ * - BACKWARD: career → homeWorld (check selections at higher stepIndex)
+ * - Direction determines which selection is "last" for connectivity
+ * - The ±1 rule itself is direction-independent
  */
 
 /**
@@ -102,20 +113,16 @@ export class OriginChartLayout {
   /**
    * Compute layout for a single step.
    * 
-   * Navigation Direction Logic:
-   * - FORWARD (homeWorld → career): stepIndex 0-5 in that order
-   *   - When at step N, check against selection at step N-1 (already selected)
-   *   - Previous selection's connectsTo must include current origin's position
-   * 
-   * - BACKWARD (career → homeWorld): stepIndex 5-0 in reverse order
-   *   - When at step N, check against selection at step N+1 (already selected in backward nav)
-   *   - Current origin's connectsTo must include next step's position
+   * Connectivity Rule: Only the LAST confirmed selection matters.
+   * - Position N connects to positions [N-1, N, N+1] (clamped to 0-8)
+   * - This rule is bidirectional and independent of navigation direction
+   * - Direction only affects which selection to check (forward: lower index, backward: higher index)
    * 
    * @param {Array<Item>} origins - Origins in this step
    * @param {number} stepIndex - Step index (0-5)
    * @param {Map<string, Item>} currentSelections - Current selections
    * @param {boolean} guidedMode - Guided mode flag
-   * @param {string} direction - Direction of navigation
+   * @param {string} direction - Direction of navigation (affects which selection is "last")
    * @returns {Object}
    * @private
    */
@@ -123,20 +130,33 @@ export class OriginChartLayout {
     const stepKey = this._getStepOrder()[stepIndex];
     const selectedOrigin = currentSelections.get(stepKey);
     
-    // For connectivity checking, we need to look at the adjacent step in navigation order
-    // Forward: previous in array = stepIndex - 1 (e.g., homeWorld before birthright)
-    // Backward: next in array = stepIndex + 1 (e.g., motivation after career in backward nav)
-    let adjacentStep = null;
-    let adjacentSelection = null;
+    // Find the last confirmed selection based on navigation direction
+    // FORWARD: search backward through array (lower indices)
+    // BACKWARD: search forward through array (higher indices)
+    let lastSelection = null;
     
     if (direction === DIRECTION.FORWARD) {
-      // Forward: look at the previous step in the step array
-      adjacentStep = stepIndex > 0 ? this._getStepOrder()[stepIndex - 1] : null;
+      // Search backward from current step
+      for (let i = stepIndex - 1; i >= 0; i--) {
+        const prevStepKey = this._getStepOrder()[i];
+        if (currentSelections.has(prevStepKey)) {
+          lastSelection = currentSelections.get(prevStepKey);
+          break;
+        }
+      }
     } else {
-      // Backward: look at the next step in the step array (the one selected earlier in backward nav)
-      adjacentStep = stepIndex < 5 ? this._getStepOrder()[stepIndex + 1] : null;
+      // BACKWARD: search forward from current step (higher indices were selected first)
+      for (let i = stepIndex + 1; i < 6; i++) {
+        const nextStepKey = this._getStepOrder()[i];
+        if (currentSelections.has(nextStepKey)) {
+          lastSelection = currentSelections.get(nextStepKey);
+          break;
+        }
+      }
     }
-    adjacentSelection = adjacentStep ? currentSelections.get(adjacentStep) : null;
+    
+    // Use lastSelection for connectivity checks
+    const adjacentSelection = lastSelection;
 
     const cards = [];
     let maxPosition = 0;
@@ -156,8 +176,8 @@ export class OriginChartLayout {
 
       // Determine if this origin is selectable
       const isSelected = selectedOrigin?.id === origin.id;
-      const isSelectable = this._isSelectable(origin, adjacentSelection, guidedMode, direction);
-      const isValidNext = this._isValidNext(origin, adjacentSelection, direction);
+      const isSelectable = this._isSelectable(origin, adjacentSelection, guidedMode);
+      const isValidNext = this._canConnect(origin, adjacentSelection); // Same as connectivity check
 
       cards.push({
         origin: origin,
@@ -220,80 +240,68 @@ export class OriginChartLayout {
 
   /**
    * Determine if an origin is selectable.
-   * @param {Item} origin
-   * @param {Item|null} adjacentSelection - The selection from the adjacent step (based on direction)
-   * @param {boolean} guidedMode
-   * @param {string} direction - Direction of navigation
+   * Checks requirements and positional connectivity.
+   * 
+   * @param {Item} origin - The origin to check
+   * @param {Item|null} lastSelection - The last confirmed selection
+   * @param {boolean} guidedMode - Whether guided mode is enabled
    * @returns {boolean}
    * @private
    */
-  static _isSelectable(origin, adjacentSelection, guidedMode, direction = DIRECTION.FORWARD) {
+  static _isSelectable(origin, lastSelection, guidedMode) {
     if (!guidedMode) return true; // Free mode - everything selectable
 
-    // First step (in navigation direction) is always selectable
-    if (!adjacentSelection) return true;
+    // First step is always selectable
+    if (!lastSelection) return true;
 
     // Check requirements
     const requirements = origin.system?.requirements;
 
     // Check previousSteps requirement
     if (requirements?.previousSteps?.length > 0) {
-      const adjacentId = adjacentSelection.system?.identifier;
-      if (!requirements.previousSteps.includes(adjacentId)) {
+      const lastId = lastSelection.system?.identifier;
+      if (!requirements.previousSteps.includes(lastId)) {
         return false;
       }
     }
 
     // Check excludedSteps requirement
     if (requirements?.excludedSteps?.length > 0) {
-      const adjacentId = adjacentSelection.system?.identifier;
-      if (requirements.excludedSteps.includes(adjacentId)) {
+      const lastId = lastSelection.system?.identifier;
+      if (requirements.excludedSteps.includes(lastId)) {
         return false;
       }
     }
 
     // Check positional connectivity using ±1 rule
-    return this._canConnect(origin, adjacentSelection, direction);
+    return this._canConnect(origin, lastSelection);
   }
 
   /**
-   * Check if an origin is a valid next step (used for visual indicators).
-   * Simple ±1 connectivity check for any of the origin's positions.
+   * Check if two origins can connect based on the ±1 position rule.
    * 
-   * @param {Item} origin - The origin being checked
-   * @param {Item|null} adjacentSelection - The adjacent selection
-   * @param {string} direction - Navigation direction
-   * @returns {boolean}
-   * @private
-   */
-  static _isValidNext(origin, adjacentSelection, direction = DIRECTION.FORWARD) {
-    if (!adjacentSelection) return true;
-    return this._canConnect(origin, adjacentSelection, direction);
-  }
-
-  /**
-   * Check if two origins can connect based on positions using ±1 rule.
-   * For multi-position origins, checks if ANY position can connect.
+   * Rule: Position N connects to [N-1, N, N+1] (clamped to 0-8 range)
+   * This is bidirectional - if A connects to B, then B connects to A.
+   * For multi-position origins, checks if ANY position pair can connect.
    * 
    * @param {Item} origin - The origin to check
-   * @param {Item} adjacentSelection - The adjacent step selection
-   * @param {string} direction - Direction of navigation (not used - connectivity is bidirectional)
+   * @param {Item|null} lastSelection - The last confirmed selection
    * @returns {boolean}
    * @private
    */
-  static _canConnect(origin, adjacentSelection, direction) {
-    if (!adjacentSelection) return true;
+  static _canConnect(origin, lastSelection) {
+    if (!lastSelection) return true;
 
     const originPositions = origin.system?.allPositions || [4];
-    const adjacentPositions = adjacentSelection.system?.allPositions || [4];
+    const lastPositions = lastSelection.system?.allPositions || [4];
 
-    // For each position the origin occupies, check if it can connect to any adjacent position
+    // For each position the origin occupies, check if it can connect to any last selection position
     // Using ±1 rule: position N connects to [N-1, N, N+1]
     for (const originPos of originPositions) {
-      const connectsTo = this._calculateConnections(originPos);
+      const originConnectsTo = this._calculateConnections(originPos);
       
-      for (const adjacentPos of adjacentPositions) {
-        if (connectsTo.includes(adjacentPos)) {
+      for (const lastPos of lastPositions) {
+        if (originConnectsTo.includes(lastPos)) {
           return true; // Found a valid connection
         }
       }
@@ -400,15 +408,14 @@ export class OriginChartLayout {
    * Used for highlighting in guided mode.
    * 
    * Uses ±1 connectivity rule:
-   * - Each position connects to [pos-1, pos, pos+1] in both directions
+   * - Each position connects to [pos-1, pos, pos+1] (bidirectional)
    * - Multi-position origins check if ANY of their positions can connect
    * 
-   * @param {Item} currentSelection - The current selection in navigation order
+   * @param {Item} currentSelection - The current selection
    * @param {Array<Item>} targetStepOrigins - Origins in the target step
-   * @param {string} direction - Direction of navigation
    * @returns {Array<Item>}
    */
-  static getValidNextOptions(currentSelection, targetStepOrigins, direction = DIRECTION.FORWARD) {
+  static getValidNextOptions(currentSelection, targetStepOrigins) {
     if (!currentSelection) return targetStepOrigins;
 
     const validOptions = [];
