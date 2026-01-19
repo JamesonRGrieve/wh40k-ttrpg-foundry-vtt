@@ -63,7 +63,7 @@ export class OriginChartLayout {
      * @private
      */
     static _getStepOrder() {
-        return ['homeWorld', 'birthright', 'lureOfTheVoid', 'trialsAndTravails', 'motivation', 'career'];
+        return ["homeWorld", "birthright", "lureOfTheVoid", "trialsAndTravails", "motivation", "career"];
     }
 
     /**
@@ -102,13 +102,34 @@ export class OriginChartLayout {
      * @private
      */
     static _getPositions(origin) {
-        const positions = origin?.system?.allPositions ?? origin?.system?.positions;
+        const positions = origin?.system?.pathPositions
+            ?? origin?.system?.allPositions
+            ?? origin?.system?.positions;
 
         if (Array.isArray(positions) && positions.length > 0) {
             return [...positions].sort((a, b) => a - b);
         }
 
         return [4];
+    }
+
+    /**
+     * Resolve the active path positions for a selection.
+     * @param {Item|object} origin
+     * @param {Item|object|null} lastSelection
+     * @returns {number[]}
+     */
+    static resolvePathPositions(origin, lastSelection) {
+        const originPositions = this._getPositions(origin);
+
+        if (!lastSelection) {
+            return originPositions;
+        }
+
+        const allowedPositions = this._getAllowedPositions(lastSelection);
+        const resolved = originPositions.filter(position => allowedPositions.has(position));
+
+        return resolved.length > 0 ? resolved : originPositions;
     }
 
     /**
@@ -316,7 +337,11 @@ export class OriginChartLayout {
                 const showFromThis = fromCard.isSelected || !fromStep.hasSelection;
                 if (!showFromThis) continue;
 
-                const allowedPositions = this._getAllowedPositions(fromCard.origin);
+                const selectedOrigin = fromCard.isSelected
+                    ? currentSelections.get(fromStep.stepKey)
+                    : null;
+                const originForPath = selectedOrigin ?? fromCard.origin;
+                const allowedPositions = this._getAllowedPositions(originForPath);
 
                 for (const toCard of toStep.cards) {
                     if (!this._isPositionAllowed(toCard.origin, allowedPositions)) {
