@@ -173,55 +173,55 @@
                 {{/if}}
             </div>
         </div>
-        
-        {{!-- Connections Panel --}}
-        <div class="rt-panel">
-            <div class="rt-panel-header">
-                <span class="rt-panel-title"><i class="fas fa-users"></i> Connections</span>
-            </div>
-            <div class="rt-panel-body">
-                <div class="rt-connections-section">
-                    <div class="rt-affliction-header">
-                        <span>Peers</span>
-                        <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="peer"><i class="fas fa-plus"></i></button>
-                    </div>
-                    <div class="rt-affliction-list">
-                        {{#each actor.items as |item|}}
-                            {{#if item.isPeer}}
-                            <div class="rt-affliction-row" data-item-id="{{item.id}}">
-                                <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                <span class="rt-connection-bonus">+{{item.system.modifier}}</span>
-                                <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
-                            </div>
-                            {{/if}}
-                        {{/each}}
-                    </div>
-                </div>
-                <div class="rt-connections-section">
-                    <div class="rt-affliction-header">
-                        <span>Enemies</span>
-                        <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="enemy"><i class="fas fa-plus"></i></button>
-                    </div>
-                    <div class="rt-affliction-list">
-                        {{#each actor.items as |item|}}
-                            {{#if item.isEnemy}}
-                            <div class="rt-affliction-row" data-item-id="{{item.id}}">
-                                <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                <span class="rt-connection-penalty">{{item.system.modifier}}</span>
-                                <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
-                            </div>
-                            {{/if}}
-                        {{/each}}
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
         
-        {{!-- Right Column: Journal/Notes --}}
+        {{!-- Right Column: Experience & Journal/Notes --}}
         <div class="rt-bio-col">
-            {{!-- Experience Panel --}}
+            {{!-- Experience Panel (moved above connections) --}}
             {{> systems/rogue-trader/templates/actor/panel/experience-panel-v2.hbs}}
+            
+            {{!-- Connections Panel --}}
+            <div class="rt-panel">
+                <div class="rt-panel-header">
+                    <span class="rt-panel-title"><i class="fas fa-users"></i> Connections</span>
+                </div>
+                <div class="rt-panel-body">
+                    <div class="rt-connections-section">
+                        <div class="rt-affliction-header">
+                            <span>Peers</span>
+                            <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="peer"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="rt-affliction-list">
+                            {{#each actor.items as |item|}}
+                                {{#if item.isPeer}}
+                                <div class="rt-affliction-row" data-item-id="{{item.id}}">
+                                    <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                    <span class="rt-connection-bonus">+{{item.system.modifier}}</span>
+                                    <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
+                                </div>
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="rt-connections-section">
+                        <div class="rt-affliction-header">
+                            <span>Enemies</span>
+                            <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="enemy"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="rt-affliction-list">
+                            {{#each actor.items as |item|}}
+                                {{#if item.isEnemy}}
+                                <div class="rt-affliction-row" data-item-id="{{item.id}}">
+                                    <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                    <span class="rt-connection-penalty">{{item.system.modifier}}</span>
+                                    <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
+                                </div>
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             {{!-- Character Notes / Journal --}}
             <div class="rt-panel rt-panel-journal">

@@ -4,7 +4,7 @@
   "img": "icons/svg/helm.svg",
   "system": {
     "identifier": "voidborn-mastery-void-master",
-    "category": "career",
+    "category": "origin",
     "source": {
       "book": "Rogue Trader Core Rulebook",
       "page": "67"
@@ -49,7 +49,7 @@
       "specialAbilities": [
         {
           "name": "Master of the Void",
-          "description": "Choose one at character creation:\n\u2022 Mastery of Space: Reroll all failed Tests for Starship Manoeuvre Actions.\n\u2022 Mastery of Gunnery: Reroll all failed Tests for Starship Shooting Actions."
+          "description": "Choose one at character creation:\n• Mastery of Space: Reroll all failed Tests for Starship Manoeuvre Actions.\n• Mastery of Gunnery: Reroll all failed Tests for Starship Shooting Actions."
         }
       ]
     },

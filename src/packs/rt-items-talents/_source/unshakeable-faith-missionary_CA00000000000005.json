@@ -4,7 +4,7 @@
   "img": "icons/svg/holy-shield.svg",
   "system": {
     "identifier": "unshakeable-faith-missionary",
-    "category": "career",
+    "category": "origin",
     "source": {
       "book": "Rogue Trader Core Rulebook",
       "page": "64"

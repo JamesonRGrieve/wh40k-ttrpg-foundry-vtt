@@ -4,17 +4,22 @@
   "img": "icons/svg/target.svg",
   "system": {
     "identifier": "daNexstBestFing",
-    "category": "defense",
+    "category": "combat",
     "source": "RT: Into the Storm",
     "description": "<p>Your ability to rally and inspire extends beyond your own kind, drawing strength from any nearby allies.</p>",
     "tier": 1,
     "benefit": "<p>The Ork now also gains the Benefits of Mob Rule (+10 to Resist effects of Fear and Pinning) for every Two Non-Orks that do not have the Machine Trait, are not Wild Animals, and are not Lesser Greenskins (Gretchin/Squigs/Snotlings) within 10 Metres.</p>",
-    "aptitudes": ["Willpower", "Fellowship"],
+    "aptitudes": [
+      "Willpower",
+      "Fellowship"
+    ],
     "prerequisites": {
       "text": "Ork, Mob Rule",
       "characteristics": {},
       "skills": {},
-      "talents": ["Mob Rule"]
+      "talents": [
+        "Mob Rule"
+      ]
     },
     "cost": 300,
     "isPassive": true,

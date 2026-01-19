@@ -1,0 +1,121 @@
+{{!-- NPC Template - Preview Tab --}}
+<section class="tab-content tab-preview" data-tab="preview" data-group="primary">
+    {{!-- Threat Selector --}}
+    <div class="rt-panel preview-controls">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-eye"></i> {{localize "RT.NPC.Template.PreviewSettings"}}</h3>
+        </header>
+        <div class="rt-panel-content">
+            <div class="preview-threat-control">
+                <label>{{localize "RT.NPC.Template.PreviewAtThreat"}}</label>
+                <input type="range" min="1" max="30" value="{{previewThreat}}" 
+                       class="threat-slider" data-action="updatePreview" />
+                <span class="threat-value">{{previewThreat}}</span>
+            </div>
+            <div class="preview-actions">
+                <button type="button" class="rt-btn rt-btn-primary" data-action="createFromPreview">
+                    <i class="fas fa-user-plus"></i>
+                    {{localize "RT.NPC.Template.CreateNPC"}}
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Preview Stat Block --}}
+    <div class="rt-panel preview-statblock">
+        <header class="rt-panel-header">
+            <h3>{{item.name}} <span class="threat-badge">{{localize "RT.NPC.ThreatLevel"}} {{previewThreat}}</span></h3>
+        </header>
+        <div class="rt-panel-content">
+            {{!-- Characteristics Preview --}}
+            <div class="preview-section">
+                <h4>{{localize "RT.Characteristics"}}</h4>
+                <div class="preview-characteristics">
+                    {{#each previewData.characteristics as |char key|}}
+                    <div class="preview-char">
+                        <span class="char-label">{{char.short}}</span>
+                        <span class="char-value">{{char.value}}</span>
+                        {{#if char.unnatural}}
+                        <span class="char-unnatural">({{char.unnatural}})</span>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            
+            {{!-- Vitals Preview --}}
+            <div class="preview-section">
+                <h4>{{localize "RT.NPC.Template.VitalStats"}}</h4>
+                <div class="preview-vitals">
+                    <div class="vital">
+                        <span class="vital-label">{{localize "RT.Wounds"}}</span>
+                        <span class="vital-value">{{previewData.wounds}}</span>
+                    </div>
+                    <div class="vital">
+                        <span class="vital-label">{{localize "RT.Movement"}}</span>
+                        <span class="vital-value">{{previewData.movement}}</span>
+                    </div>
+                    <div class="vital">
+                        <span class="vital-label">{{localize "RT.NPC.Armour"}}</span>
+                        <span class="vital-value">{{previewData.armour}}</span>
+                    </div>
+                </div>
+            </div>
+            
+            {{!-- Skills Preview --}}
+            {{#if (gt previewData.skills.length 0)}}
+            <div class="preview-section">
+                <h4>{{localize "RT.Skills"}}</h4>
+                <div class="preview-skills">
+                    {{#each previewData.skills as |skill|}}
+                    <span class="skill-tag">{{skill.name}} {{skill.target}}</span>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+            
+            {{!-- Weapons Preview --}}
+            {{#if (gt previewData.weapons.length 0)}}
+            <div class="preview-section">
+                <h4>{{localize "RT.Weapons"}}</h4>
+                <div class="preview-weapons">
+                    {{#each previewData.weapons as |weapon|}}
+                    <div class="preview-weapon">
+                        <span class="weapon-name">{{weapon.name}}</span>
+                        <span class="weapon-stats">{{weapon.damage}} Pen {{weapon.pen}}</span>
+                        {{#if weapon.special}}
+                        <span class="weapon-special">{{weapon.special}}</span>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+            
+            {{!-- Talents & Traits Preview --}}
+            {{#if (or (gt previewData.talents.length 0) (gt previewData.traits.length 0))}}
+            <div class="preview-section">
+                <h4>{{localize "RT.NPC.Template.TalentsAndTraits"}}</h4>
+                <div class="preview-abilities">
+                    {{#each previewData.talents as |talent|}}
+                    <span class="ability-tag talent">{{talent.name}}</span>
+                    {{/each}}
+                    {{#each previewData.traits as |trait|}}
+                    <span class="ability-tag trait">{{trait.name}}{{#if trait.level}} ({{trait.level}}){{/if}}</span>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+            
+            {{!-- Special Abilities Preview --}}
+            {{#if previewData.specialAbilities}}
+            <div class="preview-section">
+                <h4>{{localize "RT.NPC.Template.SpecialAbilities"}}</h4>
+                <div class="preview-special-abilities">
+                    {{{previewData.specialAbilities}}}
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</section>

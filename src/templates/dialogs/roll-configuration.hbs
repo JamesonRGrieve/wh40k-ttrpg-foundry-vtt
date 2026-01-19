@@ -45,6 +45,37 @@
         </select>
     </div>
 
+    {{!-- Situational Modifiers --}}
+    {{#if hasSituationalModifiers}}
+    <div class="form-group roll-config-situational">
+        <label>{{localize "RT.Roll.SituationalModifiers"}}</label>
+        <div class="roll-config-situational-list">
+            {{#each situationalModifiers}}
+            <button type="button" 
+                    class="roll-config-situational-item {{#if this.active}}active{{/if}}"
+                    data-action="toggleSituational"
+                    data-modifier-id="{{this.id}}"
+                    title="{{this.condition}}">
+                <i class="{{this.icon}}"></i>
+                <span class="situational-source">{{this.source}}</span>
+                <span class="situational-value {{#if (gt this.value 0)}}positive{{else}}negative{{/if}}">
+                    {{this.valueDisplay}}
+                </span>
+            </button>
+            {{/each}}
+        </div>
+        {{#if (gt situationalModifierTotal 0)}}
+        <div class="roll-config-situational-total positive">
+            {{localize "RT.Roll.SituationalTotal"}}: +{{situationalModifierTotal}}
+        </div>
+        {{else if (lt situationalModifierTotal 0)}}
+        <div class="roll-config-situational-total negative">
+            {{localize "RT.Roll.SituationalTotal"}}: {{situationalModifierTotal}}
+        </div>
+        {{/if}}
+    </div>
+    {{/if}}
+
     {{!-- Custom Modifier --}}
     <div class="form-group">
         <label>{{localize "RT.Roll.CustomModifier"}}</label>

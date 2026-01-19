@@ -7,7 +7,7 @@ export class RogueTraderSettings {
         simpleAttackRolls: 'simple-attack-rolls',
         simplePsychicRolls: 'simple-psychic-rolls',
         processActiveEffectsDuringCombat: 'active-effects-during-combat',
-
+        combatPresets: 'combat-presets'
     }
 
     static registerSettings() {
@@ -46,6 +46,14 @@ export class RogueTraderSettings {
             requiresReload: true,
             default: false,
             type: Boolean,
+        });
+        game.settings.register(SYSTEM_ID, RogueTraderSettings.SETTINGS.combatPresets, {
+            name: 'Combat Presets',
+            hint: 'Saved NPC combat presets (templates).',
+            scope: 'world',
+            config: false,
+            default: [],
+            type: Array,
         });
     }
 }

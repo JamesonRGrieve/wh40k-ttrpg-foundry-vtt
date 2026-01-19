@@ -1,0 +1,40 @@
+{{!-- Vehicle V2 Notes Tab --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+    <div class="rt-vehicle-v2-notes">
+        
+        {{!-- GM Notes --}}
+        <div class="rt-vehicle-v2-panel rt-vehicle-v2-gm-notes">
+            <h3 class="rt-vehicle-v2-panel-title">
+                <i class="fas fa-sticky-note"></i>
+                GM Notes
+            </h3>
+            <div class="editor-content" data-edit="system.quickNotes">
+                {{{enrichHTML system.quickNotes}}}
+            </div>
+        </div>
+
+        {{!-- Tactics --}}
+        <div class="rt-vehicle-v2-panel rt-vehicle-v2-tactics">
+            <h3 class="rt-vehicle-v2-panel-title">
+                <i class="fas fa-chess"></i>
+                Tactics
+            </h3>
+            <div class="editor-content" data-edit="system.tactics">
+                {{{enrichHTML system.tactics}}}
+            </div>
+        </div>
+
+        {{!-- Source Reference --}}
+        <div class="rt-vehicle-v2-panel rt-vehicle-v2-source">
+            <h3 class="rt-vehicle-v2-panel-title">
+                <i class="fas fa-book"></i>
+                Source
+            </h3>
+            <input type="text" 
+                   name="system.source" 
+                   value="{{system.source}}" 
+                   placeholder="Book reference (e.g., Core Rulebook pg. 123)" />
+        </div>
+        
+    </div>
+</section>

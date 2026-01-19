@@ -1,0 +1,169 @@
+/**
+ * Batch Create Dialog Styles
+ * Phase 6: Advanced GM Tools
+ */
+
+.batch-create-dialog {
+  .batch-create-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  // Form groups
+  .form-group {
+    margin-bottom: 0;
+
+    label {
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border: 1px solid var(--color-border-light-tertiary);
+      border-radius: 4px;
+      background: var(--color-bg-option);
+
+      &:focus {
+        outline: none;
+        border-color: var(--rt-color-accent, #c9a227);
+      }
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: var(--color-text-light-6);
+      margin-top: 0.25rem;
+    }
+
+    &.checkbox {
+      label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: normal;
+        cursor: pointer;
+
+        input[type="checkbox"] {
+          width: auto;
+        }
+      }
+    }
+
+    &.indent {
+      margin-left: 1.5rem;
+    }
+  }
+
+  // Row of form groups
+  .form-group-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  // Slider group
+  .slider-group {
+    .slider-with-value {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      input[type="range"] {
+        flex: 1;
+        accent-color: var(--rt-color-accent, #c9a227);
+      }
+
+      .threat-value {
+        min-width: 2rem;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+    }
+
+    .tier-label {
+      font-size: 0.8rem;
+      color: var(--rt-color-accent, #c9a227);
+      font-style: italic;
+      margin-top: 0.25rem;
+    }
+  }
+
+  // Options fieldset
+  .batch-options {
+    border: 1px solid var(--color-border-light-tertiary);
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin: 0;
+
+    legend {
+      padding: 0 0.5rem;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .form-group {
+      margin-bottom: 0.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Preview
+  .batch-preview {
+    background: var(--color-bg-option);
+    border: 1px solid var(--color-border-light-tertiary);
+    border-radius: 4px;
+    padding: 0.75rem;
+
+    h4 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.9rem;
+      color: var(--rt-color-accent, #c9a227);
+    }
+
+    .name-preview-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      li {
+        background: var(--color-bg-btn);
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  // Footer
+  .sheet-footer {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-light-tertiary);
+    gap: 0.5rem;
+
+    button {
+      flex: 1;
+    }
+
+    .primary {
+      background: var(--rt-color-accent, #c9a227);
+      color: #fff;
+
+      &:hover {
+        background: darken(#c9a227, 10%);
+      }
+    }
+  }
+}

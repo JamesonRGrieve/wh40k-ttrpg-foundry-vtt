@@ -1,0 +1,12 @@
+{{!-- Vehicle V2 Tab Navigation --}}
+<nav class="rt-navigation rt-vehicle-v2-tabs tabs" data-group="primary">
+    {{#each tabs}}
+    <a class="item rt-tab-btn {{#if active}}active{{/if}} {{cssClass}}" 
+       data-action="tab"
+       data-group="{{group}}"
+       data-tab="{{id}}"
+       data-tooltip="{{label}}">
+        {{label}}
+    </a>
+    {{/each}}
+</nav>

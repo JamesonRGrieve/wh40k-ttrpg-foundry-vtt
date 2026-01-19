@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "defense",
+    "category": "combat",
     "source": "RT: Into the Storm",
     "description": "<p>Gain +20 to Toughness Tests to resist Heat, Cold, Vacuum, Suffocation, Disease, Poision, and any other Adverse Environmental Conditions that would require a Toughness Test.</p>",
     "tier": 1,
@@ -42,7 +42,14 @@
       },
       "other": [],
       "situational": {
-        "characteristics": [],
+        "characteristics": [
+          {
+            "key": "toughness",
+            "value": 20,
+            "condition": "Tests to resist environmental hazards (heat, cold, vacuum, suffocation, disease, poison)",
+            "icon": "fa-biohazard"
+          }
+        ],
         "skills": [],
         "combat": []
       }

@@ -4,7 +4,7 @@
   "img": "icons/svg/sword.svg",
   "system": {
     "identifier": "weapon-master-arch-militant",
-    "category": "career",
+    "category": "origin",
     "source": {
       "book": "Rogue Trader Core Rulebook",
       "page": "61"
@@ -40,19 +40,22 @@
         "skills": [],
         "combat": [
           {
+            "key": "attack",
+            "value": 10,
             "condition": "Using chosen weapon class",
-            "modifier": 10,
-            "type": "To Hit"
+            "icon": "fa-solid fa-crosshairs"
           },
           {
+            "key": "damage",
+            "value": 2,
             "condition": "Using chosen weapon class",
-            "modifier": 2,
-            "type": "Damage"
+            "icon": "fa-solid fa-burst"
           },
           {
+            "key": "initiative",
+            "value": 2,
             "condition": "Using chosen weapon class",
-            "modifier": 2,
-            "type": "Initiative"
+            "icon": "fa-solid fa-bolt"
           }
         ]
       }

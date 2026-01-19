@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "defense",
+    "category": "combat",
     "source": "Only War Core",
     "description": "<p>Character gains one additional Wound. They may purchase this talent multiple times, up to twice their Toughness Bonus.\nDisplay number of times this has been purchased as Sound Constitution (X), where X is number of times purchased.</p>",
     "tier": 1,

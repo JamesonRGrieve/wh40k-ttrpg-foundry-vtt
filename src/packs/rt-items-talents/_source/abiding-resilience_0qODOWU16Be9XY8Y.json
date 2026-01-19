@@ -4,12 +4,15 @@
   "img": "icons/svg/target.svg",
   "system": {
     "identifier": "abidingResilience",
-    "category": "defense",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": "<p>Your exceptional resilience allows you to recover more effectively when drawing upon your fate to survive.</p>",
     "tier": 3,
     "benefit": "<p>When the character expends a Fate Point to regain wounds, they regain 1d5+Toughness Bonus Wounds and removes 1 Fatigue (instead of just 1d5 Wounds)</p>",
-    "aptitudes": ["Toughness", "Defence"],
+    "aptitudes": [
+      "Toughness",
+      "Defence"
+    ],
     "prerequisites": {
       "text": "Toughness 40",
       "characteristics": {

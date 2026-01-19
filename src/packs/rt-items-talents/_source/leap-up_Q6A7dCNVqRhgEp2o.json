@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "movement",
+    "category": "combat",
     "source": "Only War Core",
     "description": "<p>The Character can Stand Up as a Free Action</p>",
     "tier": 1,

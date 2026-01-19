@@ -1,0 +1,90 @@
+{{!-- Vehicle V2 Sheet Header --}}
+<div class="rt-header rt-panel rt-vehicle-v2-header">
+    <div class="rt-header__info">
+        {{!-- Portrait --}}
+        <div class="rt-header__logo rt-portrait-container">
+            <img class="rt-header__logo-image rt-portrait" 
+                 src="{{actor.img}}" 
+                 data-edit="img" 
+                 alt="{{actor.name}}" 
+                 title="{{actor.name}}" />
+        </div>
+        
+        {{!-- Name and Identity --}}
+        <div class="rt-vehicle-v2-identity">
+            <div class="rt-vehicle-v2-name-row">
+                <input class="rt-vehicle-v2-name-input" 
+                       name="name" 
+                       type="text" 
+                       value="{{actor.name}}" 
+                       placeholder="{{localize 'RT.Vehicle.Name'}}" />
+            </div>
+            
+            <div class="rt-vehicle-v2-meta-row">
+                {{!-- Type --}}
+                <div class="rt-vehicle-v2-field">
+                    <label>{{localize "RT.Vehicle.Type"}}</label>
+                    <select name="system.type" class="rt-vehicle-v2-select">
+                        <option value="vehicle" {{#if (eq system.type "vehicle")}}selected{{/if}}>Vehicle</option>
+                        <option value="walker" {{#if (eq system.type "walker")}}selected{{/if}}>Walker</option>
+                        <option value="flyer" {{#if (eq system.type "flyer")}}selected{{/if}}>Flyer</option>
+                        <option value="skimmer" {{#if (eq system.type "skimmer")}}selected{{/if}}>Skimmer</option>
+                    </select>
+                </div>
+                
+                {{!-- Faction --}}
+                <div class="rt-vehicle-v2-field rt-vehicle-v2-field--wide">
+                    <label>{{localize "RT.NPC.Faction"}}</label>
+                    <input type="text" 
+                           name="system.faction" 
+                           value="{{system.faction}}" 
+                           placeholder="e.g., Imperial Guard, Ork" />
+                </div>
+            </div>
+        </div>
+        
+        {{!-- Quick Stats --}}
+        <div class="rt-vehicle-v2-quick-stats">
+            {{!-- Structure --}}
+            <div class="rt-vehicle-v2-stat-box rt-vehicle-v2-structure">
+                <span class="rt-vehicle-v2-stat-label">Structure</span>
+                <div class="rt-vehicle-v2-stat-values">
+                    <input type="number" 
+                           class="rt-vehicle-v2-stat-input" 
+                           name="system.wounds.value" 
+                           value="{{system.wounds.value}}" 
+                           min="0" 
+                           title="Current" />
+                    <span class="rt-vehicle-v2-stat-separator">/</span>
+                    <input type="number" 
+                           class="rt-vehicle-v2-stat-input" 
+                           name="system.wounds.max" 
+                           value="{{system.wounds.max}}" 
+                           min="1" 
+                           title="Max" />
+                </div>
+            </div>
+            
+            {{!-- Hull/Armour --}}
+            <div class="rt-vehicle-v2-stat-box rt-vehicle-v2-armour">
+                <span class="rt-vehicle-v2-stat-label">Armour</span>
+                <input type="number" 
+                       class="rt-vehicle-v2-stat-input" 
+                       name="system.armour.total" 
+                       value="{{system.armour.total}}" 
+                       min="0" />
+            </div>
+            
+            {{!-- Size --}}
+            <div class="rt-vehicle-v2-stat-box rt-vehicle-v2-size">
+                <span class="rt-vehicle-v2-stat-label">Size</span>
+                <input type="number" 
+                       class="rt-vehicle-v2-stat-input" 
+                       name="system.size" 
+                       value="{{system.size}}" 
+                       min="1" 
+                       max="10" />
+            </div>
+        </div>
+    </div>
+</div>

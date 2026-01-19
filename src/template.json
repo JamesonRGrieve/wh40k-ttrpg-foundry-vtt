@@ -4,6 +4,7 @@
       "acolyte",
       "character",
       "npc",
+      "npcV2",
       "vehicle",
       "starship"
     ],
@@ -780,6 +781,14 @@
         "type": "troop",
         "threatLevel": 0
       },
+      "npcV2": {
+        "faction": "",
+        "subfaction": "",
+        "allegiance": "",
+        "role": "specialist",
+        "type": "troop",
+        "threatLevel": 5
+      },
       "vehicle": {
         "front": "",
         "side": "",
@@ -1033,7 +1042,8 @@
       "vehicleUpgrade",
       "weapon",
       "weaponModification",
-      "weaponQuality"
+      "weaponQuality",
+      "npcTemplate"
     ],
     "templates": {
       "physicalItem": {
@@ -1538,6 +1548,16 @@
       "effect": "",
       "hasLevel": false,
       "level": 0
+    },
+    "npcTemplate": {
+      "templates": [
+        "itemDescription"
+      ],
+      "category": "humanoid",
+      "faction": "",
+      "subfaction": "",
+      "role": "bruiser",
+      "baseThreatLevel": 5
     }
   }
 }

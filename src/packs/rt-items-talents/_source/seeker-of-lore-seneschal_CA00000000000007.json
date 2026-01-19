@@ -4,7 +4,7 @@
   "img": "icons/svg/book.svg",
   "system": {
     "identifier": "seeker-of-lore-seneschal",
-    "category": "career",
+    "category": "origin",
     "source": {
       "book": "Rogue Trader Core Rulebook",
       "page": "66"

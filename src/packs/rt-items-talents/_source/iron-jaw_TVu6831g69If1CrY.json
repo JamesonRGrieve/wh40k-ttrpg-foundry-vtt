@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "defense",
+    "category": "combat",
     "source": "Only War Core",
     "description": "<p>If the Character is Stunned, they can make a +0 Toughness Test as a Free Action to ignore the effects.</p>",
     "tier": 1,

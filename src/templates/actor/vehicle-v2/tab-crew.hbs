@@ -1,0 +1,48 @@
+{{!-- Vehicle V2 Crew Tab --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+    <div class="rt-vehicle-v2-crew">
+        
+        {{!-- Crew Stats --}}
+        <div class="rt-vehicle-v2-panel rt-vehicle-v2-crew-stats">
+            <h3 class="rt-vehicle-v2-panel-title">
+                <i class="fas fa-users"></i>
+                Crew Information
+            </h3>
+            <div class="rt-vehicle-v2-crew-grid">
+                <div class="rt-vehicle-v2-crew-item">
+                    <label>Required Crew</label>
+                    <input type="number" name="system.crew.required" value="{{crewStats.required}}" min="0" />
+                </div>
+                <div class="rt-vehicle-v2-crew-item">
+                    <label>Crew Rating</label>
+                    <div class="rt-vehicle-v2-crew-controls">
+                        <button type="button" data-action="modifyCrew" data-delta="-5" title="-5">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" name="system.crew.rating" value="{{crewStats.rating}}" min="1" max="100" />
+                        <button type="button" data-action="modifyCrew" data-delta="5" title="+5">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="rt-vehicle-v2-crew-item">
+                    <label>Morale</label>
+                    <div class="rt-vehicle-v2-crew-controls">
+                        <button type="button" data-action="adjustCrewMorale" data-delta="-5" title="-5">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" name="system.crew.morale" value="{{crewStats.morale}}" min="0" max="100" />
+                        <button type="button" data-action="adjustCrewMorale" data-delta="5" title="+5">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="rt-vehicle-v2-crew-item rt-vehicle-v2-crew-item--wide">
+                    <label>Notes</label>
+                    <textarea name="system.crew.notes" rows="3">{{crewStats.notes}}</textarea>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>

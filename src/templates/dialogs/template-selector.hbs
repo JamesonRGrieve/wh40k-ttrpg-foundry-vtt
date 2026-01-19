@@ -1,0 +1,114 @@
+{{!-- NPC Template Selector Dialog --}}
+<form class="template-selector-form" autocomplete="off">
+    {{!-- Filters Section --}}
+    <div class="template-filters">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="category-filter">{{localize "RT.NPC.Category"}}</label>
+                <select id="category-filter" name="category" data-action="filterTemplates">
+                    <option value="">{{localize "RT.All"}}</option>
+                    {{#each categories as |cat|}}
+                    <option value="{{cat.value}}" {{#eq cat.value selectedCategory}}selected{{/eq}}>{{cat.label}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="faction-filter">{{localize "RT.NPC.Faction"}}</label>
+                <select id="faction-filter" name="faction" data-action="filterTemplates">
+                    <option value="">{{localize "RT.All"}}</option>
+                    {{#each factions as |faction|}}
+                    <option value="{{faction}}" {{#eq faction selectedFaction}}selected{{/eq}}>{{faction}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            
+            <div class="filter-group search">
+                <label for="search-filter">{{localize "RT.Search"}}</label>
+                <input type="text" id="search-filter" name="search" 
+                       value="{{searchQuery}}" placeholder="{{localize 'RT.NPC.Template.SearchPlaceholder'}}"
+                       data-action="filterTemplates" />
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Templates List --}}
+    <div class="templates-container">
+        {{#if (gt filteredTemplates.length 0)}}
+        <div class="templates-list">
+            {{#each filteredTemplates as |template|}}
+            <div class="template-card {{#eq template.uuid ../selectedTemplate}}selected{{/eq}}" 
+                 data-uuid="{{template.uuid}}" data-action="selectTemplate">
+                <img src="{{template.img}}" alt="{{template.name}}" class="template-img" />
+                <div class="template-info">
+                    <h4 class="template-name">{{template.name}}</h4>
+                    <div class="template-meta">
+                        <span class="template-category">{{localize template.categoryLabel}}</span>
+                        {{#if template.faction}}
+                        <span class="template-faction">{{template.faction}}</span>
+                        {{/if}}
+                        <span class="template-threat">{{localize "RT.NPC.ThreatLevel"}} {{template.threatLevel}}</span>
+                    </div>
+                    {{#if template.description}}
+                    <p class="template-desc">{{truncate template.description 80}}</p>
+                    {{/if}}
+                </div>
+                <div class="template-actions">
+                    <button type="button" class="rt-btn rt-btn-icon" data-action="viewTemplate" 
+                            data-uuid="{{template.uuid}}" data-tooltip="{{localize 'RT.View'}}">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{else}}
+        <div class="empty-state">
+            <i class="fas fa-search"></i>
+            <p>{{localize "RT.NPC.Template.NoTemplatesFound"}}</p>
+        </div>
+        {{/if}}
+    </div>
+    
+    {{!-- Selected Template Preview --}}
+    {{#if selectedTemplateData}}
+    <div class="selected-preview">
+        <h3>{{localize "RT.NPC.Template.SelectedTemplate"}}: {{selectedTemplateData.name}}</h3>
+        
+        <div class="creation-options">
+            <div class="option-group">
+                <label for="npc-name">{{localize "RT.Name"}}</label>
+                <input type="text" id="npc-name" name="npcName" 
+                       value="{{npcName}}" placeholder="{{selectedTemplateData.name}}" />
+            </div>
+            
+            <div class="option-group">
+                <label for="target-threat">{{localize "RT.NPC.ThreatLevel"}}</label>
+                <div class="threat-control">
+                    <input type="range" id="target-threat" name="targetThreat" 
+                           min="1" max="30" value="{{targetThreat}}" data-action="updateThreatPreview" />
+                    <span class="threat-display">{{targetThreat}}</span>
+                </div>
+            </div>
+            
+            <div class="option-group checkbox">
+                <label>
+                    <input type="checkbox" name="openSheet" {{#if openSheet}}checked{{/if}} />
+                    {{localize "RT.NPC.Template.OpenSheetAfterCreate"}}
+                </label>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    
+    {{!-- Dialog Footer --}}
+    <footer class="dialog-footer">
+        <button type="button" class="rt-btn" data-action="cancel">
+            {{localize "RT.Cancel"}}
+        </button>
+        <button type="submit" class="rt-btn rt-btn-primary" {{#unless selectedTemplate}}disabled{{/unless}}>
+            <i class="fas fa-user-plus"></i>
+            {{localize "RT.NPC.Template.CreateNPC"}}
+        </button>
+    </footer>
+</form>

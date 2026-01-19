@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "technical",
+    "category": "tech",
     "source": "DH 2E: Enemies Without",
     "description": "<p>When character succeeds on an Operate Test (or Survival if riding a living steed), they can choose to suffer 1 Fatigue to increase their number of Degrees of Success by Agility Bonus / 2\nWhen character fails on such a test, can choose to suffer 1 Fatigue to reduce their number of Degrees of Failiure by Agility Bonus / 2 (min 1).</p>",
     "tier": 2,

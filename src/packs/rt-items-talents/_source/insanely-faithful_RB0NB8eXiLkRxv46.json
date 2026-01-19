@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "willpower",
+    "category": "general",
     "source": "Dark Heresy: Core",
     "description": "<p>When rolling to determine the effects of Shock, can roll twice and take the better result</p>",
     "tier": 1,

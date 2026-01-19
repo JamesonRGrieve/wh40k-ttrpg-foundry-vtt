@@ -1,0 +1,103 @@
+{{!-- Stat Block Parser Dialog --}}
+<div class="stat-block-parser-content">
+  {{!-- Input Section --}}
+  <div class="parser-input-section">
+    <div class="input-header">
+      <label>{{localize "RT.NPC.Import.PasteStatBlock"}}</label>
+      <button type="button" data-action="clearInput" class="icon-button" title="Clear">
+        <i class="fa-solid fa-eraser"></i>
+      </button>
+    </div>
+    <textarea name="rawInput" rows="12" placeholder="{{localize "RT.NPC.Import.Placeholder"}}">{{rawInput}}</textarea>
+    <p class="hint">{{localize "RT.NPC.Import.Hint"}}</p>
+  </div>
+
+  {{!-- Parse Button --}}
+  <div class="parse-action">
+    <button type="button" data-action="parse" class="secondary">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      {{localize "RT.NPC.Import.Parse"}}
+    </button>
+  </div>
+
+  {{!-- Errors/Warnings --}}
+  {{#if hasErrors}}
+  <div class="parse-messages errors">
+    <h4><i class="fa-solid fa-circle-exclamation"></i> {{localize "RT.NPC.Import.Errors"}}</h4>
+    <ul>
+      {{#each errors}}
+      <li>{{this}}</li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+
+  {{#if hasWarnings}}
+  <div class="parse-messages warnings">
+    <h4><i class="fa-solid fa-triangle-exclamation"></i> {{localize "RT.NPC.Import.Warnings"}}</h4>
+    <ul>
+      {{#each warnings}}
+      <li>{{this}}</li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+
+  {{!-- Preview Section --}}
+  {{#if hasParsed}}
+  <div class="parser-preview-section">
+    <h3>{{localize "RT.NPC.Preview"}}</h3>
+    
+    <div class="preview-grid">
+      {{!-- Basic Info --}}
+      <div class="preview-panel">
+        <h4>{{localize "RT.NPC.Identity"}}</h4>
+        <dl>
+          <dt>{{localize "RT.NPC.Name"}}</dt>
+          <dd>{{parsedData.name}}</dd>
+          <dt>{{localize "RT.NPC.Type"}}</dt>
+          <dd>{{parsedData.system.type}}</dd>
+          <dt>{{localize "RT.NPC.ThreatLevel"}}</dt>
+          <dd>{{parsedData.system.threatLevel}}</dd>
+        </dl>
+      </div>
+
+      {{!-- Characteristics --}}
+      <div class="preview-panel characteristics">
+        <h4>{{localize "RT.Characteristics.Label"}}</h4>
+        <div class="char-grid">
+          {{#each parsedData.system.characteristics as |char key|}}
+          <div class="char-item">
+            <span class="char-label">{{char.short}}</span>
+            <span class="char-value">{{char.base}}</span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+
+      {{!-- Vitals --}}
+      <div class="preview-panel">
+        <h4>{{localize "RT.Vitals.Label"}}</h4>
+        <dl>
+          <dt>{{localize "RT.Wounds.Label"}}</dt>
+          <dd>{{parsedData.system.wounds.max}}</dd>
+          {{#if parsedData.system.armour}}
+          <dt>{{localize "RT.Armour.Label"}}</dt>
+          <dd>{{parsedData.system.armour.total}}</dd>
+          {{/if}}
+        </dl>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Action Buttons --}}
+  <footer class="sheet-footer flexrow">
+    {{#each buttons}}
+    <button type="{{type}}" {{#if action}}data-action="{{action}}"{{/if}} class="{{cssClass}}" {{#if disabled}}disabled{{/if}}>
+      <i class="{{icon}}"></i>
+      {{localize label}}
+    </button>
+    {{/each}}
+  </footer>
+</div>

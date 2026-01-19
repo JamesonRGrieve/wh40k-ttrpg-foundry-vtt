@@ -11,6 +11,67 @@
   }
 }
 
+// Filter Controls
+.rt-talents-filters {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: $rt-space-sm;
+  background: var(--rt-panel-bg-solid);
+  border-bottom: 1px solid var(--rt-border-color-light);
+  
+  .rt-filter-search {
+    flex: 1;
+    padding: 4px 8px;
+    background: var(--color-bg-option);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 4px;
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    
+    &:focus {
+      outline: none;
+      border-color: $rt-accent-talents;
+      box-shadow: 0 0 0 2px rgba($rt-accent-talents, 0.1);
+    }
+    
+    &::placeholder {
+      color: $rt-text-muted;
+      opacity: 0.7;
+    }
+  }
+  
+  .rt-filter-select {
+    padding: 4px 8px;
+    background: var(--color-bg-option);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 4px;
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    
+    &:focus {
+      outline: none;
+      border-color: $rt-accent-talents;
+    }
+  }
+  
+  .rt-filter-clear {
+    padding: 4px 8px;
+    background: rgba($rt-color-crimson, 0.1);
+    border: 1px solid rgba($rt-color-crimson, 0.3);
+    border-radius: 4px;
+    color: $rt-color-crimson;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: rgba($rt-color-crimson, 0.2);
+      border-color: $rt-color-crimson;
+    }
+  }
+}
+
 // Table Containers
 .rt-talents-table,
 .rt-traits-table {
@@ -198,7 +259,34 @@
   display: flex;
   gap: 2px;
   align-items: center;
+  margin-left: auto;
   flex-shrink: 0;
+}
+
+// Talent favorite button
+.rt-talent-favorite {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  color: $rt-text-muted;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  border-radius: 3px;
+  
+  &:hover {
+    background: rgba($rt-color-gold, 0.1);
+    color: $rt-color-gold;
+    transform: scale(1.1);
+  }
+  
+  &.active {
+    color: $rt-color-gold;
+    
+    i {
+      filter: drop-shadow(0 0 2px rgba($rt-color-gold, 0.5));
+    }
+  }
 }
 
 .rt-action-btn {

@@ -51,7 +51,20 @@
       },
       "other": [],
       "situational": {
-        "characteristics": [],
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": 10,
+            "condition": "When dealing with alien races or cultures",
+            "icon": "fa-solid fa-users"
+          },
+          {
+            "key": "willpower",
+            "value": -5,
+            "condition": "Involving alien artefacts and psychic powers",
+            "icon": "fa-solid fa-brain"
+          }
+        ],
         "skills": [],
         "combat": []
       }

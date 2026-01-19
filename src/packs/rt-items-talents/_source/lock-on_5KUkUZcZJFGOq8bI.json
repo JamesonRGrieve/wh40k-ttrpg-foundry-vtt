@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "defense",
+    "category": "combat",
     "source": "OW: Hammer of the Emperor",
     "description": "<p>The character can make a Dodge Reaction whilst maintaining an Aim or Overwatch Action without losing its benefits.</p>",
     "tier": 3,

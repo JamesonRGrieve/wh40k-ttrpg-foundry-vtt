@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "technical",
+    "category": "tech",
     "source": "OW: Hammer of the Emperor",
     "description": "<p>All Character's Cybernetics count as being one level of Craftsmanship Higher than that of their Base Craftsmanship (Poor-->Common-->Good-->Best)</p>",
     "tier": 3,

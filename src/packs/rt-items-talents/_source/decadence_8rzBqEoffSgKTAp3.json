@@ -4,12 +4,15 @@
   "img": "icons/svg/target.svg",
   "system": {
     "identifier": "decadence",
-    "category": "defense",
+    "category": "combat",
     "source": "Rogue Trader Core",
     "description": "<p>Through excessive indulgence, you have developed an almost supernatural tolerance for intoxicants and addictive substances.</p>",
     "tier": 1,
     "benefit": "<p>When drinking alcohol or similar beverages, does not pass out until failing a number of toughness tests equal to 2xTB. Also gain +10 to resisting addiction effects.</p>",
-    "aptitudes": ["Toughness", "General"],
+    "aptitudes": [
+      "Toughness",
+      "General"
+    ],
     "prerequisites": {
       "text": "T 30",
       "characteristics": {

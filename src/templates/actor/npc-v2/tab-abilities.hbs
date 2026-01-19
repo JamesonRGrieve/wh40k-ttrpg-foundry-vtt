@@ -1,0 +1,213 @@
+{{!-- NPC V2 Abilities Tab - Talent & Trait Management --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+  <div class="rt-abilities-tab">
+    
+    {{!-- Talents Section --}}
+    <div class="rt-panel rt-panel--talents" data-drop-zone="ability" data-accepts="talent">
+      <div class="rt-panel-header">
+        <i class="fa-solid fa-stars"></i>
+        <span>{{localize "RT.Talents"}}</span>
+        <span class="rt-count-badge">{{talents.length}}</span>
+      </div>
+      
+      <div class="rt-panel-body">
+        {{#if talents.length}}
+        <div class="rt-abilities-grid">
+          {{#each talents}}
+          <div class="rt-ability-card {{#if isPinned}}pinned{{/if}}" data-item-id="{{id}}">
+            <div class="rt-ability-header">
+              <img src="{{img}}" class="rt-ability-img" alt="{{name}}" />
+              <span class="rt-ability-name">{{name}}</span>
+              {{#if ../editable}}
+              <div class="rt-ability-actions">
+                <button type="button" 
+                        class="rt-btn-icon {{#if isFavorite}}active{{/if}}"
+                        data-action="toggleFavoriteTalent"
+                        data-item-id="{{id}}"
+                        title="{{#if isFavorite}}Remove from Favorites{{else}}Add to Favorites{{/if}}">
+                  <i class="{{#if isFavorite}}fa-solid{{else}}fa-regular{{/if}} fa-star"></i>
+                </button>
+                <button type="button" 
+                        class="rt-btn-icon"
+                        data-action="itemEdit"
+                        data-item-id="{{id}}"
+                        title="Edit">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button type="button" 
+                        class="rt-btn-icon rt-btn-icon--danger"
+                        data-action="itemDelete"
+                        data-item-id="{{id}}"
+                        title="Delete">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+              {{/if}}
+            </div>
+            {{#if system.description.value}}
+            <div class="rt-ability-desc">
+              {{{system.description.value}}}
+            </div>
+            {{/if}}
+          </div>
+          {{/each}}
+        </div>
+        {{else}}
+        <div class="rt-empty-state rt-dropzone">
+          <i class="fa-solid fa-stars"></i>
+          <p>No talents</p>
+          <span class="rt-empty-hint">Drag talent items here to add</span>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+
+    {{!-- Traits Section --}}
+    <div class="rt-panel rt-panel--traits" data-drop-zone="ability" data-accepts="trait">
+      <div class="rt-panel-header">
+        <i class="fa-solid fa-paw-claws"></i>
+        <span>{{localize "RT.Traits"}}</span>
+        <span class="rt-count-badge">{{traits.length}}</span>
+      </div>
+      
+      <div class="rt-panel-body">
+        {{#if traits.length}}
+        <div class="rt-abilities-grid">
+          {{#each traits}}
+          <div class="rt-ability-card trait {{#if isPinned}}pinned{{/if}}" data-item-id="{{id}}">
+            <div class="rt-ability-header">
+              <img src="{{img}}" class="rt-ability-img" alt="{{name}}" />
+              <span class="rt-ability-name">{{name}}</span>
+              {{#if ../editable}}
+              <div class="rt-ability-actions">
+                <button type="button" 
+                        class="rt-btn-icon"
+                        data-action="itemEdit"
+                        data-item-id="{{id}}"
+                        title="Edit">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button type="button" 
+                        class="rt-btn-icon rt-btn-icon--danger"
+                        data-action="itemDelete"
+                        data-item-id="{{id}}"
+                        title="Delete">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+              {{/if}}
+            </div>
+            {{#if system.description.value}}
+            <div class="rt-ability-desc">
+              {{{system.description.value}}}
+            </div>
+            {{/if}}
+          </div>
+          {{/each}}
+        </div>
+        {{else}}
+        <div class="rt-empty-state rt-dropzone">
+          <i class="fa-solid fa-paw-claws"></i>
+          <p>No traits</p>
+          <span class="rt-empty-hint">Drag trait items here to add</span>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+
+    {{!-- Psychic Powers Section (if any) --}}
+    {{#if psychicPowers.length}}
+    <div class="rt-panel rt-panel--powers" data-drop-zone="ability" data-accepts="psychicPower">
+      <div class="rt-panel-header">
+        <i class="fa-solid fa-head-side-brain"></i>
+        <span>{{localize "RT.Tabs.Powers"}}</span>
+        <span class="rt-count-badge">{{psychicPowers.length}}</span>
+      </div>
+      
+      <div class="rt-panel-body">
+        <div class="rt-abilities-grid">
+          {{#each psychicPowers}}
+          <div class="rt-ability-card power" data-item-id="{{id}}">
+            <div class="rt-ability-header">
+              <img src="{{img}}" class="rt-ability-img" alt="{{name}}" />
+              <span class="rt-ability-name">{{name}}</span>
+              {{#if system.psy.rating}}
+              <span class="rt-psy-badge">PR {{system.psy.rating}}</span>
+              {{/if}}
+              {{#if ../editable}}
+              <div class="rt-ability-actions">
+                <button type="button" 
+                        class="rt-btn-icon"
+                        data-action="itemEdit"
+                        data-item-id="{{id}}"
+                        title="Edit">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button type="button" 
+                        class="rt-btn-icon rt-btn-icon--danger"
+                        data-action="itemDelete"
+                        data-item-id="{{id}}"
+                        title="Delete">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+              {{/if}}
+            </div>
+            {{#if system.description.value}}
+            <div class="rt-ability-desc">
+              {{{system.description.value}}}
+            </div>
+            {{/if}}
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Special Abilities (Rich Text) --}}
+    <div class="rt-panel rt-panel--special">
+      <div class="rt-panel-header">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>{{localize "RT.SpecialAbilities"}}</span>
+      </div>
+      
+      <div class="rt-panel-body">
+        {{#if editable}}
+        <div class="rt-editor-wrapper">
+          {{editor system.specialAbilities 
+                   target="system.specialAbilities" 
+                   button=true 
+                   editable=editable
+                   collaborate=false}}
+        </div>
+        {{else}}
+        {{#if hasSpecialAbilities}}
+        <div class="rt-special-content">
+          {{{system.specialAbilities}}}
+        </div>
+        {{else}}
+        <div class="rt-empty-state rt-empty-state--inline">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>No special abilities defined</span>
+        </div>
+        {{/if}}
+        {{/if}}
+      </div>
+    </div>
+
+    {{!-- Description (moved from notes tab) --}}
+    <div class="rt-panel rt-panel--description">
+      <div class="rt-panel-header">
+        <i class="fa-solid fa-scroll"></i>
+        <span>Description</span>
+      </div>
+      <div class="rt-panel-body">
+        <div class="rt-editor-wrapper">
+          {{editor system.description target="system.description" button=true editable=editable collaborate=false}}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

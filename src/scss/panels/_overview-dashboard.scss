@@ -626,6 +626,89 @@
 }
 
 // ============================================
+// Zone 3: Favorite Talents
+// ============================================
+
+.rt-zone-talents {
+  border-left: 3px solid $rt-accent-talents;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba($rt-accent-talents, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: $rt-accent-talents;
+    }
+  }
+}
+
+.rt-talent-list-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rt-talent-row-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  background: var(--color-bg-option);
+  border-radius: 4px;
+  
+  &:hover {
+    background: var(--color-bg-tertiary);
+  }
+}
+
+.rt-talent-icon-compact {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.rt-talent-name-compact {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rt-talent-tier-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  background: rgba($rt-accent-talents, 0.15);
+  border: 1px solid rgba($rt-accent-talents, 0.4);
+  border-radius: 3px;
+  color: $rt-accent-talents;
+}
+
+.rt-talent-info-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  transition: all 0.15s ease;
+  
+  &:hover {
+    color: $rt-accent-talents;
+    transform: scale(1.15);
+  }
+}
+
+// ============================================
 // Zone 4: Movement & Load
 // ============================================
 

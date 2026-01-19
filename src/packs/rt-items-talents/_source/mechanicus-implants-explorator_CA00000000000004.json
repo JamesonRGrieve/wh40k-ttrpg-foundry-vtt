@@ -4,7 +4,7 @@
   "img": "icons/svg/upgrade.svg",
   "system": {
     "identifier": "mechanicus-implants-explorator",
-    "category": "career",
+    "category": "origin",
     "source": {
       "book": "Rogue Trader Core Rulebook",
       "page": "63"
@@ -55,7 +55,7 @@
       "specialAbilities": [
         {
           "name": "Starting Bionics",
-          "description": "Choose two Common Craftsmanship bionics. At character creation, you may spend 200 XP per bionic to upgrade its Craftsmanship by one level (Common \u2192 Good, or Good \u2192 Best). This can be done multiple times for different bionics."
+          "description": "Choose two Common Craftsmanship bionics. At character creation, you may spend 200 XP per bionic to upgrade its Craftsmanship by one level (Common → Good, or Good → Best). This can be done multiple times for different bionics."
         }
       ]
     },

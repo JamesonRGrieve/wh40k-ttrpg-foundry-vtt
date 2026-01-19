@@ -142,6 +142,44 @@
                     </div>
                 </div>
             </div>
+            
+            {{!-- Zone 3: Favorite Talents --}}
+            <div class="rt-dashboard-zone rt-zone-talents">
+                <div class="rt-zone-header">
+                    <i class="fas fa-star-half-alt"></i>
+                    <span>Favorite Talents</span>
+                </div>
+                <div class="rt-zone-content">
+                    <div class="rt-talent-list-compact">
+                        {{#if favoriteTalents}}
+                            {{#each favoriteTalents as |talent|}}
+                            <div class="rt-talent-row-compact" data-tooltip title="{{talent.name}}{{#if talent.specialization}} ({{talent.specialization}}){{/if}}">
+                                <img class="rt-talent-icon-compact" src="{{talent.img}}" alt="{{talent.name}}" />
+                                <span class="rt-talent-name-compact">
+                                    {{talent.fullName}}
+                                    {{#if talent.system.tier}}
+                                    <span class="rt-talent-tier-badge">T{{talent.system.tier}}</span>
+                                    {{/if}}
+                                </span>
+                                <button type="button" 
+                                        class="rt-talent-info-btn"
+                                        data-action="itemEdit"
+                                        data-item-id="{{talent.id}}"
+                                        title="View {{talent.name}}">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
+                            {{/each}}
+                        {{else}}
+                            <div class="rt-no-favorites">
+                                <i class="far fa-star"></i>
+                                <p>No favorite talents selected</p>
+                                <p class="rt-hint">Star talents in the Talents tab to add them here</p>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
         </div>
         
         {{!-- Row 2: Movement & Load | Quick Combat Stats --}}

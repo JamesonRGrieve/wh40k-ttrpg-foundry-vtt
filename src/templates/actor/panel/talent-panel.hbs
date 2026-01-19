@@ -1,10 +1,41 @@
-{{!-- Talents Panel - Compact Table View --}}
+{{!-- Talents Panel - Compact Table View with Filtering --}}
 <div class="rt-panel rt-panel-talents-table">
     <div class="rt-panel-header">
         <span class="rt-panel-title">
             <i class="fas fa-star"></i> Talents
         </span>
     </div>
+    
+    {{!-- Filter Controls --}}
+    <div class="rt-talents-filters">
+        <input type="text" 
+               class="rt-filter-search" 
+               name="talents-search" 
+               placeholder="Search talents..." 
+               data-action="filterTalents"
+               value="{{talentsFilter.search}}" />
+        
+        <select class="rt-filter-select" name="talents-category" data-action="filterTalents">
+            <option value="">All Categories</option>
+            {{#each talentCategories as |cat|}}
+            <option value="{{cat}}" {{#if (eq ../talentsFilter.category cat)}}selected{{/if}}>{{cat}}</option>
+            {{/each}}
+        </select>
+        
+        <select class="rt-filter-select" name="talents-tier" data-action="filterTalents">
+            <option value="">All Tiers</option>
+            <option value="1" {{#if (eq talentsFilter.tier "1")}}selected{{/if}}>Tier 1</option>
+            <option value="2" {{#if (eq talentsFilter.tier "2")}}selected{{/if}}>Tier 2</option>
+            <option value="3" {{#if (eq talentsFilter.tier "3")}}selected{{/if}}>Tier 3</option>
+        </select>
+        
+        {{#if (or talentsFilter.search talentsFilter.category talentsFilter.tier)}}
+        <button type="button" class="rt-filter-clear" data-action="clearTalentsFilter" title="Clear Filters">
+            <i class="fas fa-times"></i>
+        </button>
+        {{/if}}
+    </div>
+    
     <div class="rt-panel-body">
         <div class="rt-talents-table" data-drop-zone="talents" data-accepts="talent">
             {{#each talents as |talent|}}
@@ -44,6 +75,11 @@
                 </div>
                 
                 <div class="rt-row-actions">
+                    <button type="button" class="rt-talent-favorite {{#if talent.isFavorite}}active{{/if}}" 
+                            data-action="toggleFavoriteTalent" data-item-id="{{talent.id}}"
+                            title="{{#if talent.isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                        <i class="{{#if talent.isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                    </button>
                     <button type="button" class="rt-action-btn" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Send to Chat">
                         <i class="fas fa-comment"></i>
                     </button>

@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "technical",
+    "category": "tech",
     "source": "OW: Hammer of the Emperor",
     "description": "<p>Character gains Machine(X) Trait, where X is equal to Half the Cybernetics they possess (roundewd up), to a maximum amount equal to their Toughness Bonus. This value updates if they get or lose cybernetics.\nOnly Applies to Cybernetics such as Replacement Limbs, Organs, Syb-systems, and Mechadendrites, not Traits or Talents that give similar effects.</p>",
     "tier": 3,

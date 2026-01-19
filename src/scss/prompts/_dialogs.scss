@@ -1025,6 +1025,134 @@
 }
 
 // ============================================
+// Situational Modifiers Section
+// ============================================
+
+.roll-config-situational {
+  margin-bottom: 12px;
+  
+  label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #c9a227;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+}
+
+.roll-config-situational-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.roll-config-situational-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 4px;
+  color: #9a9a8a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-size: 0.85rem;
+  
+  i {
+    font-size: 14px;
+    color: #6a6a5a;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+  }
+  
+  .situational-source {
+    flex: 1;
+    font-weight: 500;
+    color: #b8b8a8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .situational-value {
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    
+    &.positive {
+      color: #4ade80;
+    }
+    
+    &.negative {
+      color: #f87171;
+    }
+  }
+  
+  &:hover {
+    background: rgba(201, 162, 39, 0.1);
+    border-color: rgba(201, 162, 39, 0.4);
+    
+    i {
+      color: #c9a227;
+    }
+  }
+  
+  &.active {
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.25) 0%, rgba(201, 162, 39, 0.15) 100%);
+    border-color: #c9a227;
+    box-shadow: 0 0 8px rgba(201, 162, 39, 0.2);
+    
+    i {
+      color: #c9a227;
+    }
+    
+    .situational-source {
+      color: #e8e4d9;
+    }
+    
+    .situational-value {
+      background: rgba(0, 0, 0, 0.3);
+      
+      &.positive {
+        color: #6ee7b7;
+        text-shadow: 0 0 6px rgba(74, 222, 128, 0.3);
+      }
+      
+      &.negative {
+        color: #fca5a5;
+        text-shadow: 0 0 6px rgba(248, 113, 113, 0.3);
+      }
+    }
+  }
+}
+
+.roll-config-situational-total {
+  margin-top: 8px;
+  padding: 6px 12px;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-top: 1px solid rgba(201, 162, 39, 0.15);
+  
+  &.positive {
+    color: #4ade80;
+  }
+  
+  &.negative {
+    color: #f87171;
+  }
+}
+
+// ============================================
 // Add XP Dialog Styles
 // ============================================
 

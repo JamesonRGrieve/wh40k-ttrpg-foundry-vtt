@@ -1,0 +1,1037 @@
+{{!-- 
+  Rogue Trader Talent Item Sheet V2 - Complete Redesign
+  Modern tabbed interface with translucent gothic styling
+  Font Awesome 6 Pro icons throughout
+--}}
+<div class="rt-talent-sheet-v2">
+  <form autocomplete="off">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Portrait, name, key badges, and quick actions
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="rt-talent-header">
+      {{!-- Portrait --}}
+      <div class="rt-talent-portrait" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        {{#if inEditMode}}
+        <div class="rt-talent-portrait-overlay">
+          <i class="fa-solid fa-camera"></i>
+        </div>
+        {{/if}}
+      </div>
+      
+      {{!-- Title & Meta --}}
+      <div class="rt-talent-title">
+        {{#if inEditMode}}
+        <input type="text" class="rt-talent-name" name="name" value="{{item.name}}" placeholder="Talent Name" />
+        {{else}}
+        <h1 class="rt-talent-name">{{item.name}}</h1>
+        {{/if}}
+        
+        {{!-- Quick Badges --}}
+        <div class="rt-talent-badges">
+          {{!-- Type Badge --}}
+          <span class="rt-badge rt-badge--type">
+            <i class="fa-solid {{#if talentData.isPassive}}fa-circle-check{{else}}fa-bolt{{/if}}"></i>
+            {{#if talentData.isPassive}}Passive{{else}}Active{{/if}}
+          </span>
+          
+          {{!-- Tier Badge --}}
+          {{#if (gt talentData.tier 0)}}
+          <span class="rt-badge rt-badge--tier rt-badge--tier-{{talentData.tier}}">
+            <i class="fa-solid fa-layer-group"></i>
+            Tier {{talentData.tier}}
+          </span>
+          {{/if}}
+          
+          {{!-- Category Badge --}}
+          <span class="rt-badge rt-badge--category">
+            <i class="fa-solid fa-tag"></i>
+            {{talentData.categoryLabel}}
+          </span>
+          
+          {{!-- XP Cost Badge --}}
+          {{#if (gt talentData.cost 0)}}
+          <span class="rt-badge rt-badge--cost">
+            <i class="fa-solid fa-coins"></i>
+            {{talentData.cost}} XP
+          </span>
+          {{/if}}
+          
+          {{!-- Stackable Badge --}}
+          {{#if talentData.stackable}}
+          <span class="rt-badge rt-badge--stackable">
+            <i class="fa-solid fa-layer-group"></i>
+            Rank {{talentData.rank}}
+          </span>
+          {{/if}}
+          
+          {{!-- Rollable Badge --}}
+          {{#if talentData.isRollable}}
+          <span class="rt-badge rt-badge--rollable">
+            <i class="fa-solid fa-dice-d20"></i>
+            Rollable
+          </span>
+          {{/if}}
+        </div>
+      </div>
+      
+      {{!-- Action Buttons --}}
+      <div class="rt-talent-actions">
+        {{!-- Edit Mode Toggle (only for actor-owned items) --}}
+        {{#if isOwnedByActor}}
+        {{#if canEdit}}
+        <button type="button" class="rt-action-btn rt-action-btn--edit {{#if inEditMode}}active{{/if}}" 
+                data-action="toggleEditMode" title="{{#if inEditMode}}Exit Edit Mode{{else}}Enter Edit Mode{{/if}}">
+          <i class="fa-solid {{#if inEditMode}}fa-lock-open{{else}}fa-pen-to-square{{/if}}"></i>
+        </button>
+        {{/if}}
+        {{/if}}
+        
+        {{!-- Roll Button --}}
+        {{#if talentData.isRollable}}
+        <button type="button" class="rt-action-btn rt-action-btn--roll" data-action="rollTalent" title="Roll Talent">
+          <i class="fa-solid fa-dice-d20"></i>
+        </button>
+        {{/if}}
+        
+        {{!-- Chat Button --}}
+        <button type="button" class="rt-action-btn rt-action-btn--chat" data-action="postToChat" title="Post to Chat">
+          <i class="fa-solid fa-comment"></i>
+        </button>
+      </div>
+    </header>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         QUICK STATS BAR: Key info at a glance
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-talent-quickstats">
+      {{!-- Prerequisites Summary --}}
+      {{#if prerequisitesData.hasAny}}
+      <div class="rt-quickstat rt-quickstat--prereqs">
+        <i class="fa-solid fa-lock"></i>
+        <span class="rt-quickstat-label">Prerequisites</span>
+        <span class="rt-quickstat-value">{{prerequisitesData.label}}</span>
+      </div>
+      {{/if}}
+      
+      {{!-- Aptitudes --}}
+      {{#if talentData.hasAptitudes}}
+      <div class="rt-quickstat rt-quickstat--aptitudes">
+        <i class="fa-solid fa-brain"></i>
+        <span class="rt-quickstat-label">Aptitudes</span>
+        <div class="rt-quickstat-tags">
+          {{#each talentData.aptitudes}}
+          <span class="rt-aptitude-tag">{{this}}</span>
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
+      
+      {{!-- Specialization --}}
+      {{#if talentData.specialization}}
+      <div class="rt-quickstat rt-quickstat--spec">
+        <i class="fa-solid fa-bullseye"></i>
+        <span class="rt-quickstat-label">Specialization</span>
+        <span class="rt-quickstat-value">{{talentData.specialization}}</span>
+      </div>
+      {{/if}}
+    </div>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="rt-talent-tabs" data-group="primary">
+      <button type="button" class="rt-talent-tab {{#if (eq activeTab "overview")}}active{{/if}}" 
+              data-tab="overview" data-group="primary">
+        <i class="fa-solid fa-eye"></i>
+        <span>Overview</span>
+      </button>
+      <button type="button" class="rt-talent-tab {{#if (eq activeTab "effects")}}active{{/if}}" 
+              data-tab="effects" data-group="primary">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>Effects</span>
+      </button>
+      <button type="button" class="rt-talent-tab {{#if (eq activeTab "properties")}}active{{/if}}" 
+              data-tab="properties" data-group="primary">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Properties</span>
+      </button>
+      <button type="button" class="rt-talent-tab {{#if (eq activeTab "description")}}active{{/if}}" 
+              data-tab="description" data-group="primary">
+        <i class="fa-solid fa-book"></i>
+        <span>Description</span>
+      </button>
+    </nav>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <section class="rt-talent-content">
+      
+      {{!-- ─────────────────────────────────────────────────────────────────
+           OVERVIEW TAB: Benefit and effects summary
+      ───────────────────────────────────────────────────────────────── --}}
+      <div class="rt-talent-panel {{#if (eq activeTab "overview")}}active{{/if}}" data-tab="overview" data-group="primary">
+        
+        {{!-- Benefit Section (Editable) --}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-star"></i>
+            Benefit
+          </h3>
+          <div class="rt-section-body">
+            {{#if inEditMode}}
+            <div class="rt-editor-container">
+              {{editor system.benefit target="system.benefit" button=true editable=true engine="prosemirror" collaborate=false}}
+            </div>
+            {{else}}
+              {{#if talentData.hasBenefit}}
+              <div class="rt-benefit-text">
+                {{{talentData.benefit}}}
+              </div>
+              {{else}}
+              <div class="rt-empty-state rt-empty-state--compact">
+                <i class="fa-solid fa-file-lines"></i>
+                <p>No benefit description defined</p>
+              </div>
+              {{/if}}
+            {{/if}}
+          </div>
+        </div>
+        
+        {{!-- Special Abilities Section --}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-bolt-lightning"></i>
+            Special Abilities
+            {{#if inEditMode}}
+            <button type="button" class="rt-header-btn" data-action="openTalentEditor" data-section="grants" title="Edit Grants & Abilities">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            {{/if}}
+          </h3>
+          <div class="rt-section-body">
+            {{#if grantsData.hasSpecialAbilities}}
+            <div class="rt-abilities-list">
+              {{#each grantsData.specialAbilities}}
+              <div class="rt-ability-card">
+                <h4 class="rt-ability-name">
+                  <i class="fa-solid fa-circle-dot"></i>
+                  {{this.name}}
+                </h4>
+                <div class="rt-ability-description">
+                  {{{this.description}}}
+                </div>
+              </div>
+              {{/each}}
+            </div>
+            {{else}}
+            <div class="rt-empty-state rt-empty-state--compact">
+              <i class="fa-solid fa-bolt-lightning"></i>
+              <p>No special abilities</p>
+              {{#if inEditMode}}
+              <button type="button" class="rt-btn-add-data" data-action="openTalentEditor" data-section="grants">
+                <i class="fa-solid fa-plus"></i> Add Abilities & Grants
+              </button>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        
+        {{!-- Effects Summary Section --}}
+        {{#if (or modifiersData.hasAny situationalData.hasAny grantsData.hasAny)}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            Mechanical Effects Summary
+          </h3>
+          <div class="rt-section-body">
+            <div class="rt-effects-summary">
+              {{!-- Permanent Modifiers Count --}}
+              {{#if modifiersData.hasAny}}
+              <div class="rt-summary-card rt-summary-card--modifiers">
+                <div class="rt-summary-icon">
+                  <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="rt-summary-content">
+                  <h4 class="rt-summary-title">Permanent Modifiers</h4>
+                  <p class="rt-summary-text">
+                    {{#if modifiersData.hasCharacteristics}}{{modifiersData.characteristics.length}} Characteristic{{#if (gt modifiersData.characteristics.length 1)}}s{{/if}}{{/if}}
+                    {{#if (and modifiersData.hasCharacteristics modifiersData.hasSkills)}}, {{/if}}
+                    {{#if modifiersData.hasSkills}}{{modifiersData.skills.length}} Skill{{#if (gt modifiersData.skills.length 1)}}s{{/if}}{{/if}}
+                    {{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills) modifiersData.hasCombat)}}, {{/if}}
+                    {{#if modifiersData.hasCombat}}{{modifiersData.combat.length}} Combat{{/if}}
+                    {{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills modifiersData.hasCombat) modifiersData.hasResources)}}, {{/if}}
+                    {{#if modifiersData.hasResources}}{{modifiersData.resources.length}} Resource{{#if (gt modifiersData.resources.length 1)}}s{{/if}}{{/if}}
+                  </p>
+                </div>
+              </div>
+              {{/if}}
+              
+              {{!-- Situational Modifiers Count --}}
+              {{#if situationalData.hasAny}}
+              <div class="rt-summary-card rt-summary-card--situational">
+                <div class="rt-summary-icon">
+                  <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div class="rt-summary-content">
+                  <h4 class="rt-summary-title">Situational Modifiers</h4>
+                  <p class="rt-summary-text">
+                    {{#if situationalData.hasCharacteristics}}{{situationalData.characteristics.length}} Characteristic{{#if (gt situationalData.characteristics.length 1)}}s{{/if}}{{/if}}
+                    {{#if (and situationalData.hasCharacteristics situationalData.hasSkills)}}, {{/if}}
+                    {{#if situationalData.hasSkills}}{{situationalData.skills.length}} Skill{{#if (gt situationalData.skills.length 1)}}s{{/if}}{{/if}}
+                    {{#if (and (or situationalData.hasCharacteristics situationalData.hasSkills) situationalData.hasCombat)}}, {{/if}}
+                    {{#if situationalData.hasCombat}}{{situationalData.combat.length}} Combat{{/if}}
+                  </p>
+                </div>
+              </div>
+              {{/if}}
+              
+              {{!-- Grants Count --}}
+              {{#if grantsData.hasAny}}
+              <div class="rt-summary-card rt-summary-card--grants">
+                <div class="rt-summary-icon">
+                  <i class="fa-solid fa-gift"></i>
+                </div>
+                <div class="rt-summary-content">
+                  <h4 class="rt-summary-title">Grants</h4>
+                  <p class="rt-summary-text">
+                    {{#if grantsData.hasSkills}}{{grantsData.skills.length}} Skill{{#if (gt grantsData.skills.length 1)}}s{{/if}}{{/if}}
+                    {{#if (and grantsData.hasSkills grantsData.hasTalents)}}, {{/if}}
+                    {{#if grantsData.hasTalents}}{{grantsData.talents.length}} Talent{{#if (gt grantsData.talents.length 1)}}s{{/if}}{{/if}}
+                    {{#if (and (or grantsData.hasSkills grantsData.hasTalents) grantsData.hasTraits)}}, {{/if}}
+                    {{#if grantsData.hasTraits}}{{grantsData.traits.length}} Trait{{#if (gt grantsData.traits.length 1)}}s{{/if}}{{/if}}
+                  </p>
+                </div>
+              </div>
+              {{/if}}
+            </div>
+            <p class="rt-hint-text" style="margin-top: 12px;">
+              <i class="fa-solid fa-info-circle"></i>
+              View the <strong>Effects</strong> tab for complete details on all modifiers and grants.
+            </p>
+          </div>
+        </div>
+        {{/if}}
+        
+      </div>
+      
+      {{!-- ─────────────────────────────────────────────────────────────────
+           PROPERTIES TAB: Configuration and details
+      ───────────────────────────────────────────────────────────────── --}}
+      <div class="rt-talent-panel {{#if (eq activeTab "properties")}}active{{/if}}" data-tab="properties" data-group="primary">
+        
+        {{!-- Basic Properties --}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-cog"></i>
+            Basic Properties
+          </h3>
+          <div class="rt-section-body">
+            <div class="rt-properties-grid">
+              {{!-- Category --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fa-solid fa-tag"></i>
+                  Category
+                </label>
+                {{#if inEditMode}}
+                <select name="system.category" class="rt-property-select">
+                  {{#each categoryOptions}}
+                  <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+                  {{/each}}
+                </select>
+                {{else}}
+                <div class="rt-property-value">{{talentData.categoryLabel}}</div>
+                {{/if}}
+              </div>
+              
+              {{!-- Tier --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fa-solid fa-layer-group"></i>
+                  Tier
+                </label>
+                {{#if inEditMode}}
+                <select name="system.tier" class="rt-property-select">
+                  {{#each tierOptions}}
+                  <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+                  {{/each}}
+                </select>
+                {{else}}
+                <div class="rt-property-value">{{talentData.tierLabel}}</div>
+                {{/if}}
+              </div>
+              
+              {{!-- XP Cost --}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fa-solid fa-coins"></i>
+                  XP Cost
+                </label>
+                {{#if inEditMode}}
+                <input type="number" name="system.cost" value="{{talentData.cost}}" min="0" class="rt-property-input" />
+                {{else}}
+                <div class="rt-property-value">{{talentData.cost}}</div>
+                {{/if}}
+              </div>
+              
+              {{!-- Type (Passive/Active) - Radio Buttons --}}
+              <div class="rt-property rt-property--radio">
+                <label class="rt-property-label">
+                  <i class="fa-solid fa-circle-check"></i>
+                  Type
+                </label>
+                {{#if inEditMode}}
+                <div class="rt-radio-group">
+                  <label class="rt-radio-label">
+                    <input type="radio" name="system.isPassive" value="true" {{#if talentData.isPassive}}checked{{/if}} />
+                    <span class="rt-radio-indicator"></span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Passive</span>
+                  </label>
+                  <label class="rt-radio-label">
+                    <input type="radio" name="system.isPassive" value="false" {{#unless talentData.isPassive}}checked{{/unless}} />
+                    <span class="rt-radio-indicator"></span>
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Active</span>
+                  </label>
+                </div>
+                {{else}}
+                <div class="rt-property-value">
+                  <i class="fa-solid {{#if talentData.isPassive}}fa-circle-check{{else}}fa-bolt{{/if}}"></i>
+                  {{#if talentData.isPassive}}Passive{{else}}Active{{/if}}
+                </div>
+                {{/if}}
+              </div>
+              
+              {{!-- Stackable --}}
+              <div class="rt-property rt-property--checkbox">
+                <label class="rt-property-label">
+                  <i class="fa-solid fa-layer-group"></i>
+                  Stackable
+                </label>
+                {{#if inEditMode}}
+                <label class="rt-checkbox-label">
+                  <input type="checkbox" name="system.stackable" {{checked talentData.stackable}} />
+                  <span>Can Take Multiple Times</span>
+                </label>
+                {{else}}
+                <div class="rt-property-value">{{#if talentData.stackable}}Yes{{else}}No{{/if}}</div>
+                {{/if}}
+              </div>
+              
+              {{!-- Rank (if stackable) --}}
+              {{#if talentData.stackable}}
+              <div class="rt-property">
+                <label class="rt-property-label">
+                  <i class="fa-solid fa-hashtag"></i>
+                  Current Rank
+                </label>
+                {{#if inEditMode}}
+                <div class="rt-rank-controls">
+                  <button type="button" class="rt-rank-btn" data-action="adjustRank" data-delta="-1">
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <input type="number" name="system.rank" value="{{talentData.rank}}" min="1" class="rt-property-input rt-property-input--rank" />
+                  <button type="button" class="rt-rank-btn" data-action="adjustRank" data-delta="1">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+                {{else}}
+                <div class="rt-property-value">{{talentData.rank}}</div>
+                {{/if}}
+              </div>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+        
+        {{!-- Specialization (with Has Specialization checkbox) --}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-bullseye"></i>
+            Specialization (X)
+          </h3>
+          <div class="rt-section-body">
+            {{#if inEditMode}}
+            <div class="rt-specialization-edit">
+              <label class="rt-checkbox-inline">
+                <input type="checkbox" name="system.hasSpecialization" {{checked talentData.hasSpecialization}} />
+                <span>This talent has a specialization (e.g., Peer (X), Weapon Training (X))</span>
+              </label>
+              {{#if talentData.hasSpecialization}}
+              <div class="rt-specialization-field">
+                <input type="text" name="system.specialization" value="{{talentData.specialization}}" 
+                       class="rt-property-input rt-property-input--inline" placeholder="e.g., Las, Mechanicum, Nobility" />
+              </div>
+              {{/if}}
+            </div>
+            {{else if talentData.hasSpecialization}}
+            <div class="rt-property-display">
+              <span class="rt-specialization-badge">
+                <i class="fa-solid fa-bullseye"></i>
+                {{talentData.specialization}}
+              </span>
+            </div>
+            {{else}}
+            <div class="rt-empty-state rt-empty-state--compact">
+              <i class="fa-solid fa-bullseye"></i>
+              <p>Not a specialization talent</p>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        
+        {{!-- Prerequisites --}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-lock"></i>
+            Prerequisites
+            {{#if inEditMode}}
+            <button type="button" class="rt-header-btn" data-action="openTalentEditor" data-section="prerequisites" title="Edit Prerequisites">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            {{/if}}
+          </h3>
+          <div class="rt-section-body">
+            {{#if prerequisitesData.hasAny}}
+            <div class="rt-prerequisites-display">
+              {{#if prerequisitesData.hasText}}
+              <div class="rt-prereq-text">{{prerequisitesData.text}}</div>
+              {{/if}}
+              
+              {{#if prerequisitesData.hasCharacteristics}}
+              <div class="rt-prereq-group">
+                <span class="rt-prereq-group-label">Characteristics:</span>
+                {{#each prerequisitesData.characteristics}}
+                <span class="rt-prereq-tag">{{this.short}} {{this.value}}+</span>
+                {{/each}}
+              </div>
+              {{/if}}
+              
+              {{#if prerequisitesData.hasSkills}}
+              <div class="rt-prereq-group">
+                <span class="rt-prereq-group-label">Skills:</span>
+                {{#each prerequisitesData.skills}}
+                <span class="rt-prereq-tag">{{this}}</span>
+                {{/each}}
+              </div>
+              {{/if}}
+              
+              {{#if prerequisitesData.hasTalents}}
+              <div class="rt-prereq-group">
+                <span class="rt-prereq-group-label">Talents:</span>
+                {{#each prerequisitesData.talents}}
+                <span class="rt-prereq-tag">{{this}}</span>
+                {{/each}}
+              </div>
+              {{/if}}
+            </div>
+            {{else}}
+            <div class="rt-empty-state rt-empty-state--compact">
+              <i class="fa-solid fa-unlock"></i>
+              <p>No prerequisites — available to all characters</p>
+              {{#if inEditMode}}
+              <button type="button" class="rt-btn-add-data" data-action="openTalentEditor" data-section="prerequisites">
+                <i class="fa-solid fa-plus"></i> Add Prerequisites
+              </button>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        
+        {{!-- Roll Configuration (if active talent) --}}
+        {{#unless talentData.isPassive}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-dice-d20"></i>
+            Roll Configuration
+          </h3>
+          <div class="rt-section-body">
+            {{#if inEditMode}}
+            <div class="rt-properties-grid">
+              <div class="rt-property">
+                <label class="rt-property-label">Characteristic</label>
+                <input type="text" name="system.rollConfig.characteristic" 
+                       value="{{rollConfigData.characteristic}}" 
+                       class="rt-property-input" placeholder="e.g., willpower" />
+              </div>
+              <div class="rt-property">
+                <label class="rt-property-label">Skill</label>
+                <input type="text" name="system.rollConfig.skill" 
+                       value="{{rollConfigData.skill}}" 
+                       class="rt-property-input" placeholder="e.g., psyniscience" />
+              </div>
+              <div class="rt-property">
+                <label class="rt-property-label">Modifier</label>
+                <input type="number" name="system.rollConfig.modifier" 
+                       value="{{rollConfigData.modifier}}" 
+                       class="rt-property-input" />
+              </div>
+            </div>
+            <div class="rt-property" style="margin-top: 12px;">
+              <label class="rt-property-label">Roll Description</label>
+              <input type="text" name="system.rollConfig.description" 
+                     value="{{rollConfigData.description}}" 
+                     class="rt-property-input" placeholder="Description for roll dialog" />
+            </div>
+            {{else if rollConfigData.isConfigured}}
+            <div class="rt-roll-config-display">
+              {{#if rollConfigData.characteristic}}
+              <div class="rt-config-item">
+                <i class="fa-solid fa-dumbbell"></i>
+                <span>{{rollConfigData.characteristicLabel}} Test</span>
+                {{#if (ne rollConfigData.modifier 0)}}
+                <span class="rt-config-mod {{#if (gt rollConfigData.modifier 0)}}positive{{else}}negative{{/if}}">
+                  {{#if (gt rollConfigData.modifier 0)}}+{{/if}}{{rollConfigData.modifier}}
+                </span>
+                {{/if}}
+              </div>
+              {{/if}}
+              {{#if rollConfigData.skill}}
+              <div class="rt-config-item">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>{{rollConfigData.skillLabel}} Test</span>
+                {{#if (ne rollConfigData.modifier 0)}}
+                <span class="rt-config-mod {{#if (gt rollConfigData.modifier 0)}}positive{{else}}negative{{/if}}">
+                  {{#if (gt rollConfigData.modifier 0)}}+{{/if}}{{rollConfigData.modifier}}
+                </span>
+                {{/if}}
+              </div>
+              {{/if}}
+              {{#if rollConfigData.description}}
+              <p class="rt-config-desc">{{rollConfigData.description}}</p>
+              {{/if}}
+            </div>
+            {{else}}
+            <div class="rt-empty-state rt-empty-state--compact">
+              <i class="fa-solid fa-dice-d20"></i>
+              <p>No roll configuration defined</p>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        {{/unless}}
+        
+      </div>
+      
+      {{!-- ─────────────────────────────────────────────────────────────────
+           EFFECTS TAB: Modifiers and mechanical effects
+      ───────────────────────────────────────────────────────────────── --}}
+      <div class="rt-talent-panel rt-talent-panel--effects {{#if (eq activeTab "effects")}}active{{/if}}" data-tab="effects" data-group="primary">
+        
+        {{!-- Permanent Modifiers --}}
+        <div class="rt-section rt-section--effects" data-section-id="modifiers" data-has-data="{{modifiersData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "modifiers")}}{{@index}}{{/if}}{{/each}}">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-chart-line"></i>
+            Permanent Modifiers
+            {{#if inEditMode}}
+            <button type="button" class="rt-header-btn" data-action="openTalentEditor" data-section="modifiers" title="Edit Modifiers">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            {{/if}}
+          </h3>
+          <div class="rt-section-body">
+            {{#if modifiersData.hasAny}}
+            <p class="rt-hint-text">
+              <i class="fa-solid fa-info-circle"></i>
+              These modifiers are automatically applied while this talent is possessed.
+            </p>
+            <div class="rt-modifiers-grid">
+              {{!-- Characteristic Modifiers --}}
+              {{#if modifiersData.hasCharacteristics}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-header">
+                  <i class="fa-solid fa-dumbbell"></i>
+                  Characteristics
+                </h4>
+                <div class="rt-modifier-list">
+                  {{#each modifiersData.characteristics}}
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">{{this.label}}</span>
+                    <span class="rt-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                      {{#if this.positive}}+{{/if}}{{this.value}}
+                    </span>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+              
+              {{!-- Skill Modifiers --}}
+              {{#if modifiersData.hasSkills}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-header">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  Skills
+                </h4>
+                <div class="rt-modifier-list">
+                  {{#each modifiersData.skills}}
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">{{this.label}}</span>
+                    <span class="rt-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                      {{#if this.positive}}+{{/if}}{{this.value}}
+                    </span>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+              
+              {{!-- Combat Modifiers --}}
+              {{#if modifiersData.hasCombat}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-header">
+                  <i class="fa-solid fa-swords"></i>
+                  Combat
+                </h4>
+                <div class="rt-modifier-list">
+                  {{#each modifiersData.combat}}
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">{{this.label}}</span>
+                    <span class="rt-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                      {{#if this.positive}}+{{/if}}{{this.value}}
+                    </span>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+              
+              {{!-- Resource Modifiers --}}
+              {{#if modifiersData.hasResources}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-header">
+                  <i class="fa-solid fa-heart"></i>
+                  Resources
+                </h4>
+                <div class="rt-modifier-list">
+                  {{#each modifiersData.resources}}
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">{{this.label}}</span>
+                    <span class="rt-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                      {{#if this.positive}}+{{/if}}{{this.value}}
+                    </span>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+              
+              {{!-- Other Modifiers --}}
+              {{#if modifiersData.hasOther}}
+              <div class="rt-modifier-group">
+                <h4 class="rt-modifier-group-header">
+                  <i class="fa-solid fa-ellipsis"></i>
+                  Other
+                </h4>
+                <div class="rt-modifier-list">
+                  {{#each modifiersData.other}}
+                  <div class="rt-modifier-item">
+                    <span class="rt-modifier-name">{{this.label}}</span>
+                    <span class="rt-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                      {{#if this.positive}}+{{/if}}{{this.value}}
+                    </span>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+            </div>
+            {{else}}
+            <div class="rt-empty-state rt-empty-state--compact">
+              <i class="fa-solid fa-chart-line"></i>
+              <p>No permanent modifiers</p>
+              {{#if inEditMode}}
+              <button type="button" class="rt-btn-add-data" data-action="openTalentEditor" data-section="modifiers">
+                <i class="fa-solid fa-plus"></i> Add Modifiers
+              </button>
+              {{else}}
+              <p class="rt-hint">This talent provides benefits through its special abilities or rules text.</p>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        
+        {{!-- Situational Modifiers --}}
+        <div class="rt-section rt-section--effects" data-section-id="situational" data-has-data="{{situationalData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "situational")}}{{@index}}{{/if}}{{/each}}">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Situational Modifiers
+            {{#if inEditMode}}
+            <button type="button" class="rt-header-btn" data-action="openTalentEditor" data-section="situational" title="Edit Situational Modifiers">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            {{/if}}
+          </h3>
+          <div class="rt-section-body">
+            {{#if situationalData.hasAny}}
+            <p class="rt-hint-text">
+              <i class="fa-solid fa-info-circle"></i>
+              These modifiers appear as optional checkboxes in roll dialogs when conditions apply.
+            </p>
+            <div class="rt-situational-list">
+              {{#each situationalData.characteristics}}
+              <div class="rt-situational-item">
+                <div class="rt-situational-header">
+                  <i class="{{this.icon}}"></i>
+                  <span class="rt-situational-stat">{{this.label}}</span>
+                  <span class="rt-situational-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                    {{#if this.positive}}+{{/if}}{{this.value}}
+                  </span>
+                </div>
+                <p class="rt-situational-condition">{{this.condition}}</p>
+              </div>
+              {{/each}}
+              {{#each situationalData.skills}}
+              <div class="rt-situational-item">
+                <div class="rt-situational-header">
+                  <i class="{{this.icon}}"></i>
+                  <span class="rt-situational-stat">{{this.label}}</span>
+                  <span class="rt-situational-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                    {{#if this.positive}}+{{/if}}{{this.value}}
+                  </span>
+                </div>
+                <p class="rt-situational-condition">{{this.condition}}</p>
+              </div>
+              {{/each}}
+              {{#each situationalData.combat}}
+              <div class="rt-situational-item">
+                <div class="rt-situational-header">
+                  <i class="{{this.icon}}"></i>
+                  <span class="rt-situational-stat">{{this.label}}</span>
+                  <span class="rt-situational-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                    {{#if this.positive}}+{{/if}}{{this.value}}
+                  </span>
+                </div>
+                <p class="rt-situational-condition">{{this.condition}}</p>
+              </div>
+              {{/each}}
+            </div>
+            {{else}}
+            <div class="rt-empty-state rt-empty-state--compact">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <p>No situational modifiers</p>
+              {{#if inEditMode}}
+              <button type="button" class="rt-btn-add-data" data-action="openTalentEditor" data-section="situational">
+                <i class="fa-solid fa-plus"></i> Add Situational Modifiers
+              </button>
+              {{else}}
+              <p class="rt-hint">This talent applies consistent bonuses without situational conditions.</p>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        
+        {{!-- Grants Section --}}
+        <div class="rt-section rt-section--effects" data-section-id="grants" data-has-data="{{grantsData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "grants")}}{{@index}}{{/if}}{{/each}}">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-gift"></i>
+            Grants
+            {{#if inEditMode}}
+            <button type="button" class="rt-header-btn" data-action="openTalentEditor" data-section="grants" title="Edit Grants">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            {{/if}}
+          </h3>
+          <div class="rt-section-body">
+            {{#if grantsData.hasAny}}
+            <p class="rt-hint-text">
+              <i class="fa-solid fa-info-circle"></i>
+              These skills, talents, and traits are automatically granted when this talent is acquired.
+            </p>
+            <div class="rt-grants-grid">
+              {{!-- Skills Granted --}}
+              {{#if grantsData.hasSkills}}
+              <div class="rt-grants-category">
+                <h4 class="rt-grants-category-header">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  Skills
+                </h4>
+                <div class="rt-grants-items">
+                  {{#each grantsData.skills}}
+                  <div class="rt-grant-tag rt-grant-tag--skill">
+                    <span class="rt-grant-name">{{this.displayName}}</span>
+                    <span class="rt-grant-level rt-grant-level--{{this.level}}">{{this.levelLabel}}</span>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+              
+              {{!-- Talents Granted --}}
+              {{#if grantsData.hasTalents}}
+              <div class="rt-grants-category">
+                <h4 class="rt-grants-category-header">
+                  <i class="fa-solid fa-star"></i>
+                  Talents
+                </h4>
+                <div class="rt-grants-items">
+                  {{#each grantsData.talents}}
+                  <div class="rt-grant-tag rt-grant-tag--talent {{#if this.hasLink}}rt-grant-tag--clickable{{/if}}"
+                       {{#if this.hasLink}}data-action="viewGrantedItem" data-uuid="{{this.uuid}}"{{/if}}>
+                    <span class="rt-grant-name">{{this.name}}</span>
+                    {{#if this.specialization}}
+                    <span class="rt-grant-spec">({{this.specialization}})</span>
+                    {{/if}}
+                    {{#if this.hasLink}}
+                    <i class="fa-solid fa-external-link rt-grant-link"></i>
+                    {{/if}}
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+              
+              {{!-- Traits Granted --}}
+              {{#if grantsData.hasTraits}}
+              <div class="rt-grants-category">
+                <h4 class="rt-grants-category-header">
+                  <i class="fa-solid fa-dna"></i>
+                  Traits
+                </h4>
+                <div class="rt-grants-items">
+                  {{#each grantsData.traits}}
+                  <div class="rt-grant-tag rt-grant-tag--trait {{#if this.hasLink}}rt-grant-tag--clickable{{/if}}"
+                       {{#if this.hasLink}}data-action="viewGrantedItem" data-uuid="{{this.uuid}}"{{/if}}>
+                    <span class="rt-grant-name">{{this.name}}</span>
+                    {{#if this.level}}
+                    <span class="rt-grant-level">({{this.level}})</span>
+                    {{/if}}
+                    {{#if this.hasLink}}
+                    <i class="fa-solid fa-external-link rt-grant-link"></i>
+                    {{/if}}
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
+              {{/if}}
+            </div>
+            {{else}}
+            <div class="rt-empty-state rt-empty-state--compact">
+              <i class="fa-solid fa-gift"></i>
+              <p>No grants defined</p>
+              {{#if inEditMode}}
+              <button type="button" class="rt-btn-add-data" data-action="openTalentEditor" data-section="grants">
+                <i class="fa-solid fa-plus"></i> Add Grants
+              </button>
+              {{else}}
+              <p class="rt-hint">This talent does not automatically grant additional skills, talents, or traits.</p>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        
+      </div>
+      
+      {{!-- ─────────────────────────────────────────────────────────────────
+           DESCRIPTION TAB: Benefit, notes, technical
+      ───────────────────────────────────────────────────────────────── --}}
+      <div class="rt-talent-panel {{#if (eq activeTab "description")}}active{{/if}}" data-tab="description" data-group="primary">
+        
+        {{!-- Benefit (Editable) --}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-star"></i>
+            Benefit
+          </h3>
+          <div class="rt-section-body">
+            {{#if inEditMode}}
+            <div class="rt-editor-container">
+              {{editor system.benefit target="system.benefit" button=true editable=true engine="prosemirror" collaborate=false}}
+            </div>
+            {{else}}
+            <div class="rt-description-content">
+              {{{talentData.benefit}}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        
+        {{!-- Notes --}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-sticky-note"></i>
+            Notes
+          </h3>
+          <div class="rt-section-body">
+            {{#if inEditMode}}
+            <textarea name="system.notes" rows="4" class="rt-property-textarea" 
+                      placeholder="GM notes, house rules, clarifications...">{{talentData.notes}}</textarea>
+            {{else if talentData.notes}}
+            <div class="rt-notes-content">
+              {{talentData.notes}}
+            </div>
+            {{else}}
+            <div class="rt-empty-state rt-empty-state--compact">
+              <i class="fa-solid fa-sticky-note"></i>
+              <p>No notes</p>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        
+        {{!-- Identifier (for developers) --}}
+        {{#if inEditMode}}
+        <div class="rt-section">
+          <h3 class="rt-section-header">
+            <i class="fa-solid fa-code"></i>
+            Technical
+          </h3>
+          <div class="rt-section-body">
+            <div class="rt-property">
+              <label class="rt-property-label">Identifier <span class="rt-hint">(for macros/scripts)</span></label>
+              <input type="text" name="system.identifier" value="{{talentData.identifier}}" 
+                     class="rt-property-input rt-property-input--mono" placeholder="camelCaseIdentifier" />
+            </div>
+          </div>
+        </div>
+        {{/if}}
+        
+      </div>
+      
+    </section>{{!-- .rt-talent-content --}}
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         FOOTER: Source Reference
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <footer class="rt-talent-footer">
+      {{#if inEditMode}}
+      <div class="rt-footer-edit">
+        <div class="rt-footer-field">
+          <label class="rt-footer-label">
+            <i class="fa-solid fa-book"></i>
+            Book
+          </label>
+          <input type="text" name="system.source.book" value="{{talentData.sourceBook}}" 
+                 class="rt-footer-input" placeholder="Core Rulebook" />
+        </div>
+        <div class="rt-footer-field rt-footer-field--page">
+          <label class="rt-footer-label">
+            <i class="fa-solid fa-bookmark"></i>
+            Page
+          </label>
+          <input type="text" name="system.source.page" value="{{talentData.sourcePage}}" 
+                 class="rt-footer-input" placeholder="123" />
+        </div>
+      </div>
+      {{else}}
+      <div class="rt-footer-display">
+        <i class="fa-solid fa-book-open"></i>
+        {{#if talentData.source}}
+        <span class="rt-footer-source">{{talentData.source}}</span>
+        {{else}}
+        <span class="rt-footer-source rt-footer-source--empty">No source specified</span>
+        {{/if}}
+      </div>
+      {{/if}}
+    </footer>
+  </form>
+</div>{{!-- .rt-talent-sheet-v2 --}}

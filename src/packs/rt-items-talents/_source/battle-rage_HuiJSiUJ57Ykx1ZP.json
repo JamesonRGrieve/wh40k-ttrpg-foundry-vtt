@@ -4,17 +4,22 @@
   "img": "icons/svg/target.svg",
   "system": {
     "identifier": "battleRage",
-    "category": "defense",
+    "category": "combat",
     "source": "Only War Core",
     "description": "<p>You have learned to channel your frenzy more effectively, maintaining defensive capability even in your berserker rage.</p>",
     "tier": 2,
     "benefit": "<p>Character can Parry whilst Frenzied. They can also re-roll a failed test to snap out of Frenzy or resist entering Frenzy if they choose to.</p>",
-    "aptitudes": ["Weapon Skill", "Offence"],
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence"
+    ],
     "prerequisites": {
       "text": "Frenzy",
       "characteristics": {},
       "skills": {},
-      "talents": ["Frenzy"]
+      "talents": [
+        "Frenzy"
+      ]
     },
     "cost": 600,
     "isPassive": true,

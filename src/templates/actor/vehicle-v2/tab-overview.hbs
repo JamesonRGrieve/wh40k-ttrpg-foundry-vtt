@@ -1,0 +1,51 @@
+{{!-- Vehicle V2 Overview Tab --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+    <div class="rt-vehicle-v2-overview">
+        
+        {{!-- Vehicle Stats Grid --}}
+        <div class="rt-vehicle-v2-panel rt-vehicle-v2-stats">
+            <h3 class="rt-vehicle-v2-panel-title">
+                <i class="fas fa-tachometer-alt"></i>
+                Vehicle Statistics
+            </h3>
+            <div class="rt-vehicle-v2-stats-grid">
+                <div class="rt-vehicle-v2-stat-item">
+                    <label>Speed (Cruising)</label>
+                    <input type="number" name="system.speed.cruising" value="{{vehicleStats.speed.cruising}}" min="0" />
+                </div>
+                <div class="rt-vehicle-v2-stat-item">
+                    <label>Speed (Tactical)</label>
+                    <input type="number" name="system.speed.tactical" value="{{vehicleStats.speed.tactical}}" min="0" />
+                </div>
+                <div class="rt-vehicle-v2-stat-item">
+                    <label>Handling</label>
+                    <input type="number" name="system.handling" value="{{vehicleStats.handling}}" />
+                </div>
+                <div class="rt-vehicle-v2-stat-item">
+                    <label>Manoeuvrability</label>
+                    <span class="rt-vehicle-v2-stat-value">{{vehicleStats.manoeuvrability}}</span>
+                </div>
+                <div class="rt-vehicle-v2-stat-item">
+                    <label>Hull Points</label>
+                    <input type="number" name="system.hull" value="{{vehicleStats.hull}}" min="0" />
+                </div>
+                <div class="rt-vehicle-v2-stat-item rt-vehicle-v2-stat-item--wide">
+                    <label>Size</label>
+                    <input type="number" name="system.size" value="{{vehicleStats.size}}" min="1" max="10" />
+                </div>
+            </div>
+        </div>
+
+        {{!-- Description --}}
+        <div class="rt-vehicle-v2-panel rt-vehicle-v2-description">
+            <h3 class="rt-vehicle-v2-panel-title">
+                <i class="fas fa-file-alt"></i>
+                Description
+            </h3>
+            <div class="editor-content" data-edit="system.description">
+                {{{enrichHTML system.description}}}
+            </div>
+        </div>
+        
+    </div>
+</section>

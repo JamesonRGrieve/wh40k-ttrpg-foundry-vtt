@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "willpower",
+    "category": "general",
     "source": "DH 2E: Enemies Beyond",
     "description": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>",
     "tier": 3,

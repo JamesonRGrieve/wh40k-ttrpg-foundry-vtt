@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "defense",
+    "category": "combat",
     "source": "DH 2E: Enemies Beyond",
     "description": "<p>When character is armed with a shield, they can re-roll one failed Evasion test to Parry per round.</p>",
     "tier": 3,

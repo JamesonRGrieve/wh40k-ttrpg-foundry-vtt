@@ -3,7 +3,7 @@
   "type": "talent",
   "img": "icons/svg/target.svg",
   "system": {
-    "category": "unique",
+    "category": "general",
     "source": "RT: The Soul Reaver",
     "description": "<p>If the character has gained at least 3 Pain Tokens during an encounter, they may spend a Fate Point to gain Unnatural Strength (x2) for the remainder of the Encounter.\nUnnatural Strength: Double Strength Bonus, gain 2 free Degrees of Success on all successful strength tests. </p>",
     "tier": 1,

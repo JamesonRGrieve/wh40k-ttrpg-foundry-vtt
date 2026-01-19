@@ -19,3 +19,6 @@ export * from "./dialogs/_module.mjs";
 
 // Character Creation exports
 export * from "./character-creation/_module.mjs";
+
+// NPC utilities exports
+export * from "./npc/_module.mjs";

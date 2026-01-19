@@ -1,0 +1,457 @@
+{{!-- 
+  Talent Editor Dialog Template
+  Comprehensive editor for complex talent fields (modifiers, grants, prerequisites, situational)
+--}}
+<div class="ted-container">
+  
+  {{!-- Section Tabs --}}
+  <nav class="ted-section-tabs">
+    <button type="button" class="ted-section-tab {{#if sections.prerequisites}}active{{/if}}" 
+            data-action="switchSection" data-section="prerequisites">
+      <i class="fa-solid fa-lock"></i>
+      <span>Prerequisites</span>
+    </button>
+    <button type="button" class="ted-section-tab {{#if sections.modifiers}}active{{/if}}" 
+            data-action="switchSection" data-section="modifiers">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Modifiers</span>
+    </button>
+    <button type="button" class="ted-section-tab {{#if sections.situational}}active{{/if}}" 
+            data-action="switchSection" data-section="situational">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <span>Situational</span>
+    </button>
+    <button type="button" class="ted-section-tab {{#if sections.grants}}active{{/if}}" 
+            data-action="switchSection" data-section="grants">
+      <i class="fa-solid fa-gift"></i>
+      <span>Grants</span>
+    </button>
+  </nav>
+
+  {{!-- Content Area --}}
+  <div class="ted-content">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         PREREQUISITES SECTION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="ted-section-panel {{#if sections.prerequisites}}active{{/if}}" data-section="prerequisites">
+      <div class="ted-section-header">
+        <i class="fa-solid fa-lock"></i>
+        <h3>Prerequisites</h3>
+        <p class="ted-section-hint">Define requirements that must be met before this talent can be taken.</p>
+      </div>
+      
+      {{!-- Text Prerequisites --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-font"></i>
+          Text Prerequisites
+        </label>
+        <textarea name="prerequisites.text" rows="2" class="ted-textarea" 
+                  placeholder="Freeform text prerequisites (e.g., 'Must be a member of the Adeptus Mechanicus')">{{prerequisites.text}}</textarea>
+      </div>
+      
+      {{!-- Characteristic Prerequisites --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-dumbbell"></i>
+          Characteristic Requirements
+        </label>
+        <div class="ted-list" data-category="prerequisites" data-type="characteristics">
+          {{#each prerequisites.characteristics}}
+          <div class="ted-list-row">
+            <select name="prerequisites.characteristics.{{@index}}.key">
+              <option value="">-- Select --</option>
+              {{#each ../characteristicOptions}}
+              <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+            <input type="number" name="prerequisites.characteristics.{{@index}}.value" value="{{this.value}}" min="0" placeholder="Min value" />
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="prerequisites" data-type="characteristics">
+          <i class="fa-solid fa-plus"></i> Add Characteristic Requirement
+        </button>
+      </div>
+      
+      {{!-- Skill Prerequisites --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-graduation-cap"></i>
+          Skill Requirements
+        </label>
+        <div class="ted-list" data-category="prerequisites" data-type="skills">
+          {{#each prerequisites.skills}}
+          <div class="ted-list-row">
+            <input type="text" name="prerequisites.skills.{{@index}}.name" value="{{this.name}}" placeholder="Skill name (e.g., Dodge, Parry)" />
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="prerequisites" data-type="skills">
+          <i class="fa-solid fa-plus"></i> Add Skill Requirement
+        </button>
+      </div>
+      
+      {{!-- Talent Prerequisites --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-star"></i>
+          Talent Requirements
+        </label>
+        <div class="ted-list" data-category="prerequisites" data-type="talents">
+          {{#each prerequisites.talents}}
+          <div class="ted-list-row">
+            <input type="text" name="prerequisites.talents.{{@index}}.name" value="{{this.name}}" placeholder="Talent name" />
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="prerequisites" data-type="talents">
+          <i class="fa-solid fa-plus"></i> Add Talent Requirement
+        </button>
+      </div>
+    </div>
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         MODIFIERS SECTION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="ted-section-panel {{#if sections.modifiers}}active{{/if}}" data-section="modifiers">
+      <div class="ted-section-header">
+        <i class="fa-solid fa-chart-line"></i>
+        <h3>Permanent Modifiers</h3>
+        <p class="ted-section-hint">Modifiers automatically applied while this talent is possessed.</p>
+      </div>
+      
+      {{!-- Characteristic Modifiers --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-dumbbell"></i>
+          Characteristic Modifiers
+        </label>
+        <div class="ted-list" data-category="modifiers" data-type="characteristics">
+          {{#each modifiers.characteristics}}
+          <div class="ted-list-row">
+            <select name="modifiers.characteristics.{{@index}}.key">
+              <option value="">-- Select --</option>
+              {{#each ../characteristicOptions}}
+              <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+            <input type="number" name="modifiers.characteristics.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="characteristics">
+          <i class="fa-solid fa-plus"></i> Add Characteristic Modifier
+        </button>
+      </div>
+      
+      {{!-- Skill Modifiers --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-graduation-cap"></i>
+          Skill Modifiers
+        </label>
+        <div class="ted-list" data-category="modifiers" data-type="skills">
+          {{#each modifiers.skills}}
+          <div class="ted-list-row">
+            <select name="modifiers.skills.{{@index}}.key">
+              <option value="">-- Select --</option>
+              {{#each ../skillOptions}}
+              <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+            <input type="number" name="modifiers.skills.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="skills">
+          <i class="fa-solid fa-plus"></i> Add Skill Modifier
+        </button>
+      </div>
+      
+      {{!-- Combat Modifiers --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-swords"></i>
+          Combat Modifiers
+        </label>
+        <div class="ted-list" data-category="modifiers" data-type="combat">
+          {{#each modifiers.combat}}
+          <div class="ted-list-row">
+            <select name="modifiers.combat.{{@index}}.key">
+              <option value="">-- Select --</option>
+              {{#each ../combatOptions}}
+              <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+            <input type="number" name="modifiers.combat.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="combat">
+          <i class="fa-solid fa-plus"></i> Add Combat Modifier
+        </button>
+      </div>
+      
+      {{!-- Resource Modifiers --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-heart"></i>
+          Resource Modifiers
+        </label>
+        <div class="ted-list" data-category="modifiers" data-type="resources">
+          {{#each modifiers.resources}}
+          <div class="ted-list-row">
+            <select name="modifiers.resources.{{@index}}.key">
+              <option value="">-- Select --</option>
+              {{#each ../resourceOptions}}
+              <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+            <input type="number" name="modifiers.resources.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="resources">
+          <i class="fa-solid fa-plus"></i> Add Resource Modifier
+        </button>
+      </div>
+      
+      {{!-- Other Modifiers --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-ellipsis"></i>
+          Other Modifiers
+        </label>
+        <div class="ted-list" data-category="modifiers" data-type="other">
+          {{#each modifiers.other}}
+          <div class="ted-list-row ted-list-row--wide">
+            <input type="text" name="modifiers.other.{{@index}}.key" value="{{this.key}}" placeholder="Key (e.g., movement)" />
+            <input type="text" name="modifiers.other.{{@index}}.label" value="{{this.label}}" placeholder="Label" />
+            <input type="number" name="modifiers.other.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
+            <select name="modifiers.other.{{@index}}.mode">
+              <option value="add" {{#if (eq this.mode "add")}}selected{{/if}}>Add</option>
+              <option value="multiply" {{#if (eq this.mode "multiply")}}selected{{/if}}>Multiply</option>
+              <option value="override" {{#if (eq this.mode "override")}}selected{{/if}}>Override</option>
+            </select>
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="other">
+          <i class="fa-solid fa-plus"></i> Add Other Modifier
+        </button>
+      </div>
+    </div>
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         SITUATIONAL SECTION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="ted-section-panel {{#if sections.situational}}active{{/if}}" data-section="situational">
+      <div class="ted-section-header">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <h3>Situational Modifiers</h3>
+        <p class="ted-section-hint">Modifiers that appear as checkboxes in roll dialogs when conditions apply.</p>
+      </div>
+      
+      {{!-- Situational Characteristic Modifiers --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-dumbbell"></i>
+          Characteristic Situational Modifiers
+        </label>
+        <div class="ted-list" data-category="situational" data-type="characteristics">
+          {{#each situational.characteristics}}
+          <div class="ted-list-row ted-list-row--stacked">
+            <div class="ted-row-inline">
+              <select name="situational.characteristics.{{@index}}.key">
+                <option value="">-- Select --</option>
+                {{#each ../characteristicOptions}}
+                <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
+                {{/each}}
+              </select>
+              <input type="number" name="situational.characteristics.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
+              <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <textarea name="situational.characteristics.{{@index}}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When fighting in melee combat')">{{this.condition}}</textarea>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="situational" data-type="characteristics">
+          <i class="fa-solid fa-plus"></i> Add Situational Characteristic Modifier
+        </button>
+      </div>
+      
+      {{!-- Situational Skill Modifiers --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-graduation-cap"></i>
+          Skill Situational Modifiers
+        </label>
+        <div class="ted-list" data-category="situational" data-type="skills">
+          {{#each situational.skills}}
+          <div class="ted-list-row ted-list-row--stacked">
+            <div class="ted-row-inline">
+              <select name="situational.skills.{{@index}}.key">
+                <option value="">-- Select --</option>
+                {{#each ../skillOptions}}
+                <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
+                {{/each}}
+              </select>
+              <input type="number" name="situational.skills.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
+              <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <textarea name="situational.skills.{{@index}}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When performing acrobatic maneuvers')">{{this.condition}}</textarea>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="situational" data-type="skills">
+          <i class="fa-solid fa-plus"></i> Add Situational Skill Modifier
+        </button>
+      </div>
+      
+      {{!-- Situational Combat Modifiers --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-swords"></i>
+          Combat Situational Modifiers
+        </label>
+        <div class="ted-list" data-category="situational" data-type="combat">
+          {{#each situational.combat}}
+          <div class="ted-list-row ted-list-row--stacked">
+            <div class="ted-row-inline">
+              <select name="situational.combat.{{@index}}.key">
+                <option value="">-- Select --</option>
+                {{#each ../combatOptions}}
+                <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
+                {{/each}}
+              </select>
+              <input type="number" name="situational.combat.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
+              <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <textarea name="situational.combat.{{@index}}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When attacking from surprise')">{{this.condition}}</textarea>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="situational" data-type="combat">
+          <i class="fa-solid fa-plus"></i> Add Situational Combat Modifier
+        </button>
+      </div>
+    </div>
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         GRANTS SECTION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="ted-section-panel {{#if sections.grants}}active{{/if}}" data-section="grants">
+      <div class="ted-section-header">
+        <i class="fa-solid fa-gift"></i>
+        <h3>Grants</h3>
+        <p class="ted-section-hint">Skills, talents, traits, and special abilities granted by this talent.</p>
+      </div>
+      
+      {{!-- Granted Skills --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-graduation-cap"></i>
+          Granted Skills
+        </label>
+        <div class="ted-list" data-category="grants" data-type="skills">
+          {{#each grants.skills}}
+          <div class="ted-list-row ted-list-row--wide">
+            <input type="text" name="grants.skills.{{@index}}.name" value="{{this.name}}" placeholder="Skill name" />
+            <input type="text" name="grants.skills.{{@index}}.specialization" value="{{this.specialization}}" placeholder="Specialization (optional)" />
+            <select name="grants.skills.{{@index}}.level">
+              {{#each ../trainingLevelOptions}}
+              <option value="{{this.value}}" {{#if (eq this.value ../this.level)}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="grants" data-type="skills">
+          <i class="fa-solid fa-plus"></i> Add Granted Skill
+        </button>
+      </div>
+      
+      {{!-- Granted Talents --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-star"></i>
+          Granted Talents
+        </label>
+        <div class="ted-list" data-category="grants" data-type="talents">
+          {{#each grants.talents}}
+          <div class="ted-list-row ted-list-row--wide">
+            <input type="text" name="grants.talents.{{@index}}.name" value="{{this.name}}" placeholder="Talent name" />
+            <input type="text" name="grants.talents.{{@index}}.specialization" value="{{this.specialization}}" placeholder="Specialization (optional)" />
+            <input type="text" name="grants.talents.{{@index}}.uuid" value="{{this.uuid}}" placeholder="UUID (optional)" />
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="grants" data-type="talents">
+          <i class="fa-solid fa-plus"></i> Add Granted Talent
+        </button>
+      </div>
+      
+      {{!-- Granted Traits --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-dna"></i>
+          Granted Traits
+        </label>
+        <div class="ted-list" data-category="grants" data-type="traits">
+          {{#each grants.traits}}
+          <div class="ted-list-row ted-list-row--wide">
+            <input type="text" name="grants.traits.{{@index}}.name" value="{{this.name}}" placeholder="Trait name" />
+            <input type="number" name="grants.traits.{{@index}}.level" value="{{this.level}}" placeholder="Level (optional)" />
+            <input type="text" name="grants.traits.{{@index}}.uuid" value="{{this.uuid}}" placeholder="UUID (optional)" />
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="grants" data-type="traits">
+          <i class="fa-solid fa-plus"></i> Add Granted Trait
+        </button>
+      </div>
+      
+      {{!-- Special Abilities --}}
+      <div class="ted-field-group">
+        <label class="ted-field-label">
+          <i class="fa-solid fa-bolt-lightning"></i>
+          Special Abilities
+        </label>
+        <div class="ted-list" data-category="grants" data-type="specialAbilities">
+          {{#each grants.specialAbilities}}
+          <div class="ted-list-row ted-list-row--column">
+            <input type="text" name="grants.specialAbilities.{{@index}}.name" value="{{this.name}}" placeholder="Ability name" />
+            <textarea name="grants.specialAbilities.{{@index}}.description" rows="2" placeholder="Description">{{this.description}}</textarea>
+            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          {{/each}}
+        </div>
+        <button type="button" class="ted-btn-add" data-action="addItem" data-category="grants" data-type="specialAbilities">
+          <i class="fa-solid fa-plus"></i> Add Special Ability
+        </button>
+      </div>
+    </div>
+    
+  </div>{{!-- .ted-content --}}
+
+  {{!-- Footer with Submit --}}
+  <footer class="ted-footer">
+    <button type="submit" class="ted-btn-submit">
+      <i class="fa-solid fa-check"></i>
+      Save Changes
+    </button>
+  </footer>
+</div>

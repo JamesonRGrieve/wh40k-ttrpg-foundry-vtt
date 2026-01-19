@@ -53,9 +53,20 @@ const checks = {
     const benefit = talent.system.benefit || '';
     const issues = [];
 
-    // Check for training mentions
-    if (benefit.match(/trained|training/i) && !talent.system.grants?.skills?.length) {
-      issues.push('Benefit mentions skill training but grants.skills empty');
+    // Check for explicit skill grant phrases (avoid false positives from prerequisites)
+    const grantPatterns = [
+      /gain.*trained/i,
+      /become.*trained/i,
+      /count as.*trained/i,
+      /treat as.*trained/i,
+      /grants.*training/i,
+      /you are trained/i
+    ];
+    
+    const matchesGrantPattern = grantPatterns.some(pattern => benefit.match(pattern));
+    
+    if (matchesGrantPattern && !talent.system.grants?.skills?.length) {
+      issues.push('Benefit explicitly grants skill training but grants.skills empty');
     }
 
     return issues;
@@ -82,10 +93,20 @@ const checks = {
       (talent.system.grants?.talents?.length > 0) ||
       (talent.system.grants?.traits?.length > 0);
 
+    // Skip if has grants or modifiers
+    if (hasAnyModifiers || hasGrants) {
+      return issues;
+    }
+    
+    // Skip if this is a choice talent (correctly documented in benefit)
+    if (benefit.match(/choose|or/i) || benefit.match(/one of the following/i)) {
+      return issues;
+    }
+
     // Check if benefit suggests mechanical effect
     const hasMechanicalText = benefit.match(/\+\d+|bonus|penalty|-\d+|damage|attack|defense|initiative/i);
 
-    if (hasMechanicalText && !hasAnyModifiers && !hasGrants) {
+    if (hasMechanicalText) {
       issues.push('Benefit describes mechanical effect but modifiers and grants empty');
     }
 
@@ -157,6 +178,18 @@ const checks = {
   characteristicBonus(talent) {
     const benefit = talent.system.benefit || '';
     const issues = [];
+
+    // Skip if this is a choice talent (origin talents with "Choose" or "OR")
+    if (benefit.match(/choose|or/i)) {
+      return issues;
+    }
+    
+    // Skip if has special abilities describing the choice
+    if (talent.system.grants?.specialAbilities?.some(sa => 
+      sa.description?.match(/choose|choice/i)
+    )) {
+      return issues;
+    }
 
     // Common characteristic patterns (excluding +0 which is not a bonus)
     const charPatterns = [

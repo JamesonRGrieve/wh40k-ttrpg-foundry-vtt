@@ -75,6 +75,9 @@ export default class TalentData extends ItemDataModel.mixin(
       // How many times has it been taken (if stackable)
       rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
       
+      // Whether this talent has a specialization (for talents like "Weapon Training (X)")
+      hasSpecialization: new fields.BooleanField({ required: true, initial: false }),
+      
       // Specialization (for talents like "Weapon Training")
       specialization: new fields.StringField({ required: false, blank: true }),
       
@@ -153,7 +156,33 @@ export default class TalentData extends ItemDataModel.mixin(
       source.aptitudes = source.aptitudes.split(",").map(a => a.trim()).filter(Boolean);
     }
     
+    // Infer hasSpecialization from existing specialization value
+    if ( source.hasSpecialization === undefined && source.specialization ) {
+      source.hasSpecialization = !!source.specialization.trim();
+    }
+    
     return super.migrateData(source);
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Preparation                            */
+  /* -------------------------------------------- */
+
+  /**
+   * Auto-detect hasSpecialization from talent name containing (X).
+   * @override
+   */
+  prepareDerivedData() {
+    super.prepareDerivedData?.();
+    
+    // Auto-infer hasSpecialization from name containing (X)
+    // Only set if not already explicitly set and name contains (X)
+    if ( this.parent?.name ) {
+      const nameHasX = /\(X\)/i.test(this.parent.name);
+      if ( nameHasX && !this.hasSpecialization ) {
+        this.hasSpecialization = true;
+      }
+    }
   }
 
   /* -------------------------------------------- */
@@ -345,7 +374,7 @@ export default class TalentData extends ItemDataModel.mixin(
         aptitudesLabel: this.aptitudes.length > 0 ? this.aptitudes.join(", ") : "—",
         hasPrerequisites: this.hasPrerequisites,
         prerequisitesLabel: this.prerequisitesLabel,
-        benefit: this.benefit || this.parent.system.description?.value || "",
+        benefit: this.benefit || "",
         cost: this.cost,
         costLabel: this.cost > 0 ? `${this.cost} XP` : "—",
         isPassive: this.isPassive,

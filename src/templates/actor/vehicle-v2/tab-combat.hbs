@@ -1,0 +1,49 @@
+{{!-- Vehicle V2 Combat Tab --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+    <div class="rt-vehicle-v2-combat">
+        
+        {{!-- Weapons List --}}
+        <div class="rt-vehicle-v2-panel rt-vehicle-v2-weapons">
+            <h3 class="rt-vehicle-v2-panel-title">
+                <i class="fas fa-crosshairs"></i>
+                Weapons
+            </h3>
+            <div class="rt-vehicle-v2-weapons-list">
+                {{#each weapons}}
+                <div class="rt-vehicle-v2-weapon-item" data-item-id="{{this._id}}">
+                    <div class="rt-vehicle-v2-weapon-name" data-action="rollWeapon" data-item-id="{{this._id}}">
+                        {{this.name}}
+                    </div>
+                    <div class="rt-vehicle-v2-weapon-stats">
+                        <span>{{this.system.damage}}</span>
+                        <span>{{this.system.range}}m</span>
+                    </div>
+                </div>
+                {{else}}
+                <div class="rt-vehicle-v2-empty">No weapons equipped</div>
+                {{/each}}
+            </div>
+        </div>
+
+        {{!-- Traits --}}
+        <div class="rt-vehicle-v2-panel rt-vehicle-v2-traits">
+            <h3 class="rt-vehicle-v2-panel-title">
+                <i class="fas fa-shield-alt"></i>
+                Vehicle Traits
+            </h3>
+            <div class="rt-vehicle-v2-traits-list">
+                {{#each vehicleTraits}}
+                <div class="rt-vehicle-v2-trait-item">
+                    <strong>{{this.name}}</strong>
+                    {{#if this.system.description}}
+                    <p>{{{this.system.description}}}</p>
+                    {{/if}}
+                </div>
+                {{else}}
+                <div class="rt-vehicle-v2-empty">No traits</div>
+                {{/each}}
+            </div>
+        </div>
+        
+    </div>
+</section>
