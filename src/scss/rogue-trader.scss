@@ -21,6 +21,15 @@
 @import 'src/scss/dialogs/loadout-preset-dialog';
 @import 'src/scss/dialogs/confirmation-dialog';
 @import 'src/scss/dialogs/effect-creation-dialog';
+@import 'src/scss/dialogs/talent-editor-dialog';
+@import 'src/scss/dialogs/npc-quick-create';
+@import 'src/scss/dialogs/threat-scaler';
+@import 'src/scss/dialogs/stat-block-exporter';
+@import 'src/scss/dialogs/stat-block-parser';
+@import 'src/scss/dialogs/batch-create';
+@import 'src/scss/dialogs/difficulty-calculator';
+@import 'src/scss/dialogs/combat-preset';
+@import 'src/scss/apps/encounter-builder';
 @import 'src/scss/components/origin-path-builder';
 @import 'src/scss/components/origin-path-choice-dialog';
 @import 'src/scss/components/origin-detail-dialog';
@@ -35,6 +44,12 @@
 
 // Biography origin panel - ApplicationV2 sheet (outside rt-wrapper)
 @import 'src/scss/actor/biography-origin-panel';
+
+// NPC Sheet V2 - ApplicationV2 sheet (outside rt-wrapper)
+@import 'src/scss/actor/npc-sheet-v2';
+
+// Vehicle Sheet V2 - ApplicationV2 sheet (outside rt-wrapper)
+@import 'src/scss/actor/vehicle-sheet-v2';
 
 .rt-material {
     font-family: 'Material Icons';

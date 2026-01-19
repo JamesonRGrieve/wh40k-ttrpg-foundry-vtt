@@ -1,0 +1,457 @@
+// ============================================
+// Vehicle Sheet V2 Styles
+// ============================================
+// Phase 6: Dedicated sheet for vehicle/ship NPCs
+// Based on NPC V2 pattern but optimized for vehicles
+
+.rogue-trader.sheet.actor.vehicle-v2 {
+  // ApplicationV2 Layout Structure
+  .window-content {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    height: 100% !important;
+  }
+  
+  form {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    gap: 0 !important;
+    height: 100% !important;
+  }
+  
+  .rt-header {
+    flex: 0 0 auto !important;
+    overflow: visible !important;
+    z-index: 10 !important;
+  }
+  
+  .rt-navigation {
+    flex: 0 0 auto !important;
+  }
+  
+  .rt-body {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 0 !important;
+  }
+  
+  // === HEADER ===
+  .rt-vehicle-v2-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--rt-space-md, 1rem);
+    padding: var(--rt-space-md, 1rem);
+    background: var(--rt-panel-bg, rgba(30, 30, 30, 0.9));
+    border-bottom: 2px solid var(--rt-gold, #d4af37);
+    
+    .rt-header__info {
+      display: contents;
+    }
+  }
+  
+  // Portrait
+  .rt-portrait-container {
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--rt-border-color, #444);
+    border-radius: 4px;
+    overflow: hidden;
+    
+    .rt-portrait {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+      transition: filter 0.2s;
+      
+      &:hover {
+        filter: brightness(1.1);
+      }
+    }
+  }
+  
+  // Identity Section
+  .rt-vehicle-v2-identity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-space-sm, 0.5rem);
+  }
+  
+  .rt-vehicle-v2-name-input {
+    font-size: 1.4rem;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    color: var(--rt-text-dark, #f0f0f0);
+    padding: 0.25rem;
+    width: 100%;
+    
+    &:hover, &:focus {
+      border-bottom-color: var(--rt-gold, #d4af37);
+      outline: none;
+    }
+  }
+  
+  .rt-vehicle-v2-meta-row {
+    display: flex;
+    gap: var(--rt-space-md, 1rem);
+    flex-wrap: wrap;
+  }
+  
+  .rt-vehicle-v2-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    
+    label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--rt-text-muted, #888);
+    }
+    
+    input, select, textarea {
+      background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+      border: 1px solid var(--rt-border-color, #444);
+      color: var(--rt-text-dark, #f0f0f0);
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+      
+      &:focus {
+        border-color: var(--rt-gold, #d4af37);
+        outline: none;
+      }
+    }
+    
+    &--wide {
+      flex: 1;
+      min-width: 150px;
+    }
+  }
+  
+  // Quick Stats
+  .rt-vehicle-v2-quick-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-space-sm, 0.5rem);
+  }
+  
+  .rt-vehicle-v2-stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+    border: 1px solid var(--rt-border-color, #444);
+    border-radius: 4px;
+    min-width: 70px;
+  }
+  
+  .rt-vehicle-v2-stat-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--rt-text-muted, #888);
+  }
+  
+  .rt-vehicle-v2-stat-input {
+    width: 45px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    color: var(--rt-text-dark, #f0f0f0);
+    
+    &:focus {
+      outline: 1px solid var(--rt-gold, #d4af37);
+    }
+  }
+  
+  .rt-vehicle-v2-stat-values {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  .rt-vehicle-v2-stat-separator {
+    font-size: 1rem;
+    color: var(--rt-text-muted, #888);
+  }
+  
+  // === PANELS ===
+  .rt-vehicle-v2-panel {
+    background: var(--rt-panel-bg, rgba(40, 35, 30, 0.7));
+    border: 1px solid var(--rt-border-color, #444);
+    border-radius: 6px;
+    padding: var(--rt-space-md, 1rem);
+    margin-bottom: var(--rt-space-md, 1rem);
+  }
+  
+  .rt-vehicle-v2-panel-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--rt-gold, #d4af37);
+    margin-bottom: var(--rt-space-sm, 0.5rem);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    i {
+      color: var(--rt-gold, #d4af37);
+    }
+  }
+  
+  // === TABS ===
+  .rt-vehicle-v2-tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    background: var(--rt-panel-bg, rgba(40, 35, 30, 0.7));
+    border-bottom: 1px solid var(--rt-border-color, #444);
+    
+    .rt-tab-btn {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--rt-text-muted, #888);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      
+      &:hover {
+        color: var(--rt-gold, #d4af37);
+        border-color: var(--rt-border-color, #444);
+      }
+      
+      &.active {
+        color: var(--rt-text-dark, #f0f0f0);
+        background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+        border-color: var(--rt-gold, #d4af37);
+      }
+    }
+  }
+  
+  // === TAB CONTENT ===
+  .tab {
+    display: none;
+    
+    &.active {
+      display: block;
+    }
+  }
+  
+  // === VEHICLE STATS ===
+  .rt-vehicle-v2-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--rt-space-md, 1rem);
+  }
+  
+  .rt-vehicle-v2-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    
+    label {
+      font-size: 0.8rem;
+      color: var(--rt-text-muted, #888);
+      text-transform: uppercase;
+    }
+    
+    input {
+      background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+      border: 1px solid var(--rt-border-color, #444);
+      color: var(--rt-text-dark, #f0f0f0);
+      padding: 0.5rem;
+      border-radius: 3px;
+      
+      &:focus {
+        border-color: var(--rt-gold, #d4af37);
+        outline: none;
+      }
+    }
+    
+    &--wide {
+      grid-column: span 2;
+    }
+  }
+  
+  .rt-vehicle-v2-stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--rt-text-dark, #f0f0f0);
+    padding: 0.5rem;
+    background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+    border: 1px solid var(--rt-border-color, #444);
+    border-radius: 3px;
+    text-align: center;
+  }
+  
+  // === WEAPONS ===
+  .rt-vehicle-v2-weapons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .rt-vehicle-v2-weapon-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+    border: 1px solid var(--rt-border-color, #444);
+    border-radius: 3px;
+    transition: all 0.2s;
+    
+    &:hover {
+      border-color: var(--rt-gold, #d4af37);
+    }
+  }
+  
+  .rt-vehicle-v2-weapon-name {
+    font-weight: bold;
+    cursor: pointer;
+    
+    &:hover {
+      color: var(--rt-gold, #d4af37);
+    }
+  }
+  
+  .rt-vehicle-v2-weapon-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--rt-text-muted, #888);
+  }
+  
+  // === CREW ===
+  .rt-vehicle-v2-crew-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--rt-space-md, 1rem);
+  }
+  
+  .rt-vehicle-v2-crew-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    
+    label {
+      font-size: 0.8rem;
+      color: var(--rt-text-muted, #888);
+      text-transform: uppercase;
+    }
+    
+    &--wide {
+      grid-column: span 2;
+    }
+  }
+  
+  .rt-vehicle-v2-crew-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    button {
+      padding: 0.25rem 0.5rem;
+      background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+      border: 1px solid var(--rt-border-color, #444);
+      color: var(--rt-text-dark, #f0f0f0);
+      cursor: pointer;
+      border-radius: 3px;
+      
+      &:hover {
+        border-color: var(--rt-gold, #d4af37);
+      }
+    }
+    
+    input {
+      flex: 1;
+      text-align: center;
+    }
+  }
+  
+  // === COMPONENTS ===
+  .rt-vehicle-v2-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .rt-vehicle-v2-component-item {
+    padding: 0.75rem;
+    background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+    border: 1px solid var(--rt-border-color, #444);
+    border-radius: 3px;
+  }
+  
+  .rt-vehicle-v2-component-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    
+    input[type="checkbox"] {
+      margin: 0;
+    }
+  }
+  
+  .rt-vehicle-v2-component-desc {
+    font-size: 0.85rem;
+    color: var(--rt-text-muted, #888);
+    margin-top: 0.5rem;
+  }
+  
+  // === TRAITS ===
+  .rt-vehicle-v2-traits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .rt-vehicle-v2-trait-item {
+    padding: 0.75rem;
+    background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+    border: 1px solid var(--rt-border-color, #444);
+    border-radius: 3px;
+    
+    strong {
+      color: var(--rt-gold, #d4af37);
+    }
+    
+    p {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--rt-text-muted, #888);
+    }
+  }
+  
+  // === EMPTY STATES ===
+  .rt-vehicle-v2-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--rt-text-muted, #888);
+    font-style: italic;
+  }
+  
+  // === EDITOR CONTENT ===
+  .editor-content {
+    min-height: 100px;
+    padding: 0.75rem;
+    background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
+    border: 1px solid var(--rt-border-color, #444);
+    border-radius: 3px;
+    
+    &:hover {
+      border-color: var(--rt-gold, #d4af37);
+    }
+  }
+}

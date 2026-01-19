@@ -1,0 +1,104 @@
+{{!-- NPC Template - Abilities Tab --}}
+<section class="tab-content tab-abilities" data-tab="abilities" data-group="primary">
+    {{!-- Talents Section --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-star"></i> {{localize "RT.NPC.Template.Talents"}}</h3>
+            <button type="button" class="rt-btn rt-btn-icon" data-action="addTalent">
+                <i class="fas fa-plus"></i>
+            </button>
+        </header>
+        <div class="rt-panel-content">
+            {{#if (gt system.talentRefs.length 0)}}
+            <div class="abilities-list">
+                {{#each talents as |talent idx|}}
+                <div class="ability-row" data-index="{{idx}}">
+                    <img src="{{talent.img}}" alt="{{talent.name}}" class="ability-icon" />
+                    <span class="ability-name">{{talent.name}}</span>
+                    <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" 
+                            data-action="removeTalent" data-index="{{idx}}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                {{/each}}
+            </div>
+            {{else}}
+            <p class="empty-message">{{localize "RT.NPC.Template.NoTalents"}}</p>
+            {{/if}}
+        </div>
+    </div>
+    
+    {{!-- Traits Section --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-dna"></i> {{localize "RT.NPC.Template.Traits"}}</h3>
+            <button type="button" class="rt-btn rt-btn-icon" data-action="addTrait">
+                <i class="fas fa-plus"></i>
+            </button>
+        </header>
+        <div class="rt-panel-content">
+            {{#if (gt system.traitRefs.length 0)}}
+            <div class="abilities-list">
+                {{#each traits as |trait idx|}}
+                <div class="ability-row" data-index="{{idx}}">
+                    <img src="{{trait.img}}" alt="{{trait.name}}" class="ability-icon" />
+                    <span class="ability-name">{{trait.name}}</span>
+                    {{#if trait.level}}
+                    <span class="ability-level">({{trait.level}})</span>
+                    {{/if}}
+                    <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" 
+                            data-action="removeTrait" data-index="{{idx}}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                {{/each}}
+            </div>
+            {{else}}
+            <p class="empty-message">{{localize "RT.NPC.Template.NoTraits"}}</p>
+            {{/if}}
+        </div>
+    </div>
+    
+    {{!-- Special Abilities Section --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-magic"></i> {{localize "RT.NPC.Template.SpecialAbilities"}}</h3>
+        </header>
+        <div class="rt-panel-content">
+            <div class="prosemirror-editor">
+                {{formInput fields.specialAbilities value=system.specialAbilities enriched=enrichedSpecialAbilities}}
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Psychic Powers Section (if applicable) --}}
+    {{#if hasPsychicPowers}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-brain"></i> {{localize "RT.NPC.Template.PsychicPowers"}}</h3>
+            <button type="button" class="rt-btn rt-btn-icon" data-action="addPsychicPower">
+                <i class="fas fa-plus"></i>
+            </button>
+        </header>
+        <div class="rt-panel-content">
+            {{#if (gt psychicPowers.length 0)}}
+            <div class="abilities-list">
+                {{#each psychicPowers as |power idx|}}
+                <div class="ability-row" data-index="{{idx}}">
+                    <img src="{{power.img}}" alt="{{power.name}}" class="ability-icon" />
+                    <span class="ability-name">{{power.name}}</span>
+                    <span class="power-rating">PR {{power.rating}}</span>
+                    <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" 
+                            data-action="removePsychicPower" data-index="{{idx}}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                {{/each}}
+            </div>
+            {{else}}
+            <p class="empty-message">{{localize "RT.NPC.Template.NoPowers"}}</p>
+            {{/if}}
+        </div>
+    </div>
+    {{/if}}
+</section>

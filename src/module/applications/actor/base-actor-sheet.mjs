@@ -572,6 +572,13 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         
         // Tooltip data (JSON string)
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
+        
+        // Check if skill is favorite
+        const favorites = this.actor.getFlag("rogue-trader", "favoriteSkills") || [];
+        data.isFavorite = favorites.includes(key);
+        
+        // Check if advanced skill is granted (for locking)
+        data.isGranted = this._isSkillGranted(key, data);
     }
 
     /**
@@ -630,6 +637,41 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
         
         // Return specializations array if it exists
         return skillDesc.specializations || [];
+    }
+    
+    /**
+     * Check if skill is granted by talents, traits, or origin paths.
+     * Basic skills are always granted. Advanced skills need explicit grants.
+     * @param {string} skillKey  Skill key
+     * @param {object} skillData  Skill data object
+     * @returns {boolean}  True if skill is granted (or is basic)
+     * @protected
+     */
+    _isSkillGranted(skillKey, skillData) {
+        // Basic skills are always granted
+        if (!skillData.advanced) return true;
+        
+        // Advanced skills need to check for grants
+        // Check if any training level is set (means granted at some point)
+        if (skillData.trained || skillData.plus10 || skillData.plus20) return true;
+        
+        // Check if granted by talents/traits/origin paths
+        // This is a simplified check - a more complete implementation would scan
+        // all talents, traits, and origin paths for skill grants
+        const items = this.actor.items;
+        for (const item of items) {
+            if (!item.system?.grants?.skills) continue;
+            
+            const skillGrants = item.system.grants.skills || [];
+            for (const grant of skillGrants) {
+                const grantName = grant.name || grant;
+                if (grantName.toLowerCase() === skillData.label?.toLowerCase()) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 
     /* -------------------------------------------- */
@@ -697,6 +739,10 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
      * @protected
      */
     _augmentTalentData(talent) {
+        // Check if this talent is favorited
+        const favorites = this.actor.getFlag("rogue-trader", "favoriteTalents") || [];
+        const isFavorite = favorites.includes(talent.id);
+        
         return {
             id: talent.id,
             _id: talent._id,
@@ -710,7 +756,9 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             aptitudesLabel: this._formatAptitudes(talent.system.aptitudes),
             prerequisitesLabel: talent.system.prerequisitesLabel,
             hasPrerequisites: talent.system.hasPrerequisites,
-            costLabel: talent.system.cost > 0 ? `${talent.system.cost} XP` : "—"
+            costLabel: talent.system.cost > 0 ? `${talent.system.cost} XP` : "—",
+            isFavorite: isFavorite,
+            flags: talent.flags
         };
     }
 

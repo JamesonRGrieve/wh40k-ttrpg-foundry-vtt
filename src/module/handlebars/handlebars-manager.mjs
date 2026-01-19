@@ -105,14 +105,34 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/ship-upgrades-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/ship-weapons-panel.hbs',
 
-            // NPC sheet templates
-            'systems/rogue-trader/templates/actor/npc/header.hbs',
-            'systems/rogue-trader/templates/actor/npc/tabs.hbs',
-            'systems/rogue-trader/templates/actor/npc/tab-combat.hbs',
-            'systems/rogue-trader/templates/actor/npc/tab-abilities.hbs',
-            'systems/rogue-trader/templates/actor/npc/tab-gear.hbs',
-            'systems/rogue-trader/templates/actor/npc/tab-powers.hbs',
-            'systems/rogue-trader/templates/actor/npc/tab-notes.hbs',
+            // NPC V2 sheet templates
+            'systems/rogue-trader/templates/actor/npc-v2/header.hbs',
+            'systems/rogue-trader/templates/actor/npc-v2/tabs.hbs',
+            'systems/rogue-trader/templates/actor/npc-v2/tab-overview.hbs',
+            'systems/rogue-trader/templates/actor/npc-v2/tab-combat.hbs',
+            'systems/rogue-trader/templates/actor/npc-v2/tab-skills.hbs',
+            'systems/rogue-trader/templates/actor/npc-v2/tab-abilities.hbs',
+            'systems/rogue-trader/templates/actor/npc-v2/tab-notes.hbs',
+
+            // NPC dialogs
+            'systems/rogue-trader/templates/dialogs/npc-quick-create.hbs',
+            'systems/rogue-trader/templates/dialogs/threat-scaler.hbs',
+            'systems/rogue-trader/templates/dialogs/stat-block-exporter.hbs',
+            'systems/rogue-trader/templates/dialogs/stat-block-parser.hbs',
+            'systems/rogue-trader/templates/dialogs/batch-create.hbs',
+            'systems/rogue-trader/templates/dialogs/template-selector.hbs',
+
+            // NPC applications
+            'systems/rogue-trader/templates/apps/encounter-builder.hbs',
+
+            // NPC Template sheet templates
+            'systems/rogue-trader/templates/item/npc-template/header.hbs',
+            'systems/rogue-trader/templates/item/npc-template/tabs.hbs',
+            'systems/rogue-trader/templates/item/npc-template/tab-basics.hbs',
+            'systems/rogue-trader/templates/item/npc-template/tab-characteristics.hbs',
+            'systems/rogue-trader/templates/item/npc-template/tab-equipment.hbs',
+            'systems/rogue-trader/templates/item/npc-template/tab-abilities.hbs',
+            'systems/rogue-trader/templates/item/npc-template/tab-preview.hbs',
 
             // Chat templates
             'systems/rogue-trader/templates/chat/item-card-chat.hbs',

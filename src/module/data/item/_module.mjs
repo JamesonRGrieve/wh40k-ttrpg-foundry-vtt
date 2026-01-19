@@ -49,3 +49,6 @@ export { default as MutationData } from "./mutation.mjs";
 export { default as MalignancyData } from "./malignancy.mjs";
 export { default as MentalDisorderData } from "./mental-disorder.mjs";
 export { default as JournalEntryItemData } from "./journal-entry.mjs";
+
+// NPC Templates
+export { default as NPCTemplateData } from "./npc-template.mjs";

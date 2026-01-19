@@ -124,6 +124,78 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     }
 
     /* -------------------------------------------- */
+    /*  Situational Modifiers                       */
+    /* -------------------------------------------- */
+
+    /**
+     * Collect all situational modifiers from items that apply to a specific type.
+     * @param {"characteristics"|"skills"|"combat"} type - The type of situational modifier
+     * @param {string} [key] - Optional key to filter by (e.g., "weaponSkill", "dodge", "attack")
+     * @returns {Array<{key: string, value: number, condition: string, icon: string, source: string, itemId: string}>}
+     */
+    getSituationalModifiers(type, key = null) {
+        const modifiers = [];
+        
+        // Collect from all modifier-providing items
+        const modifierItems = this.items.filter(item =>
+            item.isTalent ||
+            item.isTrait ||
+            item.isCondition ||
+            (item.type === 'armour' && item.system.equipped) ||
+            (item.type === 'cybernetic' && item.system.equipped) ||
+            (item.type === 'gear' && item.system.equipped)
+        );
+
+        for (const item of modifierItems) {
+            const situational = item.system?.modifiers?.situational?.[type];
+            if (!situational || !Array.isArray(situational)) continue;
+
+            for (const mod of situational) {
+                // Skip if key filter is provided and doesn't match
+                if (key && mod.key !== key) continue;
+
+                modifiers.push({
+                    key: mod.key,
+                    value: mod.value,
+                    condition: mod.condition,
+                    icon: mod.icon || "fa-solid fa-exclamation-triangle",
+                    source: item.name,
+                    itemId: item.id
+                });
+            }
+        }
+
+        return modifiers;
+    }
+
+    /**
+     * Get situational modifiers for a characteristic roll.
+     * @param {string} charKey - The characteristic key (e.g., "weaponSkill")
+     * @returns {Array} Array of situational modifier objects
+     */
+    getCharacteristicSituationalModifiers(charKey) {
+        return this.getSituationalModifiers("characteristics", charKey);
+    }
+
+    /**
+     * Get situational modifiers for a skill roll.
+     * @param {string} skillKey - The skill key (e.g., "dodge")
+     * @returns {Array} Array of situational modifier objects
+     */
+    getSkillSituationalModifiers(skillKey) {
+        return this.getSituationalModifiers("skills", skillKey);
+    }
+
+    /**
+     * Get situational modifiers for combat rolls.
+     * @param {string} [combatKey] - Optional combat key (e.g., "attack", "damage")
+     * @returns {Array} Array of situational modifier objects
+     */
+    getCombatSituationalModifiers(combatKey = null) {
+        return this.getSituationalModifiers("combat", combatKey);
+    }
+
+    /* -------------------------------------------- */
     /*  Roll Methods (New D100Roll System)          */
     /* -------------------------------------------- */
 
@@ -145,6 +217,9 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
 
         const flavor = flavorOverride || `${char.label} Test`;
 
+        // Collect situational modifiers for this characteristic
+        const situationalModifiers = this.getCharacteristicSituationalModifiers(charKey);
+
         return D100Roll.build({
             actor: this,
             target: char.total,
@@ -154,6 +229,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             speaker: ChatMessage.getSpeaker({ actor: this }),
             type: "characteristic",
             characteristic: charKey,
+            situationalModifiers,
             ...options
         });
     }
@@ -187,6 +263,9 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             }
         }
 
+        // Collect situational modifiers for this skill
+        const situationalModifiers = this.getSkillSituationalModifiers(resolvedSkillName);
+
         return D100Roll.build({
             actor: this,
             target: targetValue,
@@ -196,6 +275,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             speaker: ChatMessage.getSpeaker({ actor: this }),
             type: "skill",
             skill: resolvedSkillName,
+            situationalModifiers,
             ...options
         });
     }

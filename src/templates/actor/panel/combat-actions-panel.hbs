@@ -127,6 +127,33 @@
             </div>
         </div>
 
+        {{!-- COMBAT TALENTS --}}
+        {{#if combatTalents.length}}
+        <div class="rt-actions-group">
+            <div class="rt-actions-group-header">
+                <i class="fas fa-star rt-group-icon"></i>
+                <span class="rt-actions-group-label">Combat Talents</span>
+            </div>
+            <div class="rt-actions-grid">
+                {{#each combatTalents as |talent|}}
+                <button type="button"
+                        class="rt-action-btn rt-action-attack"
+                        data-action="itemVocalize"
+                        data-item-id="{{talent.id}}"
+                        data-tooltip
+                        aria-label="{{talent.name}}"
+                        title="{{talent.name}}">
+                    <i class="fas fa-star"></i>
+                    <span class="rt-action-name">{{talent.name}}</span>
+                    {{#if talent.system.tier}}
+                    <span class="rt-action-type">T{{talent.system.tier}}</span>
+                    {{/if}}
+                </button>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+
         {{!-- Info Note --}}
         <div class="rt-actions-info">
             <i class="fas fa-info-circle"></i>

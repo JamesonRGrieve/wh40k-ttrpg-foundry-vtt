@@ -1,0 +1,240 @@
+{{!-- NPC V2 Overview Tab - Interaction & Quick Tests --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+  <div class="rt-interaction-tab">
+    
+    {{!-- 2-COLUMN GRID: Left = Char Dial + Panel, Right = Skills --}}
+    <div class="rt-interaction-grid">
+      
+      {{!-- LEFT COLUMN TOP: Characteristics Quick Dial (3x3 Grid) --}}
+      <div class="rt-panel rt-panel--chars rt-grid-char-dial">
+        <div class="rt-panel-header">
+          <i class="fa-solid fa-dice-d20"></i>
+          <span>Characteristics</span>
+          {{#if editable}}
+          <button class="rt-header-btn rt-toggle-edit" type="button" data-action="toggleEditSection" data-target="char-edit" title="Toggle Edit Mode">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+          {{/if}}
+        </div>
+        <div class="rt-panel-body">
+          <div class="rt-char-dial">
+            {{#each characteristicsArray}}
+            <div class="rt-char-cell rollable"
+                 data-action="rollCharacteristic"
+                 data-characteristic="{{key}}"
+                 title="Roll {{label}} ({{total}})">
+              <span class="rt-char-label">{{label}}</span>
+              <span class="rt-char-bonus">
+                {{bonus}}
+                {{#if hasUnnatural}}<i class="fa-solid fa-bolt rt-unnatural" title="Unnatural ×{{unnatural}}"></i>{{/if}}
+              </span>
+              <span class="rt-char-total">({{total}})</span>
+            </div>
+            {{/each}}
+          </div>
+
+          {{!-- Inline Edit Mode --}}
+          {{#if editable}}
+          <div class="rt-char-edit-section" data-section-id="char-edit" hidden>
+            <table class="rt-char-edit-table">
+              <thead>
+                <tr>
+                  <th>Char</th>
+                  <th>Base</th>
+                  <th>Mod</th>
+                  <th>Unnat.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each characteristicsArray}}
+                <tr>
+                  <td><strong>{{short}}</strong></td>
+                  <td><input type="number" name="system.characteristics.{{key}}.base" value="{{base}}" class="rt-char-input" /></td>
+                  <td><input type="number" name="system.characteristics.{{key}}.modifier" value="{{modifier}}" class="rt-char-input" /></td>
+                  <td><input type="number" name="system.characteristics.{{key}}.unnatural" value="{{unnatural}}" min="0" class="rt-char-input" /></td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+
+      {{!-- RIGHT COLUMN: Skills Table (Dense, All Skills) - Spans 2 Rows --}}
+      <div class="rt-panel rt-panel--skills rt-grid-skills">
+        <div class="rt-panel-header">
+          <i class="fa-solid fa-book"></i>
+          <span>Skills</span>
+          <span class="rt-count-badge">{{trainedSkillsList.length}} trained</span>
+          {{#if editable}}
+          <button class="rt-header-btn" type="button" data-action="addTrainedSkill" title="Add Skill">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          {{/if}}
+        </div>
+        <div class="rt-panel-body">
+          <div class="rt-skills-table">
+            {{#each basicSkillsList}}
+            <div class="rt-skill-row {{#if isTrained}}trained{{else}}untrained{{/if}}">
+              <button type="button" class="rt-skill-roll rollable" data-action="rollSkill" data-skill="{{key}}" title="Roll {{name}}">
+                <i class="fa-solid fa-dice-d20"></i>
+              </button>
+              <span class="rt-skill-name">
+                {{name}}
+                {{#if plus20}}<span class="rt-skill-badge rt-skill-badge--plus20" title="Expert (+20)">+20</span>{{else if plus10}}<span class="rt-skill-badge rt-skill-badge--plus10" title="Experienced (+10)">+10</span>{{/if}}
+              </span>
+              <span class="rt-skill-char">({{char}})</span>
+              <span class="rt-skill-target">{{target}}</span>
+              {{#if ../editable}}
+              <div class="rt-skill-levels">
+                {{#if trained}}
+                  {{!-- When trained, show current level indicator and advancement buttons --}}
+                  <button type="button" class="rt-level-btn active" title="Trained" disabled>
+                    <i class="fa-solid fa-check"></i>
+                  </button>
+                  <button type="button" class="rt-level-btn {{#if plus10}}active{{/if}}" data-action="setSkillLevel" data-skill="{{key}}" data-level="plus10" title="{{#if plus10}}Remove +10{{else}}Add +10{{/if}}">+10</button>
+                  <button type="button" class="rt-level-btn {{#if plus20}}active{{/if}}" data-action="setSkillLevel" data-skill="{{key}}" data-level="plus20" title="{{#if plus20}}Remove +20{{else}}Add +20{{/if}}">+20</button>
+                  <button type="button" class="rt-level-btn rt-level-btn--remove" data-action="setSkillLevel" data-skill="{{key}}" data-level="untrained" title="Remove Training">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                {{else}}
+                  {{!-- When untrained, show add button --}}
+                  <button type="button" class="rt-level-btn" data-action="setSkillLevel" data-skill="{{key}}" data-level="trained" title="Train Skill">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                {{/if}}
+              </div>
+              {{/if}}
+            </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+
+      {{!-- LEFT COLUMN BOTTOM: Talents & Traits Quick View --}}
+      <div class="rt-panel rt-panel--talents rt-grid-talents">
+        <div class="rt-panel-header">
+          <i class="fa-solid fa-stars"></i>
+          <span>Talents & Traits</span>
+          <span class="rt-count-badge">{{talents.length}}</span>
+        </div>
+        <div class="rt-panel-body">
+          {{#if talents.length}}
+          <div class="rt-talent-chips-compact">
+            {{#each talents}}
+            <div class="rt-talent-chip-mini" data-item-id="{{id}}" title="{{name}}">
+              <img src="{{img}}" class="rt-talent-img-mini" alt="" />
+              <span class="rt-talent-name-mini">{{name}}</span>
+            </div>
+            {{/each}}
+          </div>
+          {{else}}
+          <div class="rt-empty-state rt-empty-state--inline rt-empty-state--compact">
+            <i class="fa-regular fa-stars"></i>
+            <span>No talents</span>
+          </div>
+          {{/if}}
+
+          {{#if traits.length}}
+          <div class="rt-trait-chips-compact">
+            {{#each traits}}
+            <div class="rt-trait-chip-mini" data-item-id="{{id}}" title="{{name}}">
+              <img src="{{img}}" class="rt-trait-img-mini" alt="" />
+              <span class="rt-trait-name-mini">{{name}}</span>
+            </div>
+            {{/each}}
+          </div>
+          {{/if}}
+        </div>
+      </div>
+
+    </div>
+
+    {{!-- SECTION 4: GM Notes (if GM) --}}
+    {{#if isGM}}
+    <div class="rt-panel rt-panel--notes">
+      <div class="rt-panel-header">
+        <i class="fa-solid fa-sticky-note"></i>
+        <span>GM Notes</span>
+        <span class="rt-gm-badge"><i class="fa-solid fa-lock"></i></span>
+      </div>
+      <div class="rt-panel-body">
+        <div class="rt-notes-grid">
+          <div class="rt-note-field">
+            <label>Quick Notes</label>
+            <div class="rt-editor-mini">
+              {{editor content=system.quickNotes target="system.quickNotes" button=true editable=editable collaborate=false engine="prosemirror"}}
+            </div>
+          </div>
+          <div class="rt-note-field">
+            <label>Tactics</label>
+            <div class="rt-editor-mini">
+              {{editor content=system.tactics target="system.tactics" button=true editable=editable collaborate=false engine="prosemirror"}}
+            </div>
+          </div>
+        </div>
+        <div class="rt-meta-fields">
+          <div class="rt-meta-field">
+            <i class="fa-solid fa-flag"></i>
+            <input type="text" name="system.faction" value="{{system.faction}}" placeholder="Faction" {{#unless editable}}disabled{{/unless}} />
+          </div>
+          <div class="rt-meta-field">
+            <i class="fa-solid fa-book-open"></i>
+            <input type="text" name="system.source" value="{{system.source}}" placeholder="Source (e.g. Core p.123)" {{#unless editable}}disabled{{/unless}} />
+          </div>
+        </div>
+        {{!-- Tags --}}
+        <div class="rt-tags-row">
+          {{#each tags}}
+          <span class="rt-tag">
+            {{this}}
+            {{#if ../editable}}
+            <button type="button" class="rt-tag-remove" data-action="removeTag" data-tag="{{this}}">×</button>
+            {{/if}}
+          </span>
+          {{else}}
+          <span class="rt-tags-empty">No tags</span>
+          {{/each}}
+          {{#if editable}}
+          <button type="button" class="rt-tag-add" data-action="addTag" title="Add Tag">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Roleplay Personality (if roleplay mode) --}}
+    {{#if (eq system.primaryUse "roleplay")}}
+    <div class="rt-panel rt-panel--personality">
+      <div class="rt-panel-header">
+        <i class="fa-solid fa-theater-masks"></i>
+        <span>Personality</span>
+      </div>
+      <div class="rt-panel-body">
+        <div class="rt-personality-grid">
+          <div class="rt-personality-field">
+            <label>Demeanor</label>
+            <input type="text" name="system.personality.demeanor" value="{{system.personality.demeanor}}" placeholder="e.g., Gruff" {{#unless editable}}disabled{{/unless}} />
+          </div>
+          <div class="rt-personality-field">
+            <label>Goals</label>
+            <input type="text" name="system.personality.goals" value="{{system.personality.goals}}" placeholder="What do they want?" {{#unless editable}}disabled{{/unless}} />
+          </div>
+          <div class="rt-personality-field">
+            <label>Fears</label>
+            <input type="text" name="system.personality.fears" value="{{system.personality.fears}}" placeholder="What do they fear?" {{#unless editable}}disabled{{/unless}} />
+          </div>
+          <div class="rt-personality-field">
+            <label>Quirks</label>
+            <input type="text" name="system.personality.quirks" value="{{system.personality.quirks}}" placeholder="Memorable traits" {{#unless editable}}disabled{{/unless}} />
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+  </div>
+</section>

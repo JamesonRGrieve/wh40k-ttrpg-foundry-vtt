@@ -1,0 +1,152 @@
+{{!-- NPC Quick Create Dialog Template --}}
+{{!-- Phase 3: Quick NPC creation with auto-generated stats --}}
+
+<div class="npc-quick-create">
+    {{!-- Header --}}
+    <header class="dialog-header">
+        <h2><i class="fa-solid fa-user-plus"></i> {{localize "RT.NPC.QuickCreate"}}</h2>
+        <p class="subtitle">{{localize "RT.NPC.QuickCreateSubtitle"}}</p>
+    </header>
+
+    {{!-- Form Section --}}
+    <section class="form-section">
+        {{!-- Name Input --}}
+        <div class="form-group">
+            <label for="name">{{localize "RT.Name"}}</label>
+            <input type="text" name="name" value="{{state.name}}" placeholder="Enter NPC name..." />
+        </div>
+
+        {{!-- Faction Input --}}
+        <div class="form-group">
+            <label for="faction">{{localize "RT.NPC.Faction"}}</label>
+            <input type="text" name="faction" value="{{state.faction}}" placeholder="e.g., Ork, Imperial Guard, Chaos..." />
+        </div>
+
+        {{!-- Threat Level Slider --}}
+        <div class="form-group threat-slider-group">
+            <label for="threatLevel">{{localize "RT.NPC.ThreatLevel"}}</label>
+            <div class="slider-container">
+                <input type="range" name="threatLevel" min="1" max="30" value="{{state.threatLevel}}" />
+                <span class="threat-value">{{state.threatLevel}}</span>
+            </div>
+            <div class="threat-tier-info">
+                <span class="tier-name">{{tierName}}</span>
+                <span class="tier-description">{{tierDescription}}</span>
+            </div>
+        </div>
+
+        {{!-- Three-Column Layout --}}
+        <div class="form-row three-column">
+            {{!-- Role Select --}}
+            <div class="form-group">
+                <label for="role">{{localize "RT.NPC.Role"}}</label>
+                <select name="role">
+                    {{#each roles}}
+                    <option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            {{!-- Type Select --}}
+            <div class="form-group">
+                <label for="type">{{localize "RT.NPC.Type"}}</label>
+                <select name="type">
+                    {{#each types}}
+                    <option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            {{!-- Equipment Preset Select --}}
+            <div class="form-group">
+                <label for="preset">{{localize "RT.NPC.EquipmentPreset"}}</label>
+                <select name="preset">
+                    {{#each presets}}
+                    <option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+
+        {{!-- Horde Toggle --}}
+        <div class="form-group checkbox-group">
+            <label>
+                <input type="checkbox" name="isHorde" {{#if state.isHorde}}checked{{/if}} />
+                <span>{{localize "RT.NPC.EnableHordeMode"}}</span>
+            </label>
+            <p class="hint">{{localize "RT.NPC.HordeModeHint"}}</p>
+        </div>
+    </section>
+
+    {{!-- Preview Section --}}
+    <section class="preview-section">
+        <h3><i class="fa-solid fa-eye"></i> {{localize "RT.NPC.Preview"}}</h3>
+
+        {{!-- Characteristics Grid --}}
+        <div class="preview-panel characteristics-preview">
+            <h4>{{localize "RT.Characteristics"}}</h4>
+            <div class="characteristics-grid">
+                {{#each preview.characteristics}}
+                <div class="characteristic-item">
+                    <span class="char-short">{{short}}</span>
+                    <span class="char-value">{{value}}</span>
+                    <span class="char-bonus">({{bonus}})</span>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        {{!-- Stats Row --}}
+        <div class="preview-panel stats-row">
+            <div class="stat-item">
+                <span class="stat-label">{{localize "RT.Wounds"}}</span>
+                <span class="stat-value">{{preview.wounds}}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">{{localize "RT.Armour"}}</span>
+                <span class="stat-value">{{preview.armour}}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">{{localize "RT.Movement"}}</span>
+                <span class="stat-value">{{preview.movement.half}}/{{preview.movement.full}}/{{preview.movement.charge}}/{{preview.movement.run}}</span>
+            </div>
+        </div>
+
+        {{!-- Skills Preview --}}
+        {{#if preview.skills.length}}
+        <div class="preview-panel skills-preview">
+            <h4>{{localize "RT.Skills"}}</h4>
+            <div class="skills-list">
+                {{#each preview.skills}}
+                <span class="skill-tag">{{name}}{{#if level}} {{level}}{{/if}}</span>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+
+        {{!-- Weapons Preview --}}
+        {{#if preview.weapons.length}}
+        <div class="preview-panel weapons-preview">
+            <h4>{{localize "RT.Weapons"}}</h4>
+            <div class="weapons-list">
+                {{#each preview.weapons}}
+                <div class="weapon-item">
+                    <span class="weapon-name">{{name}}</span>
+                    <span class="weapon-stats">{{damage}}, Pen {{pen}}</span>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+    </section>
+
+    {{!-- Footer Buttons --}}
+    <footer class="form-footer">
+        {{#each buttons}}
+        <button type="{{type}}" class="dialog-button {{cssClass}}" {{#if action}}data-action="{{action}}"{{/if}}>
+            <i class="{{icon}}"></i>
+            {{localize label}}
+        </button>
+        {{/each}}
+    </footer>
+</div>

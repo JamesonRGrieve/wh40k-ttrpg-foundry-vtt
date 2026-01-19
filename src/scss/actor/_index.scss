@@ -16,4 +16,5 @@
 @import 'abilities';       // Abilities tab layout
 @import 'equipment';       // Equipment tab styles
 @import 'tables';          // Table improvements, item buttons
+// NOTE: npc-sheet-v2 imported at root level (outside rt-wrapper) for ApplicationV2
 // @import 'vitals';          // Vitals panels (wounds, fatigue, fate) - LEGACY - REMOVED to fix conflicts

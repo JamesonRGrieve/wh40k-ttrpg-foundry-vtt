@@ -10,8 +10,9 @@ import * as dice from './dice/_module.mjs';
 // Import V2 Actor Sheets (ApplicationV2-based)
 import AcolyteSheet from './applications/actor/acolyte-sheet.mjs';
 import AcolyteSheetSidebar from './applications/actor/acolyte-sheet-sidebar.mjs';
-import NpcSheet from './applications/actor/npc-sheet.mjs';
+import NPCSheetV2 from './applications/actor/npc-sheet-v2.mjs';
 import VehicleSheet from './applications/actor/vehicle-sheet.mjs';
+import VehicleSheetV2 from './applications/actor/vehicle-sheet-v2.mjs';
 import StarshipSheet from './applications/actor/starship-sheet.mjs';
 
 // Import V2 Item Sheets (ApplicationV2-based)
@@ -39,7 +40,8 @@ import {
     AttackSpecialSheet,
     ShipComponentSheet,
     ShipWeaponSheet,
-    ShipUpgradeSheet
+    ShipUpgradeSheet,
+    NPCTemplateSheet
 } from './applications/item/_module.mjs';
 
 import { RTCompendiumBrowser } from './applications/compendium-browser.mjs';
@@ -62,6 +64,7 @@ import { DHTourMain } from './tours/main-tour.mjs';
 import { RollTableUtils } from './utils/roll-table-utils.mjs';
 import { TooltipsRT } from './applications/components/_module.mjs';
 import * as characterCreation from './applications/character-creation/_module.mjs';
+import * as npcApplications from './applications/npc/_module.mjs';
 
 import * as documents from './documents/_module.mjs'
 import { SYSTEM_ID } from './constants.mjs';
@@ -75,6 +78,7 @@ export class HooksManager {
         Hooks.on('ready', HooksManager.ready);
         Hooks.on('hotbarDrop', HooksManager.hotbarDrop);
         Hooks.on('renderCompendiumDirectory', HooksManager.renderCompendiumDirectory);
+        Hooks.on('getActorSheetClass', HooksManager.getActorSheetClass);
 
         DHTargetedActionManager.initializeHooks();
         DHBasicActionManager.initializeHooks();
@@ -116,6 +120,23 @@ Enable Debug with: game.rt.debug = true
             // Character creation
             OriginPathBuilder: characterCreation.OriginPathBuilder,
             openOriginPathBuilder: (actor) => characterCreation.OriginPathBuilder.show(actor),
+            // NPC utilities
+            npc: npcApplications,
+            applications: npcApplications, // Alias for shorter access
+            ThreatCalculator: npcApplications.ThreatCalculator,
+            quickCreateNPC: (config) => npcApplications.NPCQuickCreateDialog.create(config),
+            batchCreateNPCs: (config) => npcApplications.BatchCreateDialog.open(config),
+            openEncounterBuilder: () => npcApplications.EncounterBuilder.show(),
+            exportStatBlock: (actor, format) => npcApplications.StatBlockExporter.quickExport(actor, format),
+            importStatBlock: (input) => npcApplications.StatBlockParser.open(input),
+            openTemplateSelector: (options) => npcApplications.TemplateSelector.open(options),
+            // Phase 7: QoL Features
+            DifficultyCalculatorDialog: npcApplications.DifficultyCalculatorDialog,
+            calculateDifficulty: (actor) => npcApplications.DifficultyCalculatorDialog.show(actor),
+            CombatPresetDialog: npcApplications.CombatPresetDialog,
+            savePreset: (actor) => npcApplications.CombatPresetDialog.savePreset(actor),
+            loadPreset: (actor) => npcApplications.CombatPresetDialog.loadPreset(actor),
+            openPresetLibrary: () => npcApplications.CombatPresetDialog.showLibrary(),
             // Dice/Roll classes
             dice: dice,
             BasicRollRT: dice.BasicRollRT,
@@ -135,6 +156,7 @@ Enable Debug with: game.rt.debug = true
             acolyte: documents.RogueTraderAcolyte,
             character: documents.RogueTraderAcolyte,
             npc: documents.RogueTraderNPC,
+            npcV2: documents.RogueTraderNPCV2,
             vehicle: documents.RogueTraderVehicle,
             starship: documents.RogueTraderStarship,
         };
@@ -151,6 +173,7 @@ Enable Debug with: game.rt.debug = true
             acolyte: dataModels.CharacterData,
             character: dataModels.CharacterData,
             npc: dataModels.NPCData,
+            npcV2: dataModels.NPCDataV2,
             vehicle: dataModels.VehicleData,
             starship: dataModels.StarshipData,
         };
@@ -203,6 +226,8 @@ Enable Debug with: game.rt.debug = true
             malignancy: dataModels.MalignancyData,
             mentalDisorder: dataModels.MentalDisorderData,
             journalEntry: dataModels.JournalEntryItemData,
+            // NPC Templates
+            npcTemplate: dataModels.NPCTemplateData,
         };
 
         // Register sheet application classes
@@ -221,11 +246,26 @@ Enable Debug with: game.rt.debug = true
             makeDefault: false,
             label: "RT.Sheet.AcolyteSidebar"
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NpcSheet, {
+        // Legacy NPC type uses Acolyte sheet as fallback (for existing npc actors)
+        // TODO: Add migration to convert "npc" to "npcV2" type
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheet, {
             types: ["npc"],
             makeDefault: true,
-            label: "RT.Sheet.NPC"
+            label: "RT.Sheet.NPCLegacy"
         });
+        // NPC V2 sheet - modern redesign for npcV2 actors
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheetV2, {
+            types: ["npcV2"],
+            makeDefault: true,
+            label: "RT.Sheet.NPCV2"
+        });
+        // Vehicle V2 sheet - for npcV2 actors with primaryUse="vehicle"
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheetV2, {
+            types: ["npcV2"],
+            makeDefault: false,
+            label: "RT.Sheet.VehicleV2"
+        });
+        // Legacy vehicle sheet
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
             types: ["vehicle"],
             makeDefault: true,
@@ -406,6 +446,13 @@ Enable Debug with: game.rt.debug = true
             makeDefault: true,
             label: "RT.Sheet.ShipUpgrade"
         });
+        
+        // NPC Template sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, NPCTemplateSheet, {
+            types: ["npcTemplate"],
+            makeDefault: true,
+            label: "RT.Sheet.NPCTemplate"
+        });
 
         RogueTraderSettings.registerSettings();
         HandlebarManager.loadTemplates();
@@ -460,5 +507,31 @@ Enable Debug with: game.rt.debug = true
             RTCompendiumBrowser.open();
         });
         header.find('.header-actions').prepend(browserBtn);
+    }
+
+    /**
+     * Auto-select appropriate sheet for npcV2 actors based on primaryUse field.
+     * Hook: getActorSheetClass
+     */
+    static getActorSheetClass(actor, sheetData) {
+        // Only handle npcV2 actors
+        if (actor.type !== "npcV2") return;
+        
+        // Check primaryUse field
+        const primaryUse = actor.system?.primaryUse;
+        
+        // Auto-select vehicle sheet for vehicle/ship NPCs
+        if (primaryUse === "vehicle" || primaryUse === "ship") {
+            // Find VehicleSheetV2 in registered sheets
+            const vehicleSheet = Object.values(sheetData).find(s => 
+                s.id === "rogue-trader.VehicleSheetV2"
+            );
+            if (vehicleSheet) {
+                return vehicleSheet.id;
+            }
+        }
+        
+        // Default to NPCSheetV2 for standard NPCs
+        return null; // Let default handling work
     }
 }

@@ -1,0 +1,34 @@
+{{!-- Stat Block Exporter Dialog --}}
+<div class="stat-block-exporter-content">
+  {{!-- Format Tabs --}}
+  <nav class="export-format-tabs">
+    <button type="button" class="format-tab {{#eq format "text"}}active{{/eq}}" data-format="text">
+      <i class="fa-solid fa-file-lines"></i>
+      {{localize "RT.NPC.Export.TextFormat"}}
+    </button>
+    <button type="button" class="format-tab {{#eq format "json"}}active{{/eq}}" data-format="json">
+      <i class="fa-solid fa-file-code"></i>
+      {{localize "RT.NPC.Export.JSONFormat"}}
+    </button>
+  </nav>
+
+  {{!-- Export Preview --}}
+  <div class="export-preview">
+    <label>{{localize "RT.NPC.Export.Preview"}}</label>
+    {{#eq format "text"}}
+    <pre class="export-content text-content">{{textContent}}</pre>
+    {{else}}
+    <pre class="export-content json-content">{{jsonContent}}</pre>
+    {{/eq}}
+  </div>
+
+  {{!-- Action Buttons --}}
+  <footer class="sheet-footer flexrow">
+    {{#each buttons}}
+    <button type="button" data-action="{{action}}" class="{{cssClass}}">
+      <i class="{{icon}}"></i>
+      {{localize label}}
+    </button>
+    {{/each}}
+  </footer>
+</div>

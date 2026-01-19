@@ -985,3 +985,33 @@ export function displayStrength(strength) {
 export function displayCrit(crit) {
     return (crit && crit > 0) ? `${crit}+` : '-';
 }
+
+/**
+ * Truncate a string to a maximum length, adding ellipsis if truncated
+ * @param {string} str - String to truncate
+ * @param {number} maxLength - Maximum length before truncation
+ * @returns {string} Truncated string
+ */
+export function truncate(str, maxLength = 100) {
+    if (!str || typeof str !== 'string') return '';
+    // Strip HTML tags for text length calculation
+    const plainText = str.replace(/<[^>]*>/g, '');
+    if (plainText.length <= maxLength) return str;
+    return plainText.substring(0, maxLength).trim() + '…';
+}
+
+/**
+ * Select helper for dropdown options
+ * Usage: {{#select currentValue}}...options...{{/select}}
+ * Marks the matching option as selected
+ */
+export function select(selected, options) {
+    const escapedValue = String(selected).replace(/['"]/g, '\\$&');
+    
+    // Replace selected attribute in options
+    const html = options.fn(this);
+    return html.replace(
+        new RegExp(' value="' + escapedValue + '"'),
+        ' value="' + escapedValue + '" selected="selected"'
+    );
+}

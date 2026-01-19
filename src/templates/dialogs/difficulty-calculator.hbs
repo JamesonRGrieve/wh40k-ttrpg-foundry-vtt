@@ -1,0 +1,143 @@
+{{!-- Difficulty Calculator Dialog Template --}}
+<form class="rt-difficulty-calculator">
+  {{!-- NPC Info --}}
+  <section class="rt-panel rt-panel--npc-info">
+    <header class="rt-panel-header">
+      <img src="{{npc.img}}" alt="{{npc.name}}" class="rt-token-image" />
+      <div class="rt-panel-header-text">
+        <h3>{{npc.name}}</h3>
+        <div class="rt-subtitle">
+          Threat {{npc.threatLevel}} • {{npc.type}}
+          {{#if npc.isHorde}}<span class="rt-badge rt-badge--horde">Horde</span>{{/if}}
+        </div>
+      </div>
+    </header>
+  </section>
+
+  {{!-- Quantity Input --}}
+  <section class="rt-panel rt-panel--quantity">
+    <label class="rt-form-group">
+      <span class="rt-label">Number of Enemies</span>
+      <input 
+        type="number" 
+        name="quantity" 
+        value="{{quantity}}" 
+        min="1" 
+        class="rt-input" 
+        data-tooltip="How many of this NPC are in the encounter?"
+      />
+    </label>
+  </section>
+
+  {{!-- Party Composition --}}
+  <section class="rt-panel rt-panel--party">
+    <header class="rt-panel-header">
+      <i class="fa-solid fa-users"></i>
+      <h4>Party Composition</h4>
+    </header>
+    <div class="rt-panel-body">
+      {{#if partyMembers}}
+        <ul class="rt-party-list">
+          {{#each partyMembers}}
+            <li class="rt-party-member">
+              <img src="{{this.img}}" alt="{{this.name}}" class="rt-avatar" />
+              <span class="rt-party-member-name">{{this.name}}</span>
+              <span class="rt-party-member-rank">Rank {{this.rank}}</span>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p class="rt-empty-message">No active party members found.</p>
+      {{/if}}
+      
+      <div class="rt-stats-grid">
+        <div class="rt-stat-box">
+          <span class="rt-stat-label">Party Size</span>
+          <span class="rt-stat-value">{{partySize}}</span>
+        </div>
+        <div class="rt-stat-box">
+          <span class="rt-stat-label">Avg. Rank</span>
+          <span class="rt-stat-value">{{partyLevel}}</span>
+        </div>
+        <div class="rt-stat-box">
+          <span class="rt-stat-label">Party Threat</span>
+          <span class="rt-stat-value">{{partyThreat}}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{!-- Threat Analysis --}}
+  <section class="rt-panel rt-panel--threat-analysis">
+    <header class="rt-panel-header">
+      <i class="fa-solid fa-chart-line"></i>
+      <h4>Threat Analysis</h4>
+    </header>
+    <div class="rt-panel-body">
+      <div class="rt-threat-comparison">
+        <div class="rt-threat-bar">
+          <div class="rt-threat-bar-label">NPC Threat</div>
+          <div class="rt-threat-bar-visual">
+            <div 
+              class="rt-threat-bar-fill" 
+              style="width: {{multiply threatRatio 100}}%; background-color: {{difficulty.color}};"
+            ></div>
+          </div>
+          <div class="rt-threat-bar-value">{{totalThreat}}</div>
+        </div>
+        
+        <div class="rt-threat-ratio">
+          <span class="rt-ratio-value" style="color: {{difficulty.color}};">
+            {{threatRatio}}×
+          </span>
+          <span class="rt-ratio-label">Threat Ratio</span>
+        </div>
+      </div>
+
+      {{!-- Difficulty Rating --}}
+      <div class="rt-difficulty-result" style="border-color: {{difficulty.color}};">
+        <div class="rt-difficulty-badge" style="background-color: {{difficulty.color}};">
+          {{difficulty.label}}
+        </div>
+        <p class="rt-difficulty-description">{{difficulty.description}}</p>
+      </div>
+
+      {{!-- Difficulty Scale Reference --}}
+      <div class="rt-difficulty-scale">
+        <h5>Difficulty Scale</h5>
+        <ul class="rt-scale-list">
+          <li class="rt-scale-item">
+            <span class="rt-scale-dot" style="background-color: #4caf50;"></span>
+            <span class="rt-scale-label">Trivial</span>
+            <span class="rt-scale-range">&lt; 0.25×</span>
+          </li>
+          <li class="rt-scale-item">
+            <span class="rt-scale-dot" style="background-color: #8bc34a;"></span>
+            <span class="rt-scale-label">Easy</span>
+            <span class="rt-scale-range">0.25-0.50×</span>
+          </li>
+          <li class="rt-scale-item">
+            <span class="rt-scale-dot" style="background-color: #ff9800;"></span>
+            <span class="rt-scale-label">Moderate</span>
+            <span class="rt-scale-range">0.50-0.75×</span>
+          </li>
+          <li class="rt-scale-item">
+            <span class="rt-scale-dot" style="background-color: #ff5722;"></span>
+            <span class="rt-scale-label">Dangerous</span>
+            <span class="rt-scale-range">0.75-1.00×</span>
+          </li>
+          <li class="rt-scale-item">
+            <span class="rt-scale-dot" style="background-color: #f44336;"></span>
+            <span class="rt-scale-label">Deadly</span>
+            <span class="rt-scale-range">1.00-1.50×</span>
+          </li>
+          <li class="rt-scale-item">
+            <span class="rt-scale-dot" style="background-color: #9c27b0;"></span>
+            <span class="rt-scale-label">Apocalyptic</span>
+            <span class="rt-scale-range">&gt; 1.50×</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</form>

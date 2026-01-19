@@ -1,0 +1,101 @@
+{{!-- NPC Template - Characteristics Tab --}}
+<section class="tab-content tab-characteristics" data-tab="characteristics" data-group="primary">
+    {{!-- Base Characteristics --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-dice-d20"></i> {{localize "RT.NPC.Template.BaseCharacteristics"}}</h3>
+            <span class="panel-note">{{localize "RT.NPC.Template.CharacteristicsNote"}}</span>
+        </header>
+        <div class="rt-panel-content">
+            <div class="characteristics-grid">
+                {{#each characteristics as |char key|}}
+                <div class="characteristic-field">
+                    <label>{{char.label}}</label>
+                    <input type="number" name="system.baseCharacteristics.{{key}}" 
+                           value="{{char.value}}" min="0" max="100" />
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Unnatural Characteristics --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-bolt"></i> {{localize "RT.NPC.Template.UnnaturalCharacteristics"}}</h3>
+        </header>
+        <div class="rt-panel-content">
+            <div class="characteristics-grid small">
+                {{#each characteristics as |char key|}}
+                <div class="characteristic-field compact">
+                    <label>{{char.short}}</label>
+                    <input type="number" name="system.unnaturalCharacteristics.{{key}}" 
+                           value="{{lookup ../system.unnaturalCharacteristics key}}" min="0" max="10" />
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Wounds & Movement --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-heart"></i> {{localize "RT.NPC.Template.VitalStats"}}</h3>
+        </header>
+        <div class="rt-panel-content">
+            <div class="vital-stats-grid">
+                <div class="vital-field">
+                    <label>{{localize "RT.Wounds"}}</label>
+                    <input type="number" name="system.baseWounds" value="{{system.baseWounds}}" min="1" />
+                </div>
+                
+                <div class="vital-field">
+                    <label>{{localize "RT.Movement"}}</label>
+                    <input type="number" name="system.baseMovement" value="{{system.baseMovement}}" min="0" />
+                </div>
+                
+                <div class="vital-field">
+                    <label>{{localize "RT.NPC.Armour"}}</label>
+                    <input type="number" name="system.baseArmour" value="{{system.baseArmour}}" min="0" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Trained Skills --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-graduation-cap"></i> {{localize "RT.NPC.Template.TrainedSkills"}}</h3>
+            <button type="button" class="rt-btn rt-btn-icon" data-action="addSkill">
+                <i class="fas fa-plus"></i>
+            </button>
+        </header>
+        <div class="rt-panel-content">
+            {{#if (gt system.trainedSkills.length 0)}}
+            <div class="skills-list">
+                {{#each system.trainedSkills as |skill idx|}}
+                <div class="skill-row" data-index="{{idx}}">
+                    <span class="skill-name">{{skill.name}}</span>
+                    <span class="skill-char">{{skill.characteristic}}</span>
+                    <div class="skill-level">
+                        <select name="system.trainedSkills.{{idx}}.level">
+                            <option value="trained" {{#eq skill.level "trained"}}selected{{/eq}}>{{localize "RT.Skills.Trained"}}</option>
+                            <option value="plus10" {{#eq skill.level "plus10"}}selected{{/eq}}>+10</option>
+                            <option value="plus20" {{#eq skill.level "plus20"}}selected{{/eq}}>+20</option>
+                        </select>
+                    </div>
+                    <input type="number" name="system.trainedSkills.{{idx}}.bonus" 
+                           value="{{skill.bonus}}" placeholder="+0" class="skill-bonus" />
+                    <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" 
+                            data-action="removeSkill" data-index="{{idx}}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                {{/each}}
+            </div>
+            {{else}}
+            <p class="empty-message">{{localize "RT.NPC.Template.NoSkills"}}</p>
+            {{/if}}
+        </div>
+    </div>
+</section>

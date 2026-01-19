@@ -1,0 +1,13 @@
+{{!-- NPC Template Sheet Tabs Navigation --}}
+<nav class="rt-tabs-nav" data-group="primary">
+    {{#each tabs as |tab|}}
+    <button type="button" 
+            class="rt-tab {{#if tab.active}}active{{/if}}" 
+            data-tab="{{tab.tab}}" 
+            data-group="primary"
+            data-action="changeTab">
+        <i class="{{tab.icon}}"></i>
+        <span>{{localize tab.label}}</span>
+    </button>
+    {{/each}}
+</nav>

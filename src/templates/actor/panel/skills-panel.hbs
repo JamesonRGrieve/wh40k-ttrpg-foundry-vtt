@@ -3,7 +3,7 @@
         <!-- Left Column -->
         <div class="rt-skills-column">
             {{#each skillLists.standardColumns.[0] as |entry|}}
-            <div class="rt-skill-row{{#if (eq entry.[1].advanced true)}} rt-skill-row--advanced{{/if}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+            <div class="rt-skill-row{{#if (eq entry.[1].advanced true)}} rt-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} rt-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="rt-skill-info">
                     <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <div class="rt-skill-name-wrapper">
@@ -19,15 +19,18 @@
                                 title="Roll {{entry.[1].label}} Test">
                             <i class="fas fa-dice-d20"></i>
                         </button>
+                        {{!-- Favorite toggle button --}}
+                        <button type="button" class="rt-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}" 
+                                data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
+                                title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                            <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="rt-spec-training">
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}"
-                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="1" title="Trained (+0 bonus)">T</button>
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}"
-                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="2" title="+10 Bonus">+10</button>
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}"
-                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="3" title="+20 Bonus">+20</button>
+                <div class="rt-spec-training rt-training-display">
+                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
+                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
+                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
                 </div>
                 <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
@@ -38,7 +41,7 @@
         <!-- Right Column -->
         <div class="rt-skills-column">
             {{#each skillLists.standardColumns.[1] as |entry|}}
-            <div class="rt-skill-row{{#if (eq entry.[1].advanced true)}} rt-skill-row--advanced{{/if}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+            <div class="rt-skill-row{{#if (eq entry.[1].advanced true)}} rt-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} rt-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="rt-skill-info">
                     <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <div class="rt-skill-name-wrapper">
@@ -54,15 +57,18 @@
                                 title="Roll {{entry.[1].label}} Test">
                             <i class="fas fa-dice-d20"></i>
                         </button>
+                        {{!-- Favorite toggle button --}}
+                        <button type="button" class="rt-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}" 
+                                data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
+                                title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                            <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="rt-spec-training">
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}"
-                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="1" title="Trained (+0 bonus)">T</button>
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}"
-                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="2" title="+10 Bonus">+10</button>
-                    <button type="button" class="rt-train-btn {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}"
-                            data-action="toggleTraining" data-skill="{{entry.[0]}}" data-level="3" title="+20 Bonus">+20</button>
+                <div class="rt-spec-training rt-training-display">
+                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
+                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
+                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
                 </div>
                 <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>

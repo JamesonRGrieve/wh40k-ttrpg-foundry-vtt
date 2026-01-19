@@ -25,7 +25,8 @@
 @import 'gear-v2';               // Gear sheet V2
 @import 'cybernetic-v2';         // Cybernetic sheet V2
 @import 'force-field-v2';        // Force field sheet V2
-@import 'talent-sheet';          // Talent sheet modern redesign
+@import 'talent-sheet';          // Talent sheet legacy (backup)
+@import 'talent-sheet-v2';       // Talent sheet V2 complete redesign
 @import 'trait-sheet';           // Trait sheet modern redesign
 @import 'skill';                 // Skill sheet
 @import 'condition';             // Condition sheet & chat card
@@ -37,3 +38,6 @@
 @import 'talent-trait-modern';   // Talent/trait legacy tabbed
 @import 'origin-path';           // Origin path legacy styles
 @import 'actor-styles';          // Modern actor sheet integration
+
+// NPC Templates (Phase 7)
+@import 'npc-template-sheet';    // NPC template item sheet

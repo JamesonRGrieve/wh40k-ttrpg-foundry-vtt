@@ -1,0 +1,162 @@
+{{!-- Encounter Builder Application --}}
+<div class="encounter-builder-content">
+  {{!-- Header with Party Settings --}}
+  <header class="encounter-header">
+    <div class="party-config">
+      <h3><i class="fa-solid fa-users"></i> {{localize "RT.NPC.Encounter.PartySettings"}}</h3>
+      <div class="party-fields">
+        <div class="form-group">
+          <label>{{localize "RT.NPC.Encounter.PartySize"}}</label>
+          <input type="number" name="partyCount" value="{{party.count}}" min="1" max="10"/>
+        </div>
+        <div class="form-group">
+          <label>{{localize "RT.NPC.Encounter.PartyLevel"}}</label>
+          <input type="number" name="partyLevel" value="{{party.averageLevel}}" min="1" max="30"/>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {{!-- Main Content Grid --}}
+  <div class="encounter-main">
+    {{!-- NPC List --}}
+    <section class="npc-list-section">
+      <div class="section-header">
+        <h3><i class="fa-solid fa-skull"></i> {{localize "RT.NPC.Encounter.Enemies"}}</h3>
+        <button type="button" data-action="addNPC" class="icon-button" title="{{localize "RT.NPC.Encounter.AddNPC"}}">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+
+      {{!-- Drop Zone --}}
+      <div class="encounter-drop-zone">
+        <i class="fa-solid fa-hand-pointer"></i>
+        <span>{{localize "RT.NPC.Encounter.DropHere"}}</span>
+      </div>
+
+      {{!-- NPC Table --}}
+      {{#if hasNPCs}}
+      <table class="npc-table">
+        <thead>
+          <tr>
+            <th class="img"></th>
+            <th class="name">{{localize "RT.NPC.Name"}}</th>
+            <th class="threat">{{localize "RT.NPC.ThreatLevel"}}</th>
+            <th class="count">{{localize "RT.NPC.Encounter.Count"}}</th>
+            <th class="total">{{localize "RT.NPC.Encounter.Total"}}</th>
+            <th class="actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each npcs}}
+          <tr>
+            <td class="img">
+              <img src="{{img}}" alt="{{name}}" data-action="openNPC" data-uuid="{{uuid}}"/>
+            </td>
+            <td class="name">
+              <a data-action="openNPC" data-uuid="{{uuid}}">{{name}}</a>
+            </td>
+            <td class="threat">{{threat}}</td>
+            <td class="count">
+              <button type="button" data-action="adjustCount" data-index="{{index}}" data-delta="-1">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <span>{{count}}</span>
+              <button type="button" data-action="adjustCount" data-index="{{index}}" data-delta="1">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </td>
+            <td class="total">{{totalThreat}}</td>
+            <td class="actions">
+              <button type="button" data-action="removeNPC" data-index="{{index}}" class="icon-button danger" title="{{localize "Remove"}}">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{else}}
+      <p class="empty-message">{{localize "RT.NPC.Encounter.NoEnemies"}}</p>
+      {{/if}}
+    </section>
+
+    {{!-- Metrics Panel --}}
+    <aside class="encounter-metrics">
+      {{!-- Difficulty Rating --}}
+      <div class="metric-card difficulty" style="border-color: {{difficultyColor}};">
+        <h4>{{localize "RT.NPC.Encounter.Difficulty"}}</h4>
+        <div class="difficulty-badge" style="background-color: {{difficultyColor}};">
+          {{difficultyLabel}}
+        </div>
+        <p class="ratio">{{localize "RT.NPC.Encounter.ThreatRatio"}}: {{threatRatio}}x</p>
+      </div>
+
+      {{!-- Threat Summary --}}
+      <div class="metric-card threat-summary">
+        <h4>{{localize "RT.NPC.Encounter.ThreatSummary"}}</h4>
+        <dl>
+          <dt>{{localize "RT.NPC.Encounter.EnemyThreat"}}</dt>
+          <dd>{{totalThreat}}</dd>
+          <dt>{{localize "RT.NPC.Encounter.PartyThreat"}}</dt>
+          <dd>{{partyThreat}}</dd>
+          <dt>{{localize "RT.NPC.Encounter.TotalEnemies"}}</dt>
+          <dd>{{totalNPCs}}</dd>
+        </dl>
+      </div>
+
+      {{!-- Action Economy --}}
+      <div class="metric-card action-economy">
+        <h4>{{localize "RT.NPC.Encounter.ActionEconomy"}}</h4>
+        <div class="action-comparison">
+          <div class="party-actions">
+            <span class="label">{{localize "RT.NPC.Encounter.Party"}}</span>
+            <span class="value">{{actionEconomy.partyActions}}</span>
+          </div>
+          <span class="vs">vs</span>
+          <div class="enemy-actions">
+            <span class="label">{{localize "RT.NPC.Encounter.Enemies"}}</span>
+            <span class="value">{{actionEconomy.enemyActions}}</span>
+          </div>
+        </div>
+        <p class="advantage" style="color: {{actionEconomy.advantage.color}};">
+          {{actionEconomy.advantage.text}}
+        </p>
+      </div>
+
+      {{!-- Saved Templates --}}
+      <div class="metric-card templates">
+        <h4>{{localize "RT.NPC.Encounter.Templates"}}</h4>
+        {{#if hasTemplates}}
+        <ul class="template-list">
+          {{#each templates}}
+          <li>
+            <button type="button" data-action="loadTemplate" data-index="{{@index}}">
+              {{name}}
+            </button>
+          </li>
+          {{/each}}
+        </ul>
+        {{else}}
+        <p class="empty-message">{{localize "RT.NPC.Encounter.NoTemplates"}}</p>
+        {{/if}}
+      </div>
+    </aside>
+  </div>
+
+  {{!-- Footer Actions --}}
+  <footer class="encounter-footer">
+    <button type="button" data-action="clearAll" class="secondary">
+      <i class="fa-solid fa-broom"></i>
+      {{localize "RT.NPC.Encounter.ClearAll"}}
+    </button>
+    <button type="button" data-action="saveTemplate" class="secondary">
+      <i class="fa-solid fa-floppy-disk"></i>
+      {{localize "RT.NPC.Encounter.SaveTemplate"}}
+    </button>
+    <button type="button" data-action="deployToCombat" class="primary" {{#unless hasCombat}}title="{{localize "RT.NPC.Encounter.NoCombat"}}"{{/unless}}>
+      <i class="fa-solid fa-swords"></i>
+      {{localize "RT.NPC.Encounter.Deploy"}}
+    </button>
+  </footer>
+</div>

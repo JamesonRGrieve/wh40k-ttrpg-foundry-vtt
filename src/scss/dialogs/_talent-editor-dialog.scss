@@ -1,0 +1,578 @@
+// ============================================
+// Talent Editor Dialog Styles - Gothic Theme
+// ============================================
+// Matches talent-sheet-v2 gothic styling
+// Comprehensive editor for talent modifiers, grants, prerequisites, and situational modifiers
+
+// ============================================
+// CSS Variables
+// ============================================
+
+.talent-editor-dialog {
+  --ted-accent: #{$rt-accent-talents};
+  --ted-accent-light: #{lighten($rt-accent-talents, 15%)};
+  --ted-accent-bg: #{rgba($rt-accent-talents, 0.1)};
+  --ted-accent-border: #{rgba($rt-accent-talents, 0.3)};
+  
+  font-family: $rt-font-body;
+  color: var(--color-text-primary);
+}
+
+.ted-container {
+  --ted-accent: #{$rt-accent-talents};
+  --ted-accent-light: #{lighten($rt-accent-talents, 15%)};
+  --ted-accent-bg: #{rgba($rt-accent-talents, 0.1)};
+  --ted-accent-border: #{rgba($rt-accent-talents, 0.3)};
+  
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-bg-primary);
+  font-family: $rt-font-body;
+}
+
+// ============================================
+// Tab Navigation - Gothic Style
+// ============================================
+
+.ted-section-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 $rt-space-md;
+  background: var(--color-bg-secondary);
+  border-bottom: 2px solid var(--color-border-secondary);
+  flex-shrink: 0;
+}
+
+.ted-section-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: $rt-space-sm $rt-space-md;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 0.95em;
+  }
+  
+  &:hover {
+    color: var(--color-text-primary);
+    background: rgba($rt-color-gold, 0.05);
+  }
+  
+  &.active {
+    color: $rt-color-gold;
+    border-bottom-color: $rt-color-gold;
+    background: rgba($rt-color-gold, 0.08);
+  }
+}
+
+// ============================================
+// Content Area
+// ============================================
+
+.ted-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: $rt-space-md;
+}
+
+// ============================================
+// Section Panels
+// ============================================
+
+.ted-section-panel {
+  display: none;
+  
+  &.active {
+    display: block;
+  }
+}
+
+// ============================================
+// Section Header - Gothic Style
+// ============================================
+
+.ted-section-header {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  margin-bottom: $rt-space-lg;
+  padding-bottom: $rt-space-md;
+  border-bottom: 2px solid var(--color-border-secondary);
+  
+  > i {
+    font-size: 1.2rem;
+    color: var(--ted-accent-light);
+  }
+  
+  h3 {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-family: $rt-font-heading;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $rt-color-gold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    i {
+      font-size: 1em;
+      color: var(--ted-accent-light);
+    }
+  }
+  
+  .ted-section-hint {
+    width: 100%;
+    margin: 0;
+    padding-left: calc(1.2rem + #{$rt-space-sm});
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--color-text-tertiary);
+    line-height: 1.4;
+  }
+}
+
+// ============================================
+// Field Groups - Enhanced Gothic Style
+// ============================================
+
+.ted-field-group {
+  margin-bottom: $rt-space-lg;
+  padding: $rt-space-md;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--color-border-light);
+  border-radius: $rt-radius-md;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: var(--ted-accent-border);
+  }
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.ted-field-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-family: $rt-font-heading;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: $rt-color-gold;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  
+  i {
+    font-size: 0.9em;
+    color: var(--ted-accent-light);
+  }
+}
+
+// ============================================
+// Form Inputs - Gothic Style
+// ============================================
+
+.ted-input,
+.ted-select,
+.ted-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  font-family: $rt-font-body;
+  font-size: 0.9rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color-border-light);
+  border-radius: $rt-radius-sm;
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+  
+  &::placeholder {
+    color: var(--color-text-tertiary);
+    font-style: italic;
+  }
+  
+  &:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: $rt-color-gold;
+    outline: none;
+    box-shadow: 0 0 8px rgba($rt-color-gold, 0.2);
+  }
+  
+  &:hover:not(:focus) {
+    border-color: var(--ted-accent-border);
+  }
+}
+
+.ted-textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: $rt-font-body;
+  line-height: 1.5;
+}
+
+.ted-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9a227' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 32px;
+}
+
+// ============================================
+// List Container & Rows - Gothic Enhanced
+// ============================================
+
+.ted-list {
+  display: flex;
+  flex-direction: column;
+  gap: $rt-space-sm;
+  margin-top: $rt-space-sm;
+}
+
+.ted-list-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 32px;
+  gap: $rt-space-sm;
+  align-items: center;
+  padding: $rt-space-sm $rt-space-md;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--color-border-light);
+  border-radius: $rt-radius-sm;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.35);
+    border-color: var(--ted-accent-border);
+  }
+  
+  &--wide {
+    grid-template-columns: 1fr 1fr 80px 32px;
+  }
+  
+  &--stacked {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+    align-items: stretch;
+    
+    .ted-row-inline {
+      display: grid;
+      grid-template-columns: 1fr 80px 32px;
+      gap: $rt-space-sm;
+      align-items: center;
+    }
+  }
+  
+  &--column {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-sm;
+    
+    .ted-list-row-main {
+      display: grid;
+      grid-template-columns: 1fr 32px;
+      gap: $rt-space-sm;
+      align-items: center;
+    }
+  }
+  
+  input, select {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    font-family: $rt-font-body;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--color-border-light);
+    border-radius: $rt-radius-sm;
+    color: var(--color-text-primary);
+    transition: all 0.15s ease;
+    
+    &:focus {
+      border-color: $rt-color-gold;
+      outline: none;
+      box-shadow: 0 0 6px rgba($rt-color-gold, 0.2);
+    }
+    
+    &:hover:not(:focus) {
+      border-color: var(--ted-accent-border);
+    }
+  }
+  
+  input[type="number"] {
+    width: 70px;
+    text-align: center;
+  }
+}
+
+.ted-textarea-condition {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-family: $rt-font-body;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--color-border-light);
+  border-radius: $rt-radius-sm;
+  color: var(--color-text-primary);
+  resize: vertical;
+  min-height: 50px;
+  transition: all 0.15s ease;
+  
+  &:focus {
+    border-color: $rt-color-gold;
+    outline: none;
+    box-shadow: 0 0 6px rgba($rt-color-gold, 0.2);
+  }
+  
+  &:hover:not(:focus) {
+    border-color: var(--ted-accent-border);
+  }
+  
+  &::placeholder {
+    color: var(--color-text-disabled);
+    opacity: 0.6;
+  }
+}
+
+// ============================================
+// Buttons - Gothic Enhanced
+// ============================================
+
+.ted-btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: $rt-space-sm;
+  padding: 8px 16px;
+  background: var(--ted-accent-bg);
+  border: 1px dashed var(--ted-accent-border);
+  border-radius: $rt-radius-sm;
+  color: var(--ted-accent-light);
+  font-family: $rt-font-heading;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 0.85em;
+  }
+  
+  &:hover {
+    background: rgba($rt-accent-talents, 0.2);
+    border-style: solid;
+    border-color: $rt-color-gold;
+    color: $rt-color-gold;
+    box-shadow: 0 0 10px rgba($rt-color-gold, 0.15);
+  }
+}
+
+.ted-btn-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba($rt-color-crimson, 0.15);
+  border: 1px solid rgba($rt-color-crimson, 0.4);
+  border-radius: $rt-radius-sm;
+  color: lighten($rt-color-crimson, 20%);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 0.8rem;
+  }
+  
+  &:hover {
+    background: rgba($rt-color-crimson, 0.3);
+    border-color: $rt-color-crimson;
+    color: lighten($rt-color-crimson, 30%);
+    box-shadow: 0 0 8px rgba($rt-color-crimson, 0.3);
+  }
+}
+
+// ============================================
+// Footer - Gothic Enhanced
+// ============================================
+
+.ted-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: $rt-space-md;
+  padding: $rt-space-md;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.2));
+  border-top: 2px solid var(--color-border-secondary);
+  flex-shrink: 0;
+}
+
+.ted-btn-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(180deg, 
+    rgba($rt-color-gold, 0.15), 
+    rgba($rt-color-gold, 0.1)
+  );
+  border: 1px solid rgba($rt-color-gold, 0.4);
+  border-radius: $rt-radius-md;
+  color: $rt-color-gold;
+  font-family: $rt-font-heading;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  
+  i {
+    font-size: 1em;
+  }
+  
+  &:hover {
+    background: linear-gradient(180deg, 
+      rgba($rt-color-gold, 0.25), 
+      rgba($rt-color-gold, 0.15)
+    );
+    border-color: $rt-color-gold;
+    color: lighten($rt-color-gold, 10%);
+    box-shadow: 0 0 16px rgba($rt-color-gold, 0.3);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 0 8px rgba($rt-color-gold, 0.2);
+  }
+}
+
+// ============================================
+// Modifier Grid (for characteristics/skills/combat/resources)
+// ============================================
+
+.ted-modifier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: $rt-space-sm;
+}
+
+.ted-modifier-cell {
+  display: flex;
+  align-items: center;
+  gap: $rt-space-sm;
+  padding: 6px $rt-space-sm;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-border-light);
+  border-radius: $rt-radius-sm;
+  
+  label {
+    flex: 1;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+  }
+  
+  input {
+    width: 50px;
+    padding: 4px 6px;
+    text-align: center;
+    font-size: 0.85rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-border-light);
+    border-radius: $rt-radius-sm;
+    color: var(--color-text-primary);
+    
+    &:focus {
+      border-color: var(--ted-accent-border);
+      outline: none;
+    }
+  }
+}
+
+// ============================================
+// Subsections within panels
+// ============================================
+
+.ted-subsection {
+  margin-bottom: $rt-space-lg;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.ted-subsection-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: $rt-space-sm;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  i {
+    font-size: 0.8rem;
+    color: var(--ted-accent-light);
+  }
+}
+
+// ============================================
+// Empty State
+// ============================================
+
+.ted-empty {
+  padding: $rt-space-lg;
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: 0.85rem;
+  font-style: italic;
+  
+  i {
+    display: block;
+    margin-bottom: $rt-space-sm;
+    font-size: 1.5rem;
+    opacity: 0.5;
+  }
+}
+
+// ============================================
+// Application Window Override
+// ============================================
+
+.talent-editor-dialog {
+  .window-content {
+    padding: 0;
+    background: var(--color-bg-primary);
+    display: flex;
+    flex-direction: column;
+    
+    > form {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{{!-- Batch Create Dialog --}}
+<div class="batch-create-content">
+  {{!-- Name Pattern --}}
+  <div class="form-group">
+    <label>{{localize "RT.NPC.BatchCreate.NamePattern"}}</label>
+    <input type="text" name="namePattern" value="{{state.namePattern}}" placeholder="NPC {n}"/>
+    <p class="hint">{{localize "RT.NPC.BatchCreate.NamePatternHint"}}</p>
+  </div>
+
+  {{!-- Count --}}
+  <div class="form-group">
+    <label>{{localize "RT.NPC.BatchCreate.Count"}}</label>
+    <input type="number" name="count" value="{{state.count}}" min="1" max="100"/>
+  </div>
+
+  {{!-- Threat Level --}}
+  <div class="form-group slider-group">
+    <label>{{localize "RT.NPC.ThreatLevel"}}</label>
+    <div class="slider-with-value">
+      <input type="range" name="threatLevel" value="{{state.threatLevel}}" min="1" max="30" step="1"/>
+      <span class="threat-value">{{state.threatLevel}}</span>
+    </div>
+    <p class="tier-label">{{tierName}}</p>
+  </div>
+
+  {{!-- Role & Type --}}
+  <div class="form-group-row">
+    <div class="form-group">
+      <label>{{localize "RT.NPC.Role"}}</label>
+      <select name="role">
+        {{#each roles}}
+        <option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>{{localize "RT.NPC.Type"}}</label>
+      <select name="type">
+        {{#each types}}
+        <option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+        {{/each}}
+      </select>
+    </div>
+  </div>
+
+  {{!-- Equipment Preset --}}
+  <div class="form-group">
+    <label>{{localize "RT.NPC.EquipmentPreset"}}</label>
+    <select name="preset">
+      {{#each presets}}
+      <option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}} - {{description}}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  {{!-- Faction --}}
+  <div class="form-group">
+    <label>{{localize "RT.NPC.Faction"}}</label>
+    <input type="text" name="faction" value="{{state.faction}}" placeholder="Optional"/>
+  </div>
+
+  {{!-- Folder --}}
+  {{#if folders.length}}
+  <div class="form-group">
+    <label>{{localize "RT.NPC.BatchCreate.Folder"}}</label>
+    <select name="folder">
+      <option value="">{{localize "RT.NPC.BatchCreate.NoFolder"}}</option>
+      {{#each folders}}
+      <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+      {{/each}}
+    </select>
+  </div>
+  {{/if}}
+
+  {{!-- Options --}}
+  <fieldset class="batch-options">
+    <legend>{{localize "RT.NPC.BatchCreate.Options"}}</legend>
+    
+    <div class="form-group checkbox">
+      <label>
+        <input type="checkbox" name="isHorde" {{#if state.isHorde}}checked{{/if}}/>
+        {{localize "RT.NPC.EnableHordeMode"}}
+      </label>
+    </div>
+
+    <div class="form-group checkbox">
+      <label>
+        <input type="checkbox" name="randomize" {{#if state.randomize}}checked{{/if}}/>
+        {{localize "RT.NPC.BatchCreate.RandomizeStats"}}
+      </label>
+    </div>
+
+    {{#if state.randomize}}
+    <div class="form-group indent">
+      <label>{{localize "RT.NPC.BatchCreate.RandomizeAmount"}}</label>
+      <div class="slider-with-value">
+        <input type="range" name="randomizeAmount" value="{{state.randomizeAmount}}" min="5" max="30" step="5"/>
+        <span>±{{state.randomizeAmount}}%</span>
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="form-group checkbox">
+      <label>
+        <input type="checkbox" name="openSheets" {{#if state.openSheets}}checked{{/if}}/>
+        {{localize "RT.NPC.BatchCreate.OpenSheets"}}
+      </label>
+      <p class="hint">{{localize "RT.NPC.BatchCreate.OpenSheetsHint"}}</p>
+    </div>
+  </fieldset>
+
+  {{!-- Preview --}}
+  <div class="batch-preview">
+    <h4>{{localize "RT.NPC.Preview"}}</h4>
+    <ul class="name-preview-list">
+      {{#each previewNames}}
+      <li>{{this}}</li>
+      {{/each}}
+    </ul>
+  </div>
+
+  {{!-- Buttons --}}
+  <footer class="sheet-footer flexrow">
+    {{#each buttons}}
+    <button type="{{type}}" {{#if action}}data-action="{{action}}"{{/if}} class="{{cssClass}}">
+      <i class="{{icon}}"></i>
+      {{localize label}}
+    </button>
+    {{/each}}
+  </footer>
+</div>

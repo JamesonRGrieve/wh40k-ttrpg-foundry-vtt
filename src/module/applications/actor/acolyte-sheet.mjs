@@ -61,10 +61,12 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Skills actions
             filterSkills: AcolyteSheet.#filterSkills,
             clearSkillsSearch: AcolyteSheet.#clearSkillsSearch,
+            toggleFavoriteSkill: AcolyteSheet.#toggleFavoriteSkill,
             
             // Talents actions
             filterTalents: AcolyteSheet.#filterTalents,
             clearTalentsFilter: AcolyteSheet.#clearTalentsFilter,
+            toggleFavoriteTalent: AcolyteSheet.#toggleFavoriteTalent,
             filterTraits: AcolyteSheet.#filterTraits,
             clearTraitsFilter: AcolyteSheet.#clearTraitsFilter,
             adjustTraitLevel: AcolyteSheet.#adjustTraitLevel,
@@ -394,6 +396,10 @@ export default class AcolyteSheet extends BaseActorSheet {
         if (partId === "talents") {
             const talentsData = this._prepareTalentsContext();
             Object.assign(context, talentsData);
+            // Map property names for template compatibility
+            context.talentsFilter = talentsData.filter || {};
+            context.talentCategories = talentsData.categories || [];
+            
             const traitsData = this._prepareTraitsContext(context);
             Object.assign(context, traitsData);
         }
@@ -925,6 +931,20 @@ export default class AcolyteSheet extends BaseActorSheet {
             4: "Upgrade",
             5: "Override"
         };
+        
+        // Extract combat talents for display in combat actions panel
+        const talents = this.actor.items.filter(i => i.type === "talent");
+        context.combatTalents = talents
+            .filter(t => t.system?.category === "combat")
+            .map(t => ({
+                id: t.id,
+                name: t.name,
+                img: t.img,
+                system: {
+                    tier: t.system.tier,
+                    category: t.system.category
+                }
+            }));
     }
 
     /* -------------------------------------------- */
@@ -1021,6 +1041,9 @@ export default class AcolyteSheet extends BaseActorSheet {
             icon: effect.icon,
             document: effect
         }));
+        
+        // Add favorite talents for display
+        context.favoriteTalents = this._prepareFavoriteTalents();
         
         return context;
     }
@@ -1136,6 +1159,36 @@ export default class AcolyteSheet extends BaseActorSheet {
         }
         
         return parts.join(' | ');
+    }
+    
+    /**
+     * Prepare favorite talents for overview dashboard display.
+     * @returns {Array<object>} Array of favorite talent display objects
+     * @protected
+     */
+    _prepareFavoriteTalents() {
+        const favorites = this.actor.getFlag("rogue-trader", "favoriteTalents") || [];
+        const talents = this.actor.items.filter(i => i.type === "talent");
+        
+        // Map favorite talent IDs to full talent objects
+        return favorites
+            .map(id => {
+                const talent = talents.find(t => t.id === id);
+                if (!talent) return null;
+                
+                return {
+                    id: talent.id,
+                    name: talent.name,
+                    img: talent.img,
+                    fullName: talent.system.fullName || talent.name,
+                    specialization: talent.system.specialization || "",
+                    system: {
+                        tier: talent.system.tier || 0,
+                        category: talent.system.category || ""
+                    }
+                };
+            })
+            .filter(talent => talent !== null); // Remove any invalid talents
     }
 
     /* -------------------------------------------- */
@@ -2294,6 +2347,34 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Re-render skills tab
         await this.render({ parts: ['skills'] });
     }
+    
+    /**
+     * Toggle favorite status for a skill.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering event.
+     * @param {HTMLElement} target  Element that triggered the event.
+     */
+    static async #toggleFavoriteSkill(event, target) {
+        const skillKey = target.dataset.skill;
+        if (!skillKey) return;
+        
+        // Get current favorite skills
+        const favorites = this.actor.getFlag("rogue-trader", "favoriteSkills") || [];
+        const index = favorites.indexOf(skillKey);
+        
+        // Toggle
+        if (index > -1) {
+            favorites.splice(index, 1);
+        } else {
+            favorites.push(skillKey);
+        }
+        
+        // Save
+        await this.actor.setFlag("rogue-trader", "favoriteSkills", favorites);
+        
+        // Re-render skills tab and overview tab
+        await this.render({ parts: ['skills', 'overview'] });
+    }
 
     /* -------------------------------------------- */
     /*  Talents Actions                             */
@@ -2326,6 +2407,34 @@ export default class AcolyteSheet extends BaseActorSheet {
     static async #clearTalentsFilter(event, target) {
         this._talentsFilter = { search: '', category: '', tier: '' };
         await this.render({ parts: ["talents"] });
+    }
+    
+    /**
+     * Toggle favorite status for a talent.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering event.
+     * @param {HTMLElement} target  Element that triggered the event.
+     */
+    static async #toggleFavoriteTalent(event, target) {
+        const itemId = target.dataset.itemId;
+        if (!itemId) return;
+        
+        // Get current favorite talents
+        const favorites = this.actor.getFlag("rogue-trader", "favoriteTalents") || [];
+        const index = favorites.indexOf(itemId);
+        
+        // Toggle
+        if (index > -1) {
+            favorites.splice(index, 1);
+        } else {
+            favorites.push(itemId);
+        }
+        
+        // Save
+        await this.actor.setFlag("rogue-trader", "favoriteTalents", favorites);
+        
+        // Re-render talents tab and overview tab
+        await this.render({ parts: ['talents', 'overview'] });
     }
 
     /* -------------------------------------------- */

@@ -1,0 +1,118 @@
+{{!-- NPC V2 Vertical Navigation + Identity Panel --}}
+<div class="rt-npc-v2-sidebar">
+  {{!-- Portrait & Identity --}}
+  <div class="rt-npc-identity">
+    <div class="rt-portrait-container">
+      <img class="rt-portrait-img" src="{{actor.img}}" alt="{{actor.name}}" />
+      {{#if editable}}
+      <button class="rt-portrait-edit-btn" data-action="editImage" type="button" title="Change Image">
+        <i class="fa-solid fa-camera"></i>
+      </button>
+      {{/if}}
+    </div>
+
+    <input class="rt-name-input"
+           name="name"
+           type="text"
+           value="{{actor.name}}"
+           placeholder="{{localize 'RT.NPC.Name'}}"
+           {{#unless editable}}disabled{{/unless}} />
+
+    {{!-- Threat Badge --}}
+    <div class="rt-threat-badge" style="--threat-color: {{threatTier.color}}">
+      <i class="fa-solid fa-skull"></i>
+      <span class="rt-threat-label">Threat</span>
+      <input type="number"
+             name="system.threatLevel"
+             value="{{system.threatLevel}}"
+             min="1"
+             max="30"
+             class="rt-threat-input"
+             {{#unless editable}}disabled{{/unless}} />
+      <span class="rt-threat-tier">{{threatTier.label}}</span>
+    </div>
+
+    {{!-- Quick Meta --}}
+    <div class="rt-meta-compact">
+      <select name="system.type" class="rt-select-compact" {{#unless editable}}disabled{{/unless}} title="Type">
+        {{#select system.type}}
+        <option value="troop">Troop</option>
+        <option value="elite">Elite</option>
+        <option value="master">Master</option>
+        <option value="horde">Horde</option>
+        <option value="swarm">Swarm</option>
+        <option value="creature">Creature</option>
+        <option value="daemon">Daemon</option>
+        <option value="xenos">Xenos</option>
+        {{/select}}
+      </select>
+      <select name="system.role" class="rt-select-compact" {{#unless editable}}disabled{{/unless}} title="Role">
+        {{#select system.role}}
+        <option value="bruiser">Bruiser</option>
+        <option value="sniper">Sniper</option>
+        <option value="caster">Caster</option>
+        <option value="support">Support</option>
+        <option value="commander">Commander</option>
+        <option value="specialist">Specialist</option>
+        {{/select}}
+      </select>
+    </div>
+  </div>
+
+  {{!-- Vertical Tab Navigation --}}
+  <nav class="rt-vertical-nav tabs" data-group="primary">
+    {{#each tabs}}
+    <button type="button"
+            class="rt-nav-item {{#if active}}active{{/if}}"
+            data-action="changeTab"
+            data-group="{{group}}"
+            data-tab="{{tab}}"
+            data-tooltip="{{label}}">
+      <i class="{{icon}}"></i>
+      <span class="rt-nav-label">{{label}}</span>
+    </button>
+    {{/each}}
+  </nav>
+
+  {{!-- GM Toolbar (compact vertical) --}}
+  {{#if isGM}}
+  <div class="rt-gm-tools">
+    <button class="rt-tool-btn" data-action="setupToken" type="button" data-tooltip="Configure Token">
+      <i class="fa-solid fa-chess-pawn"></i>
+    </button>
+    <button class="rt-tool-btn" data-action="duplicateNPC" type="button" data-tooltip="Clone NPC">
+      <i class="fa-solid fa-clone"></i>
+    </button>
+    <button class="rt-tool-btn" data-action="scaleToThreat" type="button" data-tooltip="Scale to Threat">
+      <i class="fa-solid fa-scale-balanced"></i>
+    </button>
+    <button class="rt-tool-btn" data-action="exportStatBlock" type="button" data-tooltip="Export Stat Block">
+      <i class="fa-solid fa-file-export"></i>
+    </button>
+    <button class="rt-tool-btn" data-action="calculateDifficulty" type="button" data-tooltip="Calculate Difficulty">
+      <i class="fa-solid fa-calculator"></i>
+    </button>
+    <button class="rt-tool-btn rt-tool-btn--danger" data-action="deleteNPC" type="button" data-tooltip="Delete NPC">
+      <i class="fa-solid fa-trash-can"></i>
+    </button>
+  </div>
+  {{/if}}
+
+  {{!-- Horde Magnitude (if enabled) --}}
+  {{#if horde.enabled}}
+  <div class="rt-magnitude-compact">
+    <div class="rt-magnitude-header">
+      <i class="fa-solid fa-users"></i>
+      <span>{{horde.magnitude}}/{{horde.magnitudeMax}}</span>
+    </div>
+    <div class="rt-magnitude-bar-container">
+      <div class="rt-magnitude-bar rt-magnitude-bar--{{horde.barClass}}"
+           style="width: {{horde.magnitudePercent}}%"></div>
+    </div>
+    <div class="rt-magnitude-btns">
+      <button type="button" class="rt-mag-btn" data-action="applyMagnitudeDamage" data-amount="1">−1</button>
+      <button type="button" class="rt-mag-btn" data-action="restoreMagnitude" data-amount="1">+1</button>
+    </div>
+  </div>
+  {{/if}}
+</div>

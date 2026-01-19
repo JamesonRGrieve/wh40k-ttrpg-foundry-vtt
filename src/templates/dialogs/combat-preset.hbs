@@ -1,0 +1,190 @@
+{{!-- Combat Preset Dialog Template --}}
+<form class="rt-combat-preset-dialog">
+  
+  {{!-- Save Mode --}}
+  {{#if (eq mode "save")}}
+    <section class="rt-panel rt-panel--save-preset">
+      <header class="rt-panel-header">
+        <i class="fa-solid fa-save"></i>
+        <h3>Save Combat Preset</h3>
+      </header>
+      <div class="rt-panel-body">
+        {{#if npc}}
+          <div class="rt-npc-preview">
+            <img src="{{npc.img}}" alt="{{npc.name}}" class="rt-token-image" />
+            <div class="rt-npc-info">
+              <h4>{{npc.name}}</h4>
+              <div class="rt-npc-stats">
+                <span class="rt-badge">Threat {{npc.threatLevel}}</span>
+                <span class="rt-badge">{{npc.type}}</span>
+                <span class="rt-badge">{{npc.role}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rt-form-group">
+            <label class="rt-label">Preset Name *</label>
+            <input 
+              type="text" 
+              name="presetName" 
+              class="rt-input" 
+              placeholder="e.g., Elite Guard, Chaos Cultist, Xenos Warrior"
+              required
+            />
+          </div>
+
+          <div class="rt-form-group">
+            <label class="rt-label">Description</label>
+            <textarea 
+              name="presetDescription" 
+              class="rt-input" 
+              rows="3"
+              placeholder="Optional description of this preset..."
+            ></textarea>
+          </div>
+
+          <div class="rt-form-actions">
+            <button 
+              type="button" 
+              class="rt-btn rt-btn--primary" 
+              data-action="saveNew"
+            >
+              <i class="fa-solid fa-save"></i> Save Preset
+            </button>
+          </div>
+        {{/if}}
+      </div>
+    </section>
+  {{/if}}
+
+  {{!-- Load Mode --}}
+  {{#if (eq mode "load")}}
+    <section class="rt-panel rt-panel--load-preset">
+      <header class="rt-panel-header">
+        <i class="fa-solid fa-download"></i>
+        <h3>Load Combat Preset</h3>
+      </header>
+      <div class="rt-panel-body">
+        {{#if npc}}
+          <div class="rt-npc-preview">
+            <img src="{{npc.img}}" alt="{{npc.name}}" class="rt-token-image" />
+            <div class="rt-npc-info">
+              <h4>{{npc.name}}</h4>
+              <p class="rt-warning">Loading a preset will overwrite this NPC's stats.</p>
+            </div>
+          </div>
+        {{/if}}
+
+        {{#if hasPresets}}
+          <div class="rt-preset-list">
+            {{#each presets}}
+              <div 
+                class="rt-preset-item {{#if this.selected}}rt-preset-item--selected{{/if}}" 
+                data-action="selectPreset"
+                data-preset-id="{{this.id}}"
+              >
+                <div class="rt-preset-header">
+                  <h5 class="rt-preset-name">{{this.name}}</h5>
+                  <span class="rt-preset-date">{{this.createdDate}}</span>
+                </div>
+                {{#if this.description}}
+                  <p class="rt-preset-description">{{this.description}}</p>
+                {{/if}}
+                <div class="rt-preset-stats">
+                  <span class="rt-badge rt-badge--small">Threat {{this.threatLevel}}</span>
+                  <span class="rt-badge rt-badge--small">{{this.type}}</span>
+                  {{#if this.faction}}<span class="rt-badge rt-badge--small">{{this.faction}}</span>{{/if}}
+                </div>
+              </div>
+            {{/each}}
+          </div>
+
+          <div class="rt-form-actions">
+            <button 
+              type="button" 
+              class="rt-btn rt-btn--primary" 
+              data-action="loadSelected"
+              {{#unless selectedPreset}}disabled{{/unless}}
+            >
+              <i class="fa-solid fa-download"></i> Load Selected
+            </button>
+          </div>
+        {{else}}
+          <p class="rt-empty-message">
+            <i class="fa-solid fa-info-circle"></i>
+            No presets saved yet. Create one from an NPC sheet.
+          </p>
+        {{/if}}
+      </div>
+    </section>
+  {{/if}}
+
+  {{!-- Library Mode --}}
+  {{#if (eq mode "library")}}
+    <section class="rt-panel rt-panel--preset-library">
+      <header class="rt-panel-header">
+        <i class="fa-solid fa-bookmark"></i>
+        <h3>Preset Library</h3>
+        <button 
+          type="button" 
+          class="rt-btn rt-btn--icon" 
+          data-action="importPreset"
+          data-tooltip="Import Preset from JSON"
+        >
+          <i class="fa-solid fa-file-import"></i>
+        </button>
+      </header>
+      <div class="rt-panel-body">
+        {{#if hasPresets}}
+          <div class="rt-preset-library-list">
+            {{#each presets}}
+              <div class="rt-preset-library-item">
+                <div class="rt-preset-content">
+                  <div class="rt-preset-header">
+                    <h5 class="rt-preset-name">{{this.name}}</h5>
+                    <span class="rt-preset-date">{{this.createdDate}}</span>
+                  </div>
+                  {{#if this.description}}
+                    <p class="rt-preset-description">{{this.description}}</p>
+                  {{/if}}
+                  <div class="rt-preset-stats">
+                    <span class="rt-badge rt-badge--small">Threat {{this.threatLevel}}</span>
+                    <span class="rt-badge rt-badge--small">{{this.type}}</span>
+                    {{#if this.role}}<span class="rt-badge rt-badge--small">{{this.role}}</span>{{/if}}
+                    {{#if this.faction}}<span class="rt-badge rt-badge--small">{{this.faction}}</span>{{/if}}
+                  </div>
+                </div>
+                <div class="rt-preset-actions">
+                  <button 
+                    type="button" 
+                    class="rt-btn rt-btn--icon" 
+                    data-action="exportPreset"
+                    data-preset-id="{{this.id}}"
+                    data-tooltip="Export as JSON"
+                  >
+                    <i class="fa-solid fa-file-export"></i>
+                  </button>
+                  <button 
+                    type="button" 
+                    class="rt-btn rt-btn--icon rt-btn--danger" 
+                    data-action="deletePreset"
+                    data-preset-id="{{this.id}}"
+                    data-tooltip="Delete Preset"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        {{else}}
+          <p class="rt-empty-message">
+            <i class="fa-solid fa-info-circle"></i>
+            No presets saved yet. Create one from an NPC sheet.
+          </p>
+        {{/if}}
+      </div>
+    </section>
+  {{/if}}
+
+</form>

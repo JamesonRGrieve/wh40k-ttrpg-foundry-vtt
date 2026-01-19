@@ -44,6 +44,14 @@
           "details.biography"
         ]
       },
+      "npcV2": {
+        "htmlFields": [
+          "description",
+          "tactics",
+          "specialAbilities",
+          "quickNotes"
+        ]
+      },
       "vehicle": {
         "htmlFields": [
           "details.biography"

@@ -1,0 +1,112 @@
+{{!-- NPC Template - Basics Tab --}}
+<section class="tab-content tab-basics" data-tab="basics" data-group="primary">
+    {{!-- Description Section --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-scroll"></i> {{localize "RT.NPC.Template.Description"}}</h3>
+        </header>
+        <div class="rt-panel-content">
+            <div class="prosemirror-editor">
+                {{formInput fields.description value=system.description enriched=enrichedDescription}}
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Tags Section --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-tags"></i> {{localize "RT.NPC.Tags"}}</h3>
+        </header>
+        <div class="rt-panel-content">
+            <div class="tags-container">
+                {{#each system.tags as |tag idx|}}
+                <span class="rt-tag" data-index="{{idx}}">
+                    {{tag}}
+                    <button type="button" class="tag-remove" data-action="removeTag" data-index="{{idx}}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </span>
+                {{/each}}
+                <div class="add-tag">
+                    <input type="text" class="tag-input" placeholder="{{localize 'RT.NPC.AddTag'}}" data-action="addTagOnEnter" />
+                    <button type="button" data-action="addTag">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Scaling Rules Section --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-chart-line"></i> {{localize "RT.NPC.Template.ScalingRules"}}</h3>
+        </header>
+        <div class="rt-panel-content">
+            <div class="scaling-grid">
+                <div class="scaling-field">
+                    <label>{{localize "RT.NPC.Template.CharacteristicScale"}}</label>
+                    <div class="input-with-suffix">
+                        <input type="number" name="system.scalingRules.characteristicScale" 
+                               value="{{system.scalingRules.characteristicScale}}" min="0" max="50" step="1" />
+                        <span class="suffix">%</span>
+                    </div>
+                </div>
+                
+                <div class="scaling-field">
+                    <label>{{localize "RT.NPC.Template.WoundsScale"}}</label>
+                    <div class="input-with-suffix">
+                        <input type="number" name="system.scalingRules.woundsScale" 
+                               value="{{system.scalingRules.woundsScale}}" min="0" max="50" step="1" />
+                        <span class="suffix">%</span>
+                    </div>
+                </div>
+                
+                <div class="scaling-field">
+                    <label>{{localize "RT.NPC.Template.ArmourScale"}}</label>
+                    <div class="input-with-suffix">
+                        <input type="number" name="system.scalingRules.armourScale" 
+                               value="{{system.scalingRules.armourScale}}" min="0" max="30" step="1" />
+                        <span class="suffix">%</span>
+                    </div>
+                </div>
+                
+                <div class="scaling-field">
+                    <label>{{localize "RT.NPC.Template.WeaponScale"}}</label>
+                    <div class="input-with-suffix">
+                        <input type="number" name="system.scalingRules.weaponScale" 
+                               value="{{system.scalingRules.weaponScale}}" min="0" max="30" step="1" />
+                        <span class="suffix">%</span>
+                    </div>
+                </div>
+                
+                <div class="scaling-field full-width">
+                    <label>{{localize "RT.NPC.Template.MinMultiplier"}}</label>
+                    <input type="number" name="system.scalingRules.minMultiplier" 
+                           value="{{system.scalingRules.minMultiplier}}" min="0.1" max="1" step="0.1" />
+                </div>
+                
+                <div class="scaling-field full-width">
+                    <label>{{localize "RT.NPC.Template.MaxMultiplier"}}</label>
+                    <input type="number" name="system.scalingRules.maxMultiplier" 
+                           value="{{system.scalingRules.maxMultiplier}}" min="1" max="5" step="0.1" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Source Reference --}}
+    <div class="rt-panel">
+        <header class="rt-panel-header">
+            <h3><i class="fas fa-book"></i> {{localize "RT.NPC.Source"}}</h3>
+        </header>
+        <div class="rt-panel-content">
+            <div class="source-fields">
+                <div class="field-group">
+                    <label>{{localize "RT.NPC.SourceBook"}}</label>
+                    <input type="text" name="system.source" value="{{system.source}}" placeholder="{{localize 'RT.NPC.SourcePlaceholder'}}" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

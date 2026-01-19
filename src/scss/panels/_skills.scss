@@ -147,6 +147,37 @@
   border: 1px solid var(--color-border-tertiary);
 }
 
+// Training indicators (display-only, not interactive)
+.rt-training-display {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: var(--color-bg-secondary);
+  border-radius: 4px;
+  border: 1px solid var(--color-border-tertiary);
+  
+  .rt-train-indicator {
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(120, 46, 34, 0.35);
+    border-radius: 3px;
+    color: #3a2820;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 4px;
+    min-width: 24px;
+    text-align: center;
+    opacity: 0.5;
+    
+    &.active {
+      background: rgba($rt-accent-skills, 0.25);
+      border-color: $rt-accent-skills;
+      color: var(--color-text-primary);
+      opacity: 1;
+      font-weight: 700;
+    }
+  }
+}
+
 // Skills use the same rt-train-btn styling as specialist panel
 .rt-skill-row .rt-train-btn {
   background: rgba(255, 255, 255, 0.35);
@@ -264,9 +295,64 @@
       line-height: 1;
     }
   }
+}
+
+// Favorite skill button
+.rt-skill-favorite {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  color: $rt-text-muted;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
   
-  // Future: grey out if actor lacks appropriate talent/trait
-  &.rt-skill-row--unavailable {
+  &:hover {
+    color: $rt-color-gold;
+    transform: scale(1.1);
+  }
+  
+  &.active {
+    color: $rt-color-gold;
+    
+    i {
+      filter: drop-shadow(0 0 2px rgba($rt-color-gold, 0.5));
+    }
+  }
+}
+
+// Locked advanced skill styling
+.rt-skill-row--locked {
+  opacity: 0.5;
+  position: relative;
+  
+  &:hover {
+    opacity: 0.65;
+  }
+  
+  .rt-skill-name {
+    cursor: help;
+    
+    &::after {
+      content: '\f023'; // fa-lock
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      margin-left: 6px;
+      font-size: 0.7rem;
+      color: $rt-text-muted;
+      opacity: 0.7;
+    }
+  }
+  
+  .rt-skill-roll,
+  .rt-skill-favorite {
+    pointer-events: none;
+    opacity: 0.4;
+  }
+}
+
+// Future: grey out if actor lacks appropriate talent/trait
+.rt-skill-row--unavailable {
     opacity: 0.5;
     filter: grayscale(0.5);
     
@@ -282,5 +368,4 @@
       pointer-events: none;
       opacity: 0.6;
     }
-  }
 }
