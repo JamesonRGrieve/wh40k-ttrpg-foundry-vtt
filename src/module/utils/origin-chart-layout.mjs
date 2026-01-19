@@ -96,6 +96,22 @@ export class OriginChartLayout {
     }
 
     /**
+     * Get the normalized positions array for an origin or selection.
+     * @param {Item|object|null} origin
+     * @returns {number[]}
+     * @private
+     */
+    static _getPositions(origin) {
+        const positions = origin?.system?.allPositions ?? origin?.system?.positions;
+
+        if (Array.isArray(positions) && positions.length > 0) {
+            return [...positions].sort((a, b) => a - b);
+        }
+
+        return [4];
+    }
+
+    /**
      * Compute layout for a single step.
      *
      * Connectivity Rule: Only the most recent confirmed selection matters.
@@ -125,7 +141,7 @@ export class OriginChartLayout {
             if (seenOrigins.has(origin.id)) continue;
             seenOrigins.add(origin.id);
 
-            const positions = origin.system?.allPositions || [4];
+            const positions = this._getPositions(origin);
             const position = origin.system?.primaryPosition || 4;
             maxPosition = Math.max(maxPosition, position);
 
@@ -178,7 +194,7 @@ export class OriginChartLayout {
         if (!lastSelection) return null;
 
         const allowed = new Set();
-        const positions = lastSelection.system?.allPositions || [4];
+        const positions = this._getPositions(lastSelection);
 
         for (const pos of positions) {
             if (pos > 0) allowed.add(pos - 1);
@@ -232,7 +248,7 @@ export class OriginChartLayout {
     static _isPositionAllowed(origin, allowedPositions) {
         if (!allowedPositions) return true;
 
-        const originPositions = origin.system?.allPositions || [4];
+        const originPositions = this._getPositions(origin);
         for (const pos of originPositions) {
             if (allowedPositions.has(pos)) {
                 return true;
