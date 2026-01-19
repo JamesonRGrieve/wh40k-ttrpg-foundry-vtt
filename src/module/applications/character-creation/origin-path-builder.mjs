@@ -182,6 +182,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 this.selections.set(step, originData);
             }
         }
+
+        this._refreshPathPositions();
         
         // Set current step to first incomplete based on direction
         const steps = this.orderedSteps;
@@ -190,6 +192,41 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 this.currentStepIndex = i;
                 break;
             }
+        }
+    }
+
+    /**
+     * Get the last confirmed selection before a step index.
+     * @param {number} stepIndex
+     * @returns {object|null}
+     * @private
+     */
+    _getLastConfirmedSelection(stepIndex) {
+        const orderedSteps = this.orderedSteps;
+
+        for (let i = stepIndex - 1; i >= 0; i--) {
+            const step = orderedSteps[i];
+            if (this.selections.has(step.step)) {
+                return this.selections.get(step.step);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Refresh resolved path positions for all selections.
+     * @private
+     */
+    _refreshPathPositions() {
+        let lastSelection = null;
+
+        for (const step of this.orderedSteps) {
+            const selection = this.selections.get(step.step);
+            if (!selection) continue;
+
+            selection.system.pathPositions = OriginChartLayout.resolvePathPositions(selection, lastSelection);
+            lastSelection = selection;
         }
     }
 
@@ -1102,6 +1139,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 this.selections.set(CORE_STEPS[i].step, originData);
             }
         }
+
+        this._refreshPathPositions();
         
         this.currentStepIndex = 0;
         this.render();
@@ -1187,6 +1226,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         this.selections.set(step, originData);
                     }
                 }
+
+                this._refreshPathPositions();
                 
                 this.currentStepIndex = 0;
                 this.render();
@@ -1388,16 +1429,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Lineage selection
             this.lineageSelection = originData;
         } else {
+            const currentIndex = this.orderedSteps.findIndex(s => s.key === currentStep.key);
+
             // Check if changing selection - need to reset subsequent steps
             if (this.guidedMode && this.selections.has(currentStep.step)) {
                 // Clear subsequent steps when changing a selection
-                const currentIndex = this.orderedSteps.findIndex(s => s.key === currentStep.key);
                 const stepsToReset = this.orderedSteps.slice(currentIndex + 1);
                 for (const step of stepsToReset) {
                     this.selections.delete(step.step);
                 }
             }
-            
+
+            const lastSelection = this._getLastConfirmedSelection(currentIndex);
+            originData.system.pathPositions = OriginChartLayout.resolvePathPositions(originData, lastSelection);
+             
             // Store selection as plain data object
             this.selections.set(currentStep.step, originData);
             
