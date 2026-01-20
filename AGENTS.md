@@ -9,18 +9,8 @@ Foundry V13 game system for Rogue Trader RPG (Warhammer 40K, Dark Heresy 2e rule
 | System ID    | `rogue-trader`                                                    |
 | Foundry      | V13.351+                                                          |
 | Version      | 1.8.1                                                             |
-| Build        | `npm run build` → `dist/`                                         |
 | Entry        | `src/module/rogue-trader.mjs`                                     |
 | Architecture | DataModel-heavy, slim Documents, ApplicationV2 with 8-mixin stack |
-
-## Game Mechanics
-
--   **d100 roll-under**: roll ≤ target = success
--   **Degrees**: `floor((target - roll) / 10) + 1`
--   **Critical**: 01-05 auto-success, 96-00 auto-fail, OR 3+ degrees
--   **10 Characteristics**: WS, BS, S, T, Ag, Int, Per, WP, Fel, Inf
--   **Characteristic Bonus**: tens digit (42 → CB 4)
--   **Unnatural**: bonus multiplier (×2, ×3) - affects CB
 
 ## Directory Structure
 
@@ -113,65 +103,6 @@ ActorDataModel (abstract base)
 -   `data/actor/templates/creature.mjs` - CreatureTemplate (skills, fate, fatigue)
 -   `data/actor/mixins/horde-template.mjs` - Horde mechanics
 
-### NPC V2 System (CURRENT)
-
-**Philosophy**: Minimal complexity, GM-centric, fast creation/editing.
-
-**Key Features**:
-
--   **Sparse skills**: Only store trained skills (not all 36)
--   **Simple weapons**: Inline array OR embedded items (toggle mode)
--   **Simple armour**: Total value OR location-based
--   **Custom stats**: Manual overrides for special NPCs
--   **Threat scaling**: Auto-scale stats by threat level (1-30)
--   **Horde mechanics**: Magnitude, damage per hit
--   **Stat block I/O**: Import/export text stat blocks
-
-**Schema**:
-
-```javascript
-{
-  faction, subfaction, allegiance,
-  primaryUse: "npc" | "vehicle" | "ship",
-  role: "bruiser" | "sniper" | "caster" | "support" | "commander" | "specialist",
-  type: "troop" | "elite" | "master" | "horde" | "swarm" | "creature" | "daemon" | "xenos",
-  threatLevel: 1-30,
-
-  trainedSkills: { "awareness": { trained: true, plus10: false, bonus: 0, current: 45 } },
-
-  weapons: {
-    mode: "simple" | "embedded",
-    simple: [{ name, damage, pen, range, rof, clip, reload, special, class }]
-  },
-
-  armour: {
-    mode: "simple" | "locations",
-    total: 4,
-    locations: { head, body, leftArm, rightArm, leftLeg, rightLeg }
-  },
-
-  customStats: { enabled: boolean, characteristics: {}, skills: {} },
-
-  horde: { enabled, magnitude: { max, current }, damagePerHit }
-}
-```
-
-**Methods**:
-
--   `getSkillTarget(skillName)` - Calculate skill test target
--   `addTrainedSkill(name, char, level, bonus)` - Add a skill
--   `addSimpleWeapon(data)` - Add inline weapon
--   `switchWeaponMode("simple" | "embedded")` - Toggle weapon mode
--   `scaleToThreat(newThreatLevel)` - Auto-scale stats
--   `exportStatBlock()` - Export as text block
-
-**Files**:
-
--   `data/actor/npc-v2.mjs` - DataModel (901 lines)
--   `documents/npc-v2.mjs` - Document (477 lines)
--   `applications/actor/npc-sheet-v2.mjs` - Sheet
--   `applications/npc/` - Tools (8 files: encounter builder, threat calculator, stat block parser, etc.)
-
 ## Item Types (36+)
 
 **Equipment**: weapon, armour, ammunition, gear, cybernetic, forceField, backpack, storageLocation, tool, consumable, drug
@@ -257,86 +188,6 @@ ActorDataModel (abstract base)
 -   `data/item/talent.mjs` - DataModel (399 lines)
 -   `applications/item/talent-sheet-v2.mjs` - Sheet
 -   `utils/talent-grants.mjs` - Grant processor
-
-### Origin Path System (Post-Rework)
-
-**6-Step Flowchart**: homeWorld(0) → birthright(1) → lureOfTheVoid(2) → trialsAndTravails(3) → motivation(4) → career(5)
-
-**Key Features**:
-
--   **Multi-position support**: Origins can occupy multiple positions in flowchart (`positions: [1, 5]`)
--   **Formula-based wounds**: `"2xTB+1d5"`, `"1d10+2"`, etc.
--   **Formula-based fate**: `"(1-5|=2),(6-10|=3)"` (conditional rolls)
--   **Interactive rolling**: Roll results stored with breakdown
--   **Choice system**: Player decisions (e.g., "Choose +5 to one of: WS, BS, or S")
--   **Active modifiers**: Calculated from choices in `prepareDerivedData`
-
-**Schema**:
-
-```javascript
-{
-  identifier: "death-world",
-  step: "homeWorld" | "birthright" | "lureOfTheVoid" | "trialsAndTravails" | "motivation" | "career",
-  stepIndex: 0-5,
-
-  positions: [4],  // Array of positions (0-8) this origin occupies
-
-  xpCost: 0,  // For Into The Storm advanced origins
-  isAdvancedOrigin: false,
-  replacesOrigins: [],
-
-  source: { book: "Core Rulebook", page: "17", custom: "" },
-
-  grants: {
-    woundsFormula: "2xTB+1d5",  // NEW: Formula-based
-    fateFormula: "(1-5|=2),(6-10|=3)",  // NEW: Conditional
-
-    wounds: 0,  // Legacy (backward compat)
-    fateThreshold: 0,  // Legacy
-
-    blessedByEmperor: false,
-
-    skills: [{ name: "Survival", specialization: "", level: "trained" }],
-    talents: [{ name: "Weapon Training", specialization: "Las", uuid: "..." }],
-    traits: [{ name: "Size (Hulking)", level: 5, uuid: "..." }],
-    aptitudes: ["Strength", "Toughness"],
-    equipment: [{ name: "Stub Revolver", quantity: 1, uuid: "..." }],
-    specialAbilities: [{ name: "Wilderness Savvy", description: "<p>...</p>" }],
-
-    choices: [{
-      type: "characteristic" | "skill" | "talent" | "equipment",
-      label: "Choose Combat Characteristic",
-      options: [
-        { value: "ws", label: "+5 WS", grants: { characteristics: { weaponSkill: 5 } } },
-        { value: "bs", label: "+5 BS", grants: { characteristics: { ballisticSkill: 5 } } }
-      ],
-      count: 1,
-      xpCost: 0
-    }]
-  },
-
-  selectedChoices: { "Choose Combat Characteristic": ["ws"] },
-
-  activeModifiers: [
-    { source: "Choose Combat Characteristic", type: "characteristic", key: "weaponSkill", value: 5 }
-  ],
-
-  rollResults: {
-    wounds: { formula: "2xTB+1d5", rolled: 14, breakdown: "2×4+1d5(6) = 14", timestamp: 1704... },
-    fate: { formula: "(1-5|=2),(6-10|=3)", rolled: 2, breakdown: "1d10(3) → 2", timestamp: 1704... }
-  }
-}
-```
-
-**Files**:
-
--   `data/item/origin-path.mjs` - DataModel (546 lines)
--   `applications/character-creation/origin-path-builder.mjs` - Visual flowchart builder
--   `applications/character-creation/origin-roll-dialog.mjs` - Interactive rolling
--   `applications/character-creation/origin-path-choice-dialog.mjs` - Choice selection
--   `utils/origin-grants-processor.mjs` - Grant processor
--   `utils/formula-evaluator.mjs` - Formula evaluation
--   `utils/origin-chart-layout.mjs` - Flowchart layout calculation
 
 ## ApplicationV2 Sheet System
 
@@ -570,66 +421,6 @@ await findSkillUuid('Common Lore', 'Imperium'); // → with specialization
 
 Icon mapping for items/abilities.
 
-### Utils (`utils/`)
-
-#### OriginGrantsProcessor (`origin-grants-processor.mjs`)
-
-Processes origin path grants and applies to actors.
-
-```javascript
-await OriginGrantsProcessor.applyOriginPath(actor, originPathItem);
-// Applies: characteristics, skills, talents, traits, aptitudes, equipment, wounds, fate, choices
-```
-
-#### FormulaEvaluator (`formula-evaluator.mjs`)
-
-Evaluates complex formulas.
-
-```javascript
-// Wounds formulas
-FormulaEvaluator.evaluateWounds(actor, '2xTB+1d5');
-// → { result: 14, breakdown: "2×4+1d5(6) = 14" }
-
-// Fate formulas (conditional)
-FormulaEvaluator.evaluateFate(actor, '(1-5|=2),(6-10|=3)');
-// → { result: 2, breakdown: "1d10(3) → 2 fate points" }
-```
-
-#### ArmourCalculator (`armour-calculator.mjs`)
-
-Calculates total armour by location from equipped items.
-
-```javascript
-ArmourCalculator.calculate(actor);
-// Returns: { head: { total, items, toughnessBonus, traitBonus, value }, body: {...}, ... }
-```
-
-#### EncumbranceCalculator (`encumbrance-calculator.mjs`)
-
-Calculates carrying capacity and encumbrance.
-
-```javascript
-EncumbranceCalculator.calculate(actor);
-// Returns: { current: 42, max: 90, percentage: 47, status: "normal" | "encumbered" | "overencumbered" }
-```
-
-#### TalentGrants (`talent-grants.mjs`)
-
-Processes talent grants (skills, talents, traits).
-
-```javascript
-await TalentGrants.applyTalent(actor, talentItem);
-```
-
-#### OriginChartLayout (`origin-chart-layout.mjs`)
-
-Calculates flowchart layout and connections for origin path builder.
-
-```javascript
-OriginChartLayout.calculateLayout(originPathItems, currentStep);
-// Returns: { positions, connections, validNextSteps, ... }
-```
-
 ### Handlebars Helpers
 
 **Logic**: `eq`, `ne`, `gt`, `lt`, `gte`, `lte`, `and`, `or`, `not`
@@ -709,7 +500,6 @@ OriginChartLayout.calculateLayout(originPathItems, currentStep);
 
 **Use These (CURRENT)**:
 
--   `npcV2` actor type (not legacy `npc`)
 -   ApplicationV2 PARTS system
 -   Action handlers (not jQuery `.on()`)
 -   V13 toast system (not `ui.notifications`)
@@ -720,22 +510,12 @@ OriginChartLayout.calculateLayout(originPathItems, currentStep);
 
 **Avoid These (DEPRECATED)**:
 
--   Legacy `npc` actor type
 -   V1 Application sheets
 -   jQuery event binding (`.click()`, `.on()`)
 -   `ui.notifications` (use `ui.notifications.toasts`)
 -   Custom context menus (use V13 native)
 -   TinyMCE editors
 -   Logic in sheet classes (move to DataModels)
-
-## Build Commands
-
-```bash
-npm run build     # Full build: clean → scss → copy → packs → archive
-gulp scss         # SCSS only
-gulp packs        # Compendium packs only
-gulp watch        # Watch for changes
-```
 
 ## Compendium Packs
 
@@ -752,41 +532,6 @@ gulp watch        # Watch for changes
 -   `rt-actors-bestiary` (50+ NPCs)
 -   `rt-journals-*` (rules references)
 -   `rt-rolltables-*` (random tables)
-
-## Testing Checklist
-
-**Build**:
-
--   [ ] `npm run build` succeeds without errors
--   [ ] Browser console clean (no errors)
-
-**Actors**:
-
--   [ ] Create acolyte/npcV2/vehicle/starship actors
--   [ ] Characteristic rolls work
--   [ ] Skill training toggles work (trained/+10/+20)
--   [ ] Stat adjustments work (wounds, fate, fatigue)
-
-**Items**:
-
--   [ ] Drag talents to actor → modifiers apply
--   [ ] Weapon attacks roll correctly
--   [ ] Armour displays all 6 locations
--   [ ] Origin paths apply grants correctly
-
-**UI**:
-
--   [ ] Drag/drop functions (items, effects)
--   [ ] Context menus work (right-click)
--   [ ] Tooltips display on hover
--   [ ] What-if mode toggles correctly
-
-**Sheets**:
-
--   [ ] All tabs render without errors
--   [ ] Scroll positions preserved on re-render
--   [ ] Panel collapse/expand works
--   [ ] Action handlers fire correctly
 
 ## Beads Issue Tracking
 
@@ -934,7 +679,7 @@ bd sync                          # Push to remote (MANDATORY)
 **MANDATORY WORKFLOW:**
 
 1. **File issues for remaining work** - Create issues for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
+2. **Run quality gates** (if code changed) - Linters
 3. **Update issue status** - Close finished work, update in-progress items
 4. **PUSH TO REMOTE** - This is MANDATORY:
     ```bash
