@@ -36,6 +36,7 @@
     "js-yaml": "4.1.0",
     "json": "11.0.0",
     "merge-stream": "2.0.0",
+    "micode": "^0.8.6",
     "nedb": "1.8.0",
     "path": "0.12.7",
     "prettier": "2.7.1",
