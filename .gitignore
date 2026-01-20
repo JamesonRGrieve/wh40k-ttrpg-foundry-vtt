@@ -31,3 +31,6 @@ FoundryVTTData
 ## Docker Development
 docker-compose.yml
 conf
+
+## Tooling
+bdui-linux-x64
