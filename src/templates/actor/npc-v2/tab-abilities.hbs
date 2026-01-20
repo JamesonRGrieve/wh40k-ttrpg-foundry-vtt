@@ -175,10 +175,11 @@
       <div class="rt-panel-body">
         {{#if editable}}
         <div class="rt-editor-wrapper">
-          {{editor system.specialAbilities 
+          {{editor content=system.specialAbilities 
                    target="system.specialAbilities" 
                    button=true 
                    editable=editable
+                   engine="prosemirror"
                    collaborate=false}}
         </div>
         {{else}}
@@ -204,7 +205,7 @@
       </div>
       <div class="rt-panel-body">
         <div class="rt-editor-wrapper">
-          {{editor system.description target="system.description" button=true editable=editable collaborate=false}}
+          {{editor content=system.description target="system.description" button=true editable=editable engine="prosemirror" collaborate=false}}
         </div>
       </div>
     </div>
