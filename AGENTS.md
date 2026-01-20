@@ -15,12 +15,12 @@ Foundry V13 game system for Rogue Trader RPG (Warhammer 40K, Dark Heresy 2e rule
 
 ## Game Mechanics
 
-- **d100 roll-under**: roll ≤ target = success
-- **Degrees**: `floor((target - roll) / 10) + 1`
-- **Critical**: 01-05 auto-success, 96-00 auto-fail, OR 3+ degrees
-- **10 Characteristics**: WS, BS, S, T, Ag, Int, Per, WP, Fel, Inf
-- **Characteristic Bonus**: tens digit (42 → CB 4)
-- **Unnatural**: bonus multiplier (×2, ×3) - affects CB
+-   **d100 roll-under**: roll ≤ target = success
+-   **Degrees**: `floor((target - roll) / 10) + 1`
+-   **Critical**: 01-05 auto-success, 96-00 auto-fail, OR 3+ degrees
+-   **10 Characteristics**: WS, BS, S, T, Ag, Int, Per, WP, Fel, Inf
+-   **Characteristic Bonus**: tens digit (42 → CB 4)
+-   **Unnatural**: bonus multiplier (×2, ×3) - affects CB
 
 ## Directory Structure
 
@@ -107,11 +107,11 @@ ActorDataModel (abstract base)
 
 **Key Files**:
 
-- `data/actor/character.mjs` - CharacterData (player characters)
-- `data/actor/npc-v2.mjs` - NPCDataV2 (CURRENT NPC system)
-- `data/actor/templates/common.mjs` - CommonTemplate (10 characteristics, wounds)
-- `data/actor/templates/creature.mjs` - CreatureTemplate (skills, fate, fatigue)
-- `data/actor/mixins/horde-template.mjs` - Horde mechanics
+-   `data/actor/character.mjs` - CharacterData (player characters)
+-   `data/actor/npc-v2.mjs` - NPCDataV2 (CURRENT NPC system)
+-   `data/actor/templates/common.mjs` - CommonTemplate (10 characteristics, wounds)
+-   `data/actor/templates/creature.mjs` - CreatureTemplate (skills, fate, fatigue)
+-   `data/actor/mixins/horde-template.mjs` - Horde mechanics
 
 ### NPC V2 System (CURRENT)
 
@@ -119,13 +119,13 @@ ActorDataModel (abstract base)
 
 **Key Features**:
 
-- **Sparse skills**: Only store trained skills (not all 36)
-- **Simple weapons**: Inline array OR embedded items (toggle mode)
-- **Simple armour**: Total value OR location-based
-- **Custom stats**: Manual overrides for special NPCs
-- **Threat scaling**: Auto-scale stats by threat level (1-30)
-- **Horde mechanics**: Magnitude, damage per hit
-- **Stat block I/O**: Import/export text stat blocks
+-   **Sparse skills**: Only store trained skills (not all 36)
+-   **Simple weapons**: Inline array OR embedded items (toggle mode)
+-   **Simple armour**: Total value OR location-based
+-   **Custom stats**: Manual overrides for special NPCs
+-   **Threat scaling**: Auto-scale stats by threat level (1-30)
+-   **Horde mechanics**: Magnitude, damage per hit
+-   **Stat block I/O**: Import/export text stat blocks
 
 **Schema**:
 
@@ -158,19 +158,19 @@ ActorDataModel (abstract base)
 
 **Methods**:
 
-- `getSkillTarget(skillName)` - Calculate skill test target
-- `addTrainedSkill(name, char, level, bonus)` - Add a skill
-- `addSimpleWeapon(data)` - Add inline weapon
-- `switchWeaponMode("simple" | "embedded")` - Toggle weapon mode
-- `scaleToThreat(newThreatLevel)` - Auto-scale stats
-- `exportStatBlock()` - Export as text block
+-   `getSkillTarget(skillName)` - Calculate skill test target
+-   `addTrainedSkill(name, char, level, bonus)` - Add a skill
+-   `addSimpleWeapon(data)` - Add inline weapon
+-   `switchWeaponMode("simple" | "embedded")` - Toggle weapon mode
+-   `scaleToThreat(newThreatLevel)` - Auto-scale stats
+-   `exportStatBlock()` - Export as text block
 
 **Files**:
 
-- `data/actor/npc-v2.mjs` - DataModel (901 lines)
-- `documents/npc-v2.mjs` - Document (477 lines)
-- `applications/actor/npc-sheet-v2.mjs` - Sheet
-- `applications/npc/` - Tools (8 files: encounter builder, threat calculator, stat block parser, etc.)
+-   `data/actor/npc-v2.mjs` - DataModel (901 lines)
+-   `documents/npc-v2.mjs` - Document (477 lines)
+-   `applications/actor/npc-sheet-v2.mjs` - Sheet
+-   `applications/npc/` - Tools (8 files: encounter builder, threat calculator, stat block parser, etc.)
 
 ## Item Types (36+)
 
@@ -192,13 +192,13 @@ ActorDataModel (abstract base)
 
 **Key Features**:
 
-- Structured prerequisites (characteristics, skills, talents)
-- Grants system (skills, talents, traits, special abilities)
-- Modifiers (characteristics, skills, combat)
-- Tier/category system (Tier 0-3, 10+ categories)
-- Specialization support ("Weapon Training (Las)")
-- Stackable talents (rank tracking)
-- Rollable talents (via rollConfig)
+-   Structured prerequisites (characteristics, skills, talents)
+-   Grants system (skills, talents, traits, special abilities)
+-   Modifiers (characteristics, skills, combat)
+-   Tier/category system (Tier 0-3, 10+ categories)
+-   Specialization support ("Weapon Training (Las)")
+-   Stackable talents (rank tracking)
+-   Rollable talents (via rollConfig)
 
 **Schema**:
 
@@ -246,17 +246,17 @@ ActorDataModel (abstract base)
 
 **Properties**:
 
-- `isRollable` - Can be rolled/activated
-- `tierLabel` - "Tier 1", "Tier 2", etc.
-- `fullName` - Name + specialization + rank
-- `hasGrants` - Does it grant anything?
-- `grantsSummary` - Array of grant descriptions
+-   `isRollable` - Can be rolled/activated
+-   `tierLabel` - "Tier 1", "Tier 2", etc.
+-   `fullName` - Name + specialization + rank
+-   `hasGrants` - Does it grant anything?
+-   `grantsSummary` - Array of grant descriptions
 
 **Files**:
 
-- `data/item/talent.mjs` - DataModel (399 lines)
-- `applications/item/talent-sheet-v2.mjs` - Sheet
-- `utils/talent-grants.mjs` - Grant processor
+-   `data/item/talent.mjs` - DataModel (399 lines)
+-   `applications/item/talent-sheet-v2.mjs` - Sheet
+-   `utils/talent-grants.mjs` - Grant processor
 
 ### Origin Path System (Post-Rework)
 
@@ -264,12 +264,12 @@ ActorDataModel (abstract base)
 
 **Key Features**:
 
-- **Multi-position support**: Origins can occupy multiple positions in flowchart (`positions: [1, 5]`)
-- **Formula-based wounds**: `"2xTB+1d5"`, `"1d10+2"`, etc.
-- **Formula-based fate**: `"(1-5|=2),(6-10|=3)"` (conditional rolls)
-- **Interactive rolling**: Roll results stored with breakdown
-- **Choice system**: Player decisions (e.g., "Choose +5 to one of: WS, BS, or S")
-- **Active modifiers**: Calculated from choices in `prepareDerivedData`
+-   **Multi-position support**: Origins can occupy multiple positions in flowchart (`positions: [1, 5]`)
+-   **Formula-based wounds**: `"2xTB+1d5"`, `"1d10+2"`, etc.
+-   **Formula-based fate**: `"(1-5|=2),(6-10|=3)"` (conditional rolls)
+-   **Interactive rolling**: Roll results stored with breakdown
+-   **Choice system**: Player decisions (e.g., "Choose +5 to one of: WS, BS, or S")
+-   **Active modifiers**: Calculated from choices in `prepareDerivedData`
 
 **Schema**:
 
@@ -330,13 +330,13 @@ ActorDataModel (abstract base)
 
 **Files**:
 
-- `data/item/origin-path.mjs` - DataModel (546 lines)
-- `applications/character-creation/origin-path-builder.mjs` - Visual flowchart builder
-- `applications/character-creation/origin-roll-dialog.mjs` - Interactive rolling
-- `applications/character-creation/origin-path-choice-dialog.mjs` - Choice selection
-- `utils/origin-grants-processor.mjs` - Grant processor
-- `utils/formula-evaluator.mjs` - Formula evaluation
-- `utils/origin-chart-layout.mjs` - Flowchart layout calculation
+-   `data/item/origin-path.mjs` - DataModel (546 lines)
+-   `applications/character-creation/origin-path-builder.mjs` - Visual flowchart builder
+-   `applications/character-creation/origin-roll-dialog.mjs` - Interactive rolling
+-   `applications/character-creation/origin-path-choice-dialog.mjs` - Choice selection
+-   `utils/origin-grants-processor.mjs` - Grant processor
+-   `utils/formula-evaluator.mjs` - Formula evaluation
+-   `utils/origin-chart-layout.mjs` - Flowchart layout calculation
 
 ## ApplicationV2 Sheet System
 
@@ -372,8 +372,8 @@ ApplicationV2Mixin        → Base V2 (PARTS, actions)
 
 **Files**:
 
-- `applications/actor/base-actor-sheet.mjs` - Base sheet (1800+ lines)
-- `applications/api/*` - 10 mixin files
+-   `applications/actor/base-actor-sheet.mjs` - Base sheet (1800+ lines)
+-   `applications/api/*` - 10 mixin files
 
 ### PARTS System
 
@@ -397,10 +397,10 @@ static PARTS = {
 
 **Benefits**:
 
-- Only render visible tabs
-- Partial updates (only re-render changed parts)
-- Better performance
-- State preservation (scroll positions)
+-   Only render visible tabs
+-   Partial updates (only re-render changed parts)
+-   Better performance
+-   State preservation (scroll positions)
 
 ### Action Handlers
 
@@ -474,10 +474,10 @@ modifiers: {
 
 **Applied in**:
 
-- `prepareDerivedData()` - Collects all modifiers from items
-- `getCharacteristicModifier(char)` - Total modifier for characteristic
-- `getSkillModifier(skill)` - Total modifier for skill
-- `getCombatModifier(type)` - Attack/damage/defense modifiers
+-   `prepareDerivedData()` - Collects all modifiers from items
+-   `getCharacteristicModifier(char)` - Total modifier for characteristic
+-   `getSkillModifier(skill)` - Total modifier for skill
+-   `getCombatModifier(type)` - Attack/damage/defense modifiers
 
 ### Skill Schema
 
@@ -517,10 +517,10 @@ skills: {
 
 **Training Levels**:
 
-- Untrained: `-20` penalty
-- Trained: No penalty
-- +10: +10 bonus
-- +20: +20 bonus
+-   Untrained: `-20` penalty
+-   Trained: No penalty
+-   +10: +10 bonus
+-   +20: +20 bonus
 
 ### Armour by Location
 
@@ -648,11 +648,11 @@ OriginChartLayout.calculateLayout(originPathItems, currentStep);
 
 **Key Classes**:
 
-- `.rt-panel` - Main panel container
-- `.rt-vital-stat` - Wounds, fate, fatigue displays
-- `.rt-dropzone` - Drag-drop zones
-- `.rt-btn-*` - Button variants (primary, secondary, danger)
-- `.rt-input` - Form inputs
+-   `.rt-panel` - Main panel container
+-   `.rt-vital-stat` - Wounds, fate, fatigue displays
+-   `.rt-dropzone` - Drag-drop zones
+-   `.rt-btn-*` - Button variants (primary, secondary, danger)
+-   `.rt-input` - Form inputs
 
 **Modifiers**: `.rt-panel--wounds`, `.rt-panel--combat`, `.rt-panel--skills`, etc.
 
@@ -709,24 +709,24 @@ OriginChartLayout.calculateLayout(originPathItems, currentStep);
 
 **Use These (CURRENT)**:
 
-- `npcV2` actor type (not legacy `npc`)
-- ApplicationV2 PARTS system
-- Action handlers (not jQuery `.on()`)
-- V13 toast system (not `ui.notifications`)
-- V13 context menus (native, not custom)
-- ProseMirror rich text editors
-- DataModel `prepareDerivedData()` for calculations
-- 8-mixin stack for sheets
+-   `npcV2` actor type (not legacy `npc`)
+-   ApplicationV2 PARTS system
+-   Action handlers (not jQuery `.on()`)
+-   V13 toast system (not `ui.notifications`)
+-   V13 context menus (native, not custom)
+-   ProseMirror rich text editors
+-   DataModel `prepareDerivedData()` for calculations
+-   8-mixin stack for sheets
 
 **Avoid These (DEPRECATED)**:
 
-- Legacy `npc` actor type
-- V1 Application sheets
-- jQuery event binding (`.click()`, `.on()`)
-- `ui.notifications` (use `ui.notifications.toasts`)
-- Custom context menus (use V13 native)
-- TinyMCE editors
-- Logic in sheet classes (move to DataModels)
+-   Legacy `npc` actor type
+-   V1 Application sheets
+-   jQuery event binding (`.click()`, `.on()`)
+-   `ui.notifications` (use `ui.notifications.toasts`)
+-   Custom context menus (use V13 native)
+-   TinyMCE editors
+-   Logic in sheet classes (move to DataModels)
 
 ## Build Commands
 
@@ -743,47 +743,213 @@ gulp watch        # Watch for changes
 
 **Key Packs**:
 
-- `rt-items-talents` (300+ talents)
-- `rt-items-traits` (100+ traits)
-- `rt-items-skills` (36 skills)
-- `rt-items-weapons` (100+ weapons)
-- `rt-items-armour` (50+ armour)
-- `rt-items-origin-path` (30+ origin paths)
-- `rt-actors-bestiary` (50+ NPCs)
-- `rt-journals-*` (rules references)
-- `rt-rolltables-*` (random tables)
+-   `rt-items-talents` (300+ talents)
+-   `rt-items-traits` (100+ traits)
+-   `rt-items-skills` (36 skills)
+-   `rt-items-weapons` (100+ weapons)
+-   `rt-items-armour` (50+ armour)
+-   `rt-items-origin-path` (30+ origin paths)
+-   `rt-actors-bestiary` (50+ NPCs)
+-   `rt-journals-*` (rules references)
+-   `rt-rolltables-*` (random tables)
 
 ## Testing Checklist
 
 **Build**:
 
-- [ ] `npm run build` succeeds without errors
-- [ ] Browser console clean (no errors)
+-   [ ] `npm run build` succeeds without errors
+-   [ ] Browser console clean (no errors)
 
 **Actors**:
 
-- [ ] Create acolyte/npcV2/vehicle/starship actors
-- [ ] Characteristic rolls work
-- [ ] Skill training toggles work (trained/+10/+20)
-- [ ] Stat adjustments work (wounds, fate, fatigue)
+-   [ ] Create acolyte/npcV2/vehicle/starship actors
+-   [ ] Characteristic rolls work
+-   [ ] Skill training toggles work (trained/+10/+20)
+-   [ ] Stat adjustments work (wounds, fate, fatigue)
 
 **Items**:
 
-- [ ] Drag talents to actor → modifiers apply
-- [ ] Weapon attacks roll correctly
-- [ ] Armour displays all 6 locations
-- [ ] Origin paths apply grants correctly
+-   [ ] Drag talents to actor → modifiers apply
+-   [ ] Weapon attacks roll correctly
+-   [ ] Armour displays all 6 locations
+-   [ ] Origin paths apply grants correctly
 
 **UI**:
 
-- [ ] Drag/drop functions (items, effects)
-- [ ] Context menus work (right-click)
-- [ ] Tooltips display on hover
-- [ ] What-if mode toggles correctly
+-   [ ] Drag/drop functions (items, effects)
+-   [ ] Context menus work (right-click)
+-   [ ] Tooltips display on hover
+-   [ ] What-if mode toggles correctly
 
 **Sheets**:
 
-- [ ] All tabs render without errors
-- [ ] Scroll positions preserved on re-render
-- [ ] Panel collapse/expand works
-- [ ] Action handlers fire correctly
+-   [ ] All tabs render without errors
+-   [ ] Scroll positions preserved on re-render
+-   [ ] Panel collapse/expand works
+-   [ ] Action handlers fire correctly
+
+## Beads Issue Tracking
+
+This project uses **Beads** for AI-native issue tracking. Issues live in `.beads/` and sync with git.
+
+### When to Use Beads vs TodoWrite
+
+| Use Beads (`bd`)                    | Use TodoWrite                |
+| ----------------------------------- | ---------------------------- |
+| Multi-session work                  | Single-session tasks         |
+| Work with dependencies              | Simple execution lists       |
+| Discovered work that needs tracking | Breaking down immediate work |
+| Bugs, features, strategic tasks     | Step-by-step task tracking   |
+| Anything that needs persistence     | Temporary session planning   |
+
+**Rule of thumb**: If work might span sessions or has dependencies, use beads. If it's a simple checklist for right now, use TodoWrite.
+
+### Essential Commands
+
+```bash
+# Finding Work
+bd ready                           # Show issues ready to work (no blockers)
+bd list --status=open              # All open issues
+bd list --status=in_progress       # Your active work
+bd show <id>                       # Detailed issue view with dependencies
+bd blocked                         # Show all blocked issues
+
+# Creating Issues
+bd create --title="Fix bug X" --type=bug --priority=2
+bd create --title="Add feature Y" --type=feature --priority=1
+
+# Priority: 0-4 (NOT "high"/"medium"/"low")
+#   0 = P0 (critical)
+#   1 = P1 (high)
+#   2 = P2 (medium, default)
+#   3 = P3 (low)
+#   4 = P4 (backlog)
+
+# Updating Issues
+bd update <id> --status=in_progress  # Claim work
+bd update <id> --assignee=username   # Assign to someone
+
+# Closing Issues
+bd close <id>                        # Mark complete
+bd close <id1> <id2> <id3>           # Close multiple at once (efficient)
+bd close <id> --reason="explanation" # Close with reason
+bd reopen <id>                       # Reopen if needed
+
+# Dependencies
+bd dep add <issue> <depends-on>      # issue depends on depends-on
+bd dep remove <issue> <depends-on>   # Remove dependency
+
+# Sync (REQUIRED at session end)
+bd sync                              # Sync with git remote
+bd sync --status                     # Check sync status
+```
+
+### Agent Delegation
+
+**Default to the beads-task-agent.** For ANY beads work involving multiple commands, use:
+
+```javascript
+// Use Task tool with subagent_type: "beads-task-agent"
+```
+
+**Delegate to agent for:**
+
+-   Status overviews ("what's next", "what's blocked", "show me progress")
+-   Exploring the issue graph (ready + in-progress + blocked queries)
+-   Finding and completing ready work
+-   Working through multiple issues in sequence
+-   Any request requiring 2+ bd commands
+
+**Use CLI directly ONLY for single, atomic operations:**
+
+-   Creating exactly one issue
+-   Closing exactly one issue
+-   Updating one specific field
+
+**Why delegate?** The agent processes multiple commands internally and returns only a concise summary. Running bd commands directly dumps raw JSON into context, wasting tokens.
+
+### Issue Types
+
+| Type      | Use For                                     |
+| --------- | ------------------------------------------- |
+| `bug`     | Something broken that needs fixing          |
+| `feature` | New functionality to implement              |
+| `task`    | General work item (refactoring, docs, etc.) |
+
+### Dependencies & Blocking
+
+Dependencies track work order. If issue A depends on issue B, A is blocked until B is closed.
+
+```bash
+# Feature depends on API (API must be done first)
+bd create --title="Build API endpoint" --type=task
+# Returns: beads-001
+bd create --title="Add feature using API" --type=feature
+# Returns: beads-002
+bd dep add beads-002 beads-001  # Feature depends on API
+
+# Check what's blocked
+bd blocked                      # List all blocked issues
+bd show beads-002               # See blockers for specific issue
+```
+
+### Project Health
+
+```bash
+bd stats                         # Open/closed/blocked counts
+bd doctor                        # Check for sync issues, missing hooks
+```
+
+### Common Workflows
+
+**Starting a session:**
+
+```bash
+bd ready                         # Find available work
+bd show <id>                     # Review issue details
+bd update <id> --status=in_progress  # Claim it
+```
+
+**During work:**
+
+```bash
+# Discover new work needed? Create an issue
+bd create --title="Also need to fix X" --type=bug --priority=2
+
+# Found a blocker? Add dependency
+bd dep add <current> <blocker>
+```
+
+**Ending a session:**
+
+```bash
+bd close <id1> <id2> ...         # Close all completed issues
+bd sync                          # Push to remote (MANDATORY)
+```
+
+## Landing the Plane (Session Completion)
+
+**When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
+
+**MANDATORY WORKFLOW:**
+
+1. **File issues for remaining work** - Create issues for anything that needs follow-up
+2. **Run quality gates** (if code changed) - Tests, linters, builds
+3. **Update issue status** - Close finished work, update in-progress items
+4. **PUSH TO REMOTE** - This is MANDATORY:
+    ```bash
+    git pull --rebase
+    bd sync
+    git push
+    git status  # MUST show "up to date with origin"
+    ```
+5. **Clean up** - Clear stashes, prune remote branches
+6. **Verify** - All changes committed AND pushed
+7. **Hand off** - Provide context for next session
+
+**CRITICAL RULES:**
+
+-   Work is NOT complete until `git push` succeeds
+-   NEVER stop before pushing - that leaves work stranded locally
+-   NEVER say "ready to push when you are" - YOU must push
+-   If push fails, resolve and retry until it succeeds
