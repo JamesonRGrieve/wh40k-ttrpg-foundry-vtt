@@ -414,19 +414,6 @@
     line-height: 1.6;
   }
 }
-  
-  &:focus {
-    outline: none;
-    border-color: var(--rt-accent-gold);
-    box-shadow: 0 0 0 3px var(--rt-glow-gold);
-  }
-  
-  option {
-    background: var(--rt-bg-primary);
-    color: var(--rt-text-primary);
-    padding: 8px;
-  }
-}
 
 // ============================================
 // Checkbox Field (inline layout)
