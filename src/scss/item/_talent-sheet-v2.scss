@@ -1386,6 +1386,62 @@
         border-color: var(--talent-accent-border);
         color: var(--talent-accent-light);
     }
+
+    // Hidden by default, shows on section hover
+    &--hover {
+        opacity: 0;
+        transition:
+            opacity 0.2s ease,
+            background 0.2s ease,
+            border-color 0.2s ease,
+            color 0.2s ease;
+    }
+
+    // Done button (green checkmark)
+    &--done {
+        background: rgba($rt-color-success, 0.15);
+        border-color: rgba($rt-color-success, 0.4);
+        color: $rt-color-success;
+
+        &:hover {
+            background: rgba($rt-color-success, 0.25);
+            border-color: rgba($rt-color-success, 0.6);
+            color: lighten($rt-color-success, 10%);
+        }
+    }
+}
+
+// ============================================
+// EDITABLE SECTIONS (Hover to reveal edit button)
+// ============================================
+
+.rt-section--editable {
+    // Show edit button on hover
+    &:hover .rt-header-btn--hover {
+        opacity: 1;
+    }
+
+    // Editing state - subtle highlight
+    &.rt-section--editing {
+        border-color: var(--talent-accent-border);
+        box-shadow: 0 0 0 1px var(--talent-accent-border) inset;
+    }
+}
+
+// Clickable empty states
+.rt-empty-state--clickable {
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: var(--talent-accent-bg);
+        border-color: var(--talent-accent-border);
+        color: var(--talent-accent-light);
+
+        i {
+            color: var(--talent-accent-light);
+        }
+    }
 }
 
 // ============================================
@@ -1619,6 +1675,11 @@
         font-size: 0.7rem;
         font-weight: 600;
         color: var(--color-text-primary);
+
+        // Hide empty count badges (e.g., when only special abilities exist)
+        &:empty {
+            display: none;
+        }
     }
 
     // Variant colors
