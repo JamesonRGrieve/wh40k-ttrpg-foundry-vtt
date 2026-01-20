@@ -232,7 +232,7 @@
                     </div>
                     <div class="rt-panel__content">
                         <div class="rt-description">
-                            {{editor item.system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+                            {{editor content=item.system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
                         </div>
                         <p class="rt-field__hint">{{localize "RT.Gear.EffectHint"}}</p>
                     </div>
@@ -245,7 +245,7 @@
                     </div>
                     <div class="rt-panel__content">
                         <div class="rt-description">
-                            {{editor item.system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+                            {{editor content=item.system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
                         </div>
                     </div>
                 </div>

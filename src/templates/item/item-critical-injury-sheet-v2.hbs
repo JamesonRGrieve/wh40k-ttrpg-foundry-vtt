@@ -102,7 +102,7 @@
         <i class="fas fa-file-medical"></i>
         {{localize "RT.CriticalInjury.Effect"}}
       </label>
-      {{editor item.system.effect 
+      {{editor content=item.system.effect 
                target="system.effect" 
                button=true 
                editable=isEditable 
@@ -164,7 +164,7 @@
         <i class="fas fa-align-left"></i>
         Description (for chat)
       </label>
-      {{editor item.system.description.value 
+      {{editor content=item.system.description.value 
                target="system.description.value" 
                button=true 
                editable=isEditable 
