@@ -373,6 +373,7 @@
 
 // Select Dropdowns
 .rt-prompt__select {
+  width: 100%;
   padding: 10px 32px 10px 14px;
   background: rgba(0, 0, 0, 0.3);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9a227' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
@@ -388,10 +389,31 @@
   transition: all 0.2s ease;
   appearance: none;
   min-width: 140px;
+  line-height: 1.4;
   
   &:hover {
     border-color: rgba(255, 255, 255, 0.15);
   }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--rt-accent-gold);
+    box-shadow: 0 0 0 3px var(--rt-glow-gold);
+  }
+  
+  // Ensure placeholder option has distinct styling
+  option[value=""] {
+    color: #888;
+    font-style: italic;
+  }
+  
+  option {
+    background: var(--rt-bg-primary);
+    color: var(--rt-text-primary);
+    padding: 8px;
+    line-height: 1.6;
+  }
+}
   
   &:focus {
     outline: none;
