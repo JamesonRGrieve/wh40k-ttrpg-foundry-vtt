@@ -35,26 +35,10 @@
     {{!-- Quick Meta --}}
     <div class="rt-meta-compact">
       <select name="system.type" class="rt-select-compact" {{#unless editable}}disabled{{/unless}} title="Type">
-        {{#select system.type}}
-        <option value="troop">Troop</option>
-        <option value="elite">Elite</option>
-        <option value="master">Master</option>
-        <option value="horde">Horde</option>
-        <option value="swarm">Swarm</option>
-        <option value="creature">Creature</option>
-        <option value="daemon">Daemon</option>
-        <option value="xenos">Xenos</option>
-        {{/select}}
+        {{selectOptions npcTypeOptions selected=system.type}}
       </select>
       <select name="system.role" class="rt-select-compact" {{#unless editable}}disabled{{/unless}} title="Role">
-        {{#select system.role}}
-        <option value="bruiser">Bruiser</option>
-        <option value="sniper">Sniper</option>
-        <option value="caster">Caster</option>
-        <option value="support">Support</option>
-        <option value="commander">Commander</option>
-        <option value="specialist">Specialist</option>
-        {{/select}}
+        {{selectOptions npcRoleOptions selected=system.role}}
       </select>
     </div>
   </div>
