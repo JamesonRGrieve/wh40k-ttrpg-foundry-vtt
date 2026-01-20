@@ -238,7 +238,7 @@
           <div class="rt-section-body">
             {{#if inEditMode}}
             <div class="rt-editor-container">
-              {{editor content=system.benefit target="system.benefit" button=true editable=canEdit engine="prosemirror"}}
+              {{editor system.benefit target="system.benefit" button=true editable=canEdit engine="prosemirror"}}
             </div>
             {{else}}
               {{#if talentData.hasBenefit}}
@@ -935,7 +935,7 @@
           <div class="rt-section-body">
             {{#if inEditMode}}
             <div class="rt-editor-container">
-              {{editor content=system.benefit target="system.benefit" button=true editable=canEdit engine="prosemirror"}}
+              {{editor system.benefit target="system.benefit" button=true editable=canEdit engine="prosemirror"}}
             </div>
             {{else}}
               {{#if talentData.hasBenefit}}

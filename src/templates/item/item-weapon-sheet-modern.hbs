@@ -480,7 +480,7 @@
           <div class="rt-weapon-section__body">
             <div class="rt-prose-editor">
               {{#if editable}}
-              {{editor content=system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+              {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
               {{else}}
               <div class="rt-description-content">{{{system.description.value}}}</div>
               {{/if}}
