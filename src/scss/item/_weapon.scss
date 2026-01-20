@@ -238,9 +238,7 @@
         position: sticky;
         top: 0;
         z-index: 10;
-        box-shadow:
-            0 12px 24px rgba(0, 0, 0, 0.35),
-            0 4px 12px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 }
 
@@ -705,66 +703,14 @@
 }
 
 .rt-field {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  
-  &--small {
-    flex: 0 0 70px;
-  }
-  
-  label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: var(--rt-text-muted);
-  }
-  
-  input,
-  select,
-  textarea {
-    padding: 6px 10px;
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
-    border-radius: 4px;
-    font-size: 0.9rem;
-    color: var(--rt-text-dark);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    
-    &:focus {
-      outline: none;
-      border-color: var(--rt-gold);
-      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-    }
-  }
-  
-  input[type="number"] {
-    text-align: center;
-  }
-  
-  select {
-    cursor: pointer;
-  }
-  
-  textarea {
-    resize: vertical;
-    min-height: 60px;
-  }
-  
-  &-value {
-    padding: 6px 10px;
-    background: rgba(12, 16, 24, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
-    font-size: 0.9rem;
-    color: var(--rt-text-medium);
-    min-height: 32px;
+    flex: 1;
     display: flex;
-    align-items: center;
-  }
-}
+    flex-direction: column;
+    gap: 4px;
+
+    &--small {
+        flex: 0 0 70px;
+    }
 
     label {
         font-size: 0.75rem;
@@ -783,9 +729,7 @@
         border-radius: 4px;
         font-size: 0.9rem;
         color: var(--rt-text-dark);
-        transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
         &:focus {
             outline: none;
@@ -805,6 +749,18 @@
     textarea {
         resize: vertical;
         min-height: 60px;
+    }
+
+    &-value {
+        padding: 6px 10px;
+        background: rgba(12, 16, 24, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        font-size: 0.9rem;
+        color: var(--rt-text-medium);
+        min-height: 32px;
+        display: flex;
+        align-items: center;
     }
 }
 
@@ -1006,6 +962,207 @@
     &__actions {
         display: flex;
         gap: 4px;
+    }
+}
+
+// ============================================
+// MODIFICATION CARDS (Enhanced for Properties Tab)
+// ============================================
+
+.rt-mod-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &:hover {
+        border-color: rgba(212, 175, 55, 0.3);
+        box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
+    }
+
+    &--inactive {
+        opacity: 0.5;
+        border-color: rgba(255, 255, 255, 0.05);
+
+        .rt-mod-card__name {
+            text-decoration: line-through;
+            color: var(--rt-text-muted);
+        }
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        i {
+            color: var(--rt-gold);
+            font-size: 0.9rem;
+        }
+    }
+
+    &__name {
+        font-weight: 600;
+        color: var(--rt-text-dark);
+    }
+
+    &__actions {
+        display: flex;
+        gap: 4px;
+    }
+
+    &__effects {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+    }
+}
+
+.rt-mod-effect {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: rgba(58, 93, 132, 0.2);
+    border: 1px solid rgba(98, 142, 185, 0.3);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: rgba(178, 208, 234, 0.95);
+
+    i {
+        font-size: 0.65rem;
+    }
+}
+
+.rt-mod-toggle {
+    &--active {
+        color: var(--rt-green-bright);
+    }
+}
+
+// ============================================
+// MODIFICATIONS BANNER (Overview Tab)
+// ============================================
+
+.rt-modifications-banner {
+    background: linear-gradient(135deg, rgba(58, 93, 132, 0.25), rgba(58, 93, 132, 0.1));
+    border: 1px solid rgba(98, 142, 185, 0.3);
+    border-left: 3px solid rgba(98, 142, 185, 0.6);
+    border-radius: 6px;
+    padding: 10px 12px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+        color: rgba(178, 208, 234, 0.95);
+        margin-bottom: 8px;
+
+        i {
+            font-size: 0.9rem;
+        }
+    }
+
+    &__summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+}
+
+.rt-mod-badge {
+    padding: 3px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--rt-text-dark);
+    cursor: help;
+}
+
+// ============================================
+// MODIFIED STAT INDICATOR
+// ============================================
+
+.rt-weapon-stat {
+    &--modified {
+        position: relative;
+
+        .rt-weapon-stat__icon {
+            position: relative;
+        }
+
+        .rt-weapon-stat__value {
+            color: var(--rt-gold);
+            font-weight: 700;
+        }
+    }
+
+    &__modified-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 14px;
+        height: 14px;
+        background: var(--rt-gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+            font-size: 0.45rem;
+            color: rgba(10, 12, 18, 0.9);
+        }
+    }
+}
+
+// ============================================
+// EMPTY STATE FOR MODS
+// ============================================
+
+.rt-empty-state--mods {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--rt-text-muted);
+
+    i {
+        font-size: 2.5em;
+        color: rgba(255, 255, 255, 0.2);
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    p {
+        margin: 0 0 6px;
+        color: var(--rt-text-medium);
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .rt-empty-hint {
+        font-size: 0.8rem;
+        font-style: italic;
+        margin-top: 8px;
+        color: var(--rt-text-muted);
     }
 }
 

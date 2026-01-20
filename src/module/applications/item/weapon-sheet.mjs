@@ -20,6 +20,9 @@ export default class WeaponSheet extends ContainerItemSheet {
             openQuality: WeaponSheet.#openQuality,
             nestedItemEdit: WeaponSheet.#nestedItemEdit,
             nestedItemDelete: WeaponSheet.#nestedItemDelete,
+            toggleModificationActive: WeaponSheet.#toggleModificationActive,
+            viewModification: WeaponSheet.#viewModification,
+            removeModification: WeaponSheet.#removeModification,
         },
         position: {
             width: 650,
@@ -150,6 +153,20 @@ export default class WeaponSheet extends ContainerItemSheet {
         context.effectiveToHit = system.effectiveToHit;
         context.effectiveWeight = system.effectiveWeight;
 
+        // Prepare modifications data for display
+        context.modificationsData = (system.modifications || []).map((mod, index) => ({
+            index,
+            uuid: mod.uuid,
+            name: mod.name,
+            active: mod.active ?? true,
+            cachedModifiers: mod.cachedModifiers || {},
+            effects: this._getModificationEffects(mod),
+            hasEffects: this._hasModificationEffects(mod),
+        }));
+
+        // Check if weapon has any modifications affecting stats
+        context.hasModificationEffects = system._modificationModifiers && Object.values(system._modificationModifiers).some((v) => v !== 0);
+
         // Convenience flags
         context.hasActions = this.isEditable && this.item.actor;
 
@@ -218,6 +235,40 @@ export default class WeaponSheet extends ContainerItemSheet {
         }
 
         return true;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Get a list of modification effects for display.
+     * @param {object} mod - Modification data object
+     * @returns {string[]} - Array of effect descriptions
+     * @private
+     */
+    _getModificationEffects(mod) {
+        const effects = [];
+        const m = mod.cachedModifiers || {};
+
+        if (m.damage) effects.push(`Damage ${m.damage > 0 ? '+' : ''}${m.damage}`);
+        if (m.penetration) effects.push(`Pen ${m.penetration > 0 ? '+' : ''}${m.penetration}`);
+        if (m.toHit) effects.push(`To Hit ${m.toHit > 0 ? '+' : ''}${m.toHit}`);
+        if (m.range) effects.push(`Range ${m.range > 0 ? '+' : ''}${m.range}m`);
+        if (m.weight) effects.push(`Weight ${m.weight > 0 ? '+' : ''}${m.weight}kg`);
+
+        return effects;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Check if a modification has any effects.
+     * @param {object} mod - Modification data object
+     * @returns {boolean}
+     * @private
+     */
+    _hasModificationEffects(mod) {
+        const m = mod.cachedModifiers || {};
+        return !!(m.damage || m.penetration || m.toHit || m.range || m.weight);
     }
 
     /* -------------------------------------------- */
@@ -369,5 +420,182 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Open a dialog or compendium browser to add modifications
         // For now, show a notification
         ui.notifications.info('Drag a weapon modification from a compendium to add it.');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle a modification's active state.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #toggleModificationActive(event, target) {
+        const index = parseInt(target.dataset.modIndex, 10);
+        if (isNaN(index)) return;
+
+        const mods = foundry.utils.deepClone(this.item.system.modifications);
+        if (index < 0 || index >= mods.length) return;
+
+        mods[index].active = !mods[index].active;
+
+        await this.item.update({ 'system.modifications': mods });
+
+        const mod = mods[index];
+        ui.notifications.info(`${mod.name} ${mod.active ? 'activated' : 'deactivated'}.`);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * View/edit a modification's details.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #viewModification(event, target) {
+        const index = parseInt(target.dataset.modIndex, 10);
+        if (isNaN(index)) return;
+
+        const mod = this.item.system.modifications[index];
+        if (!mod) return;
+
+        const modItem = await fromUuid(mod.uuid);
+        if (!modItem) {
+            ui.notifications.error(`Modification "${mod.name}" not found. It may have been deleted.`);
+            return;
+        }
+
+        modItem.sheet.render(true);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Remove a modification from the weapon.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #removeModification(event, target) {
+        const index = parseInt(target.dataset.modIndex, 10);
+        if (isNaN(index)) return;
+
+        const mod = this.item.system.modifications[index];
+        if (!mod) return;
+
+        const confirmed = await Dialog.confirm({
+            title: 'Remove Modification',
+            content: `<p>Remove <strong>${mod.name}</strong> from this weapon?</p>`,
+            yes: () => true,
+            no: () => false,
+        });
+
+        if (!confirmed) return;
+
+        const mods = this.item.system.modifications.filter((_, i) => i !== index);
+        await this.item.update({ 'system.modifications': mods });
+
+        ui.notifications.info(`${mod.name} removed.`);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle dropping a weaponModification onto the weapon.
+     * @param {Item} modItem - The modification item
+     * @returns {Promise<boolean>}
+     * @private
+     */
+    async _onDropModification(modItem) {
+        // Validate
+        if (!this._canAddModification(modItem)) {
+            return false;
+        }
+
+        // Create modification entry
+        const modEntry = {
+            uuid: modItem.uuid,
+            name: modItem.name,
+            active: true,
+            cachedModifiers: {
+                damage: modItem.system.modifiers?.damage ?? 0,
+                penetration: modItem.system.modifiers?.penetration ?? 0,
+                toHit: modItem.system.modifiers?.toHit ?? 0,
+                range: modItem.system.modifiers?.range ?? 0,
+                weight: modItem.system.modifiers?.weight ?? 0,
+            },
+        };
+
+        // Add to array
+        const mods = [...this.item.system.modifications, modEntry];
+        await this.item.update({ 'system.modifications': mods });
+
+        ui.notifications.info(`${modItem.name} installed.`);
+        return true;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Check if a modification can be added to this weapon.
+     * @param {Item} modItem - The modification item
+     * @returns {boolean}
+     * @private
+     */
+    _canAddModification(modItem) {
+        const weapon = this.item.system;
+        const restrictions = modItem.system.restrictions;
+
+        // Check weapon class restriction
+        if (restrictions?.weaponClasses?.size > 0) {
+            if (!restrictions.weaponClasses.has(weapon.class)) {
+                ui.notifications.warn(`${modItem.name} cannot be installed on ${weapon.classLabel} weapons.`);
+                return false;
+            }
+        }
+
+        // Check weapon type restriction
+        if (restrictions?.weaponTypes?.size > 0) {
+            if (!restrictions.weaponTypes.has(weapon.type)) {
+                ui.notifications.warn(`${modItem.name} is not compatible with ${weapon.typeLabel} weapons.`);
+                return false;
+            }
+        }
+
+        // Check for duplicates
+        if (weapon.modifications.some((m) => m.uuid === modItem.uuid)) {
+            ui.notifications.info(`${modItem.name} is already installed.`);
+            return false;
+        }
+
+        return true;
+    }
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    async _onDrop(event) {
+        event.preventDefault();
+
+        let data;
+        try {
+            data = JSON.parse(event.dataTransfer.getData('text/plain'));
+        } catch (err) {
+            return false;
+        }
+
+        if (data.type !== 'Item') return false;
+
+        const droppedItem = await fromUuid(data.uuid);
+        if (!droppedItem) return false;
+
+        // Handle weaponModification drops
+        if (droppedItem.type === 'weaponModification') {
+            return this._onDropModification(droppedItem);
+        }
+
+        // Fallback to parent container behavior for other item types
+        return super._onDrop(event);
     }
 }
