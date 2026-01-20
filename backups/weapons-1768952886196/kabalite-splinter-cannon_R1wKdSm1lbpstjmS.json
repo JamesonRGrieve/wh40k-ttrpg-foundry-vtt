@@ -1,0 +1,64 @@
+{
+  "name": "Kabalite Splinter Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "kabalite-splinter-cannon",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 110,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 10
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing",
+      "toxic"
+    ],
+    "clip": {
+      "max": 300,
+      "value": 300,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 15,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Toxic</p><p><b>Note:</b> Rare Availability if Acquired from Dark Eldar Settlement. May be equipped with Suspensors, but would be one step rarer, gives wielder the Auto-Stabilised Trait when using this weapon. </p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rare Availability if Acquired from Dark Eldar Settlement. May be equipped with Suspensors, but would be one step rarer, gives wielder the Auto-Stabilised Trait when using this weapon. ",
+    "source": "RT: The Soul Reaver"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "R1wKdSm1lbpstjmS"
+}

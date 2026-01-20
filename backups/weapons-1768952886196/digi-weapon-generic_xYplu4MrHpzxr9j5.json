@@ -1,0 +1,63 @@
+{
+  "name": "Digi-Weapon (Generic)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "digi-weapon-generic",
+    "class": "pistol",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 3,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Takes 1 hour to recharge between shots, worn as a ring, does not prevent the hand worn on from performing normal actions.\nProfile Lists that of Digi-Las Pistol, Can replace Damage, Penetration, and Qualities with that of another ranged weapon for different Digi Weapons at GM discretion.\nCommon examples include Flamers, Grav Pistols, Inferno Pistols, Needle Pistols, Plasma Pistols, etc. (Typically weapons with more energy-like attacks).</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Takes 1 hour to recharge between shots, worn as a ring, does not prevent the hand worn on from performing normal actions.\nProfile Lists that of Digi-Las Pistol, Can replace Damage, Penetration, and Qualities with that of another ranged weapon for different Digi Weapons at GM discretion.\nCommon examples include Flamers, Grav Pistols, Inferno Pistols, Needle Pistols, Plasma Pistols, etc. (Typically weapons with more energy-like attacks).",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xYplu4MrHpzxr9j5"
+}

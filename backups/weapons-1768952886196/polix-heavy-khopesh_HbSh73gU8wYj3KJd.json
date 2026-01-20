@@ -1,0 +1,65 @@
+{
+  "name": "Polix Heavy Khopesh",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "polix-heavy-khopesh",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 8
+    },
+    "special": [
+      "balanced",
+      "concussive-1",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 2,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Concussive (1), Power Field</p><p><b>Note:</b> Can Parry the Castir Lightning Khopesh without Penalties, but doesn't gain Concussive Quality against those using them.\nMust be used in two hands to gain Concussive Quality.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can Parry the Castir Lightning Khopesh without Penalties, but doesn't gain Concussive Quality against those using them.\nMust be used in two hands to gain Concussive Quality.",
+    "source": "BC: Tome of Fate"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HbSh73gU8wYj3KJd"
+}

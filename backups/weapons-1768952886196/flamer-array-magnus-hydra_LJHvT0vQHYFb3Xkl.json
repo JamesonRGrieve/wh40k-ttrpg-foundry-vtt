@@ -1,0 +1,65 @@
+{
+  "name": "Flamer Array (Magnus) \"Hydra\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "flamer-array-magnus-hydra",
+    "class": "basic",
+    "type": "flame",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 8,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 2
+    },
+    "special": [
+      "flame",
+      "proven-3",
+      "spray"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 10,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Proven (3), Spray</p><p><b>Note:</b> Consists of several flamers strapped to each forearm linked to a single canister. Usually worn under heavy robes. Allows wearer to wave their hands about, spewing fire.\nAfter firing the weapon, gain Fear(1) until end of encounter. Spray Quality affects 90 degree cone rather than 30 degree. Weight includes backpack fuel supply.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Consists of several flamers strapped to each forearm linked to a single canister. Usually worn under heavy robes. Allows wearer to wave their hands about, spewing fire.\nAfter firing the weapon, gain Fear(1) until end of encounter. Spray Quality affects 90 degree cone rather than 30 degree. Weight includes backpack fuel supply.",
+    "source": "DH 2E: Enemies Within"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LJHvT0vQHYFb3Xkl"
+}

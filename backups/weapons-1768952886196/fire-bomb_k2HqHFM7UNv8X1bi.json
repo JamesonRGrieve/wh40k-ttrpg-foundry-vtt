@@ -1,0 +1,64 @@
+{
+  "name": "Fire Bomb",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "fire-bomb",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "blast-2",
+      "flame"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Flame</p><p><b>Note:</b> Requires Half Action to ready before use. Cannot be loaded into launchers.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Requires Half Action to ready before use. Cannot be loaded into launchers.",
+    "source": "Dark Heresy 2E: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k2HqHFM7UNv8X1bi"
+}

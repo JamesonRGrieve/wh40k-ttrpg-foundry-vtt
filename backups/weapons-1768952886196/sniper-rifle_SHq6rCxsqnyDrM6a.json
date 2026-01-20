@@ -1,0 +1,64 @@
+{
+  "name": "Sniper Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "sniper-rifle",
+    "class": "basic",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 200,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 3
+    },
+    "special": [
+      "accurate",
+      "reliable"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Reliable</p><p><b>Note:</b> -20 Awareness Test required to detect the sound of a shot fired by this weapon.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "-20 Awareness Test required to detect the sound of a shot fired by this weapon.",
+    "source": "Only War: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SHq6rCxsqnyDrM6a"
+}

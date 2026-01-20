@@ -1,0 +1,63 @@
+{
+  "name": "Tau Battlesuit Phased Ion Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "tau-battlesuit-phased-ion-gun",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 8
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 9,
+      "penetration": 4
+    },
+    "special": [
+      "overcharge-6"
+    ],
+    "clip": {
+      "max": 150,
+      "value": 150,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 35,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Overcharge (6)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one.",
+    "source": "RT: Tau Char. Guide"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lFG6ZAN21CaZVWOS"
+}

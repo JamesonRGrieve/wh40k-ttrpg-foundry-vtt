@@ -1,0 +1,65 @@
+{
+  "name": "Bilge Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "bilge-grenade",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-4",
+      "unreliable",
+      "toxic"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4), Unreliable, Toxic</p><p><b>Note:</b> Modified Frag Grenades mixed with toxic fungi, chemical waste, and diseased flesh. Used by Bilge Scum in the underdecks of some void ships, and likely elsewhere.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Modified Frag Grenades mixed with toxic fungi, chemical waste, and diseased flesh. Used by Bilge Scum in the underdecks of some void ships, and likely elsewhere.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZD8YGWm5VzhUR12j"
+}

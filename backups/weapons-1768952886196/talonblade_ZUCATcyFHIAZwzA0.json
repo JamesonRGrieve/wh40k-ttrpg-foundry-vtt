@@ -1,0 +1,64 @@
+{
+  "name": "Talonblade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "talonblade",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 4
+    },
+    "special": [
+      "razor-sharp",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Razor Sharp, Tearing</p><p><b>Note:</b> Cruel Looking Talons crafted by an unknown Xenos Species. Prized by hunters and pitfighters for their perpetual sharpness and brutal wounds.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Cruel Looking Talons crafted by an unknown Xenos Species. Prized by hunters and pitfighters for their perpetual sharpness and brutal wounds.",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZUCATcyFHIAZwzA0"
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Krak Grenade (Guard)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "krak-grenade-guard",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 4,
+      "penetration": 6
+    },
+    "special": [
+      "concussive-0"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (0)</p><p><b>Note:</b> Triggers Righteous Fury on a 9 or 10 damage roll</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Triggers Righteous Fury on a 9 or 10 damage roll",
+    "source": "Only War: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ywoXSxGVaK5psimV"
+}

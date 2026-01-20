@@ -1,0 +1,65 @@
+{
+  "name": "Psycannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "psycannon",
+    "class": "heavy",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 2,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "daemonbane",
+      "reliable",
+      "tearing"
+    ],
+    "clip": {
+      "max": 40,
+      "value": 40,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 20,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Reliable, Tearing</p><p><b>Note:</b> Integrated Suspensor that grants Auto-Stabilised Trait. Always at least Good Craftsmanship. Ignores protective benefits granted by psychic powers. Inflicts +2 damage for each point of wielder's psy rating.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Integrated Suspensor that grants Auto-Stabilised Trait. Always at least Good Craftsmanship. Ignores protective benefits granted by psychic powers. Inflicts +2 damage for each point of wielder's psy rating.",
+    "source": "DH 2E: Enemies Beyond"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MMvLAI7gaqrVrRoB"
+}

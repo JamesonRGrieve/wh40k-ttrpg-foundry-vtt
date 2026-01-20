@@ -1,0 +1,63 @@
+{
+  "name": "Bolt Carbine (Angelus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "bolt-carbine-angelus",
+    "class": "basic",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 5
+    },
+    "special": [
+      "accurate"
+    ],
+    "clip": {
+      "max": 3,
+      "value": 3,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 11,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 2000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Highly Illegal due to chambering Unmarked Astartes Bolt Rounds, regular ammo won't work.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Highly Illegal due to chambering Unmarked Astartes Bolt Rounds, regular ammo won't work.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lOzvANCwK0DUB9GI"
+}

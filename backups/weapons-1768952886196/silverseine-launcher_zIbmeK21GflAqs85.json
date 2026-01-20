@@ -1,0 +1,66 @@
+{
+  "name": "Silverseine Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "silverseine-launcher",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-4",
+      "reliable",
+      "sanctified",
+      "snare-2"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 25,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4), Reliable, Sanctified, Snare (2)</p><p><b>Note:</b> A netlauncher for capturing daemons. The sanctified wiring eating through their warpflesh. Weapon doubles Snare value against characters with Daemonic Trait. Daemonic targets snared by the weapon must test for Warp Instability at the start of each round they are snared.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A netlauncher for capturing daemons. The sanctified wiring eating through their warpflesh. Weapon doubles Snare value against characters with Daemonic Trait. Daemonic targets snared by the weapon must test for Warp Instability at the start of each round they are snared.",
+    "source": "DH 2E: Enemies Beyond"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zIbmeK21GflAqs85"
+}

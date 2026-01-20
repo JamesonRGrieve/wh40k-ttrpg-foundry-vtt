@@ -1,0 +1,63 @@
+{
+  "name": "Catalytic Mass Driver",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "catalytic-mass-driver",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 12
+    },
+    "special": [
+      "integrated-weapon"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 7,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Rare example of Ballistic Integrated Weapon\nInfinite clip, no reload.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Rare example of Ballistic Integrated Weapon\nInfinite clip, no reload.",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mU2TMWlmDSHVABw3"
+}

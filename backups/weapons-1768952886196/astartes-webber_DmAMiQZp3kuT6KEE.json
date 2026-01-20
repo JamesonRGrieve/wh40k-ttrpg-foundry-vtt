@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Webber",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-webber",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep",
+      "blast-5",
+      "snare"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 10,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (5), Snare</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Each time a snared character fails a Strength/Agility Test to escape Snare, imposes -10 Penalty on future tests. If exceeds -30, the victim is hopelessly trapped and cannot escape. Webbing breaks down on its own after 1d5 hours.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Each time a snared character fails a Strength/Agility Test to escape Snare, imposes -10 Penalty on future tests. If exceeds -30, the victim is hopelessly trapped and cannot escape. Webbing breaks down on its own after 1d5 hours.",
+    "source": "DW: Rites of Battle"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DmAMiQZp3kuT6KEE"
+}

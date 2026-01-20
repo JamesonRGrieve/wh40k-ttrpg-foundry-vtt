@@ -1,0 +1,65 @@
+{
+  "name": "Gate Maker [Melta]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "gate-maker-melta",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 16,
+      "penetration": 12
+    },
+    "special": [
+      "sm-wep",
+      "blast-3",
+      "melta"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 25,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (3), Melta</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Combi-Melta. Has [Boltgun] and [Melta] Profile. Each uses different ammo source and is reloaded seperately.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Combi-Melta. Has [Boltgun] and [Melta] Profile. Each uses different ammo source and is reloaded seperately.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AUTplfm3pKkBftPD"
+}

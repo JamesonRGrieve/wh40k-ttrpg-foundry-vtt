@@ -1,0 +1,66 @@
+{
+  "name": "Eldar Agonizer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "eldar-agonizer",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 3,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 6
+    },
+    "special": [
+      "flexible",
+      "power-field",
+      "tearing",
+      "shocking"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 2,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Power Field, Tearing, Shocking</p><p><b>Note:</b> Overloads target's nervous system with pain.\nIf Best Craftsmanship any that suffer Critical Damage from weapon permenantly reduce Perception Characteristic by 1d5.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Overloads target's nervous system with pain.\nIf Best Craftsmanship any that suffer Critical Damage from weapon permenantly reduce Perception Characteristic by 1d5.",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Nu3NqaW5lSFHiFLZ"
+}

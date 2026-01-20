@@ -1,0 +1,63 @@
+{
+  "name": "Necron Staff of Light [Ranged]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "necron-staff-of-light-ranged",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 25,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 7
+    },
+    "special": [
+      "necron-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 10,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep</p><p><b>Note:</b> Always Best Quality. Has [Ranged] and [Melee] Profile.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Always Best Quality. Has [Ranged] and [Melee] Profile.",
+    "source": "BC: Tome of Fate"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qL3vB739aToBTkTc"
+}

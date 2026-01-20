@@ -1,0 +1,64 @@
+{
+  "name": "Conversion Beamer [Med Range]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "conversion-beamer-med-range",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 8
+    },
+    "special": [
+      "blast-2",
+      "recharge"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 55,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Recharge</p><p><b>Note:</b> Damage and Penetration vary with range. Use this profile for Medium Range. See Conversion Beamer [Short Range] and [Long Range]</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Damage and Penetration vary with range. Use this profile for Medium Range. See Conversion Beamer [Short Range] and [Long Range]",
+    "source": "RT: Faith and Coin"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tai4oeAWvTiBW6ah"
+}

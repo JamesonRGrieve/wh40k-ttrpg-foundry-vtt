@@ -1,0 +1,65 @@
+{
+  "name": "Improvised Weapon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "improvised-weapon",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": -2,
+      "penetration": 0
+    },
+    "special": [
+      "ogryn-proof",
+      "primitive-7",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0,
+    "availability": "ubiquitous",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Ogryn-Proof, Primitive (7), Unbalanced</p><p><b>Note:</b> Any non-weapon object used as a weapon, such as table legs, the butt of a basic weapon, etc.\nHB: Add +2 Damage per Size category Improvised weapon is above Puny.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Any non-weapon object used as a weapon, such as table legs, the butt of a basic weapon, etc.\nHB: Add +2 Damage per Size category Improvised weapon is above Puny.",
+    "source": "Only War: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NRUVulArpLw1dQKp"
+}

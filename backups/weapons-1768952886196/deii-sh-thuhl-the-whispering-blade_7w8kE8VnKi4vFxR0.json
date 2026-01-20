@@ -1,0 +1,66 @@
+{
+  "name": "Deii'Sh'Thuhl The Whispering Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "deiishthuhl-the-whispering-blade",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 9,
+      "penetration": 5
+    },
+    "special": [
+      "daemon-wep",
+      "balanced",
+      "razor-sharp",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 8,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Balanced, Razor-Sharp, Tearing</p><p><b>Note:</b> Weapon: Sword. Daemon WP 66 (Greater Slaaneshi Daemon), Bind Str 2 . Att. Bloodlust, Entrancing Aura, Clittering, Vicious. Unaligned or Slaanesh-Dedicated character encountering blade must make -60 Willpower Test to resist taking the weapon or to discard it. Gain +10 to test for each of the 6 Syllables of the Daemon's name the character knows (first is weapon's name). Must be Unaligned or Slaanesh Dedicated to use. When drawing weapon make +0 Willpower Test or enter Frenzy, can make -10 WP Test to sheath weapon. Can Feint as a Free Action once per turn, Dodging/Parrying weapon has -10.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Sword. Daemon WP 66 (Greater Slaaneshi Daemon), Bind Str 2 . Att. Bloodlust, Entrancing Aura, Clittering, Vicious. Unaligned or Slaanesh-Dedicated character encountering blade must make -60 Willpower Test to resist taking the weapon or to discard it. Gain +10 to test for each of the 6 Syllables of the Daemon's name the character knows (first is weapon's name). Must be Unaligned or Slaanesh Dedicated to use. When drawing weapon make +0 Willpower Test or enter Frenzy, can make -10 WP Test to sheath weapon. Can Feint as a Free Action once per turn, Dodging/Parrying weapon has -10.",
+    "source": "BC: Tome of Excess"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7w8kE8VnKi4vFxR0"
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Vanquisher Battle Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "vanquisher-battle-cannon",
+    "class": "melee",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 900,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "explosive",
+      "bonus": 10,
+      "penetration": 16
+    },
+    "special": [
+      "accurate"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 400,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks\nAccurate Quality works as if Basic Weapon</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks\nAccurate Quality works as if Basic Weapon",
+    "source": "Only War: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LbdeIF6aogrh31mQ"
+}

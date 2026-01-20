@@ -1,0 +1,64 @@
+{
+  "name": "Toxin Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "toxin-grenade",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "blast-10",
+      "toxic"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10), Toxic</p><p><b>Note:</b> Only does damage to those in blast range that fail -10 Toughness test. Damage bypassing armour. (Respirators/sealed armour gives +20 to test). Gas in grenade may linger.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Only does damage to those in blast range that fail -10 Toughness test. Damage bypassing armour. (Respirators/sealed armour gives +20 to test). Gas in grenade may linger.",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PFtXxRcK9LzqSHra"
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Choke Gas Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "choke-gas-grenade",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (1d10+3)</p><p><b>Note:</b> Gas Cloud Lingers for 1d5 x 3 Minutes, anyone within its area makes Toughness Test each round, on fail gain one Fatigue (is cumulative). Those affected by the gas remain so for as long as they are in its area, plus 1d10 rounds after they leave it. Failing the test by 4+ DoF causes 1d10 Toughness Damage for 1d5-1 Hours.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Gas Cloud Lingers for 1d5 x 3 Minutes, anyone within its area makes Toughness Test each round, on fail gain one Fatigue (is cumulative). Those affected by the gas remain so for as long as they are in its area, plus 1d10 rounds after they leave it. Failing the test by 4+ DoF causes 1d10 Toughness Damage for 1d5-1 Hours.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "z4yv3OHzUz1Fwl73"
+}

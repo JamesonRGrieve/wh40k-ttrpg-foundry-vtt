@@ -1,0 +1,64 @@
+{
+  "name": "Grapplewhip",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "grapplewhip",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 5,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "flexible",
+      "snare"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 3,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Snare</p><p><b>Note:</b> Without training, missing an attack causes user to hit themselves in random location. With +0 Weapon Skill Test, user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. </p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Without training, missing an attack causes user to hit themselves in random location. With +0 Weapon Skill Test, user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. ",
+    "source": "RT: Stars of Inequity"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zmfGsweZolM3fdgf"
+}

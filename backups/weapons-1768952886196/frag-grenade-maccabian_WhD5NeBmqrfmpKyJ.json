@@ -1,0 +1,64 @@
+{
+  "name": "Frag Grenade (Maccabian)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "frag-grenade-maccabian",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 1,
+      "penetration": 0
+    },
+    "special": [
+      "blast-3",
+      "sanctified"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Sanctified</p><p><b>Note:</b> Space Holy Hand Grenade. +5 to Willpower Tests vs Fear/Pinning for Squad possessing them. Bonus lost when all grenades used, unless the last one kills/causes Critical Damage on an enemy, in which case, bonus lasts for the rest of the session. Always Good/Best Craftsmanship</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Holy Hand Grenade. +5 to Willpower Tests vs Fear/Pinning for Squad possessing them. Bonus lost when all grenades used, unless the last one kills/causes Critical Damage on an enemy, in which case, bonus lasts for the rest of the session. Always Good/Best Craftsmanship",
+    "source": "OW: Hammer of the Emperor"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WhD5NeBmqrfmpKyJ"
+}

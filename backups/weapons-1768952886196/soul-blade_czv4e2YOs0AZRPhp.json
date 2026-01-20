@@ -1,0 +1,65 @@
+{
+  "name": "Soul Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "soul-blade",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "primitive-8",
+      "unbalanced",
+      "sanctified"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 5.5,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Unbalanced, Sanctified</p><p><b>Note:</b> Attacks inflict additional damage equal to target's corruption points divided by 10. Requires two hands to wield.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Attacks inflict additional damage equal to target's corruption points divided by 10. Requires two hands to wield.",
+    "source": "RT: Faith and Coin"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "czv4e2YOs0AZRPhp"
+}

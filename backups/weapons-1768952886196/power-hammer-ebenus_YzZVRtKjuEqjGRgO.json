@@ -1,0 +1,65 @@
+{
+  "name": "Power Hammer (Ebenus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "power-hammer-ebenus",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 10
+    },
+    "special": [
+      "daemonbane",
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 16,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Power Field, Unwieldy</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+.. Acts as a Null Rod, and grants wielder the Deny the Witch Talent whilst wielded.\nNull Rod: psykers within 2d10 metres suffer -30 to manifest Psychic Powers. When on person provides +30 to resist any psychic powers that directly affect them</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two-Handed unless wielder has Strength Bonus of 5+.. Acts as a Null Rod, and grants wielder the Deny the Witch Talent whilst wielded.\nNull Rod: psykers within 2d10 metres suffer -30 to manifest Psychic Powers. When on person provides +30 to resist any psychic powers that directly affect them",
+    "source": "DH 2E: Enemies Beyond"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YzZVRtKjuEqjGRgO"
+}

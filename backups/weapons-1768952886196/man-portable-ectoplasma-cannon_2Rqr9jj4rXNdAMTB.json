@@ -1,0 +1,65 @@
+{
+  "name": "Man-Portable Ectoplasma Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "man-portable-ectoplasma-cannon",
+    "class": "heavy",
+    "type": "plasma",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 8
+    },
+    "special": [
+      "blast-2",
+      "maximal",
+      "overheats"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 50,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Maximal, Overheats</p><p><b>Note:</b> Overheats on a 91+. Whenever wielder rolls a double on the Ballistic Skill Test to fire this weapon, they must immediately make a -10 Willpower Test or suffer 1d10 nonpermenant Willpower Damage and gain 1 Corruption for every Degree of Failiure.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Overheats on a 91+. Whenever wielder rolls a double on the Ballistic Skill Test to fire this weapon, they must immediately make a -10 Willpower Test or suffer 1d10 nonpermenant Willpower Damage and gain 1 Corruption for every Degree of Failiure.",
+    "source": "BC: Tome of Excess"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2Rqr9jj4rXNdAMTB"
+}

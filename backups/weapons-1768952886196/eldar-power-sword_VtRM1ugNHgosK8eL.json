@@ -1,0 +1,64 @@
+{
+  "name": "Eldar Power Sword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "eldar-power-sword",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "balanced",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 1,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> A Status Symbol amongst some Radical Inquisitors and Rogue Traders, either acquired as a gift from alien partners or taken as battle spoils.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Status Symbol amongst some Radical Inquisitors and Rogue Traders, either acquired as a gift from alien partners or taken as battle spoils.",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VtRM1ugNHgosK8eL"
+}

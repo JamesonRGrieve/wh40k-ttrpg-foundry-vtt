@@ -1,0 +1,64 @@
+{
+  "name": "Condemnor [Crossbow]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "condemnor-crossbow",
+    "class": "basic",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 45,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 2
+    },
+    "special": [
+      "accurate",
+      "sanctified"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 7.5,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Sanctified</p><p><b>Note:</b> Combi-Weapon, undermounted on a boltgun, see Condemnor [Boltgun].  A Special Best Craftsmanship version exists whose attacks cannot be dodged by Daemons or Psykers. Note: See \"Purgatus Stake-Bolts\" for ammo type used.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Combi-Weapon, undermounted on a boltgun, see Condemnor [Boltgun].  A Special Best Craftsmanship version exists whose attacks cannot be dodged by Daemons or Psykers. Note: See \"Purgatus Stake-Bolts\" for ammo type used.",
+    "source": "RT: Faith and Coin"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CMUAgd7SxYGlZy9V"
+}

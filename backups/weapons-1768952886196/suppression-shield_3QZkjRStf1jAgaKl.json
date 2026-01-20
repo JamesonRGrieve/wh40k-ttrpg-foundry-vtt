@@ -1,0 +1,65 @@
+{
+  "name": "Suppression Shield",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "suppression-shield",
+    "class": "melee",
+    "type": "shock",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "defensive",
+      "recharge",
+      "shocking"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 7,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Defensive, Recharge, Shocking</p><p><b>Note:</b> Loses Shocking Quality while Recharging. Uses Normal Shield Profile while Recharging. Grants +4AP to wielding Arm and Body, Good/Best Craftsmanship have a weapon lock that lets a basic weapon rest on it and fire one-handed without penalty.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Loses Shocking Quality while Recharging. Uses Normal Shield Profile while Recharging. Grants +4AP to wielding Arm and Body, Good/Best Craftsmanship have a weapon lock that lets a basic weapon rest on it and fire one-handed without penalty.",
+    "source": "OW: Hammer of the Emperor"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3QZkjRStf1jAgaKl"
+}

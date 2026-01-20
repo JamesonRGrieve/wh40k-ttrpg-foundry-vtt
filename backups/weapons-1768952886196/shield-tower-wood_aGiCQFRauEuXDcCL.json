@@ -1,0 +1,64 @@
+{
+  "name": "Shield (Tower - Wood)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "shield-tower-wood",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d5",
+      "type": "impact",
+      "bonus": 1,
+      "penetration": 0
+    },
+    "special": [
+      "defensive",
+      "primitive"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Defensive, Primitive</p><p><b>Note:</b> Provides AP 6 Primitive Cover to arm and body. Imposes -2 to Agility Bonus whilst wielded.\nNote, this is cover AP, so each time it is penetrated, it is reduced by 1 until repaired or destroyed.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Provides AP 6 Primitive Cover to arm and body. Imposes -2 to Agility Bonus whilst wielded.\nNote, this is cover AP, so each time it is penetrated, it is reduced by 1 until repaired or destroyed.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aGiCQFRauEuXDcCL"
+}

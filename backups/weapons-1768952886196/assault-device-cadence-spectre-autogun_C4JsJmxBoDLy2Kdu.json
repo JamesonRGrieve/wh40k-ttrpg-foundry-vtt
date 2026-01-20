@@ -1,0 +1,61 @@
+{
+  "name": "Assault Device (Cadence)\n\"Spectre\" [Autogun]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "assault-device-cadence-spectre-autogun",
+    "class": "basic",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 10
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 6.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 375,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Note:</b> Has Three Autogun Magazines (each containing 20 rounds and requiring a Full Action to Reload) and a Fire Selector to switch between them.\nHas an Undermounted Shotgun (see [Shotgun] Profile). Can only fire as either an [Autogun] or [Shotgun] at once.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Has Three Autogun Magazines (each containing 20 rounds and requiring a Full Action to Reload) and a Fire Selector to switch between them.\nHas an Undermounted Shotgun (see [Shotgun] Profile). Can only fire as either an [Autogun] or [Shotgun] at once.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "C4JsJmxBoDLy2Kdu"
+}

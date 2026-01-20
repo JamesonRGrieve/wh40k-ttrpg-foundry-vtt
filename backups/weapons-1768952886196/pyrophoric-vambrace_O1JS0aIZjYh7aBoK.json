@@ -1,0 +1,65 @@
+{
+  "name": "Pyrophoric Vambrace",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "pyrophoric-vambrace",
+    "class": "pistol",
+    "type": "flame",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 15,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 4
+    },
+    "special": [
+      "corrosive",
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 4,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Corrosive, Flame, Spray</p><p><b>Note:</b> Easily Concealed and leaves hands free, worn on wrist and connects to sealed case on the back. Fires a Corrosive Powedered Metal rather than promethium. Targets take additional 1d10 damage from being on fire, but put themselves out with +0 Agility Test.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Easily Concealed and leaves hands free, worn on wrist and connects to sealed case on the back. Fires a Corrosive Powedered Metal rather than promethium. Targets take additional 1d10 damage from being on fire, but put themselves out with +0 Agility Test.",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O1JS0aIZjYh7aBoK"
+}

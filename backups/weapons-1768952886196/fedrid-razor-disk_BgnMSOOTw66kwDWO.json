@@ -1,0 +1,63 @@
+{
+  "name": "Fedrid Razor Disk",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "fedrid-razor-disk",
+    "class": "thrown",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 1
+    },
+    "special": [
+      "primitive-8"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> PEN Only applies to Primitive Armours\nMay require Exotic Weapon Training to use. Creates an audible low humming sound when thrown which can be followed by the thrower or those nearby.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "PEN Only applies to Primitive Armours\nMay require Exotic Weapon Training to use. Creates an audible low humming sound when thrown which can be followed by the thrower or those nearby.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BgnMSOOTw66kwDWO"
+}

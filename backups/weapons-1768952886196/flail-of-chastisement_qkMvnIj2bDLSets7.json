@@ -1,0 +1,66 @@
+{
+  "name": "Flail of Chastisement",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "flail-of-chastisement",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 2
+    },
+    "special": [
+      "crippling-2",
+      "flexible",
+      "primitive-8",
+      "snare-0"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 3,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Crippling (2), Flexible, Primitive (8), Snare (0)</p><p><b>Note:</b> Crippling Quality only affects those caught by the Snare Quality.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Crippling Quality only affects those caught by the Snare Quality.",
+    "source": "DH 2E: Enemies Within"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qkMvnIj2bDLSets7"
+}

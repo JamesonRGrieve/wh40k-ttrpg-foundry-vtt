@@ -1,0 +1,66 @@
+{
+  "name": "Force Hammer (Tempus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "force-hammer-tempus",
+    "class": "melee",
+    "type": "force",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 6
+    },
+    "special": [
+      "daemonbane",
+      "force",
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 14,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Force, Power Field, Unwieldy</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+ Once per Session as a Full Action, wielder can smite the ground, creating a 2d10 metre radius blast, all other characters must make -20 Agility Test or lose a Half Action on their next turn. Those that fail by 2+ DoF lose their Full Action.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two-Handed unless wielder has Strength Bonus of 5+ Once per Session as a Full Action, wielder can smite the ground, creating a 2d10 metre radius blast, all other characters must make -20 Agility Test or lose a Half Action on their next turn. Those that fail by 2+ DoF lose their Full Action.",
+    "source": "DH 2E: Enemies Beyond"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "O6LiyJoP35wxvRi5"
+}

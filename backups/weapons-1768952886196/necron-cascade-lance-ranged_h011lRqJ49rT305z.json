@@ -1,0 +1,64 @@
+{
+  "name": "Necron Cascade Lance [Ranged]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "necron-cascade-lance-ranged",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 15,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 10
+    },
+    "special": [
+      "proven-5",
+      "reliable"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "half",
+    "weight": 6,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Proven (5), Reliable</p><p><b>Note:</b> An ornate staff with a [Melee] and [Ranged] Mode. Two-Handed.\nInfinite Ammo, No Reloads needed.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "An ornate staff with a [Melee] and [Ranged] Mode. Two-Handed.\nInfinite Ammo, No Reloads needed.",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h011lRqJ49rT305z"
+}

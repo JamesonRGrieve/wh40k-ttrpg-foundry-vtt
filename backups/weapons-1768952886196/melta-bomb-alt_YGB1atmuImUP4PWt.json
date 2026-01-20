@@ -1,0 +1,63 @@
+{
+  "name": "Melta Bomb (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "melta-bomb-alt",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "5d10",
+      "type": "energy",
+      "bonus": 7,
+      "penetration": 12
+    },
+    "special": [
+      "blast-5"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 4,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 12,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Placed Rather than thrown. Attached to a wall, bulkhead, vehicle, etc. Comes with an integrated timer which can be set to up to 1 hour. Anyone on the other side of a surface destroyed by this takes half the damage of the Melta Bomb. Set by a Demolitions Test, if failed by 4+ DoF, bomb immediately explodes.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Placed Rather than thrown. Attached to a wall, bulkhead, vehicle, etc. Comes with an integrated timer which can be set to up to 1 hour. Anyone on the other side of a surface destroyed by this takes half the damage of the Melta Bomb. Set by a Demolitions Test, if failed by 4+ DoF, bomb immediately explodes.",
+    "source": "Deathwatch: Errata"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YGB1atmuImUP4PWt"
+}

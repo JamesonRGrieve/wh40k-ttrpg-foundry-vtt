@@ -1,0 +1,63 @@
+{
+  "name": "Plasma Rifle (Selvanus) \"Sentinel\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "plasma-rifle-selvanus-sentinel",
+    "class": "basic",
+    "type": "plasma",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 5,
+        "full": 10
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 3
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 40,
+      "value": 40,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 20,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Safer than many Plasma Guns due to reducing the size of each plasma pulse, yet firing them much faster.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Safer than many Plasma Guns due to reducing the size of each plasma pulse, yet firing them much faster.",
+    "source": "DH 2E: Enemies Within"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SrowCCF2fU1VxKv3"
+}

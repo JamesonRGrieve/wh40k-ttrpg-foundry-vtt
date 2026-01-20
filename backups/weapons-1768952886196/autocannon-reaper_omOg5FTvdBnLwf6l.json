@@ -1,0 +1,64 @@
+{
+  "name": "Autocannon (Reaper)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "autocannon-reaper",
+    "class": "heavy",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "impact",
+      "bonus": 8,
+      "penetration": 6
+    },
+    "special": [
+      "reliable",
+      "twin-linked"
+    ],
+    "clip": {
+      "max": 40,
+      "value": 40,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 60,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Twin-Linked</p><p><b>Note:</b> Rarely used by the Imperium, commonly seen on Chaos Terminators</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rarely used by the Imperium, commonly seen on Chaos Terminators",
+    "source": "Black Crusade: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "omOg5FTvdBnLwf6l"
+}

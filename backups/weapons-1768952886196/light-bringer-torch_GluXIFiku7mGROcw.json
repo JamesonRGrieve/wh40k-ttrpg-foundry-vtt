@@ -1,0 +1,64 @@
+{
+  "name": "Light-Bringer Torch",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "light-bringer-torch",
+    "class": "pistol",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 6,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 2
+    },
+    "special": [
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 6,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Fueled with Promethium. Acts as a brazier-shaped light source that can last for months. Provides +5 Intimidate when lit and held. </p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fueled with Promethium. Acts as a brazier-shaped light source that can last for months. Provides +5 Intimidate when lit and held. ",
+    "source": "RT: Stars of Inequity"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GluXIFiku7mGROcw"
+}

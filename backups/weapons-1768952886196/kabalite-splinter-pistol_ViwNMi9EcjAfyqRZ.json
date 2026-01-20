@@ -1,0 +1,63 @@
+{
+  "name": "Kabalite Splinter Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "kabalite-splinter-pistol",
+    "class": "pistol",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 50,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 3
+    },
+    "special": [
+      "toxic"
+    ],
+    "clip": {
+      "max": 120,
+      "value": 120,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Common Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Knife in Melee Combat. </p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Common Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Knife in Melee Combat. ",
+    "source": "RT: The Soul Reaver"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ViwNMi9EcjAfyqRZ"
+}

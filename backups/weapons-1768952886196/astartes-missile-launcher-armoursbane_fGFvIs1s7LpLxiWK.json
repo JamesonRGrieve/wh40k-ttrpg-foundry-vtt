@@ -1,0 +1,63 @@
+{
+  "name": "Astartes Missile-Launcher (Armoursbane)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-missile-launcher-armoursbane",
+    "class": "heavy",
+    "type": "launcher",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 200,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 12,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 15,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable.  Has inbuilt Preysense Sight and Red-dot sight, and provides +20 to BS Tests to fire at Ground Based Targets.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable.  Has inbuilt Preysense Sight and Red-dot sight, and provides +20 to BS Tests to fire at Ground Based Targets.",
+    "source": "DW: Rites of Battle"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fGFvIs1s7LpLxiWK"
+}

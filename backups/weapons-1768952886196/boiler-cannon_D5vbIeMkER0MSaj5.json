@@ -1,0 +1,66 @@
+{
+  "name": "Boiler Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "boiler-cannon",
+    "class": "heavy",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-7",
+      "overheats",
+      "spray",
+      "toxic-3"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 30,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (7), Overheats, Spray, Toxic (3)</p><p><b>Note:</b> Primitive Flamethrower-esque weapon that uses a toxic stream that scalds the skin and burns the lungs.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Primitive Flamethrower-esque weapon that uses a toxic stream that scalds the skin and burns the lungs.",
+    "source": "BC: Tome of Blood"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D5vbIeMkER0MSaj5"
+}

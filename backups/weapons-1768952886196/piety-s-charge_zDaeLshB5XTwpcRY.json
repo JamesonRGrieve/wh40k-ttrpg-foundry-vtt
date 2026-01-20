@@ -1,0 +1,64 @@
+{
+  "name": "Piety's Charge",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "pietys-charge",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 9
+    },
+    "special": [
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 20,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> Relic Weapon, Cannot be acquired, only earned. +10 to Interactions Test with Ecclesiarchy, Sisters of Battle, or other Pious Individuals while it is visible on your person and +20 to Interaction Tests with weapon's keepers (provided the weapon wasn't stolen), Anyone hit by the weapon must make +0 Strength Test or be knocked prone.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Relic Weapon, Cannot be acquired, only earned. +10 to Interactions Test with Ecclesiarchy, Sisters of Battle, or other Pious Individuals while it is visible on your person and +20 to Interaction Tests with weapon's keepers (provided the weapon wasn't stolen), Anyone hit by the weapon must make +0 Strength Test or be knocked prone.",
+    "source": "RT: Faith and Coin"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zDaeLshB5XTwpcRY"
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Man-Catcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "man-catcher",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 2,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "snare-4",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 8,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Snare (4), Unwieldy</p><p><b>Note:</b> Spring-loaded claw on a long pole. Used to restrain or immobilse rather than kill. Two-Handed Weapon.\nUser must spend a Half Action each round to maintain hold over victim caught in the Snare. Best Crafsmanship gains Shocking Quality.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Spring-loaded claw on a long pole. Used to restrain or immobilse rather than kill. Two-Handed Weapon.\nUser must spend a Half Action each round to maintain hold over victim caught in the Snare. Best Crafsmanship gains Shocking Quality.",
+    "source": "DH 2E: Enemies Within"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5khvyzrFwP6hKV3O"
+}

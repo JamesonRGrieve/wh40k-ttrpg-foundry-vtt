@@ -1,0 +1,65 @@
+{
+  "name": "Father of Blades",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "father-of-blades",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 4
+    },
+    "special": [
+      "daemon-wep",
+      "toxic-7",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 7,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Toxic (7), Unbalanced</p><p><b>Note:</b> Weapon: Sword. Daemon WP 77 (Greater Daemon of Nurgle), Bind Str 4. Att.: Bile-Quenched, Pestilent Stench, Plague Carrier. Must be Dedicated to Nurgle to wield. If get 5+ DoS on parry, attacker hits themselves.  Non Daemon, Machine, or From Beyond Creatures wounded by weapon lose half their actions next turn, everyone not devoted to nurgle in 7m suffer -10 to WS, BS, Agility, Intelligence, and Perception Tests, Toxic Trait also deals 2d10 nonpermenant Toughness Damage which spreads to any that touch the target within 7 rounds if they fail +0 Toughness Test.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Sword. Daemon WP 77 (Greater Daemon of Nurgle), Bind Str 4. Att.: Bile-Quenched, Pestilent Stench, Plague Carrier. Must be Dedicated to Nurgle to wield. If get 5+ DoS on parry, attacker hits themselves.  Non Daemon, Machine, or From Beyond Creatures wounded by weapon lose half their actions next turn, everyone not devoted to nurgle in 7m suffer -10 to WS, BS, Agility, Intelligence, and Perception Tests, Toxic Trait also deals 2d10 nonpermenant Toughness Damage which spreads to any that touch the target within 7 rounds if they fail +0 Toughness Test.",
+    "source": "BC: Tome of Decay"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Pjx2bDkUjb4gUkJa"
+}

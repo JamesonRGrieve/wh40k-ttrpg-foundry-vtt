@@ -1,0 +1,65 @@
+{
+  "name": "Membrane Dagger",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "membrane-dagger",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "crippling-6",
+      "toxic-3",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 4,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Crippling (6), Toxic (3), Unwieldy</p><p><b>Note:</b> Those wounded by weapon have 10% chance each turn of suffering Blood Loss until receiving First Aid. Medicae tests to heal damage dealt by weapon have -20.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Those wounded by weapon have 10% chance each turn of suffering Blood Loss until receiving First Aid. Medicae tests to heal damage dealt by weapon have -20.",
+    "source": "BC: Tome of Excess"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2gJBhh9pn7S7wsBD"
+}

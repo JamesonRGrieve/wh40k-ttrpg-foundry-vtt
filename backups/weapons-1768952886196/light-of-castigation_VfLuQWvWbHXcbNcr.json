@@ -1,0 +1,66 @@
+{
+  "name": "Light of Castigation",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "light-of-castigation",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 25,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 11,
+      "penetration": 4
+    },
+    "special": [
+      "sm-wep",
+      "flame",
+      "spray",
+      "sanctified"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 15,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Spray, Sanctified</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Flamer of the Fire Angels Chapter. Heretics and other such individuals who have forsaken the light of The Emperor suffer -10 to avoid being hit and +2 damage when hit by this weapon. As with all Astartes Flamers, those on fire take +4 damage from being on fire.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Flamer of the Fire Angels Chapter. Heretics and other such individuals who have forsaken the light of The Emperor suffer -10 to avoid being hit and +2 damage when hit by this weapon. As with all Astartes Flamers, those on fire take +4 damage from being on fire.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VfLuQWvWbHXcbNcr"
+}

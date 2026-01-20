@@ -1,0 +1,64 @@
+{
+  "name": "Razorhail Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "razorhail-gun",
+    "class": "basic",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 35,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 1
+    },
+    "special": [
+      "scatter",
+      "tearing"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter, Tearing</p><p><b>Note:</b> Uses special razorblade ammo, and can't use Unusual Ammunition. Good for puncturing voidsuits.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Uses special razorblade ammo, and can't use Unusual Ammunition. Good for puncturing voidsuits.",
+    "source": "RT: Hostile Acquisitions"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XvsuXzIKEJnJ4F68"
+}

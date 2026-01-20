@@ -1,0 +1,64 @@
+{
+  "name": "Wailing Axe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "wailing-axe",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 3,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Unwieldy</p><p><b>Note:</b> Strapped to user's wrist by a tough hide loop. As a Half Action Can be wrapped around the wrist and swung around causing an unnerving waling sound that gives wielder Fear(+1), if doing this and then attacking, add 2x Strength Bonus to damage and impose -10 to Parry Attack.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Strapped to user's wrist by a tough hide loop. As a Half Action Can be wrapped around the wrist and swung around causing an unnerving waling sound that gives wielder Fear(+1), if doing this and then attacking, add 2x Strength Bonus to damage and impose -10 to Parry Attack.",
+    "source": "BC: Tome of Blood"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2xCPM5Is7AeePhke"
+}

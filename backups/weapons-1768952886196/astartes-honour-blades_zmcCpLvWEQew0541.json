@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Honour Blades",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-honour-blades",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 6
+    },
+    "special": [
+      "sm-wep",
+      "balanced",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 8,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 20,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only. Ultramarines variant set of two Power Swords. When wielded together grant the wielder the \"Wall of Steel\" talent, and +20 to Parry Tests in addition to the +10 from the Balanced Quality.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Ultramarines variant set of two Power Swords. When wielded together grant the wielder the \"Wall of Steel\" talent, and +20 to Parry Tests in addition to the +10 from the Balanced Quality.",
+    "source": "DW: First Founding"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zmcCpLvWEQew0541"
+}

@@ -1,0 +1,68 @@
+{
+  "name": "Ghibelline Hyperwave Clarion Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "ghibelline-hyperwave-clarion-cannon",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "6d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 6
+    },
+    "special": [
+      "concussive-1",
+      "devastating-3",
+      "melta",
+      "overcharge",
+      "overheats",
+      "spray"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 45,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (1), Devastating (3), Melta, Overcharge, Overheats, Spray</p><p><b>Note:</b> Sonic Weapon, uses a backpack ammo supply included in weapon weight. When weapon overheats, it only inflicts half the normal Overheat damage on the user.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Sonic Weapon, uses a backpack ammo supply included in weapon weight. When weapon overheats, it only inflicts half the normal Overheat damage on the user.",
+    "source": "BC: Tome of Excess"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dMq6IuGWdM9V9rJR"
+}

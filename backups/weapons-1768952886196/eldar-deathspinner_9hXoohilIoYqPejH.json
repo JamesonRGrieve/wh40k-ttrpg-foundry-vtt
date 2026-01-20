@@ -1,0 +1,65 @@
+{
+  "name": "Eldar Deathspinner",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "eldar-deathspinner",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 2
+    },
+    "special": [
+      "reliable",
+      "blast-2",
+      "tearing"
+    ],
+    "clip": {
+      "max": 30,
+      "value": 30,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 4,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Blast (2), Tearing</p><p><b>Note:</b> Eldar weapon, Fires a gossamer of monofilamet threads that entangle and tear apart anyone caught in them.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Eldar weapon, Fires a gossamer of monofilamet threads that entangle and tear apart anyone caught in them.",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9hXoohilIoYqPejH"
+}

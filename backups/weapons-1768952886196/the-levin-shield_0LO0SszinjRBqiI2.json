@@ -1,0 +1,64 @@
+{
+  "name": "The Levin Shield",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "the-levin-shield",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep",
+      "defensive"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 10,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Defensive</p><p><b>Note:</b> Space Marines Only. Storm Wardens Relic. Innately Master-Crafted. Can make Guarded Attack as Half Action. +4 AP to Arm and Body. Counts as Prot 55 Forcefield with overload 01. Causes 1d10+4 E Damage to all creatures in melee trange of wielder each round that ignores armour. When successfully Parrying attacker makes Toughness Test with -10 per DoS on Parry or is stunned for 1 Round.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Storm Wardens Relic. Innately Master-Crafted. Can make Guarded Attack as Half Action. +4 AP to Arm and Body. Counts as Prot 55 Forcefield with overload 01. Causes 1d10+4 E Damage to all creatures in melee trange of wielder each round that ignores armour. When successfully Parrying attacker makes Toughness Test with -10 per DoS on Parry or is stunned for 1 Round.",
+    "source": "Deathwatch: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0LO0SszinjRBqiI2"
+}

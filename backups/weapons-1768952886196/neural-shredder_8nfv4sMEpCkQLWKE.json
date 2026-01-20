@@ -1,0 +1,63 @@
+{
+  "name": "Neural Shredder",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "neural-shredder",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "scatter"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 4,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Target suffers 2d10 Intelligence damage on hit (ignores armour/toughness), make -20 Toughness Test or be stunned for 1 Round. Foes with Daemonic, Machine, Strange Physiology, or The Stuff of Nightmares Traits are unaffected by this weapon.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Target suffers 2d10 Intelligence damage on hit (ignores armour/toughness), make -20 Toughness Test or be stunned for 1 Round. Foes with Daemonic, Machine, Strange Physiology, or The Stuff of Nightmares Traits are unaffected by this weapon.",
+    "source": "RT: Faith and Coin"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8nfv4sMEpCkQLWKE"
+}

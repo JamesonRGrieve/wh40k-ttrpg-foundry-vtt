@@ -1,0 +1,66 @@
+{
+  "name": "Breaching Augur (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "breaching-augur-alt",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 11,
+      "penetration": 7
+    },
+    "special": [
+      "sm-wep",
+      "tearing",
+      "unwieldy",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 28,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 18,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing, Unwieldy, Power Field</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted (can be fitted to Tech Marine Servo-harness, Grafted to Servitors, or used as a Cybernetic Limb). Used for breaching walls and bulkheads. When dealing Righteous Fury, double the damage roll (HB: For OW's RF, roll two dice).</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted (can be fitted to Tech Marine Servo-harness, Grafted to Servitors, or used as a Cybernetic Limb). Used for breaching walls and bulkheads. When dealing Righteous Fury, double the damage roll (HB: For OW's RF, roll two dice).",
+    "source": "Deathwatch: Errata"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ABR5fcIi7LB7SrZ0"
+}

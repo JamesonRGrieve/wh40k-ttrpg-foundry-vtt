@@ -1,0 +1,64 @@
+{
+  "name": "Astartes Sacris Claymore",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-sacris-claymore",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 2
+    },
+    "special": [
+      "sm-wep",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 10,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 3,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Unbalanced</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Traditional Weapon of the Storm Wardens Space Marine Chapter. Replaces Combat Knife if preferred.\nTwo Handed Weapon. Counts as a Chapter Trapping. (Deathwatch Initiate may start with one appropriate Chapter Trapping)</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Traditional Weapon of the Storm Wardens Space Marine Chapter. Replaces Combat Knife if preferred.\nTwo Handed Weapon. Counts as a Chapter Trapping. (Deathwatch Initiate may start with one appropriate Chapter Trapping)",
+    "source": "Deathwatch: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cmV5BQPkMHggJ0hR"
+}

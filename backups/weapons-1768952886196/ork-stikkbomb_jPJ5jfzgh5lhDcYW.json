@@ -1,0 +1,64 @@
+{
+  "name": "Ork Stikkbomb",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "ork-stikkbomb",
+    "class": "thrown",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 2
+    },
+    "special": [
+      "blast-2",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 1,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. Counts as a Truncheon in Melee Combat, if Weapon Skill Test failed by 3+ DoF, it explodes.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Not Unreliable when wielded by an Ork. Counts as a Truncheon in Melee Combat, if Weapon Skill Test failed by 3+ DoF, it explodes.",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jPJ5jfzgh5lhDcYW"
+}

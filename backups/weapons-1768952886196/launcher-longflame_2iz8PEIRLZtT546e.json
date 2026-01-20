@@ -1,0 +1,66 @@
+{
+  "name": "Launcher \"Longflame\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "launcher-longflame",
+    "class": "heavy",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 200,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-4",
+      "flame",
+      "inaccurate",
+      "primitive-8"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 6,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (4), Flame, Inaccurate, Primitive (8)</p><p><b>Note:</b> Single-Use item, can't be reloaded. A Primitive Rocket Launcher with a firey payload.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Single-Use item, can't be reloaded. A Primitive Rocket Launcher with a firey payload.",
+    "source": "DH 2E: Enemies Within"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2iz8PEIRLZtT546e"
+}

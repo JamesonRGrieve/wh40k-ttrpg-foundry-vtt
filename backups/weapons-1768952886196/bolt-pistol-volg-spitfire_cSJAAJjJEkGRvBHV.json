@@ -1,0 +1,63 @@
+{
+  "name": "Bolt Pistol (Volg) \"Spitfire\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "bolt-pistol-volg-spitfire",
+    "class": "pistol",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "unreliable"
+    ],
+    "clip": {
+      "max": 3,
+      "value": 3,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 75,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Unreliable</p><p><b>Note:</b> Not a True Bolt Weapon, but rather a crude imitation which is sometimes peddled as one. If it Jams an Explosive Mishap Occurs. Uses Custom Unstable Ammunition (Scarce, 5 Thrones/Clip), which has a 65% chance of exploding if hit by an explosion or flame weapon (dealing 1d10+3 X Damage)</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Not a True Bolt Weapon, but rather a crude imitation which is sometimes peddled as one. If it Jams an Explosive Mishap Occurs. Uses Custom Unstable Ammunition (Scarce, 5 Thrones/Clip), which has a 65% chance of exploding if hit by an explosion or flame weapon (dealing 1d10+3 X Damage)",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cSJAAJjJEkGRvBHV"
+}

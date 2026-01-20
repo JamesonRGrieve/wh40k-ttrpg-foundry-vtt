@@ -1,0 +1,64 @@
+{
+  "name": "Slaught Ripper Ray",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "slaught-ripper-ray",
+    "class": "pistol",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 6,
+      "penetration": 4
+    },
+    "special": [
+      "reliable",
+      "tearing"
+    ],
+    "clip": {
+      "max": 15,
+      "value": 15,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 1,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Tearing</p><p><b>Note:</b> Xenotech. Seemingly made out of brass, bone, and meaty gristle. Weapon physically bites into and binds with the hand of the wielder. Fires dark beams that twist and rupture people apart on the inside.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Xenotech. Seemingly made out of brass, bone, and meaty gristle. Weapon physically bites into and binds with the hand of the wielder. Fires dark beams that twist and rupture people apart on the inside.",
+    "source": "RT: Hostile Acquisitions"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gXx08H39EPhV19iW"
+}

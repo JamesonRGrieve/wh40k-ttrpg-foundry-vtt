@@ -1,0 +1,66 @@
+{
+  "name": "The Scyphus Vitae",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "the-scyphus-vitae",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 13,
+      "penetration": 8
+    },
+    "special": [
+      "sm-wep",
+      "devastating-1",
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 18,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Devastating (1), Power Field, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Powersword of the Blood Drinkers Chapter. Two-Handed. Wielder can drink the blood of any target they deal wounds to with this weapon to avert the Blood Craving curse of their Chapter.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Powersword of the Blood Drinkers Chapter. Two-Handed. Wielder can drink the blood of any target they deal wounds to with this weapon to avert the Blood Craving curse of their Chapter.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "26eSRDXex0SUldgB"
+}

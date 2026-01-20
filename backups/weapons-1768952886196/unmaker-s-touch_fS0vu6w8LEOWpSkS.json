@@ -1,0 +1,66 @@
+{
+  "name": "Unmaker's Touch",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "unmakers-touch",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 10
+    },
+    "special": [
+      "sm-wep",
+      "power-field",
+      "tearing",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 48,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 80,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Chainfist of the Minotaurs Chapter. Increases its Damage and Penetration by 5 against Vehicles, Structures, Objects, and enemies with the Machine Trait. As with all Chainfists, increases Unnatural Strength x2 to x3.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Chainfist of the Minotaurs Chapter. Increases its Damage and Penetration by 5 against Vehicles, Structures, Objects, and enemies with the Machine Trait. As with all Chainfists, increases Unnatural Strength x2 to x3.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fS0vu6w8LEOWpSkS"
+}

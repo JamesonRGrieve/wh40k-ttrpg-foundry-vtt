@@ -1,0 +1,64 @@
+{
+  "name": "Firesprite Needler",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "firesprite-needler",
+    "class": "pistol",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 4,
+        "full": 8
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 2
+    },
+    "special": [
+      "inaccurate",
+      "toxic-2"
+    ],
+    "clip": {
+      "max": 16,
+      "value": 16,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 1.5,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Toxic (2)</p><p><b>Note:</b> Inbuilt Compact, Forearm Mounting, and Silencer Upgrades.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Inbuilt Compact, Forearm Mounting, and Silencer Upgrades.",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hkzR29UOMvQWPuq6"
+}

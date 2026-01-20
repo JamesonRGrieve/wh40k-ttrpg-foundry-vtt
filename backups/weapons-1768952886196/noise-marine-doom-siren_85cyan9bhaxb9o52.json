@@ -1,0 +1,63 @@
+{
+  "name": "Noise Marine Doom Siren",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "noise-marine-doom-siren",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 9
+    },
+    "special": [
+      "spray"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 18,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Spray</p><p><b>Note:</b> Mounted on the wearer's shoulders, leaving the hands free. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Mounted on the wearer's shoulders, leaving the hands free. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour.",
+    "source": "Black Crusade: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "85cyan9bhaxb9o52"
+}

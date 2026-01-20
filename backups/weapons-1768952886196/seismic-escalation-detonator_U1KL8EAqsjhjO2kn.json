@@ -1,0 +1,63 @@
+{
+  "name": "Seismic Escalation Detonator",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "seismic-escalation-detonator",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "impact",
+      "bonus": 10,
+      "penetration": 0
+    },
+    "special": [
+      "blast-10"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 40,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Planted in Solid Ground or Walls via a large spike. Power Generator is good for 1 Hour. Once activated, damage repeats every round, and increases by 1d10 every 10 rounds. Attempting to approach it whilst its operating requires -30 Agility Test or be knocked down and be dealt half current damage it is producing.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Planted in Solid Ground or Walls via a large spike. Power Generator is good for 1 Hour. Once activated, damage repeats every round, and increases by 1d10 every 10 rounds. Attempting to approach it whilst its operating requires -30 Agility Test or be knocked down and be dealt half current damage it is producing.",
+    "source": "DW: Rites of Battle"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "U1KL8EAqsjhjO2kn"
+}

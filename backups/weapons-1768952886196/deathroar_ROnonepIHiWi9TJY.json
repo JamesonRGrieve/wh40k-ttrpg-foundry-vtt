@@ -1,0 +1,67 @@
+{
+  "name": "Deathroar",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "deathroar",
+    "class": "pistol",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 13,
+      "penetration": 10
+    },
+    "special": [
+      "sm-wep",
+      "blast-1",
+      "felling-4",
+      "volatile",
+      "maximal"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 7,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 70,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (1), Felling (4), Volatile, Maximal</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Plasma Pistol of the Dark Angels. Maximal Setting does not cause Overheats Quality.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Plasma Pistol of the Dark Angels. Maximal Setting does not cause Overheats Quality.",
+    "source": "Deathwatch: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ROnonepIHiWi9TJY"
+}

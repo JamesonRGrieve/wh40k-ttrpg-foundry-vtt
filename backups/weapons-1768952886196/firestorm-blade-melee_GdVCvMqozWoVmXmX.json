@@ -1,0 +1,66 @@
+{
+  "name": "Firestorm Blade [Melee]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "firestorm-blade-melee",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 4
+    },
+    "special": [
+      "daemon-wep",
+      "balanced",
+      "flame",
+      "proven-3"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 7,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Balanced, Flame, Proven (3)</p><p><b>Note:</b> Weapon: Great Sword. Daemon WP 70 (Khorne Daemon), Bind Str 4. Att.: Howling, Piercing, Rampage. Can make [Ranged] Attack.\nGain Fear(+1) whenever attacking, add Daemon's WP Bonus to critical damage, every other round when charging can attack all within 1m.\nMust have Mark of Khorne to Wield.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Great Sword. Daemon WP 70 (Khorne Daemon), Bind Str 4. Att.: Howling, Piercing, Rampage. Can make [Ranged] Attack.\nGain Fear(+1) whenever attacking, add Daemon's WP Bonus to critical damage, every other round when charging can attack all within 1m.\nMust have Mark of Khorne to Wield.",
+    "source": "BC: Tome of Blood"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GdVCvMqozWoVmXmX"
+}

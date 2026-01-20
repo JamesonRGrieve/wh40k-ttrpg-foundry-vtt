@@ -1,0 +1,63 @@
+{
+  "name": "Combi-Bolter (Melta)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "combi-bolter-melta",
+    "class": "basic",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 18,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Listed stats are for Bolter, weapon has undermounted Melta Gun with a Clip of 1.  Can be used by Terminators.\nMelta Gun Profile: (Range 20m, S/-/-, 2d10+10 E, Pen 12, Clip 1, Rld Full, Melta)</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Listed stats are for Bolter, weapon has undermounted Melta Gun with a Clip of 1.  Can be used by Terminators.\nMelta Gun Profile: (Range 20m, S/-/-, 2d10+10 E, Pen 12, Clip 1, Rld Full, Melta)",
+    "source": "BC: Tome of Blood"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "apb51krmEScRT9Ou"
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Inferno Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "inferno-cannon",
+    "class": "melee",
+    "type": "flame",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 50,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 15,
+      "penetration": 8
+    },
+    "special": [
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 50,
+      "value": 50,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 600,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks. Takes 30 Minutes to reload internal tank.\nOther vehicles do not add their value when trying to avoid catching on fire. </p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks. Takes 30 Minutes to reload internal tank.\nOther vehicles do not add their value when trying to avoid catching on fire. ",
+    "source": "Only War: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MXDtoivCrEbGCEFx"
+}
