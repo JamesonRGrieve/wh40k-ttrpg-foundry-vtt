@@ -6,6 +6,7 @@
 import BaseActorSheet from './base-actor-sheet.mjs';
 import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.mjs';
 import StatBlockExporter from '../npc/stat-block-exporter.mjs';
+import StatBlockParser from '../npc/stat-block-parser.mjs';
 import DifficultyCalculatorDialog from '../npc/difficulty-calculator-dialog.mjs';
 import CombatPresetDialog from '../npc/combat-preset-dialog.mjs';
 
@@ -1265,9 +1266,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
     static async #importStatBlock(event, target) {
         event.preventDefault();
 
-        // Import and show the stat block importer dialog
-        const { StatBlockImporter } = await import('../dialogs/stat-block-importer.mjs');
-        StatBlockImporter.show(this.actor);
+        await StatBlockParser.open({ actor: this.actor });
     }
 
     /* -------------------------------------------- */

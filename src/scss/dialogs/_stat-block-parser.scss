@@ -117,15 +117,19 @@
   .parser-preview-section {
     flex: 1;
     overflow: auto;
-    border: 1px solid var(--color-border-light-tertiary);
-    border-radius: 4px;
-    padding: 1rem;
-    background: var(--color-bg-option);
+    border: 1px solid var(--color-border-tertiary);
+    border-radius: $rt-radius-md;
+    padding: $rt-space-lg;
+    background: $rt-bg-translucent;
+    box-shadow: $rt-shadow-inset;
+    backdrop-filter: blur(4px);
 
     h3 {
       margin: 0 0 1rem 0;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--color-border-light-tertiary);
+      font-family: $rt-font-heading;
+      letter-spacing: 0.02em;
     }
 
     .preview-grid {
@@ -135,14 +139,26 @@
     }
 
     .preview-panel {
-      background: var(--color-bg-btn);
-      padding: 0.75rem;
-      border-radius: 4px;
+      background: $rt-bg-paper-light;
+      padding: $rt-space-md;
+      border-radius: $rt-radius-lg;
+      border: 1px solid var(--color-border-secondary);
+      box-shadow: $rt-shadow-sm;
 
       h4 {
         margin: 0 0 0.5rem 0;
-        font-size: 0.85rem;
-        color: var(--rt-color-accent, #c9a227);
+        font-size: $rt-font-size-sm;
+        color: var(--rt-color-accent, $rt-color-gold);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        i {
+          font-size: 0.7rem;
+          color: var(--rt-color-accent, $rt-color-gold);
+        }
       }
 
       dl {
@@ -168,9 +184,10 @@
 
         .char-item {
           text-align: center;
-          background: var(--color-bg-option);
+          background: $rt-bg-subtle;
           padding: 0.25rem;
-          border-radius: 3px;
+          border-radius: $rt-radius-sm;
+          border: 1px solid $rt-border-light;
 
           .char-label {
             display: block;
@@ -183,6 +200,54 @@
             font-size: 1rem;
           }
         }
+      }
+
+      .preview-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 0.35rem;
+
+        li {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.3rem 0.4rem;
+          border-radius: $rt-radius-sm;
+          background: $rt-bg-overlay-medium;
+          border: 1px solid var(--color-border-light-tertiary);
+          font-size: $rt-font-size-sm;
+          color: var(--color-text-secondary);
+
+          i {
+            color: var(--rt-color-accent, $rt-color-gold);
+            font-size: 0.65rem;
+          }
+        }
+
+        .preview-empty {
+          justify-content: center;
+          font-style: italic;
+          color: var(--color-text-tertiary);
+          background: $rt-bg-overlay-light;
+        }
+      }
+
+      &.preview-panel--skills {
+        --rt-color-accent: #{$rt-accent-skills};
+      }
+
+      &.preview-panel--talents {
+        --rt-color-accent: #{$rt-accent-talents};
+      }
+
+      &.preview-panel--traits {
+        --rt-color-accent: #{$rt-accent-equipment};
+      }
+
+      &.preview-panel--weapons {
+        --rt-color-accent: #{$rt-accent-combat};
       }
     }
   }
