@@ -74,9 +74,14 @@
     ═══════════════════════════════════════════════════════════════════ --}}
     <div class="rt-weapon-stats rt-weapon-stats--sticky">
       {{!-- Damage --}}
-      <div class="rt-weapon-stat rt-weapon-stat--damage">
+      <div class="rt-weapon-stat rt-weapon-stat--damage {{#if hasModificationEffects}}rt-weapon-stat--modified{{/if}}">
         <div class="rt-weapon-stat__icon">
           <i class="fa-solid fa-burst"></i>
+          {{#if hasModificationEffects}}
+          <span class="rt-weapon-stat__modified-badge" title="Modified by equipment">
+            <i class="fa-solid fa-wrench"></i>
+          </span>
+          {{/if}}
         </div>
         <div class="rt-weapon-stat__content">
           <span class="rt-weapon-stat__value">{{effectiveDamageLabel}}</span>
@@ -85,9 +90,14 @@
       </div>
       
       {{!-- Penetration --}}
-      <div class="rt-weapon-stat rt-weapon-stat--pen">
+      <div class="rt-weapon-stat rt-weapon-stat--pen {{#if hasModificationEffects}}rt-weapon-stat--modified{{/if}}">
         <div class="rt-weapon-stat__icon">
           <i class="fa-solid fa-bullseye"></i>
+          {{#if hasModificationEffects}}
+          <span class="rt-weapon-stat__modified-badge" title="Modified by equipment">
+            <i class="fa-solid fa-wrench"></i>
+          </span>
+          {{/if}}
         </div>
         <div class="rt-weapon-stat__content">
           <span class="rt-weapon-stat__value">{{effectivePenetration}}</span>
@@ -291,40 +301,30 @@
         {{/if}}
         
         {{!-- Weapon Modifications --}}
+        {{#if (gt modificationsData.length 0)}}
         <div class="rt-weapon-section">
           <div class="rt-weapon-section__header">
             <i class="fa-solid fa-wrench"></i>
             <h3>Modifications</h3>
-            {{#if inEditMode}}
-            <button type="button" class="rt-btn rt-btn--small rt-btn--ghost" data-action="addModification">
-              <i class="fa-solid fa-plus"></i>
-            </button>
-            {{/if}}
+            <span class="rt-weapon-section__count">{{modificationsData.length}}</span>
           </div>
           <div class="rt-weapon-section__body">
-            {{#if item.items.length}}
-            <div class="rt-mods-list">
-              {{#each item.items as |embedded|}}
-              <div class="rt-mod-item">
-                <span class="rt-mod-item__name">{{embedded.name}}</span>
-                {{#if ../inEditMode}}
-                <div class="rt-mod-item__actions">
-                  <button type="button" class="rt-btn rt-btn--icon" data-action="nestedItemEdit" data-item-id="{{embedded.id}}">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                  </button>
-                  <button type="button" class="rt-btn rt-btn--icon rt-btn--danger" data-action="nestedItemDelete" data-item-id="{{embedded.id}}">
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
-                </div>
-                {{/if}}
+            <div class="rt-modifications-banner">
+              <div class="rt-modifications-banner__header">
+                <i class="fa-solid fa-wrench"></i>
+                <span>{{modificationsData.length}} Modification{{#if (gt modificationsData.length 1)}}s{{/if}} Installed</span>
               </div>
-              {{/each}}
+              <div class="rt-modifications-banner__summary">
+                {{#each modificationsData}}
+                {{#if active}}
+                <span class="rt-mod-badge" data-tooltip="{{name}}">{{name}}</span>
+                {{/if}}
+                {{/each}}
+              </div>
             </div>
-            {{else}}
-            <p class="rt-empty-message">{{#if inEditMode}}Drag modifications here to add them{{else}}No modifications{{/if}}</p>
-            {{/if}}
           </div>
         </div>
+        {{/if}}
         
       </div>
       
@@ -595,6 +595,80 @@
           </div>
         </div>
         {{/if}}
+        
+        {{!-- Modifications Section --}}
+        <div class="rt-weapon-section">
+          <div class="rt-weapon-section__header">
+            <i class="fa-solid fa-wrench"></i>
+            <h3>Modifications</h3>
+            {{#if (gt modificationsData.length 0)}}
+            <span class="rt-weapon-section__count">{{modificationsData.length}}</span>
+            {{/if}}
+          </div>
+          <div class="rt-weapon-section__body">
+            {{#if (gt modificationsData.length 0)}}
+            <div class="rt-mods-list">
+              {{#each modificationsData as |mod|}}
+              <div class="rt-mod-card {{unless mod.active}}rt-mod-card--inactive{{/unless}}" data-mod-index="{{mod.index}}">
+                <div class="rt-mod-card__header">
+                  <div class="rt-mod-card__title">
+                    <i class="fa-solid fa-wrench"></i>
+                    <span class="rt-mod-card__name">{{mod.name}}</span>
+                  </div>
+                  <div class="rt-mod-card__actions">
+                    {{!-- Active/Inactive Toggle --}}
+                    <button type="button"
+                            class="rt-btn rt-btn--icon rt-mod-toggle {{#if mod.active}}rt-mod-toggle--active{{/if}}"
+                            data-action="toggleModificationActive"
+                            data-mod-index="{{mod.index}}"
+                            title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
+                      <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+                    </button>
+
+                    {{!-- View/Edit Button --}}
+                    <button type="button"
+                            class="rt-btn rt-btn--icon"
+                            data-action="viewModification"
+                            data-mod-index="{{mod.index}}"
+                            title="View Details">
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+
+                    {{#if ../inEditMode}}
+                    {{!-- Remove Button --}}
+                    <button type="button"
+                            class="rt-btn rt-btn--icon rt-btn--danger"
+                            data-action="removeModification"
+                            data-mod-index="{{mod.index}}"
+                            title="Remove">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                    {{/if}}
+                  </div>
+                </div>
+
+                {{!-- Mod Effects Summary --}}
+                {{#if mod.hasEffects}}
+                <div class="rt-mod-card__effects">
+                  {{#each mod.effects}}
+                  <span class="rt-mod-effect">{{this}}</span>
+                  {{/each}}
+                </div>
+                {{/if}}
+              </div>
+              {{/each}}
+            </div>
+            {{else}}
+            <div class="rt-empty-state rt-empty-state--mods">
+              <i class="fa-solid fa-wrench"></i>
+              <p>No modifications installed</p>
+              {{#if inEditMode}}
+              <p class="rt-empty-hint">Drag weapon modifications here from compendium</p>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
         
       </div>
       
