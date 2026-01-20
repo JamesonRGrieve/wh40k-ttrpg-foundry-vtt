@@ -218,16 +218,27 @@
       ───────────────────────────────────────────────────────────────── --}}
       <div class="rt-talent-panel {{#if (eq activeTab "overview")}}active{{/if}}" data-tab="overview" data-group="primary">
         
-        {{!-- Benefit Section (Editable) --}}
-        <div class="rt-section">
+        {{!-- Benefit Section (Editable with hover button) --}}
+        <div class="rt-section rt-section--editable {{#if inEditMode}}rt-section--editing{{/if}}">
           <h3 class="rt-section-header">
             <i class="fa-solid fa-star"></i>
             Benefit
+            {{#if canEdit}}
+            {{#unless inEditMode}}
+            <button type="button" class="rt-header-btn rt-header-btn--hover" data-action="toggleEditMode" title="Edit Benefit">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            {{else}}
+            <button type="button" class="rt-header-btn rt-header-btn--done" data-action="toggleEditMode" title="Done Editing">
+              <i class="fa-solid fa-check"></i>
+            </button>
+            {{/unless}}
+            {{/if}}
           </h3>
           <div class="rt-section-body">
             {{#if inEditMode}}
             <div class="rt-editor-container">
-              {{editor system.benefit target="system.benefit" button=true editable=true engine="prosemirror"}}
+              {{editor content=system.benefit target="system.benefit" button=true editable=true engine="prosemirror"}}
             </div>
             {{else}}
               {{#if talentData.hasBenefit}}
@@ -235,9 +246,9 @@
                 {{{talentData.benefit}}}
               </div>
               {{else}}
-              <div class="rt-empty-state rt-empty-state--compact">
+              <div class="rt-empty-state rt-empty-state--compact rt-empty-state--clickable" data-action="toggleEditMode">
                 <i class="fa-solid fa-file-lines"></i>
-                <p>No benefit description defined</p>
+                <p>Click to add benefit description</p>
               </div>
               {{/if}}
             {{/if}}
@@ -904,21 +915,39 @@
       ───────────────────────────────────────────────────────────────── --}}
       <div class="rt-talent-panel {{#if (eq activeTab "description")}}active{{/if}}" data-tab="description" data-group="primary">
         
-        {{!-- Benefit (Editable) --}}
-        <div class="rt-section">
+        {{!-- Benefit (Editable with hover button) --}}
+        <div class="rt-section rt-section--editable {{#if inEditMode}}rt-section--editing{{/if}}">
           <h3 class="rt-section-header">
             <i class="fa-solid fa-star"></i>
             Benefit
+            {{#if canEdit}}
+            {{#unless inEditMode}}
+            <button type="button" class="rt-header-btn rt-header-btn--hover" data-action="toggleEditMode" title="Edit Benefit">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            {{else}}
+            <button type="button" class="rt-header-btn rt-header-btn--done" data-action="toggleEditMode" title="Done Editing">
+              <i class="fa-solid fa-check"></i>
+            </button>
+            {{/unless}}
+            {{/if}}
           </h3>
           <div class="rt-section-body">
             {{#if inEditMode}}
             <div class="rt-editor-container">
-              {{editor system.benefit target="system.benefit" button=true editable=true engine="prosemirror"}}
+              {{editor content=system.benefit target="system.benefit" button=true editable=true engine="prosemirror"}}
             </div>
             {{else}}
-            <div class="rt-description-content">
-              {{{talentData.benefit}}}
-            </div>
+              {{#if talentData.hasBenefit}}
+              <div class="rt-description-content">
+                {{{talentData.benefit}}}
+              </div>
+              {{else}}
+              <div class="rt-empty-state rt-empty-state--compact rt-empty-state--clickable" data-action="toggleEditMode">
+                <i class="fa-solid fa-file-lines"></i>
+                <p>Click to add benefit description</p>
+              </div>
+              {{/if}}
             {{/if}}
           </div>
         </div>

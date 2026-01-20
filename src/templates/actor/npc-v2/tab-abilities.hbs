@@ -166,46 +166,39 @@
     {{/if}}
 
     {{!-- Special Abilities (Rich Text) --}}
-    <div class="rt-panel rt-panel--special">
+    <div class="rt-panel rt-panel--special rt-panel--editable">
       <div class="rt-panel-header">
         <i class="fa-solid fa-wand-magic-sparkles"></i>
         <span>{{localize "RT.SpecialAbilities"}}</span>
+        {{#if editable}}
+        <i class="fa-solid fa-pen-to-square rt-edit-hint"></i>
+        {{/if}}
       </div>
       
       <div class="rt-panel-body">
-        {{#if editable}}
         <div class="rt-editor-wrapper">
-          {{editor system.specialAbilities 
+          {{editor content=system.specialAbilities 
                    target="system.specialAbilities" 
                    button=true 
                    editable=editable
                    engine="prosemirror"
                   }}
         </div>
-        {{else}}
-        {{#if hasSpecialAbilities}}
-        <div class="rt-special-content">
-          {{{system.specialAbilities}}}
-        </div>
-        {{else}}
-        <div class="rt-empty-state rt-empty-state--inline">
-          <i class="fa-solid fa-wand-magic-sparkles"></i>
-          <span>No special abilities defined</span>
-        </div>
-        {{/if}}
-        {{/if}}
       </div>
     </div>
 
     {{!-- Description (moved from notes tab) --}}
-    <div class="rt-panel rt-panel--description">
+    <div class="rt-panel rt-panel--description rt-panel--editable">
       <div class="rt-panel-header">
         <i class="fa-solid fa-scroll"></i>
         <span>Description</span>
+        {{#if editable}}
+        <i class="fa-solid fa-pen-to-square rt-edit-hint"></i>
+        {{/if}}
       </div>
       <div class="rt-panel-body">
         <div class="rt-editor-wrapper">
-          {{editor system.description target="system.description" button=true editable=editable engine="prosemirror"}}
+          {{editor content=system.description target="system.description" button=true editable=editable engine="prosemirror"}}
         </div>
       </div>
     </div>
