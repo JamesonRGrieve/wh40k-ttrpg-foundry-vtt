@@ -1,6 +1,6 @@
 /**
  * @file TalentSheetV2 - Redesigned ApplicationV2 sheet for talent items
- * 
+ *
  * Features:
  * - Modern tabbed interface following origin-path-sheet patterns
  * - Edit mode toggle for character-owned talents
@@ -9,21 +9,20 @@
  * - Translucent gothic styling
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Redesigned sheet for talent items with modern ApplicationV2 patterns.
  * @extends BaseItemSheet
  */
 export default class TalentSheetV2 extends BaseItemSheet {
-    
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "sheet", "item", "talent-sheet-v2"],
+        classes: ['rogue-trader', 'sheet', 'item', 'talent-sheet-v2'],
         actions: {
             ...super.DEFAULT_OPTIONS?.actions,
             toggleEditMode: TalentSheetV2.#toggleEditMode,
@@ -31,16 +30,16 @@ export default class TalentSheetV2 extends BaseItemSheet {
             postToChat: TalentSheetV2.#postToChat,
             viewGrantedItem: TalentSheetV2.#viewGrantedItem,
             adjustRank: TalentSheetV2.#adjustRank,
-            openTalentEditor: TalentSheetV2.#openTalentEditor
+            openTalentEditor: TalentSheetV2.#openTalentEditor,
         },
         position: {
             width: 650,
-            height: 700
+            height: 700,
         },
         window: {
             resizable: true,
-            icon: "fa-solid fa-star"
-        }
+            icon: 'fa-solid fa-star',
+        },
     };
 
     /* -------------------------------------------- */
@@ -48,26 +47,26 @@ export default class TalentSheetV2 extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/talent-sheet-v2.hbs",
-            scrollable: [".rt-talent-content"]
-        }
+            template: 'systems/rogue-trader/templates/item/talent-sheet-v2.hbs',
+            scrollable: ['.rt-talent-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "overview", group: "primary", label: "RT.Tabs.Overview" },
-        { tab: "effects", group: "primary", label: "RT.Tabs.Effects" },
-        { tab: "properties", group: "primary", label: "RT.Tabs.Properties" },
-        { tab: "description", group: "primary", label: "RT.Tabs.Description" }
+        { tab: 'overview', group: 'primary', label: 'RT.Tabs.Overview' },
+        { tab: 'effects', group: 'primary', label: 'RT.Tabs.Effects' },
+        { tab: 'properties', group: 'primary', label: 'RT.Tabs.Properties' },
+        { tab: 'description', group: 'primary', label: 'RT.Tabs.Description' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "overview"
+        primary: 'overview',
     };
 
     /* -------------------------------------------- */
@@ -155,13 +154,9 @@ export default class TalentSheetV2 extends BaseItemSheet {
         // Category options for select
         context.categoryOptions = this._getCategoryOptions(system.category);
         context.tierOptions = this._getTierOptions(system.tier);
-        
+
         // Determine effects tab section order (sections with data first)
-        context.effectsSectionOrder = this._getEffectsSectionOrder(
-            context.modifiersData,
-            context.situationalData,
-            context.grantsData
-        );
+        context.effectsSectionOrder = this._getEffectsSectionOrder(context.modifiersData, context.situationalData, context.grantsData);
 
         return context;
     }
@@ -176,24 +171,24 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _prepareTalentData(system) {
         // Get source reference properly (not the object)
-        const sourceReference = system.sourceReference || "";
-        const sourceBook = system.source?.book || "";
-        const sourcePage = system.source?.page || "";
-        
+        const sourceReference = system.sourceReference || '';
+        const sourceBook = system.source?.book || '';
+        const sourcePage = system.source?.page || '';
+
         return {
-            identifier: system.identifier || "",
-            category: system.category || "",
-            categoryLabel: system.categoryLabel || "General",
+            identifier: system.identifier || '',
+            category: system.category || '',
+            categoryLabel: system.categoryLabel || 'General',
             tier: system.tier || 0,
-            tierLabel: system.tierLabel || "—",
+            tierLabel: system.tierLabel || '—',
             cost: system.cost || 0,
             isPassive: system.isPassive ?? true,
             isRollable: system.isRollable ?? false,
             stackable: system.stackable ?? false,
             rank: system.rank || 1,
             hasSpecialization: system.hasSpecialization ?? false,
-            specialization: system.specialization || "",
-            notes: system.notes || "",
+            specialization: system.specialization || '',
+            notes: system.notes || '',
             // Source fields
             source: sourceReference,
             sourceBook: sourceBook,
@@ -201,9 +196,9 @@ export default class TalentSheetV2 extends BaseItemSheet {
             // Benefit field
             aptitudes: system.aptitudes || [],
             hasAptitudes: (system.aptitudes?.length || 0) > 0,
-            benefit: system.benefit || "",
+            benefit: system.benefit || '',
             hasBenefit: !!(system.benefit && system.benefit.trim()),
-            fullName: system.fullName || this.item.name
+            fullName: system.fullName || this.item.name,
         };
     }
 
@@ -228,20 +223,20 @@ export default class TalentSheetV2 extends BaseItemSheet {
                 key,
                 label: this._getCharacteristicLabel(key),
                 short: this._getCharacteristicShort(key),
-                value
+                value,
             }));
 
         return {
-            text: prereqs.text || "",
+            text: prereqs.text || '',
             hasText: !!(prereqs.text && prereqs.text.trim()),
             characteristics: characteristicReqs,
             hasCharacteristics: characteristicReqs.length > 0,
-            skills: skills.filter(s => s),
-            hasSkills: skills.filter(s => s).length > 0,
-            talents: talents.filter(t => t),
-            hasTalents: talents.filter(t => t).length > 0,
+            skills: skills.filter((s) => s),
+            hasSkills: skills.filter((s) => s).length > 0,
+            talents: talents.filter((t) => t),
+            hasTalents: talents.filter((t) => t).length > 0,
             hasAny: system.hasPrerequisites ?? false,
-            label: system.prerequisitesLabel || ""
+            label: system.prerequisitesLabel || '',
         };
     }
 
@@ -264,7 +259,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
                 label: this._getCharacteristicLabel(key),
                 short: this._getCharacteristicShort(key),
                 value,
-                positive: value > 0
+                positive: value > 0,
             }));
 
         // Skill modifiers
@@ -274,7 +269,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
                 key,
                 label: this._formatSkillLabel(key),
                 value,
-                positive: value > 0
+                positive: value > 0,
             }));
 
         // Combat modifiers
@@ -285,7 +280,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
                 key,
                 label: this._formatCombatLabel(key),
                 value,
-                positive: value > 0
+                positive: value > 0,
             }));
 
         // Resource modifiers
@@ -296,18 +291,16 @@ export default class TalentSheetV2 extends BaseItemSheet {
                 key,
                 label: this._formatResourceLabel(key),
                 value,
-                positive: value > 0
+                positive: value > 0,
             }));
 
         // Other modifiers
-        const otherMods = (mods.other || []).map(mod => ({
+        const otherMods = (mods.other || []).map((mod) => ({
             ...mod,
-            positive: mod.value > 0
+            positive: mod.value > 0,
         }));
 
-        const hasAny = charMods.length > 0 || skillMods.length > 0 || 
-                       combatMods.length > 0 || resourceMods.length > 0 || 
-                       otherMods.length > 0;
+        const hasAny = charMods.length > 0 || skillMods.length > 0 || combatMods.length > 0 || resourceMods.length > 0 || otherMods.length > 0;
 
         return {
             characteristics: charMods,
@@ -320,7 +313,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
             hasResources: resourceMods.length > 0,
             other: otherMods,
             hasOther: otherMods.length > 0,
-            hasAny
+            hasAny,
         };
     }
 
@@ -335,37 +328,34 @@ export default class TalentSheetV2 extends BaseItemSheet {
     _prepareGrantsData(system) {
         const grants = system.grants || {};
 
-        const skills = (grants.skills || []).map(skill => ({
+        const skills = (grants.skills || []).map((skill) => ({
             name: skill.name,
             specialization: skill.specialization || null,
-            level: skill.level || "trained",
+            level: skill.level || 'trained',
             levelLabel: this._getTrainingLabel(skill.level),
-            displayName: skill.specialization 
-                ? `${skill.name} (${skill.specialization})`
-                : skill.name
+            displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
 
-        const talents = (grants.talents || []).map(talent => ({
+        const talents = (grants.talents || []).map((talent) => ({
             name: talent.name,
             specialization: talent.specialization || null,
             uuid: talent.uuid || null,
-            hasLink: !!talent.uuid
+            hasLink: !!talent.uuid,
         }));
 
-        const traits = (grants.traits || []).map(trait => ({
+        const traits = (grants.traits || []).map((trait) => ({
             name: trait.name,
             level: trait.level || null,
             uuid: trait.uuid || null,
-            hasLink: !!trait.uuid
+            hasLink: !!trait.uuid,
         }));
 
-        const specialAbilities = (grants.specialAbilities || []).map(ability => ({
+        const specialAbilities = (grants.specialAbilities || []).map((ability) => ({
             name: ability.name,
-            description: ability.description || ""
+            description: ability.description || '',
         }));
 
-        const hasAny = skills.length > 0 || talents.length > 0 || 
-                       traits.length > 0 || specialAbilities.length > 0;
+        const hasAny = skills.length > 0 || talents.length > 0 || traits.length > 0 || specialAbilities.length > 0;
 
         return {
             skills,
@@ -376,7 +366,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
             hasTraits: traits.length > 0,
             specialAbilities,
             hasSpecialAbilities: specialAbilities.length > 0,
-            hasAny
+            hasAny,
         };
     }
 
@@ -391,31 +381,31 @@ export default class TalentSheetV2 extends BaseItemSheet {
     _prepareSituationalData(system) {
         const situational = system.modifiers?.situational || {};
 
-        const characteristics = (situational.characteristics || []).map(mod => ({
+        const characteristics = (situational.characteristics || []).map((mod) => ({
             key: mod.key,
             label: this._getCharacteristicLabel(mod.key),
             value: mod.value,
             condition: mod.condition,
             icon: this._getCharacteristicIcon(mod.key),
-            positive: mod.value > 0
+            positive: mod.value > 0,
         }));
 
-        const skills = (situational.skills || []).map(mod => ({
+        const skills = (situational.skills || []).map((mod) => ({
             key: mod.key,
             label: this._formatSkillLabel(mod.key),
             value: mod.value,
             condition: mod.condition,
             icon: this._getSkillIcon(mod.key),
-            positive: mod.value > 0
+            positive: mod.value > 0,
         }));
 
-        const combat = (situational.combat || []).map(mod => ({
+        const combat = (situational.combat || []).map((mod) => ({
             key: mod.key,
             label: this._formatCombatLabel(mod.key),
             value: mod.value,
             condition: mod.condition,
             icon: this._getCombatIcon(mod.key),
-            positive: mod.value > 0
+            positive: mod.value > 0,
         }));
 
         const hasAny = characteristics.length > 0 || skills.length > 0 || combat.length > 0;
@@ -427,7 +417,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
             hasSkills: skills.length > 0,
             combat,
             hasCombat: combat.length > 0,
-            hasAny
+            hasAny,
         };
     }
 
@@ -442,15 +432,13 @@ export default class TalentSheetV2 extends BaseItemSheet {
     _prepareRollConfigData(system) {
         const config = system.rollConfig || {};
         return {
-            characteristic: config.characteristic || "",
-            characteristicLabel: config.characteristic 
-                ? this._getCharacteristicLabel(config.characteristic)
-                : "",
-            skill: config.skill || "",
-            skillLabel: config.skill ? this._formatSkillLabel(config.skill) : "",
+            characteristic: config.characteristic || '',
+            characteristicLabel: config.characteristic ? this._getCharacteristicLabel(config.characteristic) : '',
+            skill: config.skill || '',
+            skillLabel: config.skill ? this._formatSkillLabel(config.skill) : '',
             modifier: config.modifier || 0,
-            description: config.description || "",
-            isConfigured: !!(config.characteristic || config.skill)
+            description: config.description || '',
+            isConfigured: !!(config.characteristic || config.skill),
         };
     }
 
@@ -464,22 +452,22 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _getCategoryOptions(currentCategory) {
         const categories = [
-            { value: "", label: "General" },
-            { value: "general", label: "General" },
-            { value: "combat", label: "Combat" },
-            { value: "social", label: "Social" },
-            { value: "investigation", label: "Investigation" },
-            { value: "psychic", label: "Psychic" },
-            { value: "navigator", label: "Navigator" },
-            { value: "tech", label: "Tech" },
-            { value: "leadership", label: "Leadership" },
-            { value: "career", label: "Career" },
-            { value: "unique", label: "Unique" }
+            { value: '', label: 'General' },
+            { value: 'general', label: 'General' },
+            { value: 'combat', label: 'Combat' },
+            { value: 'social', label: 'Social' },
+            { value: 'investigation', label: 'Investigation' },
+            { value: 'psychic', label: 'Psychic' },
+            { value: 'navigator', label: 'Navigator' },
+            { value: 'tech', label: 'Tech' },
+            { value: 'leadership', label: 'Leadership' },
+            { value: 'career', label: 'Career' },
+            { value: 'unique', label: 'Unique' },
         ];
 
-        return categories.map(cat => ({
+        return categories.map((cat) => ({
             ...cat,
-            selected: cat.value === currentCategory
+            selected: cat.value === currentCategory,
         }));
     }
 
@@ -493,10 +481,10 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _getTierOptions(currentTier) {
         return [
-            { value: 0, label: "—", selected: currentTier === 0 },
-            { value: 1, label: "Tier 1", selected: currentTier === 1 },
-            { value: 2, label: "Tier 2", selected: currentTier === 2 },
-            { value: 3, label: "Tier 3", selected: currentTier === 3 }
+            { value: 0, label: '—', selected: currentTier === 0 },
+            { value: 1, label: 'Tier 1', selected: currentTier === 1 },
+            { value: 2, label: 'Tier 2', selected: currentTier === 2 },
+            { value: 3, label: 'Tier 3', selected: currentTier === 3 },
         ];
     }
 
@@ -513,19 +501,19 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _getEffectsSectionOrder(modifiersData, situationalData, grantsData) {
         const sections = [
-            { id: "modifiers", hasData: modifiersData.hasAny },
-            { id: "situational", hasData: situationalData.hasAny },
-            { id: "grants", hasData: grantsData.hasAny }
+            { id: 'modifiers', hasData: modifiersData.hasAny },
+            { id: 'situational', hasData: situationalData.hasAny },
+            { id: 'grants', hasData: grantsData.hasAny },
         ];
-        
+
         // Sort: sections with data first, then empty sections
         sections.sort((a, b) => {
             if (a.hasData && !b.hasData) return -1;
             if (!a.hasData && b.hasData) return 1;
             return 0; // Maintain relative order for sections with same status
         });
-        
-        return sections.map(s => s.id);
+
+        return sections.map((s) => s.id);
     }
 
     /* -------------------------------------------- */
@@ -540,16 +528,16 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _getCharacteristicLabel(key) {
         const labels = {
-            weaponSkill: "Weapon Skill",
-            ballisticSkill: "Ballistic Skill",
-            strength: "Strength",
-            toughness: "Toughness",
-            agility: "Agility",
-            intelligence: "Intelligence",
-            perception: "Perception",
-            willpower: "Willpower",
-            fellowship: "Fellowship",
-            influence: "Influence"
+            weaponSkill: 'Weapon Skill',
+            ballisticSkill: 'Ballistic Skill',
+            strength: 'Strength',
+            toughness: 'Toughness',
+            agility: 'Agility',
+            intelligence: 'Intelligence',
+            perception: 'Perception',
+            willpower: 'Willpower',
+            fellowship: 'Fellowship',
+            influence: 'Influence',
         };
         return labels[key] || key;
     }
@@ -562,16 +550,16 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _getCharacteristicShort(key) {
         const shorts = {
-            weaponSkill: "WS",
-            ballisticSkill: "BS",
-            strength: "S",
-            toughness: "T",
-            agility: "Ag",
-            intelligence: "Int",
-            perception: "Per",
-            willpower: "WP",
-            fellowship: "Fel",
-            influence: "Inf"
+            weaponSkill: 'WS',
+            ballisticSkill: 'BS',
+            strength: 'S',
+            toughness: 'T',
+            agility: 'Ag',
+            intelligence: 'Int',
+            perception: 'Per',
+            willpower: 'WP',
+            fellowship: 'Fel',
+            influence: 'Inf',
         };
         return shorts[key] || key.substring(0, 3).toUpperCase();
     }
@@ -584,7 +572,10 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _formatSkillLabel(key) {
         // Convert camelCase to Title Case
-        return key.replace(/([A-Z])/g, " $1").replace(/^./, str => str.toUpperCase()).trim();
+        return key
+            .replace(/([A-Z])/g, ' $1')
+            .replace(/^./, (str) => str.toUpperCase())
+            .trim();
     }
 
     /**
@@ -595,12 +586,12 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _formatCombatLabel(key) {
         const labels = {
-            attack: "Attack Bonus",
-            damage: "Damage Bonus",
-            penetration: "Penetration",
-            defense: "Defense Bonus",
-            initiative: "Initiative",
-            speed: "Movement Speed"
+            attack: 'Attack Bonus',
+            damage: 'Damage Bonus',
+            penetration: 'Penetration',
+            defense: 'Defense Bonus',
+            initiative: 'Initiative',
+            speed: 'Movement Speed',
         };
         return labels[key] || key.charAt(0).toUpperCase() + key.slice(1);
     }
@@ -613,10 +604,10 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _formatResourceLabel(key) {
         const labels = {
-            wounds: "Wounds",
-            fate: "Fate Points",
-            insanity: "Insanity Threshold",
-            corruption: "Corruption Threshold"
+            wounds: 'Wounds',
+            fate: 'Fate Points',
+            insanity: 'Insanity Threshold',
+            corruption: 'Corruption Threshold',
         };
         return labels[key] || key.charAt(0).toUpperCase() + key.slice(1);
     }
@@ -629,9 +620,9 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _getTrainingLabel(level) {
         const labels = {
-            trained: "Trained",
-            plus10: "+10",
-            plus20: "+20"
+            trained: 'Trained',
+            plus10: '+10',
+            plus20: '+20',
         };
         return labels[level] || level;
     }
@@ -644,18 +635,18 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _getCharacteristicIcon(key) {
         const icons = {
-            weaponSkill: "fa-solid fa-sword",
-            ballisticSkill: "fa-solid fa-crosshairs",
-            strength: "fa-solid fa-dumbbell",
-            toughness: "fa-solid fa-shield",
-            agility: "fa-solid fa-person-running",
-            intelligence: "fa-solid fa-brain",
-            perception: "fa-solid fa-eye",
-            willpower: "fa-solid fa-head-side-brain",
-            fellowship: "fa-solid fa-people-group",
-            influence: "fa-solid fa-crown"
+            weaponSkill: 'fa-solid fa-sword',
+            ballisticSkill: 'fa-solid fa-crosshairs',
+            strength: 'fa-solid fa-dumbbell',
+            toughness: 'fa-solid fa-shield',
+            agility: 'fa-solid fa-person-running',
+            intelligence: 'fa-solid fa-brain',
+            perception: 'fa-solid fa-eye',
+            willpower: 'fa-solid fa-head-side-brain',
+            fellowship: 'fa-solid fa-people-group',
+            influence: 'fa-solid fa-crown',
         };
-        return icons[key] || "fa-solid fa-star";
+        return icons[key] || 'fa-solid fa-star';
     }
 
     /**
@@ -667,75 +658,75 @@ export default class TalentSheetV2 extends BaseItemSheet {
     _getSkillIcon(key) {
         const icons = {
             // Combat skills
-            dodge: "fa-solid fa-shield-halved",
-            parry: "fa-solid fa-shield",
-            
+            dodge: 'fa-solid fa-shield-halved',
+            parry: 'fa-solid fa-shield',
+
             // Physical skills
-            acrobatics: "fa-solid fa-person-running",
-            athletics: "fa-solid fa-dumbbell",
-            climb: "fa-solid fa-mountain",
-            swim: "fa-solid fa-person-swimming",
-            contortionist: "fa-solid fa-user-tie",
-            
+            acrobatics: 'fa-solid fa-person-running',
+            athletics: 'fa-solid fa-dumbbell',
+            climb: 'fa-solid fa-mountain',
+            swim: 'fa-solid fa-person-swimming',
+            contortionist: 'fa-solid fa-user-tie',
+
             // Stealth/infiltration
-            concealment: "fa-solid fa-user-ninja",
-            disguise: "fa-solid fa-mask",
-            shadowing: "fa-solid fa-user-secret",
-            silentMove: "fa-solid fa-shoe-prints",
-            sleightOfHand: "fa-solid fa-hand-sparkles",
-            stealth: "fa-solid fa-user-ninja",
-            
+            concealment: 'fa-solid fa-user-ninja',
+            disguise: 'fa-solid fa-mask',
+            shadowing: 'fa-solid fa-user-secret',
+            silentMove: 'fa-solid fa-shoe-prints',
+            sleightOfHand: 'fa-solid fa-hand-sparkles',
+            stealth: 'fa-solid fa-user-ninja',
+
             // Social skills
-            barter: "fa-solid fa-handshake",
-            carouse: "fa-solid fa-champagne-glasses",
-            charm: "fa-solid fa-face-smile-beam",
-            command: "fa-solid fa-bullhorn",
-            deceive: "fa-solid fa-mask",
-            gamble: "fa-solid fa-dice",
-            intimidate: "fa-solid fa-skull",
-            interrogation: "fa-solid fa-gavel",
-            blather: "fa-solid fa-comment-dots",
-            
+            barter: 'fa-solid fa-handshake',
+            carouse: 'fa-solid fa-champagne-glasses',
+            charm: 'fa-solid fa-face-smile-beam',
+            command: 'fa-solid fa-bullhorn',
+            deceive: 'fa-solid fa-mask',
+            gamble: 'fa-solid fa-dice',
+            intimidate: 'fa-solid fa-skull',
+            interrogation: 'fa-solid fa-gavel',
+            blather: 'fa-solid fa-comment-dots',
+
             // Knowledge skills
-            awareness: "fa-solid fa-eye",
-            scrutiny: "fa-solid fa-magnifying-glass",
-            search: "fa-solid fa-magnifying-glass-plus",
-            inquiry: "fa-solid fa-clipboard-question",
-            literacy: "fa-solid fa-book",
-            logic: "fa-solid fa-brain",
-            commonLore: "fa-solid fa-book-open",
-            forbiddenLore: "fa-solid fa-book-skull",
-            scholasticLore: "fa-solid fa-graduation-cap",
-            ciphers: "fa-solid fa-key",
-            secretTongue: "fa-solid fa-lock",
-            speakLanguage: "fa-solid fa-language",
-            
+            awareness: 'fa-solid fa-eye',
+            scrutiny: 'fa-solid fa-magnifying-glass',
+            search: 'fa-solid fa-magnifying-glass-plus',
+            inquiry: 'fa-solid fa-clipboard-question',
+            literacy: 'fa-solid fa-book',
+            logic: 'fa-solid fa-brain',
+            commonLore: 'fa-solid fa-book-open',
+            forbiddenLore: 'fa-solid fa-book-skull',
+            scholasticLore: 'fa-solid fa-graduation-cap',
+            ciphers: 'fa-solid fa-key',
+            secretTongue: 'fa-solid fa-lock',
+            speakLanguage: 'fa-solid fa-language',
+
             // Tech/craft skills
-            techUse: "fa-solid fa-screwdriver-wrench",
-            security: "fa-solid fa-lock-open",
-            demolition: "fa-solid fa-bomb",
-            chemUse: "fa-solid fa-flask",
-            medicae: "fa-solid fa-kit-medical",
-            trade: "fa-solid fa-hammer",
-            
+            techUse: 'fa-solid fa-screwdriver-wrench',
+            security: 'fa-solid fa-lock-open',
+            demolition: 'fa-solid fa-bomb',
+            chemUse: 'fa-solid fa-flask',
+            medicae: 'fa-solid fa-kit-medical',
+            trade: 'fa-solid fa-hammer',
+
             // Vehicle skills
-            drive: "fa-solid fa-car",
-            pilot: "fa-solid fa-jet-fighter",
-            
+            drive: 'fa-solid fa-car',
+            pilot: 'fa-solid fa-jet-fighter',
+
             // Misc skills
-            evaluate: "fa-solid fa-scale-balanced",
-            commerce: "fa-solid fa-coins",
-            performer: "fa-solid fa-music",
-            tracking: "fa-solid fa-paw",
-            survival: "fa-solid fa-compass",
-            wrangling: "fa-solid fa-horse",
-            navigation: "fa-solid fa-compass",
-            
+            evaluate: 'fa-solid fa-scale-balanced',
+            commerce: 'fa-solid fa-coins',
+            performer: 'fa-solid fa-music',
+            tracking: 'fa-solid fa-paw',
+            survival: 'fa-solid fa-compass',
+            wrangling: 'fa-solid fa-horse',
+            navigation: 'fa-solid fa-compass',
+
             // Psychic skills
-            psyniscience: "fa-solid fa-eye-evil",
-            invocation: "fa-solid fa-hand-sparkles"
+            psyniscience: 'fa-solid fa-eye-evil',
+            invocation: 'fa-solid fa-hand-sparkles',
         };
-        return icons[key] || "fa-solid fa-graduation-cap";
+        return icons[key] || 'fa-solid fa-graduation-cap';
     }
 
     /**
@@ -746,14 +737,14 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     _getCombatIcon(key) {
         const icons = {
-            attack: "fa-solid fa-crosshairs",
-            damage: "fa-solid fa-burst",
-            penetration: "fa-solid fa-arrow-up-right-dots",
-            defense: "fa-solid fa-shield-halved",
-            initiative: "fa-solid fa-gauge-high",
-            speed: "fa-solid fa-person-running"
+            attack: 'fa-solid fa-crosshairs',
+            damage: 'fa-solid fa-burst',
+            penetration: 'fa-solid fa-arrow-up-right-dots',
+            defense: 'fa-solid fa-shield-halved',
+            initiative: 'fa-solid fa-gauge-high',
+            speed: 'fa-solid fa-person-running',
         };
-        return icons[key] || "fa-solid fa-swords";
+        return icons[key] || 'fa-solid fa-swords';
     }
 
     /* -------------------------------------------- */
@@ -775,27 +766,39 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @protected
      */
     _setupTalentTabs() {
-        const tabs = this.element.querySelectorAll(".rt-talent-tabs .rt-talent-tab");
-        tabs.forEach(tab => {
-            tab.addEventListener("click", (event) => {
+        const tabs = this.element.querySelectorAll('.rt-talent-tabs .rt-talent-tab');
+        const switchTab = (tabName) => {
+            if (!tabName) return;
+
+            // Update active tab button
+            tabs.forEach((t) => t.classList.toggle('active', t.dataset.tab === tabName));
+
+            // Show/hide panels
+            const panels = this.element.querySelectorAll('.rt-talent-panel');
+            panels.forEach((panel) => {
+                panel.classList.toggle('active', panel.dataset.tab === tabName);
+            });
+
+            // Update tab group state
+            this.tabGroups.primary = tabName;
+        };
+
+        // Tab button clicks
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', (event) => {
                 event.preventDefault();
-                const tabName = tab.dataset.tab;
-                if (!tabName) return;
-
-                // Update active tab button
-                tabs.forEach(t => t.classList.remove("active"));
-                tab.classList.add("active");
-
-                // Show/hide panels
-                const panels = this.element.querySelectorAll(".rt-talent-panel");
-                panels.forEach(panel => {
-                    panel.classList.toggle("active", panel.dataset.tab === tabName);
-                });
-
-                // Update tab group state
-                this.tabGroups.primary = tabName;
+                switchTab(tab.dataset.tab);
             });
         });
+
+        // Effects banner link click
+        const bannerLink = this.element.querySelector('.rt-effects-banner__link');
+        if (bannerLink) {
+            bannerLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                switchTab(bannerLink.dataset.tab);
+            });
+        }
     }
 
     /* -------------------------------------------- */
@@ -824,13 +827,13 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     static async #rollTalent(event, target) {
         if (!this.item.system.isRollable) {
-            ui.notifications.warn("This talent cannot be rolled.");
+            ui.notifications.warn('This talent cannot be rolled.');
             return;
         }
 
         const actor = this.item.actor;
         if (!actor) {
-            ui.notifications.warn("This talent must be on an actor to roll.");
+            ui.notifications.warn('This talent must be on an actor to roll.');
             return;
         }
 
@@ -851,7 +854,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @param {HTMLElement} target - The action target
      */
     static async #postToChat(event, target) {
-        await this.item.system.toChat?.() ?? this._postTalentToChat();
+        (await this.item.system.toChat?.()) ?? this._postTalentToChat();
     }
 
     /* -------------------------------------------- */
@@ -893,7 +896,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
         const currentRank = this.item.system.rank || 1;
         const newRank = Math.max(1, currentRank + delta);
 
-        await this.item.update({ "system.rank": newRank });
+        await this.item.update({ 'system.rank': newRank });
     }
 
     /* -------------------------------------------- */
@@ -909,10 +912,10 @@ export default class TalentSheetV2 extends BaseItemSheet {
         if (!section) return;
 
         // Import and render the TalentEditorDialog
-        const { TalentEditorDialog } = await import("./talent-editor-dialog.mjs");
+        const { TalentEditorDialog } = await import('./talent-editor-dialog.mjs');
         const dialog = new TalentEditorDialog({
             item: this.item,
-            initialSection: section
+            initialSection: section,
         });
         await dialog.render(true);
     }
@@ -927,17 +930,17 @@ export default class TalentSheetV2 extends BaseItemSheet {
         const content = `
             <div class="talent-chat-card">
                 <h3>${this.item.name}</h3>
-                <p><strong>Type:</strong> ${this.item.system.isPassive ? "Passive" : "Active"}</p>
-                ${this.item.system.tier ? `<p><strong>Tier:</strong> ${this.item.system.tier}</p>` : ""}
-                ${this.item.system.cost ? `<p><strong>Cost:</strong> ${this.item.system.cost} XP</p>` : ""}
+                <p><strong>Type:</strong> ${this.item.system.isPassive ? 'Passive' : 'Active'}</p>
+                ${this.item.system.tier ? `<p><strong>Tier:</strong> ${this.item.system.tier}</p>` : ''}
+                ${this.item.system.cost ? `<p><strong>Cost:</strong> ${this.item.system.cost} XP</p>` : ''}
                 <hr>
-                <div>${this.item.system.benefit || this.item.system.description?.value || ""}</div>
+                <div>${this.item.system.benefit || this.item.system.description?.value || ''}</div>
             </div>
         `;
 
         await ChatMessage.create({
             content,
-            speaker: ChatMessage.getSpeaker({ actor: this.item.actor })
+            speaker: ChatMessage.getSpeaker({ actor: this.item.actor }),
         });
     }
 }

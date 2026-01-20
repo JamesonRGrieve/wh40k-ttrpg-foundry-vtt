@@ -240,79 +240,45 @@
           </div>
         </div>
         
-        {{!-- Effects Summary Section --}}
+        {{!-- Effects Summary Banner - Modern compact design --}}
         {{#if (or modifiersData.hasAny situationalData.hasAny grantsData.hasAny)}}
-        <div class="rt-section">
-          <h3 class="rt-section-header">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-            Mechanical Effects Summary
-          </h3>
-          <div class="rt-section-body">
-            <div class="rt-effects-summary">
-              {{!-- Permanent Modifiers Count --}}
-              {{#if modifiersData.hasAny}}
-              <div class="rt-summary-card rt-summary-card--modifiers">
-                <div class="rt-summary-icon">
-                  <i class="fa-solid fa-chart-line"></i>
-                </div>
-                <div class="rt-summary-content">
-                  <h4 class="rt-summary-title">Permanent Modifiers</h4>
-                  <p class="rt-summary-text">
-                    {{#if modifiersData.hasCharacteristics}}{{modifiersData.characteristics.length}} Characteristic{{#if (gt modifiersData.characteristics.length 1)}}s{{/if}}{{/if}}
-                    {{#if (and modifiersData.hasCharacteristics modifiersData.hasSkills)}}, {{/if}}
-                    {{#if modifiersData.hasSkills}}{{modifiersData.skills.length}} Skill{{#if (gt modifiersData.skills.length 1)}}s{{/if}}{{/if}}
-                    {{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills) modifiersData.hasCombat)}}, {{/if}}
-                    {{#if modifiersData.hasCombat}}{{modifiersData.combat.length}} Combat{{/if}}
-                    {{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills modifiersData.hasCombat) modifiersData.hasResources)}}, {{/if}}
-                    {{#if modifiersData.hasResources}}{{modifiersData.resources.length}} Resource{{#if (gt modifiersData.resources.length 1)}}s{{/if}}{{/if}}
-                  </p>
-                </div>
-              </div>
-              {{/if}}
-              
-              {{!-- Situational Modifiers Count --}}
-              {{#if situationalData.hasAny}}
-              <div class="rt-summary-card rt-summary-card--situational">
-                <div class="rt-summary-icon">
-                  <i class="fa-solid fa-clock-rotate-left"></i>
-                </div>
-                <div class="rt-summary-content">
-                  <h4 class="rt-summary-title">Situational Modifiers</h4>
-                  <p class="rt-summary-text">
-                    {{#if situationalData.hasCharacteristics}}{{situationalData.characteristics.length}} Characteristic{{#if (gt situationalData.characteristics.length 1)}}s{{/if}}{{/if}}
-                    {{#if (and situationalData.hasCharacteristics situationalData.hasSkills)}}, {{/if}}
-                    {{#if situationalData.hasSkills}}{{situationalData.skills.length}} Skill{{#if (gt situationalData.skills.length 1)}}s{{/if}}{{/if}}
-                    {{#if (and (or situationalData.hasCharacteristics situationalData.hasSkills) situationalData.hasCombat)}}, {{/if}}
-                    {{#if situationalData.hasCombat}}{{situationalData.combat.length}} Combat{{/if}}
-                  </p>
-                </div>
-              </div>
-              {{/if}}
-              
-              {{!-- Grants Count --}}
-              {{#if grantsData.hasAny}}
-              <div class="rt-summary-card rt-summary-card--grants">
-                <div class="rt-summary-icon">
-                  <i class="fa-solid fa-gift"></i>
-                </div>
-                <div class="rt-summary-content">
-                  <h4 class="rt-summary-title">Grants</h4>
-                  <p class="rt-summary-text">
-                    {{#if grantsData.hasSkills}}{{grantsData.skills.length}} Skill{{#if (gt grantsData.skills.length 1)}}s{{/if}}{{/if}}
-                    {{#if (and grantsData.hasSkills grantsData.hasTalents)}}, {{/if}}
-                    {{#if grantsData.hasTalents}}{{grantsData.talents.length}} Talent{{#if (gt grantsData.talents.length 1)}}s{{/if}}{{/if}}
-                    {{#if (and (or grantsData.hasSkills grantsData.hasTalents) grantsData.hasTraits)}}, {{/if}}
-                    {{#if grantsData.hasTraits}}{{grantsData.traits.length}} Trait{{#if (gt grantsData.traits.length 1)}}s{{/if}}{{/if}}
-                  </p>
-                </div>
-              </div>
-              {{/if}}
-            </div>
-            <p class="rt-hint-text" style="margin-top: 12px;">
-              <i class="fa-solid fa-info-circle"></i>
-              View the <strong>Effects</strong> tab for complete details on all modifiers and grants.
-            </p>
+        <div class="rt-effects-banner">
+          <div class="rt-effects-banner__header">
+            <i class="fa-solid fa-sparkles"></i>
+            <span>Effects</span>
           </div>
+          <div class="rt-effects-banner__pills">
+            {{!-- Permanent Modifiers Pill --}}
+            {{#if modifiersData.hasAny}}
+            <div class="rt-effect-pill rt-effect-pill--modifiers" title="Permanent modifiers applied while talent is possessed">
+              <i class="fa-solid fa-chart-line"></i>
+              <span class="rt-effect-pill__label">Modifiers</span>
+              <span class="rt-effect-pill__count">{{#if modifiersData.hasCharacteristics}}{{modifiersData.characteristics.length}}{{/if}}{{#if (and modifiersData.hasCharacteristics modifiersData.hasSkills)}}+{{/if}}{{#if modifiersData.hasSkills}}{{modifiersData.skills.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills) modifiersData.hasCombat)}}+{{/if}}{{#if modifiersData.hasCombat}}{{modifiersData.combat.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills modifiersData.hasCombat) modifiersData.hasResources)}}+{{/if}}{{#if modifiersData.hasResources}}{{modifiersData.resources.length}}{{/if}}</span>
+            </div>
+            {{/if}}
+            
+            {{!-- Situational Modifiers Pill --}}
+            {{#if situationalData.hasAny}}
+            <div class="rt-effect-pill rt-effect-pill--situational" title="Conditional bonuses that appear in roll dialogs">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <span class="rt-effect-pill__label">Situational</span>
+              <span class="rt-effect-pill__count">{{#if situationalData.hasCharacteristics}}{{situationalData.characteristics.length}}{{/if}}{{#if (and situationalData.hasCharacteristics situationalData.hasSkills)}}+{{/if}}{{#if situationalData.hasSkills}}{{situationalData.skills.length}}{{/if}}{{#if (and (or situationalData.hasCharacteristics situationalData.hasSkills) situationalData.hasCombat)}}+{{/if}}{{#if situationalData.hasCombat}}{{situationalData.combat.length}}{{/if}}</span>
+            </div>
+            {{/if}}
+            
+            {{!-- Grants Pill --}}
+            {{#if grantsData.hasAny}}
+            <div class="rt-effect-pill rt-effect-pill--grants" title="Skills, talents, and traits automatically granted">
+              <i class="fa-solid fa-gift"></i>
+              <span class="rt-effect-pill__label">Grants</span>
+              <span class="rt-effect-pill__count">{{#if grantsData.hasSkills}}{{grantsData.skills.length}}{{/if}}{{#if (and grantsData.hasSkills grantsData.hasTalents)}}+{{/if}}{{#if grantsData.hasTalents}}{{grantsData.talents.length}}{{/if}}{{#if (and (or grantsData.hasSkills grantsData.hasTalents) grantsData.hasTraits)}}+{{/if}}{{#if grantsData.hasTraits}}{{grantsData.traits.length}}{{/if}}</span>
+            </div>
+            {{/if}}
+          </div>
+          <a class="rt-effects-banner__link" data-tab="effects" data-group="primary">
+            <span>View Details</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
         {{/if}}
         
