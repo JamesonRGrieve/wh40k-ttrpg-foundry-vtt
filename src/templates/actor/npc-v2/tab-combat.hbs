@@ -208,7 +208,7 @@
             <div class="rt-weapon-stats">
               {{#if ../editable}}
               <select name="system.weapons.simple.{{index}}.class" class="rt-weapon-class">
-                {{selectOptions ../weaponClassOptions selected=class}}
+                {{selectOptions ../weaponClassOptions selected=this.class}}
               </select>
               {{/if}}
               <span class="rt-weapon-stat">

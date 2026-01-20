@@ -35,10 +35,10 @@
     {{!-- Quick Meta --}}
     <div class="rt-meta-compact">
       <select name="system.type" class="rt-select-compact" {{#unless editable}}disabled{{/unless}} title="Type">
-        {{selectOptions npcTypeOptions selected=system.type}}
+        {{selectOptions npcTypeOptions selected=source.type}}
       </select>
       <select name="system.role" class="rt-select-compact" {{#unless editable}}disabled{{/unless}} title="Role">
-        {{selectOptions npcRoleOptions selected=system.role}}
+        {{selectOptions npcRoleOptions selected=source.role}}
       </select>
     </div>
   </div>

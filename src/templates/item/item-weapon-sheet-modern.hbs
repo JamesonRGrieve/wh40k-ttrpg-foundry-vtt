@@ -2,50 +2,48 @@
   Rogue Trader Weapon Item Sheet - Modern Redesign
   A sleek, information-dense weapon sheet for the grim darkness of the far future.
 --}}
-<div class="rt-weapon-sheet">
+<div class="rt-item-sheet rt-weapon-sheet">
   <form autocomplete="off">
-    
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         HEADER: Compact weapon identity with inline stats
-    ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="rt-weapon-header">
-      <div class="rt-weapon-header__image" data-action="editImage" data-edit="img">
+    <header class="rt-item-header rt-item-header--compact rt-weapon-header">
+      <div class="rt-item-image rt-item-image--sm" data-edit="img" data-action="editImage">
         <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="rt-weapon-header__image-overlay">
-          <i class="fas fa-edit"></i>
-        </div>
       </div>
-      
-      <div class="rt-weapon-header__info">
-        <input type="text" class="rt-weapon-header__name" name="name" value="{{item.name}}" placeholder="Weapon Name" />
-        
-        <div class="rt-weapon-header__meta">
-          <span class="rt-weapon-badge rt-weapon-badge--class" title="Weapon Class">
-            <i class="fas {{item.system.classIcon}}"></i>
+
+      <div class="rt-item-title">
+        <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Weapon Name" />
+        <div class="rt-item-meta rt-weapon-meta">
+          <span class="rt-meta-badge rt-meta-badge--weapon" title="Weapon">
+            <i class="fa-solid fa-gun"></i>
+            Weapon
+          </span>
+          <span class="rt-meta-badge rt-meta-badge--weapon-class" title="Weapon Class">
+            <i class="fa-solid {{item.system.classIcon}}"></i>
             {{item.system.classLabel}}
           </span>
-          <span class="rt-weapon-badge rt-weapon-badge--type" title="Weapon Type">
+          <span class="rt-meta-badge rt-meta-badge--weapon-type" title="Weapon Type">
+            <i class="fa-solid {{item.system.typeIcon}}"></i>
             {{item.system.typeLabel}}
           </span>
           {{#if (ne item.system.craftsmanship "common")}}
-          <span class="rt-weapon-badge rt-weapon-badge--craft rt-weapon-badge--{{item.system.craftsmanship}}" title="Craftsmanship">
-            <i class="fas fa-hammer"></i>
+          <span class="rt-meta-badge rt-meta-badge--weapon-craft rt-meta-badge--{{item.system.craftsmanship}}" title="Craftsmanship">
+            <i class="fa-solid fa-hammer"></i>
             {{item.system.craftsmanshipLabel}}
           </span>
           {{/if}}
           {{#if item.system.twoHanded}}
-          <span class="rt-weapon-badge rt-weapon-badge--hands" title="Two-Handed">
-            <i class="fas fa-hands"></i>
+          <span class="rt-meta-badge rt-meta-badge--weapon-hands" title="Two-Handed">
+            <i class="fa-solid fa-hands"></i>
+            Two-Handed
           </span>
           {{/if}}
         </div>
       </div>
-      
-      <div class="rt-weapon-header__equipped">
+
+      <div class="rt-weapon-actions">
         <label class="rt-toggle-equipped" title="Toggle Equipped">
           <input type="checkbox" name="system.equipped" {{checked item.system.equipped}} />
           <span class="rt-toggle-equipped__indicator">
-            <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+            <i class="fa-solid {{#if item.system.equipped}}fa-circle-check{{else}}fa-circle{{/if}}"></i>
           </span>
           <span class="rt-toggle-equipped__label">{{#if item.system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
         </label>
@@ -59,7 +57,7 @@
       {{!-- Damage --}}
       <div class="rt-weapon-stat rt-weapon-stat--damage">
         <div class="rt-weapon-stat__icon">
-          <i class="fas fa-burst"></i>
+          <i class="fa-solid fa-burst"></i>
         </div>
         <div class="rt-weapon-stat__content">
           <span class="rt-weapon-stat__label">Damage</span>
@@ -70,7 +68,7 @@
       {{!-- Penetration --}}
       <div class="rt-weapon-stat rt-weapon-stat--pen">
         <div class="rt-weapon-stat__icon">
-          <i class="fas fa-bullseye"></i>
+          <i class="fa-solid fa-bullseye"></i>
         </div>
         <div class="rt-weapon-stat__content">
           <span class="rt-weapon-stat__label">Pen</span>
@@ -82,7 +80,7 @@
       {{#if item.system.isRangedWeapon}}
       <div class="rt-weapon-stat rt-weapon-stat--range">
         <div class="rt-weapon-stat__icon">
-          <i class="fas fa-arrows-left-right"></i>
+          <i class="fa-solid fa-arrows-left-right"></i>
         </div>
         <div class="rt-weapon-stat__content">
           <span class="rt-weapon-stat__label">Range</span>
@@ -93,7 +91,7 @@
       {{!-- Rate of Fire --}}
       <div class="rt-weapon-stat rt-weapon-stat--rof">
         <div class="rt-weapon-stat__icon">
-          <i class="fas fa-bolt"></i>
+          <i class="fa-solid fa-bolt"></i>
         </div>
         <div class="rt-weapon-stat__content">
           <span class="rt-weapon-stat__label">RoF</span>
@@ -106,7 +104,7 @@
       {{#if item.system.usesAmmo}}
       <div class="rt-weapon-stat rt-weapon-stat--clip rt-weapon-stat--ammo-{{item.system.ammoStatus}}">
         <div class="rt-weapon-stat__icon">
-          <i class="fas fa-database"></i>
+          <i class="fa-solid fa-database"></i>
         </div>
         <div class="rt-weapon-stat__content">
           <span class="rt-weapon-stat__label">Clip</span>
@@ -121,7 +119,7 @@
       {{!-- Weight --}}
       <div class="rt-weapon-stat rt-weapon-stat--weight">
         <div class="rt-weapon-stat__icon">
-          <i class="fas fa-weight-hanging"></i>
+          <i class="fa-solid fa-weight-hanging"></i>
         </div>
         <div class="rt-weapon-stat__content">
           <span class="rt-weapon-stat__label">Weight</span>
@@ -136,7 +134,7 @@
     {{#if item.system.effectiveSpecial.size}}
     <div class="rt-weapon-qualities">
       <div class="rt-weapon-qualities__label">
-        <i class="fas fa-star"></i>
+        <i class="fa-solid fa-star"></i>
         Qualities
       </div>
       <div class="rt-weapon-qualities__tags">
@@ -154,19 +152,19 @@
     ═══════════════════════════════════════════════════════════════════ --}}
     <nav class="rt-weapon-tabs" data-group="primary">
       <button type="button" class="rt-weapon-tab active" data-tab="stats" data-group="primary">
-        <i class="fas fa-chart-bar"></i>
+        <i class="fa-solid fa-chart-bar"></i>
         <span>Stats</span>
       </button>
       <button type="button" class="rt-weapon-tab" data-tab="qualities" data-group="primary">
-        <i class="fas fa-star"></i>
+        <i class="fa-solid fa-star"></i>
         <span>Qualities</span>
       </button>
       <button type="button" class="rt-weapon-tab" data-tab="description" data-group="primary">
-        <i class="fas fa-scroll"></i>
+        <i class="fa-solid fa-scroll"></i>
         <span>Info</span>
       </button>
       <button type="button" class="rt-weapon-tab" data-tab="effects" data-group="primary">
-        <i class="fas fa-magic"></i>
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
         <span>Effects</span>
       </button>
     </nav>
@@ -184,7 +182,7 @@
         {{!-- Combat Stats Section --}}
         <div class="rt-weapon-section">
           <div class="rt-weapon-section__header">
-            <i class="fas fa-swords"></i>
+            <i class="fa-solid fa-swords"></i>
             <h3>Combat Statistics</h3>
           </div>
           <div class="rt-weapon-section__body">
@@ -227,11 +225,11 @@
             <div class="rt-field-row rt-field-row--checkboxes">
               <label class="rt-checkbox">
                 <input type="checkbox" name="system.twoHanded" {{checked item.system.twoHanded}} />
-                <span><i class="fas fa-hands"></i> Two-Handed</span>
+                <span><i class="fa-solid fa-hands"></i> Two-Handed</span>
               </label>
               <label class="rt-checkbox">
                 <input type="checkbox" name="system.melee" {{checked item.system.melee}} />
-                <span><i class="fas fa-sword"></i> Can Melee</span>
+                <span><i class="fa-solid fa-sword"></i> Can Melee</span>
               </label>
             </div>
           </div>
@@ -241,7 +239,7 @@
         {{#if item.system.isRangedWeapon}}
         <div class="rt-weapon-section">
           <div class="rt-weapon-section__header">
-            <i class="fas fa-crosshairs"></i>
+            <i class="fa-solid fa-crosshairs"></i>
             <h3>Ranged Attack</h3>
           </div>
           <div class="rt-weapon-section__body">
@@ -278,11 +276,11 @@
         {{#if item.system.usesAmmo}}
         <div class="rt-weapon-section">
           <div class="rt-weapon-section__header">
-            <i class="fas fa-database"></i>
+            <i class="fa-solid fa-database"></i>
             <h3>Ammunition</h3>
             {{#if item.system.jamThreshold}}
             <span class="rt-weapon-section__badge rt-weapon-section__badge--warning" title="Jam Threshold">
-              <i class="fas fa-exclamation-triangle"></i> Jams {{item.system.jamThreshold}}+
+              <i class="fa-solid fa-triangle-exclamation"></i> Jams {{item.system.jamThreshold}}+
             </span>
             {{/if}}
           </div>
@@ -294,7 +292,7 @@
               </div>
               <div class="rt-ammo-display__controls">
                 <button type="button" class="rt-btn rt-btn--small" data-action="reload" title="Reload">
-                  <i class="fas fa-rotate-right"></i>
+                  <i class="fa-solid fa-rotate-right"></i>
                 </button>
               </div>
             </div>
@@ -327,7 +325,7 @@
         {{!-- Acquisition Section --}}
         <div class="rt-weapon-section">
           <div class="rt-weapon-section__header">
-            <i class="fas fa-coins"></i>
+            <i class="fa-solid fa-coins"></i>
             <h3>Acquisition</h3>
           </div>
           <div class="rt-weapon-section__body">
@@ -368,7 +366,7 @@
         {{#if (ne item.system.craftsmanship "common")}}
         <div class="rt-weapon-section rt-weapon-section--craftsmanship">
           <div class="rt-weapon-section__header">
-            <i class="fas fa-hammer"></i>
+            <i class="fa-solid fa-hammer"></i>
             <h3>{{item.system.craftsmanshipLabel}} Craftsmanship</h3>
           </div>
           <div class="rt-weapon-section__body">
@@ -408,7 +406,7 @@
         {{!-- Active Qualities --}}
         <div class="rt-weapon-section">
           <div class="rt-weapon-section__header">
-            <i class="fas fa-star"></i>
+            <i class="fa-solid fa-star"></i>
             <h3>Active Qualities</h3>
             <span class="rt-weapon-section__count">{{item.system.effectiveSpecial.size}}</span>
           </div>
@@ -438,10 +436,10 @@
         {{!-- Weapon Modifications --}}
         <div class="rt-weapon-section">
           <div class="rt-weapon-section__header">
-            <i class="fas fa-wrench"></i>
+            <i class="fa-solid fa-wrench"></i>
             <h3>Modifications</h3>
             <button type="button" class="rt-btn rt-btn--small rt-btn--ghost" data-action="addModification">
-              <i class="fas fa-plus"></i>
+              <i class="fa-solid fa-plus"></i>
             </button>
           </div>
           <div class="rt-weapon-section__body">
@@ -453,10 +451,10 @@
                 <span class="rt-mod-item__name">{{embedded.name}}</span>
                 <div class="rt-mod-item__actions">
                   <button type="button" class="rt-btn rt-btn--icon" data-action="itemEdit" data-item-id="{{embedded.id}}">
-                    <i class="fas fa-edit"></i>
+                    <i class="fa-solid fa-pen-to-square"></i>
                   </button>
                   <button type="button" class="rt-btn rt-btn--icon rt-btn--danger" data-action="itemDelete" data-item-id="{{embedded.id}}">
-                    <i class="fas fa-trash"></i>
+                    <i class="fa-solid fa-trash"></i>
                   </button>
                 </div>
               </div>
@@ -476,19 +474,19 @@
       <div class="rt-weapon-panel" data-tab="description" data-group="primary">
         <div class="rt-weapon-section rt-weapon-section--full">
           <div class="rt-weapon-section__header">
-            <i class="fas fa-scroll"></i>
+            <i class="fa-solid fa-scroll"></i>
             <h3>Description</h3>
           </div>
           <div class="rt-weapon-section__body">
             <div class="rt-prose-editor">
-              {{editor content=item.system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+              {{editor content=item.system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             </div>
           </div>
         </div>
         
         <div class="rt-weapon-section">
           <div class="rt-weapon-section__header">
-            <i class="fas fa-sticky-note"></i>
+            <i class="fa-solid fa-sticky-note"></i>
             <h3>Notes</h3>
           </div>
           <div class="rt-weapon-section__body">

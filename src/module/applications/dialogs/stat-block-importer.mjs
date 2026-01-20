@@ -12,36 +12,8 @@ export class StatBlockImporter extends foundry.applications.api.DialogV2 {
    * @param {RogueTraderNPC} actor - The NPC actor to update.
    */
   static async show(actor) {
-    const content = await renderTemplate(
-      "systems/rogue-trader/templates/dialogs/stat-block-importer.hbs",
-      { actorName: actor.name }
-    );
-
-    return this.prompt({
-      window: {
-        title: `Import Stat Block: ${actor.name}`,
-        icon: "fa-solid fa-file-import"
-      },
-      classes: ["rogue-trader", "stat-block-importer"],
-      content,
-      ok: {
-        label: "Import",
-        icon: "fa-solid fa-download",
-        callback: async (event, button, dialog) => {
-          const textarea = dialog.querySelector("textarea[name='statblock']");
-          const statblock = textarea?.value?.trim();
-          if (!statblock) {
-            ui.notifications.warn("No stat block text provided.");
-            return;
-          }
-          
-          const parsed = StatBlockImporter.parseStatBlock(statblock);
-          await StatBlockImporter.applyToActor(actor, parsed);
-        }
-      },
-      rejectClose: false,
-      position: { width: 600, height: 500 }
-    });
+    const { default: StatBlockParser } = await import("../npc/stat-block-parser.mjs");
+    return StatBlockParser.open({ actor });
   }
 
   /* -------------------------------------------- */

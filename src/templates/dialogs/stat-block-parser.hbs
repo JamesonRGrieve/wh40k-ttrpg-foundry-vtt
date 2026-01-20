@@ -76,7 +76,7 @@
       </div>
 
       {{!-- Vitals --}}
-      <div class="preview-panel">
+      <div class="preview-panel preview-panel--skills">
         <h4>{{localize "RT.Vitals.Label"}}</h4>
         <dl>
           <dt>{{localize "RT.Wounds.Label"}}</dt>
@@ -87,6 +87,70 @@
           {{/if}}
         </dl>
       </div>
+
+      {{!-- Skills --}}
+      {{#if parsedData}}
+      <div class="preview-panel preview-panel--talents">
+        <h4><i class="fa-solid fa-list-check"></i> {{localize "RT.Skills"}}</h4>
+        <ul class="preview-list">
+          {{#if hasPreviewSkills}}
+            {{#each previewSkills as |skill|}}
+            <li><i class="fa-solid fa-check"></i>{{skill.name}}</li>
+            {{/each}}
+          {{else}}
+            <li class="preview-empty">None</li>
+          {{/if}}
+        </ul>
+      </div>
+      {{/if}}
+
+      {{!-- Talents --}}
+      {{#if parsedData}}
+      <div class="preview-panel preview-panel--traits">
+        <h4><i class="fa-solid fa-star"></i> {{localize "RT.Talents"}}</h4>
+        <ul class="preview-list">
+          {{#if hasPreviewTalents}}
+            {{#each previewTalents as |item|}}
+            <li><i class="fa-solid fa-bolt"></i>{{item.name}}</li>
+            {{/each}}
+          {{else}}
+            <li class="preview-empty">None</li>
+          {{/if}}
+        </ul>
+      </div>
+      {{/if}}
+
+      {{!-- Traits --}}
+      {{#if parsedData}}
+      <div class="preview-panel preview-panel--weapons">
+        <h4><i class="fa-solid fa-dna"></i> {{localize "RT.Traits"}}</h4>
+        <ul class="preview-list">
+          {{#if hasPreviewTraits}}
+            {{#each previewTraits as |item|}}
+            <li><i class="fa-solid fa-shield"></i>{{item.name}}</li>
+            {{/each}}
+          {{else}}
+            <li class="preview-empty">None</li>
+          {{/if}}
+        </ul>
+      </div>
+      {{/if}}
+
+      {{!-- Weapons --}}
+      {{#if parsedData}}
+      <div class="preview-panel">
+        <h4><i class="fa-solid fa-gun"></i> {{localize "RT.Weapons"}}</h4>
+        <ul class="preview-list">
+          {{#if hasPreviewWeapons}}
+            {{#each previewWeapons as |weapon|}}
+            <li><i class="fa-solid fa-bullseye"></i>{{weapon.name}} ({{weapon.damage}}, Pen {{weapon.pen}})</li>
+            {{/each}}
+          {{else}}
+            <li class="preview-empty">None</li>
+          {{/if}}
+        </ul>
+      </div>
+      {{/if}}
     </div>
   </div>
   {{/if}}
