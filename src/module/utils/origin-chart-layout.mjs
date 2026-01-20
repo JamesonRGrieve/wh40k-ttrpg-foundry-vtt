@@ -32,7 +32,6 @@ export class OriginChartLayout {
     static computeFullChart(allOrigins, currentSelections, guidedMode = true, direction = DIRECTION.FORWARD) {
         const layout = {
             steps: [],
-            connections: [],
             maxColumns: 0,
         };
 
@@ -50,9 +49,6 @@ export class OriginChartLayout {
             layout.steps.push(stepLayout);
             layout.maxColumns = Math.max(layout.maxColumns, stepLayout.maxPosition + 1);
         }
-
-        // Compute connections between steps
-        layout.connections = this._computeConnections(layout.steps, currentSelections);
 
         return layout;
     }
@@ -319,136 +315,4 @@ export class OriginChartLayout {
         return game.i18n.localize(key);
     }
 
-    /**
-     * Compute connection paths between steps.
-     * @param {Array} steps - Step layout data
-     * @param {Map<string, Item>} currentSelections - Current selections
-     * @returns {Array}
-     * @private
-     */
-    static _computeConnections(steps, currentSelections) {
-        const connections = [];
-
-        for (let i = 0; i < steps.length - 1; i++) {
-            const fromStep = steps[i];
-            const toStep = steps[i + 1];
-
-            for (const fromCard of fromStep.cards) {
-                const showFromThis = fromCard.isSelected || !fromStep.hasSelection;
-                if (!showFromThis) continue;
-
-                const selectedOrigin = fromCard.isSelected
-                    ? currentSelections.get(fromStep.stepKey)
-                    : null;
-                const originForPath = selectedOrigin ?? fromCard.origin;
-                const allowedPositions = this._getAllowedPositions(originForPath);
-
-                for (const toCard of toStep.cards) {
-                    if (!this._isPositionAllowed(toCard.origin, allowedPositions)) {
-                        continue;
-                    }
-
-                    connections.push({
-                        id: `conn-${fromCard.id}-${toCard.id}`,
-                        fromStep: fromStep.stepIndex,
-                        toStep: toStep.stepIndex,
-                        fromPosition: fromCard.position,
-                        toPosition: toCard.position,
-                        fromId: fromCard.id,
-                        toId: toCard.id,
-                        isActive: fromCard.isSelected,
-                        isValid: fromCard.isSelected && toCard.isSelectable,
-                        pathData: this._createSVGPath(fromCard.gridColumn, fromCard.gridRow, toCard.gridColumn, toCard.gridRow),
-                    });
-                }
-            }
-        }
-
-        return connections;
-    }
-
-    /**
-     * Create SVG path data for connection line.
-     * @param {number} fromCol
-     * @param {number} fromRow
-     * @param {number} toCol
-     * @param {number} toRow
-     * @returns {string}
-     * @private
-     */
-    static _createSVGPath(fromCol, fromRow, toCol, toRow) {
-        const cardWidth = 150;
-        const cardHeight = 200;
-        const xGap = 20;
-        const yGap = 40;
-
-        const x1 = (fromCol - 1) * (cardWidth + xGap) + cardWidth / 2;
-        const y1 = (fromRow - 1) * (cardHeight + yGap) + cardHeight;
-
-        const x2 = (toCol - 1) * (cardWidth + xGap) + cardWidth / 2;
-        const y2 = (toRow - 1) * (cardHeight + yGap);
-
-        const cx = (x1 + x2) / 2;
-        const cy = (y1 + y2) / 2;
-
-        return `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
-    }
-
-    /**
-     * Get valid next options for a given selection.
-     * Used for highlighting in guided mode.
-     *
-     * @param {Item} currentSelection - The current selection
-     * @param {Array<Item>} targetStepOrigins - Origins in the target step
-     * @returns {Array<Item>}
-     */
-    static getValidNextOptions(currentSelection, targetStepOrigins) {
-        if (!currentSelection) return targetStepOrigins;
-
-        const validOptions = [];
-        const allowedPositions = this._getAllowedPositions(currentSelection);
-
-        for (const origin of targetStepOrigins) {
-            if (!this._isPositionAllowed(origin, allowedPositions)) {
-                continue;
-            }
-
-            const requirements = origin.system?.requirements;
-            const currentId = currentSelection.system?.identifier;
-
-            if (requirements?.previousSteps?.length > 0) {
-                if (!requirements.previousSteps.includes(currentId)) continue;
-            }
-
-            if (requirements?.excludedSteps?.length > 0) {
-                if (requirements.excludedSteps.includes(currentId)) continue;
-            }
-
-            validOptions.push(origin);
-        }
-
-        return validOptions;
-    }
-
-    /**
-     * Calculate chart dimensions for CSS.
-     * @param {number} maxColumns
-     * @param {number} numRows
-     * @returns {Object}
-     */
-    static calculateChartDimensions(maxColumns, numRows) {
-        const cardWidth = 150;
-        const cardHeight = 200;
-        const xGap = 20;
-        const yGap = 40;
-
-        return {
-            width: maxColumns * (cardWidth + xGap),
-            height: numRows * (cardHeight + yGap),
-            cardWidth: cardWidth,
-            cardHeight: cardHeight,
-            columnGap: xGap,
-            rowGap: yGap,
-        };
-    }
 }

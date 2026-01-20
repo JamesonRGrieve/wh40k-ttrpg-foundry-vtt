@@ -294,8 +294,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         await this._loadOrigins();
         
         const currentStep = this.currentStep;
-        const orderedSteps = this.orderedSteps;
-        
         // Get origins for current step
         let currentOrigins = [];
         let selectedItem = null;
@@ -326,18 +324,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return {
             actor: this.actor,
             guidedMode: this.guidedMode,
-            direction: this.direction,
             isForward: this.direction === DIRECTION.FORWARD,
             isBackward: this.direction === DIRECTION.BACKWARD,
             showLineage: this.showLineage,
-            currentStepIndex: this.currentStepIndex,
-            
-            // Direction labels
-            directionLabels: {
-                forward: game.i18n.localize("RT.OriginPath.DirectionForward"),
-                backward: game.i18n.localize("RT.OriginPath.DirectionBackward")
-            },
-            
+
             // Step navigation
             steps: this._prepareStepNavigation(),
             
