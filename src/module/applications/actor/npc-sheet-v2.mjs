@@ -144,6 +144,34 @@ export default class NPCSheetV2 extends BaseActorSheet {
     // Prepare threat tier for header display
     context.threatTier = this.actor.system.threatTier;
 
+    context.npcTypeOptions = {
+      troop: "Troop",
+      elite: "Elite",
+      master: "Master",
+      horde: "Horde",
+      swarm: "Swarm",
+      creature: "Creature",
+      daemon: "Daemon",
+      xenos: "Xenos"
+    };
+
+    context.npcRoleOptions = {
+      bruiser: "Bruiser",
+      sniper: "Sniper",
+      caster: "Caster",
+      support: "Support",
+      commander: "Commander",
+      specialist: "Specialist"
+    };
+
+    context.weaponClassOptions = {
+      melee: "Melee",
+      pistol: "Pistol",
+      basic: "Basic",
+      heavy: "Heavy",
+      thrown: "Thrown"
+    };
+
     // Prepare characteristics for display
     this._prepareCharacteristicsContext(context);
 

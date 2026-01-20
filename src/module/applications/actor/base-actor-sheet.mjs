@@ -14,6 +14,7 @@ import EnhancedDragDropMixin from "../api/drag-drop-visual-mixin.mjs";
 import WhatIfMixin from "../api/what-if-mixin.mjs";
 import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
 import EffectCreationDialog from "../prompts/effect-creation-dialog.mjs";
+import { toCamelCase } from "../../handlebars/handlebars-helpers.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -496,17 +497,55 @@ export default class BaseActorSheet extends WhatIfMixin(EnhancedDragDropMixin(Co
             // Augment with computed properties
             this._augmentSkillData(key, data, characteristics);
             
-            if (Array.isArray(data.entries)) {
+            if (data.entries !== undefined) {
                 // Specialist skill - process entries
-                // Convert entries to plain array to ensure Handlebars can iterate
-                const plainEntries = Array.from(data.entries);
+                const entryList = Array.isArray(data.entries)
+                    ? data.entries
+                    : data.entries
+                        ? Object.values(data.entries)
+                        : [];
+                const plainEntries = entryList.map((entry) => {
+                    if (typeof entry === "string") {
+                        return {
+                            name: entry,
+                            slug: toCamelCase(entry),
+                            characteristic: data.characteristic,
+                            advanced: data.advanced,
+                            basic: !data.advanced,
+                            trained: false,
+                            plus10: false,
+                            plus20: false,
+                            bonus: 0,
+                            notes: "",
+                            cost: 0,
+                            current: 0
+                        };
+                    }
+
+                    const normalized = { ...entry };
+                    const entryName = normalized.name || normalized.label || normalized.slug || "";
+                    normalized.name = entryName;
+                    if (!normalized.slug && entryName) {
+                        normalized.slug = toCamelCase(entryName);
+                    }
+                    if (!normalized.characteristic) {
+                        normalized.characteristic = data.characteristic;
+                    }
+                    if (normalized.advanced === undefined) {
+                        normalized.advanced = data.advanced;
+                    }
+                    if (normalized.basic === undefined) {
+                        normalized.basic = !data.advanced;
+                    }
+                    return normalized;
+                });
                 plainEntries.forEach(entry => {
                     this._augmentSkillData(key, entry, characteristics, data);
                 });
-                
+
                 // Get suggested specializations from compendium for autocomplete
                 data.suggestedSpecializations = this._getSkillSuggestions(key);
-                
+
                 // Create plain object with converted entries
                 specialist.push([key, { ...data, entries: plainEntries }]);
             } else {

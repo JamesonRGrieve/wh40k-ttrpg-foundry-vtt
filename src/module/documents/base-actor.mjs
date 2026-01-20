@@ -237,16 +237,20 @@ export class RogueTraderBaseActor extends Actor {
             return;
         }
 
+        const isAdvanced = parent.advanced ?? false;
         entries.push({
             name: speciality,
             slug: specialityKey,
-            basic: true,
+            characteristic: parent.characteristic,
+            advanced: isAdvanced,
+            basic: !isAdvanced,
             trained: false,
             plus10: false,
             plus20: false,
             bonus: 0,
             notes: '',
-            cost: 0
+            cost: 0,
+            current: 0
         });
 
         await this.update({

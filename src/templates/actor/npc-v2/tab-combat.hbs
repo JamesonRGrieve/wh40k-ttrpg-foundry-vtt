@@ -208,13 +208,7 @@
             <div class="rt-weapon-stats">
               {{#if ../editable}}
               <select name="system.weapons.simple.{{index}}.class" class="rt-weapon-class">
-                {{#select class}}
-                <option value="melee">Melee</option>
-                <option value="pistol">Pistol</option>
-                <option value="basic">Basic</option>
-                <option value="heavy">Heavy</option>
-                <option value="thrown">Thrown</option>
-                {{/select}}
+                {{selectOptions ../weaponClassOptions selected=class}}
               </select>
               {{/if}}
               <span class="rt-weapon-stat">
