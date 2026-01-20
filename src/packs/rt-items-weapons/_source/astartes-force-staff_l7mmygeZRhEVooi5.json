@@ -1,12 +1,12 @@
 {
   "name": "Astartes Force Staff",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "astartes-force-staff",
     "class": "melee",
     "type": "force",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Force</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Counts as an Exceptional Psy-Focus, granting +15 to Invocation Tests as long as it is held in at least 1 hand. \nNeeds to be wielded two-handed to attack with.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Counts as an Exceptional Psy-Focus, granting +15 to Invocation Tests as long as it is held in at least 1 hand. \nNeeds to be wielded two-handed to attack with.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

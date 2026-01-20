@@ -1,0 +1,66 @@
+{
+  "name": "Heaver Flamer (Magnus) \"Cerberus\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "heaver-flamer-magnus-cerberus",
+    "class": "heavy",
+    "type": "flame",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 3
+    },
+    "special": [
+      "flame",
+      "reliable",
+      "spray",
+      "vengeful-9"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 50,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Reliable, Spray, Vengeful (9)</p><p><b>Note:</b> Weight includes backpack fuel supply.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weight includes backpack fuel supply.",
+    "source": "DH 2E: Enemies Within"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vS6ohsgdqmSNINVi"
+}

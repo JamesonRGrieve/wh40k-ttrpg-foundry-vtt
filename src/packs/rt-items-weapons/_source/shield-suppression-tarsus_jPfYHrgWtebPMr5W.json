@@ -1,7 +1,7 @@
 {
   "name": "Shield (Suppression - Tarsus)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
   "system": {
     "identifier": "shield-suppression-tarsus",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Defensive, Recharge, Shocking</p><p><b>Note:</b> Gives +4 AP to Arm and Body (stacks with armour). Can attack when recharging but doesn't have shocking quality. Lock grip on shield allows a basic weapon to be fired one handed with no penalty.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gives +4 AP to Arm and Body (stacks with armour). Can attack when recharging but doesn't have shocking quality. Lock grip on shield allows a basic weapon to be fired one handed with no penalty.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

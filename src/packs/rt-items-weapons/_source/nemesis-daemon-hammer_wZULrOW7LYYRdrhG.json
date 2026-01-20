@@ -1,7 +1,7 @@
 {
   "name": "Nemesis Daemon Hammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "nemesis-daemon-hammer",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Daemonbane, Force, Power Field, Unwieldy</p><p><b>Note:</b> Can be One Handed, if Two Handed, gains Concussive (X), where X = wielder's Psy Rating.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be One Handed, if Two Handed, gains Concussive (X), where X = wielder's Psy Rating.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

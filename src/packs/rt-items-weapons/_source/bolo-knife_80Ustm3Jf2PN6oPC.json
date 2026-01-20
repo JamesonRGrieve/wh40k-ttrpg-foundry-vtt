@@ -1,7 +1,7 @@
 {
   "name": "Bolo Knife",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "bolo-knife",
     "class": "melee",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> 40cm-long Inwards Curving Blade\nCommon Availability on Planet Malfi</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "40cm-long Inwards Curving Blade\nCommon Availability on Planet Malfi",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

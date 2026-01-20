@@ -1,12 +1,12 @@
 {
   "name": "Razorweb Launcher",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "razorweb-launcher",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (1), Tearing, Inaccurate</p><p><b>Note:</b> Fires a mass of Monofilament threads that rip enemies apart.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires a mass of Monofilament threads that rip enemies apart.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

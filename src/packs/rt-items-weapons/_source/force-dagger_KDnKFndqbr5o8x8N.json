@@ -1,7 +1,7 @@
 {
   "name": "Force Dagger",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "force-dagger",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Force</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

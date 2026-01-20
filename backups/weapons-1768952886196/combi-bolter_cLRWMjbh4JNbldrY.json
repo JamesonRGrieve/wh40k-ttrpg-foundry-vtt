@@ -1,0 +1,64 @@
+{
+  "name": "Combi-Bolter",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "combi-bolter",
+    "class": "basic",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing",
+      "twin-linked"
+    ],
+    "clip": {
+      "max": 32,
+      "value": 32,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 12,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Twin-Linked</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Black Crusade: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cLRWMjbh4JNbldrY"
+}

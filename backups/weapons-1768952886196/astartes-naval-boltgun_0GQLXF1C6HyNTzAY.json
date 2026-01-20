@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Naval Boltgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-naval-boltgun",
+    "class": "basic",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 9,
+      "penetration": 5
+    },
+    "special": [
+      "sm",
+      "wep",
+      "tearing"
+    ],
+    "clip": {
+      "max": 8,
+      "value": 8,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 9,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM, Wep, Tearing</p><p><b>Note:</b> Marines Errant Only. Replaces standard Issue Boltgun. Can be used one-handed and in Melee without penalty.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Marines Errant Only. Replaces standard Issue Boltgun. Can be used one-handed and in Melee without penalty.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0GQLXF1C6HyNTzAY"
+}

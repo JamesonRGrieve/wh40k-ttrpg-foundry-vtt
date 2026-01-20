@@ -1,7 +1,7 @@
 {
   "name": "Knife",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "knife",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Can be Thrown</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be Thrown",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Tyranid Barbed Strangler",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "tyranid-barbed-strangler",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Blast (10), Snare, Devastating (2), Tearing, Living Ammunition</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Targets Snared by this weapon will take the weapon's damage on every subsequent round they remain snared.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. Targets Snared by this weapon will take the weapon's damage on every subsequent round they remain snared.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

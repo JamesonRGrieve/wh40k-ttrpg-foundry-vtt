@@ -1,7 +1,7 @@
 {
   "name": "Soul Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "soul-blade",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Unbalanced, Sanctified</p><p><b>Note:</b> Attacks inflict additional damage equal to target's corruption points divided by 10. Requires two hands to wield.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Attacks inflict additional damage equal to target's corruption points divided by 10. Requires two hands to wield.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

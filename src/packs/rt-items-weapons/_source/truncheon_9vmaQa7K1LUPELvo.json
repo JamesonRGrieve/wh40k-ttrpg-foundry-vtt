@@ -1,7 +1,7 @@
 {
   "name": "Truncheon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "truncheon",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

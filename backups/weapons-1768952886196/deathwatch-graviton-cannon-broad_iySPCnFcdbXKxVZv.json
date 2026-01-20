@@ -1,0 +1,64 @@
+{
+  "name": "Deathwatch Graviton Cannon [Broad]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "deathwatch-graviton-cannon-broad",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 45,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep",
+      "blast-5"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 65,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 45,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Blast (5)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Broad] targets blast area, everyone inside makes -30 Strength Test or is affected by extreme gravitational forces for 1d10 rounds, taking 1d10 damage per round or more if smashed into worse environmental objects. Attempting to move whilst affected requires Opposed Strength vs Strength 50 (Unnatural Strength x2). Shatters fragile objects, weak floors, etc.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Broad] targets blast area, everyone inside makes -30 Strength Test or is affected by extreme gravitational forces for 1d10 rounds, taking 1d10 damage per round or more if smashed into worse environmental objects. Attempting to move whilst affected requires Opposed Strength vs Strength 50 (Unnatural Strength x2). Shatters fragile objects, weak floors, etc.",
+    "source": "DW: Rites of Battle"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iySPCnFcdbXKxVZv"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Double-Edged Chainsword (Locke)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "double-edged-chainsword-locke",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> A Chainsword with no protective covering on this side facing you. For those with extreme confidence.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Chainsword with no protective covering on this side facing you. For those with extreme confidence.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

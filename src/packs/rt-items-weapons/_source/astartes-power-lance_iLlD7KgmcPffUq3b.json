@@ -1,12 +1,12 @@
 {
   "name": "Astartes Power Lance",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-power-lance",
     "class": "melee",
     "type": "power",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field</p><p><b>Note:</b> Space Marines Only. White Scars Astartes Power Blade on a stick. When making a charge action whilst riding a beast or vehicle, can add additional Strength Bonus damage to attack. Weapon can attack targets up to 2m away, doesn't count as being in melee unless enemies have melee weapons with range (such as whips).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. White Scars Astartes Power Blade on a stick. When making a charge action whilst riding a beast or vehicle, can add additional Strength Bonus damage to attack. Weapon can attack targets up to 2m away, doesn't count as being in melee unless enemies have melee weapons with range (such as whips).",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

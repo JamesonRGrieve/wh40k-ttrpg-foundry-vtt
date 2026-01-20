@@ -1,12 +1,12 @@
 {
   "name": "Eldar Hawk's Talon [Ranged]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "eldar-hawks-talon-ranged",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Xenotech. Also counts as melee weapon (1d10+3 E, Pen 7, Power Field, Unbalanced) (see Eldar Hawk's Talon [Melee]). Eldar las weapon with mounted blade.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Also counts as melee weapon (1d10+3 E, Pen 7, Power Field, Unbalanced) (see Eldar Hawk's Talon [Melee]). Eldar las weapon with mounted blade.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

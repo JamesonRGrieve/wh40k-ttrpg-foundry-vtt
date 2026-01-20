@@ -1,7 +1,7 @@
 {
   "name": "Power Axe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-axe",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unbalanced</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

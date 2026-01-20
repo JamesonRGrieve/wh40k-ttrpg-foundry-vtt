@@ -1,0 +1,63 @@
+{
+  "name": "Frag Grenade (Gunmetal)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "frag-grenade-gunmetal",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-5"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.8,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Considered by some as a \"Trophy  Weapon\" acquired through combat.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Considered by some as a \"Trophy  Weapon\" acquired through combat.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bz1A1F1BUJOjxs9w"
+}

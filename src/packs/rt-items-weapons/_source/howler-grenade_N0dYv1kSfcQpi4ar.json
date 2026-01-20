@@ -1,7 +1,7 @@
 {
   "name": "Howler Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "howler-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Lasts for 1d5 Rounds producing an incredibly loud sound, anyone in range must make a +0 Toughness Test or be stunned while the grenade is active.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Lasts for 1d5 Rounds producing an incredibly loud sound, anyone in range must make a +0 Toughness Test or be stunned while the grenade is active.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

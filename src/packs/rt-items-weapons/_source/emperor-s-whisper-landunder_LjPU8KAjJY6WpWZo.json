@@ -1,7 +1,7 @@
 {
   "name": "Emperor's Whisper (Landunder)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "emperors-whisper-landunder",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Balanced</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

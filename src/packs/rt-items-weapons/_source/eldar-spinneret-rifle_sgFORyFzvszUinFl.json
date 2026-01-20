@@ -1,12 +1,12 @@
 {
   "name": "Eldar Spinneret Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "eldar-spinneret-rifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Accurate, Tearing</p><p><b>Note:</b> Xenotech. Fires single monofilament wire that pierces target and rips them apart from the inside.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Fires single monofilament wire that pierces target and rips them apart from the inside.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

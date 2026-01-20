@@ -1,12 +1,12 @@
 {
   "name": "Heavy Webber (Aegis-Redback)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "heavy-webber-aegis-redback",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (6), Snare</p><p><b>Note:</b> Weapon does no damage, use to restrain large crowds of people</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon does no damage, use to restrain large crowds of people",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

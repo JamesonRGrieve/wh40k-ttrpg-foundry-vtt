@@ -1,7 +1,7 @@
 {
   "name": "Necron Warscythe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "necron-warscythe",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Felling (3), Power Field, Unbalanced</p><p><b>Note:</b> Always Best Quality</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

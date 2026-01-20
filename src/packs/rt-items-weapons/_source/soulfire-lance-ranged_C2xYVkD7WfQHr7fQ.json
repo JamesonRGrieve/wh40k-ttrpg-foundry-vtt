@@ -1,12 +1,12 @@
 {
   "name": "Soulfire Lance [Ranged]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "soulfire-lance-ranged",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Felling (2), Spray, Warp Weapon</p><p><b>Note:</b> Weapon: Spear. Daemon WP 60 (Khorne Daemon), Bind Str 3. Att.: Howling, Piercing. Needs Two hands, can make [Melee] Attack.\nGain Fear(+1) When attacking, Add Daemon's WP to Critical Damage.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Spear. Daemon WP 60 (Khorne Daemon), Bind Str 3. Att.: Howling, Piercing. Needs Two hands, can make [Melee] Attack.\nGain Fear(+1) When attacking, Add Daemon's WP to Critical Damage.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

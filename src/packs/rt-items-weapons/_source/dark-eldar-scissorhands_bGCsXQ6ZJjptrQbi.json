@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Scissorhands",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-scissorhands",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Xenotech. If target takes damage from this weapon, makes Toughness test with -5 per point of damage taken. If fail, victim is stunned for one round and suffers a level of fatigue per DoF.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. If target takes damage from this weapon, makes Toughness test with -5 per point of damage taken. If fail, victim is stunned for one round and suffers a level of fatigue per DoF.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Heart-Ripper",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "heart-ripper",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Reliable, Tearing, Twin-Linked</p><p><b>Note:</b> Weapon: Reaper Autocannon. Daemon WP 52 (Bloodletter or Flesh Hound), Bind Str 2. Att.: Howling, Skulltaker, Vicious. Must be Dedicated to Khorne to wield. Gain Fear(+1) when attacking, Called shots to the head are +0 and a Half Action,  </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Reaper Autocannon. Daemon WP 52 (Bloodletter or Flesh Hound), Bind Str 2. Att.: Howling, Skulltaker, Vicious. Must be Dedicated to Khorne to wield. Gain Fear(+1) when attacking, Called shots to the head are +0 and a Half Action,  ",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

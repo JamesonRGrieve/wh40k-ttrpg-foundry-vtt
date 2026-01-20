@@ -1,7 +1,7 @@
 {
   "name": "Nurgle's Breath",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "nurgles-breath",
     "class": "pistol",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Corrosive, Spray, Toxic (2)</p><p><b>Note:</b> Can't be Acquired. Instead gained by Contracting Nurgle's Breath Disease (see Gear). Any that fail Toxic Quality's Toughness Test also contract disease.\nIf rolling 2 7's on the Damage roll, instantly die. Explode, and hit everyone in 3d10m with weapon attack.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can't be Acquired. Instead gained by Contracting Nurgle's Breath Disease (see Gear). Any that fail Toxic Quality's Toughness Test also contract disease.\nIf rolling 2 7's on the Damage roll, instantly die. Explode, and hit everyone in 3d10m with weapon attack.",
-    "source": "BC: Tome of Decay"
+    "source": "BC: Tome of Decay",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

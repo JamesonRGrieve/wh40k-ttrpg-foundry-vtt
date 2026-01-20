@@ -1,12 +1,12 @@
 {
   "name": "Ork Rokkit Launcha",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "ork-rokkit-launcha",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (2), Inaccurate, Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. Little more than a launching stick with some rockets strapped to the end.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Not Unreliable when wielded by an Ork. Little more than a launching stick with some rockets strapped to the end.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

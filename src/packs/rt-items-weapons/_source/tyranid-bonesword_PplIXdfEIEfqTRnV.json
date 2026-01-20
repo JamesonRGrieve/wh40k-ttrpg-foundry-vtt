@@ -1,7 +1,7 @@
 {
   "name": "Tyranid Bonesword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "tyranid-bonesword",
     "class": "melee",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. If weapon damages target, Target and Wielder make Opposed Willpower Test, for every Degree of Success wielder wins by the target take additional 1d10 damage that ignores Armour and Toughness.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies. If weapon damages target, Target and Wielder make Opposed Willpower Test, for every Degree of Success wielder wins by the target take additional 1d10 damage that ignores Armour and Toughness.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

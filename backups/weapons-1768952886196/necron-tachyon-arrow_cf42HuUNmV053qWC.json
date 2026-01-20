@@ -1,0 +1,65 @@
+{
+  "name": "Necron Tachyon Arrow",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "necron-tachyon-arrow",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "10d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 20
+    },
+    "special": [
+      "necron-wep",
+      "concussive-6",
+      "proven-3"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 5,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep, Concussive (6), Proven (3)</p><p><b>Note:</b> Always Best Quality. Only has one shot, not feasible to reload in combat. Only Necrons know how to reload it at all.\nNecron Lords use it as a Wrist Mounted one-use delete button.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Always Best Quality. Only has one shot, not feasible to reload in combat. Only Necrons know how to reload it at all.\nNecron Lords use it as a Wrist Mounted one-use delete button.",
+    "source": "BC: Tome of Fate"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cf42HuUNmV053qWC"
+}

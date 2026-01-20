@@ -1,7 +1,7 @@
 {
   "name": "Eldar Agonizer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eldar-agonizer",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Flexible, Power Field, Tearing, Shocking</p><p><b>Note:</b> Overloads target's nervous system with pain.\nIf Best Craftsmanship any that suffer Critical Damage from weapon permenantly reduce Perception Characteristic by 1d5.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Overloads target's nervous system with pain.\nIf Best Craftsmanship any that suffer Critical Damage from weapon permenantly reduce Perception Characteristic by 1d5.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

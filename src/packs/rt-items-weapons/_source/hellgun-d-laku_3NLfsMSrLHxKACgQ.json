@@ -1,12 +1,12 @@
 {
   "name": "Hellgun (D'laku)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "hellgun-dlaku",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Can use Standard Lasgun Power Packs, but would have a clip of 12.\nScarce Availability in the Laythe System.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can use Standard Lasgun Power Packs, but would have a clip of 12.\nScarce Availability in the Laythe System.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

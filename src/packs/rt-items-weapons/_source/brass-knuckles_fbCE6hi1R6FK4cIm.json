@@ -1,7 +1,7 @@
 {
   "name": "Brass Knuckles",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "brass-knuckles",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Easy to Hide</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Easy to Hide",
-    "source": "Dark Heresy: Core"
+    "source": "DH: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

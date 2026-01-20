@@ -1,0 +1,63 @@
+{
+  "name": "Bolter Cane",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "bolter-cane",
+    "class": "pistol",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 3,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Concealed Weapon, looks like a regular cane, staff, or baton. Stops being concealed after being fired, unless false bottom is replaced. Can use any bolt ammo</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Concealed Weapon, looks like a regular cane, staff, or baton. Stops being concealed after being fired, unless false bottom is replaced. Can use any bolt ammo",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TCe6R1Akf3ncXvZs"
+}

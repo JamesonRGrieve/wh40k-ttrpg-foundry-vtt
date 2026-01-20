@@ -1,7 +1,7 @@
 {
   "name": "Eldar Hawk's Talon [Melee]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eldar-hawks-talon-melee",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Xenotech. Also counts as ranged weapon (see Eldar Hawk's Talon [Ranged]). Eldar las weapon with mounted blade.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Also counts as ranged weapon (see Eldar Hawk's Talon [Ranged]). Eldar las weapon with mounted blade.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

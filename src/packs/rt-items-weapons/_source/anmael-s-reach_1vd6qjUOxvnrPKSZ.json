@@ -1,12 +1,12 @@
 {
   "name": "Anmael's Reach",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "anmaels-reach",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Storm, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Storm Bolter of the Angels of Vengeance Chapter. Wielder is immune to fear however if they ever retreat from battle they suffer -10 to their Willpower Characteristic for the rest of the mission.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Storm Bolter of the Angels of Vengeance Chapter. Wielder is immune to fear however if they ever retreat from battle they suffer -10 to their Willpower Characteristic for the rest of the mission.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Rak'Gol Rad-Beam Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "rakgol-rad-beam-cannon",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Radioactive</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Radioactive",
-    "source": "RT: Koronus Bestiary"
+    "source": "RT: Koronus Bestiary",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

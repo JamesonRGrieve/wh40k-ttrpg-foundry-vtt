@@ -1,7 +1,7 @@
 {
   "name": "Force Axe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "force-axe",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Force, Unbalanced</p><p><b>Note:</b> Acts as Best Craftsmanship Mono Weapon to non-psyker.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Acts as Best Craftsmanship Mono Weapon to non-psyker.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

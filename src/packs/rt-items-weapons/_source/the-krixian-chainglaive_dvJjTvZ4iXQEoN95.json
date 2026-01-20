@@ -1,7 +1,7 @@
 {
   "name": "The Krixian Chainglaive",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "the-krixian-chainglaive",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Chain-Glaive of the Deathwatch. Two-Handed. Last surviving example of such a weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Relic Master-Crafted Astartes Chain-Glaive of the Deathwatch. Two-Handed. Last surviving example of such a weapon.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

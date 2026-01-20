@@ -1,7 +1,7 @@
 {
   "name": "Astartes Power Fist",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-power-fist",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Replaces one of the Power Armour's Gauntlets. These gloves can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. For damage increase Unnatural Strength Bonus from x2 to x3</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Replaces one of the Power Armour's Gauntlets. These gloves can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. For damage increase Unnatural Strength Bonus from x2 to x3",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

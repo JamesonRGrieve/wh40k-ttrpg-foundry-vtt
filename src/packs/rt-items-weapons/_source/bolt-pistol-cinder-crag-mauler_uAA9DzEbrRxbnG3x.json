@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Cinder Crag) \"Mauler\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
   "system": {
     "identifier": "bolt-pistol-cinder-crag-mauler",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Each is Uniquely Tailored to the Comissioner's Biometric Data. Treat as having an inbuilt \"Loyalty Spirit (Genelock)\" Upgrade</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Each is Uniquely Tailored to the Comissioner's Biometric Data. Treat as having an inbuilt \"Loyalty Spirit (Genelock)\" Upgrade",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

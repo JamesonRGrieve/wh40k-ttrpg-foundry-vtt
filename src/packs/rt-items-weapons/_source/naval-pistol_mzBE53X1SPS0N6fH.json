@@ -1,7 +1,7 @@
 {
   "name": "Naval Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "naval-pistol",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Uses Specialised Ammunition. Loses Tearing Quality if this is not used.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Uses Specialised Ammunition. Loses Tearing Quality if this is not used.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

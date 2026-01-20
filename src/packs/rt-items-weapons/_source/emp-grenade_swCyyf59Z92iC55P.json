@@ -1,7 +1,7 @@
 {
   "name": "EMP Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "emp-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Haywire (3)</p><p><b>Note:</b> Xenos device, often seen used by Tau and Eldar.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenos device, often seen used by Tau and Eldar.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

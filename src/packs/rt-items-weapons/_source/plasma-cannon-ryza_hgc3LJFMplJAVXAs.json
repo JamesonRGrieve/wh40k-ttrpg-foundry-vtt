@@ -1,12 +1,12 @@
 {
   "name": "Plasma Cannon (Ryza)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-plasma.svg",
   "system": {
     "identifier": "plasma-cannon-ryza",
     "class": "heavy",
     "type": "plasma",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Maximal,Overheats, Blast (1), Unreliable</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can choose between firing normally or maximally",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

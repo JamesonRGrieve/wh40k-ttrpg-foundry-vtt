@@ -1,7 +1,7 @@
 {
   "name": "Power Scythe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-scythe",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Two Handed Weapon, rare to see in the Imperium, more favoured by Heretics.\nCan be used by Terminators</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two Handed Weapon, rare to see in the Imperium, more favoured by Heretics.\nCan be used by Terminators",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

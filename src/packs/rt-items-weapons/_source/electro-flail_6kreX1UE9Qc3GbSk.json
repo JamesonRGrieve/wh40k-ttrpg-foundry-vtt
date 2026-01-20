@@ -1,7 +1,7 @@
 {
   "name": "Electro-Flail",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
   "system": {
     "identifier": "electro-flail",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flexible, Shocking</p><p><b>Note:</b> Long electrically charged lashes attached to a short staff or handle. Popular when lethal force is not desired, but suffering is.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Long electrically charged lashes attached to a short staff or handle. Popular when lethal force is not desired, but suffering is.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

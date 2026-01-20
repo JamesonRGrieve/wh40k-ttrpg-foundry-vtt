@@ -1,7 +1,7 @@
 {
   "name": "Shield (Mirror)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "shield-mirror",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Defensive, Primitive (8)</p><p><b>Note:</b> Provides AP 8 Primitive Cover to arm and body. Non-Primitive for las weapons.\nNote, this is cover AP, so each time it is penetrated, it is reduced by 1 until repaired or destroyed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Provides AP 8 Primitive Cover to arm and body. Non-Primitive for las weapons.\nNote, this is cover AP, so each time it is penetrated, it is reduced by 1 until repaired or destroyed.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

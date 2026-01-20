@@ -1,12 +1,12 @@
 {
   "name": "Astartes Sharpshooter's Rifle (Mk.IX Ultra) (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "astartes-sharpshooters-rifle-mkix-ultra-alt",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Accurate, Felling (4), Toxic</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Custom Built for the user, with Genetic Lock linked to matching pad on Space Marine's Shooting Hand. Weapon disables itself if not used by assigned user. Weapon has Inbuilt Telescopic Sight. Awareness Tests to detect shots via sight or sound have -20 penalty and at half normal distance. Counts as Exotic for non-Astartes. Uses Needle Ammo, so can hold a variety of toxins in the needles.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Custom Built for the user, with Genetic Lock linked to matching pad on Space Marine's Shooting Hand. Weapon disables itself if not used by assigned user. Weapon has Inbuilt Telescopic Sight. Awareness Tests to detect shots via sight or sound have -20 penalty and at half normal distance. Counts as Exotic for non-Astartes. Uses Needle Ammo, so can hold a variety of toxins in the needles.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

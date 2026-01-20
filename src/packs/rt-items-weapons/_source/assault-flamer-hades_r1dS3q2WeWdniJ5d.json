@@ -1,7 +1,7 @@
 {
   "name": "Assault Flamer (Hades)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "assault-flamer-hades",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Spray, Reliable</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Power Claymore",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-power-claymore",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldty, Devastating</p><p><b>Note:</b> Space Marines Only, not easily acquirable. \nTwo Handed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. \nTwo Handed.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

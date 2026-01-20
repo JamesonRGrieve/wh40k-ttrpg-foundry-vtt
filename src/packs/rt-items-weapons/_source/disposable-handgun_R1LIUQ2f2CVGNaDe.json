@@ -1,7 +1,7 @@
 {
   "name": "Disposable Handgun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "disposable-handgun",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> Cannot use unusual ammo. Might be better off just throwing the weapon as opposed to reloading…</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Cannot use unusual ammo. Might be better off just throwing the weapon as opposed to reloading…",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Eternal Vigilance",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eternal-vigilance",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Proven (3), Razor Sharp</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Sword of the Knights of Blood Chapter. Two-Handed. Cannot be destroyed by Power Fields.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Sword of the Knights of Blood Chapter. Two-Handed. Cannot be destroyed by Power Fields.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

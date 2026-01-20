@@ -1,12 +1,12 @@
 {
   "name": "Eldar Dragon's Breath Flamer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "eldar-dragons-breath-flamer",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Eldar weapon, emits a flame that does not need oxygen (although still needs an atmosphere) to ignite. Sticks to surfaces, making it difficult to extinguish.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Eldar weapon, emits a flame that does not need oxygen (although still needs an atmosphere) to ignite. Sticks to surfaces, making it difficult to extinguish.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Autogun (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "autogun-guard",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": ""
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

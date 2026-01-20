@@ -1,7 +1,7 @@
 {
   "name": "Necron Staff of Light \n[Melee]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "necron-staff-of-light-melee",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Balanced, Shocking</p><p><b>Note:</b> Always Best Quality. Has [Ranged] and [Melee] Profile.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality. Has [Ranged] and [Melee] Profile.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

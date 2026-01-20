@@ -1,0 +1,64 @@
+{
+  "name": "Duelling Laspistol (Khayer-Addin)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "duelling-laspistol-khayer-addin",
+    "class": "pistol",
+    "type": "las",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 4
+    },
+    "special": [
+      "accurate",
+      "tearing"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 1.5,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 220,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Tearing</p><p><b>Note:</b> Uses special Single Shot charge cells instead of power packs (Rare, 20 Thrones Each). Weapon cannot be further overcharged or use hotshot cells.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Uses special Single Shot charge cells instead of power packs (Rare, 20 Thrones Each). Weapon cannot be further overcharged or use hotshot cells.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "61LJbFW6AnvFNbOf"
+}

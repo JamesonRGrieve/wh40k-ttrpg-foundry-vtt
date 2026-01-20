@@ -1,7 +1,7 @@
 {
   "name": "Forearm Powerblade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "forearm-powerblade",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Power Field, Balanced, Defensive</p><p><b>Note:</b> Doesn't need to be held, allowing wielder to use other weapons. Activated/Deactivated as a free action. Can only be used while activated.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Doesn't need to be held, allowing wielder to use other weapons. Activated/Deactivated as a free action. Can only be used while activated.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

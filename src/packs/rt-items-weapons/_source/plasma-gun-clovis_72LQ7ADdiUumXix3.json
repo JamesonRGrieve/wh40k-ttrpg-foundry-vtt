@@ -1,12 +1,12 @@
 {
   "name": "Plasma Gun (Clovis)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
   "system": {
     "identifier": "plasma-gun-clovis",
     "class": "basic",
     "type": "plasma",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Overheats, Maximal</p><p><b>Note:</b> Can only use Maximal Setting on single-shot or semi-automatic fire</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can only use Maximal Setting on single-shot or semi-automatic fire",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

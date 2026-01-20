@@ -1,7 +1,7 @@
 {
   "name": "Grapplewhip",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "grapplewhip",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flexible, Snare</p><p><b>Note:</b> Without training, missing an attack causes user to hit themselves in random location. With +0 Weapon Skill Test, user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Without training, missing an attack causes user to hit themselves in random location. With +0 Weapon Skill Test, user latches to protruding object within 5 metres. Grapplewhip can then retract to pull object to person or vice versa. ",
-    "source": "RT: Stars of Inequity"
+    "source": "RT: Stars of Inequity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

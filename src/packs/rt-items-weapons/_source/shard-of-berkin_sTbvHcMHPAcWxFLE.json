@@ -1,7 +1,7 @@
 {
   "name": "Shard of Berkin",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "shard-of-berkin",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldy</p><p><b>Note:</b> Space Marines Only.  Master-Crafted Relic Power Sword of the Deathwatch. When carried grants +10 to Fellowship with Astartes. When used against Tyranid weapon gains Felling (8).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only.  Master-Crafted Relic Power Sword of the Deathwatch. When carried grants +10 to Fellowship with Astartes. When used against Tyranid weapon gains Felling (8).",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Blowgun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "blowgun",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic (0)</p><p><b>Note:</b> Easy to make and coneal. Ammunition is annoying to find</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Easy to make and coneal. Ammunition is annoying to find",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

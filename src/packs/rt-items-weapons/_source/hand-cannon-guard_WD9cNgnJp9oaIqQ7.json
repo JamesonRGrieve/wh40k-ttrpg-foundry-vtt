@@ -1,7 +1,7 @@
 {
   "name": "Hand Cannon (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "hand-cannon-guard",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> -10 to Ballistic Test to fire unless used in two hands or with Recoil Gloves</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "-10 to Ballistic Test to fire unless used in two hands or with Recoil Gloves",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

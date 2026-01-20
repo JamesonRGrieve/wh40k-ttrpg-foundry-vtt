@@ -1,0 +1,63 @@
+{
+  "name": "Shock Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "shock-blaster",
+    "class": "pistol",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 4
+    },
+    "special": [
+      "shocking"
+    ],
+    "clip": {
+      "max": 7,
+      "value": 7,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 650,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Configured to use Laspistol Power Packs. Effectively a heavily suped up taser</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Configured to use Laspistol Power Packs. Effectively a heavily suped up taser",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h6JqA2x9tfnJ7Hv3"
+}

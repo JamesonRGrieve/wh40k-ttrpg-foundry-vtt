@@ -1,12 +1,12 @@
 {
   "name": "Lasrifle (Lathe)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "lasrifle-lathe",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). As long as Potentia Coil functions it hasInfinite clip, no reload.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). As long as Potentia Coil functions it hasInfinite clip, no reload.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

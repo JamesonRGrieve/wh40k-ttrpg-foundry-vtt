@@ -1,7 +1,7 @@
 {
   "name": "Hammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "hammer",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (9), Unbalanced</p><p><b>Note:</b> Can be carried openly without generating too much suspicion</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be carried openly without generating too much suspicion",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

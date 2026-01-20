@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Digital Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-digital-flamer",
+    "class": "pistol",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 4,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 3
+    },
+    "special": [
+      "sm-wep",
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.1,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 35,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Spray</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Targets set on fire by this weapon take +4 damage from being on fire.\nTakes 1d5 Hours and a +0 Tech-Use Test to reload. Can be worn on fingers (but not thumbs), and used whilst holding something else.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Targets set on fire by this weapon take +4 damage from being on fire.\nTakes 1d5 Hours and a +0 Tech-Use Test to reload. Can be worn on fingers (but not thumbs), and used whilst holding something else.",
+    "source": "Deathwatch: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bWOX9hFOjH2i7477"
+}

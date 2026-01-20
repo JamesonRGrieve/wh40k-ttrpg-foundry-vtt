@@ -1,12 +1,12 @@
 {
   "name": "Ork Snazzgun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "ork-snazzgun",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Overheats, Unreliable</p><p><b>Note:</b> For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. Can be either Impact or Explosive Damage Type. Loses Inaccurate Quality if fitted with targeting equipment.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. Can be either Impact or Explosive Damage Type. Loses Inaccurate Quality if fitted with targeting equipment.",
-    "source": "RT: Koronus Bestiary"
+    "source": "RT: Koronus Bestiary",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

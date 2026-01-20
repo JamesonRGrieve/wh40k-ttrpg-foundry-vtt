@@ -1,7 +1,7 @@
 {
   "name": "Astartes Honour Blades",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-honour-blades",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only. Ultramarines variant set of two Power Swords. When wielded together grant the wielder the \"Wall of Steel\" talent, and +20 to Parry Tests in addition to the +10 from the Balanced Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Ultramarines variant set of two Power Swords. When wielded together grant the wielder the \"Wall of Steel\" talent, and +20 to Parry Tests in addition to the +10 from the Balanced Quality.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

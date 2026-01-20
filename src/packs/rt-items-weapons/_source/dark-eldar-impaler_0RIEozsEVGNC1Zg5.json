@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Impaler",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-impaler",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Razor-Sharp</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. If wielder does not have training with this weapon, it counts as a Mono-Spear (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)). Often used alongside Shardnets.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Rare Availability if acquired from Dark Eldar Settlement. If wielder does not have training with this weapon, it counts as a Mono-Spear (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)). Often used alongside Shardnets.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

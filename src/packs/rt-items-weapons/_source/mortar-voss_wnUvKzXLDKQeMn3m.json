@@ -1,12 +1,12 @@
 {
   "name": "Mortar (Voss)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg",
   "system": {
     "identifier": "mortar-voss",
     "class": "heavy",
     "type": "launcher",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Blast (5), Indirect</p><p><b>Note:</b> Can fire other unusual ammo that is specifically designed for mortars. Damage/pen listed for frag ammo. Traits vary with ammo (Ammo - Missiles)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can fire other unusual ammo that is specifically designed for mortars. Damage/pen listed for frag ammo. Traits vary with ammo (Ammo - Missiles)",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

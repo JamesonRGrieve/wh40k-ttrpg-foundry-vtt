@@ -1,7 +1,7 @@
 {
   "name": "Memor Nihilis",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "memor-nihilis",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Eviscerator Chainsword of the Flesh Tearers Chapter. Two-Handed. +10 to all Willpower Test whilst wielded, or +20 if failing the test would lead to gaining Insanity Points.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Eviscerator Chainsword of the Flesh Tearers Chapter. Two-Handed. +10 to all Willpower Test whilst wielded, or +20 if failing the test would lead to gaining Insanity Points.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

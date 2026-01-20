@@ -1,12 +1,12 @@
 {
   "name": "Sling (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "sling-alt",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (5)</p><p><b>Note:</b> Can be used to throw grenades, retains weapon range but replaces damage with that of the grenade.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be used to throw grenades, retains weapon range but replaces damage with that of the grenade.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

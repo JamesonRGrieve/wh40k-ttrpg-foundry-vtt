@@ -1,7 +1,7 @@
 {
   "name": "The Levin Shield",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "the-levin-shield",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Defensive</p><p><b>Note:</b> Space Marines Only. Storm Wardens Relic. Innately Master-Crafted. Can make Guarded Attack as Half Action. +4 AP to Arm and Body. Counts as Prot 55 Forcefield with overload 01. Causes 1d10+4 E Damage to all creatures in melee trange of wielder each round that ignores armour. When successfully Parrying attacker makes Toughness Test with -10 per DoS on Parry or is stunned for 1 Round.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Storm Wardens Relic. Innately Master-Crafted. Can make Guarded Attack as Half Action. +4 AP to Arm and Body. Counts as Prot 55 Forcefield with overload 01. Causes 1d10+4 E Damage to all creatures in melee trange of wielder each round that ignores armour. When successfully Parrying attacker makes Toughness Test with -10 per DoS on Parry or is stunned for 1 Round.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

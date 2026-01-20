@@ -1,7 +1,7 @@
 {
   "name": "Astartes Storm Bolter",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "astartes-storm-bolter",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Storm, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

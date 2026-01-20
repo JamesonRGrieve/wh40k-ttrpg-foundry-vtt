@@ -1,7 +1,7 @@
 {
   "name": "Necron Molecular Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "necron-molecular-blade",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Corrosive, Razor Sharp, Tearing</p><p><b>Note:</b> A Strangely shaped blade that extends from either side of the grip, the blade monomolecularly thin and seem to flicker in and out of reality.\nInfinite Ammo, No Reloads needed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Strangely shaped blade that extends from either side of the grip, the blade monomolecularly thin and seem to flicker in and out of reality.\nInfinite Ammo, No Reloads needed.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Teeth of the Blizzard",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "teeth-of-the-blizzard",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Frost Blade of the Space Wolves. When wielded grants +10 Weapon Skill, and adds +5 to Critical Damage instead of +3.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Relic Master-Crafted Astartes Frost Blade of the Space Wolves. When wielded grants +10 Weapon Skill, and adds +5 to Critical Damage instead of +3.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

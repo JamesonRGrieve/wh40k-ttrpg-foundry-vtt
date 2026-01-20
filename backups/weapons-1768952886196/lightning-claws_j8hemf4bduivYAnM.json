@@ -1,0 +1,64 @@
+{
+  "name": "Lightning Claws",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "lightning-claws",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 8
+    },
+    "special": [
+      "power-field",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 12,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Tearing</p><p><b>Note:</b> Gains Unwieldy Quality unless worn as a pair by a wielder with a 4+ Strength Bonus.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Gains Unwieldy Quality unless worn as a pair by a wielder with a 4+ Strength Bonus.",
+    "source": "RT: Faith and Coin"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "j8hemf4bduivYAnM"
+}

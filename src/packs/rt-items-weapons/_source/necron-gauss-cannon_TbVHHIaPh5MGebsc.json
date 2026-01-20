@@ -1,12 +1,12 @@
 {
   "name": "Necron Gauss Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "necron-gauss-cannon",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Gauss</p><p><b>Note:</b> Always Best Quality. If Retrofitted, needs external backpack power pack, gains Overheats quality but overheats in backpack, good for 3d10 Shots.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality. If Retrofitted, needs external backpack power pack, gains Overheats quality but overheats in backpack, good for 3d10 Shots.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

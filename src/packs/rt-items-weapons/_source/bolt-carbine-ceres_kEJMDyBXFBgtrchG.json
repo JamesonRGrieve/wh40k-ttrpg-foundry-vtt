@@ -1,12 +1,12 @@
 {
   "name": "Bolt Carbine (Ceres)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "bolt-carbine-ceres",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Tearing</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Kabalite Splinter Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "kabalite-splinter-rifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Average Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Spear in Melee Combat. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Average Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Spear in Melee Combat. ",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

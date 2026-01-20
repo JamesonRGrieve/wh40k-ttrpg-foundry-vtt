@@ -1,7 +1,7 @@
 {
   "name": "Hunter-Killer Missile",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
   "system": {
     "identifier": "hunter-killer-missile",
     "class": "melee",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Mounted to vehicles. Can only fire one shot, can't use unusual ammo.\nWhen firing, gain +20 to Ballistic Test due to onboard guidance.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Mounted to vehicles. Can only fire one shot, can't use unusual ammo.\nWhen firing, gain +20 to Ballistic Test due to onboard guidance.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Ripper Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "ripper-pistol",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Toxic</p><p><b>Note:</b> Has its own specialised, venomous ammo, cannot use unusual ammo</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has its own specialised, venomous ammo, cannot use unusual ammo",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

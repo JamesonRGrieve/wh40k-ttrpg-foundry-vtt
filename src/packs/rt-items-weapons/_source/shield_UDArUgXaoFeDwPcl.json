@@ -1,7 +1,7 @@
 {
   "name": "Shield",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "shield",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Defensive</p><p><b>Note:</b> Adds 2 Armour to Body and Arm when wielded</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Adds 2 Armour to Body and Arm when wielded",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

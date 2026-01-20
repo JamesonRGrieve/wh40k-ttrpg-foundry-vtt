@@ -1,0 +1,63 @@
+{
+  "name": "Longshot",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "longshot",
+    "class": "heavy",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 350,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "accurate"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 6,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Designed to fire a variety of Specialist rounds (see Unusual Ammo). Gas Powered, minimal noise and no muzzle flash. Can be broken down into a compact pistol as a Full Action, halves range and loses Accurate. Reconstructing also requires Full Action.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Designed to fire a variety of Specialist rounds (see Unusual Ammo). Gas Powered, minimal noise and no muzzle flash. Can be broken down into a compact pistol as a Full Action, halves range and loses Accurate. Reconstructing also requires Full Action.",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rx1DUFD55OyHdLcg"
+}

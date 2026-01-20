@@ -1,7 +1,7 @@
 {
   "name": "Manreaper",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "manreaper",
     "class": "melee",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Felling (5), Power Field, Toxic (2), Unbalanced</p><p><b>Note:</b> Weapon: Scyth?. Daemon WP 57 (Daemon of Nurgle), Bind Str 3. Att.: Accursed, Herald of Decay. Two-Handed, must be dedicate to Nurgle to wield. Best Craftsmanship version has Force Quality. When making charge/all out attack, can hit one additional enemy per 2 DoS on attack after first. Whilst drawn, all Explosive/Rending damage in 5m has Toxic(1) and Felling(1) Qualities. \n</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Scyth?. Daemon WP 57 (Daemon of Nurgle), Bind Str 3. Att.: Accursed, Herald of Decay. Two-Handed, must be dedicate to Nurgle to wield. Best Craftsmanship version has Force Quality. When making charge/all out attack, can hit one additional enemy per 2 DoS on attack after first. Whilst drawn, all Explosive/Rending damage in 5m has Toxic(1) and Felling(1) Qualities. \n",
-    "source": "BC: Tome of Decay"
+    "source": "BC: Tome of Decay",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

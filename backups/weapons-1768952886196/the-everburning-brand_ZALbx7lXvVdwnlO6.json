@@ -1,0 +1,65 @@
+{
+  "name": "The Everburning Brand",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "the-everburning-brand",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 9,
+      "penetration": 7
+    },
+    "special": [
+      "sm-wep",
+      "power-field",
+      "volatile"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 4,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 45,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Volatile</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Fire Hawks Chapter. Weapon scores a Righteous Fury on an 8, 9, or 10, however if any dice involved in the Righteous Fury rolls a 10, the blade breaks and is unusable for the rest of the mission. It can be reforged afterwards.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Fire Hawks Chapter. Weapon scores a Righteous Fury on an 8, 9, or 10, however if any dice involved in the Righteous Fury rolls a 10, the blade breaks and is unusable for the rest of the mission. It can be reforged afterwards.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZALbx7lXvVdwnlO6"
+}

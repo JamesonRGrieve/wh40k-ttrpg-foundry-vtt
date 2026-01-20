@@ -1,0 +1,64 @@
+{
+  "name": "Energy Blade (Sollex-Aegis)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "energy-blade-sollex-aegis",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 7
+    },
+    "special": [
+      "balanced",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 5000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> If the wielder successfully parries another weapon with this one and succeeds by 2+ DoS, they automatically destory the other weapon if it is not immune to power fields. If Attack/Parry fails by 5+ DoF, resolve attack against wielder. Do not add Strength Bonus to attack damage with this weapon.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "If the wielder successfully parries another weapon with this one and succeeds by 2+ DoS, they automatically destory the other weapon if it is not immune to power fields. If Attack/Parry fails by 5+ DoF, resolve attack against wielder. Do not add Strength Bonus to attack damage with this weapon.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MtdbwzvsAQgFyugy"
+}

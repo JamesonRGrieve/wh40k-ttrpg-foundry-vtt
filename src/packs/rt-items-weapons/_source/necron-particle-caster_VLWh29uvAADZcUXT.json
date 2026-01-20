@@ -1,7 +1,7 @@
 {
   "name": "Necron Particle Caster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "necron-particle-caster",
     "class": "pistol",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Concussive (1), Reliable</p><p><b>Note:</b> Always Best Quality</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

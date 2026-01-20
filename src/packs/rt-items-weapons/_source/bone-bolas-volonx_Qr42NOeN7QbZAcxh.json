@@ -1,7 +1,7 @@
 {
   "name": "Bone Bolas (Volonx)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
   "system": {
     "identifier": "bone-bolas-volonx",
     "class": "thrown",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Snare, Toxic</p><p><b>Note:</b> A set of balls connected by cords that can wrap around a target when thrown at them</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A set of balls connected by cords that can wrap around a target when thrown at them",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Lightning Claw",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "lightning-claw",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Proven (4)</p><p><b>Note:</b> Can only be used whilst wearing power armour. Does +1 Damage per Degree of Success on the attack roll, or +2 if wielded as a pair of Lightning Claws. The claw can be used for basic manipulation (couldn't use a weapon or write, but could pick something up)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can only be used whilst wearing power armour. Does +1 Damage per Degree of Success on the attack roll, or +2 if wielded as a pair of Lightning Claws. The claw can be used for basic manipulation (couldn't use a weapon or write, but could pick something up)",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

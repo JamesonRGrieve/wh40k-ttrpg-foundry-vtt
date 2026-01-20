@@ -1,12 +1,12 @@
 {
   "name": "Naval Shotgun (Cypra Mundi) \"Ironclaw\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "naval-shotgun-cypra-mundi-ironclaw",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Scatter</p><p><b>Note:</b> Has a weighted stock that can be used as a club. (Melee, 1d10+2 I, Pen 0, Primitive)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has a weighted stock that can be used as a club. (Melee, 1d10+2 I, Pen 0, Primitive)",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

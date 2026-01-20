@@ -1,7 +1,7 @@
 {
   "name": "Hand Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "hand-cannon",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> -10 to BS tests unless 2 handed or wearing recoil gloves</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "-10 to BS tests unless 2 handed or wearing recoil gloves",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

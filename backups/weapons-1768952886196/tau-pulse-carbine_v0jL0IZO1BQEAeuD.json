@@ -1,0 +1,63 @@
+{
+  "name": "Tau Pulse Carbine",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "tau-pulse-carbine",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 3
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 4
+    },
+    "special": [
+      "gyro-stabilised"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 6,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Gyro-Stabilised</p><p><b>Note:</b> Has an undermounted Grenade Launcher (Grenade Launcher (Mezoa) - RoF S/-/-, Range 80m, Clip 1, Rld Half). Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Has an undermounted Grenade Launcher (Grenade Launcher (Mezoa) - RoF S/-/-, Range 80m, Clip 1, Rld Half). Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "source": "RT: Tau Char. Guide"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v0jL0IZO1BQEAeuD"
+}

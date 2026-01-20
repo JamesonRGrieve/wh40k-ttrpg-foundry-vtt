@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Agoniser Talon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-agoniser-talon",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Power Field, Tearing, Shocking</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Best Craftsmanship versions inflict 1d5 Permenant Perception damage whenever causing Critical Damage on a living creature, in addition to any other effects.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Rare Availability if acquired from Dark Eldar Settlement. Best Craftsmanship versions inflict 1d5 Permenant Perception damage whenever causing Critical Damage on a living creature, in addition to any other effects.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Legion Chainfist",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "legion-chainfist",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Power Field, Tearing, Unwieldy,  SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own. Can only be used whilst wearing Terminator Armour or some equally bulky equivilent. Doubles Strength Bonus. Attached to a bulky gauntlet which can only be used for basic manipulation (couldn't use a weapon or write, but could pick something up)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Chaos Legionary Weapon. Dangerous to own. Can only be used whilst wearing Terminator Armour or some equally bulky equivilent. Doubles Strength Bonus. Attached to a bulky gauntlet which can only be used for basic manipulation (couldn't use a weapon or write, but could pick something up)",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

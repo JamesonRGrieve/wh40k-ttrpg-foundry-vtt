@@ -1,0 +1,67 @@
+{
+  "name": "Ork Shokk Attack Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "ork-shokk-attack-gun",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 200,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 1
+    },
+    "special": [
+      "blast-3",
+      "inaccurate",
+      "overheats",
+      "unreliable",
+      "unstable"
+    ],
+    "clip": {
+      "max": 8,
+      "value": 8,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 40,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Inaccurate, Overheats, Unreliable, Unstable</p><p><b>Note:</b> For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. If triples are rolled for damage, misfires. Roll 1d10: 1 - Explodes, resolve attack against self ignoring armour and weapon is destroyed, 2-5: Uses 3 extra rounds of \"ammo\",6-7: Reduce damage to 1d5 and Pen to 0 for attack, 8-9: Weapon is Blast(5) but damage is 1d10 for attack, 10: \"Ammo\" attacks the user.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "For Orks, not Unreliable. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. If triples are rolled for damage, misfires. Roll 1d10: 1 - Explodes, resolve attack against self ignoring armour and weapon is destroyed, 2-5: Uses 3 extra rounds of \"ammo\",6-7: Reduce damage to 1d5 and Pen to 0 for attack, 8-9: Weapon is Blast(5) but damage is 1d10 for attack, 10: \"Ammo\" attacks the user.",
+    "source": "RT: Koronus Bestiary"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rqaqjpsu9sKhsRG9"
+}

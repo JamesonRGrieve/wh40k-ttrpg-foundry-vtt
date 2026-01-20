@@ -1,7 +1,7 @@
 {
   "name": "Signalling Device",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-primitive.svg",
   "system": {
     "identifier": "signalling-device",
     "class": "pistol",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Inaccurate, Reliable</p><p><b>Note:</b> Space Flaregun, and is supposed to be used as one. Its shot fires a bright light that can be seen from far away. Can be used as a weapon in a pinch.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Flaregun, and is supposed to be used as one. Its shot fires a bright light that can be seen from far away. Can be used as a weapon in a pinch.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

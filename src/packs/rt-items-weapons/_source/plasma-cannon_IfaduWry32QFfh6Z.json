@@ -1,12 +1,12 @@
 {
   "name": "Plasma Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-plasma.svg",
   "system": {
     "identifier": "plasma-cannon",
     "class": "heavy",
     "type": "plasma",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (1), Maximal, Overheats</p><p><b>Note:</b> Ammo worn as Backpack, Can choose between firing normally or maximally</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Ammo worn as Backpack, Can choose between firing normally or maximally",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

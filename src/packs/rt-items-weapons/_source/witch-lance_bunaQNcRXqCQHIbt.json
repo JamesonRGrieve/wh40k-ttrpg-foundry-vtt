@@ -1,7 +1,7 @@
 {
   "name": "Witch Lance",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "witch-lance",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> Can be Thrown. If Righteous Fury Occurs, instead of normal effect deal +2d10 E Damage (Sanctified) and set the target on fire.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be Thrown. If Righteous Fury Occurs, instead of normal effect deal +2d10 E Damage (Sanctified) and set the target on fire.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

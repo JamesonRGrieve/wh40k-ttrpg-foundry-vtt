@@ -1,12 +1,12 @@
 {
   "name": "Lasgun (Merovech 481) \"Persuader\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "lasgun-merovech-481-persuader",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Inaccurate</p><p><b>Note:</b> Can come with a \"Drum\" Power pack, that has a capacity of 50, increases weight by 2kg, and becomes one step rarer (Rare).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can come with a \"Drum\" Power pack, that has a capacity of 50, increases weight by 2kg, and becomes one step rarer (Rare).",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Cutlass",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "cutlass",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Unbalanced</p><p><b>Note:</b> Power Fielded Variants exist amongst Imperial Navy Officers</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Power Fielded Variants exist amongst Imperial Navy Officers",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

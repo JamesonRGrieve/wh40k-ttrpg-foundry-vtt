@@ -1,7 +1,7 @@
 {
   "name": "Falchion",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "falchion",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

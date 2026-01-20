@@ -1,7 +1,7 @@
 {
   "name": "Bolter Cane",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
   "system": {
     "identifier": "bolter-cane",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Concealed Weapon, looks like a regular cane, staff, or baton. Stops being concealed after being fired, unless false bottom is replaced. Can use any bolt ammo</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Concealed Weapon, looks like a regular cane, staff, or baton. Stops being concealed after being fired, unless false bottom is replaced. Can use any bolt ammo",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

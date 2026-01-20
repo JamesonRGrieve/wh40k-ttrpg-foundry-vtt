@@ -1,7 +1,7 @@
 {
   "name": "Eldar Powersword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eldar-powersword",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Balanced</p><p><b>Note:</b> Additional +10 to Parry</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Additional +10 to Parry",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

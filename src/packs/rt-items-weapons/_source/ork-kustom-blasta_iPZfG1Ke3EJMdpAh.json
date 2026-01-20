@@ -1,12 +1,12 @@
 {
   "name": "Ork Kustom Blasta",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "ork-kustom-blasta",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Overheats, Unreliable, Unstable</p><p><b>Note:</b> Xenotech. Ork zappy weapon. Always has one appropriate \"Kustom Bit\" Upgrade. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, +1 Kustom Bit, +1kg. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Ork zappy weapon. Always has one appropriate \"Kustom Bit\" Upgrade. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, +1 Kustom Bit, +1kg. ",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

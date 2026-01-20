@@ -1,7 +1,7 @@
 {
   "name": "Egerian Shard Glaive",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "egerian-shard-glaive",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Toxic</p><p><b>Note:</b> Poles of black metal tipped with crystalline growths. When hitting someone, leaves behind painful shards in them. For some reason, mass of shards + mass of crystal is greater after shattering.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Poles of black metal tipped with crystalline growths. When hitting someone, leaves behind painful shards in them. For some reason, mass of shards + mass of crystal is greater after shattering.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

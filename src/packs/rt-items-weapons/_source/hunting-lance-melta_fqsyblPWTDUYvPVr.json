@@ -1,7 +1,7 @@
 {
   "name": "Hunting Lance (Melta)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "hunting-lance-melta",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Unwieldy</p><p><b>Note:</b> Attacks suffer -10. Single-Use weapon, Treat as Improvised weapon after tip explodes. \nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Attacks suffer -10. Single-Use weapon, Treat as Improvised weapon after tip explodes. \nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Meltagun (Mars)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-meltagun.svg",
   "system": {
     "identifier": "meltagun-mars",
     "class": "basic",
     "type": "melta",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": ""
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

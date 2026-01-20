@@ -1,0 +1,64 @@
+{
+  "name": "Heavy Webber (Aegis-Redback)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "heavy-webber-aegis-redback",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-6",
+      "snare"
+    ],
+    "clip": {
+      "max": 4,
+      "value": 4,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 17,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 2000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (6), Snare</p><p><b>Note:</b> Weapon does no damage, use to restrain large crowds of people</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon does no damage, use to restrain large crowds of people",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MbbUrwvZWh6AwivH"
+}

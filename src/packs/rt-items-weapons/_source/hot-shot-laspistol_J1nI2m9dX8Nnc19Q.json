@@ -1,7 +1,7 @@
 {
   "name": "Hot-shot Laspistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "hot-shot-laspistol",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Uses 10kg Backpack power source.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Uses 10kg Backpack power source.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

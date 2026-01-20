@@ -1,12 +1,12 @@
 {
   "name": "Necron Tesla Carbine",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "necron-tesla-carbine",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Shocking</p><p><b>Note:</b> Always Best Quality. On Damage roll of 9/10, or when killing/incapacitating enemy, random target within 15m of first is autohit in body by one shot of weapon, effect can repeat. If Retrofitted, needs external power backpack, gains Overheats Q. from backpack, good for 3d10 Shots.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality. On Damage roll of 9/10, or when killing/incapacitating enemy, random target within 15m of first is autohit in body by one shot of weapon, effect can repeat. If Retrofitted, needs external power backpack, gains Overheats Q. from backpack, good for 3d10 Shots.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Xenarch Death-Arc",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "xenarch-death-arc",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Shocking</p><p><b>Note:</b> Fires Crackling bolts of energy. When a character wielding the weapon would inflict multiple hits from a single attack of thie weapon, they instead resolve all of them as one single hit, combining damage (EG: 2 hits, 2d10+6 E damage)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires Crackling bolts of energy. When a character wielding the weapon would inflict multiple hits from a single attack of thie weapon, they instead resolve all of them as one single hit, combining damage (EG: 2 hits, 2d10+6 E damage)",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

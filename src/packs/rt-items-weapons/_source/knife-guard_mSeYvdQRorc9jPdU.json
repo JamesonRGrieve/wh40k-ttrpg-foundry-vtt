@@ -1,7 +1,7 @@
 {
   "name": "Knife (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "knife-guard",
     "class": "melee",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Can be thrown</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be thrown",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

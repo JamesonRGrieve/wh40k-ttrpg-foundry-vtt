@@ -1,7 +1,7 @@
 {
   "name": "Aetheme Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "aetheme-blade",
     "class": "melee",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Has two channels that can each hold three applications of a poison. As a Free Action can coat the blade in one of the poisons, applying its effect to any harmed by the weapon. Grants +10 to any Rite or Ritual that involves sacrifices if it is used to sacrifice someone.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has two channels that can each hold three applications of a poison. As a Free Action can coat the blade in one of the poisons, applying its effect to any harmed by the weapon. Grants +10 to any Rite or Ritual that involves sacrifices if it is used to sacrifice someone.",
-    "source": "BC: Tome of Excess"
+    "source": "BC: Tome of Excess",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

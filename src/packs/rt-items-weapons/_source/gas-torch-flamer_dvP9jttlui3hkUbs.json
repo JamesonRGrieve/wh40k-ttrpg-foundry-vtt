@@ -1,7 +1,7 @@
 {
   "name": "Gas Torch Flamer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "gas-torch-flamer",
     "class": "basic",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Uses a Bulky Canister, if the wearer takes a wounding hit to the body, there is a 50% chance it explodes, dealing 2d10E Damage with Blast(4). Wearer suffers double damage and catches on fire.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Uses a Bulky Canister, if the wearer takes a wounding hit to the body, there is a 50% chance it explodes, dealing 2d10E Damage with Blast(4). Wearer suffers double damage and catches on fire.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

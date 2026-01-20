@@ -1,7 +1,7 @@
 {
   "name": "Lash of Torment",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "lash-of-torment",
     "class": "melee",
@@ -58,9 +58,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Concussive (2), Flexible, Gyro-Stabilised, Snare (2), Tearing</p><p><b>Note:</b> Weapon: Whip. Daemon WP 69 (Slaaneshi Daemon), Bind Str 3 . Att.: Howling, Lashing, Shrieking. Must be Dedicated to Slaanesh to wield. Gain Fear(+1) on any turn attacking with weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Whip. Daemon WP 69 (Slaaneshi Daemon), Bind Str 3 . Att.: Howling, Lashing, Shrieking. Must be Dedicated to Slaanesh to wield. Gain Fear(+1) on any turn attacking with weapon.",
-    "source": "BC: Tome of Excess"
+    "source": "BC: Tome of Excess",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

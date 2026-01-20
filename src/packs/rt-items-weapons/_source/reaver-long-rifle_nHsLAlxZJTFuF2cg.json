@@ -1,12 +1,12 @@
 {
   "name": "Reaver Long Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "reaver-long-rifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Accurate, Felling (3), Toxic (0)</p><p><b>Note:</b> Fires heavy glass or iron darts filled with toxins</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires heavy glass or iron darts filled with toxins",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

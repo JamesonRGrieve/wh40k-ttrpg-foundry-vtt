@@ -1,7 +1,7 @@
 {
   "name": "Shield (Naval)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "shield-naval",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Defensive, Primitive</p><p><b>Note:</b> Provides 8AP of Cover to arm and body, can completely conceal the user if desired.\nNote: As Cover AP, each time the shield is penetrated its AP is reduced by 1 until it is destroyed or repaired.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Provides 8AP of Cover to arm and body, can completely conceal the user if desired.\nNote: As Cover AP, each time the shield is penetrated its AP is reduced by 1 until it is destroyed or repaired.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

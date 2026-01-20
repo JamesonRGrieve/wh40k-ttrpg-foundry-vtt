@@ -1,7 +1,7 @@
 {
   "name": "Service Pistol(Hax-Orthlack)\n\"Armsman-10\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "service-pistolhax-orthlack-armsman-10",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": ""
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

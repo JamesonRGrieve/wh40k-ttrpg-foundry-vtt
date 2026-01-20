@@ -1,0 +1,63 @@
+{
+  "name": "Ork Copper Channeling Rod",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "ork-copper-channeling-rod",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-8"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> If wielded by a Weirdboy, counts as Psy Focus, once per encounter when rolling on 'Eadbang Table, may make -30 Willpower Test as Free Action, if suceeded, can choose result and avoid most consequences to themselves. If fail, add +10 to roll. Affected by Kraftsmanship.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "If wielded by a Weirdboy, counts as Psy Focus, once per encounter when rolling on 'Eadbang Table, may make -30 Willpower Test as Free Action, if suceeded, can choose result and avoid most consequences to themselves. If fail, add +10 to roll. Affected by Kraftsmanship.",
+    "source": "RT: The Navis Primer"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0tQ3TUEMtR20S9TO"
+}

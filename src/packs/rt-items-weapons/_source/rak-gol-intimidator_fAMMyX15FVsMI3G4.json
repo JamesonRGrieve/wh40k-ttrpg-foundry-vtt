@@ -1,7 +1,7 @@
 {
   "name": "Rak'Gol Intimidator",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "rakgol-intimidator",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Carried by higher-up Rak'Gol as a status symbol, believed to be used for torture.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Carried by higher-up Rak'Gol as a status symbol, believed to be used for torture.",
-    "source": "RT: Koronus Bestiary"
+    "source": "RT: Koronus Bestiary",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

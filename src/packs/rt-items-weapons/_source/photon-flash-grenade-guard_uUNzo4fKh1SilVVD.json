@@ -1,7 +1,7 @@
 {
   "name": "Photon Flash Grenade (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "photon-flash-grenade-guard",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Make +10 Agility Test if in radius. If fail be blinded for Rounds equal to Degrees of Failiure</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Make +10 Agility Test if in radius. If fail be blinded for Rounds equal to Degrees of Failiure",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

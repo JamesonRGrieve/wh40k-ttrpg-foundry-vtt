@@ -1,12 +1,12 @@
 {
   "name": "Necron Ablative Projector",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "necron-ablative-projector",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Vengeful (9)</p><p><b>Note:</b> The weapon of the mindless Necron Warriors. A Glowing Green beam that reduces flesh, armour, and anything else to their component atoms.\nInfinite Ammo, No Reloads needed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "The weapon of the mindless Necron Warriors. A Glowing Green beam that reduces flesh, armour, and anything else to their component atoms.\nInfinite Ammo, No Reloads needed.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

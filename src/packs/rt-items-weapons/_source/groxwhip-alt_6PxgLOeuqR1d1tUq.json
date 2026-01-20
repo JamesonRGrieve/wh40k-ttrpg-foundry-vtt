@@ -1,7 +1,7 @@
 {
   "name": "Groxwhip (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "groxwhip-alt",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flexible, Tearing, Primitive (6)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

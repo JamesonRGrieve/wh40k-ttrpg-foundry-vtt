@@ -1,12 +1,12 @@
 {
   "name": "Catalytic Mass Driver",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "catalytic-mass-driver",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Rare example of Ballistic Integrated Weapon\nInfinite clip, no reload.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Rare example of Ballistic Integrated Weapon\nInfinite clip, no reload.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Eldar Shuriken Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "eldar-shuriken-cannon",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Razor Sharp, Reliable</p><p><b>Note:</b> Gain Auto-Stabilised Trait whilst using weapon. Fires horrific volleys of monofilament micro-shurikens</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gain Auto-Stabilised Trait whilst using weapon. Fires horrific volleys of monofilament micro-shurikens",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

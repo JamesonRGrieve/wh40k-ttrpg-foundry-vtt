@@ -1,7 +1,7 @@
 {
   "name": "Astartes Plasma Gun (Ragefire)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
   "system": {
     "identifier": "astartes-plasma-gun-ragefire",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

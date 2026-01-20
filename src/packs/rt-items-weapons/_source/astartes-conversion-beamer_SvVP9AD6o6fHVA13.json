@@ -1,12 +1,12 @@
 {
   "name": "Astartes Conversion Beamer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "astartes-conversion-beamer",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Felling (4), Blast (2)</p><p><b>Note:</b> Space Marines Only (Specifically, only Techmarines), not easily acquirable. At shorter Ranges, weapon is weaker: \nShort Range: 3d10+9, Pen 8, Felling(4). 15m or less: 1d10+9 Pen 2.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only (Specifically, only Techmarines), not easily acquirable. At shorter Ranges, weapon is weaker: \nShort Range: 3d10+9, Pen 8, Felling(4). 15m or less: 1d10+9 Pen 2.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Condemner",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "condemner",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Accurate, Reliable</p><p><b>Note:</b> Undermounted to a Boltgun to form a Combi-Weapon. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Undermounted to a Boltgun to form a Combi-Weapon. ",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

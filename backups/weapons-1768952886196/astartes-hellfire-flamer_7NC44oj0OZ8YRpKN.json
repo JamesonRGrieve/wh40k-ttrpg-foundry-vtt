@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Hellfire Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-hellfire-flamer",
+    "class": "basic",
+    "type": "flame",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 9,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "flame",
+      "tearing"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 15,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Flame, Tearing</p><p><b>Note:</b> Space Marines Only.  Deathwatch variant Astartes Flamer. Ignores Natural Armour and inflicts Righteous Fury on a 9 or 10.\nThose set on fire by Astartes flamer weapons take +4 damage from the flames.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only.  Deathwatch variant Astartes Flamer. Ignores Natural Armour and inflicts Righteous Fury on a 9 or 10.\nThose set on fire by Astartes flamer weapons take +4 damage from the flames.",
+    "source": "DW: First Founding"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7NC44oj0OZ8YRpKN"
+}

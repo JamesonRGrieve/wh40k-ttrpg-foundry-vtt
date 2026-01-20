@@ -1,12 +1,12 @@
 {
   "name": "Autocannon (M34, Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "autocannon-m34-guard",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Ogryn-Proof, Reliable</p><p><b>Note:</b> Can be manned as a crew of two.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be manned as a crew of two.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

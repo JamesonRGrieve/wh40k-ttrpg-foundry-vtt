@@ -1,12 +1,12 @@
 {
   "name": "Lasgun (Mars, Short)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "lasgun-mars-short",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> The Standard armament of many guardsmen across the Calixis Sector.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "The Standard armament of many guardsmen across the Calixis Sector.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

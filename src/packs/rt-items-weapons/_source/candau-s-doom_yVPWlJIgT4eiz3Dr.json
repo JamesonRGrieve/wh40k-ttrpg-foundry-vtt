@@ -1,12 +1,12 @@
 {
   "name": "Candau's Doom",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "candaus-doom",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Accurate, Felling (4), Razor Sharp</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Archeotech Autogun of the Relictors Chapter. Despite being similar in nature to an Autogun, it is considerably more dangerous.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Archeotech Autogun of the Relictors Chapter. Despite being similar in nature to an Autogun, it is considerably more dangerous.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

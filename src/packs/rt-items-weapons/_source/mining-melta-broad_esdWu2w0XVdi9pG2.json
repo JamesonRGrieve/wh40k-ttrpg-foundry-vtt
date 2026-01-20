@@ -1,12 +1,12 @@
 {
   "name": "Mining Melta [Broad]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-multimelta.svg",
   "system": {
     "identifier": "mining-melta-broad",
     "class": "heavy",
     "type": "melta",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Can switch between [Broad] and [Focused] Modes as a Half Action (see Mining Melta [Focused])</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can switch between [Broad] and [Focused] Modes as a Half Action (see Mining Melta [Focused])",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

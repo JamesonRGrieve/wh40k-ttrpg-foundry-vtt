@@ -1,7 +1,7 @@
 {
   "name": "Astartes Stasis Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "astartes-stasis-grenade",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Blast (2)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Cannot be requisitioned due to extreme dangers, can only be granted.\nTraps Blast area in a state of frozen time for 1d5 Rounds (rolled by GM). Those inside cannot perceive anything, those outside can see inside by can't interact.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Cannot be requisitioned due to extreme dangers, can only be granted.\nTraps Blast area in a state of frozen time for 1d5 Rounds (rolled by GM). Those inside cannot perceive anything, those outside can see inside by can't interact.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

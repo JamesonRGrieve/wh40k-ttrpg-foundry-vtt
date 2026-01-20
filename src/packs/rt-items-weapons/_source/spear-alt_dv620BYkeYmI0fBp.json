@@ -1,7 +1,7 @@
 {
   "name": "Spear (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "spear-alt",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Two-Handed Weapon</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed Weapon",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

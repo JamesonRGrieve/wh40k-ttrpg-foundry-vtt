@@ -1,7 +1,7 @@
 {
   "name": "Hellblade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "hellblade",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> A Weapon wielded by Bloodletter Daemons of Khorne. Deals +2 Damage per kill it causes in a combat encounter (resets after combat is over). Requires -30 Willpower Test to remove or sheath weapon from wielder's hand. Weapon is corruptive.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Weapon wielded by Bloodletter Daemons of Khorne. Deals +2 Damage per kill it causes in a combat encounter (resets after combat is over). Requires -30 Willpower Test to remove or sheath weapon from wielder's hand. Weapon is corruptive.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

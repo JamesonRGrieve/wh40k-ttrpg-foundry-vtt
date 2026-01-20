@@ -1,7 +1,7 @@
 {
   "name": "Astartes Plasma Pistol (Barrage)  (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-plasma.svg",
   "system": {
     "identifier": "astartes-plasma-pistol-barrage-alt",
     "class": "pistol",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Overheats, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. ",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

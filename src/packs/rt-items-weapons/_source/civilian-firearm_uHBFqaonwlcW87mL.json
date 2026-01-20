@@ -1,12 +1,12 @@
 {
   "name": "Civilian Firearm",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "civilian-firearm",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Cannot use unusual ammo</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Cannot use unusual ammo",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

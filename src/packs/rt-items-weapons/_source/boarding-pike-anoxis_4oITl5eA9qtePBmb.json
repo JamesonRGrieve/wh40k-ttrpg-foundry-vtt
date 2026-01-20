@@ -1,7 +1,7 @@
 {
   "name": "Boarding Pike (Anoxis)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "boarding-pike-anoxis",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive</p><p><b>Note:</b> Two-Handed Weapon. Has an explosive tip that can be detonated to do listed damage. Takes some time to reload so cannot be done in combat. If not detonated, or already detonated, weapon has the profile of a Club  (Melee, 1d10+2 I, Pen 0, Primitive)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed Weapon. Has an explosive tip that can be detonated to do listed damage. Takes some time to reload so cannot be done in combat. If not detonated, or already detonated, weapon has the profile of a Club  (Melee, 1d10+2 I, Pen 0, Primitive)",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

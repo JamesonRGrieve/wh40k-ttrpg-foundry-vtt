@@ -1,12 +1,12 @@
 {
   "name": "Dark Eldar Terrorfex",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "dark-eldar-terrorfex",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Xenotech. Causes fear and pain rather than direct damage. Anyone in 5 metres of shot location tests Fear(2), considering source of fear to be origin point of shot.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Causes fear and pain rather than direct damage. Anyone in 5 metres of shot location tests Fear(2), considering source of fear to be origin point of shot.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Eldar Singing Spear",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eldar-singing-spear",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Witch-Edge</p><p><b>Note:</b> If wielder is psychic, can throw up to 2xPsy-Rating Metres. Once per round can Recall it to their hand as Free Action, creatures holding on/impaled make -30 Strength Test or are dragged back to the thrower.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If wielder is psychic, can throw up to 2xPsy-Rating Metres. Once per round can Recall it to their hand as Free Action, creatures holding on/impaled make -30 Strength Test or are dragged back to the thrower.",
-    "source": "RT: The Navis Primer"
+    "source": "RT: The Navis Primer",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

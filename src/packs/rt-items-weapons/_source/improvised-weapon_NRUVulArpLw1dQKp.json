@@ -1,7 +1,7 @@
 {
   "name": "Improvised Weapon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "improvised-weapon",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Ogryn-Proof, Primitive (7), Unbalanced</p><p><b>Note:</b> Any non-weapon object used as a weapon, such as table legs, the butt of a basic weapon, etc.\nHB: Add +2 Damage per Size category Improvised weapon is above Puny.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Any non-weapon object used as a weapon, such as table legs, the butt of a basic weapon, etc.\nHB: Add +2 Damage per Size category Improvised weapon is above Puny.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

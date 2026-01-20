@@ -1,12 +1,12 @@
 {
   "name": "Astartes Multi-Melta (Firestorm)  (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-multimelta.svg",
   "system": {
     "identifier": "astartes-multi-melta-firestorm-alt",
     "class": "heavy",
     "type": "melta",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> SM Wep, Blast (2), Recharge, Volatile, Melta</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. ",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

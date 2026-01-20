@@ -1,12 +1,12 @@
 {
   "name": "Assault Stubber (Echon)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "assault-stubber-echon",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Storm</p><p><b>Note:</b> Designed for a backpack ammo pack. (25kg, 200 rounds). Can use any Heavy Stubber ammunition</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Designed for a backpack ammo pack. (25kg, 200 rounds). Can use any Heavy Stubber ammunition",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

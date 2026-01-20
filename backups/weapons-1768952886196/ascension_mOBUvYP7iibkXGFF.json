@@ -1,0 +1,67 @@
+{
+  "name": "Ascension",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "ascension",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 5,
+      "penetration": 10
+    },
+    "special": [
+      "rune-wep",
+      "proven-4",
+      "tainted",
+      "tearing",
+      "balanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 10,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Rune Wep, Proven (4), Tainted, Tearing, Balanced</p><p><b>Note:</b> The Master-Crafted Midnight Blade of the Wanderer of Worlds, Forgemaster Mehnix. Weapon may only be summoned in the presence of a worthy enemy. In addition to listed statistics can be switched to one of 5 modes as a Free Action, starts in Lightning Mode by default. - Lightning: (Shocking Quality, Ranged Attack (Basic, S/-/-, 100m, 2d10+5 E, Pen 8, Shocking, Fires Beam Pierces all enemies (make Agility test to dodge), doesn't extend past listed range or through sufficient blocking material)\n- Fire: (Flame Quality, Can be thrown SBx5 Metres, Ranged Attack (Basic, S/-/-, 30m, 1d10+5, Pen 2, Flame, Spray)\n- Water (Flexible Quality, Melee Range 5m, attacks can hit around corners and ignore cover within this range)\n- Wind (Storm Quality, Ranged Attack (250m, S/-/-, 2d10+5 I, Pen 5, Accurate, Lance, Felling (8))\n- Earth (Concussive (2) and Blast (2) Quality, Blast does not effect wielder).\nCelebration of my obsession, and 1000 weapons catalogued.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "The Master-Crafted Midnight Blade of the Wanderer of Worlds, Forgemaster Mehnix. Weapon may only be summoned in the presence of a worthy enemy. In addition to listed statistics can be switched to one of 5 modes as a Free Action, starts in Lightning Mode by default. - Lightning: (Shocking Quality, Ranged Attack (Basic, S/-/-, 100m, 2d10+5 E, Pen 8, Shocking, Fires Beam Pierces all enemies (make Agility test to dodge), doesn't extend past listed range or through sufficient blocking material)\n- Fire: (Flame Quality, Can be thrown SBx5 Metres, Ranged Attack (Basic, S/-/-, 30m, 1d10+5, Pen 2, Flame, Spray)\n- Water (Flexible Quality, Melee Range 5m, attacks can hit around corners and ignore cover within this range)\n- Wind (Storm Quality, Ranged Attack (250m, S/-/-, 2d10+5 I, Pen 5, Accurate, Lance, Felling (8))\n- Earth (Concussive (2) and Blast (2) Quality, Blast does not effect wielder).\nCelebration of my obsession, and 1000 weapons catalogued.",
+    "source": "HB"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mOBUvYP7iibkXGFF"
+}

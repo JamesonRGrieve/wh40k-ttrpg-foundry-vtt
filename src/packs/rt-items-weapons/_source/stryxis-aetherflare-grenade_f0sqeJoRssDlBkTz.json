@@ -1,7 +1,7 @@
 {
   "name": "Stryxis Aetherflare Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "stryxis-aetherflare-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (4)</p><p><b>Note:</b> Stryxis (xenos) weapon. Blast ignores Armour and Toughness, no damage to non-living objects, Daemons, or Machines (Machine (5+) Trait). Blocked by untouchables and wards. Can't be used in launchers.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Stryxis (xenos) weapon. Blast ignores Armour and Toughness, no damage to non-living objects, Daemons, or Machines (Machine (5+) Trait). Blocked by untouchables and wards. Can't be used in launchers.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

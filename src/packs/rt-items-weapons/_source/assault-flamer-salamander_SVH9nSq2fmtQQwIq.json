@@ -1,7 +1,7 @@
 {
   "name": "Assault Flamer (Salamander)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "assault-flamer-salamander",
     "class": "basic",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Spray, Flame</p><p><b>Note:</b> Fires in a 45-degree arc, as opposed to a 30-degree arc. Designed for backpack mounted fuel canister.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires in a 45-degree arc, as opposed to a 30-degree arc. Designed for backpack mounted fuel canister.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

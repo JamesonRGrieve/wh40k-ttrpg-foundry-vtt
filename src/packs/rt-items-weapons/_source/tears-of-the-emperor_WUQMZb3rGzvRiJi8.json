@@ -1,7 +1,7 @@
 {
   "name": "Tears of the Emperor",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "tears-of-the-emperor",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (2), Sanctified</p><p><b>Note:</b> Psykers hit bt weapon must immediately roll on perils of the warp. Creatuers with the Daemonic Trait hit by this gain the Warp Instability Trait until the end of the encounter, or suffer -20 to Warp Instability Tests if they already have the trait. Contains a Blood-like substance said to weep from some statues and relics.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Psykers hit bt weapon must immediately roll on perils of the warp. Creatuers with the Daemonic Trait hit by this gain the Warp Instability Trait until the end of the encounter, or suffer -20 to Warp Instability Tests if they already have the trait. Contains a Blood-like substance said to weep from some statues and relics.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

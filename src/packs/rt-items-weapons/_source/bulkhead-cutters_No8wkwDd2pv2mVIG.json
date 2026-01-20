@@ -1,7 +1,7 @@
 {
   "name": "Bulkhead Cutters",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "bulkhead-cutters",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unwieldy</p><p><b>Note:</b> Two-Handed Weapon. May need Exotic Weapon Training to use as a weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed Weapon. May need Exotic Weapon Training to use as a weapon.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

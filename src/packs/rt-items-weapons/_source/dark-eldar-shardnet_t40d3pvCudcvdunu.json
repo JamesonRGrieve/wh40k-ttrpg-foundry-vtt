@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Shardnet",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-shardnet",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Flexible, Snare, Crippling (1d5), Shocking</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Crippling Effect continues as long as Target is immobilised by the weapon's snare. Triggering each time they try to get free, this may cause the shocking quality to take effect again.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Rare Availability if acquired from Dark Eldar Settlement. Crippling Effect continues as long as Target is immobilised by the weapon's snare. Triggering each time they try to get free, this may cause the shocking quality to take effect again.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

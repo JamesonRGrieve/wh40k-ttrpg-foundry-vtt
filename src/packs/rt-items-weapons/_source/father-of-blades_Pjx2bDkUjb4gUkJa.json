@@ -1,7 +1,7 @@
 {
   "name": "Father of Blades",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "father-of-blades",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Toxic (7), Unbalanced</p><p><b>Note:</b> Weapon: Sword. Daemon WP 77 (Greater Daemon of Nurgle), Bind Str 4. Att.: Bile-Quenched, Pestilent Stench, Plague Carrier. Must be Dedicated to Nurgle to wield. If get 5+ DoS on parry, attacker hits themselves.  Non Daemon, Machine, or From Beyond Creatures wounded by weapon lose half their actions next turn, everyone not devoted to nurgle in 7m suffer -10 to WS, BS, Agility, Intelligence, and Perception Tests, Toxic Trait also deals 2d10 nonpermenant Toughness Damage which spreads to any that touch the target within 7 rounds if they fail +0 Toughness Test.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Sword. Daemon WP 77 (Greater Daemon of Nurgle), Bind Str 4. Att.: Bile-Quenched, Pestilent Stench, Plague Carrier. Must be Dedicated to Nurgle to wield. If get 5+ DoS on parry, attacker hits themselves.  Non Daemon, Machine, or From Beyond Creatures wounded by weapon lose half their actions next turn, everyone not devoted to nurgle in 7m suffer -10 to WS, BS, Agility, Intelligence, and Perception Tests, Toxic Trait also deals 2d10 nonpermenant Toughness Damage which spreads to any that touch the target within 7 rounds if they fail +0 Toughness Test.",
-    "source": "BC: Tome of Decay"
+    "source": "BC: Tome of Decay",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

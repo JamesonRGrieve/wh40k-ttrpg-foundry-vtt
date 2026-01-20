@@ -1,0 +1,61 @@
+{
+  "name": "Tau Battlesuit Plasma Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "tau-battlesuit-plasma-rifle",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 90,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 10
+    },
+    "special": [],
+    "clip": {
+      "max": 16,
+      "value": 16,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 15,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. </p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. ",
+    "source": "RT: Tau Char. Guide"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GM5ookb3nBzXe8Q1"
+}

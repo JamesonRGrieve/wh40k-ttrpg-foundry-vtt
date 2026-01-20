@@ -1,7 +1,7 @@
 {
   "name": "Chainflail",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "chainflail",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flexible, Tearing, Unwieldy</p><p><b>Note:</b> Inflicts Righteous Fury on a natural 9 or 10 damage roll. If failing a WS Test by more Degrees of Failiure than Weapon Skill Bonus, hit yourself. Two Handed Weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Inflicts Righteous Fury on a natural 9 or 10 damage roll. If failing a WS Test by more Degrees of Failiure than Weapon Skill Bonus, hit yourself. Two Handed Weapon.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

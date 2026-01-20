@@ -1,12 +1,12 @@
 {
   "name": "Tau Pulse Carbine (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "tau-pulse-carbine-alt",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Gyro-Stabilised, Devastating (1)</p><p><b>Note:</b> Has an undermounted Grenade Launcher (Grenade Launcher (Mezoa) - RoF S/-/-, Range 80m, Clip 1, Rld Half). Usually Fires Photon Grenades.\n Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has an undermounted Grenade Launcher (Grenade Launcher (Mezoa) - RoF S/-/-, Range 80m, Clip 1, Rld Half). Usually Fires Photon Grenades.\n Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

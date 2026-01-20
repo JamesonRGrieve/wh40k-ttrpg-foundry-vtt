@@ -1,7 +1,7 @@
 {
   "name": "Kursian Sickle Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "kursian-sickle-sword",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Balanced</p><p><b>Note:</b> Needs Exotic Weapon Training(Kursian Pit Weapons). Additional +10 to Parry Tests, if gaining 3+ DoS on parry test, can make Disarm Action on attacker as Free Action. Best Quality versions have the Tainted Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Needs Exotic Weapon Training(Kursian Pit Weapons). Additional +10 to Parry Tests, if gaining 3+ DoS on parry test, can make Disarm Action on attacker as Free Action. Best Quality versions have the Tainted Quality.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

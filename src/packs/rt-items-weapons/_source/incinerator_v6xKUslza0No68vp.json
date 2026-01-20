@@ -1,7 +1,7 @@
 {
   "name": "Incinerator",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "incinerator",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Daemonbane, Flame, Spray</p><p><b>Note:</b> Ignores protection granted by Psychic Powers. Targets in area suffer -10 x their Psy Rating penalty to agility tests to avoid flames.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Ignores protection granted by Psychic Powers. Targets in area suffer -10 x their Psy Rating penalty to agility tests to avoid flames.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

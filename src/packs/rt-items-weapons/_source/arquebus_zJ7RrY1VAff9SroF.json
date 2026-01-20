@@ -1,12 +1,12 @@
 {
   "name": "Arquebus",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "arquebus",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Concussive (1), Inaccurate, Unreliable, Smoke (1)</p><p><b>Note:</b> Brute Force Black Powder weapon used commonly on some fuedal weapons. Recoil can knock someone off of their feet. If Strength Bonus is 3 or less, weapon counts as Heavy instead of Basic. Smoke (1) Quality occurs at firing location from the black powder and not impact, Smoke lasts 1d5-1 rounds.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Brute Force Black Powder weapon used commonly on some fuedal weapons. Recoil can knock someone off of their feet. If Strength Bonus is 3 or less, weapon counts as Heavy instead of Basic. Smoke (1) Quality occurs at firing location from the black powder and not impact, Smoke lasts 1d5-1 rounds.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

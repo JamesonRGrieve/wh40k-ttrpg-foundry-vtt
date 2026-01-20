@@ -1,7 +1,7 @@
 {
   "name": "Smoke Grenade (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "smoke-grenade-guard",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Smoke (6)</p><p><b>Note:</b> Only blocks regular sight</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Only blocks regular sight",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

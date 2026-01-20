@@ -1,7 +1,7 @@
 {
   "name": "Cryo Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "cryo-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (3)</p><p><b>Note:</b> Enemies damaged by weapon must make -40 Toughness Test, if failed enemies take 2d10 Toughness Damage each round for 1d5 rounds. Enemies that reach 0 Toughness as a Result of this are killed and frozen solid. Further damage causes the corpse to shatter.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Enemies damaged by weapon must make -40 Toughness Test, if failed enemies take 2d10 Toughness Damage each round for 1d5 rounds. Enemies that reach 0 Toughness as a Result of this are killed and frozen solid. Further damage causes the corpse to shatter.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Plasma Pistol (Kronos)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-plasma.svg",
   "system": {
     "identifier": "plasma-pistol-kronos",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Overheats, Recharge</p><p><b>Note:</b> Can fire on Maximal Mode, consuming 3 shots at once for +10m Range and +4 Damage, however takes 2 Rounds to recharge instead of 1.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can fire on Maximal Mode, consuming 3 shots at once for +10m Range and +4 Damage, however takes 2 Rounds to recharge instead of 1.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

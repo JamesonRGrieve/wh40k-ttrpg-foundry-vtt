@@ -1,7 +1,7 @@
 {
   "name": "Laspistol (Accatran, Heavy)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "laspistol-accatran-heavy",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Designed to use Lasgun Power Packs rather than Laspistol. Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Designed to use Lasgun Power Packs rather than Laspistol. Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Launcher \"Drake's Claw\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-default.svg",
   "system": {
     "identifier": "launcher-drakes-claw",
     "class": "heavy",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Blast (3), Crippling (1), Inaccurate, Primitive (7), Tearing</p><p><b>Note:</b> Single-Use item, can't be reloaded A Primitive Rocket Launcher with a spiked payload that shatters into splinters.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Single-Use item, can't be reloaded A Primitive Rocket Launcher with a spiked payload that shatters into splinters.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

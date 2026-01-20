@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Footfall)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
   "system": {
     "identifier": "bolt-pistol-footfall",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Can't use Unusual Ammunition, not trustworthy.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can't use Unusual Ammunition, not trustworthy.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

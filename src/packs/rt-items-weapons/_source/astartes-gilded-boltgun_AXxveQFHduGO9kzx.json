@@ -1,7 +1,7 @@
 {
   "name": "Astartes Gilded Boltgun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "astartes-gilded-boltgun",
     "class": "basic",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only.  Ultramarines variant Master-Crafted Astartes Bolter. Adds +10 to Fellowship and Skill Tests based on Fellowship when carried. If wielder is squad leader, Ultramarines Squad Mode abilities reduce their cohesion cost by 1 (min 1).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only.  Ultramarines variant Master-Crafted Astartes Bolter. Adds +10 to Fellowship and Skill Tests based on Fellowship when carried. If wielder is squad leader, Ultramarines Squad Mode abilities reduce their cohesion cost by 1 (min 1).",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

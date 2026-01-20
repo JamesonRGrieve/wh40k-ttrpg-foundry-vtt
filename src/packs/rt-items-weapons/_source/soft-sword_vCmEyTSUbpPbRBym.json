@@ -1,7 +1,7 @@
 {
   "name": "Soft Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "soft-sword",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Balanced</p><p><b>Note:</b> When unpowered (or power cell damaged), weapon is flexible like cloth and can appear unassuming. When given an electric current, stiffens to consistency of steel. Can also act as a Staff or shortsword.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "When unpowered (or power cell damaged), weapon is flexible like cloth and can appear unassuming. When given an electric current, stiffens to consistency of steel. Can also act as a Staff or shortsword.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

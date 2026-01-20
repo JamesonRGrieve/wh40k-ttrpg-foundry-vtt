@@ -1,12 +1,12 @@
 {
   "name": "Scrap Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-default.svg",
   "system": {
     "identifier": "scrap-cannon",
     "class": "heavy",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Scatter, Unreliable</p><p><b>Note:</b> Average Availability in the Underhives of most Hive Worlds.\nAmmo is practically free (treat as Ubiquitous - 0 Thrones per 10 Clips)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Average Availability in the Underhives of most Hive Worlds.\nAmmo is practically free (treat as Ubiquitous - 0 Thrones per 10 Clips)",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

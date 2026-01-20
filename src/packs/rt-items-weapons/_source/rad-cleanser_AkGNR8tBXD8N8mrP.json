@@ -1,12 +1,12 @@
 {
   "name": "Rad-Cleanser",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "rad-cleanser",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (2), Recharge, Toxic</p><p><b>Note:</b> \"Toxic\" Trait represents Radioactivity. Can't be reloaded in Combat, instead requires the refuelling of its bulky reactor core units.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "\"Toxic\" Trait represents Radioactivity. Can't be reloaded in Combat, instead requires the refuelling of its bulky reactor core units.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

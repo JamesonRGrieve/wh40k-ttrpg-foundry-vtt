@@ -1,12 +1,12 @@
 {
   "name": "Deathwatch Graviton Cannon [Broad]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "deathwatch-graviton-cannon-broad",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Blast (5)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Broad] targets blast area, everyone inside makes -30 Strength Test or is affected by extreme gravitational forces for 1d10 rounds, taking 1d10 damage per round or more if smashed into worse environmental objects. Attempting to move whilst affected requires Opposed Strength vs Strength 50 (Unnatural Strength x2). Shatters fragile objects, weak floors, etc.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Fired as [Focused] or [Broad] mode. [Broad] targets blast area, everyone inside makes -30 Strength Test or is affected by extreme gravitational forces for 1d10 rounds, taking 1d10 damage per round or more if smashed into worse environmental objects. Attempting to move whilst affected requires Opposed Strength vs Strength 50 (Unnatural Strength x2). Shatters fragile objects, weak floors, etc.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

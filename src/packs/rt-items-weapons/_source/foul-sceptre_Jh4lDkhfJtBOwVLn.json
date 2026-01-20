@@ -1,12 +1,12 @@
 {
   "name": "Foul Sceptre",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "foul-sceptre",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Recharge, Shocking, Toxic</p><p><b>Note:</b> Xenotech. Doesn't need to be reloaded, and doesn't use ammo. Gaining a Mental Disorder while possessing this weapon causes wielder to become obsessed with finding more. May experience dark visions.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Doesn't need to be reloaded, and doesn't use ammo. Gaining a Mental Disorder while possessing this weapon causes wielder to become obsessed with finding more. May experience dark visions.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

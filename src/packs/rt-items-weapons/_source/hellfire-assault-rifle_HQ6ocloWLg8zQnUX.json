@@ -1,12 +1,12 @@
 {
   "name": "Hellfire Assault Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "hellfire-assault-rifle",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Accurate</p><p><b>Note:</b> Weapon is made to use custom \"Hellfire\" Rounds, if used at the beginning of the target's next turn they take 1d5 Energy Damage that ignores armour.\nNote: Whilst the gist of this weapon was created by ChatGPT, it had to be heavily refined into something that makes sense.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon is made to use custom \"Hellfire\" Rounds, if used at the beginning of the target's next turn they take 1d5 Energy Damage that ignores armour.\nNote: Whilst the gist of this weapon was created by ChatGPT, it had to be heavily refined into something that makes sense.",
-    "source": "ChatGPT"
+    "source": "Homebrew",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Frag Grenade (Maccabian)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "frag-grenade-maccabian",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (3), Sanctified</p><p><b>Note:</b> Space Holy Hand Grenade. +5 to Willpower Tests vs Fear/Pinning for Squad possessing them. Bonus lost when all grenades used, unless the last one kills/causes Critical Damage on an enemy, in which case, bonus lasts for the rest of the session. Always Good/Best Craftsmanship</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Holy Hand Grenade. +5 to Willpower Tests vs Fear/Pinning for Squad possessing them. Bonus lost when all grenades used, unless the last one kills/causes Critical Damage on an enemy, in which case, bonus lasts for the rest of the session. Always Good/Best Craftsmanship",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

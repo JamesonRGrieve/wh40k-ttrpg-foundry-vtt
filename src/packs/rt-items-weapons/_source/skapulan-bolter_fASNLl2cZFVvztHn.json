@@ -1,12 +1,12 @@
 {
   "name": "Skapulan Bolter",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "skapulan-bolter",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Accurate, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Boltgun of the Deathwatch. Has integrated Fire Selector, Targeter, and Melee Attachment (Master-Crafted Astartes Combat Knife). Never Jams. Reroll attack rolls of 96-100.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Boltgun of the Deathwatch. Has integrated Fire Selector, Targeter, and Melee Attachment (Master-Crafted Astartes Combat Knife). Never Jams. Reroll attack rolls of 96-100.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

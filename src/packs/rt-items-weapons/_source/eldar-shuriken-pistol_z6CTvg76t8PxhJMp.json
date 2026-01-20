@@ -1,7 +1,7 @@
 {
   "name": "Eldar Shuriken Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "eldar-shuriken-pistol",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Razor Sharp, Reliable</p><p><b>Note:</b> A Somewhat common weapon amongst successful Cold Traders and other such Xenotech brokers as a status symbol.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Somewhat common weapon amongst successful Cold Traders and other such Xenotech brokers as a status symbol.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

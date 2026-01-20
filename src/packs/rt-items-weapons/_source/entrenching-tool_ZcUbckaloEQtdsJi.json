@@ -1,7 +1,7 @@
 {
   "name": "Entrenching Tool",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "entrenching-tool",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Unwieldy</p><p><b>Note:</b> Good for Digging Trenches, as this is its intended purpose.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Good for Digging Trenches, as this is its intended purpose.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

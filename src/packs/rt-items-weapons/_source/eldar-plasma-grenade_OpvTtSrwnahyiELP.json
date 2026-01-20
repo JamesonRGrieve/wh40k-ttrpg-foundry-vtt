@@ -1,7 +1,7 @@
 {
   "name": "Eldar Plasma Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
   "system": {
     "identifier": "eldar-plasma-grenade",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (4), Shocking</p><p><b>Note:</b> Highly valued by Cold Traders</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Highly valued by Cold Traders",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

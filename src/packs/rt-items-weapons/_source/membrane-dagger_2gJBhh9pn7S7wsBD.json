@@ -1,7 +1,7 @@
 {
   "name": "Membrane Dagger",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "membrane-dagger",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Crippling (6), Toxic (3), Unwieldy</p><p><b>Note:</b> Those wounded by weapon have 10% chance each turn of suffering Blood Loss until receiving First Aid. Medicae tests to heal damage dealt by weapon have -20.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Those wounded by weapon have 10% chance each turn of suffering Blood Loss until receiving First Aid. Medicae tests to heal damage dealt by weapon have -20.",
-    "source": "BC: Tome of Excess"
+    "source": "BC: Tome of Excess",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Omnisian Axe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "omnisian-axe",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> An Icon of the Machine God, only given to its followers.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "An Icon of the Machine God, only given to its followers.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

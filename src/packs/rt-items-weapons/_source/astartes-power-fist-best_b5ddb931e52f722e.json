@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Power Fist [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "system": {
+    "identifier": "astartes-power-fist-best",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 9
+    },
+    "special": [
+      "sm-wep",
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 25,
+    "availability": "average",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 60,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Replaces one of the Power Armour's Gauntlets. These gloves can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. For damage increase Unnatural Strength Bonus from x2 to x3</p>"
+    },
+    "modifications": [],
+    "notes": "Space Marines Only, not easily acquirable. Replaces one of the Power Armour's Gauntlets. These gloves can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20. For damage increase Unnatural Strength Bonus from x2 to x3",
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "b5ddb931e52f722e"
+}

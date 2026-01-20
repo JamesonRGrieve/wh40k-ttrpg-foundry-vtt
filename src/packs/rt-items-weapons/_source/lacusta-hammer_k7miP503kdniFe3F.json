@@ -1,7 +1,7 @@
 {
   "name": "Lacusta Hammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "lacusta-hammer",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> +2 Damage if user is mounted while attacking with this weapon. Requires two hands to use.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "+2 Damage if user is mounted while attacking with this weapon. Requires two hands to use.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

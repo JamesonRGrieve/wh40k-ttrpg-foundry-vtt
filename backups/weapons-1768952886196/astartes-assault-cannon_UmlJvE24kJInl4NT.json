@@ -1,0 +1,64 @@
+{
+  "name": "Astartes Assault Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-assault-cannon",
+    "class": "melee",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 10
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "impact",
+      "bonus": 6,
+      "penetration": 6
+    },
+    "special": [
+      "sm-wep",
+      "tearing"
+    ],
+    "clip": {
+      "max": 200,
+      "value": 200,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 80,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Can be wielded by Terminators.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. Can be wielded by Terminators.",
+    "source": "Deathwatch: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UmlJvE24kJInl4NT"
+}

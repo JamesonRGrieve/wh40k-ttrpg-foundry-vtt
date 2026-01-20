@@ -1,12 +1,12 @@
 {
   "name": "Condemnor [Crossbow]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "condemnor-crossbow",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Accurate, Sanctified</p><p><b>Note:</b> Combi-Weapon, undermounted on a boltgun, see Condemnor [Boltgun].  A Special Best Craftsmanship version exists whose attacks cannot be dodged by Daemons or Psykers. Note: See \"Purgatus Stake-Bolts\" for ammo type used.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Combi-Weapon, undermounted on a boltgun, see Condemnor [Boltgun].  A Special Best Craftsmanship version exists whose attacks cannot be dodged by Daemons or Psykers. Note: See \"Purgatus Stake-Bolts\" for ammo type used.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Astartes Lascannon (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-lascannon.svg",
   "system": {
     "identifier": "astartes-lascannon-alt",
     "class": "heavy",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Proven (3)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Requires a separate backpack power pack that is affixed to the power armour generator.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Requires a separate backpack power pack that is affixed to the power armour generator.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

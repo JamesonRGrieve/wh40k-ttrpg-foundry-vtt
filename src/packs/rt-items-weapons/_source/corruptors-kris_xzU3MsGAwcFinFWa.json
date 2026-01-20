@@ -1,7 +1,7 @@
 {
   "name": "Corruptors' Kris",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "corruptors-kris",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unbalanced</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Stryxis Aether Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "stryxis-aether-blade",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Unwieldy</p><p><b>Note:</b> Extremely Rare when sold by Stryxis. Doesn't damage non-living targets, machines (Machine (5+) Trait), or any creature with Daemoinc Trait. But ignores armour and toughness. Don't add Strength Bonus to damage. Is disabled for 1d10 days if hitting a psychic ward, barrier, or untouchable. Can't be parried.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Extremely Rare when sold by Stryxis. Doesn't damage non-living targets, machines (Machine (5+) Trait), or any creature with Daemoinc Trait. But ignores armour and toughness. Don't add Strength Bonus to damage. Is disabled for 1d10 days if hitting a psychic ward, barrier, or untouchable. Can't be parried.",
-    "source": "RT: Edge of the Abyss"
+    "source": "RT: Edge of the Abyss",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

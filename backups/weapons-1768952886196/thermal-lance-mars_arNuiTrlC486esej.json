@@ -1,0 +1,63 @@
+{
+  "name": "Thermal Lance (Mars)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "thermal-lance-mars",
+    "class": "heavy",
+    "type": "melta",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 12
+    },
+    "special": [
+      "accurate"
+    ],
+    "clip": {
+      "max": 2,
+      "value": 2,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 40,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 3000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Rogue Trader: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "arNuiTrlC486esej"
+}

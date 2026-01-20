@@ -1,7 +1,7 @@
 {
   "name": "Chemical Flamer (Magnus) \"Gorgon\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "chemical-flamer-magnus-gorgon",
     "class": "basic",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Corrosive, Felling(1), Flame, Spray, Toxic (2)</p><p><b>Note:</b> Can't use other Unusual Flamer Ammunition</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can't use other Unusual Flamer Ammunition",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

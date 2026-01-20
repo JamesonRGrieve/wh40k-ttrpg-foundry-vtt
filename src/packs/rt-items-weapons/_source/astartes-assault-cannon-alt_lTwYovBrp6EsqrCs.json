@@ -1,7 +1,7 @@
 {
   "name": "Astartes Assault Cannon (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
   "system": {
     "identifier": "astartes-assault-cannon-alt",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Devastating (1), Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Can be wielded by Terminators.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Can be wielded by Terminators.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

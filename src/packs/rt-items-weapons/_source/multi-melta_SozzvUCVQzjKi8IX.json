@@ -1,12 +1,12 @@
 {
   "name": "Multi-Melta",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-multimelta.svg",
   "system": {
     "identifier": "multi-melta",
     "class": "heavy",
     "type": "melta",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (1)</p><p><b>Note:</b> Users are advised to insulate tehmselves to prevent acciental self incineration whilst firing</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Users are advised to insulate tehmselves to prevent acciental self incineration whilst firing",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Gate Maker [Boltgun]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "gate-maker-boltgun",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Combi-Melta. Has [Boltgun] and [Melta] Profile. Each uses different ammo source and is reloaded seperately.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Combi-Melta. Has [Boltgun] and [Melta] Profile. Each uses different ammo source and is reloaded seperately.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

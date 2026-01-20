@@ -1,0 +1,64 @@
+{
+  "name": "Tears of the Emperor",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "tears-of-the-emperor",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-2",
+      "sanctified"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (2), Sanctified</p><p><b>Note:</b> Psykers hit bt weapon must immediately roll on perils of the warp. Creatuers with the Daemonic Trait hit by this gain the Warp Instability Trait until the end of the encounter, or suffer -20 to Warp Instability Tests if they already have the trait. Contains a Blood-like substance said to weep from some statues and relics.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Psykers hit bt weapon must immediately roll on perils of the warp. Creatuers with the Daemonic Trait hit by this gain the Warp Instability Trait until the end of the encounter, or suffer -20 to Warp Instability Tests if they already have the trait. Contains a Blood-like substance said to weep from some statues and relics.",
+    "source": "DH 2E: Enemies Within"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WUQMZb3rGzvRiJi8"
+}

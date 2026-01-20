@@ -1,0 +1,65 @@
+{
+  "name": "Dark Eldar Husk Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "dark-eldar-husk-blade",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 7
+    },
+    "special": [
+      "balanced",
+      "felling-4",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 3,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Felling (4), Power Field</p><p><b>Note:</b> Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Any Living creature that suffers at least one wound from this also takes 2d10+5 Toughness Damage, any that suffer critical damage from this weapon instantly die, turning to dust.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Any Living creature that suffers at least one wound from this also takes 2d10+5 Toughness Damage, any that suffer critical damage from this weapon instantly die, turning to dust.",
+    "source": "RT: The Soul Reaver"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DqdK39TTNyF3w9mV"
+}

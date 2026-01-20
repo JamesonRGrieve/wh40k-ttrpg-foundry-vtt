@@ -1,7 +1,7 @@
 {
   "name": "Havatian Ringblade [Melee]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "havatian-ringblade-melee",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Razor Sharp</p><p><b>Note:</b> Can be used as a [Melee] or [Ranged] Option. Ranged option is a Grenade that explodes on impact and is destroyed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be used as a [Melee] or [Ranged] Option. Ranged option is a Grenade that explodes on impact and is destroyed.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

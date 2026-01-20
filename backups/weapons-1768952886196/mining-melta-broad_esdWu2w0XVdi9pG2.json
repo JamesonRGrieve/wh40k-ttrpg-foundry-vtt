@@ -1,0 +1,63 @@
+{
+  "name": "Mining Melta [Broad]",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "mining-melta-broad",
+    "class": "heavy",
+    "type": "melta",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 11
+    },
+    "special": [
+      "scatter"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 36,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Can switch between [Broad] and [Focused] Modes as a Half Action (see Mining Melta [Focused])</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can switch between [Broad] and [Focused] Modes as a Half Action (see Mining Melta [Focused])",
+    "source": "RT: Faith and Coin"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "esdWu2w0XVdi9pG2"
+}

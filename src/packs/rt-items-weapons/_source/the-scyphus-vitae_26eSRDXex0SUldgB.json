@@ -1,7 +1,7 @@
 {
   "name": "The Scyphus Vitae",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "the-scyphus-vitae",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Devastating (1), Power Field, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Powersword of the Blood Drinkers Chapter. Two-Handed. Wielder can drink the blood of any target they deal wounds to with this weapon to avert the Blood Craving curse of their Chapter.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Powersword of the Blood Drinkers Chapter. Two-Handed. Wielder can drink the blood of any target they deal wounds to with this weapon to avert the Blood Craving curse of their Chapter.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

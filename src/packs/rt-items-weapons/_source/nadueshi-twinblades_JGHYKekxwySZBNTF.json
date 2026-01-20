@@ -1,7 +1,7 @@
 {
   "name": "Nadueshi Twinblades",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "nadueshi-twinblades",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Tearing</p><p><b>Note:</b> Archeotech. Fancy double-chained chainswords.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Archeotech. Fancy double-chained chainswords.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

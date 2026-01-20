@@ -1,7 +1,7 @@
 {
   "name": "Tox Spray",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "tox-spray",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Spray, Toxic</p><p><b>Note:</b> If the Weapon suffers a Jam it ruptures, dealing weapon's base damage to everyone in 2 metres (doubled for user).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If the Weapon suffers a Jam it ruptures, dealing weapon's base damage to everyone in 2 metres (doubled for user).",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

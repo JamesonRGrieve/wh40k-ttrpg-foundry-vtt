@@ -1,12 +1,12 @@
 {
   "name": "Thunder Hammer (Lathe)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "thunder-hammer-lathe",
     "class": "melee",
     "type": "power",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> When calculating damage, double user's strength bonus as if they had Unnatural Strength. If user already has Unnatural Strength, increase its modifier by one (EG x2 --> x3)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "When calculating damage, double user's strength bonus as if they had Unnatural Strength. If user already has Unnatural Strength, increase its modifier by one (EG x2 --> x3)",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

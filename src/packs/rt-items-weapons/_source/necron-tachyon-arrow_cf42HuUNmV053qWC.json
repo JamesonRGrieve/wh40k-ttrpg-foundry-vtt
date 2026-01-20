@@ -1,12 +1,12 @@
 {
   "name": "Necron Tachyon Arrow",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "necron-tachyon-arrow",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Concussive (6), Proven (3)</p><p><b>Note:</b> Always Best Quality. Only has one shot, not feasible to reload in combat. Only Necrons know how to reload it at all.\nNecron Lords use it as a Wrist Mounted one-use delete button.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality. Only has one shot, not feasible to reload in combat. Only Necrons know how to reload it at all.\nNecron Lords use it as a Wrist Mounted one-use delete button.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Abyssal Charge",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "abyssal-charge",
     "class": "thrown",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (3), Crippling (2), Tainted</p><p><b>Note:</b> Standard Explosives packed with daemon-touched materials</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Standard Explosives packed with daemon-touched materials",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

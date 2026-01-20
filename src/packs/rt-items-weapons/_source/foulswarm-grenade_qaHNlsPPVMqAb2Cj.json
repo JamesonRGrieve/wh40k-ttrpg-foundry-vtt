@@ -1,7 +1,7 @@
 {
   "name": "Foulswarm Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "foulswarm-grenade",
     "class": "thrown",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Blast (3), Corrosive, Smoke (6), Toxic (3)</p><p><b>Note:</b> Smoke Cloud created by grenade causes all who start their turn in it to automatically suffer 2d10 Impact Damage with Corrosive and Toxic(3) Qualities.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Smoke Cloud created by grenade causes all who start their turn in it to automatically suffer 2d10 Impact Damage with Corrosive and Toxic(3) Qualities.",
-    "source": "BC: Tome of Decay"
+    "source": "BC: Tome of Decay",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Auto-Carbine (Zayth)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "auto-carbine-zayth",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Inaccurate</p><p><b>Note:</b> Can be fired one-handed without penalty. -10 to notice weapon if it is concealed under bulky clothing or cloaks.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be fired one-handed without penalty. -10 to notice weapon if it is concealed under bulky clothing or cloaks.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

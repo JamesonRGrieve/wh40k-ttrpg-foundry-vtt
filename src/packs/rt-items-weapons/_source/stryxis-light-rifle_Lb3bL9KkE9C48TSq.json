@@ -1,12 +1,12 @@
 {
   "name": "Stryxis Light Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "stryxis-light-rifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Accurate</p><p><b>Note:</b> One step easier to obtain if offered by a Stryxis Merchant.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "One step easier to obtain if offered by a Stryxis Merchant.",
-    "source": "RT: Koronus Bestiary"
+    "source": "RT: Koronus Bestiary",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

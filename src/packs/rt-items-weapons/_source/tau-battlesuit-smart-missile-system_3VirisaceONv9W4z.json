@@ -1,12 +1,12 @@
 {
   "name": "Tau Battlesuit Smart Missile System",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "tau-battlesuit-smart-missile-system",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one.  As long as target position known to firier, do not need line of sight for weapon, instead to fire at target outside of line of sight, make +0 Intelligence Test in lieu of Ballistic Skill Test.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Tau Battlesuit Weapon, not practical to wield outside of one.  As long as target position known to firier, do not need line of sight for weapon, instead to fire at target outside of line of sight, make +0 Intelligence Test in lieu of Ballistic Skill Test.",
-    "source": "RT: Tau Char. Guide"
+    "source": "RT: Tau Character Guide",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

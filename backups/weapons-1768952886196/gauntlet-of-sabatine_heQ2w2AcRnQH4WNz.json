@@ -1,0 +1,66 @@
+{
+  "name": "Gauntlet of Sabatine",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "gauntlet-of-sabatine",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 9
+    },
+    "special": [
+      "sm-wep",
+      "power-field",
+      "sanctified",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 25,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 65,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Sanctified, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Fist of the White Consuls Chapter. Does +2 damage against Mutants. \nIncreases Unnatural Strength from x2 to x3 for damage purposes as with all Power Fists.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Fist of the White Consuls Chapter. Does +2 damage against Mutants. \nIncreases Unnatural Strength from x2 to x3 for damage purposes as with all Power Fists.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "heQ2w2AcRnQH4WNz"
+}

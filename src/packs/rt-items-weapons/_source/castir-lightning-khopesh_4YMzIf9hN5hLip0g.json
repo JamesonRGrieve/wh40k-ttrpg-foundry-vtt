@@ -1,7 +1,7 @@
 {
   "name": "Castir Lightning Khopesh",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "castir-lightning-khopesh",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Balanced, Flexible, Power Field</p><p><b>Note:</b> Can be used to Parry despite Flexible Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be used to Parry despite Flexible Quality.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

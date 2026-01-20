@@ -1,0 +1,65 @@
+{
+  "name": "Berzerker Glaive",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "berzerker-glaive",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 6,
+      "penetration": 6
+    },
+    "special": [
+      "daemon-wep",
+      "devastating-2",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 8,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Devastating (2), Unbalanced</p><p><b>Note:</b> Weapon: Glaive. Daemon WP 40 (Khorne Daemon), Bind Str 1. Att.: Bloodlust, Impervious, Thirsting. Must Make -10 WP Test to resist entering Frenzy (or -30 if having Frenzy Talent). Inflicts 1 Fatigue on wounding hit. Gain Prot 40 Force Field with no Overload, causes Psychic Phenomena if protection roll is a double. Two-Handed. Need Mark of Khorne to Wield. </p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Glaive. Daemon WP 40 (Khorne Daemon), Bind Str 1. Att.: Bloodlust, Impervious, Thirsting. Must Make -10 WP Test to resist entering Frenzy (or -30 if having Frenzy Talent). Inflicts 1 Fatigue on wounding hit. Gain Prot 40 Force Field with no Overload, causes Psychic Phenomena if protection roll is a double. Two-Handed. Need Mark of Khorne to Wield. ",
+    "source": "BC: Tome of Blood"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AHiBzbyOjwoDGKZo"
+}

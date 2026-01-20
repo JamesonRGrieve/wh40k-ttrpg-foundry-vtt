@@ -1,7 +1,7 @@
 {
   "name": "Shock Stars",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-default.svg",
   "system": {
     "identifier": "shock-stars",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Throwing stars that deliver shock on contact.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Throwing stars that deliver shock on contact.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

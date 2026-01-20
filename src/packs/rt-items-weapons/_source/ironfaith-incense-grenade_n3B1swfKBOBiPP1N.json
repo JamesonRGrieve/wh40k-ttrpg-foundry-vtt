@@ -1,7 +1,7 @@
 {
   "name": "Ironfaith Incense Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "ironfaith-incense-grenade",
     "class": "thrown",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Daemonbane, Sanctified, Smoke (3)</p><p><b>Note:</b> Targets that are hit, enters the smoke, or starts their turn in the smoke, they suffer damage equal to their Corruption Bonus or their Daemonic (X) trait, whichever is higher. Damage ignores Armour and Toughness.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Targets that are hit, enters the smoke, or starts their turn in the smoke, they suffer damage equal to their Corruption Bonus or their Daemonic (X) trait, whichever is higher. Damage ignores Armour and Toughness.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

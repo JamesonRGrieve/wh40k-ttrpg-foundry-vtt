@@ -1,7 +1,7 @@
 {
   "name": "Eldar Void Sabre",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eldar-void-sabre",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Tearing</p><p><b>Note:</b> Weapon on an Eldar Seer. If Righteous Fury is scored when rolling for damage caused by the weapon, add +8 to Penetration for that attack.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon on an Eldar Seer. If Righteous Fury is scored when rolling for damage caused by the weapon, add +8 to Penetration for that attack.",
-    "source": "RT: The Navis Primer"
+    "source": "RT: The Navis Primer",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

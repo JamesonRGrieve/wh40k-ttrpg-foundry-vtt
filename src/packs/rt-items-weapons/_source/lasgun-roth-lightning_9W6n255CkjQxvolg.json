@@ -1,12 +1,12 @@
 {
   "name": "Lasgun (Roth) \"Lightning\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "lasgun-roth-lightning",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> A Bullpup Lasgun varient. Often reserved for sharpshooter infantry regiments and further modified into long las sniper rifles</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Bullpup Lasgun varient. Often reserved for sharpshooter infantry regiments and further modified into long las sniper rifles",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

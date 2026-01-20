@@ -1,7 +1,7 @@
 {
   "name": "Hellpistol (Lucius)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "hellpistol-lucius",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Use 10kg power pack (can also use larger backpack power pack)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Use 10kg power pack (can also use larger backpack power pack)",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Javelin (Relic)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
   "system": {
     "identifier": "javelin-relic",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Found as Treasure via book's Treasure Generator.",
-    "source": "RT: Stars of Inequity"
+    "source": "RT: Stars of Inequity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Flying Claw",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
   "system": {
     "identifier": "flying-claw",
     "class": "thrown",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Flexible, Primitive (8), Snare, Tearing</p><p><b>Note:</b> Can be used in Melee or Thrown.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be used in Melee or Thrown.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

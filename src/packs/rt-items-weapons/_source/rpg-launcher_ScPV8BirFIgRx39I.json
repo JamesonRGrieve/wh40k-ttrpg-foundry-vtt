@@ -1,12 +1,12 @@
 {
   "name": "RPG Launcher",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-default.svg",
   "system": {
     "identifier": "rpg-launcher",
     "class": "basic",
     "type": "launcher",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Damage and Penetration Vary with Ammunition</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Damage and Penetration Vary with Ammunition",
-    "source": "Dark Heresy: Core"
+    "source": "DH: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

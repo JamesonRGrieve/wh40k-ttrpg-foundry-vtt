@@ -1,7 +1,7 @@
 {
   "name": "Tau Pulse Pistol (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "tau-pulse-pistol-alt",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Force Sword (Naduesh)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "force-sword-naduesh",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Force, Balanced</p><p><b>Note:</b> Acts as Best Craftsmanship Mono Weapon to non-psyker.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Acts as Best Craftsmanship Mono Weapon to non-psyker.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

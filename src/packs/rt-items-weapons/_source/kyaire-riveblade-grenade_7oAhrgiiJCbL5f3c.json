@@ -1,7 +1,7 @@
 {
   "name": "Kyaire Riveblade Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
   "system": {
     "identifier": "kyaire-riveblade-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Razor Sharp</p><p><b>Note:</b> Specialised Grenade that used to be fired by now extinct aliens from their launchers.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Specialised Grenade that used to be fired by now extinct aliens from their launchers.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

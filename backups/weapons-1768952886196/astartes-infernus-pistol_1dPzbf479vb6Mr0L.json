@@ -1,0 +1,64 @@
+{
+  "name": "Astartes Infernus Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-infernus-pistol",
+    "class": "pistol",
+    "type": "melta",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 8,
+      "penetration": 13
+    },
+    "special": [
+      "sm-wep",
+      "melta"
+    ],
+    "clip": {
+      "max": 4,
+      "value": 4,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 35,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Melta</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable.",
+    "source": "Deathwatch: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1dPzbf479vb6Mr0L"
+}

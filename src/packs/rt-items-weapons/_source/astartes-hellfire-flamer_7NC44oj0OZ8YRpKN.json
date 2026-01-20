@@ -1,7 +1,7 @@
 {
   "name": "Astartes Hellfire Flamer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "astartes-hellfire-flamer",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Flame, Tearing</p><p><b>Note:</b> Space Marines Only.  Deathwatch variant Astartes Flamer. Ignores Natural Armour and inflicts Righteous Fury on a 9 or 10.\nThose set on fire by Astartes flamer weapons take +4 damage from the flames.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only.  Deathwatch variant Astartes Flamer. Ignores Natural Armour and inflicts Righteous Fury on a 9 or 10.\nThose set on fire by Astartes flamer weapons take +4 damage from the flames.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

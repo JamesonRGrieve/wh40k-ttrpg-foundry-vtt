@@ -1,7 +1,7 @@
 {
   "name": "Lightning Gauntlet",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "lightning-gauntlet",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Shocking</p><p><b>Note:</b> Made of a strange material that stores and releases sparks of energy</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Made of a strange material that stores and releases sparks of energy",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

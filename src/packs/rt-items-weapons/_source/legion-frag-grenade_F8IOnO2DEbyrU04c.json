@@ -1,7 +1,7 @@
 {
   "name": "Legion Frag Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "legion-frag-grenade",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (4), SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Chaos Legionary Weapon. Dangerous to own.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Mechatendril",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "mechatendril",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Flexible</p><p><b>Note:</b> Mechadendrite, requires Mechadendrite Use(Weapon) to attack without training penalty instead of Exotic Weapon Training\nGained through the Mechatendril Cybernetic, see that Gear for more details.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Mechadendrite, requires Mechadendrite Use(Weapon) to attack without training penalty instead of Exotic Weapon Training\nGained through the Mechatendril Cybernetic, see that Gear for more details.",
-    "source": "BC: Tome of Decay"
+    "source": "BC: Tome of Decay",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

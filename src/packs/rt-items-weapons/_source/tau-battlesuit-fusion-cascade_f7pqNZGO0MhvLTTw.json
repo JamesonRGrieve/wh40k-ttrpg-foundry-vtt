@@ -1,12 +1,12 @@
 {
   "name": "Tau Battlesuit Fusion Cascade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "tau-battlesuit-fusion-cascade",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Often used on  XV9 Hazard Suits.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. Often used on  XV9 Hazard Suits.",
-    "source": "RT: Tau Char. Guide"
+    "source": "RT: Tau Character Guide",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

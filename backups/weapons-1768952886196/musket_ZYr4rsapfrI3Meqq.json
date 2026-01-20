@@ -1,0 +1,65 @@
+{
+  "name": "Musket",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "musket",
+    "class": "basic",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate",
+      "primitive-8",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 7,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Primitive (8), Unreliable</p><p><b>Note:</b> Counts as a Staff in melee combat. Common on Fuedal worlds.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Counts as a Staff in melee combat. Common on Fuedal worlds.",
+    "source": "DH 2E: Enemies Within"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZYr4rsapfrI3Meqq"
+}

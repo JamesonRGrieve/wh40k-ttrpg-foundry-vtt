@@ -1,12 +1,12 @@
 {
   "name": "Techxorcism Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "techxorcism-gun",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Directly attacks Machine Spirits. Whenever it causes Cirtical Damage to a target causes the Haywire Effect.\nHaywire effect doesn't work on Ork Weapons.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Directly attacks Machine Spirits. Whenever it causes Cirtical Damage to a target causes the Haywire Effect.\nHaywire effect doesn't work on Ork Weapons.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

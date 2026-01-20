@@ -1,7 +1,7 @@
 {
   "name": "Bone Maul",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "bone-maul",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Unbalanced, Tainted</p><p><b>Note:</b> Two Handed Weapon. Starts out a Dull grey, but becomes cleaner and brighter as it causes bloody impacts, before dulling again at a battle's conclusion</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two Handed Weapon. Starts out a Dull grey, but becomes cleaner and brighter as it causes bloody impacts, before dulling again at a battle's conclusion",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

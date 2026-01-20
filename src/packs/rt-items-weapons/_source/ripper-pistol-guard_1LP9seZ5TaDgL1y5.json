@@ -1,7 +1,7 @@
 {
   "name": "Ripper Pistol (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "ripper-pistol-guard",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Toxic (2)</p><p><b>Note:</b> Uses Specialised Ammunition. Can’t use Unusual Ammuniion</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Uses Specialised Ammunition. Can’t use Unusual Ammuniion",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

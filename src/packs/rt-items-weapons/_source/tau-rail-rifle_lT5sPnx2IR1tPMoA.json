@@ -1,12 +1,12 @@
 {
   "name": "Tau Rail Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "tau-rail-rifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Felling (4), Proven (2)</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
-    "source": "RT: Tau Char. Guide"
+    "source": "RT: Tau Character Guide",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Kursian Slivernet",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "kursian-slivernet",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Crippling (2), Flexible, Inaccurate, Unwieldy</p><p><b>Note:</b> Needs Exotic Weapon Training(Kursian Pit Weapons).  Gains Snare(3) when thrown</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Needs Exotic Weapon Training(Kursian Pit Weapons).  Gains Snare(3) when thrown",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Legion Heavy Flamer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-flamer.svg",
   "system": {
     "identifier": "legion-heavy-flamer",
     "class": "heavy",
     "type": "flame",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Spray, SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own. Can be used by Terminators</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Chaos Legionary Weapon. Dangerous to own. Can be used by Terminators",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

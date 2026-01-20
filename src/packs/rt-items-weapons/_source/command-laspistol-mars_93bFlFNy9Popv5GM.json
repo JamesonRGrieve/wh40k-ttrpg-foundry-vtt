@@ -1,7 +1,7 @@
 {
   "name": "Command Laspistol (Mars)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "command-laspistol-mars",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Accurate</p><p><b>Note:</b> Presented to Officers attaining company command.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Presented to Officers attaining company command.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

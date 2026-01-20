@@ -1,12 +1,12 @@
 {
   "name": "Autocannon (M34)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "autocannon-m34",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Ogryn-Proof</p><p><b>Note:</b> Ideally employs a crew of two to move, set up, and assist in reloading. A Second crew member may spend their actions to reload the weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Ideally employs a crew of two to move, set up, and assist in reloading. A Second crew member may spend their actions to reload the weapon.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

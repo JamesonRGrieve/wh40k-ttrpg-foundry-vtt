@@ -1,7 +1,7 @@
 {
   "name": "Virus Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "virus-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> for 1d10 rounds, If damage done to target next round repeat on random target in d5 metres, ignores armour, although sealed armour or Machine (3) trait prevents.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "for 1d10 rounds, If damage done to target next round repeat on random target in d5 metres, ignores armour, although sealed armour or Machine (3) trait prevents.",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

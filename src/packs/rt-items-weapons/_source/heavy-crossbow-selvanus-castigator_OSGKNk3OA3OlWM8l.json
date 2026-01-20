@@ -1,12 +1,12 @@
 {
   "name": "Heavy Crossbow (Selvanus) \"Castigator\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-default.svg",
   "system": {
     "identifier": "heavy-crossbow-selvanus-castigator",
     "class": "heavy",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Concussive (2), Reliable</p><p><b>Note:</b> Fires Metre-Length Bolts that Knock anyone of Size 5 (Hulking) or smaller Prone if hit by them.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires Metre-Length Bolts that Knock anyone of Size 5 (Hulking) or smaller Prone if hit by them.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

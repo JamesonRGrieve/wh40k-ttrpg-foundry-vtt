@@ -1,12 +1,12 @@
 {
   "name": "Autocannon (Reaper)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "autocannon-reaper",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Twin-Linked</p><p><b>Note:</b> Rarely used by the Imperium, commonly seen on Chaos Terminators</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Rarely used by the Imperium, commonly seen on Chaos Terminators",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

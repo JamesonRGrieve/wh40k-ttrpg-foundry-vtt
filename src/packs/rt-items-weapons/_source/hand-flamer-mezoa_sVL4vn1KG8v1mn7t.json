@@ -1,7 +1,7 @@
 {
   "name": "Hand Flamer (Mezoa)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-flamer.svg",
   "system": {
     "identifier": "hand-flamer-mezoa",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flame, Spray</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

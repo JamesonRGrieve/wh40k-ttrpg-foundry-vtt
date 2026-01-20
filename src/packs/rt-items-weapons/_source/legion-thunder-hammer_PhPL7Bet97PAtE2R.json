@@ -1,12 +1,12 @@
 {
   "name": "Legion Thunder Hammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "legion-thunder-hammer",
     "class": "melee",
     "type": "power",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Concussive (3), Power Field, Unwieldy</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Chaos Legionary Weapon. Dangerous to own.",
-    "source": "BC: Tome of Excess"
+    "source": "BC: Tome of Excess",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,64 @@
+{
+  "name": "Graviton Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "graviton-gun",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 6,
+      "penetration": 8
+    },
+    "special": [
+      "concussive-2",
+      "graviton"
+    ],
+    "clip": {
+      "max": 9,
+      "value": 9,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 6,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (2), Graviton</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "Dark Heresy 2E: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xYFjobIN0gGtSj3n"
+}

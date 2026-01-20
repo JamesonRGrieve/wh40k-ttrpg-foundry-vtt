@@ -1,7 +1,7 @@
 {
   "name": "Autopistol (Talon Mk III)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "autopistol-talon-mk-iii",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Can use an optional 30 round clip, but cannot be holstered and must be fired two-handed or impose -10 to Ballistic Skill Tests.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can use an optional 30 round clip, but cannot be holstered and must be fired two-handed or impose -10 to Ballistic Skill Tests.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

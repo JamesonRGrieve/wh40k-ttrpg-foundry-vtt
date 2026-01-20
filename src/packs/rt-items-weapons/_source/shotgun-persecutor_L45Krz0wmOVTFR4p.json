@@ -1,12 +1,12 @@
 {
   "name": "Shotgun (Persecutor)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "shotgun-persecutor",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Scatter</p><p><b>Note:</b> Has an undermounted retractable shock prod. Can be used as a Shock Staff in Melee (1d5+3 I, Pen 0, Shocking)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has an undermounted retractable shock prod. Can be used as a Shock Staff in Melee (1d5+3 I, Pen 0, Shocking)",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

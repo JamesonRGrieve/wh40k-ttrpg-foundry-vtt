@@ -1,7 +1,7 @@
 {
   "name": "Ork Burna [Melee]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "ork-burna-melee",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

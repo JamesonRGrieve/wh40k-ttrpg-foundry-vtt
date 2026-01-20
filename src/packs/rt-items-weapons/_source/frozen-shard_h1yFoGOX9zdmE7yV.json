@@ -1,7 +1,7 @@
 {
   "name": "Frozen Shard",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "frozen-shard",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Felling (3)</p><p><b>Note:</b> Blade with a Frictionless Surface, capable of piecring through the smallest joint or defect.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Blade with a Frictionless Surface, capable of piecring through the smallest joint or defect.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

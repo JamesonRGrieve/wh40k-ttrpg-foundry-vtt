@@ -1,12 +1,12 @@
 {
   "name": "Warp Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "warp-cannon",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (3), Recharge, Warp Weapon</p><p><b>Note:</b> Opens brief warp portals within a target with considerablre results.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Opens brief warp portals within a target with considerablre results.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

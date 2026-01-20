@@ -1,7 +1,7 @@
 {
   "name": "Haywire Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "haywire-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (2)</p><p><b>Note:</b> Electrical devices, energy weapons, bionics, and vehicles within range cease to function for 1d5 rounds. If detonating on a vehicle, it suffers a critical hit (+1 to result). Can't be used in a launcher.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Electrical devices, energy weapons, bionics, and vehicles within range cease to function for 1d5 rounds. If detonating on a vehicle, it suffers a critical hit (+1 to result). Can't be used in a launcher.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Bolter (Godywn)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "astartes-bolter-godywn",
     "class": "basic",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Standard issue for all Space Marines, Renown cost is only for extras.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Standard issue for all Space Marines, Renown cost is only for extras.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

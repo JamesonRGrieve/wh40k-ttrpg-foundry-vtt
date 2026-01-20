@@ -1,7 +1,7 @@
 {
   "name": "Force Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "force-sword",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Force, Balanced</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

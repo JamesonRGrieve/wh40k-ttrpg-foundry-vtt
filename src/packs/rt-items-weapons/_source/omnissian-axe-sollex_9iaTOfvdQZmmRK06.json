@@ -1,7 +1,7 @@
 {
   "name": "Omnissian Axe (Sollex)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "omnissian-axe-sollex",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Also Functions as a Combi-Tool (+10 Tech-Use)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Also Functions as a Combi-Tool (+10 Tech-Use)",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

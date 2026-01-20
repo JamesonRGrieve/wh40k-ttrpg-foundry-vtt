@@ -1,0 +1,65 @@
+{
+  "name": "Tox Spray",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "tox-spray",
+    "class": "basic",
+    "type": "flame",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "flame",
+      "spray",
+      "toxic"
+    ],
+    "clip": {
+      "max": 3,
+      "value": 3,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 8,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 200,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Spray, Toxic</p><p><b>Note:</b> If the Weapon suffers a Jam it ruptures, dealing weapon's base damage to everyone in 2 metres (doubled for user).</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "If the Weapon suffers a Jam it ruptures, dealing weapon's base damage to everyone in 2 metres (doubled for user).",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tPrgtrVvP1azOsWd"
+}

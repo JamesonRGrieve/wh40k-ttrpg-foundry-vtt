@@ -1,7 +1,7 @@
 {
   "name": "Eldar Splinter Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "eldar-splinter-pistol",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic (1)</p><p><b>Note:</b> Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons. Counts as a Mono-Knife in melee combat.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons. Counts as a Mono-Knife in melee combat.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

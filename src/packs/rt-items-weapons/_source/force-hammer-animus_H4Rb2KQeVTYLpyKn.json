@@ -1,7 +1,7 @@
 {
   "name": "Force Hammer (Animus)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "force-hammer-animus",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Daemonbane, Force, Power Field, Unwieldy</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+. Acts as a Psy-Focus. If wieldy has a Psyker Trait, wielding the weapon adds +1 to Psy Rating.\nAdd 2x Strength Bonus to damage instead of 1x.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed unless wielder has Strength Bonus of 5+. Acts as a Psy-Focus. If wieldy has a Psyker Trait, wielding the weapon adds +1 to Psy Rating.\nAdd 2x Strength Bonus to damage instead of 1x.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

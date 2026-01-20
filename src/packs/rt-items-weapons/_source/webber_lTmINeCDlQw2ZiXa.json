@@ -1,12 +1,12 @@
 {
   "name": "Webber",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "webber",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (5), Snare (1)</p><p><b>Note:</b> Snaring Filaments dissolve after 1d5 hours.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Snaring Filaments dissolve after 1d5 hours.",
-    "source": "Dark Heresy 2E: Core"
+    "source": "DH2: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

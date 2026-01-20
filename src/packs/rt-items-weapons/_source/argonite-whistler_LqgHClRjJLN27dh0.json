@@ -1,7 +1,7 @@
 {
   "name": "Argonite Whistler",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "argonite-whistler",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Recharge</p><p><b>Note:</b> Argonite Xenos make, a rod that can produces destructive sonic beams on making the proper pressure patterns. May have a handgrip to aid a novice to fire.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Argonite Xenos make, a rod that can produces destructive sonic beams on making the proper pressure patterns. May have a handgrip to aid a novice to fire.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

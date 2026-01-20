@@ -1,0 +1,65 @@
+{
+  "name": "Chainflail",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "chainflail",
+    "class": "melee",
+    "type": "chain",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 4,
+      "penetration": 2
+    },
+    "special": [
+      "flexible",
+      "tearing",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 14,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Tearing, Unwieldy</p><p><b>Note:</b> Inflicts Righteous Fury on a natural 9 or 10 damage roll. If failing a WS Test by more Degrees of Failiure than Weapon Skill Bonus, hit yourself. Two Handed Weapon.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Inflicts Righteous Fury on a natural 9 or 10 damage roll. If failing a WS Test by more Degrees of Failiure than Weapon Skill Bonus, hit yourself. Two Handed Weapon.",
+    "source": "OW: Hammer of the Emperor"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jYxO3NQPlExucb6F"
+}

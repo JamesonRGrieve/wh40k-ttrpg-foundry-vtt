@@ -1,7 +1,7 @@
 {
   "name": "Laspistol (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "laspistol-guard",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

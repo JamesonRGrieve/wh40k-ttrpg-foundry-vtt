@@ -1,7 +1,7 @@
 {
   "name": "Dartcaster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "dartcaster",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Ammo can be covered in any poision (such as choke/hallucinogen), or silvered</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Ammo can be covered in any poision (such as choke/hallucinogen), or silvered",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Impaler",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-default.svg",
   "system": {
     "identifier": "impaler",
     "class": "heavy",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> A Large Harpoon gun\nRequires Strength Bonus of 4 to use.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Large Harpoon gun\nRequires Strength Bonus of 4 to use.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

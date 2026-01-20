@@ -1,12 +1,12 @@
 {
   "name": "Dark Eldar Darklight Blaster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "dark-eldar-darklight-blaster",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Felling (4), Proven (3)</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Rare Availability if acquired from Dark Eldar Settlement.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

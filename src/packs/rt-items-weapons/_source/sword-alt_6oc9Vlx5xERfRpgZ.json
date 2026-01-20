@@ -1,7 +1,7 @@
 {
   "name": "Sword (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "sword-alt",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Balanced</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

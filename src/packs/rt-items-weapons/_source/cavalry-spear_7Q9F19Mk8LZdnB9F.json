@@ -1,7 +1,7 @@
 {
   "name": "Cavalry Spear",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "cavalry-spear",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Proven (2), Unbalanced</p><p><b>Note:</b> Gains Proven(4) If used as part of a Mounted Charager's \"Crushing Charge\" Mounted Special Action</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gains Proven(4) If used as part of a Mounted Charager's \"Crushing Charge\" Mounted Special Action",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

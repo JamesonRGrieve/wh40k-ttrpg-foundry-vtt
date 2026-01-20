@@ -1,7 +1,7 @@
 {
   "name": "Red Dawn",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "red-dawn",
     "class": "melee",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Tearing, Unbalanced, Volatile</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Angels Encarmine Chapter. Whenever the wielder scores Righteous Fury on an opponent, in addition to normal effects a Photon Flash Grenade-like effect occurs.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Angels Encarmine Chapter. Whenever the wielder scores Righteous Fury on an opponent, in addition to normal effects a Photon Flash Grenade-like effect occurs.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

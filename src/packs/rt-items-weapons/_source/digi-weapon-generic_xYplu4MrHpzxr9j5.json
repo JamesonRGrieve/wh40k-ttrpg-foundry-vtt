@@ -1,7 +1,7 @@
 {
   "name": "Digi-Weapon (Generic)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "digi-weapon-generic",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Takes 1 hour to recharge between shots, worn as a ring, does not prevent the hand worn on from performing normal actions.\nProfile Lists that of Digi-Las Pistol, Can replace Damage, Penetration, and Qualities with that of another ranged weapon for different Digi Weapons at GM discretion.\nCommon examples include Flamers, Grav Pistols, Inferno Pistols, Needle Pistols, Plasma Pistols, etc. (Typically weapons with more energy-like attacks).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Takes 1 hour to recharge between shots, worn as a ring, does not prevent the hand worn on from performing normal actions.\nProfile Lists that of Digi-Las Pistol, Can replace Damage, Penetration, and Qualities with that of another ranged weapon for different Digi Weapons at GM discretion.\nCommon examples include Flamers, Grav Pistols, Inferno Pistols, Needle Pistols, Plasma Pistols, etc. (Typically weapons with more energy-like attacks).",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

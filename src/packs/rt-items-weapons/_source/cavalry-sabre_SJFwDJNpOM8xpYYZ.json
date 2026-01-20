@@ -1,7 +1,7 @@
 {
   "name": "Cavalry Sabre",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "cavalry-sabre",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Razor-Sharp</p><p><b>Note:</b> Often used as a secondary weapon for cavalry riders.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Often used as a secondary weapon for cavalry riders.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

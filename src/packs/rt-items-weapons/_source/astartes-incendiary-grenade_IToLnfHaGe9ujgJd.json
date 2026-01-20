@@ -1,7 +1,7 @@
 {
   "name": "Astartes Incendiary Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "astartes-incendiary-grenade",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Blast (3)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Area remains on fire for 1d5 Rounds, anyone remaining within area must continue to take Agility Tests to avoid catching on fire.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Area remains on fire for 1d5 Rounds, anyone remaining within area must continue to take Agility Tests to avoid catching on fire.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Fire Bomb",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "fire-bomb",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (2), Flame</p><p><b>Note:</b> Requires Half Action to ready before use. Cannot be loaded into launchers.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires Half Action to ready before use. Cannot be loaded into launchers.",
-    "source": "Dark Heresy 2E: Core"
+    "source": "DH2: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

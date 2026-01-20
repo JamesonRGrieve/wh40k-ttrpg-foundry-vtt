@@ -1,7 +1,7 @@
 {
   "name": "Autopistol (Lyndwyrm) \"Volcano\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "autopistol-lyndwyrm-volcano",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> There are special best craftsmanship versions of this weapon emblazoned with a crimson blade that have the \"Sanctified\" Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "There are special best craftsmanship versions of this weapon emblazoned with a crimson blade that have the \"Sanctified\" Quality.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

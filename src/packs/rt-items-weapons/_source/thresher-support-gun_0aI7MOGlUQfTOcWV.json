@@ -1,12 +1,12 @@
 {
   "name": "Thresher Support Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "thresher-support-gun",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Crippling (2), Primitive (8), Tearing</p><p><b>Note:</b> Comes with a Backpack Ammo Supply as part of Acquisition. Could be replaced with a Vehicle Mounted ammo supply.\nBackpack weight part of listed weight. (This conflicts with Echon Assault Stubber, which weapon is a variant of, grumble)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Comes with a Backpack Ammo Supply as part of Acquisition. Could be replaced with a Vehicle Mounted ammo supply.\nBackpack weight part of listed weight. (This conflicts with Echon Assault Stubber, which weapon is a variant of, grumble)",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

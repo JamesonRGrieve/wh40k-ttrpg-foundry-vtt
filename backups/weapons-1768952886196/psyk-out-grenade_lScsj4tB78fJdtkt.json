@@ -1,0 +1,64 @@
+{
+  "name": "Psyk-Out Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "psyk-out-grenade",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-3",
+      "smoke-3"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 1,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (3), Smoke (3)</p><p><b>Note:</b> Targets that are hit, enter the smoke, or start their turn in the smoke they must make a -30 Willpower Test or reduce their Psy rating by 1 per Degree of Failiure. If failing by 2+ DoF must immediately roll Psychic Phenomena. Every 6 hours regain 1 Psy rating lost by this weapon. Attempts to manifest a power in this smoke auto-fail.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Targets that are hit, enter the smoke, or start their turn in the smoke they must make a -30 Willpower Test or reduce their Psy rating by 1 per Degree of Failiure. If failing by 2+ DoF must immediately roll Psychic Phenomena. Every 6 hours regain 1 Psy rating lost by this weapon. Attempts to manifest a power in this smoke auto-fail.",
+    "source": "DH 2E: Enemies Beyond"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lScsj4tB78fJdtkt"
+}

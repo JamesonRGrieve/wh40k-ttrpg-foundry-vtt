@@ -1,7 +1,7 @@
 {
   "name": "Chain Fist",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "chain-fist",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Imposes -10 on WS Tests to attack with it unless wielder has 5+ Strength of Higher.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Imposes -10 on WS Tests to attack with it unless wielder has 5+ Strength of Higher.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

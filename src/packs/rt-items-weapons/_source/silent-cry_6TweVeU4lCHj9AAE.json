@@ -1,12 +1,12 @@
 {
   "name": "Silent Cry",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "silent-cry",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> SM Wep, Accurate, Felling (8), Razor Sharp, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Boltgun (Stalker) of the Excorcists Chapter. When fired after a Full Action Aim, scores Righteous Fury on a 9 or 10.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Boltgun (Stalker) of the Excorcists Chapter. When fired after a Full Action Aim, scores Righteous Fury on a 9 or 10.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

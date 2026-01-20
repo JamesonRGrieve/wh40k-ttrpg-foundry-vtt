@@ -1,12 +1,12 @@
 {
   "name": "Phased Plasma Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
   "system": {
     "identifier": "phased-plasma-rifle",
     "class": "basic",
     "type": "plasma",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon).. Infinite clip, no reload.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon).. Infinite clip, no reload.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

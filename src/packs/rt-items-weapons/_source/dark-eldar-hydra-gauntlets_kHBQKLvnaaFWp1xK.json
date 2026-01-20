@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Hydra Gauntlets",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-hydra-gauntlets",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Come in and are equipped in pairs. When making an All-Out-Attack with this weapon, can spend reaction to make additional attack per 3 DoS on original WS Test.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Come in and are equipped in pairs. When making an All-Out-Attack with this weapon, can spend reaction to make additional attack per 3 DoS on original WS Test.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

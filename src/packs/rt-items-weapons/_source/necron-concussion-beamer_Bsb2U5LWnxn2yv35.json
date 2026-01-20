@@ -1,7 +1,7 @@
 {
   "name": "Necron Concussion Beamer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "necron-concussion-beamer",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Concussive (1), Reliable</p><p><b>Note:</b> Produces a near-invisible beam of energy that violently explodes on contact with a target.\nInfinite Ammo, No Reloads needed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Produces a near-invisible beam of energy that violently explodes on contact with a target.\nInfinite Ammo, No Reloads needed.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

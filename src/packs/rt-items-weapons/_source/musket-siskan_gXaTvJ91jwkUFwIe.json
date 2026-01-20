@@ -1,12 +1,12 @@
 {
   "name": "Musket (Siskan)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "musket-siskan",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

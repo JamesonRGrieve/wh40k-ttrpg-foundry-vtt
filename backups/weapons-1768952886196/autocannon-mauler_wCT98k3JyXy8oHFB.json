@@ -1,0 +1,64 @@
+{
+  "name": "Autocannon (Mauler)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "autocannon-mauler",
+    "class": "heavy",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "impact",
+      "bonus": 8,
+      "penetration": 6
+    },
+    "special": [
+      "ogryn-proof",
+      "twin-linked"
+    ],
+    "clip": {
+      "max": 40,
+      "value": 40,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 50,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Ogryn-Proof, Twin-Linked</p><p><b>Note:</b> Designed to be used by Ogryns, a modified Autocannon design.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Designed to be used by Ogryns, a modified Autocannon design.",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wCT98k3JyXy8oHFB"
+}

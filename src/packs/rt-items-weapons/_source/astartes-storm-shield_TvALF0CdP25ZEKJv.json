@@ -1,7 +1,7 @@
 {
   "name": "Astartes Storm Shield",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-storm-shield",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Defensive</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Can make Guarded Attack as a Half Action.\nProvides +4 AP to Arm and Body. Counts as Prot 55 Forcefield.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Can make Guarded Attack as a Half Action.\nProvides +4 AP to Arm and Body. Counts as Prot 55 Forcefield.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,64 @@
+{
+  "name": "Kursian Trident",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "kursian-trident",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 3,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 1,
+      "penetration": 1
+    },
+    "special": [
+      "primitive-8",
+      "balanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 7,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8), Balanced</p><p><b>Note:</b> Needs Exotic Weapon Training(Kursian Pit Weapons). Best Quality versions gain Shocking Quality.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Needs Exotic Weapon Training(Kursian Pit Weapons). Best Quality versions gain Shocking Quality.",
+    "source": "BC: Tome of Blood"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OadgG0S0ESE186zS"
+}

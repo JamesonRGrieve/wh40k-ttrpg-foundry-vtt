@@ -1,7 +1,7 @@
 {
   "name": "Fedrid Razor Disk",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
   "system": {
     "identifier": "fedrid-razor-disk",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> PEN Only applies to Primitive Armours\nMay require Exotic Weapon Training to use. Creates an audible low humming sound when thrown which can be followed by the thrower or those nearby.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "PEN Only applies to Primitive Armours\nMay require Exotic Weapon Training to use. Creates an audible low humming sound when thrown which can be followed by the thrower or those nearby.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

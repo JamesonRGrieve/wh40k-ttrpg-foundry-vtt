@@ -1,7 +1,7 @@
 {
   "name": "Galthite Lacerator",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "galthite-lacerator",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Unknown Xenos Weapon. Worn over the hand as gauntlets with several short blades. Tarnishes into blue-green patterns when exposed to blood.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Unknown Xenos Weapon. Worn over the hand as gauntlets with several short blades. Tarnishes into blue-green patterns when exposed to blood.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

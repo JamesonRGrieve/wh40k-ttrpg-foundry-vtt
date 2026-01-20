@@ -1,7 +1,7 @@
 {
   "name": "Inertial Hammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "inertial-hammer",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Unwieldy</p><p><b>Note:</b> Performing an All Out Atttack with this weapon does an extra 1d10+3 I Damage. Requires two hands to use.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Performing an All Out Atttack with this weapon does an extra 1d10+3 I Damage. Requires two hands to use.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

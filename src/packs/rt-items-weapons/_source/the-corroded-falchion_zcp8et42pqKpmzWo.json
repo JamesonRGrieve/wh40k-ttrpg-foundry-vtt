@@ -1,7 +1,7 @@
 {
   "name": "The Corroded Falchion",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "the-corroded-falchion",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Devastating (1), Toxic</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Power Falchion of the Deathwatch. A Heavily Damaged Relic kept in a stasis sheath. Cannot be kept out of the sheath for long periods of time. Every time the weapon hits roll 1d10, on a 1 it shatters and is permenantly lost.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Relic Master-Crafted Astartes Power Falchion of the Deathwatch. A Heavily Damaged Relic kept in a stasis sheath. Cannot be kept out of the sheath for long periods of time. Every time the weapon hits roll 1d10, on a 1 it shatters and is permenantly lost.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

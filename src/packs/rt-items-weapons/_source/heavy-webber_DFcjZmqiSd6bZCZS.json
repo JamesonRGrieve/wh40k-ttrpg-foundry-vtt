@@ -1,12 +1,12 @@
 {
   "name": "Heavy Webber",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "heavy-webber",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Snare, Blast (5)</p><p><b>Note:</b> Fires a sticky mass of threads that encompass and immobilse the target(s)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires a sticky mass of threads that encompass and immobilse the target(s)",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

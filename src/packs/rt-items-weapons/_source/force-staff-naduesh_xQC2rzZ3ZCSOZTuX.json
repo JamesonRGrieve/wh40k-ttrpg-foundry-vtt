@@ -1,12 +1,12 @@
 {
   "name": "Force Staff (Naduesh)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "force-staff-naduesh",
     "class": "melee",
     "type": "force",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Force</p><p><b>Note:</b> Can appear as a walking staff until activated. Acts as a Psy-Focus. Acts as Best Craftsmanship Mono Weapon to non-psyker.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can appear as a walking staff until activated. Acts as a Psy-Focus. Acts as Best Craftsmanship Mono Weapon to non-psyker.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

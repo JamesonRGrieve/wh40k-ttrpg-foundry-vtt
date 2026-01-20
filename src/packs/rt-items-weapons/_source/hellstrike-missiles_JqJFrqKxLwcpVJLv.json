@@ -1,7 +1,7 @@
 {
   "name": "Hellstrike Missiles",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
   "system": {
     "identifier": "hellstrike-missiles",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Fired from fixed wing aircraft, Can only fire once, can't use unusual ammo.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fired from fixed wing aircraft, Can only fire once, can't use unusual ammo.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Stryxis Lightburner",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "stryxis-lightburner",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Overheats</p><p><b>Note:</b> Xenotech. For each consecutive turn user fires weapon at the same target and hits, gains +2 damage and penetration (max +10), resets on miss or when losing line of sight. Fires continuous light beam.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. For each consecutive turn user fires weapon at the same target and hits, gains +2 damage and penetration (max +10), resets on miss or when losing line of sight. Fires continuous light beam.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

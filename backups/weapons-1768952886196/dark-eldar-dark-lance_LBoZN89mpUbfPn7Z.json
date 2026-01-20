@@ -1,0 +1,64 @@
+{
+  "name": "Dark Eldar Dark Lance",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "dark-eldar-dark-lance",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 140,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 16,
+      "penetration": 16
+    },
+    "special": [
+      "felling-4",
+      "proven-4"
+    ],
+    "clip": {
+      "max": 36,
+      "value": 36,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 16,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Proven (4)</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere.",
+    "source": "RT: The Soul Reaver"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LBoZN89mpUbfPn7Z"
+}

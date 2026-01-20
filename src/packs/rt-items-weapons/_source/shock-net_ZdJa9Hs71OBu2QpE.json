@@ -1,7 +1,7 @@
 {
   "name": "Shock Net",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-default.svg",
   "system": {
     "identifier": "shock-net",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Shocking, Snare</p><p><b>Note:</b> Shocking effect occurs even if weapon doesn't do damage. If target fails toughness test, is stunned for one round, +1 round per DoF.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Shocking effect occurs even if weapon doesn't do damage. If target fails toughness test, is stunned for one round, +1 round per DoF.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Stub Automatic (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "stub-automatic-guard",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": ""
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

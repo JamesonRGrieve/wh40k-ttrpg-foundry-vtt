@@ -1,7 +1,7 @@
 {
   "name": "Power Mace",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-mace",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> If wielded in two hands, gains Concussive (0) Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If wielded in two hands, gains Concussive (0) Quality.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

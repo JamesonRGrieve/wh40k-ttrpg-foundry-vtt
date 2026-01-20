@@ -1,7 +1,7 @@
 {
   "name": "Naval Pistol (Mars)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "naval-pistol-mars",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Normally uses special Fragmentation ammo, loses tearing if this ammo is not used.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Normally uses special Fragmentation ammo, loses tearing if this ammo is not used.",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

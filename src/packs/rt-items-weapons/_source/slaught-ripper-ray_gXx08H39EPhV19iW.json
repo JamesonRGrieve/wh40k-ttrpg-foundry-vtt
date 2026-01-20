@@ -1,7 +1,7 @@
 {
   "name": "Slaught Ripper Ray",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "slaught-ripper-ray",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Tearing</p><p><b>Note:</b> Xenotech. Seemingly made out of brass, bone, and meaty gristle. Weapon physically bites into and binds with the hand of the wielder. Fires dark beams that twist and rupture people apart on the inside.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Seemingly made out of brass, bone, and meaty gristle. Weapon physically bites into and binds with the hand of the wielder. Fires dark beams that twist and rupture people apart on the inside.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

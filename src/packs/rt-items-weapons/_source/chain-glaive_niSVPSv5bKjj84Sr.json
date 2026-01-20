@@ -1,7 +1,7 @@
 {
   "name": "Chain Glaive",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "chain-glaive",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Razor-Sharp, Tearing, Unbalanced</p><p><b>Note:</b> Two Handed Weapon</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two Handed Weapon",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

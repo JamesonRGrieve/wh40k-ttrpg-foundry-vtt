@@ -1,7 +1,7 @@
 {
   "name": "The Shadow in the Sky",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "the-shadow-in-the-sky",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only.  Master-Crafted Relic Power Sword of the Raven Guard. Wielder gains the \"Precise Blow\" Talent, and +10 to all Parry Tests (in addition to the +10) from the weapon's Balanced Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only.  Master-Crafted Relic Power Sword of the Raven Guard. Wielder gains the \"Precise Blow\" Talent, and +10 to all Parry Tests (in addition to the +10) from the weapon's Balanced Quality.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

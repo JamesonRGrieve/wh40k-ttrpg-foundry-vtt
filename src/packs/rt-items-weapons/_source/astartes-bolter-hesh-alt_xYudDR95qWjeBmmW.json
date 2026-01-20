@@ -1,7 +1,7 @@
 {
   "name": "Astartes Bolter (Hesh) (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "astartes-bolter-hesh-alt",
     "class": "basic",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing, Accurate, Reliable</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Always Best Craftsmanship. Unique to Ultramarines within the Deathwatch and cannot be otherwise requisitioned.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Always Best Craftsmanship. Unique to Ultramarines within the Deathwatch and cannot be otherwise requisitioned.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

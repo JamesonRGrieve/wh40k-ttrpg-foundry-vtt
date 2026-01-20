@@ -1,7 +1,7 @@
 {
   "name": "Melta Drill",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
   "system": {
     "identifier": "melta-drill",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Unwieldy</p><p><b>Note:</b> Doesn't need Weapon Training (Melta), but has -20 to all Weapon Skill Tests and can't multi attack as it isn't meant for use as a weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Doesn't need Weapon Training (Melta), but has -20 to all Weapon Skill Tests and can't multi attack as it isn't meant for use as a weapon.",
-    "source": "RT: Stars of Inequity"
+    "source": "RT: Stars of Inequity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

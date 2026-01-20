@@ -1,7 +1,7 @@
 {
   "name": "Astartes Chainsword (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "astartes-chainsword-alt",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. ",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

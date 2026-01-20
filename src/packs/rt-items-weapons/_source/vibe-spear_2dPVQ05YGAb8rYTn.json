@@ -1,7 +1,7 @@
 {
   "name": "Vibe Spear",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
   "system": {
     "identifier": "vibe-spear",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Snare</p><p><b>Note:</b> PEN Only applies to Primitive Armours. Any Injured by this weapon must make a +0 Toughness Test or suffer 1 Fatigue. Requires a +0 Medicae Test to remove it stuck in, failiure causes 1d5 damage that ignores armour and toughness.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "PEN Only applies to Primitive Armours. Any Injured by this weapon must make a +0 Toughness Test or suffer 1 Fatigue. Requires a +0 Medicae Test to remove it stuck in, failiure causes 1d5 damage that ignores armour and toughness.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

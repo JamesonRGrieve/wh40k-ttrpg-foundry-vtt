@@ -1,7 +1,7 @@
 {
   "name": "Ork Tankhammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "ork-tankhammer",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Unbalanced, Blast (1d5-3)</p><p><b>Note:</b> One use weapon, as it explodes when it hits something. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "One use weapon, as it explodes when it hits something. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
-    "source": "RT: Koronus Bestiary"
+    "source": "RT: Koronus Bestiary",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

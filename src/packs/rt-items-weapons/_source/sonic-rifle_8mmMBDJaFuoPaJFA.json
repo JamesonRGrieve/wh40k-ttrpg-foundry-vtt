@@ -1,12 +1,12 @@
 {
   "name": "Sonic Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "sonic-rifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Shocking</p><p><b>Note:</b> Generates severe, disorientingly painful sonic waves, produces minimal collateral damage.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Generates severe, disorientingly painful sonic waves, produces minimal collateral damage.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Tanglefoot Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "tanglefoot-grenade",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (2), Snare</p><p><b>Note:</b> Knocks anyone in blast range prone and causes difficulty of movement. Acts similar to Graviton Gun effect.  Anyone moving or acting in area for 2d5 rounds afterwards must first make an Opposed Strength Test vs Strength 60 (Force has +10 to the test), failiure means user cannot make this movement/action.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Knocks anyone in blast range prone and causes difficulty of movement. Acts similar to Graviton Gun effect.  Anyone moving or acting in area for 2d5 rounds afterwards must first make an Opposed Strength Test vs Strength 60 (Force has +10 to the test), failiure means user cannot make this movement/action.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

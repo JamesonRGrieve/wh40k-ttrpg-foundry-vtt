@@ -1,12 +1,12 @@
 {
   "name": "Chain Greatsword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "chain-greatsword",
     "class": "melee",
     "type": "chain",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Two Handed Weapon</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two Handed Weapon",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

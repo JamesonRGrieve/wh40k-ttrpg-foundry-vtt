@@ -1,7 +1,7 @@
 {
   "name": "Arm-Mounted Chainblade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "arm-mounted-chainblade",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Can be used whilst gripping something else.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be used whilst gripping something else.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

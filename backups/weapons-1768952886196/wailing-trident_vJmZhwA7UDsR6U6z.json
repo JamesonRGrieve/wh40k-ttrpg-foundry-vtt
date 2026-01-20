@@ -1,0 +1,66 @@
+{
+  "name": "Wailing Trident",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "wailing-trident",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 6,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 8,
+      "penetration": 4
+    },
+    "special": [
+      "balanced",
+      "crippling-3",
+      "felling-3",
+      "sanctified"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 9,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Crippling (3), Felling (3), Sanctified</p><p><b>Note:</b> Can be thrown up to 6m. Two-Handed Weapon.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be thrown up to 6m. Two-Handed Weapon.",
+    "source": "DH 2E: Enemies Beyond"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vJmZhwA7UDsR6U6z"
+}

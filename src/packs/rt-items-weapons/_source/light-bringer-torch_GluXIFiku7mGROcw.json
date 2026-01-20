@@ -1,7 +1,7 @@
 {
   "name": "Light-Bringer Torch",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "light-bringer-torch",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Fueled with Promethium. Acts as a brazier-shaped light source that can last for months. Provides +5 Intimidate when lit and held. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fueled with Promethium. Acts as a brazier-shaped light source that can last for months. Provides +5 Intimidate when lit and held. ",
-    "source": "RT: Stars of Inequity"
+    "source": "RT: Stars of Inequity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

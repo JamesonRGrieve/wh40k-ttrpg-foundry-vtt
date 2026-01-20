@@ -1,12 +1,12 @@
 {
   "name": "Hellrifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "hellrifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Felling (2)</p><p><b>Note:</b> Intricate rifles that fire sharp shards of unknown material speculated to be daemonic in nature.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Intricate rifles that fire sharp shards of unknown material speculated to be daemonic in nature.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,65 @@
+{
+  "name": "Legion Power Fist [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "system": {
+    "identifier": "legion-power-fist-best",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 9
+    },
+    "special": [
+      "power-field",
+      "unwieldy",
+      "sm-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 25,
+    "availability": "near-unique",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unwieldy, SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own. Doubles Strength Bonus. Can be used by Terminators</p>"
+    },
+    "modifications": [],
+    "notes": "Chaos Legionary Weapon. Dangerous to own. Doubles Strength Bonus. Can be used by Terminators",
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cc08836fa9373718"
+}

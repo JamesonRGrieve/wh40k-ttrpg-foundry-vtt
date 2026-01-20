@@ -1,0 +1,63 @@
+{
+  "name": "Heavy Stubber (Volg) \"Crank Cannon\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "heavy-stubber-volg-crank-cannon",
+    "class": "heavy",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 70,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 5,
+      "penetration": 0
+    },
+    "special": [
+      "unreliable"
+    ],
+    "clip": {
+      "max": 100,
+      "value": 100,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 38,
+    "availability": "average",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Unreliable</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TSB7tFFMSz7vw0dY"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Mindphase Gauntlet",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-mindphase-gauntlet",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> -</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creatures hit by this must make +0 Strength Test and +0 Willpower Test, failing either or both causes creature gain 1 fatigue and be stunned for 1 round per combined DoF. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creatures hit by this must make +0 Strength Test and +0 Willpower Test, failing either or both causes creature gain 1 fatigue and be stunned for 1 round per combined DoF. ",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

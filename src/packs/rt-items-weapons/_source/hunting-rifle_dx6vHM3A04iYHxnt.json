@@ -1,12 +1,12 @@
 {
   "name": "Hunting Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "hunting-rifle",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Accurate</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Dark Heresy: Core"
+    "source": "DH: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

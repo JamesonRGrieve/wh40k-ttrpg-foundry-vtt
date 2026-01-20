@@ -1,7 +1,7 @@
 {
   "name": "Q'Sal Crystal Caster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "qsal-crystal-caster",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Razor-Sharp, Crippling (6)</p><p><b>Note:</b> -20 to Awarness Tests to hear shots or discover weapon on person, can only attempt to hear from half distance. If Target takes no damage from weapon, must make -20 Tougness Test. If fail Stunned for 1 round per DoF. Can incorporate into another weapon as an upgrade, reducing clip size to 1, but test to discover -40.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "-20 to Awarness Tests to hear shots or discover weapon on person, can only attempt to hear from half distance. If Target takes no damage from weapon, must make -20 Tougness Test. If fail Stunned for 1 round per DoF. Can incorporate into another weapon as an upgrade, reducing clip size to 1, but test to discover -40.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

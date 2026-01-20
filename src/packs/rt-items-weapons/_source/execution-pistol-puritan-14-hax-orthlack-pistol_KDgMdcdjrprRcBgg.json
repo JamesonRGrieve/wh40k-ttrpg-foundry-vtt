@@ -1,7 +1,7 @@
 {
   "name": "Execution Pistol \"Puritan-14\" (Hax-Orthlack) [Pistol]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "execution-pistol-puritan-14-hax-orthlack-pistol",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Has an Undermounted Shotgun (see [Shotgun] Profile) that imposes -10 to Ballistic Skill Test if not used in two hands\nCan only fire as a [Pistol] or [Shotgun] at once.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has an Undermounted Shotgun (see [Shotgun] Profile) that imposes -10 to Ballistic Skill Test if not used in two hands\nCan only fire as a [Pistol] or [Shotgun] at once.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Razor Web",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "razor-web",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (2), Crippling (3), Snare (1)</p><p><b>Note:</b> Razor Bladed Webber</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Razor Bladed Webber",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

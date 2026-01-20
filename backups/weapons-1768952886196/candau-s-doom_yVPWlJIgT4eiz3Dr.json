@@ -1,0 +1,65 @@
+{
+  "name": "Candau's Doom",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "candaus-doom",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 6
+    },
+    "special": [
+      "accurate",
+      "felling-4",
+      "razor-sharp"
+    ],
+    "clip": {
+      "max": 100,
+      "value": 100,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 15,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 70,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate, Felling (4), Razor Sharp</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Archeotech Autogun of the Relictors Chapter. Despite being similar in nature to an Autogun, it is considerably more dangerous.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Archeotech Autogun of the Relictors Chapter. Despite being similar in nature to an Autogun, it is considerably more dangerous.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yVPWlJIgT4eiz3Dr"
+}

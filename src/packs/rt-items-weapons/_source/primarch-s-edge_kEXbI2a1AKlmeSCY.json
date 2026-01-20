@@ -1,7 +1,7 @@
 {
   "name": "Primarch's Edge",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "primarchs-edge",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Sanctified</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Combat Knife of the Mortifactors Chapter. Wielder has +20 to Fellowship Tests when interacting with Ultramarines or their Successor Chapters.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Combat Knife of the Mortifactors Chapter. Wielder has +20 to Fellowship Tests when interacting with Ultramarines or their Successor Chapters.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Dark Eldar Hexrifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "dark-eldar-hexrifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Accurate, Felling (8)</p><p><b>Note:</b> Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Living non-Daemon or Machine creatures damaged by this make -20 Toughness test or lose hit body part as it turns to glass. Instant death if it’s the head or body, or if creature fails test by 3+ DoF. Burning a fate point to survive instead renders creature unconcious for 1d10+5 minutes.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Unique Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Living non-Daemon or Machine creatures damaged by this make -20 Toughness test or lose hit body part as it turns to glass. Instant death if it’s the head or body, or if creature fails test by 3+ DoF. Burning a fate point to survive instead renders creature unconcious for 1d10+5 minutes.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

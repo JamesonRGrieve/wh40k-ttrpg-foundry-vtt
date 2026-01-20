@@ -1,12 +1,12 @@
 {
   "name": "Plasma Rifle (Selvanus) \"Sentinel\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
   "system": {
     "identifier": "plasma-rifle-selvanus-sentinel",
     "class": "basic",
     "type": "plasma",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Safer than many Plasma Guns due to reducing the size of each plasma pulse, yet firing them much faster.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Safer than many Plasma Guns due to reducing the size of each plasma pulse, yet firing them much faster.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

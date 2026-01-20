@@ -1,7 +1,7 @@
 {
   "name": "Astartes Boltgun (Stalker)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "astartes-boltgun-stalker",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Accurate, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Reduced sound and no muzzle flash, Awareness Tests to hear shots have -30, and can only be attempted at half normal distance. Can be combined with Stalker Bolt Rounds unusual ammo.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Reduced sound and no muzzle flash, Awareness Tests to hear shots have -30, and can only be attempted at half normal distance. Can be combined with Stalker Bolt Rounds unusual ammo.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

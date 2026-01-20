@@ -1,7 +1,7 @@
 {
   "name": "Flameburst",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "flameburst",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Recharge, Spray</p><p><b>Note:</b> Fires a Metre wide jet, as opposed to a normal 30-degree spray.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires a Metre wide jet, as opposed to a normal 30-degree spray.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

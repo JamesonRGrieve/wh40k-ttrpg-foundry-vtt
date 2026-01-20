@@ -1,7 +1,7 @@
 {
   "name": "Frag Grenade (Gunmetal)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "frag-grenade-gunmetal",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Considered by some as a \"Trophy  Weapon\" acquired through combat.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Considered by some as a \"Trophy  Weapon\" acquired through combat.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

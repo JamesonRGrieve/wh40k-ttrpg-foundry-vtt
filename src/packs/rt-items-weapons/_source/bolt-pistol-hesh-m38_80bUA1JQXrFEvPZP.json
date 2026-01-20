@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Hesh M38)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
   "system": {
     "identifier": "bolt-pistol-hesh-m38",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Gains Unreliable Quality if Fired on Semi-Auto.\nThe Tech-Priests of the Lathes may not have this issue</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gains Unreliable Quality if Fired on Semi-Auto.\nThe Tech-Priests of the Lathes may not have this issue",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

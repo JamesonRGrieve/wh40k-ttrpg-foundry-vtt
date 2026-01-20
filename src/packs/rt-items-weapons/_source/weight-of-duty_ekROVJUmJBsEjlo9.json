@@ -1,7 +1,7 @@
 {
   "name": "Weight of Duty",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "weight-of-duty",
     "class": "melee",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> SM Wep, Concussive (1), Power Field, Tearing, Unbalanced</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Maul of the Hammers of Dorn Chapter. Auditory Protection does not assist in resisting the weapon's Concussive effect.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Maul of the Hammers of Dorn Chapter. Auditory Protection does not assist in resisting the weapon's Concussive effect.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

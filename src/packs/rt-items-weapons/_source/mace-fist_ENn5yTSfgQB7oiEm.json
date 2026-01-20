@@ -1,7 +1,7 @@
 {
   "name": "Mace-Fist",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "mace-fist",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Concussive (2), Inaccurate, Ogryn-Proof</p><p><b>Note:</b> Designed for Ogryns, looking roughly like giant knuckledusters.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Designed for Ogryns, looking roughly like giant knuckledusters.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

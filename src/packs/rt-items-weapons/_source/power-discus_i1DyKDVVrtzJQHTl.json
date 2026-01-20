@@ -1,7 +1,7 @@
 {
   "name": "Power Discus",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-default.svg",
   "system": {
     "identifier": "power-discus",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> A 30cm diameter silvery throwing disc that activates a powerfield mid flight</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A 30cm diameter silvery throwing disc that activates a powerfield mid flight",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

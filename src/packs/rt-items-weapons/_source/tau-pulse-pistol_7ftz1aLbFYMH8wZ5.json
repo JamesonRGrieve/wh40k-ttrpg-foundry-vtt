@@ -1,7 +1,7 @@
 {
   "name": "Tau Pulse Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "tau-pulse-pistol",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Gyro-Stabilised</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
-    "source": "RT: Tau Char. Guide"
+    "source": "RT: Tau Character Guide",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

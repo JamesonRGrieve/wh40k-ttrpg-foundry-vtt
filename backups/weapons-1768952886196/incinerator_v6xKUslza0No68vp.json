@@ -1,0 +1,65 @@
+{
+  "name": "Incinerator",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "incinerator",
+    "class": "basic",
+    "type": "flame",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 6
+    },
+    "special": [
+      "daemonbane",
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 3,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Daemonbane, Flame, Spray</p><p><b>Note:</b> Ignores protection granted by Psychic Powers. Targets in area suffer -10 x their Psy Rating penalty to agility tests to avoid flames.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Ignores protection granted by Psychic Powers. Targets in area suffer -10 x their Psy Rating penalty to agility tests to avoid flames.",
+    "source": "DH 2E: Enemies Beyond"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v6xKUslza0No68vp"
+}

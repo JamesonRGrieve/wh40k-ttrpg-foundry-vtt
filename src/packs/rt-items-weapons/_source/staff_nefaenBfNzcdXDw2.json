@@ -1,7 +1,7 @@
 {
   "name": "Staff",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "staff",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Primitive (7)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Lightning Claws",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "lightning-claws",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Tearing</p><p><b>Note:</b> Gains Unwieldy Quality unless worn as a pair by a wielder with a 4+ Strength Bonus.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gains Unwieldy Quality unless worn as a pair by a wielder with a 4+ Strength Bonus.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

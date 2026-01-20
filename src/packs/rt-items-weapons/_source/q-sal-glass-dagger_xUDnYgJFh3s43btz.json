@@ -1,7 +1,7 @@
 {
   "name": "Q'Sal Glass Dagger",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "qsal-glass-dagger",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic (1)</p><p><b>Note:</b> Near Indestructable until piercing flesh, at which point a small part sheers away and shatters, quickly infecting the wound.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Near Indestructable until piercing flesh, at which point a small part sheers away and shatters, quickly infecting the wound.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

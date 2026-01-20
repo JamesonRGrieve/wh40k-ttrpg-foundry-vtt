@@ -1,7 +1,7 @@
 {
   "name": "Necron Gauntlet of Fire [Ranged]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "necron-gauntlet-of-fire-ranged",
     "class": "pistol",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Flame, Spray</p><p><b>Note:</b> Always Best Quality. Has [Ranged] and [Melee] Profile.\nAll WS Tests with this weapon have +10</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality. Has [Ranged] and [Melee] Profile.\nAll WS Tests with this weapon have +10",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

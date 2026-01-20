@@ -1,7 +1,7 @@
 {
   "name": "Volcano Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
   "system": {
     "identifier": "volcano-cannon",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Blast (8), Felling (6), Overheats, Recharge</p><p><b>Note:</b> 13 Metres Long, used only by Titans and Rare Superheavy Shadowswords. Anything of Size Hulking or Smaller instantly dies if hit by it. Anything armed with this that isn’t a Titan cannot move on the same turn they fire this weapon or if it is recharging.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "13 Metres Long, used only by Titans and Rare Superheavy Shadowswords. Anything of Size Hulking or Smaller instantly dies if hit by it. Anything armed with this that isn’t a Titan cannot move on the same turn they fire this weapon or if it is recharging.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

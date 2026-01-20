@@ -1,7 +1,7 @@
 {
   "name": "Galvian Needler (Belasco)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "galvian-needler-belasco",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Can come with an optional rig to attach to wearer's forearm and fired by a palm trigger, making the weapon concealed (costs 300 Thrones, or treat as one higher rarity)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can come with an optional rig to attach to wearer's forearm and fired by a palm trigger, making the weapon concealed (costs 300 Thrones, or treat as one higher rarity)",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Necron Resonance Arc",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "necron-resonance-arc",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Shocking, Reliable</p><p><b>Note:</b> Fires an arc of Lightning. If weapon's damage is a 9 or 10, or it kills a target, the lightning arc jumps to another random enemy within 5 metres and automatically hits them in the body. This extra hit can cause further extra hits. Infinite Ammo, No Reloads needed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires an arc of Lightning. If weapon's damage is a 9 or 10, or it kills a target, the lightning arc jumps to another random enemy within 5 metres and automatically hits them in the body. This extra hit can cause further extra hits. Infinite Ammo, No Reloads needed.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

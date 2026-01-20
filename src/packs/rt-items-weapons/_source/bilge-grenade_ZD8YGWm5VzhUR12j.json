@@ -1,7 +1,7 @@
 {
   "name": "Bilge Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "bilge-grenade",
     "class": "thrown",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (4), Unreliable, Toxic</p><p><b>Note:</b> Modified Frag Grenades mixed with toxic fungi, chemical waste, and diseased flesh. Used by Bilge Scum in the underdecks of some void ships, and likely elsewhere.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Modified Frag Grenades mixed with toxic fungi, chemical waste, and diseased flesh. Used by Bilge Scum in the underdecks of some void ships, and likely elsewhere.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

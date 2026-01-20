@@ -1,12 +1,12 @@
 {
   "name": "Eldar Shuriken Catapult",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "eldar-shuriken-catapult",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Razor Sharp, Reliable</p><p><b>Note:</b> Considered the Standard Armament amongst Eldar Craftworlds for those not dedicated entirely to war. Still exceptionally lethal.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Considered the Standard Armament amongst Eldar Craftworlds for those not dedicated entirely to war. Still exceptionally lethal.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

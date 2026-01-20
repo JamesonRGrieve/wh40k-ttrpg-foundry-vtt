@@ -1,7 +1,7 @@
 {
   "name": "Crozius Arcanium",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "crozius-arcanium",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Exclusively used by Chaplains. Chaplains armed with one gain the Hatred Talent for any foe they are currently engaged in Melee with, however cannot take the Defensive Stance against that enemy.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Exclusively used by Chaplains. Chaplains armed with one gain the Hatred Talent for any foe they are currently engaged in Melee with, however cannot take the Defensive Stance against that enemy.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

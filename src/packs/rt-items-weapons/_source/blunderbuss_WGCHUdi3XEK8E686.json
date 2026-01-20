@@ -1,12 +1,12 @@
 {
   "name": "Blunderbuss",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "blunderbuss",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Unreliable, Inaccurate</p><p><b>Note:</b> Can use any musket ammo</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can use any musket ammo",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

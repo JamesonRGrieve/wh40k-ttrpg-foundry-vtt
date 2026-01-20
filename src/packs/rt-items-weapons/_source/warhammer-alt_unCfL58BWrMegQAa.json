@@ -1,7 +1,7 @@
 {
   "name": "Warhammer (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "warhammer-alt",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Ogryn-Proof, Primitive (8)</p><p><b>Note:</b> Two-Handed Weapon, \"Aha, we've found it, the Warhammer Forty Thousand!\"</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed Weapon, \"Aha, we've found it, the Warhammer Forty Thousand!\"",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

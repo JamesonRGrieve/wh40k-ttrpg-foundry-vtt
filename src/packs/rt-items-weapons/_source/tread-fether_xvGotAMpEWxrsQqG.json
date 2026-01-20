@@ -1,12 +1,12 @@
 {
   "name": "Tread Fether",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg",
   "system": {
     "identifier": "tread-fether",
     "class": "heavy",
     "type": "launcher",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Inaccurate</p><p><b>Note:</b> Portable Missile Launcher</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Portable Missile Launcher",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

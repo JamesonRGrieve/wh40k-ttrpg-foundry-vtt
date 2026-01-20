@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Garm)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
   "system": {
     "identifier": "bolt-pistol-garm",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Often Brandished by Commissars, Guardsmen learn to fear it.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Often Brandished by Commissars, Guardsmen learn to fear it.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,65 @@
+{
+  "name": "Tau Battlesuit Heavy Rail Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "tau-battlesuit-heavy-rail-rifle",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "impact",
+      "bonus": 8,
+      "penetration": 12
+    },
+    "special": [
+      "felling-4",
+      "proven-3",
+      "tearing"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 60,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Proven (3), Tearing</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Often used on XV88 Broadsides</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. Often used on XV88 Broadsides",
+    "source": "RT: Tau Char. Guide"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PBBVFVBnPhrqzzg8"
+}

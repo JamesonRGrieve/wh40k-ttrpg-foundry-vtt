@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Electrocorrosive Whip",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-electrocorrosive-whip",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flexible, Shocking</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Any Creature that suffers at least wound from this also takes 1d10 Non Permenant Strength Damage.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Rare Availability if acquired from Dark Eldar Settlement. Any Creature that suffers at least wound from this also takes 1d10 Non Permenant Strength Damage.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

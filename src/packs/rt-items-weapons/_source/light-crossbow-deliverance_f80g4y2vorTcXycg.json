@@ -1,7 +1,7 @@
 {
   "name": "Light Crossbow \"Deliverance\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-primitive.svg",
   "system": {
     "identifier": "light-crossbow-deliverance",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (7)</p><p><b>Note:</b> Has a Built-in Silencer. -20 penalty to find weapon if concealed. Doesn't lose range if given a forearm weapon mounting.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has a Built-in Silencer. -20 penalty to find weapon if concealed. Doesn't lose range if given a forearm weapon mounting.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

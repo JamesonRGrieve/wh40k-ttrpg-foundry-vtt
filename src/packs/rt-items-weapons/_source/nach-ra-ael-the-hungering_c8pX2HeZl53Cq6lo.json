@@ -1,7 +1,7 @@
 {
   "name": "Nach'ra'ael the Hungering",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "nachraael-the-hungering",
     "class": "melee",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Balanced, Felling (4), Tearing, Warp Weapon,Daemon Wep</p><p><b>Note:</b> Base Weapon: Sword.Daemon Willpower 75 (Daemon Prince Nach'ra'ael), Bind Str 4. Attributes: Accursed, Impossibly Sharp, Vicious. All Attibutes accounted in weapon stats. Warning: All Daemon weapons want you dead or possessed, this one especially.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Base Weapon: Sword.Daemon Willpower 75 (Daemon Prince Nach'ra'ael), Bind Str 4. Attributes: Accursed, Impossibly Sharp, Vicious. All Attibutes accounted in weapon stats. Warning: All Daemon weapons want you dead or possessed, this one especially.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

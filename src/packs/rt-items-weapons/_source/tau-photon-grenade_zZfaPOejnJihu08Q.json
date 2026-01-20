@@ -1,7 +1,7 @@
 {
   "name": "Tau Photon Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
   "system": {
     "identifier": "tau-photon-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (12)</p><p><b>Note:</b> Characters in blast radius must make +0 Toughness Test or be Blinded for one round, +1 per DoF. Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Characters in blast radius must make +0 Toughness Test or be Blinded for one round, +1 per DoF. Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
-    "source": "RT: Tau Char. Guide"
+    "source": "RT: Tau Character Guide",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Ceremonial Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "astartes-ceremonial-sword",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced</p><p><b>Note:</b> Space Marines Only, not easily acquirable.Traditional Weapon of the Dark Angels Space Marine Chapter. Replaces or used in addition to Combat Knife if preferred. Counts as a Chapter Trapping. (Deathwatch Initiate may start with one appropriate Chapter Trapping)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable.Traditional Weapon of the Dark Angels Space Marine Chapter. Replaces or used in addition to Combat Knife if preferred. Counts as a Chapter Trapping. (Deathwatch Initiate may start with one appropriate Chapter Trapping)",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

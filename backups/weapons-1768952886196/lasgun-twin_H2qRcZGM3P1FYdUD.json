@@ -1,0 +1,64 @@
+{
+  "name": "Lasgun (Twin)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "lasgun-twin",
+    "class": "basic",
+    "type": "las",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "tearing",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 18,
+      "value": 18,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 7,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 220,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Rarely seen due to their unreliable nature, but offer superior firepower.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rarely seen due to their unreliable nature, but offer superior firepower.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H2qRcZGM3P1FYdUD"
+}

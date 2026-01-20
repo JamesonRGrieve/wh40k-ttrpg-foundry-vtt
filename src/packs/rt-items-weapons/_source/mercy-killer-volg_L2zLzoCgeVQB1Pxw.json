@@ -1,7 +1,7 @@
 {
   "name": "Mercy Killer (Volg)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "mercy-killer-volg",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> If the Weapon suffers a Jam, roll 1d10, on a 9 the weapon explodes dealing its base damage to the firer and destroying the gun.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If the Weapon suffers a Jam, roll 1d10, on a 9 the weapon explodes dealing its base damage to the firer and destroying the gun.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

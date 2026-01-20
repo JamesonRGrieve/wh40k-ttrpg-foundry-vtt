@@ -1,12 +1,12 @@
 {
   "name": "Lasgun (Sollex) \"Death Light\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "lasgun-sollex-death-light",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Can be equipped with Hotshot or Overcharge packs but gains the Overheats rule. \nScarce Availability in Magnogorsk.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be equipped with Hotshot or Overcharge packs but gains the Overheats rule. \nScarce Availability in Magnogorsk.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

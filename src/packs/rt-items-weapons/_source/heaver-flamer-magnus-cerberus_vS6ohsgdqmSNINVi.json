@@ -1,12 +1,12 @@
 {
   "name": "Heaver Flamer (Magnus) \"Cerberus\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-flamer.svg",
   "system": {
     "identifier": "heaver-flamer-magnus-cerberus",
     "class": "heavy",
     "type": "flame",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Flame, Reliable, Spray, Vengeful (9)</p><p><b>Note:</b> Weight includes backpack fuel supply.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weight includes backpack fuel supply.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

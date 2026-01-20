@@ -1,0 +1,64 @@
+{
+  "name": "Great Weapon  (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "great-weapon-alt",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "ogryn-proof",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 7,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 70,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Ogryn-Proof, Unbalanced</p><p><b>Note:</b> Two-Handed Weapon</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two-Handed Weapon",
+    "source": "Only War: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GlecE4iTQ09a24LL"
+}

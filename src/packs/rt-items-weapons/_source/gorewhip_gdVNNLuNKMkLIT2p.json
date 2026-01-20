@@ -1,7 +1,7 @@
 {
   "name": "Gorewhip",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "gorewhip",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Crippling (4), Felling (2), Flexible</p><p><b>Note:</b> Weapon: Whip. Daemon WP 44 (Khorne Daemon), Bind Str 2. Att.: Spiteful, Wounding. Must be Dedicated to Khorne to wield.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Whip. Daemon WP 44 (Khorne Daemon), Bind Str 2. Att.: Spiteful, Wounding. Must be Dedicated to Khorne to wield.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

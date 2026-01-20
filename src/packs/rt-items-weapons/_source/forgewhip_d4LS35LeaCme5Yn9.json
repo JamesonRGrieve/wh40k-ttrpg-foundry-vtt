@@ -1,7 +1,7 @@
 {
   "name": "Forgewhip",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "forgewhip",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Flame, Flexible</p><p><b>Note:</b> Weapon: Whip. Daemon WP 68 (Khorne Daemon), Bind Str 4. Att.: Bloodlust, Blood Tracker. Must be Dedicated to Khorne to wield.\nWhen drawing must make +0 WP Test or Frenzy can make -10 WP Test to sheath and end Frenzy. Gain Unnatural Senses (Daemon's WP)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Whip. Daemon WP 68 (Khorne Daemon), Bind Str 4. Att.: Bloodlust, Blood Tracker. Must be Dedicated to Khorne to wield.\nWhen drawing must make +0 WP Test or Frenzy can make -10 WP Test to sheath and end Frenzy. Gain Unnatural Senses (Daemon's WP)",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

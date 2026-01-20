@@ -1,7 +1,7 @@
 {
   "name": "Scythe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "scythe",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Unbalanced, Felling (1)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

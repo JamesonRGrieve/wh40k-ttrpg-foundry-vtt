@@ -1,12 +1,12 @@
 {
   "name": "Ork Burna [Ranged]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "ork-burna-ranged",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Spray, Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Not Unreliable when wielded by an Ork. Has [Melee] and [Ranged] Profile. Requires Two hands to wield in either mode. Weight includes Backpack Fuel Tank.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

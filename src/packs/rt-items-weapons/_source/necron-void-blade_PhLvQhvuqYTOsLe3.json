@@ -1,7 +1,7 @@
 {
   "name": "Necron Void Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "necron-void-blade",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Crippling (5), Felling (2)</p><p><b>Note:</b> Always Best Quality</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Ork Dakkamakka",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "ork-dakkamakka",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Scatter, Unreliable</p><p><b>Note:</b> When a hit from this weapon causes Righeous Fury, it deals an additional 1d10 damage.This cannot generate additional Righteous Fury.\nNote: Weapon was relatively unchanged from ChatGPT's Descriptions (it created the quality \"Brutal\" that did +1d10 damage on Critical Hits)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "When a hit from this weapon causes Righeous Fury, it deals an additional 1d10 damage.This cannot generate additional Righteous Fury.\nNote: Weapon was relatively unchanged from ChatGPT's Descriptions (it created the quality \"Brutal\" that did +1d10 damage on Critical Hits)",
-    "source": "ChatGPT"
+    "source": "Homebrew",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Omnissian Axe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "omnissian-axe",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Functions as a Combi-Tool. (+10 Tech Use Tests), Two-Handed Weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Functions as a Combi-Tool. (+10 Tech Use Tests), Two-Handed Weapon.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

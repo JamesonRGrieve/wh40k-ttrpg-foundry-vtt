@@ -1,12 +1,12 @@
 {
   "name": "Autocannon (Mauler)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "autocannon-mauler",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Ogryn-Proof, Twin-Linked</p><p><b>Note:</b> Designed to be used by Ogryns, a modified Autocannon design.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Designed to be used by Ogryns, a modified Autocannon design.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

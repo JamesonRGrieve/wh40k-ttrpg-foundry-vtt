@@ -1,7 +1,7 @@
 {
   "name": "Astartes Meltagun (Conflagration)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-meltagun.svg",
   "system": {
     "identifier": "astartes-meltagun-conflagration",
     "class": "basic",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Melta</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,65 @@
+{
+  "name": "Q'Sal Soul Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "qsal-soul-cannon",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 75,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 0
+    },
+    "special": [
+      "flame",
+      "shocking",
+      "warp-weapon"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 45,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Shocking, Warp Weapon</p><p><b>Note:</b> Never reloads, gains 1 shot per 10 damage dealt, target killed, or hour spent within area of intense warp activity. Wielder can make -10 Willpower Test to regain one shot, if fail suffer 1d5 Willpower Damage per DoF. Custom made, if original owner, don't need to Brace.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Never reloads, gains 1 shot per 10 damage dealt, target killed, or hour spent within area of intense warp activity. Wielder can make -10 Willpower Test to regain one shot, if fail suffer 1d5 Willpower Damage per DoF. Custom made, if original owner, don't need to Brace.",
+    "source": "BC: Tome of Fate"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ee90Dm7XQ2hv0Gch"
+}

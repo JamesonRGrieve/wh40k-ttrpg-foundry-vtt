@@ -1,7 +1,7 @@
 {
   "name": "Graviton Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "graviton-grenade",
     "class": "thrown",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (3), Concussive (3), Graviton</p><p><b>Note:</b> Often only used by elite Mechanicus or powerful Inquisitors as a last resort against heavily armoured foes and vehicles.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Often only used by elite Mechanicus or powerful Inquisitors as a last resort against heavily armoured foes and vehicles.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

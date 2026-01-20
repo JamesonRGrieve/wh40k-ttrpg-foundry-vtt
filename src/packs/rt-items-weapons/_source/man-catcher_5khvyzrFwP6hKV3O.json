@@ -1,7 +1,7 @@
 {
   "name": "Man-Catcher",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "man-catcher",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Snare (4), Unwieldy</p><p><b>Note:</b> Spring-loaded claw on a long pole. Used to restrain or immobilse rather than kill. Two-Handed Weapon.\nUser must spend a Half Action each round to maintain hold over victim caught in the Snare. Best Crafsmanship gains Shocking Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Spring-loaded claw on a long pole. Used to restrain or immobilse rather than kill. Two-Handed Weapon.\nUser must spend a Half Action each round to maintain hold over victim caught in the Snare. Best Crafsmanship gains Shocking Quality.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

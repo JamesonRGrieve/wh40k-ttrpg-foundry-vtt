@@ -1,7 +1,7 @@
 {
   "name": "Stiletto (Landunder) \"Devil's Kiss\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "stiletto-landunder-devils-kiss",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Fast, Primitive (8)</p><p><b>Note:</b> A Long and Incredibly Narrow Blade</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Long and Incredibly Narrow Blade",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

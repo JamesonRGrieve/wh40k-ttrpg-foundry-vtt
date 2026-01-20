@@ -1,12 +1,12 @@
 {
   "name": "Light of Castigation",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "light-of-castigation",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Flame, Spray, Sanctified</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Flamer of the Fire Angels Chapter. Heretics and other such individuals who have forsaken the light of The Emperor suffer -10 to avoid being hit and +2 damage when hit by this weapon. As with all Astartes Flamers, those on fire take +4 damage from being on fire.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Flamer of the Fire Angels Chapter. Heretics and other such individuals who have forsaken the light of The Emperor suffer -10 to avoid being hit and +2 damage when hit by this weapon. As with all Astartes Flamers, those on fire take +4 damage from being on fire.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

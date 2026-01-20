@@ -1,7 +1,7 @@
 {
   "name": "Pyrophoric Vambrace",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-flamer.svg",
   "system": {
     "identifier": "pyrophoric-vambrace",
     "class": "pistol",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Corrosive, Flame, Spray</p><p><b>Note:</b> Easily Concealed and leaves hands free, worn on wrist and connects to sealed case on the back. Fires a Corrosive Powedered Metal rather than promethium. Targets take additional 1d10 damage from being on fire, but put themselves out with +0 Agility Test.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Easily Concealed and leaves hands free, worn on wrist and connects to sealed case on the back. Fires a Corrosive Powedered Metal rather than promethium. Targets take additional 1d10 damage from being on fire, but put themselves out with +0 Agility Test.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

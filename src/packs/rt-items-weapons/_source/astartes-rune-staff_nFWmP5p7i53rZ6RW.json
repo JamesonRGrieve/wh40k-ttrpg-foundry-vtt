@@ -1,7 +1,7 @@
 {
   "name": "Astartes Rune Staff",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "astartes-rune-staff",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Force</p><p><b>Note:</b> Space Marines Only.  Space Wolves variant Astartes Force Staff. When striking a foe and making a focus power test to do additional damage, can instead trigger one of the wielders Psychic Powers as a Free Action which has a Psy Rating of 1 per DoS scored on target. Can only use Psychic Powers that have a specific target, which will be the one hit. Wielder must be a Rune Priest.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only.  Space Wolves variant Astartes Force Staff. When striking a foe and making a focus power test to do additional damage, can instead trigger one of the wielders Psychic Powers as a Free Action which has a Psy Rating of 1 per DoS scored on target. Can only use Psychic Powers that have a specific target, which will be the one hit. Wielder must be a Rune Priest.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

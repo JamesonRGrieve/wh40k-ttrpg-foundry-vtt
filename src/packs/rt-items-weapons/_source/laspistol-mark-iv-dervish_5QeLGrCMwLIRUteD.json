@@ -1,7 +1,7 @@
 {
   "name": "Laspistol (Mark IV \"Dervish\")",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "laspistol-mark-iv-dervish",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,63 @@
+{
+  "name": "Double-Edged Chainsword (Locke)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "double-edged-chainsword-locke",
+    "class": "melee",
+    "type": "chain",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 2
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 12,
+    "availability": "average",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> A Chainsword with no protective covering on this side facing you. For those with extreme confidence.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Chainsword with no protective covering on this side facing you. For those with extreme confidence.",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rqxTg9zdi5w8doqq"
+}

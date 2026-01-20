@@ -1,7 +1,7 @@
 {
   "name": "Thunderclap (Volonx)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
   "system": {
     "identifier": "thunderclap-volonx",
     "class": "thrown",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Blast (2), Inaccurate, Unstable</p><p><b>Note:</b> May require Exotic Weapon Training to use. Returns to the user if it misses, and can be caught with a +0 Agility Test, if fail by 3+ DoF roll 1d10: 1-5: nothing happens. 6-8: nothing happens this turn, but roll again next turn. 9-10: weapon explodes, destroying itself and damaging all in range.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "May require Exotic Weapon Training to use. Returns to the user if it misses, and can be caught with a +0 Agility Test, if fail by 3+ DoF roll 1d10: 1-5: nothing happens. 6-8: nothing happens this turn, but roll again next turn. 9-10: weapon explodes, destroying itself and damaging all in range.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Harpoon Gun (Heavy)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "harpoon-gun-heavy",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Crippling (5), Primitive (9), Snare (1)</p><p><b>Note:</b> If target is snared by weapon, wielder can make Opposed Strength Test vs Target as Full Action, if successful, pull target DoS Metres closer.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If target is snared by weapon, wielder can make Opposed Strength Test vs Target as Full Action, if successful, pull target DoS Metres closer.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

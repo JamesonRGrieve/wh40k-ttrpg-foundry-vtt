@@ -1,12 +1,12 @@
 {
   "name": "Assault Shotgun (Skitarri Vanaheim)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "assault-shotgun-skitarri-vanaheim",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Has an Inbuilt Red-Dot Laser Sight and Melee Attachment (Retractable Saw-Bladed Bayonet)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has an Inbuilt Red-Dot Laser Sight and Melee Attachment (Retractable Saw-Bladed Bayonet)",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Flesh Gauntlet",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-flesh-gauntlet",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Toxic, Unbalanced</p><p><b>Note:</b> Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Failing Toughness Test from Toxic Quality causes 2d10+5 R Damage (ignores Armour/Toughness) instead of 1d10 I as normal. Can't use other toxins. Weapon loses Toxic Quality afterwards, wielder makes Half Action and +10 Chem-Use/Tech-Use test to regain it.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Failing Toughness Test from Toxic Quality causes 2d10+5 R Damage (ignores Armour/Toughness) instead of 1d10 I as normal. Can't use other toxins. Weapon loses Toxic Quality afterwards, wielder makes Half Action and +10 Chem-Use/Tech-Use test to regain it.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

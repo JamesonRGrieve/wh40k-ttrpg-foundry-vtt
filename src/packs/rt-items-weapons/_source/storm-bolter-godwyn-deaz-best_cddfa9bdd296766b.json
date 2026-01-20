@@ -1,0 +1,65 @@
+{
+  "name": "Storm Bolter (Godwyn-De'az) [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
+  "system": {
+    "identifier": "storm-bolter-godwyn-deaz-best",
+    "class": "basic",
+    "type": "bolt",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "reliable",
+      "storm",
+      "tearing"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8,
+    "availability": "near-unique",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Storm, Tearing</p><p><b>Note:</b> Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.</p>"
+    },
+    "modifications": [],
+    "notes": "Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.",
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cddfa9bdd296766b"
+}

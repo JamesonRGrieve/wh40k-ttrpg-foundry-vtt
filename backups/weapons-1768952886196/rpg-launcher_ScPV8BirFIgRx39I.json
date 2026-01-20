@@ -1,0 +1,61 @@
+{
+  "name": "RPG Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "rpg-launcher",
+    "class": "basic",
+    "type": "launcher",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 15,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 1200,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Note:</b> Damage and Penetration Vary with Ammunition</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Damage and Penetration Vary with Ammunition",
+    "source": "Dark Heresy: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ScPV8BirFIgRx39I"
+}

@@ -1,0 +1,65 @@
+{
+  "name": "Bonecrusher Mace",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "bonecrusher-mace",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 2,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 12,
+      "penetration": 4
+    },
+    "special": [
+      "concussive-2",
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 16,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (2), Power Field, Unwieldy</p><p><b>Note:</b> Two Handed, unless in Terminator Armour or something equally bulky. If making an All Out Attack, can reduce bonus to +10 instead of +30 and attack everyone within 2 metres, making a WS Test for each target.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two Handed, unless in Terminator Armour or something equally bulky. If making an All Out Attack, can reduce bonus to +10 instead of +30 and attack everyone within 2 metres, making a WS Test for each target.",
+    "source": "BC: Tome of Blood"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aIAHgKgsHbVOdIsG"
+}

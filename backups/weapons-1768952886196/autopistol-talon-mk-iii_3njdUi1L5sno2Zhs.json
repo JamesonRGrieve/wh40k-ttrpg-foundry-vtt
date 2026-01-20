@@ -1,0 +1,61 @@
+{
+  "name": "Autopistol (Talon Mk III)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "autopistol-talon-mk-iii",
+    "class": "pistol",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 18,
+      "value": 18,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 2.5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 70,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Note:</b> Can use an optional 30 round clip, but cannot be holstered and must be fired two-handed or impose -10 to Ballistic Skill Tests.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can use an optional 30 round clip, but cannot be holstered and must be fired two-handed or impose -10 to Ballistic Skill Tests.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3njdUi1L5sno2Zhs"
+}

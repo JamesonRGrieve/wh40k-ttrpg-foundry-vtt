@@ -1,7 +1,7 @@
 {
   "name": "Power Fist",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-fist",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unwieldy</p><p><b>Note:</b> Add 2x Strength Bonus to melee damage rather than 1x</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Add 2x Strength Bonus to melee damage rather than 1x",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

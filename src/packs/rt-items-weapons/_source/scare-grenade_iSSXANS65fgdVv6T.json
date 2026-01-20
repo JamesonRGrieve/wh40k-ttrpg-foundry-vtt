@@ -1,7 +1,7 @@
 {
   "name": "Scare Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "scare-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Make -10 Toughness Test or count as having failed a fear test, each DoF adds +10 to roll on shock table. Sealed suits immune to effect, Talents and traits that help against fear and poison help with test.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Make -10 Toughness Test or count as having failed a fear test, each DoF adds +10 to roll on shock table. Sealed suits immune to effect, Talents and traits that help against fear and poison help with test.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

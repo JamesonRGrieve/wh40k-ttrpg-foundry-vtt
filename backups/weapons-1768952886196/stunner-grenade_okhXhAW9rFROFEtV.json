@@ -1,0 +1,63 @@
+{
+  "name": "Stunner Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "stunner-grenade",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-10"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Anyone in blast range must make +10 Toughnes Test or be stunned for a number of roudns equal to their degrees of failiure. Respirators and Sealed armour give +20 to test.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Anyone in blast range must make +10 Toughnes Test or be stunned for a number of roudns equal to their degrees of failiure. Respirators and Sealed armour give +20 to test.",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "okhXhAW9rFROFEtV"
+}

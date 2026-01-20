@@ -1,7 +1,7 @@
 {
   "name": "Astartes Chainfist",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-chainfist",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Only usable by Terminators, replacing one of the Terminator Gauntlets. These can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Only usable by Terminators, replacing one of the Terminator Gauntlets. These can't use ranged weapons unless Thrown, and the Poor Manual Dexterity Debuff of power armour is set to -20.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

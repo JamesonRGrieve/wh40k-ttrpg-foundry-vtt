@@ -1,7 +1,7 @@
 {
   "name": "Unmaker's Touch",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "unmakers-touch",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Chainfist of the Minotaurs Chapter. Increases its Damage and Penetration by 5 against Vehicles, Structures, Objects, and enemies with the Machine Trait. As with all Chainfists, increases Unnatural Strength x2 to x3.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Chainfist of the Minotaurs Chapter. Increases its Damage and Penetration by 5 against Vehicles, Structures, Objects, and enemies with the Machine Trait. As with all Chainfists, increases Unnatural Strength x2 to x3.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

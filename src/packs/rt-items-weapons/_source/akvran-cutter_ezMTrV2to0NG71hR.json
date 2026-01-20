@@ -1,7 +1,7 @@
 {
   "name": "Akvran Cutter",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
   "system": {
     "identifier": "akvran-cutter",
     "class": "thrown",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (3), Concussive (3), Proven (4)</p><p><b>Note:</b> Requires Forbidden Lore (Xenos - Lost Races) to Repair or Modify. Grenade that sends out a planar shockwave that severs all in its wake.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires Forbidden Lore (Xenos - Lost Races) to Repair or Modify. Grenade that sends out a planar shockwave that severs all in its wake.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

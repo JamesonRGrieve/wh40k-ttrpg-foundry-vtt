@@ -1,7 +1,7 @@
 {
   "name": "Ork Grabba Stikk",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "ork-grabba-stikk",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Snare</p><p><b>Note:</b> For Orks, Average. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "For Orks, Average. Kraftsmanship: Poor: breaks for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, 1 Kustom Bit, +1kg. ",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

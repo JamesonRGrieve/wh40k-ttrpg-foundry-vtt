@@ -1,7 +1,7 @@
 {
   "name": "Astartes Balefire Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "astartes-balefire-gun",
     "class": "basic",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Flame, Spray, Toxic</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. ",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

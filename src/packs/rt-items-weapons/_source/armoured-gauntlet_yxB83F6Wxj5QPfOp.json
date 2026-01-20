@@ -1,7 +1,7 @@
 {
   "name": "Armoured Gauntlet",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "armoured-gauntlet",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (6)</p><p><b>Note:</b> Potentially gauntlet part of hard metal armours, like power armour, could use this profile if attacking unarmed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Potentially gauntlet part of hard metal armours, like power armour, could use this profile if attacking unarmed.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

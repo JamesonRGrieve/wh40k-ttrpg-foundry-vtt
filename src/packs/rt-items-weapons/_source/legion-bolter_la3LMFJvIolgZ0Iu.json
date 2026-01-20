@@ -1,12 +1,12 @@
 {
   "name": "Legion Bolter",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "legion-bolter",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing,  SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Chaos Legionary Weapon. Dangerous to own.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

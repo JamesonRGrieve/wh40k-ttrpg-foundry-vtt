@@ -1,7 +1,7 @@
 {
   "name": "Plasma Pistol (Wrath)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-plasma.svg",
   "system": {
     "identifier": "plasma-pistol-wrath",
     "class": "pistol",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Overheats, Accurate, Maximal</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can choose between firing normally or maximally",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

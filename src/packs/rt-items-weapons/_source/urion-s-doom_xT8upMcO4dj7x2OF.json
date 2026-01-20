@@ -1,12 +1,12 @@
 {
   "name": "Urion's Doom",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "urions-doom",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Storm, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Storm Bolter of the Ultramarines. +15 Ballistic Skill when shooting at Tyranids.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Relic Master-Crafted Astartes Storm Bolter of the Ultramarines. +15 Ballistic Skill when shooting at Tyranids.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

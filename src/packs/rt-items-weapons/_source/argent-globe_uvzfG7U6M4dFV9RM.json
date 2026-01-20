@@ -1,7 +1,7 @@
 {
   "name": "Argent Globe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "argent-globe",
     "class": "thrown",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (3), Crippling (3), Sanctified</p><p><b>Note:</b> Perfect spheres of blessed silver that shreds through warpspawn</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Perfect spheres of blessed silver that shreds through warpspawn",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

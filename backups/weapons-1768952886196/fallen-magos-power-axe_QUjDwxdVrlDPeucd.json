@@ -1,0 +1,64 @@
+{
+  "name": "Fallen Magos Power Axe",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "fallen-magos-power-axe",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 6
+    },
+    "special": [
+      "power-field",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 9,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Two Handed Weapon. Can corrupt Imperial Technology using this by making a -30 Tech-Use Test, if successful, interfaced technology is unusable by anyone that is not the user or a fellow Heretek. Has an inbuilt Combi-Tool.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two Handed Weapon. Can corrupt Imperial Technology using this by making a -30 Tech-Use Test, if successful, interfaced technology is unusable by anyone that is not the user or a fellow Heretek. Has an inbuilt Combi-Tool.",
+    "source": "Black Crusade: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QUjDwxdVrlDPeucd"
+}

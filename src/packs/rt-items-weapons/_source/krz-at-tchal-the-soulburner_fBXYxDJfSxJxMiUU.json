@@ -1,7 +1,7 @@
 {
   "name": "Krz'at'tchal the Soulburner",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "krzattchal-the-soulburner",
     "class": "basic",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Flame, Reliable, Spray, Warp Weapon, Daemon Wep</p><p><b>Note:</b> Base Weapon: Flamer. Daemon Willpower 40 (Flamer of Tzeentch), Bind Str 2 . Attributes: Mutating, Warp Fire\nAll Creatures Wounded by this weapon must make +0 Toughness Test or suffer a Mutation.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Base Weapon: Flamer. Daemon Willpower 40 (Flamer of Tzeentch), Bind Str 2 . Attributes: Mutating, Warp Fire\nAll Creatures Wounded by this weapon must make +0 Toughness Test or suffer a Mutation.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

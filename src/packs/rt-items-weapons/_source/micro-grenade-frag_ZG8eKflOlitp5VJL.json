@@ -1,7 +1,7 @@
 {
   "name": "Micro Grenade (Frag)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "micro-grenade-frag",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (2)</p><p><b>Note:</b> Comes as a Dispenser of 12 Grenades, of which several can be thrown at once, like as if firing on Semi-Auto. Grenades that do not hit scatter following random scattering rules, exploding regardless of miss or hit.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Comes as a Dispenser of 12 Grenades, of which several can be thrown at once, like as if firing on Semi-Auto. Grenades that do not hit scatter following random scattering rules, exploding regardless of miss or hit.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

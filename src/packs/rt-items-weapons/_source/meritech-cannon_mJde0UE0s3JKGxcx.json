@@ -1,7 +1,7 @@
 {
   "name": "Meritech Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "meritech-cannon",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (1)</p><p><b>Note:</b> Fires Tiny black marble-like devices that explode with the force of a krak missile.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires Tiny black marble-like devices that explode with the force of a krak missile.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

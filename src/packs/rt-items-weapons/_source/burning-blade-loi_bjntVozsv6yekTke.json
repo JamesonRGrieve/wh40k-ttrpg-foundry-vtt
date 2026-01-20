@@ -1,7 +1,7 @@
 {
   "name": "Burning Blade (Loi)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "burning-blade-loi",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Power Field, Balanced, Flame</p><p><b>Note:</b> On successful hit, target must make +0 Agility Test or be set on fire (flame quality there for reference, don't test twice for if the attack hits and then damages).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "On successful hit, target must make +0 Agility Test or be set on fire (flame quality there for reference, don't test twice for if the attack hits and then damages).",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

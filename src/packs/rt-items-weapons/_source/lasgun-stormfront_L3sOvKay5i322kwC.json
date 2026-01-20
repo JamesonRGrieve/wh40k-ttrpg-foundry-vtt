@@ -1,12 +1,12 @@
 {
   "name": "Lasgun (Stormfront)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "lasgun-stormfront",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Makes use of a Wooden Stock and integral bayonet. Counts as a Spear in close combat (Melee, 1d10 R, Pen 0, Primitive (8))</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Makes use of a Wooden Stock and integral bayonet. Counts as a Spear in close combat (Melee, 1d10 R, Pen 0, Primitive (8))",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

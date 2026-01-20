@@ -1,7 +1,7 @@
 {
   "name": "Chainaxe (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "chainaxe-guard",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Can be Wielded in one hand but if wielded in two hands, does additional +2 Penetration, loses Unbalanced, but gains Unwieldy.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be Wielded in one hand but if wielded in two hands, does additional +2 Penetration, loses Unbalanced, but gains Unwieldy.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

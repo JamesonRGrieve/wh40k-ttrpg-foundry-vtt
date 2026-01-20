@@ -1,12 +1,12 @@
 {
   "name": "Egerian Shardcaster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "egerian-shardcaster",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Scatter, Tearing</p><p><b>Note:</b> Xenotech. Fired fragments seem to collectively weigh more than the crystal they originated from.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Fired fragments seem to collectively weigh more than the crystal they originated from.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

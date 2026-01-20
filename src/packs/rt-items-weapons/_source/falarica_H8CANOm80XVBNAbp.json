@@ -1,7 +1,7 @@
 {
   "name": "Falarica",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
   "system": {
     "identifier": "falarica",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Tearing</p><p><b>Note:</b> A Heavy Javelin. Can be bound with combustable materials, if it is targets struck by it must make +20 Agility Test to avoid catching on fire.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Heavy Javelin. Can be bound with combustable materials, if it is targets struck by it must make +20 Agility Test to avoid catching on fire.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

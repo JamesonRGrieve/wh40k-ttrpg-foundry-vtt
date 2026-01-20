@@ -1,0 +1,63 @@
+{
+  "name": "Bolt Pistol (Hesh M38)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "bolt-pistol-hesh-m38",
+    "class": "pistol",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 25,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 4,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Gains Unreliable Quality if Fired on Semi-Auto.\nThe Tech-Priests of the Lathes may not have this issue</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Gains Unreliable Quality if Fired on Semi-Auto.\nThe Tech-Priests of the Lathes may not have this issue",
+    "source": "OW: Hammer of the Emperor"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "80bUA1JQXrFEvPZP"
+}

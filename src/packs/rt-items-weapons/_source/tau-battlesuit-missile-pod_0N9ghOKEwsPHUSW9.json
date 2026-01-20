@@ -1,12 +1,12 @@
 {
   "name": "Tau Battlesuit Missile Pod",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "tau-battlesuit-missile-pod",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (2)</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. ",
-    "source": "RT: Tau Char. Guide"
+    "source": "RT: Tau Character Guide",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

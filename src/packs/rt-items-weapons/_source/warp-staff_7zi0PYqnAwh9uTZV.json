@@ -1,7 +1,7 @@
 {
   "name": "Warp Staff",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "warp-staff",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Balanced</p><p><b>Note:</b> When wielded, only suffer Psychic Phenomena when Pushing. If an Unfettered power would cause Psychic Phenomena add Psy Rating to the damage of the next Psyhcic Power used (if it doesn't deal damage, bonus is lost).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "When wielded, only suffer Psychic Phenomena when Pushing. If an Unfettered power would cause Psychic Phenomena add Psy Rating to the damage of the next Psyhcic Power used (if it doesn't deal damage, bonus is lost).",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

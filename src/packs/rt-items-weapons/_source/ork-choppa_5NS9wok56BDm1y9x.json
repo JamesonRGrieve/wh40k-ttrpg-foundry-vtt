@@ -1,7 +1,7 @@
 {
   "name": "Ork Choppa",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "ork-choppa",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Unbalanced</p><p><b>Note:</b> Two-Handed for Non-Orks with a Strength Bonus of 3 or less.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed for Non-Orks with a Strength Bonus of 3 or less.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

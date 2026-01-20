@@ -1,0 +1,64 @@
+{
+  "name": "Autocannon (M34)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "autocannon-m34",
+    "class": "heavy",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "impact",
+      "bonus": 8,
+      "penetration": 6
+    },
+    "special": [
+      "reliable",
+      "ogryn-proof"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 40,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 1000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Ogryn-Proof</p><p><b>Note:</b> Ideally employs a crew of two to move, set up, and assist in reloading. A Second crew member may spend their actions to reload the weapon.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Ideally employs a crew of two to move, set up, and assist in reloading. A Second crew member may spend their actions to reload the weapon.",
+    "source": "RT: Faith and Coin"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IUCY4D98D3G8lAsB"
+}

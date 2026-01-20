@@ -1,12 +1,12 @@
 {
   "name": "Lightning Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "lightning-cannon",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Overheats, Shocking</p><p><b>Note:</b> Creates a dramatic lightning bolt and thunderclap when fired at a target. Using the Aim Action additionally adds +2 Damage and Penetration per Half Action, up to +4/+4 respectively.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Creates a dramatic lightning bolt and thunderclap when fired at a target. Using the Aim Action additionally adds +2 Damage and Penetration per Half Action, up to +4/+4 respectively.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

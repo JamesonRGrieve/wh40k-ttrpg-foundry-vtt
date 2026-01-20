@@ -1,12 +1,12 @@
 {
   "name": "Necron Cascade Lance [Ranged]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "necron-cascade-lance-ranged",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Proven (5), Reliable</p><p><b>Note:</b> An ornate staff with a [Melee] and [Ranged] Mode. Two-Handed.\nInfinite Ammo, No Reloads needed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "An ornate staff with a [Melee] and [Ranged] Mode. Two-Handed.\nInfinite Ammo, No Reloads needed.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

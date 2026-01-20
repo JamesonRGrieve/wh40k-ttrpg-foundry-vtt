@@ -1,12 +1,12 @@
 {
   "name": "Plasma Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
   "system": {
     "identifier": "plasma-gun",
     "class": "basic",
     "type": "plasma",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Maximal, Overheats</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can choose between firing normally or maximally",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

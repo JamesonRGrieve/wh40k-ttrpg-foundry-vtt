@@ -1,7 +1,7 @@
 {
   "name": "Scipio's Regret",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "scipios-regret",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Razor Sharp, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Chainsword of the Angels Vermillion Chapter. Grants +20 to Fellowship Tests to impress or awe others when wielded or properly displayed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Chainsword of the Angels Vermillion Chapter. Grants +20 to Fellowship Tests to impress or awe others when wielded or properly displayed.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

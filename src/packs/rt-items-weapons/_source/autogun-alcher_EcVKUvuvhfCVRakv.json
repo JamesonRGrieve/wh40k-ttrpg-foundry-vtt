@@ -1,12 +1,12 @@
 {
   "name": "Autogun (Alcher)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "autogun-alcher",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> A popular weapon amongst newer, less well-trained soldiers of PDF forces.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A popular weapon amongst newer, less well-trained soldiers of PDF forces.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

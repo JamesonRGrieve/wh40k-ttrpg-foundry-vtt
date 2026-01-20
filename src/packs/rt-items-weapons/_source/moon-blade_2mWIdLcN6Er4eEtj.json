@@ -1,7 +1,7 @@
 {
   "name": "Moon Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "moon-blade",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Fast, Primitive (8), Unwieldy</p><p><b>Note:</b> Can be thrown. Usually wielded in pairs.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be thrown. Usually wielded in pairs.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

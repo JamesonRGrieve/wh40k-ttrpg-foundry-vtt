@@ -1,7 +1,7 @@
 {
   "name": "Stealth Claw",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "stealth-claw",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Felling (2), Razor Sharp, Sanctified</p><p><b>Note:</b> Easily concealable inside robes or heavy sleeves. Has Compact Upgrade. When successfully making an All Out Attack with the weapon add +Psy Rating damage.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Easily concealable inside robes or heavy sleeves. Has Compact Upgrade. When successfully making an All Out Attack with the weapon add +Psy Rating damage.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

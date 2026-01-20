@@ -1,7 +1,7 @@
 {
   "name": "Ntharian Falx",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "ntharian-falx",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Tearing, Unbalanced</p><p><b>Note:</b> Gains additional Penetration equal to Degrees of Success on WS Test to attack with it. Requires two hands to wield.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gains additional Penetration equal to Degrees of Success on WS Test to attack with it. Requires two hands to wield.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

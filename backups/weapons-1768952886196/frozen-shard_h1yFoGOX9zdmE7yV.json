@@ -1,0 +1,64 @@
+{
+  "name": "Frozen Shard",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "frozen-shard",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 6,
+      "penetration": 8
+    },
+    "special": [
+      "balanced",
+      "felling-3"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 2,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Felling (3)</p><p><b>Note:</b> Blade with a Frictionless Surface, capable of piecring through the smallest joint or defect.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Blade with a Frictionless Surface, capable of piecring through the smallest joint or defect.",
+    "source": "Black Crusade: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h1yFoGOX9zdmE7yV"
+}

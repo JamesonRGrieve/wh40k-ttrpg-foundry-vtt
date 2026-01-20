@@ -1,12 +1,12 @@
 {
   "name": "Lasgun (Triplex)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "lasgun-triplex",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Has Precision Mode: S/-/-, Range 150m, Accurate\nHas Incineration Mode: S/-/-, Range 50m, Proven (5), Felling (4)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has Precision Mode: S/-/-, Range 150m, Accurate\nHas Incineration Mode: S/-/-, Range 50m, Proven (5), Felling (4)",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Velklir Rapier",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "velklir-rapier",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Balanced, Flexible, Razor-Sharp</p><p><b>Note:</b> After using this weapon to kill an opponent, make +0 Toughness Test or suffer one Fatigue.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "After using this weapon to kill an opponent, make +0 Toughness Test or suffer one Fatigue.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

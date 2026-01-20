@@ -1,7 +1,7 @@
 {
   "name": "Astartes Sniper Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "astartes-sniper-rifle",
     "class": "basic",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Accurate, Felling (4), Toxic</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Effectively a fancy Needle Rifle.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Effectively a fancy Needle Rifle.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Necron Hyperphase Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "necron-hyperphase-sword",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Balanced, Power Field</p><p><b>Note:</b> Always Best Quality. When wielded, generates Forcefield of Protection 65 and Overloard 01-05. When it stops a ranged attack, shot can be redirected at enemy within 25m, treat as ranged attack with -20.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality. When wielded, generates Forcefield of Protection 65 and Overloard 01-05. When it stops a ranged attack, shot can be redirected at enemy within 25m, treat as ranged attack with -20.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

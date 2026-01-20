@@ -1,7 +1,7 @@
 {
   "name": "Stub Automatic (Dorcas)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "stub-automatic-dorcas",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Often seen as a \"Trophy Weapon\" acquired in combat.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Often seen as a \"Trophy Weapon\" acquired in combat.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

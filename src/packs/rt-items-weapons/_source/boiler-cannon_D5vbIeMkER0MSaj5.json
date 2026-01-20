@@ -1,12 +1,12 @@
 {
   "name": "Boiler Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-default.svg",
   "system": {
     "identifier": "boiler-cannon",
     "class": "heavy",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Primitive (7), Overheats, Spray, Toxic (3)</p><p><b>Note:</b> Primitive Flamethrower-esque weapon that uses a toxic stream that scalds the skin and burns the lungs.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Primitive Flamethrower-esque weapon that uses a toxic stream that scalds the skin and burns the lungs.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

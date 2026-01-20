@@ -1,12 +1,12 @@
 {
   "name": "Eldar Shardcarbine",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "eldar-shardcarbine",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Storm, Toxic (1)</p><p><b>Note:</b> A More Compact version of the Splinter Rifle, used in boarding actions for capturing slaves and amongst Eldar mercenary bands. Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A More Compact version of the Splinter Rifle, used in boarding actions for capturing slaves and amongst Eldar mercenary bands. Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Inhalation Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "inhalation-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> No effect on those in environmentally sealed gear. Contains a drug or poison of choice that is applied to everyone in blast radius as a gas. Targets get +10 to tests to resist the effects of the gas (if no test by default, assume +0 Toughness Test).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "No effect on those in environmentally sealed gear. Contains a drug or poison of choice that is applied to everyone in blast radius as a gas. Targets get +10 to tests to resist the effects of the gas (if no test by default, assume +0 Toughness Test).",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

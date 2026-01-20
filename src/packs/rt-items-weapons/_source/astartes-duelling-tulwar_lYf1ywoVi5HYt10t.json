@@ -1,7 +1,7 @@
 {
   "name": "Astartes Duelling Tulwar",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "astartes-duelling-tulwar",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Primitive</p><p><b>Note:</b> Space Marines Only. White Scars variant Astartes Combat Knife. When making the Defensive Stance Action, can make a single StandardAttack as a Free Action.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. White Scars variant Astartes Combat Knife. When making the Defensive Stance Action, can make a single StandardAttack as a Free Action.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

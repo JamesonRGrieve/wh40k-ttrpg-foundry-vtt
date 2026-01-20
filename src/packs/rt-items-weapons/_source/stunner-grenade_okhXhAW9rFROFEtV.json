@@ -1,7 +1,7 @@
 {
   "name": "Stunner Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "stunner-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Anyone in blast range must make +10 Toughnes Test or be stunned for a number of roudns equal to their degrees of failiure. Respirators and Sealed armour give +20 to test.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Anyone in blast range must make +10 Toughnes Test or be stunned for a number of roudns equal to their degrees of failiure. Respirators and Sealed armour give +20 to test.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

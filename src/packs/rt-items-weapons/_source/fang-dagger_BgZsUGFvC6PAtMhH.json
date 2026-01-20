@@ -1,7 +1,7 @@
 {
   "name": "Fang Dagger",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "fang-dagger",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Warp Weapon</p><p><b>Note:</b> 30cm length dagger imbued with warp energies. Inflicts one Corruption Point on Wielder and Target each time the wielder inflicts Zealous Hatred</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "30cm length dagger imbued with warp energies. Inflicts one Corruption Point on Wielder and Target each time the wielder inflicts Zealous Hatred",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

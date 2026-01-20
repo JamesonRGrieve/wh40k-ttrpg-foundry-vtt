@@ -1,7 +1,7 @@
 {
   "name": "Eldar Harlequinn's Kiss",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eldar-harlequinns-kiss",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Felling (4), Tearing</p><p><b>Note:</b> Unleashes monofilaments within those it penetrates, liquifying the target from the inside. Considered to be of high prestige even amongst more puritan individuals.\nDo not add Strength Bonus to damage.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Unleashes monofilaments within those it penetrates, liquifying the target from the inside. Considered to be of high prestige even amongst more puritan individuals.\nDo not add Strength Bonus to damage.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

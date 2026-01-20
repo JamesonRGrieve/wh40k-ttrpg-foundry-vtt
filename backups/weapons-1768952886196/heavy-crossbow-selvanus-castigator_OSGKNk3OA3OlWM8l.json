@@ -1,0 +1,64 @@
+{
+  "name": "Heavy Crossbow (Selvanus) \"Castigator\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "heavy-crossbow-selvanus-castigator",
+    "class": "heavy",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 70,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 6,
+      "penetration": 1
+    },
+    "special": [
+      "concussive-2",
+      "reliable"
+    ],
+    "clip": {
+      "max": 14,
+      "value": 14,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 12,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Concussive (2), Reliable</p><p><b>Note:</b> Fires Metre-Length Bolts that Knock anyone of Size 5 (Hulking) or smaller Prone if hit by them.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires Metre-Length Bolts that Knock anyone of Size 5 (Hulking) or smaller Prone if hit by them.",
+    "source": "DH 2E: Enemies Within"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OSGKNk3OA3OlWM8l"
+}

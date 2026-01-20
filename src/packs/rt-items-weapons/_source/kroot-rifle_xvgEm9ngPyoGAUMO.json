@@ -1,12 +1,12 @@
 {
   "name": "Kroot Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "kroot-rifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Balanced</p><p><b>Note:</b> Also counts as 1d10 R, Pen 0, Balanced Melee Weapon</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Also counts as 1d10 R, Pen 0, Balanced Melee Weapon",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

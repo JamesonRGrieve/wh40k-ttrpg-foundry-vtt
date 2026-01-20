@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Omnissian Axe (Artificer)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-omnissian-axe-artificer",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 9,
+      "penetration": 7
+    },
+    "special": [
+      "sm-wep",
+      "power-field",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 10,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Unbalanced</p><p><b>Note:</b> Space Marines Only. Always Master-Crafted. +10 to Fellowship Tests with members of the Machine Cult. Counts as a Combi-Tool.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Always Master-Crafted. +10 to Fellowship Tests with members of the Machine Cult. Counts as a Combi-Tool.",
+    "source": "DW: First Founding"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "J8EXY42aHy8JnuiQ"
+}

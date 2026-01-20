@@ -1,7 +1,7 @@
 {
   "name": "Ork Stikkbomb",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
   "system": {
     "identifier": "ork-stikkbomb",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (2), Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. Counts as a Truncheon in Melee Combat, if Weapon Skill Test failed by 3+ DoF, it explodes.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Not Unreliable when wielded by an Ork. Counts as a Truncheon in Melee Combat, if Weapon Skill Test failed by 3+ DoF, it explodes.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

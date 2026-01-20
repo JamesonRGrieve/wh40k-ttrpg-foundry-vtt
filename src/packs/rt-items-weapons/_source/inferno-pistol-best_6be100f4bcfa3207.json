@@ -1,0 +1,63 @@
+{
+  "name": "Inferno Pistol [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-melta.svg",
+  "system": {
+    "identifier": "inferno-pistol-best",
+    "class": "pistol",
+    "type": "melta",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 12
+    },
+    "special": [
+      "melta"
+    ],
+    "clip": {
+      "max": 3,
+      "value": 3,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
+    "availability": "near-unique",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 15000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Melta</p>"
+    },
+    "modifications": [],
+    "notes": "",
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6be100f4bcfa3207"
+}

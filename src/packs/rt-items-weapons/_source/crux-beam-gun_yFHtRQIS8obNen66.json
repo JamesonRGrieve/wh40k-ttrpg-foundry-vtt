@@ -1,12 +1,12 @@
 {
   "name": "Crux Beam Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "crux-beam-gun",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Can use las ammo packs, but burns them out.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can use las ammo packs, but burns them out.",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

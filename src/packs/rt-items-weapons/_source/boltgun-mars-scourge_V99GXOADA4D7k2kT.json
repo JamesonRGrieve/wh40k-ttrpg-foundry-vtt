@@ -1,12 +1,12 @@
 {
   "name": "Boltgun (Mars) \"Scourge\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "boltgun-mars-scourge",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Reliable</p><p><b>Note:</b> Has an undermounted blade that can be used in melee combat. (1d10+2 R, Pen 0, Unbalanced)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has an undermounted blade that can be used in melee combat. (1d10+2 R, Pen 0, Unbalanced)",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Combat Knife",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "combat-knife",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive</p><p><b>Note:</b> Can be affixed to most weapons as a bayonet</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be affixed to most weapons as a bayonet",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

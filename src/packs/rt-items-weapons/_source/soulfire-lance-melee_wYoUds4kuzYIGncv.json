@@ -1,7 +1,7 @@
 {
   "name": "Soulfire Lance [Melee]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "soulfire-lance-melee",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Balanced</p><p><b>Note:</b> Weapon: Spear. Daemon WP 60 (Khorne Daemon), Bind Str 3. Att.: Howling, Piercing. Needs Two hands, can make [Ranged] Attack.\nGain Fear(+1) When attacking, Add Daemon's WP to Critical Damage.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Spear. Daemon WP 60 (Khorne Daemon), Bind Str 3. Att.: Howling, Piercing. Needs Two hands, can make [Ranged] Attack.\nGain Fear(+1) When attacking, Add Daemon's WP to Critical Damage.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

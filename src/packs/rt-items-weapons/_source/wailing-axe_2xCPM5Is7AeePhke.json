@@ -1,7 +1,7 @@
 {
   "name": "Wailing Axe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "wailing-axe",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Unwieldy</p><p><b>Note:</b> Strapped to user's wrist by a tough hide loop. As a Half Action Can be wrapped around the wrist and swung around causing an unnerving waling sound that gives wielder Fear(+1), if doing this and then attacking, add 2x Strength Bonus to damage and impose -10 to Parry Attack.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Strapped to user's wrist by a tough hide loop. As a Half Action Can be wrapped around the wrist and swung around causing an unnerving waling sound that gives wielder Fear(+1), if doing this and then attacking, add 2x Strength Bonus to damage and impose -10 to Parry Attack.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

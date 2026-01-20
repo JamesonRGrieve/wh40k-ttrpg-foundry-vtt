@@ -1,0 +1,63 @@
+{
+  "name": "Kyaire Riveblade Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "kyaire-riveblade-grenade",
+    "class": "thrown",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 6,
+      "penetration": 10
+    },
+    "special": [
+      "razor-sharp"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Razor Sharp</p><p><b>Note:</b> Specialised Grenade that used to be fired by now extinct aliens from their launchers.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Specialised Grenade that used to be fired by now extinct aliens from their launchers.",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7oAhrgiiJCbL5f3c"
+}

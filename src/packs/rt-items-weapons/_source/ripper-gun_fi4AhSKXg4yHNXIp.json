@@ -1,12 +1,12 @@
 {
   "name": "Ripper Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "ripper-gun",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Ogryn-Proof, Scatter</p><p><b>Note:</b> Designed for Ogyrns. Functions as a Warhammer in close combat.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Designed for Ogyrns. Functions as a Warhammer in close combat.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

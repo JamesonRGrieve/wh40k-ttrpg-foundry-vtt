@@ -1,12 +1,12 @@
 {
   "name": "Eviscerator (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "eviscerator-guard",
     "class": "melee",
     "type": "chain",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Razor-Sharp, Tearing, Unwieldy</p><p><b>Note:</b> Attacks that trigger Righeous Fury add +1 to Critical Hit Tables. Two-Handed Weapon</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Attacks that trigger Righeous Fury add +1 to Critical Hit Tables. Two-Handed Weapon",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

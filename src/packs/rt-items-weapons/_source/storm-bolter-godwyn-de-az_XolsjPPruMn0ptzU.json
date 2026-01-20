@@ -1,12 +1,12 @@
 {
   "name": "Storm Bolter (Godwyn-De'az)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "storm-bolter-godwyn-deaz",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Reliable, Storm, Tearing</p><p><b>Note:</b> Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

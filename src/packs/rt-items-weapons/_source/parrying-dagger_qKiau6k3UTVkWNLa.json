@@ -1,7 +1,7 @@
 {
   "name": "Parrying Dagger",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "parrying-dagger",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Defensive</p><p><b>Note:</b> Additional +5 to Parry</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Additional +5 to Parry",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

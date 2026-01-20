@@ -1,7 +1,7 @@
 {
   "name": "Throwing Knife",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
   "system": {
     "identifier": "throwing-knife",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Can be used in Melee, but has Unbalanced Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be used in Melee, but has Unbalanced Quality.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

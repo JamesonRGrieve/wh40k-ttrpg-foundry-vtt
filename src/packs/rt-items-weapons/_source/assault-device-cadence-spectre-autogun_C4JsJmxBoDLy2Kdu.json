@@ -1,12 +1,12 @@
 {
   "name": "Assault Device (Cadence)\n\"Spectre\" [Autogun]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "assault-device-cadence-spectre-autogun",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Has Three Autogun Magazines (each containing 20 rounds and requiring a Full Action to Reload) and a Fire Selector to switch between them.\nHas an Undermounted Shotgun (see [Shotgun] Profile). Can only fire as either an [Autogun] or [Shotgun] at once.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has Three Autogun Magazines (each containing 20 rounds and requiring a Full Action to Reload) and a Fire Selector to switch between them.\nHas an Undermounted Shotgun (see [Shotgun] Profile). Can only fire as either an [Autogun] or [Shotgun] at once.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

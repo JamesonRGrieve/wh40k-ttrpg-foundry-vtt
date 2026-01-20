@@ -1,7 +1,7 @@
 {
   "name": "Weighted Memory Wire",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "weighted-memory-wire",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Easily concealed, designed for choking people out</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Easily concealed, designed for choking people out",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

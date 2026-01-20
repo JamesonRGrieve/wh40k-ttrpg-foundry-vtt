@@ -1,7 +1,7 @@
 {
   "name": "Shock Maul",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
   "system": {
     "identifier": "shock-maul",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Shocking</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Dark Heresy: Core"
+    "source": "DH: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

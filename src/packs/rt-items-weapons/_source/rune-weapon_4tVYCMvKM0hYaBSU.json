@@ -1,7 +1,7 @@
 {
   "name": "Rune Weapon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "rune-weapon",
     "class": "melee",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Balanced, Tainted, Tearing, Vengeful (8), Rune Wep</p><p><b>Note:</b> Generic Rune Weapon, in this case a sword but can be any Primitive Melee Weapon. DH 2E Rune Weapons give Tainted, Tearing, and Vengeful (8), Lose Primitive, are Immune to Power Fields, and cause wielder to gain 1d5  Corruption whenever they trigger Righteous Fury.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Generic Rune Weapon, in this case a sword but can be any Primitive Melee Weapon. DH 2E Rune Weapons give Tainted, Tearing, and Vengeful (8), Lose Primitive, are Immune to Power Fields, and cause wielder to gain 1d5  Corruption whenever they trigger Righteous Fury.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

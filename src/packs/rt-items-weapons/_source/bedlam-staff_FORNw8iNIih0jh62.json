@@ -1,7 +1,7 @@
 {
   "name": "Bedlam Staff",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "bedlam-staff",
     "class": "melee",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Balanced, Concussive (2),Flame, Proven (3), Daemon Wep</p><p><b>Note:</b> Base Weapon: Staff. Daemon Willpower 40 (Minor Daemon of Tzeentch), Bind Str 2. Attributes: Illusory, Warp Flame\nWeapon appears mundane, unless observer passes -20 Awareness Test. Attempts to Dodge or Parry this weapon have -10.\nActs as Psy Focus, can only be used by those dedicated to Tzeentch.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Base Weapon: Staff. Daemon Willpower 40 (Minor Daemon of Tzeentch), Bind Str 2. Attributes: Illusory, Warp Flame\nWeapon appears mundane, unless observer passes -20 Awareness Test. Attempts to Dodge or Parry this weapon have -10.\nActs as Psy Focus, can only be used by those dedicated to Tzeentch.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

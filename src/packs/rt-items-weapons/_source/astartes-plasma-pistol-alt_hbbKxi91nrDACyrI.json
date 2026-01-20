@@ -1,7 +1,7 @@
 {
   "name": "Astartes Plasma Pistol (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-plasma.svg",
   "system": {
     "identifier": "astartes-plasma-pistol-alt",
     "class": "pistol",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Maximal Setting also adds Overheats Weapon Quality.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

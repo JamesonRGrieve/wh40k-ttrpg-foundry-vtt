@@ -1,7 +1,7 @@
 {
   "name": "Vivisector",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "vivisector",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unwieldy</p><p><b>Note:</b> Grants +10 to Interrogation and Intimidation Tests. As well as +10 to medicae tests to repair servitors or conduct an Autopsy.\nCan be fitted with a injector rigs for 500 Thrones (or +1 Rarity) to add Toxic Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Grants +10 to Interrogation and Intimidation Tests. As well as +10 to medicae tests to repair servitors or conduct an Autopsy.\nCan be fitted with a injector rigs for 500 Thrones (or +1 Rarity) to add Toxic Quality.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Kursian Heavy Shield",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "kursian-heavy-shield",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (6), Unwieldy</p><p><b>Note:</b> Needs Exotic Weapon Training(Kursian Pit Weapons). Gives +3 AP to wielding Arm and Body. If character uses Defensive Stack Action, also gives +3 AP to head and legs. Can maintain this stance as a Half Action on subsequent turns and attack without breaking it.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Needs Exotic Weapon Training(Kursian Pit Weapons). Gives +3 AP to wielding Arm and Body. If character uses Defensive Stack Action, also gives +3 AP to head and legs. Can maintain this stance as a Half Action on subsequent turns and attack without breaking it.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

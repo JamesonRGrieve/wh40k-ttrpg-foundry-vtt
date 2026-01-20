@@ -1,7 +1,7 @@
 {
   "name": "Venator Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "venator-blade",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Balanced, Felling (2), Razor-Sharp</p><p><b>Note:</b> A Long Dagger with strange properties. Cannot be destroyed by a Power Field. Can be Thrown.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Long Dagger with strange properties. Cannot be destroyed by a Power Field. Can be Thrown.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

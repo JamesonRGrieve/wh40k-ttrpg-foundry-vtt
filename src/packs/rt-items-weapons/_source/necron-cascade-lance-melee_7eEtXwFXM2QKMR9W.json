@@ -1,7 +1,7 @@
 {
   "name": "Necron Cascade Lance [Melee]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "necron-cascade-lance-melee",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Concussive (1), Power Field</p><p><b>Note:</b> An ornate staff with a [Melee] and [Ranged] Mode. Two-Handed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "An ornate staff with a [Melee] and [Ranged] Mode. Two-Handed.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

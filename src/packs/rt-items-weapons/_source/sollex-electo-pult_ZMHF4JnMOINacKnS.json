@@ -1,12 +1,12 @@
 {
   "name": "Sollex Electo-pult",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg",
   "system": {
     "identifier": "sollex-electo-pult",
     "class": "heavy",
     "type": "launcher",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Accurate, Blast (1), Overheats</p><p><b>Note:</b> Can't use Unusual Ammunition unless it is specifically designed for this weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can't use Unusual Ammunition unless it is specifically designed for this weapon.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

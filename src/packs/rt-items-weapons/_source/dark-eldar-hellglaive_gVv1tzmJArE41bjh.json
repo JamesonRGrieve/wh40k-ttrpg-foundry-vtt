@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Hellglaive",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-hellglaive",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Razor-Sharp</p><p><b>Note:</b> Scarce Availability if acquired from Dark Eldar Settlement. Two-Handed, while wielding it count as if wielding two weapons (allowing use of Two-Weapon Fighting). Grants +10 to Pilot (Personal) Tests due to its balanced nature.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Scarce Availability if acquired from Dark Eldar Settlement. Two-Handed, while wielding it count as if wielding two weapons (allowing use of Two-Weapon Fighting). Grants +10 to Pilot (Personal) Tests due to its balanced nature.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

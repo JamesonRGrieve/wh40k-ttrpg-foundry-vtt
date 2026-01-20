@@ -1,12 +1,12 @@
 {
   "name": "Harpoon Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "harpoon-gun",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Snare, Tearing</p><p><b>Note:</b> Uses special harpoon ammo, and can't use Unusual Ammunition. Good for puncturing voidsuits.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Uses special harpoon ammo, and can't use Unusual Ammunition. Good for puncturing voidsuits.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

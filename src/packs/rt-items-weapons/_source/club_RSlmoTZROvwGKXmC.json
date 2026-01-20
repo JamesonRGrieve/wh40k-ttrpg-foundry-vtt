@@ -1,7 +1,7 @@
 {
   "name": "Club",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "club",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Dark Heresy: Core"
+    "source": "DH: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Spore Caster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "spore-caster",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Devastating (5), Hallucinogenic (3), Spray</p><p><b>Note:</b> Fires fungal spore bulbs from an air launcher, that when impacting into a target mash into a paste that induces psychopathic mania.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires fungal spore bulbs from an air launcher, that when impacting into a target mash into a paste that induces psychopathic mania.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

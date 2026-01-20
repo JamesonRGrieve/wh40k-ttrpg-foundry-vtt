@@ -1,12 +1,12 @@
 {
   "name": "Vilemaw",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "vilemaw",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Razor-Sharp, Tearing, Daemon Wep</p><p><b>Note:</b> Base Weapon: Legion Bolter. Daemon Willpower 28 (Minor Warp Entity), Bind Str 2. Attributes: Vicious\nWeapon Gains Razor-Sharp Quality. Weapon is Heavy if wielded by non-Space Marine, suffer -20 to use if not Unnatural Strength (4+)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Base Weapon: Legion Bolter. Daemon Willpower 28 (Minor Warp Entity), Bind Str 2. Attributes: Vicious\nWeapon Gains Razor-Sharp Quality. Weapon is Heavy if wielded by non-Space Marine, suffer -20 to use if not Unnatural Strength (4+)",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

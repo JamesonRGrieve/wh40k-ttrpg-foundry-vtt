@@ -1,7 +1,7 @@
 {
   "name": "Compact Laspistol (Takara) \"Palatine\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "compact-laspistol-takara-palatine",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Compact yet remains as effective as most military models. For the right fee can be engraved with precious metals and lacquer work.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Compact yet remains as effective as most military models. For the right fee can be engraved with precious metals and lacquer work.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

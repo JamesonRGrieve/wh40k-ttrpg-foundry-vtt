@@ -1,12 +1,12 @@
 {
   "name": "Lasgun (Lucius)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "lasgun-lucius",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Can fire on high-power mode: +1 Damage, consumes two ammo per shot and Gains Unreliable Quality\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and,  Gains Overheats and Unreliable Qualities</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can fire on high-power mode: +1 Damage, consumes two ammo per shot and Gains Unreliable Quality\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and,  Gains Overheats and Unreliable Qualities",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

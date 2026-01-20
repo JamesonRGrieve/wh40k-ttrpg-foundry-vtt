@@ -1,7 +1,7 @@
 {
   "name": "Chem Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "chem-cannon",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Crippling (2), Felling (2), Spray, Toxic (4)</p><p><b>Note:</b> After Firing, a Toxic Cloud of 1d5 Metres Radius lasts for 1d5 Rounds. Characters that end their turn within the cloud suffer as if they were hit by the weapon again and also begin to Suffocate.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "After Firing, a Toxic Cloud of 1d5 Metres Radius lasts for 1d5 Rounds. Characters that end their turn within the cloud suffer as if they were hit by the weapon again and also begin to Suffocate.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

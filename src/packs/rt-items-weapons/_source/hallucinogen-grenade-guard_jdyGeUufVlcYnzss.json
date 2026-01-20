@@ -1,7 +1,7 @@
 {
   "name": "Hallucinogen Grenade (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "hallucinogen-grenade-guard",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Hallucinogenic (2), Blast (6)</p><p><b>Note:</b> Make -10 Toughness Test or suffer Hallucinations for 1d10 Rounds, rolling on Hallucinations at the start of this time.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Make -10 Toughness Test or suffer Hallucinations for 1d10 Rounds, rolling on Hallucinations at the start of this time.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,64 @@
+{
+  "name": "Necron Resonance Arc",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "necron-resonance-arc",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 75,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 3
+    },
+    "special": [
+      "shocking",
+      "reliable"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 20,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Shocking, Reliable</p><p><b>Note:</b> Fires an arc of Lightning. If weapon's damage is a 9 or 10, or it kills a target, the lightning arc jumps to another random enemy within 5 metres and automatically hits them in the body. This extra hit can cause further extra hits. Infinite Ammo, No Reloads needed.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Fires an arc of Lightning. If weapon's damage is a 9 or 10, or it kills a target, the lightning arc jumps to another random enemy within 5 metres and automatically hits them in the body. This extra hit can cause further extra hits. Infinite Ammo, No Reloads needed.",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xRVqwQNBbz5xnoGF"
+}

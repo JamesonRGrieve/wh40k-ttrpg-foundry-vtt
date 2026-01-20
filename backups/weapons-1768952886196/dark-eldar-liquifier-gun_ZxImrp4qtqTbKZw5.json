@@ -1,0 +1,65 @@
+{
+  "name": "Dark Eldar Liquifier Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "dark-eldar-liquifier-gun",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "impact",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "flame",
+      "toxic",
+      "spray"
+    ],
+    "clip": {
+      "max": 2,
+      "value": 2,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 4,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flame, Toxic, Spray</p><p><b>Note:</b> Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Does 1d10 I (Toxic) damage instead of normal flame damage. Gains +2 PEN per DoF vs targets that fail agility test to avoid being set on fire. If implanted into a monstrosity, doesn't need to reload, but they take 1d5 I damage (not reduced by armour/toughness) every time they fire.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Does 1d10 I (Toxic) damage instead of normal flame damage. Gains +2 PEN per DoF vs targets that fail agility test to avoid being set on fire. If implanted into a monstrosity, doesn't need to reload, but they take 1d5 I damage (not reduced by armour/toughness) every time they fire.",
+    "source": "RT: The Soul Reaver"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZxImrp4qtqTbKZw5"
+}

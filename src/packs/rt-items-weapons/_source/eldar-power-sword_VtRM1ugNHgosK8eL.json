@@ -1,7 +1,7 @@
 {
   "name": "Eldar Power Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eldar-power-sword",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> A Status Symbol amongst some Radical Inquisitors and Rogue Traders, either acquired as a gift from alien partners or taken as battle spoils.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Status Symbol amongst some Radical Inquisitors and Rogue Traders, either acquired as a gift from alien partners or taken as battle spoils.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

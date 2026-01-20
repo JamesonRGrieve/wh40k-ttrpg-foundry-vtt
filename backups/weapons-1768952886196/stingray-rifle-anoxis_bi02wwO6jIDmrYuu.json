@@ -1,0 +1,63 @@
+{
+  "name": "\"Stingray\" Rifle (Anoxis)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "stingray-rifle-anoxis",
+    "class": "basic",
+    "type": "flame",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 15,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 2
+    },
+    "special": [
+      "spray"
+    ],
+    "clip": {
+      "max": 4,
+      "value": 4,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
+    "availability": "average",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Spray</p><p><b>Note:</b> A Microwave gun, firing a blistering heat that burns the skin but leaves most objects untouched.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Microwave gun, firing a blistering heat that burns the skin but leaves most objects untouched.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bi02wwO6jIDmrYuu"
+}

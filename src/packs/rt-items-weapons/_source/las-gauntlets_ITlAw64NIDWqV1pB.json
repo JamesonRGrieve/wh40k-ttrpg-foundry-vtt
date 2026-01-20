@@ -1,7 +1,7 @@
 {
   "name": "Las Gauntlets",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "las-gauntlets",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Fits over the forearm with glove controls. Difficult to disarm.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fits over the forearm with glove controls. Difficult to disarm.",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

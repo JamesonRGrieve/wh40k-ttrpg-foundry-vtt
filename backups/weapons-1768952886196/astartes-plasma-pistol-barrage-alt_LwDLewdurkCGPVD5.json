@@ -1,0 +1,66 @@
+{
+  "name": "Astartes Plasma Pistol (Barrage)  (alt.)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-plasma-pistol-barrage-alt",
+    "class": "pistol",
+    "type": "plasma",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 9,
+      "penetration": 8
+    },
+    "special": [
+      "sm-wep",
+      "overheats",
+      "volatile",
+      "maximal"
+    ],
+    "clip": {
+      "max": 9,
+      "value": 9,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 7,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 32,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Overheats, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only, not easily acquirable. ",
+    "source": "Deathwatch: Errata"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LwDLewdurkCGPVD5"
+}

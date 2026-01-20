@@ -1,7 +1,7 @@
 {
   "name": "Autopistol (Orthlack)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "autopistol-orthlack",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Some Military Families may offer it as a commemorative inscribed gift to their sons and daughters to mark their first comission.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Some Military Families may offer it as a commemorative inscribed gift to their sons and daughters to mark their first comission.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

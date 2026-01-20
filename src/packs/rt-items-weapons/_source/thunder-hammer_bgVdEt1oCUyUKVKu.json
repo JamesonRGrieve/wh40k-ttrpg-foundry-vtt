@@ -1,12 +1,12 @@
 {
   "name": "Thunder Hammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "thunder-hammer",
     "class": "melee",
     "type": "power",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Concussive (2), Power Field, Unwieldy</p><p><b>Note:</b> One Handed, but if wielded in two hands does +2 Damage.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "One Handed, but if wielded in two hands does +2 Damage.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

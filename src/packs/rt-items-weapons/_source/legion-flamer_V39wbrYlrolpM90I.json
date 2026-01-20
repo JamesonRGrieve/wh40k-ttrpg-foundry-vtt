@@ -1,7 +1,7 @@
 {
   "name": "Legion Flamer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "legion-flamer",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Spray, SM Wep</p><p><b>Note:</b> Chaos Legionary Weapon. Dangerous to own. Can be equipped with a Backpack Canister that adds 10kg to weight and doubles Flamer's Clip Size.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Chaos Legionary Weapon. Dangerous to own. Can be equipped with a Backpack Canister that adds 10kg to weight and doubles Flamer's Clip Size.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

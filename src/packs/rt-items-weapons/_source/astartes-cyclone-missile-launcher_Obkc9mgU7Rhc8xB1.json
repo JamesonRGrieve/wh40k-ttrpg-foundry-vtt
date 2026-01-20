@@ -1,7 +1,7 @@
 {
   "name": "Astartes Cyclone Missile Launcher",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
   "system": {
     "identifier": "astartes-cyclone-missile-launcher",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Designed for Terminator Armour, back-mounted rather than held.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Designed for Terminator Armour, back-mounted rather than held.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

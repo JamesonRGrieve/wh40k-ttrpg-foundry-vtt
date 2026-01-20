@@ -1,7 +1,7 @@
 {
   "name": "Axe of Retribution",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
   "system": {
     "identifier": "axe-of-retribution",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Shocking, Tearing, Unbalanced</p><p><b>Note:</b> Requires Two Hands to wield</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires Two Hands to wield",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

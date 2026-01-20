@@ -1,12 +1,12 @@
 {
   "name": "Quill Blaster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "quill-blaster",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Overheats</p><p><b>Note:</b> Ammo can be any metal chunks fed into its rear hopper, which are processed into thin, super hot and sharp metal spines on firing.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Ammo can be any metal chunks fed into its rear hopper, which are processed into thin, super hot and sharp metal spines on firing.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

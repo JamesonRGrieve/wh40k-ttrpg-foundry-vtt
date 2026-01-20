@@ -1,7 +1,7 @@
 {
   "name": "Tube Charge",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "tube-charge",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (4)</p><p><b>Note:</b> With +10 Tech-Use Test, Multiple Charges can be linked together and detonated at once from a timer/detonator, +2 Damage and +1 Blast per additional Charge.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "With +10 Tech-Use Test, Multiple Charges can be linked together and detonated at once from a timer/detonator, +2 Damage and +1 Blast per additional Charge.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

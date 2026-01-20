@@ -1,7 +1,7 @@
 {
   "name": "Ordo Malleus Power Glaive",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "ordo-malleus-power-glaive",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Balanced, Power Field, Proven (4), Sanctified</p><p><b>Note:</b> Two-Handed Weapon. Grants additional +10 to Parry.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed Weapon. Grants additional +10 to Parry.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

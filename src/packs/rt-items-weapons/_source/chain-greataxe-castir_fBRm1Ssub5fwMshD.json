@@ -1,12 +1,12 @@
 {
   "name": "Chain Greataxe (Castir)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "chain-greataxe-castir",
     "class": "melee",
     "type": "chain",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Felling (2), Tearing, Unwieldy</p><p><b>Note:</b> Two Handed Weapon, requires Strength Bonus of 4+ to wield.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two Handed Weapon, requires Strength Bonus of 4+ to wield.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

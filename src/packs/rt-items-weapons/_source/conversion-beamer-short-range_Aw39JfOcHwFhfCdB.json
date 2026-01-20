@@ -1,12 +1,12 @@
 {
   "name": "Conversion Beamer [Short Range]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "conversion-beamer-short-range",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (1), Recharge</p><p><b>Note:</b> Damage and Penetration vary with range. Use this profile for Short or Shorter Ranges. See Conversion Beamer [Med Range] and [Long Range]</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Damage and Penetration vary with range. Use this profile for Short or Shorter Ranges. See Conversion Beamer [Med Range] and [Long Range]",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

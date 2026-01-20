@@ -1,7 +1,7 @@
 {
   "name": "Stryxis Aether Whip",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "stryxis-aether-whip",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Flexible</p><p><b>Note:</b> Ignores Armour, but does no damage to Non-living targets, machines (Machine 5+ trait), and Daemons. Contact with psychic shields, wards, or untouchables disables the weapon for 1d10 days. One step easier to obtain if offered by a Stryxis Merchant.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Ignores Armour, but does no damage to Non-living targets, machines (Machine 5+ trait), and Daemons. Contact with psychic shields, wards, or untouchables disables the weapon for 1d10 days. One step easier to obtain if offered by a Stryxis Merchant.",
-    "source": "RT: Koronus Bestiary"
+    "source": "RT: Koronus Bestiary",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

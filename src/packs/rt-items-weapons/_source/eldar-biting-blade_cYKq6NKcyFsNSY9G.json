@@ -1,7 +1,7 @@
 {
   "name": "Eldar Biting Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eldar-biting-blade",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Xenotech. +2 damage per two degrees of success on WS Test to attack. Large Eldar Chainsword, suprisingly quiet.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. +2 damage per two degrees of success on WS Test to attack. Large Eldar Chainsword, suprisingly quiet.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

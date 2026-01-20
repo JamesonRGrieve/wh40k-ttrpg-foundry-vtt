@@ -1,7 +1,7 @@
 {
   "name": "Laspistol (Lathe)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "laspistol-lathe",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Infinite clip, no reload.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon). Infinite clip, no reload.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

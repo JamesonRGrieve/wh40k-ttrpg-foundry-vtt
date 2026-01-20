@@ -1,7 +1,7 @@
 {
   "name": "Leaper Mine",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "leaper-mine",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (5)</p><p><b>Note:</b> Placed Rather than thrown, after being armed, it will go off when bio-signs enter within 5 metres of it. It will then leap 2m and explode.\nSet via a Demolitions Test.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Placed Rather than thrown, after being armed, it will go off when bio-signs enter within 5 metres of it. It will then leap 2m and explode.\nSet via a Demolitions Test.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

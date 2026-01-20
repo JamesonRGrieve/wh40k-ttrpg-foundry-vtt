@@ -1,7 +1,7 @@
 {
   "name": "Shield (Combat)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "shield-combat",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Defensive</p><p><b>Note:</b> +3 AP to Arm and Body when wielded (stacks with armour). can be crafted out of Ceramite or Adamantium, is no longer Primitive (8), but is two steps rarer (by default Scarce).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "+3 AP to Arm and Body when wielded (stacks with armour). can be crafted out of Ceramite or Adamantium, is no longer Primitive (8), but is two steps rarer (by default Scarce).",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

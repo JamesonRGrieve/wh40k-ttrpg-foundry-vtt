@@ -1,7 +1,7 @@
 {
   "name": "Bloodfeeder",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "bloodfeeder",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Balanced, Felling (4)</p><p><b>Note:</b> Weapon: Sword. Daemon WP 75 (Khorne Daemon), Bind Str 5. Att.: Accursed and Rampage. Each kill, reduce Bind Str by 1 and gain temporary Unaligned/Khorne Trait. At 0, Daemon tries to escape. Daemonic Mastery Test resets Bind Str(lose temp traits)\nOnce every other round when making charge attack, can choose to attack all enemies within 1 metre. Must be aligned to Khorne to wield.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Sword. Daemon WP 75 (Khorne Daemon), Bind Str 5. Att.: Accursed and Rampage. Each kill, reduce Bind Str by 1 and gain temporary Unaligned/Khorne Trait. At 0, Daemon tries to escape. Daemonic Mastery Test resets Bind Str(lose temp traits)\nOnce every other round when making charge attack, can choose to attack all enemies within 1 metre. Must be aligned to Khorne to wield.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

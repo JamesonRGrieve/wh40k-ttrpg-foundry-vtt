@@ -1,0 +1,61 @@
+{
+  "name": "Cylinder Pistol (Mariette)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "cylinder-pistol-mariette",
+    "class": "pistol",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d5",
+      "type": "impact",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 400,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Note:</b> Can be Dissassembled and has no Metallic Components, imposes -30 to Search Tests when dissassembled and concealed.\n Each of the 4 barrels is a self contained firing piece that counts as its specialised ammo (Rare, 100 Thrones Each)</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can be Dissassembled and has no Metallic Components, imposes -30 to Search Tests when dissassembled and concealed.\n Each of the 4 barrels is a self contained firing piece that counts as its specialised ammo (Rare, 100 Thrones Each)",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UYeodQRA3NyMk5Rv"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Lucian's Rod",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "lucians-rod",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Force</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Force Staff of the Blood Ravens Chapter. Grants +20 to Focus Power Tests to channel power into the weapon for additional damage. Requires Psy Rating of 5 (after any modifications) to use the Force Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Force Staff of the Blood Ravens Chapter. Grants +20 to Focus Power Tests to channel power into the weapon for additional damage. Requires Psy Rating of 5 (after any modifications) to use the Force Quality.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Pandemic Staff [Ranged]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "pandemic-staff-ranged",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Daemon Wep, Corrosive, Recharge, Spray, Toxic (3)</p><p><b>Note:</b> Weapon: Staff. Daemon WP 34 (Lesser Nurgle Daemon), Bind Str 2 . Att.: Stream of Corruption. Two-handed, must be dedicated to Nurgle to wield. Can make a [Melee] Attack. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Staff. Daemon WP 34 (Lesser Nurgle Daemon), Bind Str 2 . Att.: Stream of Corruption. Two-handed, must be dedicated to Nurgle to wield. Can make a [Melee] Attack. ",
-    "source": "BC: Tome of Decay"
+    "source": "BC: Tome of Decay",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

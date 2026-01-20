@@ -1,0 +1,64 @@
+{
+  "name": "Mercy Killer (Volg)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "mercy-killer-volg",
+    "class": "pistol",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 1,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 10,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> If the Weapon suffers a Jam, roll 1d10, on a 9 the weapon explodes dealing its base damage to the firer and destroying the gun.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "If the Weapon suffers a Jam, roll 1d10, on a 9 the weapon explodes dealing its base damage to the firer and destroying the gun.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L2zLzoCgeVQB1Pxw"
+}

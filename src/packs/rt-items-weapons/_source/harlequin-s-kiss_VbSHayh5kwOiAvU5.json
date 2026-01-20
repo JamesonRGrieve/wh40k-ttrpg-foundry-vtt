@@ -1,7 +1,7 @@
 {
   "name": "Harlequin's Kiss",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "harlequins-kiss",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Do not add SB to weapon damage. Consists of an arm-mounted needle-like spike that when impaled in someone releases coils of monomolcular wire that blends the victim from the inside out.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Do not add SB to weapon damage. Consists of an arm-mounted needle-like spike that when impaled in someone releases coils of monomolcular wire that blends the victim from the inside out.",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

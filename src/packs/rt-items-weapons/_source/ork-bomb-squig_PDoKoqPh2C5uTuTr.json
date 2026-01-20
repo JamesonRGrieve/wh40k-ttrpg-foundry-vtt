@@ -1,7 +1,7 @@
 {
   "name": "Ork Bomb Squig",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
   "system": {
     "identifier": "ork-bomb-squig",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Accurate, Blast (5)</p><p><b>Note:</b> Living creature with bombs strapped to it, may make +0 Wrangling Test to feed scrap, adds +3 PEN. For Orks, Rare. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, one Kustom Bit, +1kg. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Living creature with bombs strapped to it, may make +0 Wrangling Test to feed scrap, adds +3 PEN. For Orks, Rare. Kraftsmanship: Poor: autojams for non-orks, -0.5kg, Good: +5 WS/BS, +0.5kg, Best: +5 WS/BS, +1 damage, one Kustom Bit, +1kg. ",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Hellgun (Lucius)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "hellgun-lucius",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Use 10kg power pack (can also use larger backpack power pack)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Use 10kg power pack (can also use larger backpack power pack)",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

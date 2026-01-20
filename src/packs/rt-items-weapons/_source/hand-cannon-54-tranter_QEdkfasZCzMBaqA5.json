@@ -1,7 +1,7 @@
 {
   "name": "Hand Cannon (.54 Tranter)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "hand-cannon-54-tranter",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Unreliable</p><p><b>Note:</b> Counts as a Basic Weapon unless wielder has Strength Bonus of 4+\nWeapon Jams on a 94-100</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Counts as a Basic Weapon unless wielder has Strength Bonus of 4+\nWeapon Jams on a 94-100",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

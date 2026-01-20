@@ -1,7 +1,7 @@
 {
   "name": "Double-Flail",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "double-flail",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Fleble, Primitive (8)</p><p><b>Note:</b> Two-Handed Weapon</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed Weapon",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

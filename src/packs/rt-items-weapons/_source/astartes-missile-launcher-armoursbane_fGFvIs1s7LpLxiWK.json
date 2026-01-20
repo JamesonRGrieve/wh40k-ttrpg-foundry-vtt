@@ -1,12 +1,12 @@
 {
   "name": "Astartes Missile-Launcher (Armoursbane)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg",
   "system": {
     "identifier": "astartes-missile-launcher-armoursbane",
     "class": "heavy",
     "type": "launcher",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable.  Has inbuilt Preysense Sight and Red-dot sight, and provides +20 to BS Tests to fire at Ground Based Targets.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable.  Has inbuilt Preysense Sight and Red-dot sight, and provides +20 to BS Tests to fire at Ground Based Targets.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

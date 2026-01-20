@@ -1,7 +1,7 @@
 {
   "name": "Nightfire Flamer (Voss)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "nightfire-flamer-voss",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Spray, Toxic</p><p><b>Note:</b> Fills the air around it with noxious smoke. Requires protective gear to not be affected by it.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fills the air around it with noxious smoke. Requires protective gear to not be affected by it.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

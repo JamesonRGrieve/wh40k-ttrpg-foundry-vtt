@@ -1,12 +1,12 @@
 {
   "name": "Long Las (Retribution)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "long-las-retribution",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Fires quiet las beams in non-visible light spectrum (-30 to see or hear when fired). Comes with pack the weapon can be concealed in. Concealing takes 30 seconds if user has Basic Weapon Training (Las).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires quiet las beams in non-visible light spectrum (-30 to see or hear when fired). Comes with pack the weapon can be concealed in. Concealing takes 30 seconds if user has Basic Weapon Training (Las).",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Furious Vengeance",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "furious-vengeance",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing, Felling (4)</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Bolter (Godwyn) of the Dark Angels. Has PEN 8 and Felling (4), listen in its profile.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Relic Master-Crafted Astartes Bolter (Godwyn) of the Dark Angels. Has PEN 8 and Felling (4), listen in its profile.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

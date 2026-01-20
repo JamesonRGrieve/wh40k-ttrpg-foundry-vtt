@@ -1,7 +1,7 @@
 {
   "name": "Silver Shield",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "silver-shield",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Defensive</p><p><b>Note:</b> A Shield with a mirrored finish, sometimes mounted with small braziers to provide light.\nProvides 4 AP to Body and Arm Wielding it, or 8 AP vs weapons that cause Energy Damage. Stacks with armour as all shields.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Shield with a mirrored finish, sometimes mounted with small braziers to provide light.\nProvides 4 AP to Body and Arm Wielding it, or 8 AP vs weapons that cause Energy Damage. Stacks with armour as all shields.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

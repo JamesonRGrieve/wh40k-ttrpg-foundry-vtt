@@ -1,12 +1,12 @@
 {
   "name": "Dark Eldar Shredder",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "dark-eldar-shredder",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Reliable, Blast (4), Tearing</p><p><b>Note:</b> Xenotech. Fires clusters of monofilament wire that unfurl and blend enemies.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Fires clusters of monofilament wire that unfurl and blend enemies.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

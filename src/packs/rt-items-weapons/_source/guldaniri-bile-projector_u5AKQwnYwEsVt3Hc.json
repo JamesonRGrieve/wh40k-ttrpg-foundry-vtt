@@ -1,12 +1,12 @@
 {
   "name": "Guldaniri Bile Projector",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "guldaniri-bile-projector",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (2), Corrosive, Toxic (2)</p><p><b>Note:</b> Considered Dangerously Easy to find for those who know where to look.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Considered Dangerously Easy to find for those who know where to look.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

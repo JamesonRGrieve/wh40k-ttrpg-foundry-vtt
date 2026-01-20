@@ -1,12 +1,12 @@
 {
   "name": "Eldar Splinter Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "eldar-splinter-rifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic (2)</p><p><b>Note:</b> Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons Counts as a Mono-Spear in melee combat.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons Counts as a Mono-Spear in melee combat.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

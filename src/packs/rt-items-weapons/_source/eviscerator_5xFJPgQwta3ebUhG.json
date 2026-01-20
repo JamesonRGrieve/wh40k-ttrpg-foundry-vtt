@@ -1,12 +1,12 @@
 {
   "name": "Eviscerator",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "eviscerator",
     "class": "melee",
     "type": "chain",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unwieldy</p><p><b>Note:</b> Whenever this weapon inflicts Righteous Fury, it does +3 Damage. Requires two hands to wield due to size.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Whenever this weapon inflicts Righteous Fury, it does +3 Damage. Requires two hands to wield due to size.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

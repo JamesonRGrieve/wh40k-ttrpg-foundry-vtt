@@ -1,0 +1,63 @@
+{
+  "name": "Naval Pistol (Mars)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "naval-pistol-mars",
+    "class": "pistol",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 20,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 6,
+      "value": 6,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Normally uses special Fragmentation ammo, loses tearing if this ammo is not used.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Normally uses special Fragmentation ammo, loses tearing if this ammo is not used.",
+    "source": "Rogue Trader: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NEeiKPMzz2UxfRuL"
+}

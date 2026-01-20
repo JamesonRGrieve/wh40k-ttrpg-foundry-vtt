@@ -1,7 +1,7 @@
 {
   "name": "Swordstick Cane",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "swordstick-cane",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Balanced</p><p><b>Note:</b> Looks like a cane until unsheathed</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Looks like a cane until unsheathed",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

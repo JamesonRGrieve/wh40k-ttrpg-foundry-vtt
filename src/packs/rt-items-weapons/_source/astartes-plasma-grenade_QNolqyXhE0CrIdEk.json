@@ -1,7 +1,7 @@
 {
   "name": "Astartes Plasma Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "astartes-plasma-grenade",
     "class": "thrown",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Blast (1), Volatile</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Continues to do its listed damage within its blast area for 1d5 rounds after detonation.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Continues to do its listed damage within its blast area for 1d5 rounds after detonation.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

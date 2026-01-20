@@ -1,0 +1,67 @@
+{
+  "name": "Force Hammer (Sanctus)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "force-hammer-sanctus",
+    "class": "melee",
+    "type": "force",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 4
+    },
+    "special": [
+      "balanced",
+      "concussive-4",
+      "daemonbane",
+      "force",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 6,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Concussive (4), Daemonbane, Force, Power Field</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+. Equipped with an Exterminator Cartidge loaded with Incinerator Ammunition.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Two-Handed unless wielder has Strength Bonus of 5+. Equipped with an Exterminator Cartidge loaded with Incinerator Ammunition.",
+    "source": "DH 2E: Enemies Beyond"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QMQP2giisVskQ6YO"
+}

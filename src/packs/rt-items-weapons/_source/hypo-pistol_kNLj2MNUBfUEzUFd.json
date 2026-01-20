@@ -1,7 +1,7 @@
 {
   "name": "Hypo Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "hypo-pistol",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> If this weapon would do damage to an enemy, it only does 1 damage. Those damaged by the weapon must make a -20 Toughness Test or fall comatose for 1d10 x 3 minutes, or 1d5 hours if failed by 3+ DoF. Its Ammo is Scarce, and each dart costs 8 Thrones.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If this weapon would do damage to an enemy, it only does 1 damage. Those damaged by the weapon must make a -20 Toughness Test or fall comatose for 1d10 x 3 minutes, or 1d5 hours if failed by 3+ DoF. Its Ammo is Scarce, and each dart costs 8 Thrones.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

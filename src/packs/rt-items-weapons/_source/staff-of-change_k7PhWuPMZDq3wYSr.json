@@ -1,7 +1,7 @@
 {
   "name": "Staff of Change",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "staff-of-change",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Force, Warp Weapon</p><p><b>Note:</b> Two Handed Weapon. If inflicting Zealous Hatred, the target gains one random mutation or reduced to a gibbering, harmless warpspawn if the attack would have killed them. If the wielder fails a Focus Power Test whilst wielding this, they gain 1 Corruption Point.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two Handed Weapon. If inflicting Zealous Hatred, the target gains one random mutation or reduced to a gibbering, harmless warpspawn if the attack would have killed them. If the wielder fails a Focus Power Test whilst wielding this, they gain 1 Corruption Point.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

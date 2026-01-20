@@ -1,12 +1,12 @@
 {
   "name": "Dark Eldar Heat Lance",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "dark-eldar-heat-lance",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Doubles Penetration if firing at Short Range or closer.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Doubles Penetration if firing at Short Range or closer.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

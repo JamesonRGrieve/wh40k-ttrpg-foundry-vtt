@@ -1,7 +1,7 @@
 {
   "name": "Warhammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "warhammer",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Concussive (1)</p><p><b>Note:</b> Two-Handed Weapon, \"Aha, we've found it, the Warhammer Forty Thousand!\"</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed Weapon, \"Aha, we've found it, the Warhammer Forty Thousand!\"",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

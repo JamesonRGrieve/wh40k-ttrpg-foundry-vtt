@@ -1,12 +1,12 @@
 {
   "name": "Static Repeater",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "static-repeater",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Haywire (1), Storm</p><p><b>Note:</b> Fires bolts of electromagnetic energy</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires bolts of electromagnetic energy",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

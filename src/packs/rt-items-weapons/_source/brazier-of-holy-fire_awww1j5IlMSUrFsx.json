@@ -1,7 +1,7 @@
 {
   "name": "Brazier of Holy Fire",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "brazier-of-holy-fire",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Cleansing Fire, Sanctified, Unbalanced</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

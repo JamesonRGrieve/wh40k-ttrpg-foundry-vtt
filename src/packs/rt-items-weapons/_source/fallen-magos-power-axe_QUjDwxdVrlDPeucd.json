@@ -1,7 +1,7 @@
 {
   "name": "Fallen Magos Power Axe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "fallen-magos-power-axe",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Two Handed Weapon. Can corrupt Imperial Technology using this by making a -30 Tech-Use Test, if successful, interfaced technology is unusable by anyone that is not the user or a fellow Heretek. Has an inbuilt Combi-Tool.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two Handed Weapon. Can corrupt Imperial Technology using this by making a -30 Tech-Use Test, if successful, interfaced technology is unusable by anyone that is not the user or a fellow Heretek. Has an inbuilt Combi-Tool.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

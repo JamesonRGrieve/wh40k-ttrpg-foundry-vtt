@@ -1,7 +1,7 @@
 {
   "name": "Deuce Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-primitive.svg",
   "system": {
     "identifier": "deuce-pistol",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Unreliable</p><p><b>Note:</b> Can fire both barrels at once (HB: Treat as Twin-Linked shot)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can fire both barrels at once (HB: Treat as Twin-Linked shot)",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

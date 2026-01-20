@@ -1,12 +1,12 @@
 {
   "name": "Longshot",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "longshot",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Designed to fire a variety of Specialist rounds (see Unusual Ammo). Gas Powered, minimal noise and no muzzle flash. Can be broken down into a compact pistol as a Full Action, halves range and loses Accurate. Reconstructing also requires Full Action.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Designed to fire a variety of Specialist rounds (see Unusual Ammo). Gas Powered, minimal noise and no muzzle flash. Can be broken down into a compact pistol as a Full Action, halves range and loses Accurate. Reconstructing also requires Full Action.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

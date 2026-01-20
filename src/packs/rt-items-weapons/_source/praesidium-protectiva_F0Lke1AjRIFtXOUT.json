@@ -1,7 +1,7 @@
 {
   "name": "Praesidium Protectiva",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "praesidium-protectiva",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Defensive, Power Field, Sanctified</p><p><b>Note:</b> If wielder has the Pure Faith Talent while wielding this, gain +30 to Tests to resist Psychic Techniques and gains a Force Field with Protection 50 against Daemonic Attacks. +3 AP on Body and Arm.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If wielder has the Pure Faith Talent while wielding this, gain +30 to Tests to resist Psychic Techniques and gains a Force Field with Protection 50 against Daemonic Attacks. +3 AP on Body and Arm.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

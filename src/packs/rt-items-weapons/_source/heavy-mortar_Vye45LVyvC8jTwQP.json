@@ -1,7 +1,7 @@
 {
   "name": "Heavy Mortar",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
   "system": {
     "identifier": "heavy-mortar",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Indirect (3), Reliable</p><p><b>Note:</b> Can fire a variety of Mortar Rounds (See Unusual Ammunition), is designed for the Siege Shell. If Firing an Anti-Plant, Smoke, or Starflare Rounds, add +2 to Blast or Smoke Radius Size, or an extra minute of illumination for starflares.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can fire a variety of Mortar Rounds (See Unusual Ammunition), is designed for the Siege Shell. If Firing an Anti-Plant, Smoke, or Starflare Rounds, add +2 to Blast or Smoke Radius Size, or an extra minute of illumination for starflares.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

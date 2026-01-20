@@ -1,0 +1,67 @@
+{
+  "name": "Nach'ra'ael the Hungering",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "nachraael-the-hungering",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 7,
+      "penetration": 7
+    },
+    "special": [
+      "balanced",
+      "felling-4",
+      "tearing",
+      "warp-weapon",
+      "daemon-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 3,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Felling (4), Tearing, Warp Weapon,Daemon Wep</p><p><b>Note:</b> Base Weapon: Sword.Daemon Willpower 75 (Daemon Prince Nach'ra'ael), Bind Str 4. Attributes: Accursed, Impossibly Sharp, Vicious. All Attibutes accounted in weapon stats. Warning: All Daemon weapons want you dead or possessed, this one especially.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Base Weapon: Sword.Daemon Willpower 75 (Daemon Prince Nach'ra'ael), Bind Str 4. Attributes: Accursed, Impossibly Sharp, Vicious. All Attibutes accounted in weapon stats. Warning: All Daemon weapons want you dead or possessed, this one especially.",
+    "source": "Black Crusade: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c8pX2HeZl53Cq6lo"
+}

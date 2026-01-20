@@ -1,7 +1,7 @@
 {
   "name": "Sword (Rune)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "sword-rune",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Balanced, Tainted, Tearing, Rune Wep</p><p><b>Note:</b> Once held the essence of a Daemon that has now vacated it.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Once held the essence of a Daemon that has now vacated it.",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

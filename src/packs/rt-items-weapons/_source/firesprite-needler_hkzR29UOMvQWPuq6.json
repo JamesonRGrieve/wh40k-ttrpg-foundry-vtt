@@ -1,7 +1,7 @@
 {
   "name": "Firesprite Needler",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "firesprite-needler",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Toxic (2)</p><p><b>Note:</b> Inbuilt Compact, Forearm Mounting, and Silencer Upgrades.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Inbuilt Compact, Forearm Mounting, and Silencer Upgrades.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

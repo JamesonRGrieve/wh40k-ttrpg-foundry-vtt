@@ -1,7 +1,7 @@
 {
   "name": "Eldar Chainsword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "eldar-chainsword",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Tearing,</p><p><b>Note:</b> Xenotech. Unlike many chainswords it is almost silent.\nSimilar enough to regular chainswords that it doesn't need exotic weapons training.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Unlike many chainswords it is almost silent.\nSimilar enough to regular chainswords that it doesn't need exotic weapons training.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

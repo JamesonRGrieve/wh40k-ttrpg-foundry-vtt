@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Godwyn-De'az)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
   "system": {
     "identifier": "bolt-pistol-godwyn-deaz",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Reliable, Tearing</p><p><b>Note:</b> Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

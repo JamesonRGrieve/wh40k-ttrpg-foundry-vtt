@@ -1,7 +1,7 @@
 {
   "name": "Plasma Pistol (Ryza)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-plasma.svg",
   "system": {
     "identifier": "plasma-pistol-ryza",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Maximal, Overheats</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can choose between firing normally or maximally",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

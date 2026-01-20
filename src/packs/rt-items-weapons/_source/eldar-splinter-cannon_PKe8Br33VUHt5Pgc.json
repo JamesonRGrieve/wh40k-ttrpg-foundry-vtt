@@ -1,12 +1,12 @@
 {
   "name": "Eldar Splinter Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "eldar-splinter-cannon",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Toxic (4)</p><p><b>Note:</b> Gain Auto-Stabilised Trait whilst using weapon. Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gain Auto-Stabilised Trait whilst using weapon. Fires crystalline bolts that shatter inside the enemy, delivering agonising poisons",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

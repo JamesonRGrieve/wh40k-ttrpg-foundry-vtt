@@ -1,12 +1,12 @@
 {
   "name": "Graviton Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "graviton-gun",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Concussive (2), Graviton</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Dark Heresy 2E: Core"
+    "source": "DH2: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

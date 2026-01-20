@@ -1,7 +1,7 @@
 {
   "name": "Energy Blade (Sollex-Aegis)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "energy-blade-sollex-aegis",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> If the wielder successfully parries another weapon with this one and succeeds by 2+ DoS, they automatically destory the other weapon if it is not immune to power fields. If Attack/Parry fails by 5+ DoF, resolve attack against wielder. Do not add Strength Bonus to attack damage with this weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If the wielder successfully parries another weapon with this one and succeeds by 2+ DoS, they automatically destory the other weapon if it is not immune to power fields. If Attack/Parry fails by 5+ DoF, resolve attack against wielder. Do not add Strength Bonus to attack damage with this weapon.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

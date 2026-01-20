@@ -1,12 +1,12 @@
 {
   "name": "Disposable Launcher",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg",
   "system": {
     "identifier": "disposable-launcher",
     "class": "heavy",
     "type": "launcher",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> One-use, can't use unusual ammo. Fires a suped-up Krak Missile (may or may not have Blast (1)?)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "One-use, can't use unusual ammo. Fires a suped-up Krak Missile (may or may not have Blast (1)?)",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

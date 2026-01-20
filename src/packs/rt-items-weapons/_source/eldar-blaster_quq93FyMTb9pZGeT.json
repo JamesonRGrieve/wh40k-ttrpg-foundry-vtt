@@ -1,12 +1,12 @@
 {
   "name": "Eldar Blaster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "eldar-blaster",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Eldar weapon, emits a stream of dark energy similar to lasers, although it rips apart a target with explosive blasts.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Eldar weapon, emits a stream of dark energy similar to lasers, although it rips apart a target with explosive blasts.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

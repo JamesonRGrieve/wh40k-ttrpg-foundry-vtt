@@ -1,7 +1,7 @@
 {
   "name": "Force Hammer (Sanctus)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "force-hammer-sanctus",
     "class": "melee",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Balanced, Concussive (4), Daemonbane, Force, Power Field</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+. Equipped with an Exterminator Cartidge loaded with Incinerator Ammunition.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed unless wielder has Strength Bonus of 5+. Equipped with an Exterminator Cartidge loaded with Incinerator Ammunition.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

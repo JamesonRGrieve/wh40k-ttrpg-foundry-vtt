@@ -1,7 +1,7 @@
 {
   "name": "Flail",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "flail",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flexible, Ogyryn-Proof, Primitive (7)</p><p><b>Note:</b> Two Handed Weapon</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two Handed Weapon",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

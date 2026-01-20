@@ -1,12 +1,12 @@
 {
   "name": "Radiant Arrow",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "radiant-arrow",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only.  Master-Crafted Relic Astartes Plasma Gun of the Consecrators Chapter. Cannot Jam, Overheat, or otherwise fail to fire (except by running out of ammo). Psychic Powers that affect machine spirits or the Haywire effect also have no effect.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only.  Master-Crafted Relic Astartes Plasma Gun of the Consecrators Chapter. Cannot Jam, Overheat, or otherwise fail to fire (except by running out of ammo). Psychic Powers that affect machine spirits or the Haywire effect also have no effect.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

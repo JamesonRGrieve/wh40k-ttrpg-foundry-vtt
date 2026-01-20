@@ -1,7 +1,7 @@
 {
   "name": "Salvation of Correus",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "salvation-of-correus",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Devastating (2)</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Combat Knife of the Deathwatch. Eternally tainted with the vile blood of a Master Haemonculus.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Relic Master-Crafted Astartes Combat Knife of the Deathwatch. Eternally tainted with the vile blood of a Master Haemonculus.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

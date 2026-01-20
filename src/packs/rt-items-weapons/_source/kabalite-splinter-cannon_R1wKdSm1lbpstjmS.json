@@ -1,12 +1,12 @@
 {
   "name": "Kabalite Splinter Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "kabalite-splinter-cannon",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Toxic</p><p><b>Note:</b> Rare Availability if Acquired from Dark Eldar Settlement. May be equipped with Suspensors, but would be one step rarer, gives wielder the Auto-Stabilised Trait when using this weapon. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Rare Availability if Acquired from Dark Eldar Settlement. May be equipped with Suspensors, but would be one step rarer, gives wielder the Auto-Stabilised Trait when using this weapon. ",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

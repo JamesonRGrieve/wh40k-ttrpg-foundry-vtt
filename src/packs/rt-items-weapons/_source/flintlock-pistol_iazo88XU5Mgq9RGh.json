@@ -1,7 +1,7 @@
 {
   "name": "Flintlock Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-primitive.svg",
   "system": {
     "identifier": "flintlock-pistol",
     "class": "pistol",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Primitive (8), Unreliable</p><p><b>Note:</b> Counts as as Truncheon in melee combat.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Counts as as Truncheon in melee combat.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

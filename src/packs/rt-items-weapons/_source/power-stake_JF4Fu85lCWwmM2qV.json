@@ -1,7 +1,7 @@
 {
   "name": "Power Stake",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-stake",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Power Field, Sanctified, Unbalanced</p><p><b>Note:</b> Inflicts +1d10 Damage per Psy Rating the opponent has. Possessing the item grants +10 to all Interaction Tests wth those aligned with the Ordo Hereticus.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Inflicts +1d10 Damage per Psy Rating the opponent has. Possessing the item grants +10 to all Interaction Tests wth those aligned with the Ordo Hereticus.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

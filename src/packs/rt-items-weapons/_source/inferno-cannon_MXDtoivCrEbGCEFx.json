@@ -1,7 +1,7 @@
 {
   "name": "Inferno Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
   "system": {
     "identifier": "inferno-cannon",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks. Takes 30 Minutes to reload internal tank.\nOther vehicles do not add their value when trying to avoid catching on fire. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Vehicle Weapon, not feasible to carry by a person. Commonly used on Leman Russ Tanks. Takes 30 Minutes to reload internal tank.\nOther vehicles do not add their value when trying to avoid catching on fire. ",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

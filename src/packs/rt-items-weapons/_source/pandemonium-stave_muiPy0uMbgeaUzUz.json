@@ -1,7 +1,7 @@
 {
   "name": "Pandemonium Stave",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "pandemonium-stave",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Felling (4)</p><p><b>Note:</b> Weapon: Staff. Daemon WP 80 (Greater Daemon of Tzeentch), Bind Str 4. Att.: Accursed, Howling, Living Magic, Sorcerous Force\nTwo-Handed, Acts as Psy Focus, Requires Mark of Tzeentch to wield. Gain Fear(+1) on turn where attacked, Gain 2xDaemon's WP Bonus to Focus Power Tests, On dealing damage can make Opposed WP Test vs Target using Daemon's Willpower, each DoS deals 1d10 E Damage.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Weapon: Staff. Daemon WP 80 (Greater Daemon of Tzeentch), Bind Str 4. Att.: Accursed, Howling, Living Magic, Sorcerous Force\nTwo-Handed, Acts as Psy Focus, Requires Mark of Tzeentch to wield. Gain Fear(+1) on turn where attacked, Gain 2xDaemon's WP Bonus to Focus Power Tests, On dealing damage can make Opposed WP Test vs Target using Daemon's Willpower, each DoS deals 1d10 E Damage.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

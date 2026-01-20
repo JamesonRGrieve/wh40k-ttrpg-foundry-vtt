@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Duelling Tulwar",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-duelling-tulwar",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "sm-wep",
+      "balanced",
+      "primitive"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 2,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 5,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Balanced, Primitive</p><p><b>Note:</b> Space Marines Only. White Scars variant Astartes Combat Knife. When making the Defensive Stance Action, can make a single StandardAttack as a Free Action.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. White Scars variant Astartes Combat Knife. When making the Defensive Stance Action, can make a single StandardAttack as a Free Action.",
+    "source": "DW: First Founding"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lYf1ywoVi5HYt10t"
+}

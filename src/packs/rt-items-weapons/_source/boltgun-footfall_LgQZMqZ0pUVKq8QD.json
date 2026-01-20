@@ -1,12 +1,12 @@
 {
   "name": "Boltgun (Footfall)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "boltgun-footfall",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Can't use Unusual Ammunition. Debatably legal.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can't use Unusual Ammunition. Debatably legal.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

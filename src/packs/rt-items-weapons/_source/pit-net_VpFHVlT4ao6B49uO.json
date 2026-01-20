@@ -1,7 +1,7 @@
 {
   "name": "Pit Net",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "pit-net",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Flexible</p><p><b>Note:</b> Gains Snare(2) When Thrown</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gains Snare(2) When Thrown",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

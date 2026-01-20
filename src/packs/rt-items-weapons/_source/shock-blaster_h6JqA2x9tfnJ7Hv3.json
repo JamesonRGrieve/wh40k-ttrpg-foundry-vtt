@@ -1,7 +1,7 @@
 {
   "name": "Shock Blaster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "shock-blaster",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Configured to use Laspistol Power Packs. Effectively a heavily suped up taser</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Configured to use Laspistol Power Packs. Effectively a heavily suped up taser",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

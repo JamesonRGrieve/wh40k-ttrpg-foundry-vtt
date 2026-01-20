@@ -1,7 +1,7 @@
 {
   "name": "Talonblade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "talonblade",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Razor Sharp, Tearing</p><p><b>Note:</b> Cruel Looking Talons crafted by an unknown Xenos Species. Prized by hunters and pitfighters for their perpetual sharpness and brutal wounds.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Cruel Looking Talons crafted by an unknown Xenos Species. Prized by hunters and pitfighters for their perpetual sharpness and brutal wounds.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

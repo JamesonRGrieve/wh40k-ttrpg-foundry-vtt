@@ -1,7 +1,7 @@
 {
   "name": "Astartes Naval Boltgun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "astartes-naval-boltgun",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM, Wep, Tearing</p><p><b>Note:</b> Marines Errant Only. Replaces standard Issue Boltgun. Can be used one-handed and in Melee without penalty.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Marines Errant Only. Replaces standard Issue Boltgun. Can be used one-handed and in Melee without penalty.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

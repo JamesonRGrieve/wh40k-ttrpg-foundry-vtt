@@ -1,7 +1,7 @@
 {
   "name": "Chainaxe (\"Puritan's Wrath\")",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "chainaxe-puritans-wrath",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Sanctified, Tearing, Unbalanced</p><p><b>Note:</b> Felling (4) when used against Heretics, Daemons, or other Forces of Chaos. Requires Two hands to wield.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Felling (4) when used against Heretics, Daemons, or other Forces of Chaos. Requires Two hands to wield.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

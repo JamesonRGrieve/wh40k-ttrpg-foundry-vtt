@@ -1,7 +1,7 @@
 {
   "name": "Storm Shield",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "storm-shield",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Defensive, Power Field, Shocking</p><p><b>Note:</b> Gives +3 AP to Body and Arm, and provides a Force Field with Protection Rating 55, cannot be destroyed if parried by weapons with the Power Field Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gives +3 AP to Body and Arm, and provides a Force Field with Protection Rating 55, cannot be destroyed if parried by weapons with the Power Field Quality.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Surtur's Breath",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "surturs-breath",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Flame</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Flamer of the Salamanders. Targets set on fire by this weapon must also make a -20 Willpower Test, if failed they roll on the Shock Table as if they had just failed a Fear Test. Those set on fire by Astartes flamer weapons take +4 damage from the flames.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Flamer of the Salamanders. Targets set on fire by this weapon must also make a -20 Willpower Test, if failed they roll on the Shock Table as if they had just failed a Fear Test. Those set on fire by Astartes flamer weapons take +4 damage from the flames.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

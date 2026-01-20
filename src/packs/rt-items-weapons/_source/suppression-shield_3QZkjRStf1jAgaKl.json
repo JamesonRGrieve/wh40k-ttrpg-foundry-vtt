@@ -1,7 +1,7 @@
 {
   "name": "Suppression Shield",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
   "system": {
     "identifier": "suppression-shield",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Defensive, Recharge, Shocking</p><p><b>Note:</b> Loses Shocking Quality while Recharging. Uses Normal Shield Profile while Recharging. Grants +4AP to wielding Arm and Body, Good/Best Craftsmanship have a weapon lock that lets a basic weapon rest on it and fire one-handed without penalty.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Loses Shocking Quality while Recharging. Uses Normal Shield Profile while Recharging. Grants +4AP to wielding Arm and Body, Good/Best Craftsmanship have a weapon lock that lets a basic weapon rest on it and fire one-handed without penalty.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,0 +1,63 @@
+{
+  "name": "Dartcaster (Cadence) \"Widower\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "dartcaster-cadence-widower",
+    "class": "pistol",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 35,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 4
+    },
+    "special": [
+      "accurate"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 2,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 1000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> The Weapon is near slient and makes no flash when firing. Comes with an attachable Stock and long-barralled impellor to turn the weapon into a Two-Handed Basic Weapon if attached the weapon instead has a Range of 150m and weight of 4.5kg. Ammo is Rare and costs 15 Thrones each.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "The Weapon is near slient and makes no flash when firing. Comes with an attachable Stock and long-barralled impellor to turn the weapon into a Two-Handed Basic Weapon if attached the weapon instead has a Range of 150m and weight of 4.5kg. Ammo is Rare and costs 15 Thrones each.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r8JgBGFJ9DRDbwcS"
+}

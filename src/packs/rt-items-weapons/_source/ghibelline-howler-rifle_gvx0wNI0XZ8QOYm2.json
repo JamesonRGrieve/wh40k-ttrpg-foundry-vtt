@@ -1,12 +1,12 @@
 {
   "name": "Ghibelline Howler Rifle",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "ghibelline-howler-rifle",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Accurate, Concussive (0), Overcharge</p><p><b>Note:</b> Sonic Weapon, uses a backpack ammo supply included in weapon weight. When used on Overcharge Setting, everyone within 10m including character make +10 Toughness Test or suffer 1 Fatigue per DoF. Devices that block loud noises or sonic attacks give +10 to test.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Sonic Weapon, uses a backpack ammo supply included in weapon weight. When used on Overcharge Setting, everyone within 10m including character make +10 Toughness Test or suffer 1 Fatigue per DoF. Devices that block loud noises or sonic attacks give +10 to test.",
-    "source": "BC: Tome of Excess"
+    "source": "BC: Tome of Excess",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

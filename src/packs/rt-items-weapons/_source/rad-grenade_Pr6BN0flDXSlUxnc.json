@@ -1,7 +1,7 @@
 {
   "name": "Rad Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "rad-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (2)</p><p><b>Note:</b> Those in blast radius must make -20 Toughness Test or take 2d10 nonpermenantToughness Characteristic.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Those in blast radius must make -20 Toughness Test or take 2d10 nonpermenantToughness Characteristic.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Sniper Rifle (Absolution)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "sniper-rifle-absolution",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Comes with Tripod Brace, Silencer, and Telescopic Sight. Hearing shots fired by this weapon requires -20 Awareness Test. Can use any autogun ammo.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Comes with Tripod Brace, Silencer, and Telescopic Sight. Hearing shots fired by this weapon requires -20 Awareness Test. Can use any autogun ammo.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

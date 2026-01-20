@@ -1,7 +1,7 @@
 {
   "name": "Spear-thrower",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
   "system": {
     "identifier": "spear-thrower",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Doubles range of spears and falaricas used with these as well as provides them +2 Pen.\nUnbenownst to most, it is the oldest of humanities' ranged weapons.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Doubles range of spears and falaricas used with these as well as provides them +2 Pen.\nUnbenownst to most, it is the oldest of humanities' ranged weapons.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

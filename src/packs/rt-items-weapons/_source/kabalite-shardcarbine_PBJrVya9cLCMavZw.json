@@ -1,12 +1,12 @@
 {
   "name": "Kabalite Shardcarbine",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "kabalite-shardcarbine",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Storm, Toxic</p><p><b>Note:</b> Scarce Availability if acquired from Dark Eldar Settlement. Counts as Mono-Spear in Melee Combat. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Scarce Availability if acquired from Dark Eldar Settlement. Counts as Mono-Spear in Melee Combat. ",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

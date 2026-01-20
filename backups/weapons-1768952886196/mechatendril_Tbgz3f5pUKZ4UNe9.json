@@ -1,0 +1,63 @@
+{
+  "name": "Mechatendril",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "mechatendril",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 5,
+      "penetration": 0
+    },
+    "special": [
+      "flexible"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible</p><p><b>Note:</b> Mechadendrite, requires Mechadendrite Use(Weapon) to attack without training penalty instead of Exotic Weapon Training\nGained through the Mechatendril Cybernetic, see that Gear for more details.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Mechadendrite, requires Mechadendrite Use(Weapon) to attack without training penalty instead of Exotic Weapon Training\nGained through the Mechatendril Cybernetic, see that Gear for more details.",
+    "source": "BC: Tome of Decay"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tbgz3f5pUKZ4UNe9"
+}

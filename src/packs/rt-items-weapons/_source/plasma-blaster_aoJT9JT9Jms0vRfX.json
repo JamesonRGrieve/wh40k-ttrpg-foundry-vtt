@@ -1,12 +1,12 @@
 {
   "name": "Plasma Blaster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
   "system": {
     "identifier": "plasma-blaster",
     "class": "basic",
     "type": "plasma",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Overheats, Recharge, Unreliable</p><p><b>Note:</b> Effectively a Two plasma guns built into one, sharing one canister.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Effectively a Two plasma guns built into one, sharing one canister.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Razorhail Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "razorhail-gun",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Scatter, Tearing</p><p><b>Note:</b> Uses special razorblade ammo, and can't use Unusual Ammunition. Good for puncturing voidsuits.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Uses special razorblade ammo, and can't use Unusual Ammunition. Good for puncturing voidsuits.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

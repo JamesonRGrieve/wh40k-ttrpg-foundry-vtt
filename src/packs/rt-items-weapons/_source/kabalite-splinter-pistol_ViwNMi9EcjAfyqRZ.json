@@ -1,7 +1,7 @@
 {
   "name": "Kabalite Splinter Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "kabalite-splinter-pistol",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Common Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Knife in Melee Combat. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Common Availability if Acquired from Dark Eldar Settlement. Counts as Mono-Knife in Melee Combat. ",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

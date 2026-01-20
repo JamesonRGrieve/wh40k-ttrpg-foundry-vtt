@@ -1,0 +1,63 @@
+{
+  "name": "Drive Nailer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "drive-nailer",
+    "class": "basic",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 5,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 1,
+      "penetration": 4
+    },
+    "special": [
+      "primitive-8"
+    ],
+    "clip": {
+      "max": 15,
+      "value": 15,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 7,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Effectively just a High-Powered rivet gun with the safeties turned off.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Effectively just a High-Powered rivet gun with the safeties turned off.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AyWV2bcUWObMnFaQ"
+}

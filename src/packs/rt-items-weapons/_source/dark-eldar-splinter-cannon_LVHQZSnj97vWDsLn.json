@@ -1,12 +1,12 @@
 {
   "name": "Dark Eldar Splinter Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "dark-eldar-splinter-cannon",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic</p><p><b>Note:</b> Xenotech. Fires crystalline darts. User has Auto-Stablised Trait when wielding this weapon. (always counts as braced, can fire weapon on semi/full auto as Half Action).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. Fires crystalline darts. User has Auto-Stablised Trait when wielding this weapon. (always counts as braced, can fire weapon on semi/full auto as Half Action).",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Power Maul",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-maul",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Shocking</p><p><b>Note:</b> Can also use \"Low\" Setting (1d10+1 E, Pen 2, Shocking)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can also use \"Low\" Setting (1d10+1 E, Pen 2, Shocking)",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

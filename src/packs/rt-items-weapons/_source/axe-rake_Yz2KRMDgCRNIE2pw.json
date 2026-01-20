@@ -1,7 +1,7 @@
 {
   "name": "Axe-Rake",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "axe-rake",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive, Unbalanced</p><p><b>Note:</b> Designed as a Tool, Can deal either Impact or Rending Damage.\nGives +10 to Climb Tests and Tests to force open doors or locks when used.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Designed as a Tool, Can deal either Impact or Rending Damage.\nGives +10 to Climb Tests and Tests to force open doors or locks when used.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

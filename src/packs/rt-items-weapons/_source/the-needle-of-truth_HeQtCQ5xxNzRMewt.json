@@ -1,7 +1,7 @@
 {
   "name": "The Needle of Truth",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "the-needle-of-truth",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Dark Angels. Daemons and Followers of the Dark Gods suffer -20 to all Willpower Tests in the presence of this weapon as long as they can draw line of sight to it.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Sword of the Dark Angels. Daemons and Followers of the Dark Gods suffer -20 to all Willpower Tests in the presence of this weapon as long as they can draw line of sight to it.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

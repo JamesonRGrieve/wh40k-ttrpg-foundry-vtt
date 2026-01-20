@@ -1,7 +1,7 @@
 {
   "name": "Astartes Bolt Pistol (Guardian) (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
   "system": {
     "identifier": "astartes-bolt-pistol-guardian-alt",
     "class": "pistol",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing, Accurate, Reliable</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Issued as an award for excellent gallantry, courage, or other actions above and beyond the call of duty. Worn by those recognised as veterans with the deeds of the wielder inscribed on it.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Issued as an award for excellent gallantry, courage, or other actions above and beyond the call of duty. Worn by those recognised as veterans with the deeds of the wielder inscribed on it.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

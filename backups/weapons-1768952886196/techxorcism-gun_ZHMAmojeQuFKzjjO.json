@@ -1,0 +1,63 @@
+{
+  "name": "Techxorcism Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "techxorcism-gun",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 80,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 4
+    },
+    "special": [
+      "shocking"
+    ],
+    "clip": {
+      "max": 30,
+      "value": 30,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 4,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Directly attacks Machine Spirits. Whenever it causes Cirtical Damage to a target causes the Haywire Effect.\nHaywire effect doesn't work on Ork Weapons.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Directly attacks Machine Spirits. Whenever it causes Cirtical Damage to a target causes the Haywire Effect.\nHaywire effect doesn't work on Ork Weapons.",
+    "source": "DW: Rites of Battle"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZHMAmojeQuFKzjjO"
+}

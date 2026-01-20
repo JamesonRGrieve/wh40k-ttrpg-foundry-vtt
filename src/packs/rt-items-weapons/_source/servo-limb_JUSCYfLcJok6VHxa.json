@@ -1,7 +1,7 @@
 {
   "name": "Servo Limb",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "servo-limb",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Servo Limb Cybernetic, crude bionic arm with built-in tool. Can be either Impact or Rending. (See \"Servo Limbs\" Cybernetic, in \"Gear\" Table).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Servo Limb Cybernetic, crude bionic arm with built-in tool. Can be either Impact or Rending. (See \"Servo Limbs\" Cybernetic, in \"Gear\" Table).",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Ork Tusk Squigknife",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "ork-tusk-squigknife",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Tearing</p><p><b>Note:</b> Counts as a Psy Focus (likely for orks), whenever a character bearing this makes Opposed Willpower Test against a Psyker, they get +5. Affected by Kraftsmanship.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Counts as a Psy Focus (likely for orks), whenever a character bearing this makes Opposed Willpower Test against a Psyker, they get +5. Affected by Kraftsmanship.",
-    "source": "RT: The Navis Primer"
+    "source": "RT: The Navis Primer",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

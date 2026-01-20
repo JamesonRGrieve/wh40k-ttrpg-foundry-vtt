@@ -1,12 +1,12 @@
 {
   "name": "Lascutter (Mezoa)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-lascannon.svg",
   "system": {
     "identifier": "lascutter-mezoa",
     "class": "heavy",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Cuts through Hull Metal or Adamantium up to 5cm thick at a rate of 25cm/round, using one weapon charge in the clip to do so. Cannot use unusual ammo.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Cuts through Hull Metal or Adamantium up to 5cm thick at a rate of 25cm/round, using one weapon charge in the clip to do so. Cannot use unusual ammo.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Digital Laser",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "astartes-digital-laser",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Reliable</p><p><b>Note:</b> Space Marines Only, not easily acquirable.\nTakes 1d5 Hours and a +0 Tech-Use Test to reload. Can be worn on fingers (but not thumbs), and used whilst holding something else.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable.\nTakes 1d5 Hours and a +0 Tech-Use Test to reload. Can be worn on fingers (but not thumbs), and used whilst holding something else.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

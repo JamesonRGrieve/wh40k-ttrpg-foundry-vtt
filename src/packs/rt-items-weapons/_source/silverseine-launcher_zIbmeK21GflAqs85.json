@@ -1,12 +1,12 @@
 {
   "name": "Silverseine Launcher",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "silverseine-launcher",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Blast (4), Reliable, Sanctified, Snare (2)</p><p><b>Note:</b> A netlauncher for capturing daemons. The sanctified wiring eating through their warpflesh. Weapon doubles Snare value against characters with Daemonic Trait. Daemonic targets snared by the weapon must test for Warp Instability at the start of each round they are snared.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A netlauncher for capturing daemons. The sanctified wiring eating through their warpflesh. Weapon doubles Snare value against characters with Daemonic Trait. Daemonic targets snared by the weapon must test for Warp Instability at the start of each round they are snared.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Howdah Pistol (Fykos) \"Flametongue\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "howdah-pistol-fykos-flametongue",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Reliable</p><p><b>Note:</b> A Hunting Weapon, uses Custom Ammunition that counts as Exotic Ammo with the Primitive Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Hunting Weapon, uses Custom Ammunition that counts as Exotic Ammo with the Primitive Quality.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

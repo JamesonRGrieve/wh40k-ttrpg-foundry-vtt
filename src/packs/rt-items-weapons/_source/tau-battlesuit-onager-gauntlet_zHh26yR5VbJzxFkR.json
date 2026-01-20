@@ -1,7 +1,7 @@
 {
   "name": "Tau Battlesuit Onager Gauntlet",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "tau-battlesuit-onager-gauntlet",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Power Field, Unwieldy, Shocking</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Cannot be used for a Multiple Attacks Action via Swift Attack or Lightning Attack Talents.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. Cannot be used for a Multiple Attacks Action via Swift Attack or Lightning Attack Talents.",
-    "source": "RT: Tau Char. Guide"
+    "source": "RT: Tau Character Guide",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

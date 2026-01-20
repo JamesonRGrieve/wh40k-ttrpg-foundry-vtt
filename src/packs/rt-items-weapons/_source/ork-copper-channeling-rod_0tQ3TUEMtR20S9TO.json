@@ -1,7 +1,7 @@
 {
   "name": "Ork Copper Channeling Rod",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "ork-copper-channeling-rod",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> If wielded by a Weirdboy, counts as Psy Focus, once per encounter when rolling on 'Eadbang Table, may make -30 Willpower Test as Free Action, if suceeded, can choose result and avoid most consequences to themselves. If fail, add +10 to roll. Affected by Kraftsmanship.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If wielded by a Weirdboy, counts as Psy Focus, once per encounter when rolling on 'Eadbang Table, may make -30 Willpower Test as Free Action, if suceeded, can choose result and avoid most consequences to themselves. If fail, add +10 to roll. Affected by Kraftsmanship.",
-    "source": "RT: The Navis Primer"
+    "source": "RT: The Navis Primer",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

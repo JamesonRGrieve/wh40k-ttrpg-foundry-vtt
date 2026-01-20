@@ -1,7 +1,7 @@
 {
   "name": "Astartes Bolter (Angelus)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "astartes-bolter-angelus",
     "class": "basic",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only. Blood Angels variant Astartes Bolter. Wrist Mounted, can fire whilst holding something else (although if attacking with this weapon, can't attack with anything else held in the hand of the arm this weapon is attached to). Uses unique Bloodshard bolt rounds.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Blood Angels variant Astartes Bolter. Wrist Mounted, can fire whilst holding something else (although if attacking with this weapon, can't attack with anything else held in the hand of the arm this weapon is attached to). Uses unique Bloodshard bolt rounds.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

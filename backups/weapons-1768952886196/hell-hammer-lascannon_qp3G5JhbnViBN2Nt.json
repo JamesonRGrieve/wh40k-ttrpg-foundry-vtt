@@ -1,0 +1,63 @@
+{
+  "name": "Hell Hammer Lascannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "hell-hammer-lascannon",
+    "class": "heavy",
+    "type": "las",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "5d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 10
+    },
+    "special": [
+      "proven-3"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 55,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Proven (3)</p><p><b>Note:</b> Operated by 2-3 humans or one Space Marine. Typically used by Heretics.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Operated by 2-3 humans or one Space Marine. Typically used by Heretics.",
+    "source": "Black Crusade: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qp3G5JhbnViBN2Nt"
+}

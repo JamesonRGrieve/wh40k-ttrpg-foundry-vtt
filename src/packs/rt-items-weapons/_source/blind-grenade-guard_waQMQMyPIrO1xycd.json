@@ -1,7 +1,7 @@
 {
   "name": "Blind Grenade (Guard)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "blind-grenade-guard",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Smoke (3)</p><p><b>Note:</b> Produces dense smoke and blinds most forms of vision enhancement that would pierce throgh normal obscuring smoke</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Produces dense smoke and blinds most forms of vision enhancement that would pierce throgh normal obscuring smoke",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

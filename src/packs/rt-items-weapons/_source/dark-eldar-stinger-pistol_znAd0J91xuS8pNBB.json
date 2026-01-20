@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Stinger Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "dark-eldar-stinger-pistol",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Felling (4), Toxic</p><p><b>Note:</b> Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere.",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

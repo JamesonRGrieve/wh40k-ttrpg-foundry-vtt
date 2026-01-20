@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Conversion Beamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "astartes-conversion-beamer",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "6d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 14
+    },
+    "special": [
+      "sm-wep",
+      "felling-4",
+      "blast-2"
+    ],
+    "clip": {
+      "max": 4,
+      "value": 4,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 85,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Felling (4), Blast (2)</p><p><b>Note:</b> Space Marines Only (Specifically, only Techmarines), not easily acquirable. At shorter Ranges, weapon is weaker: \nShort Range: 3d10+9, Pen 8, Felling(4). 15m or less: 1d10+9 Pen 2.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only (Specifically, only Techmarines), not easily acquirable. At shorter Ranges, weapon is weaker: \nShort Range: 3d10+9, Pen 8, Felling(4). 15m or less: 1d10+9 Pen 2.",
+    "source": "Deathwatch: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SvVP9AD6o6fHVA13"
+}

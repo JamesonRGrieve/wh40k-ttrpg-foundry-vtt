@@ -1,12 +1,12 @@
 {
   "name": "Assault Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
   "system": {
     "identifier": "assault-cannon",
     "class": "heavy",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Exceptionally lethal but often requires high maintenance due to the strain placed on the barrels</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Exceptionally lethal but often requires high maintenance due to the strain placed on the barrels",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

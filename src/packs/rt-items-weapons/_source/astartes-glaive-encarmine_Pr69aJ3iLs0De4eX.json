@@ -1,7 +1,7 @@
 {
   "name": "Astartes Glaive Encarmine",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-glaive-encarmine",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Power Field</p><p><b>Note:</b> Space Marines Only. Blood Angels variant Astartes Power Spear. Two-handed. Wielded y the Sanguinary Guard.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Blood Angels variant Astartes Power Spear. Two-handed. Wielded y the Sanguinary Guard.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

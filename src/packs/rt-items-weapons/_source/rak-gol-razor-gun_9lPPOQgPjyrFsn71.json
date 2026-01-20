@@ -1,12 +1,12 @@
 {
   "name": "Rak'Gol Razor Gun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "rakgol-razor-gun",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Taking 5+ Wounds from a hit from this weapon causes the target to suffer Blood Loss Critical Effect.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Taking 5+ Wounds from a hit from this weapon causes the target to suffer Blood Loss Critical Effect.",
-    "source": "RT: Koronus Bestiary"
+    "source": "RT: Koronus Bestiary",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Plasma Gun (Barrage)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
   "system": {
     "identifier": "astartes-plasma-gun-barrage",
     "class": "basic",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Overheats, Volatile, Maximal</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. ",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

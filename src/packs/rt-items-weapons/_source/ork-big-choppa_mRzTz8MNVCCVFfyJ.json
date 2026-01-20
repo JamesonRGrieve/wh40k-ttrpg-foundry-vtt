@@ -1,7 +1,7 @@
 {
   "name": "Ork Big Choppa",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "ork-big-choppa",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Two-Handed. Some variants have the Power Field and Overheats Qualities.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed. Some variants have the Power Field and Overheats Qualities.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

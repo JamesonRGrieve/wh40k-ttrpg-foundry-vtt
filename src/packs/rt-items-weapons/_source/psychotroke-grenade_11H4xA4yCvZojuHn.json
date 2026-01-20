@@ -1,7 +1,7 @@
 {
   "name": "Psychotroke Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "psychotroke-grenade",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (3), Hallucinogenic (4)</p><p><b>Note:</b> Respirators and Sealed Armour grant no bonuses against the nerve-agents these grenades release. If Toughness Test to resist Hallucinogenics if failed, add +1 to Hallucinogen Roll per Degree of Failiure (max 10)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Respirators and Sealed Armour grant no bonuses against the nerve-agents these grenades release. If Toughness Test to resist Hallucinogenics if failed, add +1 to Hallucinogen Roll per Degree of Failiure (max 10)",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

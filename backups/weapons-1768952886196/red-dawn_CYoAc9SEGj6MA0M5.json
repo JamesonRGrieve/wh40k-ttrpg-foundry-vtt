@@ -1,0 +1,67 @@
+{
+  "name": "Red Dawn",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "red-dawn",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 10
+    },
+    "special": [
+      "sm-wep",
+      "power-field",
+      "tearing",
+      "unbalanced",
+      "volatile"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 10,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 60,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field, Tearing, Unbalanced, Volatile</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Angels Encarmine Chapter. Whenever the wielder scores Righteous Fury on an opponent, in addition to normal effects a Photon Flash Grenade-like effect occurs.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Angels Encarmine Chapter. Whenever the wielder scores Righteous Fury on an opponent, in addition to normal effects a Photon Flash Grenade-like effect occurs.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CYoAc9SEGj6MA0M5"
+}

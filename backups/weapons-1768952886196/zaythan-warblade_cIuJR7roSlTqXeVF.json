@@ -1,0 +1,65 @@
+{
+  "name": "Zaythan Warblade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "zaythan-warblade",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 6
+    },
+    "special": [
+      "power-field",
+      "tearing",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 9,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Power Field, Tearing, Unbalanced</p><p><b>Note:</b> Archeotech. Powerfielded Chainsword. Requires two hands to wield.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Archeotech. Powerfielded Chainsword. Requires two hands to wield.",
+    "source": "RT: Hostile Acquisitions"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cIuJR7roSlTqXeVF"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Shield (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "shield-alt",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Defensive, Primitive (6)</p><p><b>Note:</b> Gives +2 AP to Body and Arm wielding it. Suffers -20 to attack as opposed to normal penalty from Defensive Weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gives +2 AP to Body and Arm wielding it. Suffers -20 to attack as opposed to normal penalty from Defensive Weapon.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

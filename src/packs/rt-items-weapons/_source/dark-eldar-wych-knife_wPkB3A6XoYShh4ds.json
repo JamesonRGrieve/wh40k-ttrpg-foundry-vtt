@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Wych Knife",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-wych-knife",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Razor-Sharp</p><p><b>Note:</b> Scarce Availability if acquired from Dark Eldar Settlement. Counts as Mono-Knife if wielder is not trained to use it (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)).</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Scarce Availability if acquired from Dark Eldar Settlement. Counts as Mono-Knife if wielder is not trained to use it (and so inflicts no penalties to use if they have Melee Weapons Training (Primitive)).",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

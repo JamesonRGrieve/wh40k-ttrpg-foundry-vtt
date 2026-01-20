@@ -1,7 +1,7 @@
 {
   "name": "Neural Catalyser",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "neural-catalyser",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Concussive (3), Overheats</p><p><b>Note:</b> Damage ignores armour and is reduced by Willpower Bonus rather than Toughness bonus. Hits that cause Critical Damage inflict 1d5 nonpermenant Willpower Damage to target.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Damage ignores armour and is reduced by Willpower Bonus rather than Toughness bonus. Hits that cause Critical Damage inflict 1d5 nonpermenant Willpower Damage to target.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

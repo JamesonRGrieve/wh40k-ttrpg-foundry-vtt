@@ -1,7 +1,7 @@
 {
   "name": "Force Hammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "force-hammer",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Force, Unbalanced</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed unless wielder has Strength Bonus of 5+",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Iron-Eater Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "iron-eater-grenade",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (2), Corrosive</p><p><b>Note:</b> If the weapon jams, the grenade detonates on a d10 roll of 7, 8, 9, or 10.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "If the weapon jams, the grenade detonates on a d10 roll of 7, 8, 9, or 10.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

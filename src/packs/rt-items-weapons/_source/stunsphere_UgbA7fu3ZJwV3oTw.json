@@ -1,7 +1,7 @@
 {
   "name": "Stunsphere",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-default.svg",
   "system": {
     "identifier": "stunsphere",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Shocking</p><p><b>Note:</b> Can be reused if picked up again. Shocking effect occurs even if the weapon doesn't do damage. If target fails toughness test, stunned for one round, +1 round per DoF.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be reused if picked up again. Shocking effect occurs even if the weapon doesn't do damage. If target fails toughness test, stunned for one round, +1 round per DoF.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

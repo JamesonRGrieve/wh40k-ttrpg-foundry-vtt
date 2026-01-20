@@ -1,0 +1,64 @@
+{
+  "name": "Tau Rail Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "tau-rail-rifle",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 12
+    },
+    "special": [
+      "felling-4",
+      "proven-2"
+    ],
+    "clip": {
+      "max": 12,
+      "value": 12,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Proven (2)</p><p><b>Note:</b> Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Up to +20 to Acquisition Tests if acquired through a friendly Tau Settlement.",
+    "source": "RT: Tau Char. Guide"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lT5sPnx2IR1tPMoA"
+}

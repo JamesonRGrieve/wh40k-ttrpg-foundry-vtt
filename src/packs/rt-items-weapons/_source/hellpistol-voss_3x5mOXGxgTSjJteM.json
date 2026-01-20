@@ -1,7 +1,7 @@
 {
   "name": "Hellpistol (Voss)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "hellpistol-voss",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Designed for Backpack mounted ammo packs. Can use standard lasgun packs but consume 4 charges a shot.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Designed for Backpack mounted ammo packs. Can use standard lasgun packs but consume 4 charges a shot.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

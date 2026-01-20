@@ -1,12 +1,12 @@
 {
   "name": "Heavy Flamer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-flamer.svg",
   "system": {
     "identifier": "heavy-flamer",
     "class": "heavy",
     "type": "flame",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Requires a crew of 2 to use, one to wield the weapon, another to carry the large backpack mounted tank of incredibly explosive promethium.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires a crew of 2 to use, one to wield the weapon, another to carry the large backpack mounted tank of incredibly explosive promethium.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

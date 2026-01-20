@@ -1,7 +1,7 @@
 {
   "name": "Power Hammer (Ebenus)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-hammer-ebenus",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Daemonbane, Power Field, Unwieldy</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+.. Acts as a Null Rod, and grants wielder the Deny the Witch Talent whilst wielded.\nNull Rod: psykers within 2d10 metres suffer -30 to manifest Psychic Powers. When on person provides +30 to resist any psychic powers that directly affect them</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed unless wielder has Strength Bonus of 5+.. Acts as a Null Rod, and grants wielder the Deny the Witch Talent whilst wielded.\nNull Rod: psykers within 2d10 metres suffer -30 to manifest Psychic Powers. When on person provides +30 to resist any psychic powers that directly affect them",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

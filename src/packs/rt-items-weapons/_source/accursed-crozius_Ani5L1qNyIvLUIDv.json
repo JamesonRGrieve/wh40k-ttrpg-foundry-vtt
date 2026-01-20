@@ -1,7 +1,7 @@
 {
   "name": "Accursed Crozius",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "accursed-crozius",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> Whilst in melee with a target, gain appropriate Hatred Talent, and target cannot use Defensive Stance Action. Gain Concussive (0) if wielded in two hands.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Whilst in melee with a target, gain appropriate Hatred Talent, and target cannot use Defensive Stance Action. Gain Concussive (0) if wielded in two hands.",
-    "source": "BC: Tome of Excess"
+    "source": "BC: Tome of Excess",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

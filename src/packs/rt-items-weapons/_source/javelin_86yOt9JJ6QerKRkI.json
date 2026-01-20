@@ -1,7 +1,7 @@
 {
   "name": "Javelin",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
   "system": {
     "identifier": "javelin",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Can receive the Mono Upgrade, but doesn't have it by default.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can receive the Mono Upgrade, but doesn't have it by default.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

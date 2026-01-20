@@ -1,7 +1,7 @@
 {
   "name": "Victory's Price",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "victorys-price",
     "class": "melee",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> SM Wep, Devastating (2), Felling (8), Power Field, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Spear of the Lamenters Chapter. Wielder increases the Critical Damage they suffer (After modifications such as the True Grit Talent) by 2.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Spear of the Lamenters Chapter. Wielder increases the Critical Damage they suffer (After modifications such as the True Grit Talent) by 2.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

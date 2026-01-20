@@ -1,7 +1,7 @@
 {
   "name": "Axon Razor",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "axon-razor",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Crippling (5), Razor-Sharp</p><p><b>Note:</b> Does no Damage, instead, listed damage counts for the purposes of the weapon's Crippling Quality. A Thin paper-like blade that slices through tissue with little damage, but instead causes agonising nerve damage.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Does no Damage, instead, listed damage counts for the purposes of the weapon's Crippling Quality. A Thin paper-like blade that slices through tissue with little damage, but instead causes agonising nerve damage.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

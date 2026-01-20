@@ -1,12 +1,12 @@
 {
   "name": "Linebreaker",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "linebreaker",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Felling (4), Scatter</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Shotgun of the Marines Errant Chapter. Uses unique ammo that allows ranges up to 10m to count as Point Blank for purposes of extra hits from the Scatter Quality. Cannot use other shotgun ammo types. Comes with 3 clips, extra clips are 10 Requisition each.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Shotgun of the Marines Errant Chapter. Uses unique ammo that allows ranges up to 10m to count as Point Blank for purposes of extra hits from the Scatter Quality. Cannot use other shotgun ammo types. Comes with 3 clips, extra clips are 10 Requisition each.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

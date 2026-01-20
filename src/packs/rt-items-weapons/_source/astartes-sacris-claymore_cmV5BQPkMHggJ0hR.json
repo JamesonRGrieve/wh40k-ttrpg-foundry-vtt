@@ -1,7 +1,7 @@
 {
   "name": "Astartes Sacris Claymore",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "astartes-sacris-claymore",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Unbalanced</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Traditional Weapon of the Storm Wardens Space Marine Chapter. Replaces Combat Knife if preferred.\nTwo Handed Weapon. Counts as a Chapter Trapping. (Deathwatch Initiate may start with one appropriate Chapter Trapping)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Traditional Weapon of the Storm Wardens Space Marine Chapter. Replaces Combat Knife if preferred.\nTwo Handed Weapon. Counts as a Chapter Trapping. (Deathwatch Initiate may start with one appropriate Chapter Trapping)",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

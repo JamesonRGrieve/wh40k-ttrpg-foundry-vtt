@@ -1,12 +1,12 @@
 {
   "name": "Great Weapon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "great-weapon",
     "class": "melee",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Unbalanced</p><p><b>Note:</b> Requires Two Hands to wield</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires Two Hands to wield",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Necron Gauntlet of Fire [Melee]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "necron-gauntlet-of-fire-melee",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Flame, Tearing</p><p><b>Note:</b> Always Best Quality. Has [Ranged] and [Melee] Profile.\nAll WS Tests with this weapon have +10</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality. Has [Ranged] and [Melee] Profile.\nAll WS Tests with this weapon have +10",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

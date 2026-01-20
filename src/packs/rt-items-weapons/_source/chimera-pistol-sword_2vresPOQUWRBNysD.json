@@ -1,7 +1,7 @@
 {
   "name": "Chimera Pistol Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "chimera-pistol-sword",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive</p><p><b>Note:</b> Has an inbuilt single-shot Irontalon Naval Pistol (Pistol, SP, Range 20m, S/-/-, 1d10+2 I, Pen 0, Clip 1, Rld Full, Reliable, Tearing)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has an inbuilt single-shot Irontalon Naval Pistol (Pistol, SP, Range 20m, S/-/-, 1d10+2 I, Pen 0, Clip 1, Rld Full, Reliable, Tearing)",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

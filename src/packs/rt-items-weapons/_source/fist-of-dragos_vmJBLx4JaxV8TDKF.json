@@ -1,7 +1,7 @@
 {
   "name": "Fist of Dragos",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "fist-of-dragos",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Unwieldy, Overheats</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Power Fist of the Deathwatch. Increases Unnatural Strength x2 to x3 as normal for Power Fists.\nCan't be dropped if it overheats.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Relic Master-Crafted Astartes Power Fist of the Deathwatch. Increases Unnatural Strength x2 to x3 as normal for Power Fists.\nCan't be dropped if it overheats.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

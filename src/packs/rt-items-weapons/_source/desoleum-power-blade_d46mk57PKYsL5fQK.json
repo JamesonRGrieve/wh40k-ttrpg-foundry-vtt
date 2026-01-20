@@ -1,7 +1,7 @@
 {
   "name": "Desoleum Power Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "desoleum-power-blade",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> Has Compact Upgrade builtin. Popular with Assassins and Gang Leaders.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has Compact Upgrade builtin. Popular with Assassins and Gang Leaders.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

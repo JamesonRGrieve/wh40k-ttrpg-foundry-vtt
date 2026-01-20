@@ -1,7 +1,7 @@
 {
   "name": "Laspistol (\"Emperor's Will\")",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "laspistol-emperors-will",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Accurate, Reliable</p><p><b>Note:</b> Gain +1 Degree of Success on successful Intimidate Tests. Sometimes used by Commisars for disciplinary purposes.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gain +1 Degree of Success on successful Intimidate Tests. Sometimes used by Commisars for disciplinary purposes.",
-    "source": "OW: Shield of Humanity"
+    "source": "OW: Shield of Humanity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

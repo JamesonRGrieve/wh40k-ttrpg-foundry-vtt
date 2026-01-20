@@ -1,7 +1,7 @@
 {
   "name": "Bulkhead Shears (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "bulkhead-shears-alt",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM, Wep, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted and consisting of two adamantine blades powered by hydraulics. Useful for cutting through objects and people.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted and consisting of two adamantine blades powered by hydraulics. Useful for cutting through objects and people.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

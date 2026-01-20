@@ -1,0 +1,64 @@
+{
+  "name": "Mortar",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "mortar",
+    "class": "heavy",
+    "type": "launcher",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "50-300m"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "-",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate",
+      "indirect-2"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 41,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Indirect (2)</p><p><b>Note:</b> Traits vary with ammo (Ammo - Mortar)</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Traits vary with ammo (Ammo - Mortar)",
+    "source": "Only War: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "t3jhXnvZyR8ihsem"
+}

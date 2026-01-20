@@ -1,12 +1,12 @@
 {
   "name": "Quillgun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "quillgun",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> A Dart Gun that fires tailor made toxins. Comes with one clip of Ataractic and Venenum Rounds, the only ammo it can use. \nAtaractic: (0 Damage, Pen 0, Concussive (5), Reliable) (Very Rare). Venenum: (1d10+1 I, Pen 3, Reliable, Toxic (4)) (Scarce)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Dart Gun that fires tailor made toxins. Comes with one clip of Ataractic and Venenum Rounds, the only ammo it can use. \nAtaractic: (0 Damage, Pen 0, Concussive (5), Reliable) (Very Rare). Venenum: (1d10+1 I, Pen 3, Reliable, Toxic (4)) (Scarce)",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

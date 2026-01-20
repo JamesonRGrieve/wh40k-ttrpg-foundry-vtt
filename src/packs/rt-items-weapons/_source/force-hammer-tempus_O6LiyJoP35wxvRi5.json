@@ -1,7 +1,7 @@
 {
   "name": "Force Hammer (Tempus)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
   "system": {
     "identifier": "force-hammer-tempus",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Daemonbane, Force, Power Field, Unwieldy</p><p><b>Note:</b> Two-Handed unless wielder has Strength Bonus of 5+ Once per Session as a Full Action, wielder can smite the ground, creating a 2d10 metre radius blast, all other characters must make -20 Agility Test or lose a Half Action on their next turn. Those that fail by 2+ DoF lose their Full Action.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Two-Handed unless wielder has Strength Bonus of 5+ Once per Session as a Full Action, wielder can smite the ground, creating a 2d10 metre radius blast, all other characters must make -20 Agility Test or lose a Half Action on their next turn. Those that fail by 2+ DoF lose their Full Action.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

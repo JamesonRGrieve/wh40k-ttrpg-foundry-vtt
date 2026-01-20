@@ -1,12 +1,12 @@
 {
   "name": "Grenade Launcher (Mezoa)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-default.svg",
   "system": {
     "identifier": "grenade-launcher-mezoa",
     "class": "basic",
     "type": "launcher",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Traits vary with ammo (Weapon - Grenades)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Traits vary with ammo (Weapon - Grenades)",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

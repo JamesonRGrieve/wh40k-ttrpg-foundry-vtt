@@ -1,12 +1,12 @@
 {
   "name": "Astartes Missile Launcher (Soundstrike)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg",
   "system": {
     "identifier": "astartes-missile-launcher-soundstrike",
     "class": "heavy",
     "type": "launcher",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> SM Wep</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Is combined with a missile rack and auto-loaded mounted to the backpack power unit that can refill the launcher from a back-mounted ammo source.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Is combined with a missile rack and auto-loaded mounted to the backpack power unit that can refill the launcher from a back-mounted ammo source.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

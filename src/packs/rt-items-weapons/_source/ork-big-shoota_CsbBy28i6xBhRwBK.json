@@ -1,12 +1,12 @@
 {
   "name": "Ork Big Shoota",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "ork-big-shoota",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Unreliable</p><p><b>Note:</b> Not Unreliable when wielded by an Ork. Exceptionally loud, usually accompanied by shouts of \"Dakka Dakka Dakka!\"</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Not Unreliable when wielded by an Ork. Exceptionally loud, usually accompanied by shouts of \"Dakka Dakka Dakka!\"",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

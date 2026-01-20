@@ -1,7 +1,7 @@
 {
   "name": "Astartes Omnissian Axe (Artificer)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-omnissian-axe-artificer",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Unbalanced</p><p><b>Note:</b> Space Marines Only. Always Master-Crafted. +10 to Fellowship Tests with members of the Machine Cult. Counts as a Combi-Tool.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Always Master-Crafted. +10 to Fellowship Tests with members of the Machine Cult. Counts as a Combi-Tool.",
-    "source": "DW: First Founding"
+    "source": "DW: First Founding",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

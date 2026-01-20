@@ -1,7 +1,7 @@
 {
   "name": "Astartes Omnissian Axe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-omnissian-axe",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Unbalanced</p><p><b>Note:</b> Space Marines Only  (Specifically, only Techmarines), not easily acquirable. Also functions as a Combi-Tool.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only  (Specifically, only Techmarines), not easily acquirable. Also functions as a Combi-Tool.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

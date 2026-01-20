@@ -1,12 +1,12 @@
 {
   "name": "Noise Marine Blastmaster (Explosive Crescendo)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "noise-marine-blastmaster-explosive-crescendo",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (4), Devastating (2)</p><p><b>Note:</b> Can be fired in either \"Explosive Crescendo\" or \"Hail of Noise\" Mode. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be fired in either \"Explosive Crescendo\" or \"Hail of Noise\" Mode. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

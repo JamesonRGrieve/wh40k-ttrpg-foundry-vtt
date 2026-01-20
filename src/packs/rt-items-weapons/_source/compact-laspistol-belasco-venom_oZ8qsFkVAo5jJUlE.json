@@ -1,7 +1,7 @@
 {
   "name": "Compact Laspistol (Belasco) \"Venom\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
   "system": {
     "identifier": "compact-laspistol-belasco-venom",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Doesn't use standard power packs, instead requires its internal power cell to be recharged from a standard power port.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Doesn't use standard power packs, instead requires its internal power cell to be recharged from a standard power port.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

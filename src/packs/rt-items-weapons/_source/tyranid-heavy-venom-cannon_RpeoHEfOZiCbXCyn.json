@@ -1,12 +1,12 @@
 {
   "name": "Tyranid Heavy Venom Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "tyranid-heavy-venom-cannon",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Living Ammunition Toxic (1d10), Blast (6)</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

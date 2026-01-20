@@ -1,0 +1,61 @@
+{
+  "name": "Micro Grenade (Krak)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "micro-grenade-krak",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 2,
+      "penetration": 5
+    },
+    "special": [],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Note:</b> Comes as a Dispenser of 12 Grenades, of which several can be thrown at once, like as if firing on Semi-Auto. Grenades that do not hit scatter following random scattering rules, exploding regardless of miss or hit.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Comes as a Dispenser of 12 Grenades, of which several can be thrown at once, like as if firing on Semi-Auto. Grenades that do not hit scatter following random scattering rules, exploding regardless of miss or hit.",
+    "source": "RT: Hostile Acquisitions"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hlAXmtG0LmLkRGaE"
+}

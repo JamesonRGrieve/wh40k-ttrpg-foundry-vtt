@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Venomblade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "dark-eldar-venomblade",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Balanced, Felling (4), Toxic</p><p><b>Note:</b> Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Extremely Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. ",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

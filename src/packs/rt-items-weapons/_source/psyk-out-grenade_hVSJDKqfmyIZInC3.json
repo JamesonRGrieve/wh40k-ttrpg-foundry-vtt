@@ -1,7 +1,7 @@
 {
   "name": "Psyk-out Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "psyk-out-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (3)</p><p><b>Note:</b> Psykers in blast radius must make -10 Willpower Test or be stunned for 1d5+3 rounds. Daemons must make +0 Willpower Test or take 3d10 E Damage and be stunned for 1d5 Rounds.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Psykers in blast radius must make -10 Willpower Test or be stunned for 1d5+3 rounds. Daemons must make +0 Willpower Test or take 3d10 E Damage and be stunned for 1d5 Rounds.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

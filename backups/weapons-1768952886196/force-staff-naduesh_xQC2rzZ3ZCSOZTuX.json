@@ -1,0 +1,63 @@
+{
+  "name": "Force Staff (Naduesh)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "force-staff-naduesh",
+    "class": "melee",
+    "type": "force",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "force"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 2,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 3500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Force</p><p><b>Note:</b> Can appear as a walking staff until activated. Acts as a Psy-Focus. Acts as Best Craftsmanship Mono Weapon to non-psyker.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Can appear as a walking staff until activated. Acts as a Psy-Focus. Acts as Best Craftsmanship Mono Weapon to non-psyker.",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xQC2rzZ3ZCSOZTuX"
+}

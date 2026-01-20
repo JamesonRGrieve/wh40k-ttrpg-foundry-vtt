@@ -1,7 +1,7 @@
 {
   "name": "Psyk-Out Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "psyk-out-grenade",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (3), Smoke (3)</p><p><b>Note:</b> Targets that are hit, enter the smoke, or start their turn in the smoke they must make a -30 Willpower Test or reduce their Psy rating by 1 per Degree of Failiure. If failing by 2+ DoF must immediately roll Psychic Phenomena. Every 6 hours regain 1 Psy rating lost by this weapon. Attempts to manifest a power in this smoke auto-fail.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Targets that are hit, enter the smoke, or start their turn in the smoke they must make a -30 Willpower Test or reduce their Psy rating by 1 per Degree of Failiure. If failing by 2+ DoF must immediately roll Psychic Phenomena. Every 6 hours regain 1 Psy rating lost by this weapon. Attempts to manifest a power in this smoke auto-fail.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

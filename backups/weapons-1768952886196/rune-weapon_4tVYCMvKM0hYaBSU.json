@@ -1,0 +1,67 @@
+{
+  "name": "Rune Weapon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "rune-weapon",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "balanced",
+      "tainted",
+      "tearing",
+      "vengeful-8",
+      "rune-wep"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 3,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced, Tainted, Tearing, Vengeful (8), Rune Wep</p><p><b>Note:</b> Generic Rune Weapon, in this case a sword but can be any Primitive Melee Weapon. DH 2E Rune Weapons give Tainted, Tearing, and Vengeful (8), Lose Primitive, are Immune to Power Fields, and cause wielder to gain 1d5  Corruption whenever they trigger Righteous Fury.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Generic Rune Weapon, in this case a sword but can be any Primitive Melee Weapon. DH 2E Rune Weapons give Tainted, Tearing, and Vengeful (8), Lose Primitive, are Immune to Power Fields, and cause wielder to gain 1d5  Corruption whenever they trigger Righteous Fury.",
+    "source": "DH 2E: Enemies Beyond"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4tVYCMvKM0hYaBSU"
+}

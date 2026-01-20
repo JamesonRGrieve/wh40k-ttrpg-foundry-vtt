@@ -1,7 +1,7 @@
 {
   "name": "Assault Gauntlet",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "assault-gauntlet",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> An oversized glove often used in pairs. Fires solid metal bolts. Can also be used as a 1d10 I Melee weapon in close combat.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "An oversized glove often used in pairs. Fires solid metal bolts. Can also be used as a 1d10 I Melee weapon in close combat.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Chain-Stick",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "chain-stick",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Fast, Primitive (8), Toxic</p><p><b>Note:</b> Toxic Nunchucks</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Toxic Nunchucks",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

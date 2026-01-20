@@ -1,0 +1,65 @@
+{
+  "name": "Auto-Stubber (Wrath)",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "auto-stubber-wrath",
+    "class": "basic",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 9
+    },
+    "special": [
+      "inaccurate",
+      "tearing",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 4,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate, Tearing, Unreliable</p><p><b>Note:</b> Uses special ammo, loses Tearing Quality if this special ammo is not used.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Uses special ammo, loses Tearing Quality if this special ammo is not used.",
+    "source": "RT: Hostile Acquisitions"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F9qEXaMuNWbkDcUj"
+}

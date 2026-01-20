@@ -1,7 +1,7 @@
 {
   "name": "Macro Hammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "macro-hammer",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> Hammer head uses nano-sized warp portals that create micro-explosions on impact. Requires two hands  to use.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Hammer head uses nano-sized warp portals that create micro-explosions on impact. Requires two hands  to use.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

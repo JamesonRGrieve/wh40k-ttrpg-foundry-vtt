@@ -1,7 +1,7 @@
 {
   "name": "Long-Distance Extendable Retraction Rod (Mezoa)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "long-distance-extendable-retraction-rod-mezoa",
     "class": "melee",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Can extend to 4 metres on activation, and hold 150kg if anchored. Good Craftsmanship: 5m, 175kg, Best: 6m, 200kg</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can extend to 4 metres on activation, and hold 150kg if anchored. Good Craftsmanship: 5m, 175kg, Best: 6m, 200kg",
-    "source": "RT: Stars of Inequity"
+    "source": "RT: Stars of Inequity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

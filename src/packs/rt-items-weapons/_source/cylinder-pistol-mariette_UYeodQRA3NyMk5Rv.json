@@ -1,7 +1,7 @@
 {
   "name": "Cylinder Pistol (Mariette)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "cylinder-pistol-mariette",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Can be Dissassembled and has no Metallic Components, imposes -30 to Search Tests when dissassembled and concealed.\n Each of the 4 barrels is a self contained firing piece that counts as its specialised ammo (Rare, 100 Thrones Each)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be Dissassembled and has no Metallic Components, imposes -30 to Search Tests when dissassembled and concealed.\n Each of the 4 barrels is a self contained firing piece that counts as its specialised ammo (Rare, 100 Thrones Each)",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

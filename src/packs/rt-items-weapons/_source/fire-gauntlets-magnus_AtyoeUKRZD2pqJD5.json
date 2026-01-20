@@ -1,7 +1,7 @@
 {
   "name": "Fire Gauntlets (Magnus)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
   "system": {
     "identifier": "fire-gauntlets-magnus",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flame, Unbalanced</p><p><b>Note:</b> A Set of two Metallic Gloves, allows wearer to safely coat their hands in fire. As a free action can be ignited, gives +20 to Intimidate Tests, fire lasts one encounter or 20 minutes of narrative time.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Set of two Metallic Gloves, allows wearer to safely coat their hands in fire. As a free action can be ignited, gives +20 to Intimidate Tests, fire lasts one encounter or 20 minutes of narrative time.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

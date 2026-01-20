@@ -1,12 +1,12 @@
 {
   "name": "Musket",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "musket",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Primitive (8), Unreliable</p><p><b>Note:</b> Counts as a Staff in melee combat. Common on Fuedal worlds.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Counts as a Staff in melee combat. Common on Fuedal worlds.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

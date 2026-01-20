@@ -1,0 +1,65 @@
+{
+  "name": "Skapulan Bolter",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "skapulan-bolter",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 9,
+      "penetration": 7
+    },
+    "special": [
+      "sm-wep",
+      "accurate",
+      "tearing"
+    ],
+    "clip": {
+      "max": 28,
+      "value": 28,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 16,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 75,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Accurate, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Boltgun of the Deathwatch. Has integrated Fire Selector, Targeter, and Melee Attachment (Master-Crafted Astartes Combat Knife). Never Jams. Reroll attack rolls of 96-100.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Boltgun of the Deathwatch. Has integrated Fire Selector, Targeter, and Melee Attachment (Master-Crafted Astartes Combat Knife). Never Jams. Reroll attack rolls of 96-100.",
+    "source": "Deathwatch: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fASNLl2cZFVvztHn"
+}

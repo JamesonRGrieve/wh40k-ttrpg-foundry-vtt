@@ -1,7 +1,7 @@
 {
   "name": "Hunting Lance (Shock)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "hunting-lance-shock",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Shocking, Recharge</p><p><b>Note:</b> Tip recharges after hit. During recharge counts as Cavalry Spear. (Requires Weapon Training for Primitive and Shocking)\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Tip recharges after hit. During recharge counts as Cavalry Spear. (Requires Weapon Training for Primitive and Shocking)\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
-    "source": "OW: Hammer of the Emperor"
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

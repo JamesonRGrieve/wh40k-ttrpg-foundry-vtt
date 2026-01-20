@@ -1,12 +1,12 @@
 {
   "name": "Boltgun (Archeotech)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "boltgun-archeotech",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Reliable, Tearing, Sanctified</p><p><b>Note:</b> Characters with Malignancies suffer -10 to use this weapon. Requires strength bonus of 6+ or counts as Heavy Weapon. -10 to acquire unusual ammo and may require upkeep tests for any ammo due to rarity.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Characters with Malignancies suffer -10 to use this weapon. Requires strength bonus of 6+ or counts as Heavy Weapon. -10 to acquire unusual ammo and may require upkeep tests for any ammo due to rarity.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

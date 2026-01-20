@@ -1,7 +1,7 @@
 {
   "name": "Berzerker Axe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "berzerker-axe",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Used by Khorne Berzerkers.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Used by Khorne Berzerkers.",
-    "source": "DW: Mark of the Xenos"
+    "source": "DW: Mark of the Xenos",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

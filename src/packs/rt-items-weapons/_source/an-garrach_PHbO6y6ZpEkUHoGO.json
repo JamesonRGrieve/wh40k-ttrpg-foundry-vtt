@@ -1,7 +1,7 @@
 {
   "name": "An'garrach",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
   "system": {
     "identifier": "angarrach",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Balanced, Tearing, Daemon Wep</p><p><b>Note:</b> Base Weapon: Legion Chainsword. Daemon Willpower 28 (Several Nurglings), Bind Str 3. Attributes: Degeneration\nInflicts 1d10 Agility Damage with every Wounding Hit. Two-Handed for Non-Space Marine, suffer -20 to use if not Unnatural Strength (4+)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Base Weapon: Legion Chainsword. Daemon Willpower 28 (Several Nurglings), Bind Str 3. Attributes: Degeneration\nInflicts 1d10 Agility Damage with every Wounding Hit. Two-Handed for Non-Space Marine, suffer -20 to use if not Unnatural Strength (4+)",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Neural Shredder",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "neural-shredder",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Target suffers 2d10 Intelligence damage on hit (ignores armour/toughness), make -20 Toughness Test or be stunned for 1 Round. Foes with Daemonic, Machine, Strange Physiology, or The Stuff of Nightmares Traits are unaffected by this weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Target suffers 2d10 Intelligence damage on hit (ignores armour/toughness), make -20 Toughness Test or be stunned for 1 Round. Foes with Daemonic, Machine, Strange Physiology, or The Stuff of Nightmares Traits are unaffected by this weapon.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

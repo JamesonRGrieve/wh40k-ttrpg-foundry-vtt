@@ -1,12 +1,12 @@
 {
   "name": "Void Speargun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "void-speargun",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Has its own specialised ammo, cannot use unusual ammo. Designed for ripping void suits.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has its own specialised ammo, cannot use unusual ammo. Designed for ripping void suits.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

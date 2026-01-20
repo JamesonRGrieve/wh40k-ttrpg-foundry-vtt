@@ -1,7 +1,7 @@
 {
   "name": "Ghostblade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "ghostblade",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Felling (4), Razor Sharp, Overheats</p><p><b>Note:</b> Uses a Backpack power supply included in weight. If weapon Overheats it counts as a regular sword until repaired.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Uses a Backpack power supply included in weight. If weapon Overheats it counts as a regular sword until repaired.",
-    "source": "DH 2E: Enemies Without"
+    "source": "DH2: Enemies Without",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

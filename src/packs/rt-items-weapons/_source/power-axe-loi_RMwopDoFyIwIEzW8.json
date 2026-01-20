@@ -1,7 +1,7 @@
 {
   "name": "Power Axe (Loi)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-axe-loi",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Unbalanced</p><p><b>Note:</b> Requires Two Hands to wield</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Requires Two Hands to wield",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

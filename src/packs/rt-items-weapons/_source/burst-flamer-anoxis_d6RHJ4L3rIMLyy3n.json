@@ -1,7 +1,7 @@
 {
   "name": "Burst Flamer (Anoxis)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "burst-flamer-anoxis",
     "class": "basic",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Spray, Primitive</p><p><b>Note:</b> Fires a single quick burst of heat and flame. Mainly designed to frigten or injure and doesn't cover targets in promethium. Won't set people on fire unless at Point Blank Range.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires a single quick burst of heat and flame. Mainly designed to frigten or injure and doesn't cover targets in promethium. Won't set people on fire unless at Point Blank Range.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

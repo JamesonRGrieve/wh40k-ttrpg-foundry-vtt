@@ -1,12 +1,12 @@
 {
   "name": "Noise Marine Sonic Blaster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "noise-marine-sonic-blaster",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Counts as a Heavy Weapon when fired on Full Auto, requiring bracing. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Counts as a Heavy Weapon when fired on Full Auto, requiring bracing. Does not have ammo or need to reload, but must be connected to a power source, typically the power pack of the wearer's power armour.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

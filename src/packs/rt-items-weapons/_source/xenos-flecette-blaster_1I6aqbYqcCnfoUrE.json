@@ -1,12 +1,12 @@
 {
   "name": "Xenos Flecette Blaster",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "xenos-flecette-blaster",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Blast (2)</p><p><b>Note:</b> Unknown Xenos make, fires a barrage of razor sharp strands that tear flesh.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Unknown Xenos make, fires a barrage of razor sharp strands that tear flesh.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

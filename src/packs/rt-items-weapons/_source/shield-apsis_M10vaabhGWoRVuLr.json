@@ -1,7 +1,7 @@
 {
   "name": "Shield (Apsis)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "shield-apsis",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Defensive, Primitive</p><p><b>Note:</b> Gain +20 to Opposed Strength Tests for knocking someone down or being knocked down. Provides +3 AP to Body and Arm wielding it.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Gain +20 to Opposed Strength Tests for knocking someone down or being knocked down. Provides +3 AP to Body and Arm wielding it.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

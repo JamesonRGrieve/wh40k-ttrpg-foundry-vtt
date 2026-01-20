@@ -1,7 +1,7 @@
 {
   "name": "Astartes Combi-Weapon (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "astartes-combi-weapon-alt",
     "class": "basic",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> SM Wep, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Represents Bolter Profile. Will have an undermounted Astartes Flamer, Meltagun, or Plasmagun with a clip of 1. \nCan only fire one of the weapons at a time.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. Represents Bolter Profile. Will have an undermounted Astartes Flamer, Meltagun, or Plasmagun with a clip of 1. \nCan only fire one of the weapons at a time.",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Man-Portable Ectoplasma Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-plasma.svg",
   "system": {
     "identifier": "man-portable-ectoplasma-cannon",
     "class": "heavy",
     "type": "plasma",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Blast (2), Maximal, Overheats</p><p><b>Note:</b> Overheats on a 91+. Whenever wielder rolls a double on the Ballistic Skill Test to fire this weapon, they must immediately make a -10 Willpower Test or suffer 1d10 nonpermenant Willpower Damage and gain 1 Corruption for every Degree of Failiure.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Overheats on a 91+. Whenever wielder rolls a double on the Ballistic Skill Test to fire this weapon, they must immediately make a -10 Willpower Test or suffer 1d10 nonpermenant Willpower Damage and gain 1 Corruption for every Degree of Failiure.",
-    "source": "BC: Tome of Excess"
+    "source": "BC: Tome of Excess",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

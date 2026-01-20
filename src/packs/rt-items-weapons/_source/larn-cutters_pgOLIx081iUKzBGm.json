@@ -1,12 +1,12 @@
 {
   "name": "Larn Cutters",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "larn-cutters",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Unknown Xenos make, fires ionisation beam that slices through matter. Effective at cutting through hulls and bulkheads.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Unknown Xenos make, fires ionisation beam that slices through matter. Effective at cutting through hulls and bulkheads.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

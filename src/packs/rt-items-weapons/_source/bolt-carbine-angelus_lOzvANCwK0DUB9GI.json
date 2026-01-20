@@ -1,12 +1,12 @@
 {
   "name": "Bolt Carbine (Angelus)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "bolt-carbine-angelus",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> Highly Illegal due to chambering Unmarked Astartes Bolt Rounds, regular ammo won't work.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Highly Illegal due to chambering Unmarked Astartes Bolt Rounds, regular ammo won't work.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

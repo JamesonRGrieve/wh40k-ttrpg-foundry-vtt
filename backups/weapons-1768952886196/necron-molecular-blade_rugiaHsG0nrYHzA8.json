@@ -1,0 +1,65 @@
+{
+  "name": "Necron Molecular Blade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "necron-molecular-blade",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 5
+    },
+    "special": [
+      "corrosive",
+      "razor-sharp",
+      "tearing"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 15,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Corrosive, Razor Sharp, Tearing</p><p><b>Note:</b> A Strangely shaped blade that extends from either side of the grip, the blade monomolecularly thin and seem to flicker in and out of reality.\nInfinite Ammo, No Reloads needed.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "A Strangely shaped blade that extends from either side of the grip, the blade monomolecularly thin and seem to flicker in and out of reality.\nInfinite Ammo, No Reloads needed.",
+    "source": "DH 2E: Enemies Without"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rugiaHsG0nrYHzA8"
+}

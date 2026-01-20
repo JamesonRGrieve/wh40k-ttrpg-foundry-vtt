@@ -1,7 +1,7 @@
 {
   "name": "Scythian Venom Talon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "scythian-venom-talon",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Toxic</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

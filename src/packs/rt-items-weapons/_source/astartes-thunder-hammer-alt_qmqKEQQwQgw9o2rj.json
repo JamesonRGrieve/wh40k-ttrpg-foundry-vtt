@@ -1,12 +1,12 @@
 {
   "name": "Astartes Thunder Hammer (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "astartes-thunder-hammer-alt",
     "class": "melee",
     "type": "power",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": true,
     "attack": {
       "type": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Concussive (1), Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. For damage increase Unnatural Strength Bonus from x2 to x3</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only, not easily acquirable. For damage increase Unnatural Strength Bonus from x2 to x3",
-    "source": "Deathwatch: Errata"
+    "source": "DW: Errata",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

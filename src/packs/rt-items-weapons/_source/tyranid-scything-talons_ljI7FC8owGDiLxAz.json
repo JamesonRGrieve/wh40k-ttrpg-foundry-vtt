@@ -1,7 +1,7 @@
 {
   "name": "Tyranid Scything Talons",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "tyranid-scything-talons",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> -</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

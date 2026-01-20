@@ -1,7 +1,7 @@
 {
   "name": "Rak'Gol Rad Axe",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "rakgol-rad-axe",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Power Field, Toxic, Unbalanced</p><p><b>Note:</b> Radioactive</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Radioactive",
-    "source": "RT: Koronus Bestiary"
+    "source": "RT: Koronus Bestiary",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

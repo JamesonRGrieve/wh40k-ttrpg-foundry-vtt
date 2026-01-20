@@ -1,0 +1,61 @@
+{
+  "name": "Tau Battlesuit Smart Missile System",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "tau-battlesuit-smart-missile-system",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 150,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 4,
+      "penetration": 4
+    },
+    "special": [],
+    "clip": {
+      "max": 48,
+      "value": 48,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 30,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one.  As long as target position known to firier, do not need line of sight for weapon, instead to fire at target outside of line of sight, make +0 Intelligence Test in lieu of Ballistic Skill Test.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Tau Battlesuit Weapon, not practical to wield outside of one.  As long as target position known to firier, do not need line of sight for weapon, instead to fire at target outside of line of sight, make +0 Intelligence Test in lieu of Ballistic Skill Test.",
+    "source": "RT: Tau Char. Guide"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3VirisaceONv9W4z"
+}

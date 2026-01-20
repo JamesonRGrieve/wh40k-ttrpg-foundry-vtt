@@ -1,7 +1,7 @@
 {
   "name": "Fractal Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "fractal-blade",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Balanced</p><p><b>Note:</b> Makes a loud noise when struck (such as when parrying)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Makes a loud noise when struck (such as when parrying)",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

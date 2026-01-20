@@ -1,0 +1,67 @@
+{
+  "name": "Silent Cry",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "silent-cry",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 250,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 12,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "accurate",
+      "felling-8",
+      "razor-sharp",
+      "tearing"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 17,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Accurate, Felling (8), Razor Sharp, Tearing</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Boltgun (Stalker) of the Excorcists Chapter. When fired after a Full Action Aim, scores Righteous Fury on a 9 or 10.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Boltgun (Stalker) of the Excorcists Chapter. When fired after a Full Action Aim, scores Righteous Fury on a 9 or 10.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6TweVeU4lCHj9AAE"
+}

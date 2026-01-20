@@ -1,7 +1,7 @@
 {
   "name": "Flamer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
   "system": {
     "identifier": "flamer",
     "class": "basic",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Flame, Spray</p><p><b>Note:</b> Can be connected to backpack ammo canister via feedline, weighing 10kg. Doubles Clip Size.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be connected to backpack ammo canister via feedline, weighing 10kg. Doubles Clip Size.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

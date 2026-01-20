@@ -1,0 +1,63 @@
+{
+  "name": "Laspistol (Accatran, Heavy) [Good Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
+  "system": {
+    "identifier": "laspistol-accatran-heavy-good",
+    "class": "pistol",
+    "type": "las",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 2,
+    "availability": "average",
+    "craftsmanship": "good",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Designed to use Lasgun Power Packs rather than Laspistol. Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)</p>"
+    },
+    "modifications": [],
+    "notes": "Designed to use Lasgun Power Packs rather than Laspistol. Can fire on high-power mode: +1 Damage, consumes two ammo per shot\nCan fire on Overload mode: +2 Damage, +2 PEN, consumes four ammo per shot and becomes Unreliable (also loses Reliable)",
+    "source": "OW: Hammer of the Emperor",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "93627e1a455cf4d0"
+}

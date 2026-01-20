@@ -1,7 +1,7 @@
 {
   "name": "Skybolt",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "skybolt",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Felling (8)</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Power Spear of the Storm Wardens. Provides +15 Fellowship when dealing with other Storm Wardens Space Marines, due to the cultural significance of the weapon.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Relic Master-Crafted Astartes Power Spear of the Storm Wardens. Provides +15 Fellowship when dealing with other Storm Wardens Space Marines, due to the cultural significance of the weapon.",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

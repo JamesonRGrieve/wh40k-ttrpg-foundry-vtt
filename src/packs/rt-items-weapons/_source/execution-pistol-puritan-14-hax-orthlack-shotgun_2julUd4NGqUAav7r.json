@@ -1,7 +1,7 @@
 {
   "name": "Execution Pistol \"Puritan-14\" (Hax-Orthlack) [Shotgun]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "execution-pistol-puritan-14-hax-orthlack-shotgun",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Imposes -10 to Ballistic Skill Test if not used in two hands, see [Pistol] Profile for main gun.\nCan only fire as a [Pistol] or [Shotgun] at once.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Imposes -10 to Ballistic Skill Test if not used in two hands, see [Pistol] Profile for main gun.\nCan only fire as a [Pistol] or [Shotgun] at once.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

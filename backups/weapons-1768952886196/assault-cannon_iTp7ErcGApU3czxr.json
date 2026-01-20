@@ -1,0 +1,64 @@
+{
+  "name": "Assault Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "assault-cannon",
+    "class": "heavy",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 10
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "impact",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "tearing",
+      "unreliable"
+    ],
+    "clip": {
+      "max": 200,
+      "value": 200,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 60,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 7000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Exceptionally lethal but often requires high maintenance due to the strain placed on the barrels</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Exceptionally lethal but often requires high maintenance due to the strain placed on the barrels",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iTp7ErcGApU3czxr"
+}

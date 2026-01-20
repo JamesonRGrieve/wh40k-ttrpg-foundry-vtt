@@ -1,0 +1,64 @@
+{
+  "name": "Necron Gauss Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "necron-gauss-cannon",
+    "class": "heavy",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 4,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 5
+    },
+    "special": [
+      "necron-wep",
+      "gauss"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 35,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Necron Wep, Gauss</p><p><b>Note:</b> Always Best Quality. If Retrofitted, needs external backpack power pack, gains Overheats quality but overheats in backpack, good for 3d10 Shots.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Always Best Quality. If Retrofitted, needs external backpack power pack, gains Overheats quality but overheats in backpack, good for 3d10 Shots.",
+    "source": "BC: Tome of Fate"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TbVHHIaPh5MGebsc"
+}

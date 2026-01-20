@@ -1,7 +1,7 @@
 {
   "name": "Flail of Chastisement",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "flail-of-chastisement",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Crippling (2), Flexible, Primitive (8), Snare (0)</p><p><b>Note:</b> Crippling Quality only affects those caught by the Snare Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Crippling Quality only affects those caught by the Snare Quality.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

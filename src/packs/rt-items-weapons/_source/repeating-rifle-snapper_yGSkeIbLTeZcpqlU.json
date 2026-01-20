@@ -1,12 +1,12 @@
 {
   "name": "Repeating Rifle \"Snapper\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "repeating-rifle-snapper",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Overheats, Primitive (8), Unreliable</p><p><b>Note:</b> An 8-Barrelled Rotating Cylinder, with each cylinder holding an individual shot that can be fired in somewhat rapid succession. If used as an improvised weapon, if the WS Test fails by 2+ DoF, weapon breaks.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "An 8-Barrelled Rotating Cylinder, with each cylinder holding an individual shot that can be fired in somewhat rapid succession. If used as an improvised weapon, if the WS Test fails by 2+ DoF, weapon breaks.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

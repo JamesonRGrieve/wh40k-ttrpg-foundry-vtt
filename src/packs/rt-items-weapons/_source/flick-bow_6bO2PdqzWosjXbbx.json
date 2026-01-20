@@ -1,7 +1,7 @@
 {
   "name": "Flick Bow",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-primitive.svg",
   "system": {
     "identifier": "flick-bow",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Primitive (8)</p><p><b>Note:</b> Can be folded away to make easily concealable. Folding/Unfolding takes a Half Action.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can be folded away to make easily concealable. Folding/Unfolding takes a Half Action.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

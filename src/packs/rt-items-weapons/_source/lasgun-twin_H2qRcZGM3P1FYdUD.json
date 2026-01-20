@@ -1,12 +1,12 @@
 {
   "name": "Lasgun (Twin)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "lasgun-twin",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Rarely seen due to their unreliable nature, but offer superior firepower.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Rarely seen due to their unreliable nature, but offer superior firepower.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

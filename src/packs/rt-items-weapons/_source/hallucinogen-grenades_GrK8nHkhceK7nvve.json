@@ -1,7 +1,7 @@
 {
   "name": "Hallucinogen Grenades",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "hallucinogen-grenades",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (10), Halluciongenic (1)</p><p><b>Note:</b> Effects last 1d10 Rounds on failed save</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Effects last 1d10 Rounds on failed save",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

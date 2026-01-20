@@ -1,0 +1,67 @@
+{
+  "name": "Needle of Desire",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "needle-of-desire",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 4
+    },
+    "special": [
+      "daemon-wep",
+      "crippling-3",
+      "razor-sharp",
+      "toxic-6",
+      "crippling-6"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 1,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Daemon Wep, Crippling (3), Razor-Sharp, Toxic (6), Crippling (6)</p><p><b>Note:</b> Weapon: Embedded Spike. Daemon WP 62 (Slaaneshi Daemon), Bind Str 2 . Att.: Envenomed, Piercing, Voidchill, Wounding. Weapon is embedded into Character's Arm, it cannot be dropped, disarmed, or parried. Removing it requires Opposed -30 Medicae vs Daemon's Willpower, if fail suffer 1d5 damage per DoF. Requires Mark of Slaanesh to wield. Add 6 to any Critical Damage dealt by weapon, deals 1d10 nonpermenant Toughness Damage.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Weapon: Embedded Spike. Daemon WP 62 (Slaaneshi Daemon), Bind Str 2 . Att.: Envenomed, Piercing, Voidchill, Wounding. Weapon is embedded into Character's Arm, it cannot be dropped, disarmed, or parried. Removing it requires Opposed -30 Medicae vs Daemon's Willpower, if fail suffer 1d5 damage per DoF. Requires Mark of Slaanesh to wield. Add 6 to any Critical Damage dealt by weapon, deals 1d10 nonpermenant Toughness Damage.",
+    "source": "BC: Tome of Excess"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NcAmgjSD9bqPteSx"
+}

@@ -1,12 +1,12 @@
 {
   "name": "Auto-Stubber (Wrath)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "auto-stubber-wrath",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Inaccurate, Tearing, Unreliable</p><p><b>Note:</b> Uses special ammo, loses Tearing Quality if this special ammo is not used.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Uses special ammo, loses Tearing Quality if this special ammo is not used.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

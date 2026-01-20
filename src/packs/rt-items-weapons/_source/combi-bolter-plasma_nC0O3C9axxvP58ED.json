@@ -1,12 +1,12 @@
 {
   "name": "Combi-Bolter (Plasma)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "combi-bolter-plasma",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Listed stats are for Bolter, weapon has undermounted Plasma Gun with a Clip of 1.  Can be used by Terminators.\nPlasma Gun Profile: (Range 90m, S/-/-, 1d10+7 E, Pen 6, Clip 1, Rld 5 Full, Maximal, Overheat)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Listed stats are for Bolter, weapon has undermounted Plasma Gun with a Clip of 1.  Can be used by Terminators.\nPlasma Gun Profile: (Range 90m, S/-/-, 1d10+7 E, Pen 6, Clip 1, Rld 5 Full, Maximal, Overheat)",
-    "source": "BC: Tome of Blood"
+    "source": "BC: Tome of Blood",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

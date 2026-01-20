@@ -1,12 +1,12 @@
 {
   "name": "Condemnor [Boltgun]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
   "system": {
     "identifier": "condemnor-boltgun",
     "class": "basic",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Sanctified</p><p><b>Note:</b> Combi-Weapon, comes with undermounted crossbow, see Condemnor [Crossbow]. A Special Best Quality version exists whose attacks cannot be dodged by Daemons or Psykers.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Combi-Weapon, comes with undermounted crossbow, see Condemnor [Crossbow]. A Special Best Quality version exists whose attacks cannot be dodged by Daemons or Psykers.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

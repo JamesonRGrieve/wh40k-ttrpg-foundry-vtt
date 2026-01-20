@@ -1,12 +1,12 @@
 {
   "name": "Bola Launcher",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-default.svg",
   "system": {
     "identifier": "bola-launcher",
     "class": "basic",
     "type": "launcher",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Primitive (8), Snare</p><p><b>Note:</b> Fires Bolas, can't use unusual ammo</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Fires Bolas, can't use unusual ammo",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Null Rod (Gryphonne)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "null-rod-gryphonne",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Power Field</p><p><b>Note:</b> All psykers in 10 metres take -30 to all tests to use Psychic powers. User gains +30 to resist psychic powers. Don't need to wield it to gain these bonuses, just have it on you.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "All psykers in 10 metres take -30 to all tests to use Psychic powers. User gains +30 to resist psychic powers. Don't need to wield it to gain these bonuses, just have it on you.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

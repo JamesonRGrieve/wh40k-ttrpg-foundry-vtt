@@ -1,7 +1,7 @@
 {
   "name": "Deathroar",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "deathroar",
     "class": "pistol",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> SM Wep, Blast (1), Felling (4), Volatile, Maximal</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Plasma Pistol of the Dark Angels. Maximal Setting does not cause Overheats Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Plasma Pistol of the Dark Angels. Maximal Setting does not cause Overheats Quality.",
-    "source": "Deathwatch: Core"
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

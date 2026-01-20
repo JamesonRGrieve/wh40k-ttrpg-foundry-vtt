@@ -1,7 +1,7 @@
 {
   "name": "Power Maul [High]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-maul-high",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Power Field, Shocking</p><p><b>Note:</b> Can switch between [High] and [Low] Setting as Free Action. Gains Concussive (0) if wielded in two hands.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Can switch between [High] and [Low] Setting as Free Action. Gains Concussive (0) if wielded in two hands.",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

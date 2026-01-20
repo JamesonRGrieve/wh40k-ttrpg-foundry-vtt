@@ -1,7 +1,7 @@
 {
   "name": "Truncheon (alt.)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "truncheon-alt",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Ogyryn-Proof, Primitive (7)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "",
-    "source": "Only War: Core"
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

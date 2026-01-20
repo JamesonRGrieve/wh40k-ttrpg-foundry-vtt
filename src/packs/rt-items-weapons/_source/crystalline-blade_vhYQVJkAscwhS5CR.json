@@ -1,7 +1,7 @@
 {
   "name": "Crystalline Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "crystalline-blade",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Found as Treasure via book's Treasure Generator.",
-    "source": "RT: Stars of Inequity"
+    "source": "RT: Stars of Inequity",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

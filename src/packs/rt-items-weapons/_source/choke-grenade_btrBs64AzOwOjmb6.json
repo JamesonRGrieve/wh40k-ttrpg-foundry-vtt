@@ -1,7 +1,7 @@
 {
   "name": "Choke Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "choke-grenade",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Blast (10)</p><p><b>Note:</b> Anyone in blast range must make +0 Toughness Test, suffering one fatigue per degree of failiure. If fail by 5 degrees or more, begin to suffocate. Gas in grenade may linger for some time, causing those in area to repeat test.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Anyone in blast range must make +0 Toughness Test, suffering one fatigue per degree of failiure. If fail by 5 degrees or more, begin to suffocate. Gas in grenade may linger for some time, causing those in area to repeat test.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

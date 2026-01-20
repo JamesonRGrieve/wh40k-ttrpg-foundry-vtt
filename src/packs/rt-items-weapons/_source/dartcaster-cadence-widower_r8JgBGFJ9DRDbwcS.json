@@ -1,7 +1,7 @@
 {
   "name": "Dartcaster (Cadence) \"Widower\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "dartcaster-cadence-widower",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Accurate</p><p><b>Note:</b> The Weapon is near slient and makes no flash when firing. Comes with an attachable Stock and long-barralled impellor to turn the weapon into a Two-Handed Basic Weapon if attached the weapon instead has a Range of 150m and weight of 4.5kg. Ammo is Rare and costs 15 Thrones each.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "The Weapon is near slient and makes no flash when firing. Comes with an attachable Stock and long-barralled impellor to turn the weapon into a Two-Handed Basic Weapon if attached the weapon instead has a Range of 150m and weight of 4.5kg. Ammo is Rare and costs 15 Thrones each.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

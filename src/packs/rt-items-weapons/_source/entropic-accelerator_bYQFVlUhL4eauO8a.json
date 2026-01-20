@@ -1,12 +1,12 @@
 {
   "name": "Entropic Accelerator",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "entropic-accelerator",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Recharge, Toxic</p><p><b>Note:</b> A Hollow Barrel with rectuangular stock. Makes no noise or effect, yet invisibly causes target to wither, degrade, and die. Does not use ammo, but takes time to recharge after use.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Hollow Barrel with rectuangular stock. Makes no noise or effect, yet invisibly causes target to wither, degrade, and die. Does not use ammo, but takes time to recharge after use.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

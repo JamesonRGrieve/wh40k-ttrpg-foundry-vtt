@@ -1,7 +1,7 @@
 {
   "name": "Tau Battlesuit Fusion Blade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "tau-battlesuit-fusion-blade",
     "class": "melee",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Unstable</p><p><b>Note:</b> Tau Battlesuit Weapon, not practical to wield outside of one. Counts as Fusion Blade as long as functional. If failing weapon Skill Test with this weapon by more Degrees of Failiure than character's Weapon Skill Bonus, the weapon ceases to function until repaired.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Tau Battlesuit Weapon, not practical to wield outside of one. Counts as Fusion Blade as long as functional. If failing weapon Skill Test with this weapon by more Degrees of Failiure than character's Weapon Skill Bonus, the weapon ceases to function until repaired.",
-    "source": "RT: Tau Char. Guide"
+    "source": "RT: Tau Character Guide",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

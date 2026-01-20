@@ -1,7 +1,7 @@
 {
   "name": "Gauntlet of Sabatine",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "gauntlet-of-sabatine",
     "class": "melee",
@@ -56,9 +56,9 @@
       "value": "<p><b>Special:</b> SM Wep, Power Field, Sanctified, Unwieldy</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Fist of the White Consuls Chapter. Does +2 damage against Mutants. \nIncreases Unnatural Strength from x2 to x3 for damage purposes as with all Power Fists.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Fist of the White Consuls Chapter. Does +2 damage against Mutants. \nIncreases Unnatural Strength from x2 to x3 for damage purposes as with all Power Fists.",
-    "source": "DW: Honour the Chapter"
+    "source": "DW: Honour the Chapter",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

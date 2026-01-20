@@ -1,0 +1,63 @@
+{
+  "name": "Phased Plasma Rifle",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "phased-plasma-rifle",
+    "class": "basic",
+    "type": "plasma",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 6
+    },
+    "special": [
+      "integrated-weapon"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 12,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Integrated Weapon</p><p><b>Note:</b> Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon).. Infinite clip, no reload.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Requires Potentia Coil to Function and Exotic Weapon Training (Integrated Weapon).. Infinite clip, no reload.",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "148tOjhI2OIuEYZx"
+}

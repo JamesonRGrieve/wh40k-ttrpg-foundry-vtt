@@ -1,12 +1,12 @@
 {
   "name": "Dark Eldar Phantasm Grenade Launcher",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "dark-eldar-phantasm-grenade-launcher",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Back-Mounted, Fires special grenades. Anyone in 10 Metres of Impact Point must pass -10 Toughness Test or roll on Fear Shock Table with +10 per DoF. Can't use other grenade types. </p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Rare Availability if acquired from Dark Eldar Settlement. Back-Mounted, Fires special grenades. Anyone in 10 Metres of Impact Point must pass -10 Toughness Test or roll on Fear Shock Table with +10 per DoF. Can't use other grenade types. ",
-    "source": "RT: The Soul Reaver"
+    "source": "RT: The Soul Reaver",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

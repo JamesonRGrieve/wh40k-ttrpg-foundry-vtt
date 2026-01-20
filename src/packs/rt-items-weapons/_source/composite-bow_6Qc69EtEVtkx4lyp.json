@@ -1,12 +1,12 @@
 {
   "name": "Composite Bow",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
   "system": {
     "identifier": "composite-bow",
     "class": "basic",
     "type": "primitive",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Accurate, Primitive (8)</p><p><b>Note:</b> PEN Only applies to Primitive Armours</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "PEN Only applies to Primitive Armours",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

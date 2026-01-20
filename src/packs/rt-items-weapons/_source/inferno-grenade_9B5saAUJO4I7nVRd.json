@@ -1,7 +1,7 @@
 {
   "name": "Inferno Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "inferno-grenade",
     "class": "thrown",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Blast (3), Flame</p><p><b>Note:</b> Ignites the surrounding area and anyone within it</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Ignites the surrounding area and anyone within it",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

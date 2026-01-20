@@ -1,0 +1,66 @@
+{
+  "name": "Dark Eldar Shardnet",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "dark-eldar-shardnet",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 5,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d5",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 1
+    },
+    "special": [
+      "flexible",
+      "snare",
+      "crippling",
+      "shocking"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 3,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Flexible, Snare, Crippling (1d5), Shocking</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Crippling Effect continues as long as Target is immobilised by the weapon's snare. Triggering each time they try to get free, this may cause the shocking quality to take effect again.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rare Availability if acquired from Dark Eldar Settlement. Crippling Effect continues as long as Target is immobilised by the weapon's snare. Triggering each time they try to get free, this may cause the shocking quality to take effect again.",
+    "source": "RT: The Soul Reaver"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "t40d3pvCudcvdunu"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Witchbane",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "witchbane",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> SM Wep, Balanced, Tearing</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Chainsword of the Black Templars. +5 to Willpower Tests to resist the effects of Psychic Powers</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space Marines Only. Relic Master-Crafted Astartes Chainsword of the Black Templars. +5 to Willpower Tests to resist the effects of Psychic Powers",
-    "source": "DW: Rites of Battle"
+    "source": "DW: Rites of Battle",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

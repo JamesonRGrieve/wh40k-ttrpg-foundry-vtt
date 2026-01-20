@@ -1,7 +1,7 @@
 {
   "name": "Eldar Mirrorswords",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "eldar-mirrorswords",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Balanced, Power Field</p><p><b>Note:</b> Xenotech. When wielded as a pair by anyone with an Agility bonus of 5+, reduces penalty for dual wielding by 10 (minimum +0), and gives +10 to Parry. Acquisition Test gives a matched pair.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Xenotech. When wielded as a pair by anyone with an Agility bonus of 5+, reduces penalty for dual wielding by 10 (minimum +0), and gives +10 to Parry. Acquisition Test gives a matched pair.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

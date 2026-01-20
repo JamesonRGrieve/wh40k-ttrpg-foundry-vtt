@@ -1,12 +1,12 @@
 {
   "name": "Assault Lasgun (Merovech)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
   "system": {
     "identifier": "assault-lasgun-merovech",
     "class": "basic",
     "type": "las",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Has two powerpack slots, could swap out one in half the Reload Time to restore half the ammo. \nHas build in bayonet, counts as Spear with Mono Upgrade. (1d10R, Pen 2)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has two powerpack slots, could swap out one in half the Reload Time to restore half the ammo. \nHas build in bayonet, counts as Spear with Mono Upgrade. (1d10R, Pen 2)",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

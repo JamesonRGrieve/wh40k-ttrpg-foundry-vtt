@@ -1,0 +1,66 @@
+{
+  "name": "Lorgar's Bane",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "lorgars-bane",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 8
+    },
+    "special": [
+      "sm-wep",
+      "felling-4",
+      "sanctified",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 10,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Felling (4), Sanctified, Unbalanced</p><p><b>Note:</b> Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Black Consuls Chapter. Wielder has Fear +2 vs Chaos Space Marines, or Fear +3 vs Word Bearer Chaos Space Marines specifically. However Word Bearers double the effect of appropriate Hatred Talents against the wielder.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Space Marines Only. Master-Crafted Relic Astartes Power Axe of the Black Consuls Chapter. Wielder has Fear +2 vs Chaos Space Marines, or Fear +3 vs Word Bearer Chaos Space Marines specifically. However Word Bearers double the effect of appropriate Hatred Talents against the wielder.",
+    "source": "DW: Honour the Chapter"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bD2iiRtYYx0NIOWd"
+}

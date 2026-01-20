@@ -1,7 +1,7 @@
 {
   "name": "Zaythan Warblade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "zaythan-warblade",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Power Field, Tearing, Unbalanced</p><p><b>Note:</b> Archeotech. Powerfielded Chainsword. Requires two hands to wield.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Archeotech. Powerfielded Chainsword. Requires two hands to wield.",
-    "source": "RT: Hostile Acquisitions"
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

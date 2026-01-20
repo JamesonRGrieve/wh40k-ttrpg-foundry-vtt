@@ -1,12 +1,12 @@
 {
   "name": "Q'Sal Soul Cannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
   "system": {
     "identifier": "qsal-soul-cannon",
     "class": "heavy",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Flame, Shocking, Warp Weapon</p><p><b>Note:</b> Never reloads, gains 1 shot per 10 damage dealt, target killed, or hour spent within area of intense warp activity. Wielder can make -10 Willpower Test to regain one shot, if fail suffer 1d5 Willpower Damage per DoF. Custom made, if original owner, don't need to Brace.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Never reloads, gains 1 shot per 10 damage dealt, target killed, or hour spent within area of intense warp activity. Wielder can make -10 Willpower Test to regain one shot, if fail suffer 1d5 Willpower Damage per DoF. Custom made, if original owner, don't need to Brace.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,12 +1,12 @@
 {
   "name": "Assault Device (Cadence)\n\"Spectre\" [Shotgun]",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "assault-device-cadence-spectre-shotgun",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Undermounted Shotgun, see [Autogun] for main profile.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Undermounted Shotgun, see [Autogun] for main profile.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

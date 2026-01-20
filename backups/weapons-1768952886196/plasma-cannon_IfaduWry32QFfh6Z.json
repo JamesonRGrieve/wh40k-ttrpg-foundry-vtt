@@ -1,0 +1,65 @@
+{
+  "name": "Plasma Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "plasma-cannon",
+    "class": "heavy",
+    "type": "plasma",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 8
+    },
+    "special": [
+      "blast-1",
+      "maximal",
+      "overheats"
+    ],
+    "clip": {
+      "max": 16,
+      "value": 16,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 40,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (1), Maximal, Overheats</p><p><b>Note:</b> Ammo worn as Backpack, Can choose between firing normally or maximally</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Ammo worn as Backpack, Can choose between firing normally or maximally",
+    "source": "Only War: Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IfaduWry32QFfh6Z"
+}

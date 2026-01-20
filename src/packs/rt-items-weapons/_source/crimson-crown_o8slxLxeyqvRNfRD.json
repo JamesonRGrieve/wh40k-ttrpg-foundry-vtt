@@ -1,7 +1,7 @@
 {
   "name": "Crimson Crown",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-default.svg",
   "system": {
     "identifier": "crimson-crown",
     "class": "thrown",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> A Chain-bladed throwing discus</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "A Chain-bladed throwing discus",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

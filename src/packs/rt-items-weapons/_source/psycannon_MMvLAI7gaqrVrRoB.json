@@ -1,12 +1,12 @@
 {
   "name": "Psycannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-bolter.svg",
   "system": {
     "identifier": "psycannon",
     "class": "heavy",
     "type": "bolt",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Daemonbane, Reliable, Tearing</p><p><b>Note:</b> Integrated Suspensor that grants Auto-Stabilised Trait. Always at least Good Craftsmanship. Ignores protective benefits granted by psychic powers. Inflicts +2 damage for each point of wielder's psy rating.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Integrated Suspensor that grants Auto-Stabilised Trait. Always at least Good Craftsmanship. Ignores protective benefits granted by psychic powers. Inflicts +2 damage for each point of wielder's psy rating.",
-    "source": "DH 2E: Enemies Beyond"
+    "source": "DH2: Enemies Beyond",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

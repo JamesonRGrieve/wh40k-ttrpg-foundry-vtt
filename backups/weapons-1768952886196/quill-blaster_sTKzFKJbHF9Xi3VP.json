@@ -1,0 +1,64 @@
+{
+  "name": "Quill Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "quill-blaster",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 50,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 0,
+      "penetration": 2
+    },
+    "special": [
+      "tearing",
+      "overheats"
+    ],
+    "clip": {
+      "max": 50,
+      "value": 50,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 5,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Overheats</p><p><b>Note:</b> Ammo can be any metal chunks fed into its rear hopper, which are processed into thin, super hot and sharp metal spines on firing.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Ammo can be any metal chunks fed into its rear hopper, which are processed into thin, super hot and sharp metal spines on firing.",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sTKzFKJbHF9Xi3VP"
+}

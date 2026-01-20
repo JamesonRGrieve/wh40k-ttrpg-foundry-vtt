@@ -1,12 +1,12 @@
 {
   "name": "Purgatus Crossbow",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "purgatus-crossbow",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Mix of a Shotgun and Crossbow, can fire any type of Shotgun and Crossbow ammo, as well as Purgatus Stakes unusual ammo.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Mix of a Shotgun and Crossbow, can fire any type of Shotgun and Crossbow ammo, as well as Purgatus Stakes unusual ammo.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

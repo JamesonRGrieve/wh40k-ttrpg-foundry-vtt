@@ -1,0 +1,65 @@
+{
+  "name": "Thresher Support Gun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "thresher-support-gun",
+    "class": "heavy",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 0
+    },
+    "special": [
+      "crippling-2",
+      "primitive-8",
+      "tearing"
+    ],
+    "clip": {
+      "max": 200,
+      "value": 200,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 23,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Crippling (2), Primitive (8), Tearing</p><p><b>Note:</b> Comes with a Backpack Ammo Supply as part of Acquisition. Could be replaced with a Vehicle Mounted ammo supply.\nBackpack weight part of listed weight. (This conflicts with Echon Assault Stubber, which weapon is a variant of, grumble)</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Comes with a Backpack Ammo Supply as part of Acquisition. Could be replaced with a Vehicle Mounted ammo supply.\nBackpack weight part of listed weight. (This conflicts with Echon Assault Stubber, which weapon is a variant of, grumble)",
+    "source": "BC: Tome of Blood"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0aI7MOGlUQfTOcWV"
+}

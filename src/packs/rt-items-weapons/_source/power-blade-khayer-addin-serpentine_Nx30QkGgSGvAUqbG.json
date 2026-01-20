@@ -1,7 +1,7 @@
 {
   "name": "Power Blade (Khayer-Addin) \"Serpentine\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
   "system": {
     "identifier": "power-blade-khayer-addin-serpentine",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Fast, Power Field</p><p><b>Note:</b> Made by Comission, take the form of elaborate walking sticks that disguise the weapon until it is revealed.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Made by Comission, take the form of elaborate walking sticks that disguise the weapon until it is revealed.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

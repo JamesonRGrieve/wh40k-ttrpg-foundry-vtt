@@ -1,0 +1,64 @@
+{
+  "name": "Power Blade (Khayer-Addin) \"Serpentine\"",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "power-blade-khayer-addin-serpentine",
+    "class": "melee",
+    "type": "power",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 6
+    },
+    "special": [
+      "fast",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 1.5,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 2500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Fast, Power Field</p><p><b>Note:</b> Made by Comission, take the form of elaborate walking sticks that disguise the weapon until it is revealed.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Made by Comission, take the form of elaborate walking sticks that disguise the weapon until it is revealed.",
+    "source": "DH: Inquisitor's Handbook"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Nx30QkGgSGvAUqbG"
+}

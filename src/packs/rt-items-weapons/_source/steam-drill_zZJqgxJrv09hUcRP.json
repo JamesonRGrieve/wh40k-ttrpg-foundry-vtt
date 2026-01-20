@@ -1,7 +1,7 @@
 {
   "name": "Steam Drill",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "steam-drill",
     "class": "melee",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Primitive, Unbalanced, Unwieldy</p><p><b>Note:</b> Powered by a weighty packpack steam compressor. Requires a Strength Bonus of 4+ or suffer -10 to WS per SB Less than this. Imposes -10 to Agility whilst carried.\nPEN Only applies to Primitive Armours. Two-Handed Weapon</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Powered by a weighty packpack steam compressor. Requires a Strength Bonus of 4+ or suffer -10 to WS per SB Less than this. Imposes -10 to Agility whilst carried.\nPEN Only applies to Primitive Armours. Two-Handed Weapon",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

@@ -1,7 +1,7 @@
 {
   "name": "Whitefire Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
   "system": {
     "identifier": "whitefire-grenade",
     "class": "thrown",
@@ -57,9 +57,9 @@
       "value": "<p><b>Special:</b> Blast (3), Corrosive, Flame, Smoke (5), Toxic (2)</p><p><b>Note:</b> Space White Phosphorus. Used for Crowd Control and the elimination of Mutant Hordes. Anyone who begins their turn in the Smoke automatically suffers 1d10 Impact Damage with Corrosive and Toxic (2) Quality and starts Suffocating.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Space White Phosphorus. Used for Crowd Control and the elimination of Mutant Hordes. Anyone who begins their turn in the Smoke automatically suffers 1d10 Impact Damage with Corrosive and Toxic (2) Quality and starts Suffocating.",
-    "source": "DH 2E: Enemies Within"
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

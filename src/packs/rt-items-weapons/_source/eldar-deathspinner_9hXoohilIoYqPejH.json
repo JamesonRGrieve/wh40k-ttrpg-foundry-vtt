@@ -1,12 +1,12 @@
 {
   "name": "Eldar Deathspinner",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
   "system": {
     "identifier": "eldar-deathspinner",
     "class": "basic",
     "type": "exotic",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -55,9 +55,9 @@
       "value": "<p><b>Special:</b> Reliable, Blast (2), Tearing</p><p><b>Note:</b> Eldar weapon, Fires a gossamer of monofilamet threads that entangle and tear apart anyone caught in them.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Eldar weapon, Fires a gossamer of monofilamet threads that entangle and tear apart anyone caught in them.",
-    "source": "RT: Into the Storm"
+    "source": "RT: Into the Storm",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

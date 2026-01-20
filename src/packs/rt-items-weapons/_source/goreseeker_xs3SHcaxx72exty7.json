@@ -1,7 +1,7 @@
 {
   "name": "Goreseeker",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
   "system": {
     "identifier": "goreseeker",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Unbalanced, Daemon Wep</p><p><b>Note:</b> Base Weapon: Axe. Daemon Willpower 40 (Flesh Hound of Khorne), Bind Str 2. Attributes: Blood Tracker, Null \nWielder gains Unnatural Senses(40) and imposes -20 to all Psychic Powers targeting them.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Base Weapon: Axe. Daemon Willpower 40 (Flesh Hound of Khorne), Bind Str 2. Attributes: Blood Tracker, Null \nWielder gains Unnatural Senses(40) and imposes -20 to all Psychic Powers targeting them.",
-    "source": "Black Crusade: Core"
+    "source": "BC: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

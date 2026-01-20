@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Volg) \"Spitfire\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
   "system": {
     "identifier": "bolt-pistol-volg-spitfire",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Unreliable</p><p><b>Note:</b> Not a True Bolt Weapon, but rather a crude imitation which is sometimes peddled as one. If it Jams an Explosive Mishap Occurs. Uses Custom Unstable Ammunition (Scarce, 5 Thrones/Clip), which has a 65% chance of exploding if hit by an explosion or flame weapon (dealing 1d10+3 X Damage)</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Not a True Bolt Weapon, but rather a crude imitation which is sometimes peddled as one. If it Jams an Explosive Mishap Occurs. Uses Custom Unstable Ammunition (Scarce, 5 Thrones/Clip), which has a 65% chance of exploding if hit by an explosion or flame weapon (dealing 1d10+3 X Damage)",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

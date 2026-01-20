@@ -1,7 +1,7 @@
 {
   "name": "Necron Dispersion Shield",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
   "system": {
     "identifier": "necron-dispersion-shield",
     "class": "melee",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Necron Wep, Defensive</p><p><b>Note:</b> Always Best Quality.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Always Best Quality.",
-    "source": "BC: Tome of Fate"
+    "source": "BC: Tome of Fate",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

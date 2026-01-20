@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Sacristan)",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
   "system": {
     "identifier": "bolt-pistol-sacristan",
     "class": "pistol",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Tearing, Reliable</p><p><b>Note:</b> Imposes -10 on BS Tests to fire it unless wielder has a Strength Bonus of 4+. A Special Best Craftsmanship version exists with double the magazine, but with a -20 BS Test unless SB is 4+.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Imposes -10 on BS Tests to fire it unless wielder has a Strength Bonus of 4+. A Special Best Craftsmanship version exists with double the magazine, but with a -20 BS Test unless SB is 4+.",
-    "source": "RT: Faith and Coin"
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

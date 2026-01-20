@@ -1,7 +1,7 @@
 {
   "name": "Panoptic 0-5 Automata Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
   "system": {
     "identifier": "panoptic-0-5-automata-pistol",
     "class": "pistol",
@@ -53,9 +53,9 @@
       "value": "<p><b>Special:</b> Reliable</p><p><b>Note:</b> Has two separate Clips and a Fire Selector.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Has two separate Clips and a Fire Selector.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

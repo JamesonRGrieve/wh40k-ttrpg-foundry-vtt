@@ -1,0 +1,64 @@
+{
+  "name": "Dark Eldar Darklight Blaster",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "dark-eldar-darklight-blaster",
+    "class": "basic",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 10,
+      "penetration": 16
+    },
+    "special": [
+      "felling-4",
+      "proven-3"
+    ],
+    "clip": {
+      "max": 18,
+      "value": 18,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 4,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Felling (4), Proven (3)</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement.</p>"
+    },
+    "modifications": [],
+    "proficiency": "",
+    "notes": "Rare Availability if acquired from Dark Eldar Settlement.",
+    "source": "RT: The Soul Reaver"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3U1C7QuimEfj7aRT"
+}

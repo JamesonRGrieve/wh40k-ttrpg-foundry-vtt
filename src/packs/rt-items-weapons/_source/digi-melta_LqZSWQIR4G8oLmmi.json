@@ -1,7 +1,7 @@
 {
   "name": "Digi-Melta",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
   "system": {
     "identifier": "digi-melta",
     "class": "pistol",
@@ -51,9 +51,9 @@
       "value": "<p><b>Note:</b> Worn on any finger (not thumb) as a ring, can be fired even when holding something</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Worn on any finger (not thumb) as a ring, can be fired even when holding something",
-    "source": "Rogue Trader: Core"
+    "source": "RT: Core Rulebook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},

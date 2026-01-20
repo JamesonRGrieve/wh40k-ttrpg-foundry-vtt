@@ -1,12 +1,12 @@
 {
   "name": "Scattergun (Volg) \"Meat Hammer\"",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
   "system": {
     "identifier": "scattergun-volg-meat-hammer",
     "class": "basic",
     "type": "solid-projectile",
-    "twoHanded": false,
+    "twoHanded": true,
     "melee": false,
     "attack": {
       "type": "ranged",
@@ -54,9 +54,9 @@
       "value": "<p><b>Special:</b> Scatter, Tearing</p><p><b>Note:</b> Takes three shotgun shells to load, fires them all at once.</p>"
     },
     "modifications": [],
-    "proficiency": "",
     "notes": "Takes three shotgun shells to load, fires them all at once.",
-    "source": "DH: Inquisitor's Handbook"
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
   },
   "effects": [],
   "flags": {},
