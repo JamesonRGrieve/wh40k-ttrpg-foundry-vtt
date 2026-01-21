@@ -667,7 +667,7 @@ ROGUE_TRADER.getDefaultIcon = function (type) {
 
 /**
  * Weapon qualities (special properties).
- * @type {Object<string, {label: string, description: string, hasLevel: boolean}>}
+ * @type {Object<string, {label: string, description: string, hasLevel: boolean, category: string, mechanicalEffect: boolean}>}
  */
 ROGUE_TRADER.weaponQualities = {
     // Accuracy & Reliability
@@ -675,6 +675,8 @@ ROGUE_TRADER.weaponQualities = {
         label: 'RT.WeaponQuality.Accurate',
         description: 'RT.WeaponQuality.AccurateDesc',
         hasLevel: false,
+        category: 'simple-modifier',
+        mechanicalEffect: true,
     },
     'inaccurate': {
         label: 'RT.WeaponQuality.Inaccurate',

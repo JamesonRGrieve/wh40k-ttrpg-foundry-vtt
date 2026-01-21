@@ -7,6 +7,7 @@ import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/a
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
 import { hitDropdown } from '../rules/hit-locations.mjs';
 import { RogueTrader } from '../rules/config.mjs';
+import { getWeaponTrainingModifier } from '../rules/weapon-training.mjs';
 
 export class RollData {
     difficulties = rollDifficulties();
@@ -76,7 +77,7 @@ export class RollData {
 
     nameOverride;
     get name() {
-        if(this.nameOverride) return this.nameOverride;
+        if (this.nameOverride) return this.nameOverride;
 
         let actionItem = this.weapon ?? this.power;
         if (actionItem) return actionItem.name;
@@ -86,23 +87,23 @@ export class RollData {
 
     get effectString() {
         let actionItem = this.weapon ?? this.power;
-        if(!actionItem) return '';
+        if (!actionItem) return '';
 
         const str = [];
 
         const ammo = actionItem.items.find((i) => i.isAmmunition);
         if (ammo) {
-            str.push(ammo.name)
+            str.push(ammo.name);
         }
 
-        const specials = this.attackSpecials.map(s => s.name).join(',')
-        if(specials) {
+        const specials = this.attackSpecials.map((s) => s.name).join(',');
+        if (specials) {
             str.push(specials);
         }
 
-        if(this.hasWeaponModification) {
-            const mods = this.weaponModifications.map(m => m.name).join(',');
-            if(mods) {
+        if (this.hasWeaponModification) {
+            const mods = this.weaponModifications.map((m) => m.name).join(',');
+            if (mods) {
                 str.push(mods);
             }
         }
@@ -214,6 +215,15 @@ export class WeaponRollData extends RollData {
         if(this.weapon.system.attackBonus) {
             this.modifiers['weapon'] = this.weapon.system.attackBonus;
         }
+        
+        // Check weapon training
+        if (this.sourceActor) {
+            const trainingModifier = getWeaponTrainingModifier(this.sourceActor, this.weapon);
+            if (trainingModifier !== 0) {
+                this.modifiers['weapon-training'] = trainingModifier;
+            }
+        }
+        
         this.canAim = this.action !== 'All Out Attack';
         this.isLasWeapon = this.weapon.system.type === 'Las';
         this.isSpray = this.hasAttackSpecial('Spray');
@@ -252,6 +262,44 @@ export class WeaponRollData extends RollData {
         await calculateWeaponRange(this);
         this.updateBaseTarget();
     }
+        this.canAim = this.action !== 'All Out Attack';
+        this.isLasWeapon = this.weapon.system.type === 'Las';
+        this.isSpray = this.hasAttackSpecial('Spray');
+        this.isStun = this.action === 'Stun';
+        this.isFeint = this.action === 'Feint';
+        this.isKnockDown = this.action === 'Knock Down';
+
+        this.ignoreModifiers = this.isSpray || this.isStun;
+        this.ignoreDegrees = this.isSpray || this.isStun;
+        this.ignoreSuccess = this.isSpray;
+        this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown;
+        this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown;
+        this.isThrown = this.weapon.isThrown;
+
+        this.isOpposed = this.isKnockDown || this.isFeint;
+        if (this.isOpposed && this.targetActor) {
+            if (this.isFeint) {
+                this.opposedTarget = this.targetActor?.characteristics?.weaponSkill?.total ?? 0;
+                this.opposedChar = 'WS';
+            } else if (this.isKnockDown) {
+                this.opposedTarget = this.targetActor?.characteristics?.strength?.total ?? 0;
+                this.opposedChar = 'S';
+            }
+        }
+
+        await updateWeaponModifiers(this);
+        await updateAttackSpecials(this);
+        updateAvailableCombatActions(this);
+        calculateCombatActionModifier(this);
+        if (this.weapon.usesAmmo) {
+            this.usesAmmo = true;
+            calculateAmmoInformation(this);
+        } else {
+            this.usesAmmo = false;
+        }
+        await calculateWeaponRange(this);
+        this.updateBaseTarget();
+    }
 
     initialize() {
         this.baseTarget = 0;
@@ -261,7 +309,7 @@ export class WeaponRollData extends RollData {
         this.modifiers['modifier'] = 0;
 
         // Size Bonus should not change after initial targeting
-        if(this.targetActor && this.targetActor.system.size) {
+        if (this.targetActor && this.targetActor.system.size) {
             try {
                 const size = Number.parseInt(this.targetActor.system.size);
                 this.modifiers['target-size'] = (size - 4) * 10;
@@ -271,7 +319,7 @@ export class WeaponRollData extends RollData {
         }
 
         // Talents
-        if(this.sourceActor.hasTalent('Eye of Vengeance') && this.sourceActor.system.fate.value > 0) {
+        if (this.sourceActor.hasTalent('Eye of Vengeance') && this.sourceActor.system.fate.value > 0) {
             this.hasEyeOfVengeanceAvailable = true;
         }
 
@@ -305,7 +353,7 @@ export class WeaponRollData extends RollData {
     async finalize() {
         // Remove Aim Modifier for All out attack in the case
         // where aim was selected and then the attack changed
-        if(this.action === 'All Out Attack') {
+        if (this.action === 'All Out Attack') {
             this.modifiers['aim'] = 0;
         }
 
@@ -325,8 +373,8 @@ export class WeaponRollData extends RollData {
         // Suppressing Fire ignores other modifiers
         if (this.action.includes('Suppressing Fire')) {
             this.modifiers = {
-                'attack': -20
-            }
+                attack: -20,
+            };
         }
 
         await this.calculateTotalModifiers();
@@ -381,9 +429,9 @@ export class PsychicRollData extends RollData {
 
     updateBaseTarget() {
         const target = this.power.system.target;
-        if(!target) return;
+        if (!target) return;
 
-        if(target.useSkill) {
+        if (target.useSkill) {
             const skill = target.skill;
             const actorSkill = this.sourceActor.getSkillFuzzy(skill);
             this.baseTarget = actorSkill.current;
@@ -395,10 +443,10 @@ export class PsychicRollData extends RollData {
             this.baseChar = actorCharacteristic.short;
         }
 
-        if(target.isOpposed && this.targetActor) {
+        if (target.isOpposed && this.targetActor) {
             this.isOpposed = true;
 
-            if(target.useOpposedSkill) {
+            if (target.useOpposedSkill) {
                 const skill = target.opposedSkill;
                 const actorSkill = this.targetActor.getSkillFuzzy(skill);
                 this.opposedTarget = actorSkill.current;
