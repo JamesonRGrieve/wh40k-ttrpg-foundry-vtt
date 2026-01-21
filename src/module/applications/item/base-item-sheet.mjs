@@ -117,7 +117,8 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
         }
 
         // Merge parent context last so our values take precedence
-        return foundry.utils.mergeObject(parentContext, context);
+        // Use inplace:false to avoid "object is not extensible" errors
+        return foundry.utils.mergeObject(parentContext, context, { inplace: false });
     }
 
     /* -------------------------------------------- */
