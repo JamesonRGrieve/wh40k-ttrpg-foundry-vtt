@@ -3,9 +3,9 @@
  * Based on dnd5e's ItemSheet5e pattern for Foundry V13+
  */
 
-import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
-import PrimarySheetMixin from "../api/primary-sheet-mixin.mjs";
-import ROGUE_TRADER from "../../config.mjs";
+import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
+import PrimarySheetMixin from '../api/primary-sheet-mixin.mjs';
+import ROGUE_TRADER from '../../config.mjs';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -13,9 +13,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
  * Base item sheet built on ApplicationV2.
  * All item sheets should extend this class.
  */
-export default class BaseItemSheet extends PrimarySheetMixin(
-    ApplicationV2Mixin(ItemSheetV2)
-) {
+export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2)) {
     constructor(options = {}) {
         super(options);
     }
@@ -30,19 +28,19 @@ export default class BaseItemSheet extends PrimarySheetMixin(
             effectEdit: BaseItemSheet.#effectEdit,
             effectDelete: BaseItemSheet.#effectDelete,
             effectToggle: BaseItemSheet.#effectToggle,
-            toggleSection: BaseItemSheet.#toggleSection
+            toggleSection: BaseItemSheet.#toggleSection,
         },
-        classes: ["rogue-trader", "sheet", "item", "rt-item-sheet"],
+        classes: ['rogue-trader', 'sheet', 'item', 'rt-item-sheet'],
         form: {
-            submitOnChange: true
+            submitOnChange: true,
         },
         position: {
             width: 550,
-            height: 500
+            height: 500,
         },
         window: {
-            resizable: true
-        }
+            resizable: true,
+        },
     };
 
     /* -------------------------------------------- */
@@ -50,24 +48,24 @@ export default class BaseItemSheet extends PrimarySheetMixin(
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-sheet-modern.hbs",
-            scrollable: [".rt-tab-content"]
-        }
+            template: 'systems/rogue-trader/templates/item/item-sheet-modern.hbs',
+            scrollable: ['.rt-tab-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "description", group: "primary", label: "Description" },
-        { tab: "effects", group: "primary", label: "Effects" }
+        { tab: 'description', group: 'primary', label: 'Description' },
+        { tab: 'effects', group: 'primary', label: 'Effects' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "description"
+        primary: 'description',
     };
 
     /* -------------------------------------------- */
@@ -89,21 +87,22 @@ export default class BaseItemSheet extends PrimarySheetMixin(
     /** @inheritDoc */
     async _prepareContext(options) {
         const context = {
-            ...await super._prepareContext(options),
+            ...(await super._prepareContext(options)),
             item: this.item,
             data: this.item, // Legacy compatibility
             system: this.item.system,
             source: this.isEditable ? this.item.system._source : this.item.system,
             fields: this.item.system.schema?.fields ?? {},
-            effects: this.item.getEmbeddedCollection("ActiveEffect").contents,
+            effects: this.item.getEmbeddedCollection('ActiveEffect').contents,
             flags: this.item.flags,
             dh: CONFIG.rt || ROGUE_TRADER,
             isEditable: this.isEditable,
-            rollableClass: this.isEditable ? "rollable" : "",
+            editable: this.isEditable, // Alias for template compatibility with {{editor}} helper
+            rollableClass: this.isEditable ? 'rollable' : '',
             // Tab state
-            tabs: this._getTabs()
+            tabs: this._getTabs(),
         };
-        
+
         // Ensure dh has required config properties for selectOptions (safety measure)
         if (!context.dh.availabilities) {
             context.dh.availabilities = CONFIG.ROGUE_TRADER?.availabilities || ROGUE_TRADER.availabilities || {};
@@ -132,7 +131,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(
                 group,
                 label,
                 active: this.tabGroups[group] === tab,
-                cssClass: this.tabGroups[group] === tab ? "active" : ""
+                cssClass: this.tabGroups[group] === tab ? 'active' : '',
             };
         }
         return tabs;
@@ -153,12 +152,12 @@ export default class BaseItemSheet extends PrimarySheetMixin(
      */
     _prepareSubmitData(event, form, formData) {
         const submitData = super._prepareSubmitData(event, form, formData);
-        
+
         // CRITICAL FIX: Clean img field if present to prevent validation errors
         // Foundry V13 has very strict validation on img field
         if ('img' in submitData) {
             const imgValue = submitData.img;
-            
+
             // If img is invalid (empty, null, undefined, or no extension), remove it
             // This prevents validation errors and lets the document use its existing value
             if (!imgValue || imgValue === '' || typeof imgValue !== 'string' || imgValue.trim() === '') {
@@ -166,15 +165,15 @@ export default class BaseItemSheet extends PrimarySheetMixin(
             } else {
                 const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif'];
                 const imgStr = imgValue.toLowerCase().trim();
-                const hasValidExtension = validExtensions.some(ext => imgStr.endsWith(ext));
-                
+                const hasValidExtension = validExtensions.some((ext) => imgStr.endsWith(ext));
+
                 if (!hasValidExtension || imgStr.length < 5 || imgStr === 'null' || imgStr === 'undefined') {
                     // Invalid img - remove from submit data so it doesn't override existing valid value
                     delete submitData.img;
                 }
             }
         }
-        
+
         return submitData;
     }
 
@@ -186,17 +185,17 @@ export default class BaseItemSheet extends PrimarySheetMixin(
 
         // Handle delta inputs for numeric fields
         if (this.isEditable) {
-            this.element.querySelectorAll('input[type="text"][data-dtype="Number"]')
-                .forEach(i => i.addEventListener("change", this._onChangeInputDelta.bind(this)));
+            this.element
+                .querySelectorAll('input[type="text"][data-dtype="Number"]')
+                .forEach((i) => i.addEventListener('change', this._onChangeInputDelta.bind(this)));
         }
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (event) => {
-                    event.target.select();
-                });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (event) => {
+                event.target.select();
             });
+        });
 
         // Set up existing tab listeners (V1 compatibility)
         this._setupTabListeners();
@@ -214,35 +213,41 @@ export default class BaseItemSheet extends PrimarySheetMixin(
     _setupLegacyEffectHandlers() {
         if (!this.isEditable) return;
 
-        this.element.querySelectorAll(".effect-create").forEach(btn => {
-            btn.addEventListener("click", async () => {
-                await this.item.createEmbeddedDocuments("ActiveEffect", [{
-                    name: "New Effect",
-                    icon: "icons/svg/aura.svg",
-                    origin: this.item.uuid,
-                    disabled: true
-                }], { renderSheet: true });
+        this.element.querySelectorAll('.effect-create').forEach((btn) => {
+            btn.addEventListener('click', async () => {
+                await this.item.createEmbeddedDocuments(
+                    'ActiveEffect',
+                    [
+                        {
+                            name: 'New Effect',
+                            icon: 'icons/svg/aura.svg',
+                            origin: this.item.uuid,
+                            disabled: true,
+                        },
+                    ],
+                    { renderSheet: true },
+                );
             });
         });
 
-        this.element.querySelectorAll(".effect-edit").forEach(btn => {
-            btn.addEventListener("click", () => {
+        this.element.querySelectorAll('.effect-edit').forEach((btn) => {
+            btn.addEventListener('click', () => {
                 const effectId = btn.dataset.effectId;
                 const effect = this.item.effects.get(effectId);
                 effect?.sheet.render(true);
             });
         });
 
-        this.element.querySelectorAll(".effect-delete").forEach(btn => {
-            btn.addEventListener("click", async () => {
+        this.element.querySelectorAll('.effect-delete').forEach((btn) => {
+            btn.addEventListener('click', async () => {
                 const effectId = btn.dataset.effectId;
                 const effect = this.item.effects.get(effectId);
                 await effect?.delete();
             });
         });
 
-        this.element.querySelectorAll(".effect-enable, .effect-disable").forEach(btn => {
-            btn.addEventListener("click", async () => {
+        this.element.querySelectorAll('.effect-enable, .effect-disable').forEach((btn) => {
+            btn.addEventListener('click', async () => {
                 const effectId = btn.dataset.effectId;
                 const effect = this.item.effects.get(effectId);
                 await effect?.update({ disabled: !effect.disabled });
@@ -257,9 +262,9 @@ export default class BaseItemSheet extends PrimarySheetMixin(
      * @protected
      */
     _setupTabListeners() {
-        const tabs = this.element.querySelectorAll(".rt-tabs .rt-tab");
-        tabs.forEach(tab => {
-            tab.addEventListener("click", this._onTabClick.bind(this));
+        const tabs = this.element.querySelectorAll('.rt-tabs .rt-tab');
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', this._onTabClick.bind(this));
         });
     }
 
@@ -276,15 +281,15 @@ export default class BaseItemSheet extends PrimarySheetMixin(
         if (!tabName) return;
 
         // Update active tab
-        const tabContainer = tab.closest(".rt-tabs");
-        tabContainer.querySelectorAll(".rt-tab").forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
+        const tabContainer = tab.closest('.rt-tabs');
+        tabContainer.querySelectorAll('.rt-tab').forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
 
         // Show/hide content
-        const contentContainer = this.element.querySelector(".rt-tab-content");
+        const contentContainer = this.element.querySelector('.rt-tab-content');
         if (contentContainer) {
-            contentContainer.querySelectorAll(".rt-tab-panel").forEach(panel => {
-                panel.classList.toggle("active", panel.dataset.tab === tabName);
+            contentContainer.querySelectorAll('.rt-tab-panel').forEach((panel) => {
+                panel.classList.toggle('active', panel.dataset.tab === tabName);
             });
         }
 
@@ -306,11 +311,11 @@ export default class BaseItemSheet extends PrimarySheetMixin(
         if (!value) return;
 
         const firstChar = value[0];
-        if (firstChar === "=") {
+        if (firstChar === '=') {
             // Set absolute value
             const absolute = parseFloat(value.slice(1));
             if (!isNaN(absolute)) input.value = absolute;
-        } else if (["+", "-"].includes(firstChar)) {
+        } else if (['+', '-'].includes(firstChar)) {
             // Add or subtract delta
             const current = foundry.utils.getProperty(this.item, input.name) ?? 0;
             const delta = parseFloat(value);
@@ -327,16 +332,16 @@ export default class BaseItemSheet extends PrimarySheetMixin(
      * @param {HTMLElement} target  The action target.
      */
     static async #onEditImage(event, target) {
-        const attr = target.dataset.edit ?? "img";
+        const attr = target.dataset.edit ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
         const fp = new CONFIG.ux.FilePicker({
             current,
-            type: "image",
-            callback: path => this.document.update({ [attr]: path }),
+            type: 'image',
+            callback: (path) => this.document.update({ [attr]: path }),
             position: {
                 top: this.position.top + 40,
-                left: this.position.left + 10
-            }
+                left: this.position.left + 10,
+            },
         });
         await fp.browse();
     }
@@ -350,12 +355,18 @@ export default class BaseItemSheet extends PrimarySheetMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectCreate(event, target) {
-        await this.item.createEmbeddedDocuments("ActiveEffect", [{
-            name: "New Effect",
-            icon: "icons/svg/aura.svg",
-            origin: this.item.uuid,
-            disabled: true
-        }], { renderSheet: true });
+        await this.item.createEmbeddedDocuments(
+            'ActiveEffect',
+            [
+                {
+                    name: 'New Effect',
+                    icon: 'icons/svg/aura.svg',
+                    origin: this.item.uuid,
+                    disabled: true,
+                },
+            ],
+            { renderSheet: true },
+        );
     }
 
     /* -------------------------------------------- */
@@ -367,7 +378,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #effectEdit(event, target) {
-        const effectId = target.closest("[data-effect-id]")?.dataset.effectId;
+        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         effect?.sheet.render(true);
     }
@@ -381,7 +392,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectDelete(event, target) {
-        const effectId = target.closest("[data-effect-id]")?.dataset.effectId;
+        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.delete();
     }
@@ -395,7 +406,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectToggle(event, target) {
-        const effectId = target.closest("[data-effect-id]")?.dataset.effectId;
+        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.update({ disabled: !effect.disabled });
     }
@@ -415,7 +426,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(
         // Toggle section visibility in the DOM
         const section = this.element.querySelector(`.${sectionName}`);
         if (section) {
-            section.classList.toggle("collapsed");
+            section.classList.toggle('collapsed');
         }
     }
 }
