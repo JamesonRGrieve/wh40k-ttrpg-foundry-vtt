@@ -10,7 +10,7 @@ import BaseItemSheet from './base-item-sheet.mjs';
 export default class WeaponQualitySheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['weapon-quality'],
+        classes: ['rogue-trader', 'sheet', 'item', 'weapon-quality'],
         position: {
             width: 550,
             height: 500,

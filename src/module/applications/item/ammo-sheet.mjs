@@ -2,7 +2,7 @@
  * @file AmmoSheet - ApplicationV2 sheet for ammunition items
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for ammunition items.
@@ -10,11 +10,11 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class AmmoSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["ammunition"],
+        classes: ['rogue-trader', 'sheet', 'item', 'ammunition'],
         position: {
             width: 520,
-            height: 500
-        }
+            height: 500,
+        },
     };
 
     /* -------------------------------------------- */
@@ -22,35 +22,35 @@ export default class AmmoSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-ammo-sheet.hbs",
-            scrollable: [".rt-tab-content"]
-        }
+            template: 'systems/rogue-trader/templates/item/item-ammo-sheet.hbs',
+            scrollable: ['.rt-tab-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "details", group: "primary", label: "Details" },
-        { tab: "description", group: "primary", label: "Description" }
+        { tab: 'details', group: 'primary', label: 'Details' },
+        { tab: 'description', group: 'primary', label: 'Description' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "details"
+        primary: 'details',
     };
-    
+
     /* -------------------------------------------- */
 
     /** @override */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        
+
         // Add CONFIG reference for templates
         context.CONFIG = CONFIG;
-        
+
         return context;
     }
 }

@@ -2,7 +2,7 @@
  * @file CriticalInjurySheet - ApplicationV2 sheet for critical injury items
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for critical injury items.
@@ -10,11 +10,11 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class CriticalInjurySheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["critical-injury"],
+        classes: ['rogue-trader', 'sheet', 'item', 'critical-injury'],
         position: {
             width: 500,
-            height: 400
-        }
+            height: 400,
+        },
     };
 
     /* -------------------------------------------- */
@@ -22,23 +22,23 @@ export default class CriticalInjurySheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-critical-injury-sheet-v2.hbs",
-            scrollable: [".rt-tab-content"]
-        }
+            template: 'systems/rogue-trader/templates/item/item-critical-injury-sheet-v2.hbs',
+            scrollable: ['.rt-tab-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "details", group: "primary", label: "Details" },
-        { tab: "description", group: "primary", label: "Description" }
+        { tab: 'details', group: 'primary', label: 'Details' },
+        { tab: 'description', group: 'primary', label: 'Description' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "details"
+        primary: 'details',
     };
 }
