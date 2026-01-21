@@ -106,7 +106,11 @@
     <div class="rt-item-sheet__description">
         <div class="rt-item-sheet__field">
             <label class="rt-item-sheet__label">Effect</label>
+            {{#if inEditMode}}
             {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.effect}}}</div>
+            {{/if}}
         </div>
     </div>
 </form>

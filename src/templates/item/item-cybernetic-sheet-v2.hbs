@@ -331,7 +331,11 @@
               <i class="fas fa-info-circle"></i> Describe the mechanical benefits or abilities granted by this cybernetic.
             </p>
             <div class="rt-editor-container">
-              {{editor content=system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
+              {{#if inEditMode}}
+              {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+              {{else}}
+              <div class="rt-description-content">{{{system.effect}}}</div>
+              {{/if}}
             </div>
           </div>
         </div>
@@ -347,7 +351,11 @@
               <i class="fas fa-info-circle"></i> Any negative effects, limitations, or complications from this cybernetic.
             </p>
             <div class="rt-editor-container">
-              {{editor content=system.drawbacks target="system.drawbacks" button=true editable=editable engine="prosemirror"}}
+              {{#if inEditMode}}
+              {{editor content=system.drawbacks target="system.drawbacks" button=true editable=true engine="prosemirror"}}
+              {{else}}
+              <div class="rt-description-content">{{{system.drawbacks}}}</div>
+              {{/if}}
             </div>
           </div>
         </div>
@@ -594,7 +602,11 @@
               <i class="fas fa-info-circle"></i> Flavor text, appearance, and background information.
             </p>
             <div class="rt-editor-container">
-              {{editor content=system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+              {{#if inEditMode}}
+              {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+              {{else}}
+              <div class="rt-description-content">{{{system.description.value}}}</div>
+              {{/if}}
             </div>
           </div>
         </div>

@@ -275,7 +275,11 @@
                     </div>
                     <div class="rt-panel__content">
                         <div class="rt-description">
-                            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+                            {{#if inEditMode}}
+                              {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+                            {{else}}
+                              <div class="rt-description-content">{{{system.description.value}}}</div>
+                            {{/if}}
                         </div>
                     </div>
                 </div>

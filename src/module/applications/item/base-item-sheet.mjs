@@ -81,6 +81,54 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
     }
 
     /* -------------------------------------------- */
+
+    /**
+     * Whether the sheet is in edit mode.
+     * Compendium items are always in view mode.
+     * @type {boolean}
+     * @private
+     */
+    #editMode = false;
+
+    /**
+     * Whether this item is from a compendium (read-only).
+     * @type {boolean}
+     */
+    get isCompendiumItem() {
+        return this.item.pack !== null;
+    }
+
+    /**
+     * Whether this item is owned by an actor.
+     * @type {boolean}
+     */
+    get isOwnedByActor() {
+        return !!this.item.actor;
+    }
+
+    /**
+     * Whether the sheet should show edit controls.
+     * @type {boolean}
+     */
+    get canEdit() {
+        if (this.isCompendiumItem) return false;
+        return this.isEditable;
+    }
+
+    /**
+     * Whether the sheet is currently in edit mode.
+     * @type {boolean}
+     */
+    get inEditMode() {
+        // Compendium items are never in edit mode
+        if (this.isCompendiumItem) return false;
+        // For actor-owned items, use toggle state
+        // For world items, always allow editing if editable
+        if (!this.isOwnedByActor) return this.isEditable;
+        return this.#editMode && this.isEditable;
+    }
+
+    /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
@@ -104,6 +152,11 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
             editable: this.isEditable, // Alias for template compatibility with {{editor}} helper
             owner: this.item.isOwner, // Required for {{editor}} helper
             rollableClass: this.isEditable ? 'rollable' : '',
+            // Edit mode properties (available to all item sheets)
+            canEdit: this.canEdit,
+            inEditMode: this.inEditMode,
+            isCompendiumItem: this.isCompendiumItem,
+            isOwnedByActor: this.isOwnedByActor,
             // Tab state
             tabs: this._getTabs(),
         };

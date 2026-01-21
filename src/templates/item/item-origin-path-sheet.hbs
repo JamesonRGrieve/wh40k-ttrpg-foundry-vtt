@@ -423,7 +423,11 @@
           </p>
           
           <div class="rt-editor-container">
-            {{editor content=system.effectText target="system.effectText" button=true editable=editable engine="prosemirror"}}
+            {{#if inEditMode}}
+            {{editor content=system.effectText target="system.effectText" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.effectText}}}</div>
+            {{/if}}
           </div>
         </div>
         
@@ -438,7 +442,11 @@
           </p>
           
           <div class="rt-editor-container">
-            {{editor content=system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+            {{#if inEditMode}}
+            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.description.value}}}</div>
+            {{/if}}
           </div>
         </div>
         

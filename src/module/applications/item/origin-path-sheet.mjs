@@ -3,48 +3,50 @@
  * Extends BaseItemSheet for proper V13 ApplicationV2 integration
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for origin path items
  * @extends BaseItemSheet
  */
 export default class OriginPathSheet extends BaseItemSheet {
-    
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "sheet", "item", "origin-path-sheet"],
+        classes: ['rogue-trader', 'sheet', 'item', 'origin-path-sheet'],
         position: {
             width: 700,
-            height: 600
+            height: 600,
         },
         window: {
             resizable: true,
-            icon: "fa-solid fa-route"
-        }
+            icon: 'fa-solid fa-route',
+        },
     };
 
     /** @override */
     static PARTS = {
         content: {
-            template: "systems/rogue-trader/templates/item/item-origin-path-sheet.hbs",
-            scrollable: [""]
-        }
+            template: 'systems/rogue-trader/templates/item/item-origin-path-sheet.hbs',
+            scrollable: [''],
+        },
     };
 
     /** @override */
     tabGroups = {
-        primary: "details"
+        primary: 'details',
     };
-    
+
+    /* -------------------------------------------- */
+
     /** @override */
     get title() {
-        return this.document?.name || "Origin Path";
+        return this.document?.name || 'Origin Path';
     }
-    
+
     /** @override */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
+
         const system = this.document.system;
         const grants = system?.grants || {};
         const modifiers = system?.modifiers?.characteristics || {};
@@ -62,7 +64,7 @@ export default class OriginPathSheet extends BaseItemSheet {
         context.isAdvanced = system?.isAdvancedOrigin || false;
 
         // Description
-        context.description = system?.description?.value || "";
+        context.description = system?.description?.value || '';
         context.hasDescription = !!context.description;
 
         // Source info
@@ -78,7 +80,7 @@ export default class OriginPathSheet extends BaseItemSheet {
                     label: this._getCharacteristicLabel(key),
                     short: this._getCharacteristicShort(key),
                     value: value,
-                    positive: value > 0
+                    positive: value > 0,
                 });
             }
         }
@@ -90,38 +92,38 @@ export default class OriginPathSheet extends BaseItemSheet {
         context.hasFormulas = !!(context.woundsFormula || context.fateFormula);
 
         // Skills
-        context.skills = (grants.skills || []).map(skill => ({
+        context.skills = (grants.skills || []).map((skill) => ({
             name: skill.name,
             specialization: skill.specialization || null,
-            level: skill.level || "trained",
+            level: skill.level || 'trained',
             levelLabel: this._getTrainingLabel(skill.level),
-            displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name
+            displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
         context.hasSkills = context.skills.length > 0;
 
         // Talents
-        context.talents = (grants.talents || []).map(talent => ({
+        context.talents = (grants.talents || []).map((talent) => ({
             name: talent.name,
             specialization: talent.specialization || null,
             uuid: talent.uuid || null,
-            hasItem: !!talent.uuid
+            hasItem: !!talent.uuid,
         }));
         context.hasTalents = context.talents.length > 0;
 
         // Traits
-        context.traits = (grants.traits || []).map(trait => ({
+        context.traits = (grants.traits || []).map((trait) => ({
             name: trait.name,
             level: trait.level || null,
             uuid: trait.uuid || null,
-            hasItem: !!trait.uuid
+            hasItem: !!trait.uuid,
         }));
         context.hasTraits = context.traits.length > 0;
 
         // Equipment
-        context.equipment = (grants.equipment || []).map(item => ({
+        context.equipment = (grants.equipment || []).map((item) => ({
             name: item.name || item,
             quantity: item.quantity || 1,
-            uuid: item.uuid || null
+            uuid: item.uuid || null,
         }));
         context.hasEquipment = context.equipment.length > 0;
 
@@ -130,24 +132,22 @@ export default class OriginPathSheet extends BaseItemSheet {
         context.hasSpecialAbilities = context.specialAbilities.length > 0;
 
         // Choices
-        context.choices = (grants.choices || []).map(choice => ({
+        context.choices = (grants.choices || []).map((choice) => ({
             type: choice.type,
             typeLabel: this._getChoiceTypeLabel(choice.type),
             label: choice.label,
             count: choice.count || 1,
-            options: choice.options.map(opt => ({
+            options: choice.options.map((opt) => ({
                 label: opt.label,
                 value: opt.value,
-                description: opt.description || ""
-            }))
+                description: opt.description || '',
+            })),
         }));
         context.hasChoices = context.choices.length > 0;
 
         // Requirements
         context.requirements = system?.requirements || {};
-        context.hasRequirements = !!(context.requirements.text || 
-            context.requirements.previousSteps?.length || 
-            context.requirements.excludedSteps?.length);
+        context.hasRequirements = !!(context.requirements.text || context.requirements.previousSteps?.length || context.requirements.excludedSteps?.length);
 
         return context;
     }
@@ -157,39 +157,55 @@ export default class OriginPathSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     _getStepLabel(step) {
-        if (!step) return "";
+        if (!step) return '';
         const key = step.charAt(0).toUpperCase() + step.slice(1);
         return game.i18n.localize(`RT.OriginPath.${key}`);
     }
 
     _getCharacteristicLabel(key) {
         const labels = {
-            weaponSkill: "Weapon Skill", ballisticSkill: "Ballistic Skill",
-            strength: "Strength", toughness: "Toughness", agility: "Agility",
-            intelligence: "Intelligence", perception: "Perception",
-            willpower: "Willpower", fellowship: "Fellowship", influence: "Influence"
+            weaponSkill: 'Weapon Skill',
+            ballisticSkill: 'Ballistic Skill',
+            strength: 'Strength',
+            toughness: 'Toughness',
+            agility: 'Agility',
+            intelligence: 'Intelligence',
+            perception: 'Perception',
+            willpower: 'Willpower',
+            fellowship: 'Fellowship',
+            influence: 'Influence',
         };
         return labels[key] || key;
     }
 
     _getCharacteristicShort(key) {
         const shorts = {
-            weaponSkill: "WS", ballisticSkill: "BS", strength: "S", toughness: "T",
-            agility: "Ag", intelligence: "Int", perception: "Per", willpower: "WP",
-            fellowship: "Fel", influence: "Inf"
+            weaponSkill: 'WS',
+            ballisticSkill: 'BS',
+            strength: 'S',
+            toughness: 'T',
+            agility: 'Ag',
+            intelligence: 'Int',
+            perception: 'Per',
+            willpower: 'WP',
+            fellowship: 'Fel',
+            influence: 'Inf',
         };
         return shorts[key] || key.substring(0, 3).toUpperCase();
     }
 
     _getTrainingLabel(level) {
-        const labels = { trained: "Trained", plus10: "+10", plus20: "+20" };
+        const labels = { trained: 'Trained', plus10: '+10', plus20: '+20' };
         return labels[level] || level;
     }
 
     _getChoiceTypeLabel(type) {
         const labels = {
-            talent: "Talent", skill: "Skill", characteristic: "Characteristic",
-            equipment: "Equipment", trait: "Trait"
+            talent: 'Talent',
+            skill: 'Skill',
+            characteristic: 'Characteristic',
+            equipment: 'Equipment',
+            trait: 'Trait',
         };
         return labels[type] || type;
     }
