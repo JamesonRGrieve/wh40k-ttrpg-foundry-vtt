@@ -75,6 +75,9 @@
                 </div>
                 
                 <div class="rt-row-actions">
+                    <button type="button" class="rt-action-btn" data-action="toggleItemPreview" data-item-id="{{talent.id}}" title="Quick Preview">
+                        <i class="fas fa-eye"></i>
+                    </button>
                     <button type="button" class="rt-talent-favorite {{#if talent.isFavorite}}active{{/if}}" 
                             data-action="toggleFavoriteTalent" data-item-id="{{talent.id}}"
                             title="{{#if talent.isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
@@ -88,6 +91,8 @@
                     </button>
                 </div>
             </div>
+            <!-- Item preview card container (populated by ItemPreviewMixin) -->
+            <div id="item-preview-{{talent.id}}" class="rt-item-preview-container" style="display: none;"></div>
             {{/each}}
         </div>
         

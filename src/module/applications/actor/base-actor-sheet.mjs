@@ -12,6 +12,7 @@ import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.mjs';
 import ContextMenuMixin from '../api/context-menu-mixin.mjs';
 import EnhancedDragDropMixin from '../api/drag-drop-visual-mixin.mjs';
 import WhatIfMixin from '../api/what-if-mixin.mjs';
+import StatBreakdownMixin from '../api/stat-breakdown-mixin.mjs';
 import { ItemPreviewMixin, ActiveModifiersMixin } from '../components/item-preview-card.mjs';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.mjs';
 import EffectCreationDialog from '../prompts/effect-creation-dialog.mjs';
@@ -25,10 +26,12 @@ const { ActorSheetV2 } = foundry.applications.sheets;
  */
 export default class BaseActorSheet extends ActiveModifiersMixin(
     ItemPreviewMixin(
-        WhatIfMixin(
-            EnhancedDragDropMixin(
-                ContextMenuMixin(
-                    CollapsiblePanelMixin(EnhancedAnimationsMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ActorSheetV2)))))),
+        StatBreakdownMixin(
+            WhatIfMixin(
+                EnhancedDragDropMixin(
+                    ContextMenuMixin(
+                        CollapsiblePanelMixin(EnhancedAnimationsMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ActorSheetV2)))))),
+                    ),
                 ),
             ),
         ),

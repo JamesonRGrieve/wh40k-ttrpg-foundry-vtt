@@ -77,6 +77,9 @@
                             <span class="rt-equip-stat"><span class="rt-stat-l">Wt:</span> {{item.system.weight}}kg</span>
                             {{/if}}
                             <div class="rt-equip-actions">
+                                <button type="button" class="rt-equip-btn" data-action="toggleItemPreview" data-item-id="{{item.id}}" title="Quick Preview">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                                 <button type="button" class="rt-equip-btn rt-equip-toggle" data-action="toggleEquip" data-item-id="{{item.id}}" title="{{#if item.system.equipped}}Unequip{{else}}Equip{{/if}}">
                                     <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
                                 </button>
@@ -88,6 +91,8 @@
                                 </button>
                             </div>
                         </div>
+                        <!-- Item preview card container (populated by ItemPreviewMixin) -->
+                        <div id="item-preview-{{item.id}}" class="rt-item-preview-container" style="display: none;"></div>
                         {{/each}}
                     </div>
                     {{/if}}
