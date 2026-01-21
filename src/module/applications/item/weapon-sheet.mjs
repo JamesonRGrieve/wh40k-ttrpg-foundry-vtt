@@ -3,6 +3,7 @@
  */
 
 import ContainerItemSheet from './container-item-sheet.mjs';
+import { prepareQualityTooltipData } from '../components/rt-tooltip.mjs';
 import { ReloadActionManager } from '../../actions/reload-action-manager.mjs';
 
 /**
@@ -116,6 +117,16 @@ export default class WeaponSheet extends ContainerItemSheet {
         // For world items, always allow editing if editable
         if (!this.isOwnedByActor) return this.isEditable;
         return this.#editMode && this.isEditable;
+    }
+
+    /**
+     * Prepare weapon quality tooltip data.
+     * @param {string} identifier
+     * @param {number|null} level
+     * @returns {string}
+     */
+    prepareQualityTooltip(identifier, level = null) {
+        return prepareQualityTooltipData(identifier, level);
     }
 
     /* -------------------------------------------- */
