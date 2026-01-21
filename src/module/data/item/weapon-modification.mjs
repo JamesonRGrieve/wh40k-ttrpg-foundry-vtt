@@ -103,11 +103,6 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
   get categoryLabel() {
     return game.i18n.localize(`RT.Modification.Category.${this.category.capitalize()}`);
   }
-        if (this.restrictions.weaponTypes.size) {
-            parts.push(`Types: ${Array.from(this.restrictions.weaponTypes).join(', ')}`);
-        }
-        return parts.join('; ') || game.i18n.localize('RT.Modification.NoRestrictions');
-    }
 
     /**
      * Has any non-zero modifiers?
