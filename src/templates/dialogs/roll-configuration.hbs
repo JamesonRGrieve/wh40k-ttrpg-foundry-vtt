@@ -76,6 +76,50 @@
     </div>
     {{/if}}
 
+    {{!-- Permanent Modifiers (from items, conditions, talents, traits) --}}
+    {{#if hasPermanentModifiers}}
+    <div class="form-group roll-config-permanent">
+        <label>{{localize "RT.Roll.PermanentModifiers"}}</label>
+        <div class="roll-config-permanent-list">
+            {{#each permanentModifiers}}
+            <div class="roll-config-permanent-item">
+                {{#if this.hasSource}}
+                <button type="button" 
+                        class="roll-config-permanent-source"
+                        data-action="viewModifierSource"
+                        data-uuid="{{this.uuid}}"
+                        title="{{localize "RT.Roll.ClickToView"}}">
+                    {{#if this.icon}}<i class="{{this.icon}}"></i>{{/if}}
+                    <span>{{this.source}}</span>
+                </button>
+                {{else}}
+                <div class="roll-config-permanent-source-static">
+                    {{#if this.icon}}<i class="{{this.icon}}"></i>{{/if}}
+                    <span>{{this.source}}</span>
+                </div>
+                {{/if}}
+                <span class="roll-config-permanent-value {{#if (gt this.value 0)}}positive{{else}}negative{{/if}}">
+                    {{this.valueDisplay}}
+                </span>
+            </div>
+            {{/each}}
+        </div>
+        {{#if (gt permanentModifierTotal 0)}}
+        <div class="roll-config-permanent-total positive">
+            {{localize "RT.Roll.PermanentTotal"}}: +{{permanentModifierTotal}}
+        </div>
+        {{else if (lt permanentModifierTotal 0)}}
+        <div class="roll-config-permanent-total negative">
+            {{localize "RT.Roll.PermanentTotal"}}: {{permanentModifierTotal}}
+        </div>
+        {{else if (eq permanentModifierTotal 0)}}
+        <div class="roll-config-permanent-total neutral">
+            {{localize "RT.Roll.PermanentTotal"}}: {{permanentModifierTotal}}
+        </div>
+        {{/if}}
+    </div>
+    {{/if}}
+
     {{!-- Custom Modifier --}}
     <div class="form-group">
         <label>{{localize "RT.Roll.CustomModifier"}}</label>

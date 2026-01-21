@@ -1190,6 +1190,109 @@
     }
 }
 
+// Permanent Modifiers Section
+.roll-config-permanent {
+    margin-top: 16px;
+}
+
+.roll-config-permanent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.roll-config-permanent-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid rgba(168, 85, 247, 0.5);
+    border-radius: 4px;
+    transition: all 0.15s ease;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.3);
+        border-left-color: rgba(168, 85, 247, 0.8);
+    }
+}
+
+.roll-config-permanent-source {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.9rem;
+    color: rgba(232, 228, 217, 0.9);
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover {
+        color: #c9a227;
+    }
+
+    i {
+        opacity: 0.7;
+    }
+}
+
+.roll-config-permanent-source-static {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: rgba(232, 228, 217, 0.7);
+
+    i {
+        opacity: 0.5;
+    }
+}
+
+.roll-config-permanent-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+
+    &.positive {
+        color: #4ade80;
+        background: rgba(74, 222, 128, 0.1);
+    }
+
+    &.negative {
+        color: #f87171;
+        background: rgba(248, 113, 113, 0.1);
+    }
+}
+
+.roll-config-permanent-total {
+    margin-top: 8px;
+    padding: 6px 12px;
+    text-align: right;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-top: 1px solid rgba(168, 85, 247, 0.15);
+
+    &.positive {
+        color: #4ade80;
+    }
+
+    &.negative {
+        color: #f87171;
+    }
+
+    &.neutral {
+        color: rgba(232, 228, 217, 0.7);
+    }
+}
+
 // ============================================
 // Add XP Dialog Styles
 // ============================================

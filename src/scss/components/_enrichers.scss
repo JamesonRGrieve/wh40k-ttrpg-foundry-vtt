@@ -3,181 +3,232 @@
 // Styles for inline enriched content (characteristics, skills, modifiers, etc.)
 
 .rt-enricher {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 0.9em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-  
-  i {
-    font-size: 0.85em;
-    opacity: 0.8;
-  }
-  
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+
+    i {
+        font-size: 0.85em;
+        opacity: 0.8;
+    }
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
 }
 
 // Characteristic enricher
 .rt-enricher-characteristic {
-  background: rgba($rt-accent-gold, 0.15);
-  border: 1px solid rgba($rt-accent-gold, 0.3);
-  color: $rt-accent-gold;
-  
-  &:hover {
-    background: rgba($rt-accent-gold, 0.25);
-    border-color: $rt-accent-gold;
-    color: lighten($rt-accent-gold, 10%);
-  }
-  
-  i {
+    background: rgba($rt-accent-gold, 0.15);
+    border: 1px solid rgba($rt-accent-gold, 0.3);
     color: $rt-accent-gold;
-  }
+
+    &:hover {
+        background: rgba($rt-accent-gold, 0.25);
+        border-color: $rt-accent-gold;
+        color: lighten($rt-accent-gold, 10%);
+    }
+
+    i {
+        color: $rt-accent-gold;
+    }
 }
 
 // Skill enricher
 .rt-enricher-skill {
-  background: rgba($rt-accent-skills, 0.15);
-  border: 1px solid rgba($rt-accent-skills, 0.3);
-  color: $rt-accent-skills;
-  
-  &:hover {
-    background: rgba($rt-accent-skills, 0.25);
-    border-color: $rt-accent-skills;
-    color: lighten($rt-accent-skills, 10%);
-  }
-  
-  i {
+    background: rgba($rt-accent-skills, 0.15);
+    border: 1px solid rgba($rt-accent-skills, 0.3);
     color: $rt-accent-skills;
-  }
+
+    &:hover {
+        background: rgba($rt-accent-skills, 0.25);
+        border-color: $rt-accent-skills;
+        color: lighten($rt-accent-skills, 10%);
+    }
+
+    i {
+        color: $rt-accent-skills;
+    }
 }
 
 // Modifier enricher
 .rt-enricher-modifier {
-  cursor: default;
-  
-  &.positive {
-    background: rgba($rt-color-success, 0.15);
-    border: 1px solid rgba($rt-color-success, 0.3);
-    color: $rt-color-success;
-    
-    i {
-      color: $rt-color-success;
+    cursor: default;
+
+    &.positive {
+        background: rgba($rt-color-success, 0.15);
+        border: 1px solid rgba($rt-color-success, 0.3);
+        color: $rt-color-success;
+
+        i {
+            color: $rt-color-success;
+        }
+
+        &:hover {
+            background: rgba($rt-color-success, 0.25);
+            transform: none;
+            box-shadow: none;
+        }
     }
-    
-    &:hover {
-      background: rgba($rt-color-success, 0.25);
-      transform: none;
-      box-shadow: none;
+
+    &.negative {
+        background: rgba($rt-accent-combat, 0.15);
+        border: 1px solid rgba($rt-accent-combat, 0.3);
+        color: $rt-accent-combat;
+
+        i {
+            color: $rt-accent-combat;
+        }
+
+        &:hover {
+            background: rgba($rt-accent-combat, 0.25);
+            transform: none;
+            box-shadow: none;
+        }
     }
-  }
-  
-  &.negative {
-    background: rgba($rt-accent-combat, 0.15);
-    border: 1px solid rgba($rt-accent-combat, 0.3);
-    color: $rt-accent-combat;
-    
-    i {
-      color: $rt-accent-combat;
-    }
-    
-    &:hover {
-      background: rgba($rt-accent-combat, 0.25);
-      transform: none;
-      box-shadow: none;
-    }
-  }
 }
 
 // Armor enricher
 .rt-enricher-armor {
-  background: rgba($rt-accent-combat, 0.15);
-  border: 1px solid rgba($rt-accent-combat, 0.3);
-  color: var(--color-text-primary);
-  cursor: default;
-  
-  i {
-    color: $rt-accent-combat;
-  }
-  
-  &:hover {
-    background: rgba($rt-accent-combat, 0.25);
-    transform: none;
-    box-shadow: none;
-  }
+    background: rgba($rt-accent-combat, 0.15);
+    border: 1px solid rgba($rt-accent-combat, 0.3);
+    color: var(--color-text-primary);
+    cursor: default;
+
+    i {
+        color: $rt-accent-combat;
+    }
+
+    &:hover {
+        background: rgba($rt-accent-combat, 0.25);
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+// Quality enricher (weapon qualities)
+.rt-enricher-quality {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+
+    &:hover {
+        background: rgba(239, 68, 68, 0.25);
+        border-color: #ef4444;
+        color: #f87171;
+    }
+
+    i {
+        color: #ef4444;
+    }
+}
+
+// Property enricher (armour properties)
+.rt-enricher-property {
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #3b82f6;
+
+    &:hover {
+        background: rgba(59, 130, 246, 0.25);
+        border-color: #3b82f6;
+        color: #60a5fa;
+    }
+
+    i {
+        color: #3b82f6;
+    }
+}
+
+// Condition enricher
+.rt-enricher-condition {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #f59e0b;
+
+    &:hover {
+        background: rgba(245, 158, 11, 0.25);
+        border-color: #f59e0b;
+        color: #fbbf24;
+    }
+
+    i {
+        color: #f59e0b;
+    }
 }
 
 // Error enricher
 .rt-enricher-error {
-  background: rgba($rt-accent-combat, 0.2);
-  border: 1px dashed $rt-accent-combat;
-  color: $rt-accent-combat;
-  cursor: help;
-  font-family: monospace;
-  font-size: 0.85em;
-  padding: 2px 6px;
-  border-radius: 3px;
-  
-  &:hover {
-    background: rgba($rt-accent-combat, 0.3);
-  }
+    background: rgba($rt-accent-combat, 0.2);
+    border: 1px dashed $rt-accent-combat;
+    color: $rt-accent-combat;
+    cursor: help;
+    font-family: monospace;
+    font-size: 0.85em;
+    padding: 2px 6px;
+    border-radius: 3px;
+
+    &:hover {
+        background: rgba($rt-accent-combat, 0.3);
+    }
 }
 
 // Enricher tooltips
 .rt-enricher[data-tooltip] {
-  position: relative;
-  
-  &::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-4px);
-    padding: 4px 8px;
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    font-size: 0.75rem;
-    font-weight: normal;
-    white-space: nowrap;
-    border-radius: 3px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: 1000;
-  }
-  
-  &:hover::after {
-    opacity: 1;
-  }
+    position: relative;
+
+    &::after {
+        content: attr(title);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-4px);
+        padding: 4px 8px;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: normal;
+        white-space: nowrap;
+        border-radius: 3px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 1000;
+    }
+
+    &:hover::after {
+        opacity: 1;
+    }
 }
 
 // Context within ProseMirror editor
 .ProseMirror {
-  .rt-enricher {
-    // Ensure enrichers display properly in rich text
-    vertical-align: baseline;
-  }
+    .rt-enricher {
+        // Ensure enrichers display properly in rich text
+        vertical-align: baseline;
+    }
 }
 
 // Context within chat messages
 .chat-message {
-  .rt-enricher {
-    // Slightly smaller in chat
-    font-size: 0.85em;
-  }
+    .rt-enricher {
+        // Slightly smaller in chat
+        font-size: 0.85em;
+    }
 }
 
 // Context within item descriptions
 .item-description {
-  .rt-enricher {
-    // Keep consistent with description text
-    font-size: 1em;
-  }
+    .rt-enricher {
+        // Keep consistent with description text
+        font-size: 1em;
+    }
 }

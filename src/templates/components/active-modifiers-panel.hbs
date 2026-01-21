@@ -1,0 +1,160 @@
+{{!-- Active Modifiers Panel --}}
+{{!-- Shows all active modifiers on the character --}}
+<div class="rt-panel rt-panel--modifiers {{#if modifiers.collapsed}}rt-panel--collapsed{{/if}}">
+    <div class="rt-panel-header">
+        <button type="button" class="rt-panel-toggle" data-action="toggleModifiersPanel">
+            <i class="fa-solid {{#if modifiers.collapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}}"></i>
+        </button>
+        <span class="rt-panel-title">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            Active Modifiers
+        </span>
+        <span class="rt-modifier-count">
+            {{add (add (add (add modifiers.conditions.length modifiers.talents.length) modifiers.traits.length) modifiers.equipment.length) modifiers.effects.length}}
+        </span>
+    </div>
+
+    {{#unless modifiers.collapsed}}
+    <div class="rt-panel-body">
+        {{#if (or modifiers.conditions.length modifiers.talents.length modifiers.traits.length modifiers.equipment.length modifiers.effects.length)}}
+            <div class="rt-modifiers-list">
+                {{!-- Conditions --}}
+                {{#if modifiers.conditions.length}}
+                <div class="rt-modifier-group">
+                    <div class="rt-modifier-group-header">
+                        <i class="fa-solid fa-exclamation-triangle"></i>
+                        Conditions
+                    </div>
+                    {{#each modifiers.conditions as |mod|}}
+                    <div class="rt-modifier-item rt-modifier-item--condition rt-modifier-item--{{mod.nature}}">
+                        <div class="rt-modifier-item-icon">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                        </div>
+                        <div class="rt-modifier-item-content">
+                            <button type="button" class="rt-modifier-item-name" data-action="viewModifierSource" data-item-id="{{mod.id}}">
+                                {{mod.name}}
+                                {{#if (gt mod.stacks 1)}}
+                                <span class="rt-modifier-stacks">×{{mod.stacks}}</span>
+                                {{/if}}
+                            </button>
+                            <div class="rt-modifier-item-description">{{mod.description}}</div>
+                            <div class="rt-modifier-item-duration">{{mod.duration}}</div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+                {{!-- Talents --}}
+                {{#if modifiers.talents.length}}
+                <div class="rt-modifier-group">
+                    <div class="rt-modifier-group-header">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        Talents
+                    </div>
+                    {{#each modifiers.talents as |mod|}}
+                    <div class="rt-modifier-item rt-modifier-item--talent {{#unless mod.active}}rt-modifier-item--inactive{{/unless}}">
+                        <div class="rt-modifier-item-icon">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                        </div>
+                        <div class="rt-modifier-item-content">
+                            <button type="button" class="rt-modifier-item-name" data-action="viewModifierSource" data-item-id="{{mod.id}}">
+                                {{mod.name}}
+                            </button>
+                            <div class="rt-modifier-item-description">{{mod.description}}</div>
+                            <div class="rt-modifier-item-duration">{{mod.duration}}</div>
+                        </div>
+                        {{#if mod.canToggle}}
+                        <button type="button" class="rt-modifier-item-toggle" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
+                            <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+                        </button>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+                {{!-- Traits --}}
+                {{#if modifiers.traits.length}}
+                <div class="rt-modifier-group">
+                    <div class="rt-modifier-group-header">
+                        <i class="fa-solid fa-dna"></i>
+                        Traits
+                    </div>
+                    {{#each modifiers.traits as |mod|}}
+                    <div class="rt-modifier-item rt-modifier-item--trait">
+                        <div class="rt-modifier-item-icon">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                        </div>
+                        <div class="rt-modifier-item-content">
+                            <button type="button" class="rt-modifier-item-name" data-action="viewModifierSource" data-item-id="{{mod.id}}">
+                                {{mod.name}}
+                            </button>
+                            <div class="rt-modifier-item-description">{{mod.description}}</div>
+                            <div class="rt-modifier-item-duration">{{mod.duration}}</div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+                {{!-- Equipment --}}
+                {{#if modifiers.equipment.length}}
+                <div class="rt-modifier-group">
+                    <div class="rt-modifier-group-header">
+                        <i class="fa-solid fa-shield"></i>
+                        Equipment
+                    </div>
+                    {{#each modifiers.equipment as |mod|}}
+                    <div class="rt-modifier-item rt-modifier-item--equipment">
+                        <div class="rt-modifier-item-icon">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                        </div>
+                        <div class="rt-modifier-item-content">
+                            <button type="button" class="rt-modifier-item-name" data-action="viewModifierSource" data-item-id="{{mod.id}}">
+                                {{mod.name}}
+                            </button>
+                            <div class="rt-modifier-item-description">{{mod.description}}</div>
+                            <div class="rt-modifier-item-duration">{{mod.duration}}</div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+                {{!-- Active Effects --}}
+                {{#if modifiers.effects.length}}
+                <div class="rt-modifier-group">
+                    <div class="rt-modifier-group-header">
+                        <i class="fa-solid fa-sparkles"></i>
+                        Effects
+                    </div>
+                    {{#each modifiers.effects as |mod|}}
+                    <div class="rt-modifier-item rt-modifier-item--effect {{#unless mod.active}}rt-modifier-item--inactive{{/unless}}">
+                        <div class="rt-modifier-item-icon">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                        </div>
+                        <div class="rt-modifier-item-content">
+                            <div class="rt-modifier-item-name">{{mod.name}}</div>
+                            <div class="rt-modifier-item-description">{{mod.description}}</div>
+                            <div class="rt-modifier-item-duration">{{mod.duration}}</div>
+                        </div>
+                        {{#if mod.canToggle}}
+                        <button type="button" class="rt-modifier-item-toggle" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
+                            <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+                        </button>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+            </div>
+        {{else}}
+            <div class="rt-modifiers-empty">
+                <i class="fa-solid fa-circle-info"></i>
+                <p>No active modifiers</p>
+            </div>
+        {{/if}}
+    </div>
+    {{/unless}}
+</div>
