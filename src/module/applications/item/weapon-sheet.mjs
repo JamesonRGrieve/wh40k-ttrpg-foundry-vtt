@@ -157,11 +157,11 @@ export default class WeaponSheet extends ContainerItemSheet {
             const match = q.match(/-(\d+)$/);
             const level = match ? parseInt(match[1]) : null;
 
-            // Get localized label using CONFIG helper
-            const label = CONFIG.ROGUE_TRADER?.getQualityLabel?.(q, level) || q;
+            // Get localized label using CONFIG helper (CONFIG.rt not CONFIG.ROGUE_TRADER)
+            const label = CONFIG.rt?.getQualityLabel?.(q, level) || q;
 
             // Get definition for description
-            const def = CONFIG.ROGUE_TRADER?.getQualityDefinition?.(q) || null;
+            const def = CONFIG.rt?.getQualityDefinition?.(q) || null;
 
             return {
                 identifier: q,
@@ -514,7 +514,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             quality?.sheet.render(true);
         } else {
             // Fallback: show tooltip from CONFIG
-            const def = CONFIG.ROGUE_TRADER?.getQualityDefinition?.(identifier);
+            const def = CONFIG.rt?.getQualityDefinition?.(identifier);
             if (def) {
                 const label = game.i18n.localize(def.label);
                 const description = game.i18n.localize(def.description);
