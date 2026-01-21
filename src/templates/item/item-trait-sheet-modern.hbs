@@ -90,16 +90,16 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-trait-tabs" data-group="primary">
-      <button type="button" class="rt-trait-tab active" data-tab="properties" data-group="primary">
+    <nav class="rt-tabs rt-tabs--trait rt-trait-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-trait-tab active" data-tab="properties" data-group="primary">
         <i class="fas fa-cog"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="rt-trait-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="rt-tab rt-trait-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
-      <button type="button" class="rt-trait-tab" data-tab="description" data-group="primary">
+      <button type="button" class="rt-tab rt-trait-tab" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
@@ -108,10 +108,10 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="rt-trait-content">
+    <section class="rt-trait-content rt-tab-content rt-tab-content--trait">
       
       {{!-- PROPERTIES TAB --}}
-      <div class="rt-trait-panel active" data-tab="properties" data-group="primary">
+      <div class="rt-trait-panel tab active" data-tab="properties" data-group="primary">
         <div class="rt-trait-section">
           <h3 class="rt-section-title">
             <i class="fas fa-info-circle"></i> Basic Properties
@@ -167,7 +167,7 @@
       </div>
       
       {{!-- EFFECTS TAB --}}
-      <div class="rt-trait-panel" data-tab="effects" data-group="primary">
+      <div class="rt-trait-panel tab" data-tab="effects" data-group="primary">
         {{!-- Benefit/Effect Description --}}
         <div class="rt-trait-section">
           <h3 class="rt-section-title">
@@ -288,7 +288,7 @@
       </div>
       
       {{!-- DESCRIPTION TAB --}}
-      <div class="rt-trait-panel" data-tab="description" data-group="primary">
+      <div class="rt-trait-panel tab" data-tab="description" data-group="primary">
         {{!-- Description --}}
         <div class="rt-trait-section">
           <h3 class="rt-section-title">

@@ -88,16 +88,16 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-gear-tabs" data-group="primary">
-      <button type="button" class="rt-gear-tab active" data-tab="details" data-group="primary">
+    <nav class="rt-tabs rt-tabs--gear rt-gear-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-gear-tab active" data-tab="details" data-group="primary">
         <i class="fas fa-circle-info"></i>
         <span>Details</span>
       </button>
-      <button type="button" class="rt-gear-tab" data-tab="description" data-group="primary">
+      <button type="button" class="rt-tab rt-gear-tab" data-tab="description" data-group="primary">
         <i class="fas fa-scroll"></i>
         <span>Info</span>
       </button>
-      <button type="button" class="rt-gear-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="rt-tab rt-gear-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
@@ -106,10 +106,10 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="rt-gear-content">
+    <section class="rt-gear-content rt-tab-content rt-tab-content--gear">
       
       {{!-- DETAILS TAB --}}
-      <div class="rt-gear-panel active" data-tab="details" data-group="primary">
+      <div class="rt-gear-panel tab active" data-tab="details" data-group="primary">
         
         {{!-- Category & Classification --}}
         <div class="rt-gear-section">
@@ -255,7 +255,7 @@
       </div>
 
       {{!-- DESCRIPTION TAB --}}
-      <div class="rt-gear-panel" data-tab="description" data-group="primary">
+      <div class="rt-gear-panel tab" data-tab="description" data-group="primary">
         
         {{!-- Effect --}}
         <div class="rt-gear-section">
@@ -313,7 +313,7 @@
       </div>
 
       {{!-- EFFECTS TAB --}}
-      <div class="rt-gear-panel" data-tab="effects" data-group="primary">
+      <div class="rt-gear-panel tab" data-tab="effects" data-group="primary">
         {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
       </div>
 

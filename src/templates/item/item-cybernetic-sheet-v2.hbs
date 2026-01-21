@@ -97,24 +97,24 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-cybernetic-tabs" data-group="primary">
-      <button type="button" class="rt-cybernetic-tab active" data-tab="properties" data-group="primary">
+    <nav class="rt-tabs rt-tabs--cybernetic rt-cybernetic-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-cybernetic-tab active" data-tab="properties" data-group="primary">
         <i class="fas fa-cog"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="rt-cybernetic-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="rt-tab rt-cybernetic-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-bolt"></i>
         <span>Effects</span>
       </button>
-      <button type="button" class="rt-cybernetic-tab" data-tab="armour" data-group="primary">
+      <button type="button" class="rt-tab rt-cybernetic-tab" data-tab="armour" data-group="primary">
         <i class="fas fa-shield-halved"></i>
         <span>Armour</span>
       </button>
-      <button type="button" class="rt-cybernetic-tab" data-tab="installation" data-group="primary">
+      <button type="button" class="rt-tab rt-cybernetic-tab" data-tab="installation" data-group="primary">
         <i class="fas fa-syringe"></i>
         <span>Installation</span>
       </button>
-      <button type="button" class="rt-cybernetic-tab" data-tab="description" data-group="primary">
+      <button type="button" class="rt-tab rt-cybernetic-tab" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
@@ -123,10 +123,10 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-cybernetic-content scrollable">
+    <div class="rt-cybernetic-content rt-tab-content rt-tab-content--cybernetic scrollable">
       
       {{!-- PROPERTIES TAB --}}
-      <div class="rt-cybernetic-panel active" data-tab="properties" data-group="primary">
+      <div class="rt-cybernetic-panel tab active" data-tab="properties" data-group="primary">
         
         {{!-- Cybernetic Type & Locations --}}
         <div class="rt-cybernetic-section">
@@ -318,7 +318,7 @@
       </div>
       
       {{!-- EFFECTS TAB --}}
-      <div class="rt-cybernetic-panel" data-tab="effects" data-group="primary">
+      <div class="rt-cybernetic-panel tab" data-tab="effects" data-group="primary">
         
         {{!-- Effect Description --}}
         <div class="rt-cybernetic-section">
@@ -465,7 +465,7 @@
       </div>
       
       {{!-- ARMOUR TAB --}}
-      <div class="rt-cybernetic-panel" data-tab="armour" data-group="primary">
+      <div class="rt-cybernetic-panel tab" data-tab="armour" data-group="primary">
         
         {{!-- Armour Points Toggle --}}
         <div class="rt-cybernetic-section">
@@ -541,7 +541,7 @@
       </div>
       
       {{!-- INSTALLATION TAB --}}
-      <div class="rt-cybernetic-panel" data-tab="installation" data-group="primary">
+      <div class="rt-cybernetic-panel tab" data-tab="installation" data-group="primary">
         
         {{!-- Installation Requirements --}}
         <div class="rt-cybernetic-section">
@@ -589,7 +589,7 @@
       </div>
       
       {{!-- DESCRIPTION TAB --}}
-      <div class="rt-cybernetic-panel" data-tab="description" data-group="primary">
+      <div class="rt-cybernetic-panel tab" data-tab="description" data-group="primary">
         
         {{!-- Description --}}
         <div class="rt-cybernetic-section">

@@ -87,16 +87,16 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-forcefield-tabs" data-group="primary">
-      <button type="button" class="rt-forcefield-tab active" data-tab="stats" data-group="primary">
+    <nav class="rt-tabs rt-tabs--force-field rt-forcefield-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-forcefield-tab active" data-tab="stats" data-group="primary">
         <i class="fas fa-chart-bar"></i>
         <span>Stats</span>
       </button>
-      <button type="button" class="rt-forcefield-tab" data-tab="description" data-group="primary">
+      <button type="button" class="rt-tab rt-forcefield-tab" data-tab="description" data-group="primary">
         <i class="fas fa-scroll"></i>
         <span>Info</span>
       </button>
-      <button type="button" class="rt-forcefield-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="rt-tab rt-forcefield-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
@@ -105,10 +105,10 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="rt-forcefield-content">
+    <section class="rt-forcefield-content rt-tab-content rt-tab-content--force-field">
       
       {{!-- STATS TAB --}}
-      <div class="rt-forcefield-panel active" data-tab="stats" data-group="primary">
+      <div class="rt-forcefield-panel tab active" data-tab="stats" data-group="primary">
       
       {{!-- Status Controls --}}
       <div class="rt-forcefield-section">
@@ -237,7 +237,7 @@
       </div>
 
       {{!-- DESCRIPTION TAB --}}
-      <div class="rt-forcefield-panel" data-tab="description" data-group="primary">
+      <div class="rt-forcefield-panel tab" data-tab="description" data-group="primary">
 
       {{!-- Effect --}}
       <div class="rt-forcefield-section">
@@ -295,7 +295,7 @@
       </div>
 
       {{!-- EFFECTS TAB --}}
-      <div class="rt-forcefield-panel" data-tab="effects" data-group="primary">
+      <div class="rt-forcefield-panel tab" data-tab="effects" data-group="primary">
         {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
       </div>
 

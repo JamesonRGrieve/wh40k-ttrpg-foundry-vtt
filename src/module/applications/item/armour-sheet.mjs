@@ -31,7 +31,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/rogue-trader/templates/item/item-armour-sheet-v2.hbs',
-            scrollable: ['.rt-armour-content'],
+            scrollable: ['.rt-tab-content'],
         },
     };
 
@@ -52,46 +52,6 @@ export default class ArmourSheet extends ContainerItemSheet {
     tabGroups = {
         primary: 'protection',
     };
-
-    /* -------------------------------------------- */
-    /*  Rendering                                   */
-    /* -------------------------------------------- */
-
-    /** @override */
-    async _onRender(context, options) {
-        await super._onRender(context, options);
-
-        // Set up tab listeners
-        this._setupArmourTabs();
-    }
-
-    /**
-     * Set up tab click listeners for armour sheet tabs.
-     * @protected
-     */
-    _setupArmourTabs() {
-        const tabs = this.element.querySelectorAll('.rt-armour-tabs .rt-armour-tab');
-        tabs.forEach((tab) => {
-            tab.addEventListener('click', (event) => {
-                event.preventDefault();
-                const tabName = tab.dataset.tab;
-                if (!tabName) return;
-
-                // Update active tab button
-                tabs.forEach((t) => t.classList.remove('active'));
-                tab.classList.add('active');
-
-                // Show/hide panels
-                const panels = this.element.querySelectorAll('.rt-armour-panel');
-                panels.forEach((panel) => {
-                    panel.classList.toggle('active', panel.dataset.tab === tabName);
-                });
-
-                // Update tab group state
-                this.tabGroups.primary = tabName;
-            });
-        });
-    }
 
     /* -------------------------------------------- */
     /*  Context Preparation                         */
