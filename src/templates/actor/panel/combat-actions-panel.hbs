@@ -99,7 +99,18 @@
                         title="Roll Initiative (Current: {{system.initiative.total}})">
                     <i class="fas fa-dice-d20"></i>
                     <span class="rt-action-name">Initiative</span>
-                    <span class="rt-action-value">{{system.initiative.total}}</span>
+                    <span class="rt-action-value">
+                        {{system.initiative.total}}
+                        <button 
+                            type="button" 
+                            class="rt-stat-breakdown-btn rt-stat-breakdown-btn--inline"
+                            data-action="showStatBreakdown"
+                            data-stat-key="initiative"
+                            title="Show initiative calculation"
+                            onclick="event.stopPropagation();">
+                            <i class="fa-solid fa-calculator"></i>
+                        </button>
+                    </span>
                 </button>
                 {{!-- Assign Damage --}}
                 <button type="button"

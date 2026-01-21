@@ -30,6 +30,14 @@
                     <span class="rt-wounds-current">{{system.wounds.value}}</span>
                     <span class="rt-wounds-sep">/</span>
                     <span class="rt-wounds-max">{{system.wounds.max}}</span>
+                    <button 
+                        type="button" 
+                        class="rt-stat-breakdown-btn rt-stat-breakdown-btn--inline"
+                        data-action="showStatBreakdown"
+                        data-stat-key="wounds"
+                        title="Show wounds calculation">
+                        <i class="fa-solid fa-calculator"></i>
+                    </button>
                 </div>
 
                 <button type="button"
