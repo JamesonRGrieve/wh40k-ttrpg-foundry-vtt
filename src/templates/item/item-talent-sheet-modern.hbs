@@ -300,7 +300,11 @@
           </h3>
           
           <div class="rt-editor-container">
-            {{editor content=system.benefit target="system.benefit" button=true editable=editable engine="prosemirror"}}
+            {{#if inEditMode}}
+              {{editor content=system.benefit target="system.benefit" button=true editable=true engine="prosemirror"}}
+            {{else}}
+              <div class="rt-description-content">{{{system.benefit}}}</div>
+            {{/if}}
           </div>
         </div>
         
@@ -516,7 +520,11 @@
           </h3>
           
           <div class="rt-editor-container">
-            {{editor content=system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+            {{#if inEditMode}}
+              {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+            {{else}}
+              <div class="rt-description-content">{{{system.description.value}}}</div>
+            {{/if}}
           </div>
         </div>
         

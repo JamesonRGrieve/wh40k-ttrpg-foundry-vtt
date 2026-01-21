@@ -102,11 +102,15 @@
         <i class="fas fa-file-medical"></i>
         {{localize "RT.CriticalInjury.Effect"}}
       </label>
+      {{#if inEditMode}}
       {{editor content=system.effect 
                target="system.effect" 
                button=true 
-               editable=isEditable 
+               editable=true 
                engine="prosemirror"}}
+      {{else}}
+      <div class="rt-description-content">{{{system.effect}}}</div>
+      {{/if}}
     </div>
   </div>
   
@@ -164,11 +168,15 @@
         <i class="fas fa-align-left"></i>
         Description (for chat)
       </label>
+      {{#if inEditMode}}
       {{editor content=system.description.value 
                target="system.description.value" 
                button=true 
-               editable=isEditable 
+               editable=true 
                engine="prosemirror"}}
+      {{else}}
+      <div class="rt-description-content">{{{system.description.value}}}</div>
+      {{/if}}
     </div>
   </div>
 </form>

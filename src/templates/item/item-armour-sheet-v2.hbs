@@ -437,7 +437,11 @@
             <h3>Effect</h3>
           </div>
           <div class="rt-armour-section__body rt-armour-section__body--editor">
-            {{editor content=system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
+            {{#if inEditMode}}
+            {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.effect}}}</div>
+            {{/if}}
           </div>
         </div>
 
@@ -448,7 +452,11 @@
             <h3>Description</h3>
           </div>
           <div class="rt-armour-section__body rt-armour-section__body--editor">
-            {{editor content=system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+            {{#if inEditMode}}
+            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.description.value}}}</div>
+            {{/if}}
           </div>
         </div>
 
