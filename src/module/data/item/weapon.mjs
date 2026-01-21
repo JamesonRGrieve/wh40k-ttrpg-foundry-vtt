@@ -226,6 +226,22 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
+     * Is this a primitive weapon?
+     * @type {boolean}
+     */
+    get isPrimitive() {
+        return this.type === 'primitive';
+    }
+
+    /**
+     * Alias for isPrimitive (for consistency with armour API).
+     * @type {boolean}
+     */
+    get primitive() {
+        return this.isPrimitive;
+    }
+
+    /**
      * Does this weapon use ammunition?
      * @type {boolean}
      */
@@ -534,7 +550,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get effectiveReloadTime() {
         const baseReload = this.reload;
-        
+
         // Check for Customised quality
         if (!this.effectiveSpecial?.has('customised')) {
             return baseReload;
@@ -856,7 +872,6 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         const newValue = amount ?? this.clip.max;
         return this.parent?.update({ 'system.clip.value': Math.min(newValue, this.clip.max) });
     }
-}
 
     /**
      * Load ammunition into the weapon.
