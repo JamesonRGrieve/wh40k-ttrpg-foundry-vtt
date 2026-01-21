@@ -30,9 +30,9 @@ export class AssignDamageData {
         this.armour = 0;
         this.tb = 0;
         const location = this.hit?.location;
-        if(location) {
-            for(const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
-                if(location.replace(/\s/g, "").toUpperCase() === name.toUpperCase()) {
+        if (location) {
+            for (const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
+                if (location.replace(/\s/g, '').toUpperCase() === name.toUpperCase()) {
                     this.armour = locationArmour.value;
                     this.tb = locationArmour.toughnessBonus;
                 }
@@ -57,15 +57,15 @@ export class AssignDamageData {
         const reduction = usableArmour + this.tb;
         const reducedDamage = totalDamage - reduction;
         // We have damage to process
-        if(reducedDamage > 0) {
+        if (reducedDamage > 0) {
             // No Wounds Available
-            if(this.actor.system.wounds.value <= 0) {
+            if (this.actor.system.wounds.value <= 0) {
                 // All applied as critical
                 this.hasCriticalDamage = true;
                 this.criticalDamageTaken = reducedDamage;
             } else {
                 //Reduce Wounds First
-                if(this.actor.system.wounds.value >= reducedDamage) {
+                if (this.actor.system.wounds.value >= reducedDamage) {
                     // Only Wound Damage
                     this.damageTaken = reducedDamage;
                 } else {
@@ -77,10 +77,9 @@ export class AssignDamageData {
             }
         }
 
-        if(this.criticalDamageTaken > 0) {
-
+        if (this.criticalDamageTaken > 0) {
             // Handle True Grit Talent
-            if(this.actor.hasTalent('True Grit')) {
+            if (this.actor.hasTalent('True Grit')) {
                 // Reduces by Toughness Bonus to minimum of 1
                 this.criticalDamageTaken = this.criticalDamageTaken - this.tb < 1 ? 1 : this.criticalDamageTaken - this.tb;
             }
@@ -88,12 +87,12 @@ export class AssignDamageData {
             this.criticalEffect = getCriticalDamage(this.hit.damageType, this.hit.location, this.actor.system.wounds.critical + this.criticalDamageTaken);
         }
 
-        if(this.hit.totalFatigue > 0) {
+        if (this.hit.totalFatigue > 0) {
             this.hasFatigueDamage = true;
             this.fatigueTaken = this.hit.totalFatigue;
         }
 
-        if(this.damageTaken > 0){
+        if (this.damageTaken > 0) {
             this.hasDamage = true;
         }
     }
@@ -101,11 +100,16 @@ export class AssignDamageData {
     async performActionAndSendToChat() {
         // Assign Damage - use dot notation to avoid overwriting sibling properties
         this.actor = await this.actor.update({
-            "system.wounds.value": this.actor.system.wounds.value - this.damageTaken,
-            "system.wounds.critical": this.actor.system.wounds.critical + this.criticalDamageTaken,
-            "system.fatigue.value": this.actor.system.fatigue.value + this.fatigueTaken
+            'system.wounds.value': this.actor.system.wounds.value - this.damageTaken,
+            'system.wounds.critical': this.actor.system.wounds.critical + this.criticalDamageTaken,
+            'system.fatigue.value': this.actor.system.fatigue.value + this.fatigueTaken,
         });
-        game.rt.log('performActionAndSendToChat', this)
+        game.rt.log('performActionAndSendToChat', this);
+
+        // Create critical injury item if critical damage was taken
+        if (this.hasCriticalDamage && this.criticalEffect) {
+            await this._createCriticalInjuryItem();
+        }
 
         const html = await renderTemplate('systems/rogue-trader/templates/chat/assign-damage-chat.hbs', this);
         let chatData = {
@@ -119,5 +123,39 @@ export class AssignDamageData {
             chatData.whisper = [game.user];
         }
         await ChatMessage.create(chatData);
+    }
+
+    /**
+     * Create a criticalInjury item on the actor from the critical damage.
+     * @private
+     */
+    async _createCriticalInjuryItem() {
+        const severity = this.actor.system.wounds.critical + this.criticalDamageTaken;
+        const clampedSeverity = Math.min(severity, 10);
+
+        // Normalize location name
+        let location = this.hit.location || 'body';
+        if (location.toLowerCase().includes('arm')) location = 'Arm';
+        else if (location.toLowerCase().includes('leg')) location = 'Leg';
+        else if (location.toLowerCase().includes('head')) location = 'Head';
+        else location = 'Body';
+
+        // Normalize damage type
+        const damageType = (this.hit.damageType || 'impact').toLowerCase();
+
+        const itemData = {
+            name: `Critical Injury - ${location} (${damageType.capitalize()})`,
+            type: 'criticalInjury',
+            system: {
+                damageType: damageType,
+                bodyPart: location.toLowerCase(),
+                severity: clampedSeverity,
+                effect: this.criticalEffect || '',
+                permanent: clampedSeverity >= 8, // Severity 8+ typically permanent
+                notes: `Taken at ${new Date().toLocaleString()}`,
+            },
+        };
+
+        await this.actor.createEmbeddedDocuments('Item', [itemData]);
     }
 }
