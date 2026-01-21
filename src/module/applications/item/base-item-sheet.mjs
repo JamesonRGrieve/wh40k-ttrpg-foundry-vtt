@@ -116,9 +116,9 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
             context.dh.craftsmanships = CONFIG.ROGUE_TRADER?.craftsmanships || ROGUE_TRADER.craftsmanships || {};
         }
 
-        // Merge parent context last so our values take precedence
-        // Use inplace:false to avoid "object is not extensible" errors
-        return foundry.utils.mergeObject(parentContext, context, { inplace: false });
+        // Merge contexts: parent provides base, our values override
+        // Use spread to avoid "object is not extensible" errors with frozen parentContext
+        return { ...parentContext, ...context };
     }
 
     /* -------------------------------------------- */
