@@ -41,4 +41,14 @@ export default class WeaponQualitySheet extends BaseItemSheet {
     tabGroups = {
         primary: 'details',
     };
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+        // Add 'editable' alias for 'isEditable' for template compatibility
+        context.editable = context.isEditable;
+        return context;
+    }
 }
