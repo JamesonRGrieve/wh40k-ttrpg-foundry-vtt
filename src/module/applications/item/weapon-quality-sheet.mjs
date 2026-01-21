@@ -41,4 +41,55 @@ export default class WeaponQualitySheet extends BaseItemSheet {
     tabGroups = {
         primary: 'details',
     };
+
+    /* -------------------------------------------- */
+
+    /**
+     * Whether the sheet is in edit mode.
+     * Compendium items are always in view mode.
+     * @type {boolean}
+     */
+    #editMode = false;
+
+    /* -------------------------------------------- */
+
+    /**
+     * Whether this item is from a compendium (read-only).
+     * @type {boolean}
+     */
+    get isCompendiumItem() {
+        return this.item.pack !== null;
+    }
+
+    /**
+     * Whether the sheet can be edited.
+     * @type {boolean}
+     */
+    get canEdit() {
+        if (this.isCompendiumItem) return false;
+        return this.isEditable;
+    }
+
+    /**
+     * Whether the sheet is currently in edit mode.
+     * @type {boolean}
+     */
+    get inEditMode() {
+        if (this.isCompendiumItem) return false;
+        if (!this.item.actor) return this.isEditable;
+        return this.#editMode && this.isEditable;
+    }
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+
+        context.canEdit = this.canEdit;
+        context.inEditMode = this.inEditMode;
+        context.isCompendiumItem = this.isCompendiumItem;
+
+        return context;
+    }
 }

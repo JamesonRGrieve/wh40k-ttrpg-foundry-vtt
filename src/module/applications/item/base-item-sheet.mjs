@@ -86,8 +86,11 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
 
     /** @inheritDoc */
     async _prepareContext(options) {
+        // Get parent context first
+        const parentContext = await super._prepareContext(options);
+
+        // Build our context
         const context = {
-            ...(await super._prepareContext(options)),
             item: this.item,
             data: this.item, // Legacy compatibility
             document: this.item, // Required for V13 {{editor}} helper
@@ -113,7 +116,8 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
             context.dh.craftsmanships = CONFIG.ROGUE_TRADER?.craftsmanships || ROGUE_TRADER.craftsmanships || {};
         }
 
-        return context;
+        // Merge parent context last so our values take precedence
+        return foundry.utils.mergeObject(parentContext, context);
     }
 
     /* -------------------------------------------- */
