@@ -11,7 +11,7 @@ import ContainerItemSheet from "./container-item-sheet.mjs";
 export default class ArmourModSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["armour-modification"],
+        classes: ["rogue-trader", "sheet", "item", "armour-modification"],
         actions: {
             toggleArmourType: ArmourModSheet.#onToggleArmourType,
             adjustModifier: ArmourModSheet.#onAdjustModifier,

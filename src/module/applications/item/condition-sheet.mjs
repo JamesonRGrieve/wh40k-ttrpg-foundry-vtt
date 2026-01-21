@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class ConditionSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["condition"],
+        classes: ["rogue-trader", "sheet", "item", "condition"],
         position: {
             width: 560,
             height: 520

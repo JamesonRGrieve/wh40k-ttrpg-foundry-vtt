@@ -10,7 +10,7 @@ import ContainerItemSheet from "./container-item-sheet.mjs";
 export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["armour"],
+        classes: ["rogue-trader", "sheet", "item", "armour"],
         position: {
             width: 560,
             height: 580

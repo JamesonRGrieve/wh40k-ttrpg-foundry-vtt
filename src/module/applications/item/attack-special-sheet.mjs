@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class AttackSpecialSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["attack-special"],
+        classes: ["rogue-trader", "sheet", "item", "attack-special"],
         position: {
             width: 500,
             height: 400

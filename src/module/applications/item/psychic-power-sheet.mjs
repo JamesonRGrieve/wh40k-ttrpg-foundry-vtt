@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class PsychicPowerSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["psychic-power"],
+        classes: ["rogue-trader", "sheet", "item", "psychic-power"],
         position: {
             width: 550,
             height: 500

@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class CyberneticSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["cybernetic"],
+        classes: ["rogue-trader", "sheet", "item", "cybernetic"],
         position: {
             width: 600,
             height: 700

@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class WeaponModSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["weapon-mod"],
+        classes: ["rogue-trader", "sheet", "item", "weapon-mod"],
         position: {
             width: 500,
             height: 420

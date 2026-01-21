@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class CombatActionSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["combat-action"],
+        classes: ["rogue-trader", "sheet", "item", "combat-action"],
         position: {
             width: 550,
             height: 620
