@@ -1,0 +1,122 @@
+{{!-- Rogue Trader Weapon Quality Sheet - Modern Design --}}
+<form class="rt-item-sheet rt-weapon-quality-sheet" autocomplete="off">
+    {{!-- Header --}}
+    <div class="rt-item-sheet__header">
+        <div class="rt-item-sheet__image-wrapper" data-action="editImage" data-edit="img">
+            <img class="rt-item-sheet__image" src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" />
+            <div class="rt-item-sheet__image-overlay">
+                <i class="fas fa-edit"></i>
+            </div>
+        </div>
+        <div class="rt-item-sheet__title-area">
+            <div class="rt-item-sheet__name-field">
+                <label class="rt-item-sheet__name-label">Quality Name</label>
+                <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Quality Name" />
+            </div>
+            <div class="rt-item-sheet__type-badge">
+                <i class="fas fa-star"></i>
+                <span>Weapon Quality</span>
+            </div>
+        </div>
+    </div>
+    
+    {{!-- Tab Navigation --}}
+    <nav class="rt-tabs" data-group="primary">
+        <a class="rt-tab {{#if (eq tabs.details.active true)}}active{{/if}}" data-tab="details" data-group="primary">
+            <i class="fas fa-cog"></i> Details
+        </a>
+        <a class="rt-tab {{#if (eq tabs.description.active true)}}active{{/if}}" data-tab="description" data-group="primary">
+            <i class="fas fa-scroll"></i> Description
+        </a>
+    </nav>
+    
+    {{!-- Tab Content --}}
+    <section class="rt-tab-content">
+        {{!-- Details Tab --}}
+        <div class="tab {{#if (eq tabs.details.active true)}}active{{/if}}" data-tab="details" data-group="primary">
+            <div class="rt-panel">
+                <div class="rt-panel__header">
+                    <h3><i class="fas fa-cog"></i> Quality Properties</h3>
+                </div>
+                <div class="rt-panel__content">
+                    {{!-- Identifier --}}
+                    <div class="rt-form-group">
+                        <label class="rt-form-label">Identifier</label>
+                        <input class="rt-input" name="system.identifier" type="text" value="{{system.identifier}}" placeholder="unique-identifier" />
+                        <p class="rt-form-hint">Unique identifier for this quality (lowercase, hyphenated)</p>
+                    </div>
+                    
+                    {{!-- Has Level --}}
+                    <div class="rt-form-group rt-form-group--inline">
+                        <label class="rt-checkbox-label">
+                            <input name="system.hasLevel" type="checkbox" {{checked system.hasLevel}} />
+                            <span>Has Level/Rating</span>
+                        </label>
+                        <p class="rt-form-hint">Check if this quality has a numeric level (e.g., Blast (X))</p>
+                    </div>
+                    
+                    {{!-- Level --}}
+                    {{#if system.hasLevel}}
+                    <div class="rt-form-group">
+                        <label class="rt-form-label">Level</label>
+                        <input class="rt-input rt-input--number" name="system.level" type="number" value="{{system.level}}" min="0" placeholder="0" />
+                    </div>
+                    {{/if}}
+                    
+                    {{!-- Notes --}}
+                    <div class="rt-form-group">
+                        <label class="rt-form-label">Notes</label>
+                        <textarea class="rt-textarea" name="system.notes" rows="3" placeholder="Additional notes or legacy data">{{system.notes}}</textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rt-panel">
+                <div class="rt-panel__header">
+                    <h3><i class="fas fa-magic"></i> Effect</h3>
+                </div>
+                <div class="rt-panel__content">
+                    <div class="rt-editor-container">
+                        {{editor content=system.effect target="system.effect" button=true editable=isEditable engine="prosemirror"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {{!-- Description Tab --}}
+        <div class="tab {{#if (eq tabs.description.active true)}}active{{/if}}" data-tab="description" data-group="primary">
+            <div class="rt-panel">
+                <div class="rt-panel__header">
+                    <h3><i class="fas fa-scroll"></i> Description</h3>
+                </div>
+                <div class="rt-panel__content">
+                    <div class="rt-editor-container">
+                        {{editor content=system.description.value target="system.description.value" button=true editable=isEditable engine="prosemirror"}}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rt-panel">
+                <div class="rt-panel__header">
+                    <h3><i class="fas fa-book"></i> Source</h3>
+                </div>
+                <div class="rt-panel__content">
+                    <div class="rt-form-row">
+                        <div class="rt-form-group rt-form-group--half">
+                            <label class="rt-form-label">Book</label>
+                            <input class="rt-input" name="system.source.book" type="text" value="{{system.source.book}}" placeholder="Book Name" />
+                        </div>
+                        <div class="rt-form-group rt-form-group--half">
+                            <label class="rt-form-label">Page</label>
+                            <input class="rt-input" name="system.source.page" type="text" value="{{system.source.page}}" placeholder="123" />
+                        </div>
+                    </div>
+                    <div class="rt-form-group">
+                        <label class="rt-form-label">Custom Source</label>
+                        <input class="rt-input" name="system.source.custom" type="text" value="{{system.source.custom}}" placeholder="Custom source reference" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
