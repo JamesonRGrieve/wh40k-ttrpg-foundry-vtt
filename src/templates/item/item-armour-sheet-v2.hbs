@@ -151,24 +151,24 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-armour-tabs" data-group="primary">
-      <button type="button" class="rt-armour-tab active" data-tab="protection" data-group="primary">
+    <nav class="rt-tabs rt-tabs--armour rt-armour-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-armour-tab active" data-tab="protection" data-group="primary">
         <i class="fas fa-shield-halved"></i>
         <span>Protection</span>
       </button>
-      <button type="button" class="rt-armour-tab" data-tab="properties" data-group="primary">
+      <button type="button" class="rt-tab rt-armour-tab" data-tab="properties" data-group="primary">
         <i class="fas fa-star"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="rt-armour-tab" data-tab="mods" data-group="primary">
+      <button type="button" class="rt-tab rt-armour-tab" data-tab="mods" data-group="primary">
         <i class="fas fa-wrench"></i>
         <span>Mods</span>
       </button>
-      <button type="button" class="rt-armour-tab" data-tab="description" data-group="primary">
+      <button type="button" class="rt-tab rt-armour-tab" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
-      <button type="button" class="rt-armour-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="rt-tab rt-armour-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
@@ -177,10 +177,10 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-armour-content scrollable">
+    <div class="rt-armour-content rt-tab-content rt-tab-content--armour scrollable">
       
       {{!-- PROTECTION TAB --}}
-      <div class="rt-armour-panel active" data-tab="protection" data-group="primary">
+      <div class="rt-armour-panel tab active" data-tab="protection" data-group="primary">
         
         {{!-- Armour Points Grid --}}
         <div class="rt-armour-section">
@@ -296,7 +296,7 @@
       </div>
 
       {{!-- PROPERTIES TAB --}}
-      <div class="rt-armour-panel" data-tab="properties" data-group="primary">
+      <div class="rt-armour-panel tab" data-tab="properties" data-group="primary">
         
         <div class="rt-armour-section">
           <div class="rt-armour-section__header">
@@ -367,7 +367,7 @@
       </div>
 
       {{!-- MODIFICATIONS TAB --}}
-      <div class="rt-armour-panel" data-tab="mods" data-group="primary">
+      <div class="rt-armour-panel tab" data-tab="mods" data-group="primary">
         
         <div class="rt-armour-section">
           <div class="rt-armour-section__header">
@@ -428,7 +428,7 @@
       </div>
 
       {{!-- DESCRIPTION TAB --}}
-      <div class="rt-armour-panel" data-tab="description" data-group="primary">
+      <div class="rt-armour-panel tab" data-tab="description" data-group="primary">
         
         {{!-- Effect --}}
         <div class="rt-armour-section">
@@ -486,7 +486,7 @@
       </div>
 
       {{!-- EFFECTS TAB --}}
-      <div class="rt-armour-panel" data-tab="effects" data-group="primary">
+      <div class="rt-armour-panel tab" data-tab="effects" data-group="primary">
         {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
       </div>
 

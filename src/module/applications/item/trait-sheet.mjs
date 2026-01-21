@@ -23,7 +23,7 @@ export default class TraitSheet extends BaseItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/rogue-trader/templates/item/item-trait-sheet-modern.hbs',
-            scrollable: ['.rt-trait-content'],
+            scrollable: ['.rt-tab-content'],
         },
     };
 
@@ -42,42 +42,4 @@ export default class TraitSheet extends BaseItemSheet {
     tabGroups = {
         primary: 'properties',
     };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    async _onRender(context, options) {
-        await super._onRender(context, options);
-        this._setupTraitTabs();
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Set up tab click listeners for trait sheet tabs.
-     * @protected
-     */
-    _setupTraitTabs() {
-        const tabs = this.element.querySelectorAll('.rt-trait-tabs .rt-trait-tab');
-        tabs.forEach((tab) => {
-            tab.addEventListener('click', (event) => {
-                event.preventDefault();
-                const tabName = tab.dataset.tab;
-                if (!tabName) return;
-
-                // Update active tab button
-                tabs.forEach((t) => t.classList.remove('active'));
-                tab.classList.add('active');
-
-                // Show/hide panels
-                const panels = this.element.querySelectorAll('.rt-trait-panel');
-                panels.forEach((panel) => {
-                    panel.classList.toggle('active', panel.dataset.tab === tabName);
-                });
-
-                // Update tab group state
-                this.tabGroups.primary = tabName;
-            });
-        });
-    }
 }

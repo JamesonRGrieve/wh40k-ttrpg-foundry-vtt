@@ -27,7 +27,7 @@ export default class GearSheet extends BaseItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/rogue-trader/templates/item/item-gear-sheet-v2.hbs',
-            scrollable: ['.rt-gear-content'],
+            scrollable: ['.rt-tab-content'],
         },
     };
 
@@ -46,46 +46,6 @@ export default class GearSheet extends BaseItemSheet {
     tabGroups = {
         primary: 'details',
     };
-
-    /* -------------------------------------------- */
-    /*  Rendering                                   */
-    /* -------------------------------------------- */
-
-    /** @override */
-    async _onRender(context, options) {
-        await super._onRender(context, options);
-        this._setupGearTabs();
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Set up tab click listeners for gear sheet tabs.
-     * @protected
-     */
-    _setupGearTabs() {
-        const tabs = this.element.querySelectorAll('.rt-gear-tabs .rt-gear-tab');
-        tabs.forEach((tab) => {
-            tab.addEventListener('click', (event) => {
-                event.preventDefault();
-                const tabName = tab.dataset.tab;
-                if (!tabName) return;
-
-                // Update active tab button
-                tabs.forEach((t) => t.classList.remove('active'));
-                tab.classList.add('active');
-
-                // Show/hide panels
-                const panels = this.element.querySelectorAll('.rt-gear-panel');
-                panels.forEach((panel) => {
-                    panel.classList.toggle('active', panel.dataset.tab === tabName);
-                });
-
-                // Update tab group state
-                this.tabGroups.primary = tabName;
-            });
-        });
-    }
 
     /* -------------------------------------------- */
     /*  Context Preparation                         */

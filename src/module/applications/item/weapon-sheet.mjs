@@ -44,7 +44,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/rogue-trader/templates/item/item-weapon-sheet-modern.hbs',
-            scrollable: ['.rt-weapon-content'],
+            scrollable: ['.rt-tab-content'],
         },
     };
 
@@ -221,44 +221,8 @@ export default class WeaponSheet extends ContainerItemSheet {
     async _onRender(context, options) {
         await super._onRender(context, options);
 
-        // Set up tab listeners for the weapon-specific tabs
-        this._setupWeaponTabs();
-
         // Set up drag-and-drop visual feedback
         this._setupDragDropFeedback();
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Set up tab click listeners for weapon sheet tabs.
-     * @protected
-     */
-    _setupWeaponTabs() {
-        const tabs = this.element.querySelectorAll('.rt-weapon-tabs .rt-weapon-tab');
-        const switchTab = (tabName) => {
-            if (!tabName) return;
-
-            // Update active tab button
-            tabs.forEach((t) => t.classList.toggle('active', t.dataset.tab === tabName));
-
-            // Show/hide panels
-            const panels = this.element.querySelectorAll('.rt-weapon-panel');
-            panels.forEach((panel) => {
-                panel.classList.toggle('active', panel.dataset.tab === tabName);
-            });
-
-            // Update tab group state
-            this.tabGroups.primary = tabName;
-        };
-
-        // Tab button clicks
-        tabs.forEach((tab) => {
-            tab.addEventListener('click', (event) => {
-                event.preventDefault();
-                switchTab(tab.dataset.tab);
-            });
-        });
     }
 
     /* -------------------------------------------- */

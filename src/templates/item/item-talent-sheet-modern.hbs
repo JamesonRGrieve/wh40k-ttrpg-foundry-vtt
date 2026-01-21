@@ -130,20 +130,20 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-talent-tabs" data-group="primary">
-      <button type="button" class="rt-talent-tab active" data-tab="properties" data-group="primary">
+    <nav class="rt-tabs rt-tabs--talent rt-talent-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-talent-tab active" data-tab="properties" data-group="primary">
         <i class="fas fa-cog"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="rt-talent-tab" data-tab="prerequisites" data-group="primary">
+      <button type="button" class="rt-tab rt-talent-tab" data-tab="prerequisites" data-group="primary">
         <i class="fas fa-lock"></i>
         <span>Prerequisites</span>
       </button>
-      <button type="button" class="rt-talent-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="rt-tab rt-talent-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
-      <button type="button" class="rt-talent-tab" data-tab="description" data-group="primary">
+      <button type="button" class="rt-tab rt-talent-tab" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
@@ -152,10 +152,10 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="rt-talent-content">
+    <section class="rt-talent-content rt-tab-content rt-tab-content--talent">
       
       {{!-- PROPERTIES TAB --}}
-      <div class="rt-talent-panel active" data-tab="properties" data-group="primary">
+      <div class="rt-talent-panel tab active" data-tab="properties" data-group="primary">
         <div class="rt-talent-section">
           <h3 class="rt-section-title">
             <i class="fas fa-info-circle"></i> Basic Properties
@@ -259,7 +259,7 @@
       </div>
       
       {{!-- PREREQUISITES TAB --}}
-      <div class="rt-talent-panel" data-tab="prerequisites" data-group="primary">
+      <div class="rt-talent-panel tab" data-tab="prerequisites" data-group="primary">
         <div class="rt-talent-section">
           <h3 class="rt-section-title">
             <i class="fas fa-lock"></i> Text Description
@@ -292,7 +292,7 @@
       </div>
       
       {{!-- EFFECTS TAB --}}
-      <div class="rt-talent-panel" data-tab="effects" data-group="primary">
+      <div class="rt-talent-panel tab" data-tab="effects" data-group="primary">
         {{!-- Benefit/Effect Description --}}
         <div class="rt-talent-section">
           <h3 class="rt-section-title">
@@ -512,7 +512,7 @@
       </div>
       
       {{!-- DESCRIPTION TAB --}}
-      <div class="rt-talent-panel" data-tab="description" data-group="primary">
+      <div class="rt-talent-panel tab" data-tab="description" data-group="primary">
         {{!-- Description --}}
         <div class="rt-talent-section">
           <h3 class="rt-section-title">

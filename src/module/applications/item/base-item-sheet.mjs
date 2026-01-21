@@ -30,6 +30,13 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
             effectToggle: BaseItemSheet.#effectToggle,
             toggleSection: BaseItemSheet.#toggleSection,
         },
+        tabs: [
+            {
+                navSelector: '.rt-tabs',
+                contentSelector: '.rt-tab-content',
+                initial: 'description',
+            },
+        ],
         classes: ['rogue-trader', 'sheet', 'item', 'rt-item-sheet'],
         form: {
             submitOnChange: true,
@@ -257,9 +264,6 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
             });
         });
 
-        // Set up existing tab listeners (V1 compatibility)
-        this._setupTabListeners();
-
         // Set up legacy effect handlers (V1 class-based handlers)
         this._setupLegacyEffectHandlers();
     }
@@ -313,48 +317,6 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
                 await effect?.update({ disabled: !effect.disabled });
             });
         });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Set up tab click listeners for V1-style templates.
-     * @protected
-     */
-    _setupTabListeners() {
-        const tabs = this.element.querySelectorAll('.rt-tabs .rt-tab');
-        tabs.forEach((tab) => {
-            tab.addEventListener('click', this._onTabClick.bind(this));
-        });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle tab click events for V1-style templates.
-     * @param {Event} event  The click event.
-     * @protected
-     */
-    _onTabClick(event) {
-        const tab = event.currentTarget;
-        const tabName = tab.dataset.tab;
-        if (!tabName) return;
-
-        // Update active tab
-        const tabContainer = tab.closest('.rt-tabs');
-        tabContainer.querySelectorAll('.rt-tab').forEach((t) => t.classList.remove('active'));
-        tab.classList.add('active');
-
-        // Show/hide content
-        const contentContainer = this.element.querySelector('.rt-tab-content');
-        if (contentContainer) {
-            contentContainer.querySelectorAll('.rt-tab-panel').forEach((panel) => {
-                panel.classList.toggle('active', panel.dataset.tab === tabName);
-            });
-        }
-
-        // Update tab group state
-        this.tabGroups.primary = tabName;
     }
 
     /* -------------------------------------------- */

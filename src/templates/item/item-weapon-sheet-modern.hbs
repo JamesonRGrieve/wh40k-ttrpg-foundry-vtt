@@ -175,16 +175,16 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION (3 TABS)
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-weapon-tabs">
-      <button type="button" class="rt-weapon-tab active" data-tab="overview">
+    <nav class="rt-tabs rt-tabs--weapon rt-weapon-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-weapon-tab active" data-tab="overview" data-group="primary">
         <i class="fa-solid fa-crosshairs"></i>
         <span>Overview</span>
       </button>
-      <button type="button" class="rt-weapon-tab" data-tab="properties">
+      <button type="button" class="rt-tab rt-weapon-tab" data-tab="properties" data-group="primary">
         <i class="fa-solid fa-sliders"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="rt-weapon-tab" data-tab="effects">
+      <button type="button" class="rt-tab rt-weapon-tab" data-tab="effects" data-group="primary">
         <i class="fa-solid fa-wand-magic-sparkles"></i>
         <span>Effects</span>
       </button>
@@ -193,12 +193,12 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="rt-weapon-content">
+    <section class="rt-weapon-content rt-tab-content rt-tab-content--weapon">
       
       {{!-- ─────────────────────────────────────────────────────────────────
            OVERVIEW TAB: Combat-first view with quick actions
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="rt-weapon-panel active" data-tab="overview">
+      <div class="rt-weapon-panel tab active" data-tab="overview" data-group="primary">
         
         {{!-- Quick Roll Buttons --}}
         {{#if isOwnedByActor}}
@@ -388,7 +388,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            PROPERTIES TAB: All editable fields
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="rt-weapon-panel" data-tab="properties">
+      <div class="rt-weapon-panel tab" data-tab="properties" data-group="primary">
         
         {{#if (not inEditMode)}}
         <div class="rt-edit-notice">
@@ -816,7 +816,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            EFFECTS TAB: Active Effects
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="rt-weapon-panel" data-tab="effects">
+      <div class="rt-weapon-panel tab" data-tab="effects" data-group="primary">
         {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
       </div>
       
