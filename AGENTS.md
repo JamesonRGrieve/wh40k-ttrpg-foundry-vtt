@@ -533,6 +533,289 @@ Icon mapping for items/abilities.
 -   `rt-journals-*` (rules references)
 -   `rt-rolltables-*` (random tables)
 
+## Item Sheet Development Guide
+
+### Creating a New Item Sheet
+
+All item sheets extend `BaseItemSheet` (or `ContainerItemSheet` for items that can contain other items) and follow the ApplicationV2 pattern.
+
+#### Basic Structure
+
+```javascript
+import BaseItemSheet from './base-item-sheet.mjs';
+
+export default class MyItemSheet extends BaseItemSheet {
+    /** @override */
+    static DEFAULT_OPTIONS = {
+        classes: ['rogue-trader', 'sheet', 'item', 'my-item'],
+        position: { width: 600, height: 700 },
+        actions: {
+            // Custom action handlers
+            customAction: MyItemSheet.#handleCustomAction,
+        },
+    };
+
+    /** @override */
+    static PARTS = {
+        sheet: {
+            template: 'systems/rogue-trader/templates/item/item-my-item-sheet.hbs',
+            scrollable: ['.rt-tab-content'], // Use unified selector
+        },
+    };
+
+    /** @override */
+    static TABS = [
+        { tab: 'properties', group: 'primary', label: 'Properties' },
+        { tab: 'description', group: 'primary', label: 'Description' },
+        { tab: 'effects', group: 'primary', label: 'Effects' },
+    ];
+
+    /** @override */
+    tabGroups = {
+        primary: 'properties', // Default tab
+    };
+
+    /** @override */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+
+        // Add custom context data
+        context.myCustomData = this.item.system.someValue;
+
+        return context;
+    }
+
+    // Action handlers (static, use arrow notation)
+    static async #handleCustomAction(event, target) {
+        // 'this' is bound to the sheet instance
+        const value = target.dataset.value;
+        await this.item.update({ 'system.field': value });
+    }
+}
+```
+
+#### Tab Handling (CURRENT PATTERN)
+
+**DO NOT implement custom tab handlers.** Tabs are automatically managed by `PrimarySheetMixin._activateLegacyTabs()`.
+
+**Template Requirements:**
+
+```handlebars
+{{! Nav container with unified classes }}
+<nav class='rt-tabs rt-tabs--my-item rt-my-item-tabs' data-group='primary'>
+    <button class='rt-tab rt-my-item-tab' data-tab='properties' data-group='primary'>
+        Properties
+    </button>
+    <button class='rt-tab rt-my-item-tab' data-tab='description' data-group='primary'>
+        Description
+    </button>
+</nav>
+
+{{! Content container with unified classes }}
+<section class='rt-tab-content rt-tab-content--my-item'>
+    <div class='tab rt-my-item-panel' data-tab='properties' data-group='primary'>
+        {{! Properties content }}
+    </div>
+    <div class='tab rt-my-item-panel' data-tab='description' data-group='primary'>
+        {{! Description content }}
+    </div>
+</section>
+```
+
+**Key Points:**
+
+-   Use **dual class pattern**: `.rt-tabs` (unified) + `.rt-tabs--{type}` (per-sheet)
+-   Always include `data-group="primary"` on nav and buttons
+-   Always include `data-tab="{name}"` on buttons and panels
+-   Use `.rt-tab-content` for scrollable config
+
+**DEPRECATED PATTERN (DO NOT USE):**
+
+```javascript
+// ❌ DO NOT implement custom tab handlers
+_setupMyItemTabs() {
+    const tabs = this.element.querySelectorAll('.rt-my-item-tabs .rt-my-item-tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', (event) => {
+            // ... manual tab switching
+        });
+    });
+}
+```
+
+#### Action Handlers Pattern
+
+Use static methods with arrow notation for action handlers:
+
+```javascript
+static DEFAULT_OPTIONS = {
+    actions: {
+        addItem: MySheet.#addItem,
+        removeItem: MySheet.#removeItem,
+        toggleFlag: MySheet.#toggleFlag
+    }
+};
+
+/**
+ * Add an item to the collection.
+ * @this {MySheet}
+ * @param {PointerEvent} event - Triggering event
+ * @param {HTMLElement} target - Action target
+ */
+static async #addItem(event, target) {
+    const itemId = target.dataset.itemId;
+    // Access sheet instance via 'this'
+    await this.item.update({ 'system.items': [...this.item.system.items, itemId] });
+}
+```
+
+#### Container Items (Drag-Drop)
+
+For items that can contain other items (weapons with mods, armour with mods), extend `ContainerItemSheet`:
+
+```javascript
+import ContainerItemSheet from './container-item-sheet.mjs';
+
+export default class WeaponSheet extends ContainerItemSheet {
+    /** @override */
+    _canAddItem(item) {
+        if (!super._canAddItem(item)) return false;
+
+        // Custom validation
+        if (item.type !== 'weaponModification') {
+            ui.notifications.warn('Only weapon modifications can be added');
+            return false;
+        }
+
+        return true;
+    }
+
+    /** @override */
+    async _onDrop(event) {
+        event.preventDefault();
+
+        let data;
+        try {
+            data = JSON.parse(event.dataTransfer.getData('text/plain'));
+        } catch (err) {
+            return false;
+        }
+
+        if (data.type !== 'Item') return false;
+
+        const droppedItem = await fromUuid(data.uuid);
+        if (!droppedItem) return false;
+
+        // Handle custom drop logic
+        if (droppedItem.type === 'weaponModification') {
+            return this._onDropModification(droppedItem);
+        }
+
+        // Fallback to parent
+        return super._onDrop(event);
+    }
+}
+```
+
+#### Common Patterns
+
+**Edit Mode Toggle:**
+
+```javascript
+// In sheet class
+#editMode = false;
+
+get inEditMode() {
+    if (this.isCompendiumItem) return false;
+    if (!this.isOwnedByActor) return this.isEditable;
+    return this.#editMode && this.isEditable;
+}
+
+static async #toggleEditMode(event, target) {
+    if (!this.canEdit) return;
+    this.#editMode = !this.#editMode;
+    this.render();
+}
+```
+
+**Context Preparation:**
+
+```javascript
+async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+
+    // Add CONFIG references
+    context.CONFIG = CONFIG;
+
+    // Add edit mode flags
+    context.canEdit = this.canEdit;
+    context.inEditMode = this.inEditMode;
+
+    // Prepare arrays for templates
+    context.itemsArray = Array.from(this.item.system.items || []);
+
+    // Add derived data
+    context.effectiveValue = this.item.system.calculateEffectiveValue();
+
+    return context;
+}
+```
+
+**Modification Systems:**
+
+```javascript
+// Store modifications as array of objects with UUIDs
+{
+    modifications: [
+        {
+            uuid: "Compendium.rogue-trader.items.xxx",
+            name: "Red Dot Sight",
+            active: true,
+            cachedModifiers: { toHit: 10, range: 5 }
+        }
+    ]
+}
+
+// In DataModel prepareDerivedData()
+prepareDerivedData() {
+    super.prepareDerivedData();
+
+    // Calculate effective stats with modifications
+    this.effectiveToHit = this.baseToHit;
+    for (const mod of this.modifications) {
+        if (mod.active) {
+            this.effectiveToHit += mod.cachedModifiers.toHit || 0;
+        }
+    }
+}
+```
+
+### Item Sheet Gotchas
+
+1. **Template Context**: Use `{{system.xxx}}` NOT `{{actor.system.xxx}}` in Handlebars
+2. **Scrollable Config**: Always use `.rt-tab-content` for consistent behavior
+3. **Tab Management**: Never implement custom tab handlers - use PrimarySheetMixin
+4. **Action Naming**: Use `data-action="actionName"` not `onClick` or jQuery bindings
+5. **Field Names**: Input `name` attributes must match DataModel schema exactly
+6. **Edit Mode**: Check `this.isEditable` and `this.isCompendiumItem` before allowing edits
+7. **Array Updates**: Always use `await this.item.update()` - never mutate `system` directly
+8. **UUID References**: Store UUIDs for compendium items, not IDs
+9. **Cached Data**: Cache expensive lookups (labels, computed values) during prepareContext
+10. **Render Cycle**: Don't cache context - sheets re-render fresh each time
+
+### Template Best Practices
+
+1. **Header Structure**: Use existing header partials when possible
+2. **Form Inputs**: Bind directly to system properties via `name="system.field"`
+3. **Conditional Rendering**: Use `{{#if}}` for optional sections
+4. **Icons**: Use Font Awesome 6 (`fa-solid`, `fa-regular`, `fa-brands`)
+5. **Badges**: Use `.rt-badge` classes for status indicators
+6. **Buttons**: Use `data-action` for all interactive buttons
+7. **Tooltips**: Use `data-tooltip` for V13 native tooltips
+8. **Drag Zones**: Use `data-drop-zone="name"` for drop targets
+9. **Iterators**: Use `{{#each}}` with `@index` for arrays
+10. **Localization**: Always use `{{localize "RT.Label"}}` for text
+
 ## Beads Issue Tracking
 
 This project uses **Beads** for AI-native issue tracking. Issues live in `.beads/` and sync with git.
