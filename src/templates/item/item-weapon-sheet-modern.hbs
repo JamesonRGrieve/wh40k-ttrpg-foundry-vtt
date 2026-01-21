@@ -331,7 +331,8 @@
               <div class="rt-quality-tag rt-quality-tag--clickable"
                    data-action="openQuality"
                    data-identifier="{{identifier}}"
-                   data-tooltip="{{description}}"
+                   data-rt-tooltip="quality"
+                   data-rt-tooltip-data="{{@root.prepareQualityTooltip identifier level}}"
                    data-tooltip-direction="UP">
                 <i class="fa-solid fa-star"></i>
                 <span>{{label}}</span>
@@ -702,12 +703,14 @@
           </div>
           <div class="rt-weapon-section__body">
             {{#if (gt modificationsData.length 0)}}
-            <div class="rt-mods-list">
+            <div class="rt-mods-list" data-drop-zone="modifications">
               {{#each modificationsData as |mod|}}
-              <div class="rt-mod-card {{#if mod.active}}{{else}}rt-mod-card--inactive{{/if}}" data-mod-index="{{mod.index}}">
+               <div class="rt-mod-card {{#if mod.active}}{{else}}rt-mod-card--inactive{{/if}}" data-mod-index="{{mod.index}}">
                 <div class="rt-mod-card__header">
                   <div class="rt-mod-card__title">
-                    <i class="fa-solid fa-wrench"></i>
+                    <span class="rt-mod-category-icon" data-tooltip="{{mod.category}}" title="{{mod.category}}">
+                      <i class="fa-solid {{mod.categoryIcon}}"></i>
+                    </span>
                     <span class="rt-mod-card__name">{{mod.name}}</span>
                   </div>
                   <div class="rt-mod-card__actions">
@@ -754,11 +757,54 @@
               {{/each}}
             </div>
             {{else}}
-            <div class="rt-empty-state rt-empty-state--mods">
+            <div class="rt-empty-state rt-empty-state--mods rt-mod-dropzone" data-drop-zone="modifications">
               <i class="fa-solid fa-wrench"></i>
               <p>No modifications installed</p>
               {{#if inEditMode}}
               <p class="rt-empty-hint">Drag weapon modifications here from compendium</p>
+              <div class="rt-dropzone-info">
+                <div class="rt-dropzone-info__header">
+                  <i class="fa-solid fa-info-circle"></i>
+                  <span>Compatible Modifications</span>
+                </div>
+                <div class="rt-dropzone-info__body">
+                  <div class="rt-dropzone-compatibility">
+                    <div class="rt-dropzone-compat__item">
+                      <i class="fa-solid fa-check-circle"></i>
+                      <span>Weapon Class: <strong>{{system.classLabel}}</strong></span>
+                    </div>
+                    <div class="rt-dropzone-compat__item">
+                      <i class="fa-solid fa-check-circle"></i>
+                      <span>Weapon Type: <strong>{{system.typeLabel}}</strong></span>
+                    </div>
+                  </div>
+                  <div class="rt-dropzone-categories">
+                    <span class="rt-dropzone-category__label">Common Categories:</span>
+                    <div class="rt-mod-category-badges">
+                      <span class="rt-mod-category-badge" data-tooltip="Scopes, sights, targeting aids">
+                        <i class="fa-solid fa-crosshairs"></i>
+                        Sight
+                      </span>
+                      <span class="rt-mod-category-badge" data-tooltip="Barrels, suppressors, extensions">
+                        <i class="fa-solid fa-gun"></i>
+                        Barrel
+                      </span>
+                      <span class="rt-mod-category-badge" data-tooltip="Stocks, grips, stabilizers">
+                        <i class="fa-solid fa-wrench"></i>
+                        Stock
+                      </span>
+                      <span class="rt-mod-category-badge" data-tooltip="Magazines, ammo feeds">
+                        <i class="fa-solid fa-database"></i>
+                        Magazine
+                      </span>
+                      <span class="rt-mod-category-badge" data-tooltip="Other modifications">
+                        <i class="fa-solid fa-cog"></i>
+                        Accessory
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
               {{/if}}
             </div>
             {{/if}}

@@ -2,7 +2,7 @@ import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-loca
 import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.mjs';
 import { getCriticalDamage } from '../rules/critical-damage.mjs';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.mjs';
-import { calculateQualityPenetrationModifiers } from '../rules/weapon-quality-effects.mjs';
+import { calculateQualityPenetrationModifiers, calculateExoticQualityDamageModifiers, getRighteousFuryThreshold } from '../rules/weapon-quality-effects.mjs';
 
 export class DamageData {
     template = '';
@@ -87,9 +87,15 @@ export class Hit {
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
-        let righteousFuryThreshold = 10;
+        // Get RF threshold from weapon qualities (Gauss=9, Vengeful=8, standard=10)
+        let righteousFuryThreshold = getRighteousFuryThreshold(actionItem);
+
+        // Legacy support: check for Vengeful in attackSpecials (attack-specials.mjs)
         if (attackData.rollData.hasAttackSpecial('Vengeful')) {
-            righteousFuryThreshold = attackData.rollData.getAttackSpecial('Vengeful').level ?? 10;
+            const vengefulLevel = attackData.rollData.getAttackSpecial('Vengeful').level;
+            if (vengefulLevel && vengefulLevel < righteousFuryThreshold) {
+                righteousFuryThreshold = vengefulLevel;
+            }
             game.rt.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }
 
@@ -230,6 +236,27 @@ export class Hit {
         }
 
         await calculateWeaponModifiersDamageBonuses(attackData, this);
+
+        // Exotic quality damage bonuses (Force, Witch-Edge, Daemonbane)
+        const exoticModifiers = calculateExoticQualityDamageModifiers({
+            weapon: actionItem,
+            actor: sourceActor,
+            target: attackData.damageData?.targetActor,
+            baseDamage: this.damage,
+        });
+
+        // Handle exotic modifiers - most are numeric, but Daemonbane is a dice formula
+        for (const [key, value] of Object.entries(exoticModifiers)) {
+            if (typeof value === 'string' && value.includes('d')) {
+                // Daemonbane: "2d10" - roll additional dice
+                const exoticRoll = new Roll(value, {});
+                await exoticRoll.evaluate();
+                this.modifiers[key] = exoticRoll.total;
+            } else if (typeof value === 'number') {
+                // Force, Witch-Edge: numeric bonuses
+                this.modifiers[key] = value;
+            }
+        }
     }
 
     async _calculatePenetration(attackData) {
@@ -288,6 +315,22 @@ export class Hit {
         if (attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
             if (attackData.rollData.hasAttackSpecial('Melta')) {
                 this.penetrationModifiers['melta'] = this.penetration;
+            }
+        }
+
+        // Quality-based penetration modifiers (Melta via weapon qualities)
+        const qualityPenModifiers = calculateQualityPenetrationModifiers({
+            weapon: actionItem,
+            rangeName: attackData.rollData.rangeName,
+            basePenetration: this.penetration,
+        });
+
+        // Apply quality modifiers (merge with existing to avoid duplication)
+        for (const [key, value] of Object.entries(qualityPenModifiers)) {
+            const lowerKey = key.toLowerCase();
+            // Only apply if not already applied via attackSpecials
+            if (!this.penetrationModifiers[lowerKey]) {
+                this.penetrationModifiers[key] = value;
             }
         }
 

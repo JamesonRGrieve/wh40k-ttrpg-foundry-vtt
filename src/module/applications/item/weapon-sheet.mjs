@@ -143,12 +143,19 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Prepare qualities array for clickable tags
         context.qualitiesArray = Array.from(system.effectiveSpecial || []).map((q) => {
             const def = CONFIG.ROGUE_TRADER?.getQualityDefinition?.(q) || null;
+            // Parse level from quality identifier if present
+            const match = q.match(/-(\d+)$/);
+            const level = match ? parseInt(match[1]) : null;
             return {
                 identifier: q,
                 label: def?.label || q,
                 description: def?.description || '',
+                level,
             };
         });
+
+        // Bind prepareQualityTooltip helper for template
+        context.prepareQualityTooltip = this.prepareQualityTooltip.bind(this);
 
         // Add effective* getters to context for easy template access
         context.effectiveDamageLabel = system.effectiveDamageFormula || system.damageLabel;
@@ -165,6 +172,8 @@ export default class WeaponSheet extends ContainerItemSheet {
             cachedModifiers: mod.cachedModifiers || {},
             effects: this._getModificationEffects(mod),
             hasEffects: this._hasModificationEffects(mod),
+            category: mod.category || 'accessory',
+            categoryIcon: this._getModificationCategoryIcon(mod.category),
         }));
 
         // Check if weapon has any modifications affecting stats
@@ -197,6 +206,9 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Set up tab listeners for the weapon-specific tabs
         this._setupWeaponTabs();
+
+        // Set up drag-and-drop visual feedback
+        this._setupDragDropFeedback();
     }
 
     /* -------------------------------------------- */
@@ -230,6 +242,94 @@ export default class WeaponSheet extends ContainerItemSheet {
                 switchTab(tab.dataset.tab);
             });
         });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Set up drag-and-drop visual feedback for modification drop zones.
+     * @protected
+     */
+    _setupDragDropFeedback() {
+        const dropZones = this.element.querySelectorAll('[data-drop-zone="modifications"]');
+        if (!dropZones.length) return;
+
+        dropZones.forEach((zone) => {
+            // Drag enter
+            zone.addEventListener('dragenter', async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                // Try to get the dragged item data
+                const dragData = this._getDragData(event);
+                if (!dragData) return;
+
+                // Check if it's a valid modification
+                const isValid = await this._isValidModificationDrop(dragData);
+                zone.classList.add(isValid ? 'drag-over' : 'drag-invalid');
+            });
+
+            // Drag over (required to allow drop)
+            zone.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+            });
+
+            // Drag leave
+            zone.addEventListener('dragleave', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                // Only remove highlight if leaving the drop zone entirely
+                if (!zone.contains(event.relatedTarget)) {
+                    zone.classList.remove('drag-over', 'drag-invalid');
+                }
+            });
+
+            // Drop
+            zone.addEventListener('drop', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                zone.classList.remove('drag-over', 'drag-invalid');
+            });
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Get drag data from a drag event.
+     * @param {DragEvent} event - The drag event
+     * @returns {object|null} - The drag data or null
+     * @private
+     */
+    _getDragData(event) {
+        try {
+            // Check if dataTransfer has the data
+            const types = event.dataTransfer?.types || [];
+            if (!types.includes('text/plain')) return null;
+
+            // For dragenter, we can't access the data due to browser security
+            // We'll have to make assumptions based on the drag source
+            return { type: 'unknown' };
+        } catch (err) {
+            return null;
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Check if a dragged item is a valid modification for this weapon.
+     * @param {object} dragData - The drag data
+     * @returns {Promise<boolean>}
+     * @private
+     */
+    async _isValidModificationDrop(dragData) {
+        // Since we can't access the full data in dragenter due to browser security,
+        // we'll optimistically assume it's valid and do full validation on drop
+        // This is a UX limitation we have to accept
+        return true;
     }
 
     /* -------------------------------------------- */
@@ -285,6 +385,24 @@ export default class WeaponSheet extends ContainerItemSheet {
     _hasModificationEffects(mod) {
         const m = mod.cachedModifiers || {};
         return !!(m.damage || m.penetration || m.toHit || m.range || m.weight);
+    }
+
+    /**
+     * Get the icon class for a modification category.
+     * @param {string} category - Modification category
+     * @returns {string} - Font Awesome icon class
+     * @private
+     */
+    _getModificationCategoryIcon(category) {
+        const icons = {
+            sight: 'fa-crosshairs',
+            barrel: 'fa-gun',
+            stock: 'fa-wrench',
+            magazine: 'fa-database',
+            accessory: 'fa-cog',
+            other: 'fa-tools',
+        };
+        return icons[category] || 'fa-cog';
     }
 
     /* -------------------------------------------- */
@@ -554,6 +672,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             uuid: modItem.uuid,
             name: modItem.name,
             active: true,
+            category: modItem.system.category || 'accessory',
             cachedModifiers: {
                 damage: modItem.system.modifiers?.damage ?? 0,
                 penetration: modItem.system.modifiers?.penetration ?? 0,

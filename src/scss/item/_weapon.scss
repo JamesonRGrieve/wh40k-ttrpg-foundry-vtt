@@ -1484,3 +1484,239 @@
         color: var(--rt-text-muted);
     }
 }
+
+// ============================================
+// MODIFICATION DROPZONE ENHANCEMENTS
+// ============================================
+
+.rt-mod-dropzone {
+    position: relative;
+    transition: all 0.3s ease;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: 2px dashed transparent;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+
+    // Drag-over state
+    &.drag-over {
+        background: rgba(212, 175, 55, 0.08);
+        box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.15);
+
+        &::before {
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
+        }
+
+        .rt-empty-hint {
+            color: var(--rt-gold-bright);
+            transform: scale(1.05);
+        }
+    }
+
+    // Invalid drop
+    &.drag-invalid {
+        background: rgba(182, 62, 46, 0.08);
+
+        &::before {
+            border-color: rgba(182, 62, 46, 0.6);
+        }
+
+        .rt-empty-hint {
+            color: var(--rt-danger);
+        }
+    }
+}
+
+.rt-dropzone-info {
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba(10, 12, 18, 0.45);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 4px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        color: rgba(246, 208, 163, 0.95);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        i {
+            color: var(--rt-gold);
+        }
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+.rt-dropzone-compatibility {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rt-dropzone-compat__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: rgba(212, 175, 55, 0.05);
+    border-left: 2px solid rgba(212, 175, 55, 0.4);
+    border-radius: 2px;
+    font-size: 0.8rem;
+    color: rgba(240, 232, 220, 0.85);
+
+    i {
+        color: var(--rt-success);
+        font-size: 0.9rem;
+    }
+
+    strong {
+        color: var(--rt-gold-bright);
+        font-weight: 600;
+    }
+}
+
+.rt-dropzone-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rt-dropzone-category__label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(246, 208, 163, 0.8);
+}
+
+.rt-mod-category-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rt-mod-category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, rgba(58, 93, 132, 0.25), rgba(58, 93, 132, 0.12));
+    border: 1px solid rgba(98, 142, 185, 0.35);
+    border-radius: 3px;
+    font-size: 0.75rem;
+    color: rgba(178, 208, 234, 0.9);
+    transition: all 0.2s ease;
+    cursor: help;
+
+    i {
+        font-size: 0.85rem;
+        color: rgba(178, 208, 234, 0.8);
+    }
+
+    &:hover {
+        background: linear-gradient(135deg, rgba(58, 93, 132, 0.35), rgba(58, 93, 132, 0.2));
+        border-color: rgba(98, 142, 185, 0.5);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+}
+
+// ============================================
+// MODIFICATION CATEGORY ICONS
+// ============================================
+
+.rt-mod-category-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+    background: linear-gradient(135deg, rgba(58, 93, 132, 0.25), rgba(58, 93, 132, 0.12));
+    border: 1px solid rgba(98, 142, 185, 0.35);
+    border-radius: 3px;
+    font-size: 0.75rem;
+    color: rgba(178, 208, 234, 0.9);
+    transition: all 0.2s ease;
+
+    i {
+        font-size: 0.8rem;
+    }
+
+    // Category-specific colors
+    [data-category='sight'] & {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.12));
+        border-color: rgba(212, 175, 55, 0.35);
+        color: rgba(246, 208, 163, 0.9);
+    }
+
+    [data-category='barrel'] & {
+        background: linear-gradient(135deg, rgba(143, 76, 38, 0.25), rgba(143, 76, 38, 0.12));
+        border-color: rgba(212, 140, 80, 0.35);
+        color: rgba(246, 208, 163, 0.9);
+    }
+
+    [data-category='stock'] & {
+        background: linear-gradient(135deg, rgba(182, 62, 46, 0.25), rgba(182, 62, 46, 0.12));
+        border-color: rgba(182, 62, 46, 0.35);
+        color: rgba(246, 151, 139, 0.9);
+    }
+
+    [data-category='magazine'] & {
+        background: linear-gradient(135deg, rgba(74, 132, 72, 0.25), rgba(74, 132, 72, 0.12));
+        border-color: rgba(115, 177, 113, 0.35);
+        color: rgba(178, 234, 176, 0.9);
+    }
+}
+
+// Active modification list dropzone highlighting
+.rt-mods-list[data-drop-zone='modifications'] {
+    position: relative;
+    transition: all 0.3s ease;
+
+    &::after {
+        content: 'Drop modification here';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(212, 175, 55, 0.12);
+        border: 2px dashed rgba(212, 175, 55, 0.6);
+        border-radius: 4px;
+        font-weight: 600;
+        color: var(--rt-gold-bright);
+        text-align: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    &.drag-over::after {
+        opacity: 1;
+    }
+}

@@ -51,14 +51,14 @@ export class TooltipsRT {
      * Initialize the tooltip system. Call this once on system ready.
      */
     async initialize() {
-        this.#tooltip = document.getElementById("tooltip");
+        this.#tooltip = document.getElementById('tooltip');
         if (!this.#tooltip) {
-            console.warn("RT Tooltips | Could not find #tooltip element");
+            console.warn('RT Tooltips | Could not find #tooltip element');
             return;
         }
-        console.log("RT Tooltips | Initialized - observing #tooltip element");
+        console.log('RT Tooltips | Initialized - observing #tooltip element');
         this.observe();
-        
+
         // Load skill descriptions from compendium
         await this._loadSkillDescriptions();
     }
@@ -69,34 +69,32 @@ export class TooltipsRT {
      */
     async _loadSkillDescriptions() {
         try {
-            const pack = game.packs.get("rogue-trader.rt-items-skills");
+            const pack = game.packs.get('rogue-trader.rt-items-skills');
             if (!pack) {
-                console.warn("RT Tooltips | Could not find skills compendium");
+                console.warn('RT Tooltips | Could not find skills compendium');
                 return;
             }
-            
+
             const index = await pack.getIndex();
             for (const entry of index) {
                 const item = await pack.getDocument(entry._id);
                 if (item) {
                     // Normalize the skill name to match skill keys
-                    const key = entry.name.toLowerCase()
-                        .replace(/\s+/g, '')
-                        .replace(/-/g, '');
-                    
+                    const key = entry.name.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
+
                     this.#skillDescriptions.set(key, {
                         name: entry.name,
-                        descriptor: item.system?.descriptor || "",
-                        uses: item.system?.uses || "",
-                        useTime: item.system?.useTime || "",
+                        descriptor: item.system?.descriptor || '',
+                        uses: item.system?.uses || '',
+                        useTime: item.system?.useTime || '',
                         isBasic: item.system?.isBasic ?? true,
-                        aptitudes: item.system?.aptitudes || []
+                        aptitudes: item.system?.aptitudes || [],
                     });
                 }
             }
             console.log(`RT Tooltips | Loaded ${this.#skillDescriptions.size} skill descriptions`);
         } catch (err) {
-            console.warn("RT Tooltips | Failed to load skill descriptions:", err);
+            console.warn('RT Tooltips | Failed to load skill descriptions:', err);
         }
     }
 
@@ -117,11 +115,11 @@ export class TooltipsRT {
     observe() {
         this.#observer?.disconnect();
         if (!this.#tooltip) return;
-        
+
         this.#observer = new MutationObserver(this._onMutation.bind(this));
-        this.#observer.observe(this.#tooltip, { 
-            attributeFilter: ["class"], 
-            attributeOldValue: true 
+        this.#observer.observe(this.#tooltip, {
+            attributeFilter: ['class'],
+            attributeOldValue: true,
         });
     }
 
@@ -137,16 +135,16 @@ export class TooltipsRT {
     _onMutation(mutationList) {
         let isActive = false;
         const tooltip = this.#tooltip;
-        
+
         for (const { type, attributeName, oldValue } of mutationList) {
-            if ((type === "attributes") && (attributeName === "class")) {
-                const wasActive = oldValue?.includes("active") ?? false;
-                const nowActive = tooltip.classList.contains("active");
-                console.log("RT Tooltips | Mutation detected", { wasActive, nowActive, oldValue, newClasses: tooltip.className });
+            if (type === 'attributes' && attributeName === 'class') {
+                const wasActive = oldValue?.includes('active') ?? false;
+                const nowActive = tooltip.classList.contains('active');
+                console.log('RT Tooltips | Mutation detected', { wasActive, nowActive, oldValue, newClasses: tooltip.className });
                 if (nowActive && !wasActive) isActive = true;
             }
         }
-        
+
         if (isActive) this._onTooltipActivate();
     }
 
@@ -157,35 +155,35 @@ export class TooltipsRT {
     async _onTooltipActivate() {
         const element = game.tooltip.element;
         if (!element) {
-            console.log("RT Tooltips | Tooltip activated but no element found");
+            console.log('RT Tooltips | Tooltip activated but no element found');
             return;
         }
 
         // Check for RT rich tooltip data
         const tooltipType = element.dataset.rtTooltip;
         const tooltipDataAttr = element.dataset.rtTooltipData;
-        
-        console.log("RT Tooltips | Tooltip activated", { tooltipType, hasData: !!tooltipDataAttr, element });
-        
+
+        console.log('RT Tooltips | Tooltip activated', { tooltipType, hasData: !!tooltipDataAttr, element });
+
         if (tooltipType && tooltipDataAttr) {
             try {
                 const data = JSON.parse(tooltipDataAttr);
                 const content = await this._buildTooltipContent(data, tooltipType);
                 if (content) {
                     this.#tooltip.innerHTML = content;
-                    this.#tooltip.classList.add("rt-tooltip", `rt-tooltip--${tooltipType}`);
-                    console.log("RT Tooltips | Rich tooltip rendered for", tooltipType);
+                    this.#tooltip.classList.add('rt-tooltip', `rt-tooltip--${tooltipType}`);
+                    console.log('RT Tooltips | Rich tooltip rendered for', tooltipType);
                     // Reposition after content change
                     requestAnimationFrame(() => this._repositionTooltip());
                 }
             } catch (err) {
-                console.warn("RT Tooltips | Failed to parse tooltip data:", err, tooltipDataAttr);
+                console.warn('RT Tooltips | Failed to parse tooltip data:', err, tooltipDataAttr);
             }
             return;
         }
 
         // Check for content links with UUID (for item/actor rich tooltips)
-        if (element.classList.contains("content-link") && element.dataset.uuid) {
+        if (element.classList.contains('content-link') && element.dataset.uuid) {
             const doc = await fromUuid(element.dataset.uuid);
             if (doc) {
                 await this._onHoverContentLink(doc);
@@ -206,15 +204,15 @@ export class TooltipsRT {
         // Check if document has a richTooltip method
         const result = await (doc.richTooltip?.() ?? doc.system?.richTooltip?.() ?? {});
         const { content, classes } = result;
-        
+
         if (!content) return;
-        
+
         this.#tooltip.innerHTML = content;
-        this.#tooltip.classList.add("rt-tooltip");
+        this.#tooltip.classList.add('rt-tooltip');
         if (classes?.length) {
             this.#tooltip.classList.add(...classes);
         }
-        
+
         requestAnimationFrame(() => this._repositionTooltip());
     }
 
@@ -231,17 +229,19 @@ export class TooltipsRT {
      */
     async _buildTooltipContent(data, type) {
         switch (type) {
-            case "characteristic":
+            case 'characteristic':
                 return this._buildCharacteristicTooltip(data);
-            case "skill":
+            case 'skill':
                 return await this._buildSkillTooltip(data);
-            case "armor":
-            case "armour":
+            case 'armor':
+            case 'armour':
                 return this._buildArmorTooltip(data);
-            case "weapon":
+            case 'weapon':
                 return this._buildWeaponTooltip(data);
-            case "modifier":
+            case 'modifier':
                 return this._buildModifierTooltip(data);
+            case 'quality':
+                return this._buildQualityTooltip(data);
             default:
                 return this._buildGenericTooltip(data);
         }
@@ -254,17 +254,7 @@ export class TooltipsRT {
      * @protected
      */
     _buildCharacteristicTooltip(data) {
-        const {
-            name,
-            label,
-            base = 0,
-            advance = 0,
-            modifier = 0,
-            unnatural = 1,
-            total = 0,
-            bonus = 0,
-            sources = []
-        } = data;
+        const { name, label, base = 0, advance = 0, modifier = 0, unnatural = 1, total = 0, bonus = 0, sources = [] } = data;
 
         let html = `
             <div class="rt-tooltip__header">
@@ -349,7 +339,7 @@ export class TooltipsRT {
             basic = false,
             trainingBonus: dataTB,
             bonus: dataBonus,
-            actorUuid
+            actorUuid,
         } = data;
 
         // If actorUuid is provided, fetch live data from actor
@@ -359,7 +349,7 @@ export class TooltipsRT {
                 const skill = actor.system.skills?.[name];
                 const charKey = skill?.characteristic || characteristic;
                 const char = actor.system.characteristics?.[charKey];
-                
+
                 if (skill && char) {
                     // Update with live values
                     trained = skill.trained || false;
@@ -375,18 +365,18 @@ export class TooltipsRT {
 
         // Determine training level
         const level = plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
-        let training = "Untrained";
+        let training = 'Untrained';
         let trainingBonus = dataTB ?? 0;
         if (plus20) {
-            training = "+20";
+            training = '+20';
             trainingBonus = dataTB ?? 20;
         } else if (plus10) {
-            training = "+10";
+            training = '+10';
             trainingBonus = dataTB ?? 10;
         } else if (trained) {
-            training = "Trained";
+            training = 'Trained';
         } else if (basic) {
-            training = "Basic (Untrained)";
+            training = 'Basic (Untrained)';
         }
 
         // Use provided baseValue or calculate it
@@ -395,7 +385,7 @@ export class TooltipsRT {
 
         // Get skill description from cache
         const skillInfo = game.rt?.tooltips?.getSkillDescription(name);
-        const descriptor = skillInfo?.descriptor || "";
+        const descriptor = skillInfo?.descriptor || '';
 
         let html = `
             <div class="rt-tooltip__header">
@@ -488,14 +478,7 @@ export class TooltipsRT {
      * @protected
      */
     _buildArmorTooltip(data) {
-        const {
-            location,
-            total = 0,
-            toughnessBonus = 0,
-            traitBonus = 0,
-            armorValue = 0,
-            equipped = []
-        } = data;
+        const { location, total = 0, toughnessBonus = 0, traitBonus = 0, armorValue = 0, equipped = [] } = data;
 
         let html = `
             <div class="rt-tooltip__header">
@@ -558,14 +541,7 @@ export class TooltipsRT {
      * @protected
      */
     _buildWeaponTooltip(data) {
-        const {
-            name,
-            damage,
-            penetration = 0,
-            range,
-            rof,
-            qualities = []
-        } = data;
+        const { name, damage, penetration = 0, range, rof, qualities = [] } = data;
 
         let html = `
             <div class="rt-tooltip__header">
@@ -645,6 +621,73 @@ export class TooltipsRT {
     }
 
     /**
+     * Build weapon quality tooltip content.
+     * @param {object} data  Quality data.
+     * @returns {string}     HTML content.
+     * @protected
+     */
+    _buildQualityTooltip(data) {
+        const { label, description, level = null, hasLevel = false, category = 'other', mechanicalEffect = false, source = null } = data;
+
+        let html = `
+            <div class="rt-tooltip__header">
+                <h4 class="rt-tooltip__title">
+                    ${label}${hasLevel && level !== null ? ` (${level})` : ''}
+                </h4>
+        `;
+
+        // Add category badge
+        const categoryLabel =
+            category === 'simple-modifier'
+                ? 'Simple Modifier'
+                : category === 'damage-modifier'
+                ? 'Damage Modifier'
+                : category
+                      .split('-')
+                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                      .join(' ');
+
+        html += `
+                <span class="rt-tooltip__badge rt-tooltip__badge--${category}">
+                    ${categoryLabel}
+                </span>
+            </div>
+        `;
+
+        // Add description
+        if (description) {
+            html += `
+            <div class="rt-tooltip__description">
+                ${description}
+            </div>
+            `;
+        }
+
+        // Add mechanical effect indicator
+        if (mechanicalEffect) {
+            html += `
+            <div class="rt-tooltip__divider"></div>
+            <div class="rt-tooltip__info">
+                <i class="fas fa-cog"></i>
+                <span>This quality has automated mechanical effects</span>
+            </div>
+            `;
+        }
+
+        // Add source reference if available
+        if (source) {
+            html += `
+            <div class="rt-tooltip__source-ref">
+                <i class="fas fa-book"></i>
+                <span>${source}</span>
+            </div>
+            `;
+        }
+
+        return html;
+    }
+
+    /**
      * Build generic tooltip content.
      * @param {object} data  Generic data.
      * @returns {string}     HTML content.
@@ -675,25 +718,25 @@ export class TooltipsRT {
 
         const pos = this.#tooltip.getBoundingClientRect();
         const { innerHeight, innerWidth } = window;
-        
+
         // Check if tooltip is going off screen and reposition if needed
         let direction = game.tooltip.element?.dataset.tooltipDirection;
-        
+
         // Default to LEFT if no direction specified
         if (!direction) {
-            direction = "LEFT";
+            direction = 'LEFT';
             game.tooltip._setAnchor?.(direction);
         }
 
         // Adjust direction if tooltip would go off-screen
-        if (direction === "LEFT" && pos.x < 0) {
-            game.tooltip._setAnchor?.("RIGHT");
-        } else if (direction === "RIGHT" && pos.x + this.#tooltip.offsetWidth > innerWidth) {
-            game.tooltip._setAnchor?.("LEFT");
-        } else if (direction === "UP" && pos.y < 0) {
-            game.tooltip._setAnchor?.("DOWN");
-        } else if (direction === "DOWN" && pos.y + this.#tooltip.offsetHeight > innerHeight) {
-            game.tooltip._setAnchor?.("UP");
+        if (direction === 'LEFT' && pos.x < 0) {
+            game.tooltip._setAnchor?.('RIGHT');
+        } else if (direction === 'RIGHT' && pos.x + this.#tooltip.offsetWidth > innerWidth) {
+            game.tooltip._setAnchor?.('LEFT');
+        } else if (direction === 'UP' && pos.y < 0) {
+            game.tooltip._setAnchor?.('DOWN');
+        } else if (direction === 'DOWN' && pos.y + this.#tooltip.offsetHeight > innerHeight) {
+            game.tooltip._setAnchor?.('UP');
         }
     }
 }
@@ -711,7 +754,7 @@ export class TooltipsRT {
  */
 export function prepareCharacteristicTooltipData(key, characteristic, modifierSources = {}) {
     const sources = modifierSources[key] || [];
-    
+
     const data = {
         name: key,
         label: characteristic.label || key,
@@ -721,12 +764,12 @@ export function prepareCharacteristicTooltipData(key, characteristic, modifierSo
         unnatural: characteristic.unnatural || 1,
         total: characteristic.total || 0,
         bonus: characteristic.bonus || 0,
-        sources: sources.map(s => ({
-            name: s.name || s.source || "Unknown",
-            value: s.value || s.modifier || 0
-        }))
+        sources: sources.map((s) => ({
+            name: s.name || s.source || 'Unknown',
+            value: s.value || s.modifier || 0,
+        })),
     };
-    
+
     return JSON.stringify(data);
 }
 
@@ -739,16 +782,16 @@ export function prepareCharacteristicTooltipData(key, characteristic, modifierSo
 function _charShortToKey(short) {
     // Use the same map as CommonTemplate for consistency
     const map = {
-        "WS": "weaponSkill",
-        "BS": "ballisticSkill",
-        "S": "strength",
-        "T": "toughness",
-        "Ag": "agility",
-        "Int": "intelligence",
-        "Per": "perception",
-        "WP": "willpower",
-        "Fel": "fellowship",
-        "Inf": "influence"
+        WS: 'weaponSkill',
+        BS: 'ballisticSkill',
+        S: 'strength',
+        T: 'toughness',
+        Ag: 'agility',
+        Int: 'intelligence',
+        Per: 'perception',
+        WP: 'willpower',
+        Fel: 'fellowship',
+        Inf: 'influence',
     };
     return map[short] || short.toLowerCase();
 }
@@ -762,12 +805,12 @@ function _charShortToKey(short) {
  * @returns {string}  JSON string for data-rt-tooltip-data attribute.
  */
 export function prepareSkillTooltipData(key, skill, characteristics = {}, actorUuid = null) {
-    const charShort = skill.characteristic || skill.char || "S";
+    const charShort = skill.characteristic || skill.char || 'S';
     const charKey = _charShortToKey(charShort);
     const char = characteristics[charKey] || {};
     const charTotal = char.total || 0;
     const charLabel = char.label || charShort;
-    
+
     // Calculate training level and base value exactly as creature.mjs does
     const trained = skill.trained || false;
     const plus10 = skill.plus10 || false;
@@ -777,7 +820,7 @@ export function prepareSkillTooltipData(key, skill, characteristics = {}, actorU
     const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
     const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
     const bonus = skill.bonus || 0;
-    
+
     const data = {
         name: key,
         label: skill.label || skill.name || key,
@@ -791,9 +834,9 @@ export function prepareSkillTooltipData(key, skill, characteristics = {}, actorU
         basic: basic,
         trainingBonus: trainingBonus,
         bonus: bonus,
-        actorUuid: actorUuid  // Include actor UUID for dynamic updates
+        actorUuid: actorUuid, // Include actor UUID for dynamic updates
     };
-    
+
     return JSON.stringify(data);
 }
 
@@ -806,27 +849,27 @@ export function prepareSkillTooltipData(key, skill, characteristics = {}, actorU
  */
 export function prepareArmorTooltipData(location, armorData, equipped = []) {
     const locationLabels = {
-        head: "Head",
-        rightArm: "Right Arm",
-        leftArm: "Left Arm",
-        body: "Body",
-        rightLeg: "Right Leg",
-        leftLeg: "Left Leg"
+        head: 'Head',
+        rightArm: 'Right Arm',
+        leftArm: 'Left Arm',
+        body: 'Body',
+        rightLeg: 'Right Leg',
+        leftLeg: 'Left Leg',
     };
-    
+
     const data = {
         location: locationLabels[location] || location,
         total: armorData.total || 0,
         toughnessBonus: armorData.toughnessBonus || 0,
         traitBonus: armorData.traitBonus || 0,
         armorValue: armorData.value || 0,
-        equipped: equipped.map(item => ({
+        equipped: equipped.map((item) => ({
             name: item.name,
             img: item.img,
-            ap: item.system?.armour?.[location] || 0
-        }))
+            ap: item.system?.armour?.[location] || 0,
+        })),
     };
-    
+
     return JSON.stringify(data);
 }
 
@@ -838,13 +881,13 @@ export function prepareArmorTooltipData(location, armorData, equipped = []) {
 export function prepareWeaponTooltipData(weapon) {
     const data = {
         name: weapon.name,
-        damage: weapon.system?.damage || "—",
+        damage: weapon.system?.damage || '—',
         penetration: weapon.system?.penetration || 0,
-        range: weapon.system?.range || "—",
-        rof: weapon.system?.rof || "—",
-        qualities: weapon.system?.qualities?.map(q => q.name || q) || []
+        range: weapon.system?.range || '—',
+        rof: weapon.system?.rof || '—',
+        qualities: weapon.system?.qualities?.map((q) => q.name || q) || [],
     };
-    
+
     return JSON.stringify(data);
 }
 
@@ -857,12 +900,51 @@ export function prepareWeaponTooltipData(weapon) {
 export function prepareModifierTooltipData(title, sources) {
     const data = {
         title,
-        sources: sources.map(s => ({
-            name: s.name || s.source || "Unknown",
-            value: s.value || s.modifier || 0
-        }))
+        sources: sources.map((s) => ({
+            name: s.name || s.source || 'Unknown',
+            value: s.value || s.modifier || 0,
+        })),
     };
-    
+
+    return JSON.stringify(data);
+}
+
+/**
+ * Prepare weapon quality tooltip data.
+ * @param {string} identifier    Quality identifier (e.g., "tearing", "blast-5")
+ * @param {number} [level]       Quality level (if applicable)
+ * @returns {string}             JSON string for data-rt-tooltip-data attribute
+ */
+export function prepareQualityTooltipData(identifier, level = null) {
+    const config = CONFIG.ROGUE_TRADER;
+    if (!config) return '{}';
+
+    // Get quality definition
+    const def = config.getQualityDefinition?.(identifier);
+    if (!def) return '{}';
+
+    // Parse level from identifier if not provided
+    if (level === null) {
+        const match = identifier.match(/-(\d+)$/);
+        if (match) level = parseInt(match[1]);
+    }
+
+    // Get localized strings
+    const label = game.i18n.localize(def.label);
+    const description = game.i18n.localize(def.description);
+
+    const data = {
+        type: 'quality',
+        identifier,
+        label,
+        description,
+        level,
+        hasLevel: def.hasLevel ?? false,
+        category: def.category || 'other',
+        mechanicalEffect: def.mechanicalEffect ?? false,
+        source: def.source || null,
+    };
+
     return JSON.stringify(data);
 }
 
