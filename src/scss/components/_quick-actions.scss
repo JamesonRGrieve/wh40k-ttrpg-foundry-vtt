@@ -1,0 +1,154 @@
+// ============================================
+// Quick Actions Bar Component
+// ============================================
+// Standardized action buttons for items across all sheets
+
+.rt-quick-actions-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--rt-item-spacing-xs);
+    padding: var(--rt-item-spacing-sm);
+    background: var(--rt-item-panel-bg);
+    border-top: 1px solid var(--rt-item-panel-border);
+
+    // Compact mode (icons only, smaller spacing)
+    &--compact {
+        gap: var(--rt-item-spacing-xs);
+        padding: var(--rt-item-spacing-xs);
+
+        .rt-quick-action {
+            min-width: 32px;
+            padding: 6px;
+
+            span {
+                display: none;
+            }
+        }
+    }
+}
+
+.rt-quick-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--rt-item-spacing-xs);
+    padding: 6px 12px;
+    font-size: var(--rt-item-font-size-sm);
+    font-weight: 500;
+    border-radius: var(--rt-item-radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    user-select: none;
+
+    i {
+        font-size: 1em;
+        flex-shrink: 0;
+    }
+
+    &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--rt-gold);
+        outline-offset: 1px;
+    }
+
+    // ----------------------------------------
+    // Variant: Primary (main actions)
+    // ----------------------------------------
+    &--primary {
+        background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-dark) 100%);
+        border-color: var(--rt-gold-dark);
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+        &:hover:not(:disabled) {
+            background: linear-gradient(135deg, lighten(#c0a062, 5%) 0%, var(--rt-gold) 100%);
+            border-color: var(--rt-gold);
+            box-shadow: 0 3px 8px rgba(192, 160, 98, 0.3);
+        }
+    }
+
+    // ----------------------------------------
+    // Variant: Secondary (supporting actions)
+    // ----------------------------------------
+    &--secondary {
+        background: rgba(100, 100, 120, 0.25);
+        border-color: rgba(100, 100, 120, 0.4);
+        color: var(--color-text-secondary);
+
+        &:hover:not(:disabled) {
+            background: rgba(100, 100, 120, 0.4);
+            border-color: rgba(100, 100, 120, 0.6);
+            color: var(--color-text-primary);
+        }
+    }
+
+    // ----------------------------------------
+    // Variant: Danger (destructive actions)
+    // ----------------------------------------
+    &--danger {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+
+        &:hover:not(:disabled) {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #fecaca;
+            box-shadow: 0 3px 8px rgba(239, 68, 68, 0.3);
+        }
+    }
+
+    // ----------------------------------------
+    // Compact size
+    // ----------------------------------------
+    &--compact {
+        padding: 4px 8px;
+        font-size: var(--rt-item-font-size-xs);
+        min-width: 28px;
+    }
+}
+
+// ============================================
+// Quick Actions in Character Sheet Context
+// ============================================
+// Slightly different styling when used in character sheet item lists
+
+.rt-item-list {
+    .rt-quick-actions-bar {
+        padding: var(--rt-item-spacing-xs);
+        background: transparent;
+        border-top: none;
+        justify-content: flex-end;
+    }
+
+    .rt-quick-action {
+        padding: 4px 8px;
+        font-size: var(--rt-item-font-size-xs);
+        min-width: 28px;
+    }
+}
+
+// ============================================
+// Keyboard Navigation Support
+// ============================================
+
+.rt-quick-actions-bar:focus-within {
+    .rt-quick-action:focus {
+        z-index: 1;
+    }
+}

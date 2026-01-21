@@ -5,6 +5,8 @@
 
 import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.mjs';
+import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.mjs';
+import StatBreakdownMixin from '../api/stat-breakdown-mixin.mjs';
 import ROGUE_TRADER from '../../config.mjs';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -12,8 +14,15 @@ const { ItemSheetV2 } = foundry.applications.sheets;
 /**
  * Base item sheet built on ApplicationV2.
  * All item sheets should extend this class.
+ *
+ * Mixin Stack (bottom to top):
+ * - ItemSheetV2 (Foundry base)
+ * - ApplicationV2Mixin (V2 patterns)
+ * - PrimarySheetMixin (primary sheet management)
+ * - ExpandableTooltipMixin (click-to-expand tooltips)
+ * - StatBreakdownMixin (stat calculation breakdowns)
  */
-export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2)) {
+export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2)))) {
     constructor(options = {}) {
         super(options);
     }

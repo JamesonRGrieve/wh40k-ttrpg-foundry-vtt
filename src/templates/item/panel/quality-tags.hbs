@@ -1,0 +1,64 @@
+{{!-- 
+  Quality Tags Partial
+  Displays weapon qualities, armour properties, or similar tags
+  
+  Usage:
+  {{> "systems/rogue-trader/templates/item/panel/quality-tags.hbs" 
+      qualities=qualitiesArray
+      editable=false}}
+  
+  @param {Array} qualities - Array of quality objects with:
+    - name: Quality name
+    - rating: Quality rating (optional, for Blast (3), etc.)
+    - uuid: UUID for compendium lookup (optional)
+    - description: Full description (optional, for expansion)
+  @param {Boolean} editable - Whether to show remove buttons
+  @param {Boolean} expandable - Whether tags are click-to-expand for details
+--}}
+
+<div class="rt-quality-tags">
+  {{#each qualities}}
+  <div class="rt-quality-tag {{#if ../expandable}}rt-quality-tag--expandable{{/if}}"
+       {{#if ../expandable}}data-action="expandQuality" data-quality-name="{{this.name}}"{{/if}}>
+    <span class="rt-quality-tag__label">
+      {{this.name}}{{#if this.rating}} ({{this.rating}}){{/if}}
+    </span>
+    
+    {{#if ../editable}}
+    <button type="button" 
+            class="rt-quality-tag__remove" 
+            data-action="removeQuality" 
+            data-quality-name="{{this.name}}"
+            title="Remove {{this.name}}">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    {{/if}}
+  </div>
+  {{/each}}
+  
+  {{#if editable}}
+  <button type="button" 
+          class="rt-quality-tag rt-quality-tag--add" 
+          data-action="addQuality"
+          title="Add Quality">
+    <i class="fa-solid fa-plus"></i>
+    <span class="rt-quality-tag__label">Add</span>
+  </button>
+  {{/if}}
+</div>
+
+{{#if expandable}}
+{{!-- Quality expansion panels (hidden by default) --}}
+<div class="rt-quality-expansions">
+  {{#each qualities}}
+  {{#if this.description}}
+  <div class="rt-expansion-panel" data-quality-panel="{{this.name}}" style="display: none;">
+    <h4>{{this.name}}{{#if this.rating}} ({{this.rating}}){{/if}}</h4>
+    <div class="rt-quality-description">
+      {{{this.description}}}
+    </div>
+  </div>
+  {{/if}}
+  {{/each}}
+</div>
+{{/if}}

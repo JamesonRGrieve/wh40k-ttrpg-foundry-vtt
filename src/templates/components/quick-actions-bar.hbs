@@ -1,0 +1,226 @@
+{{!-- 
+  Quick Actions Bar Partial
+  Standardized action buttons for items
+  
+  Usage:
+  {{> "systems/rogue-trader/templates/components/quick-actions-bar.hbs" 
+      item=item
+      compact=false
+      inSheet=false}}
+  
+  @param {Item} item - The item to generate actions for
+  @param {Boolean} compact - Use compact mode (icons only)
+  @param {Boolean} inSheet - Rendering in item sheet vs character sheet
+--}}
+
+{{#if item}}
+<div class="rt-quick-actions-bar {{#if compact}}rt-quick-actions-bar--compact{{/if}}">
+  {{!-- Weapon Actions --}}
+  {{#if (eq item.type "weapon")}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--primary" 
+            data-action="itemRoll"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Attack'}}">
+      <i class="fa-solid fa-crosshairs"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Attack"}}</span>{{/unless}}
+    </button>
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--primary" 
+            data-action="rollDamage"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Damage'}}">
+      <i class="fa-solid fa-burst"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Damage"}}</span>{{/unless}}
+    </button>
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--secondary" 
+            data-action="reloadWeapon"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Reload'}}">
+      <i class="fa-solid fa-rotate-right"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Reload"}}</span>{{/unless}}
+    </button>
+  {{/if}}
+
+  {{!-- Armour Actions --}}
+  {{#if (eq item.type "armour")}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--primary" 
+            data-action="toggleEquip"
+            data-item-id="{{item.id}}"
+            title="{{#if system.equipped}}{{localize 'RT.Action.Unequip'}}{{else}}{{localize 'RT.Action.Equip'}}{{/if}}">
+      <i class="fa-solid {{#if system.equipped}}fa-user-check{{else}}fa-user-plus{{/if}}"></i>
+      {{#unless compact}}
+      <span>{{#if system.equipped}}{{localize "RT.Action.Unequip"}}{{else}}{{localize "RT.Action.Equip"}}{{/if}}</span>
+      {{/unless}}
+    </button>
+  {{/if}}
+
+  {{!-- Talent Actions --}}
+  {{#if (eq item.type "talent")}}
+    {{#if system.isRollable}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--primary" 
+            data-action="itemRoll"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Roll'}}">
+      <i class="fa-solid fa-dice-d20"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Roll"}}</span>{{/unless}}
+    </button>
+    {{/if}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--secondary" 
+            data-action="toggleFavorite"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Favorite'}}">
+      <i class="fa-solid fa-star"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Favorite"}}</span>{{/unless}}
+    </button>
+  {{/if}}
+
+  {{!-- Trait Actions --}}
+  {{#if (eq item.type "trait")}}
+    {{#if system.rollable}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--primary" 
+            data-action="itemRoll"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Roll'}}">
+      <i class="fa-solid fa-dice-d20"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Roll"}}</span>{{/unless}}
+    </button>
+    {{/if}}
+  {{/if}}
+
+  {{!-- Consumable Actions --}}
+  {{#if (or (eq item.type "consumable") (eq item.type "drug") (and (eq item.type "gear") system.consumable))}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--primary" 
+            data-action="useItem"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Use'}}">
+      <i class="fa-solid fa-flask"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Use"}}</span>{{/unless}}
+    </button>
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--secondary" 
+            data-action="adjustQuantity"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Adjust'}}">
+      <i class="fa-solid fa-sliders"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Adjust"}}</span>{{/unless}}
+    </button>
+  {{/if}}
+
+  {{!-- Condition Actions --}}
+  {{#if (eq item.type "condition")}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--secondary" 
+            data-action="stackCondition"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Stack'}}">
+      <i class="fa-solid fa-plus"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Stack"}}</span>{{/unless}}
+    </button>
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--secondary" 
+            data-action="reduceCondition"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Reduce'}}">
+      <i class="fa-solid fa-minus"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Reduce"}}</span>{{/unless}}
+    </button>
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--danger" 
+            data-action="removeCondition"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Remove'}}">
+      <i class="fa-solid fa-xmark"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Remove"}}</span>{{/unless}}
+    </button>
+  {{/if}}
+
+  {{!-- Critical Injury Actions --}}
+  {{#if (eq item.type "criticalInjury")}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--primary" 
+            data-action="rollSeverity"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.RollSeverity'}}">
+      <i class="fa-solid fa-dice"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.RollSeverity"}}</span>{{/unless}}
+    </button>
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--secondary" 
+            data-action="treatInjury"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Treat'}}">
+      <i class="fa-solid fa-kit-medical"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Treat"}}</span>{{/unless}}
+    </button>
+  {{/if}}
+
+  {{!-- Psychic Power Actions --}}
+  {{#if (or (eq item.type "psychicPower") (eq item.type "navigatorPower"))}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--primary" 
+            data-action="manifestPower"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Manifest'}}">
+      <i class="fa-solid fa-brain"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Manifest"}}</span>{{/unless}}
+    </button>
+  {{/if}}
+
+  {{!-- Ammunition Actions --}}
+  {{#if (eq item.type "ammunition")}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--primary" 
+            data-action="loadAmmo"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Load'}}">
+      <i class="fa-solid fa-arrow-up-from-bracket"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Load"}}</span>{{/unless}}
+    </button>
+  {{/if}}
+
+  {{!-- Universal Actions --}}
+  {{#unless inSheet}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--secondary" 
+            data-action="postToChat"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.PostToChat'}}">
+      <i class="fa-solid fa-comment"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.PostToChat"}}</span>{{/unless}}
+    </button>
+  {{/unless}}
+
+  {{#if inSheet}}
+    {{#if item.isOwner}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--secondary" 
+            data-action="editItem"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Edit'}}">
+      <i class="fa-solid fa-pen-to-square"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Edit"}}</span>{{/unless}}
+    </button>
+    {{/if}}
+  {{/if}}
+
+  {{#unless inSheet}}
+    {{#if item.isOwner}}
+    <button type="button" 
+            class="rt-quick-action rt-quick-action--danger" 
+            data-action="deleteItem"
+            data-item-id="{{item.id}}"
+            title="{{localize 'RT.Action.Delete'}}">
+      <i class="fa-solid fa-trash"></i>
+      {{#unless compact}}<span>{{localize "RT.Action.Delete"}}</span>{{/unless}}
+    </button>
+    {{/if}}
+  {{/unless}}
+</div>
+{{/if}}

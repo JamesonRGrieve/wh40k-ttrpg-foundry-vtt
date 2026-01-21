@@ -1,0 +1,32 @@
+{{!-- 
+  Stat Bar Partial
+  Displays a horizontal bar of stat pills
+  
+  Usage:
+  {{> "systems/rogue-trader/templates/item/panel/stat-bar.hbs" stats=statsArray}}
+  
+  @param {Array} stats - Array of stat objects with:
+    - icon: Font Awesome icon class (optional)
+    - label: Stat label
+    - value: Stat value
+    - modifier: "positive" | "negative" | "neutral" (optional)
+    - rollable: boolean (optional)
+    - action: action handler name (optional)
+    - dataset: object of data attributes (optional)
+--}}
+
+<div class="rt-stat-bar">
+  {{#each stats}}
+  <div class="rt-stat-pill {{#if this.modifier}}rt-stat-pill--{{this.modifier}}{{/if}} {{#if this.rollable}}rt-stat-pill--rollable{{/if}}"
+       {{#if this.action}}data-action="{{this.action}}"{{/if}}
+       {{#if this.dataset}}{{#each this.dataset as |value key|}}data-{{key}}="{{value}}"{{/each}}{{/if}}>
+    {{#if this.icon}}
+    <i class="{{this.icon}} rt-stat-pill__icon"></i>
+    {{/if}}
+    <span class="rt-stat-pill__value">{{this.value}}</span>
+    {{#if this.label}}
+    <span class="rt-stat-pill__label">{{this.label}}</span>
+    {{/if}}
+  </div>
+  {{/each}}
+</div>
