@@ -1,241 +1,251 @@
-{{!-- Modern Condition Sheet --}}
-<form class="rt-item-sheet rt-condition-sheet" autocomplete="off">
-  
-  {{!-- Header with Image and Title --}}
-  <div class="rt-item-sheet__header">
-    <div class="rt-item-sheet__image-wrapper">
-      <img class="rt-item-sheet__image" 
-           src="{{item.img}}" 
-           data-edit="img" 
-           alt="{{item.name}}" 
-           title="{{item.name}}" />
-      <i class="fas {{item.system.natureIcon}} rt-nature-icon"></i>
-    </div>
+{{!-- 
+  Rogue Trader Condition Item Sheet - V2 Redesign
+  Matches weapon/armour sheet patterns with modern ApplicationV2 structure
+--}}
+<div class="rt-condition-sheet">
+  <form autocomplete="off">
     
-    <div class="rt-item-sheet__title-area">
-      <input class="rt-item-sheet__name-input" 
-             name="name" 
-             type="text" 
-             value="{{item.name}}" 
-             placeholder="Condition Name" />
-      
-      <div class="rt-condition-badges">
-        <span class="rt-badge rt-badge--{{item.system.natureClass}}">
-          <i class="fas {{item.system.natureIcon}}"></i> {{item.system.natureLabel}}
-        </span>
-        <span class="rt-badge rt-badge--applies-{{item.system.appliesTo}}">
-          <i class="fas {{item.system.appliesToIcon}}"></i> {{item.system.appliesToLabel}}
-        </span>
-        {{#if item.system.stackable}}
-        <span class="rt-badge rt-badge--stacks">
-          ×{{item.system.stacks}}
-        </span>
-        {{/if}}
-        {{#if item.system.isTemporary}}
-        <span class="rt-badge rt-badge--duration">
-          <i class="fas fa-clock"></i> {{item.system.durationDisplay}}
-        </span>
-        {{/if}}
-      </div>
-    </div>
-  </div>
-  
-  {{!-- Main Panel - Condition Details --}}
-  <div class="rt-item-sheet__panel">
-    <div class="rt-condition-grid">
-      
-      {{!-- Nature --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Compact condition identity with inline stats
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="rt-condition-header">
+      <div class="rt-condition-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="rt-condition-header__image-overlay rt-condition-header__image-overlay--{{item.system.nature}}">
           <i class="fas {{item.system.natureIcon}}"></i>
-          {{localize "RT.Condition.Nature.Label"}}
-        </label>
-        <select class="rt-field__select" name="system.nature" data-dtype="String">
-          {{#select item.system.nature}}
-          <option value="beneficial">{{localize "RT.Condition.Nature.Beneficial"}}</option>
-          <option value="harmful">{{localize "RT.Condition.Nature.Harmful"}}</option>
-          <option value="neutral">{{localize "RT.Condition.Nature.Neutral"}}</option>
-          {{/select}}
-        </select>
+        </div>
       </div>
       
-      {{!-- AppliesTo --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
-          <i class="fas {{item.system.appliesToIcon}}"></i>
-          {{localize "RT.Condition.AppliesTo.Label"}}
-        </label>
-        <select class="rt-field__select" name="system.appliesTo" data-dtype="String">
-          {{#select item.system.appliesTo}}
-          <option value="self">{{localize "RT.Condition.AppliesTo.Self"}}</option>
-          <option value="target">{{localize "RT.Condition.AppliesTo.Target"}}</option>
-          <option value="both">{{localize "RT.Condition.AppliesTo.Both"}}</option>
-          <option value="area">{{localize "RT.Condition.AppliesTo.Area"}}</option>
-          {{/select}}
-        </select>
+      <div class="rt-condition-header__info">
+        <input type="text" class="rt-condition-header__name" name="name" value="{{item.name}}" placeholder="Condition Name" />
+        
+        <div class="rt-condition-header__meta">
+          <span class="rt-condition-badge rt-condition-badge--nature rt-condition-badge--{{item.system.nature}}" title="Condition Nature">
+            <i class="fas {{item.system.natureIcon}}"></i>
+            {{item.system.natureLabel}}
+          </span>
+          <span class="rt-condition-badge rt-condition-badge--applies" title="Applies To">
+            <i class="fas {{item.system.appliesToIcon}}"></i>
+            {{item.system.appliesToLabel}}
+          </span>
+          {{#if item.system.stackable}}
+          <span class="rt-condition-badge rt-condition-badge--stacks" title="Stackable Condition">
+            <i class="fas fa-layer-group"></i>
+            ×{{item.system.stacks}}
+          </span>
+          {{/if}}
+          {{#if item.system.isTemporary}}
+          <span class="rt-condition-badge rt-condition-badge--duration" title="Duration">
+            <i class="fas fa-clock"></i>
+            {{item.system.durationDisplay}}
+          </span>
+          {{/if}}
+        </div>
       </div>
-      
-      {{!-- Stackable Checkbox --}}
-      <div class="rt-field rt-field--checkbox">
-        <label class="rt-field__label">
-          <input type="checkbox" 
-                 name="system.stackable" 
-                 {{checked item.system.stackable}} />
-          <span>{{localize "RT.Condition.Stackable.Label"}}</span>
-        </label>
-      </div>
-      
-      {{!-- Stacks (conditional display) --}}
-      {{#if item.system.stackable}}
-      <div class="rt-field">
-        <label class="rt-field__label">
-          <i class="fas fa-layer-group"></i>
-          {{localize "RT.Condition.Stacks.Label"}}
-        </label>
-        <input class="rt-field__input" 
-               type="number" 
-               name="system.stacks" 
-               value="{{item.system.stacks}}" 
-               min="1"
-               data-dtype="Number" />
-      </div>
-      {{/if}}
-      
-      {{!-- Duration Value --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
-          <i class="fas fa-clock"></i>
-          {{localize "RT.Condition.Duration.Value"}}
-        </label>
-        <input class="rt-field__input" 
-               type="number" 
-               name="system.duration.value" 
-               value="{{item.system.duration.value}}" 
-               min="0"
-               data-dtype="Number" />
-      </div>
-      
-      {{!-- Duration Units --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
-          {{localize "RT.Condition.Duration.Units"}}
-        </label>
-        <select class="rt-field__select" name="system.duration.units" data-dtype="String">
-          {{#select item.system.duration.units}}
-          <option value="permanent">{{localize "RT.Condition.Duration.Permanent"}}</option>
-          <option value="rounds">{{localize "RT.Condition.Duration.Rounds"}}</option>
-          <option value="minutes">{{localize "RT.Condition.Duration.Minutes"}}</option>
-          <option value="hours">{{localize "RT.Condition.Duration.Hours"}}</option>
-          <option value="days">{{localize "RT.Condition.Duration.Days"}}</option>
-          {{/select}}
-        </select>
-      </div>
-    </div>
-  </div>
-  
-  {{!-- Effect Description (Rich HTML) --}}
-  <div class="rt-item-sheet__panel">
-    <div class="rt-field">
-      <label class="rt-field__label">
-        <i class="fas fa-bolt"></i>
-        {{localize "RT.Condition.Effect.Label"}}
-      </label>
-      {{#if inEditMode}}
-      {{editor content=system.effect 
-               target="system.effect" 
-               button=true 
-               editable=true 
-               engine="prosemirror"
-               placeholder=(localize "RT.Condition.Effect.Placeholder")}}
-      {{else}}
-      <div class="rt-description-content">{{{system.effect}}}</div>
-      {{/if}}
-    </div>
-  </div>
-  
-  {{!-- Removal Instructions (Rich HTML) --}}
-  <div class="rt-item-sheet__panel">
-    <div class="rt-field">
-      <label class="rt-field__label">
-        <i class="fas fa-eraser"></i>
-        {{localize "RT.Condition.Removal.Label"}}
-      </label>
-      {{#if inEditMode}}
-      {{editor content=system.removal 
-               target="system.removal" 
-               button=true 
-               editable=true 
-               engine="prosemirror"
-               placeholder=(localize "RT.Condition.Removal.Placeholder")}}
-      {{else}}
-      <div class="rt-description-content">{{{system.removal}}}</div>
-      {{/if}}
-    </div>
-  </div>
-  
-  {{!-- Notes Field --}}
-  <div class="rt-item-sheet__panel">
-    <div class="rt-field">
-      <label class="rt-field__label">
-        <i class="fas fa-sticky-note"></i>
-        {{localize "RT.Condition.Notes.Label"}}
-      </label>
-      <textarea class="rt-field__textarea" 
-                name="system.notes" 
-                rows="3"
-                placeholder="{{localize "RT.Condition.Notes.Placeholder"}}">{{item.system.notes}}</textarea>
-    </div>
-  </div>
-  
-  {{!-- Source Reference --}}
-  <div class="rt-item-sheet__panel rt-source-panel">
-    <div class="rt-field">
-      <label class="rt-field__label">
+    </header>
+
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="rt-tabs rt-tabs--condition rt-condition-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-condition-tab active" data-tab="details" data-group="primary">
+        <i class="fas fa-info-circle"></i>
+        <span>Details</span>
+      </button>
+      <button type="button" class="rt-tab rt-condition-tab" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
-        Source Book
-      </label>
-      <input class="rt-field__input" 
-             name="system.source.book" 
-             type="text" 
-             value="{{system.source.book}}" 
-             placeholder="Rogue Trader Core" />
+        <span>Description</span>
+      </button>
+      <button type="button" class="rt-tab rt-condition-tab" data-tab="effects" data-group="primary">
+        <i class="fas fa-magic"></i>
+        <span>Effects</span>
+      </button>
+    </nav>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-condition-content rt-tab-content rt-tab-content--condition scrollable">
+      
+      {{!-- DETAILS TAB --}}
+      <div class="rt-condition-panel tab active" data-tab="details" data-group="primary">
+        
+        {{!-- Basic Properties --}}
+        <div class="rt-condition-section">
+          <div class="rt-condition-section__header">
+            <i class="fas fa-cog"></i>
+            <h3>Condition Properties</h3>
+          </div>
+          <div class="rt-condition-section__body">
+            <div class="rt-field-grid rt-field-grid--2col">
+              <div class="rt-field">
+                <label>Nature</label>
+                <select name="system.nature">
+                  <option value="beneficial" {{#if (eq item.system.nature "beneficial")}}selected{{/if}}>Beneficial</option>
+                  <option value="harmful" {{#if (eq item.system.nature "harmful")}}selected{{/if}}>Harmful</option>
+                  <option value="neutral" {{#if (eq item.system.nature "neutral")}}selected{{/if}}>Neutral</option>
+                </select>
+              </div>
+              <div class="rt-field">
+                <label>Applies To</label>
+                <select name="system.appliesTo">
+                  <option value="self" {{#if (eq item.system.appliesTo "self")}}selected{{/if}}>Self</option>
+                  <option value="target" {{#if (eq item.system.appliesTo "target")}}selected{{/if}}>Target</option>
+                  <option value="both" {{#if (eq item.system.appliesTo "both")}}selected{{/if}}>Both</option>
+                  <option value="area" {{#if (eq item.system.appliesTo "area")}}selected{{/if}}>Area</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Stacking --}}
+        <div class="rt-condition-section">
+          <div class="rt-condition-section__header">
+            <i class="fas fa-layer-group"></i>
+            <h3>Stacking</h3>
+          </div>
+          <div class="rt-condition-section__body">
+            <div class="rt-field rt-field--checkbox">
+              <label>
+                <input type="checkbox" name="system.stackable" {{checked item.system.stackable}} />
+                <span>Condition is Stackable</span>
+              </label>
+            </div>
+            {{#if item.system.stackable}}
+            <div class="rt-field">
+              <label>Current Stacks</label>
+              <input type="number" name="system.stacks" value="{{item.system.stacks}}" 
+                     data-dtype="Number" min="1" />
+            </div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Duration --}}
+        <div class="rt-condition-section">
+          <div class="rt-condition-section__header">
+            <i class="fas fa-clock"></i>
+            <h3>Duration</h3>
+          </div>
+          <div class="rt-condition-section__body">
+            <div class="rt-field-grid rt-field-grid--2col">
+              <div class="rt-field">
+                <label>Duration Value</label>
+                <input type="number" name="system.duration.value" value="{{item.system.duration.value}}" 
+                       data-dtype="Number" min="0" />
+              </div>
+              <div class="rt-field">
+                <label>Duration Units</label>
+                <select name="system.duration.units">
+                  <option value="permanent" {{#if (eq item.system.duration.units "permanent")}}selected{{/if}}>Permanent</option>
+                  <option value="rounds" {{#if (eq item.system.duration.units "rounds")}}selected{{/if}}>Rounds</option>
+                  <option value="minutes" {{#if (eq item.system.duration.units "minutes")}}selected{{/if}}>Minutes</option>
+                  <option value="hours" {{#if (eq item.system.duration.units "hours")}}selected{{/if}}>Hours</option>
+                  <option value="days" {{#if (eq item.system.duration.units "days")}}selected{{/if}}>Days</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Effect --}}
+        <div class="rt-condition-section">
+          <div class="rt-condition-section__header">
+            <i class="fas fa-bolt"></i>
+            <h3>Condition Effect</h3>
+          </div>
+          <div class="rt-condition-section__body rt-condition-section__body--editor">
+            {{#if inEditMode}}
+            {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.effect}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Removal --}}
+        <div class="rt-condition-section">
+          <div class="rt-condition-section__header">
+            <i class="fas fa-eraser"></i>
+            <h3>Removal Conditions</h3>
+          </div>
+          <div class="rt-condition-section__body rt-condition-section__body--editor">
+            {{#if inEditMode}}
+            {{editor content=system.removal target="system.removal" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.removal}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Notes --}}
+        <div class="rt-condition-section">
+          <div class="rt-condition-section__header">
+            <i class="fas fa-sticky-note"></i>
+            <h3>GM Notes</h3>
+          </div>
+          <div class="rt-condition-section__body">
+            <textarea name="system.notes" rows="3" placeholder="Additional notes, special circumstances...">{{item.system.notes}}</textarea>
+          </div>
+        </div>
+
+      </div>
+
+      {{!-- DESCRIPTION TAB --}}
+      <div class="rt-condition-panel tab" data-tab="description" data-group="primary">
+        
+        {{!-- Full Description --}}
+        <div class="rt-condition-section">
+          <div class="rt-condition-section__header">
+            <i class="fas fa-book"></i>
+            <h3>Description</h3>
+          </div>
+          <div class="rt-condition-section__body rt-condition-section__body--editor">
+            {{#if inEditMode}}
+            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.description.value}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Source --}}
+        <div class="rt-condition-section">
+          <div class="rt-condition-section__header">
+            <i class="fas fa-book-open"></i>
+            <h3>Source</h3>
+          </div>
+          <div class="rt-condition-section__body">
+            <div class="rt-field-grid rt-field-grid--3col">
+              <div class="rt-field">
+                <label>Source Book</label>
+                <input type="text" name="system.source.book" value="{{system.source.book}}" 
+                       placeholder="Rogue Trader Core" />
+              </div>
+              <div class="rt-field">
+                <label>Page</label>
+                <input type="text" name="system.source.page" value="{{system.source.page}}" 
+                       placeholder="249" />
+              </div>
+              <div class="rt-field">
+                <label>Custom Reference</label>
+                <input type="text" name="system.source.custom" value="{{system.source.custom}}" 
+                       placeholder="Homebrew" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {{!-- EFFECTS TAB --}}
+      <div class="rt-condition-panel tab" data-tab="effects" data-group="primary">
+        {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+      </div>
+
     </div>
-    
-    <div class="rt-field">
-      <label class="rt-field__label">Page</label>
-      <input class="rt-field__input rt-field__input--short" 
-             name="system.source.page" 
-             type="text" 
-             value="{{system.source.page}}" 
-             placeholder="249" />
-    </div>
-    
-    <div class="rt-field">
-      <label class="rt-field__label">Custom Reference</label>
-      <input class="rt-field__input" 
-             name="system.source.custom" 
-             type="text" 
-             value="{{system.source.custom}}" 
-             placeholder="Homebrew / Variant" />
-    </div>
-  </div>
-  
-  {{!-- Description (for chat display) --}}
-  <div class="rt-item-sheet__panel">
-    <div class="rt-field">
-      <label class="rt-field__label">
-        <i class="fas fa-align-left"></i>
-        Description (for chat)
-      </label>
-      {{#if inEditMode}}
-      {{editor content=system.description.value 
-               target="system.description.value" 
-               button=true 
-               editable=true 
-               engine="prosemirror"}}
-      {{else}}
-      <div class="rt-description-content">{{{system.description.value}}}</div>
-      {{/if}}
-    </div>
-  </div>
-</form>
+
+  </form>
+</div>

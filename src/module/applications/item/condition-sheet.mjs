@@ -6,6 +6,7 @@ import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for condition items (status effects).
+ * Displays condition properties with nature-based color coding.
  */
 export default class ConditionSheet extends BaseItemSheet {
     /** @override */
@@ -13,7 +14,7 @@ export default class ConditionSheet extends BaseItemSheet {
         classes: ['rogue-trader', 'sheet', 'item', 'condition'],
         position: {
             width: 560,
-            height: 520,
+            height: 640,
         },
     };
 
@@ -42,4 +43,29 @@ export default class ConditionSheet extends BaseItemSheet {
     tabGroups = {
         primary: 'details',
     };
+
+    /* -------------------------------------------- */
+    /*  Context Preparation                         */
+    /* -------------------------------------------- */
+
+    /** @override */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+
+        // Add condition-specific context
+        context.natures = {
+            beneficial: 'Beneficial',
+            harmful: 'Harmful',
+            neutral: 'Neutral',
+        };
+
+        context.appliesTo = {
+            self: 'Self',
+            target: 'Target',
+            both: 'Both',
+            area: 'Area',
+        };
+
+        return context;
+    }
 }
