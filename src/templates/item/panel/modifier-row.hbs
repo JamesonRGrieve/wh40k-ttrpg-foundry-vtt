@@ -1,0 +1,29 @@
+{{!-- 
+  Modifier Row Partial
+  Displays a modifier with source, value, and optional link
+  
+  Usage:
+  {{> "systems/rogue-trader/templates/item/panel/modifier-row.hbs" 
+      source="Source Name"
+      value=10
+      uuid="item-uuid" (optional)}}
+  
+  @param {String} source - Name of the modifier source (talent, trait, etc.)
+  @param {Number} value - Modifier value (+/-)
+  @param {String} uuid - UUID of source item (optional, makes row clickable)
+  @param {String} icon - Font Awesome icon class (optional)
+--}}
+
+<div class="rt-modifier-row {{#if uuid}}rt-modifier-row--clickable{{/if}}"
+     {{#if uuid}}data-action="viewItem" data-uuid="{{uuid}}"{{/if}}>
+  <div class="rt-modifier-row__source">
+    {{#if icon}}
+    <i class="{{icon}}"></i>
+    {{/if}}
+    <span class="rt-modifier-row__name">{{source}}</span>
+  </div>
+  
+  <div class="rt-modifier-row__value {{#if (gt value 0)}}rt-modifier-row__value--positive{{else if (lt value 0)}}rt-modifier-row__value--negative{{/if}}">
+    {{signedNumber value}}
+  </div>
+</div>

@@ -1,0 +1,36 @@
+{{!-- 
+  Expandable Section Partial
+  Click-to-expand content panel with header
+  
+  Usage:
+  {{> "systems/rogue-trader/templates/item/panel/expandable-section.hbs" 
+      id="unique-id"
+      title="Section Title"
+      icon="fa-solid fa-info-circle"
+      expanded=false
+      content=htmlContent}}
+  
+  @param {String} id - Unique identifier for this section
+  @param {String} title - Section title/trigger text
+  @param {String} icon - Font Awesome icon class (optional)
+  @param {Boolean} expanded - Whether section is initially expanded (default: false)
+  @param {String} content - HTML content to display when expanded
+  @param {String} accentColor - CSS color for left border (optional)
+--}}
+
+<div class="rt-expandable-wrapper" data-expandable-id="{{id}}">
+  <div class="rt-expandable {{#if expanded}}rt-expandable--expanded{{/if}}" 
+       data-action="toggleExpandable"
+       data-target-id="{{id}}">
+    {{#if icon}}
+    <i class="{{icon}}"></i>
+    {{/if}}
+    <span class="rt-expandable__title">{{title}}</span>
+  </div>
+  
+  <div class="rt-expansion-panel {{#if expanded}}rt-expansion-panel--open{{/if}}" 
+       data-panel-id="{{id}}"
+       {{#if accentColor}}style="--rt-accent: {{accentColor}}"{{/if}}>
+    {{{content}}}
+  </div>
+</div>

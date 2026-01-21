@@ -1,0 +1,196 @@
+// ============================================
+// Stat Breakdown Popover
+// ============================================
+// Displays detailed stat calculation breakdowns
+
+.rt-stat-breakdown-popover {
+    position: fixed;
+    z-index: 9999;
+    min-width: 280px;
+    max-width: 400px;
+    background: var(--color-background-primary, #1e293b);
+    border: 1px solid var(--color-border-light, rgba(100, 100, 120, 0.4));
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    animation: popoverFadeIn 0.15s ease-out;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(192, 160, 98, 0.05) 0%, transparent 100%);
+        pointer-events: none;
+    }
+}
+
+@keyframes popoverFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rt-stat-breakdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, rgba(192, 160, 98, 0.15) 0%, rgba(192, 160, 98, 0.05) 100%);
+    border-bottom: 1px solid var(--color-border-light, rgba(100, 100, 120, 0.3));
+
+    h4 {
+        margin: 0;
+        font-family: 'Modesto Condensed', serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--color-text-primary, #e2e8f0);
+    }
+}
+
+.rt-stat-breakdown-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--color-text-secondary, #94a3b8);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    i {
+        font-size: 0.9rem;
+    }
+
+    &:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+    }
+}
+
+.rt-stat-breakdown-body {
+    padding: 12px 16px;
+}
+
+.rt-stat-breakdown-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid rgba(100, 100, 120, 0.15);
+    }
+
+    &--base {
+        font-weight: 600;
+        color: var(--color-text-primary, #e2e8f0);
+    }
+
+    &--total {
+        margin-top: 8px;
+        padding-top: 12px;
+        border-top: 2px solid var(--color-border-light, rgba(100, 100, 120, 0.4)) !important;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--color-text-primary, #e2e8f0);
+    }
+
+    &--clickable {
+        cursor: pointer;
+        border-radius: 4px;
+        margin: 0 -4px;
+        padding: 8px 4px;
+
+        &:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+    }
+}
+
+.rt-stat-breakdown-source {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    color: var(--color-text-secondary, #cbd5e1);
+
+    i {
+        opacity: 0.7;
+        font-size: 0.85em;
+    }
+}
+
+.rt-stat-breakdown-value {
+    font-family: 'Modesto Condensed', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: right;
+    color: var(--color-text-primary, #e2e8f0);
+
+    &--positive {
+        color: #4ade80;
+    }
+
+    &--negative {
+        color: #f87171;
+    }
+}
+
+.rt-stat-breakdown-modifiers {
+    margin: 4px 0;
+}
+
+// ============================================
+// Trigger Elements
+// ============================================
+// Style for elements that can show breakdowns
+
+[data-stat-breakdown],
+[data-action='showStatBreakdown'] {
+    position: relative;
+    cursor: help;
+
+    &::after {
+        content: '\f05a';
+        font-family: 'Font Awesome 6 Pro', 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        top: -2px;
+        right: -12px;
+        font-size: 0.7rem;
+        opacity: 0;
+        color: #93c5fd;
+        transition: opacity 0.2s;
+        pointer-events: none;
+    }
+
+    &:hover::after {
+        opacity: 0.6;
+    }
+}
+
+// Make stat values clickable
+.rt-stat-clickable {
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin: -2px -4px;
+
+    &:hover {
+        background: rgba(59, 130, 246, 0.1);
+        transform: translateY(-1px);
+    }
+}
