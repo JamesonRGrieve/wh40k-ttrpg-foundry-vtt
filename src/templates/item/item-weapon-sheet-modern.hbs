@@ -212,9 +212,15 @@
             <span>Damage</span>
           </button>
           {{#if system.usesAmmo}}
-          <button type="button" class="rt-btn rt-btn--reload" data-action="reload">
+          <button type="button" class="rt-btn rt-btn--reload {{#if (eq system.clip.value system.clip.max)}}rt-btn--disabled{{/if}}" 
+                  data-action="reload"
+                  data-tooltip="{{#if (eq system.clip.value system.clip.max)}}Already fully loaded{{else}}Reload ({{system.reloadLabel}}){{#if system.effectiveSpecial.has 'customised'}} - Customised: halves reload time{{/if}}{{/if}}"
+                  {{#if (eq system.clip.value system.clip.max)}}disabled{{/if}}>
             <i class="fa-solid fa-rotate-right"></i>
             <span>Reload</span>
+            {{#if (ne system.reload "free")}}
+            <span class="rt-btn__badge">{{system.reloadLabel}}</span>
+            {{/if}}
           </button>
           {{/if}}
         </div>
@@ -257,6 +263,56 @@
               </div>
               {{/if}}
             </div>
+          </div>
+        </div>
+        {{/if}}
+        
+        {{!-- Loaded Ammunition Display (Overview) --}}
+        {{#if (and system.usesAmmo hasLoadedAmmo)}}
+        <div class="rt-weapon-section rt-weapon-section--ammo">
+          <div class="rt-weapon-section__header">
+            <i class="fa-solid fa-bullseye"></i>
+            <h3>Loaded: {{loadedAmmoLabel}}</h3>
+          </div>
+          <div class="rt-weapon-section__body">
+            <div class="rt-loaded-ammo-effects">
+              {{#if (ne loadedAmmoData.modifiers.damage 0)}}
+              <div class="rt-loaded-ammo-effect">
+                <span class="rt-loaded-ammo-effect__label">Damage</span>
+                <span class="rt-loaded-ammo-effect__value {{#if (gt loadedAmmoData.modifiers.damage 0)}}rt-loaded-ammo-effect__value--positive{{else}}rt-loaded-ammo-effect__value--negative{{/if}}">
+                  {{#if (gt loadedAmmoData.modifiers.damage 0)}}+{{/if}}{{loadedAmmoData.modifiers.damage}}
+                </span>
+              </div>
+              {{/if}}
+              {{#if (ne loadedAmmoData.modifiers.penetration 0)}}
+              <div class="rt-loaded-ammo-effect">
+                <span class="rt-loaded-ammo-effect__label">Penetration</span>
+                <span class="rt-loaded-ammo-effect__value {{#if (gt loadedAmmoData.modifiers.penetration 0)}}rt-loaded-ammo-effect__value--positive{{else}}rt-loaded-ammo-effect__value--negative{{/if}}">
+                  {{#if (gt loadedAmmoData.modifiers.penetration 0)}}+{{/if}}{{loadedAmmoData.modifiers.penetration}}
+                </span>
+              </div>
+              {{/if}}
+              {{#if (ne loadedAmmoData.modifiers.range 0)}}
+              <div class="rt-loaded-ammo-effect">
+                <span class="rt-loaded-ammo-effect__label">Range</span>
+                <span class="rt-loaded-ammo-effect__value {{#if (gt loadedAmmoData.modifiers.range 0)}}rt-loaded-ammo-effect__value--positive{{else}}rt-loaded-ammo-effect__value--negative{{/if}}">
+                  {{#if (gt loadedAmmoData.modifiers.range 0)}}+{{/if}}{{loadedAmmoData.modifiers.range}}m
+                </span>
+              </div>
+              {{/if}}
+              {{#if (gt loadedAmmoData.addedQualities.length 0)}}
+              <div class="rt-loaded-ammo-effect rt-loaded-ammo-effect--qualities">
+                <span class="rt-loaded-ammo-effect__label">Added Qualities</span>
+                <span class="rt-loaded-ammo-effect__value">{{join loadedAmmoData.addedQualities ", "}}</span>
+              </div>
+              {{/if}}
+            </div>
+            {{#if isOwnedByActor}}
+            <button type="button" class="rt-btn rt-btn--secondary rt-btn--sm rt-btn--block" data-action="ejectAmmo">
+              <i class="fa-solid fa-eject"></i>
+              <span>Eject Ammunition</span>
+            </button>
+            {{/if}}
           </div>
         </div>
         {{/if}}
@@ -479,6 +535,45 @@
             <h3>Ammunition</h3>
           </div>
           <div class="rt-weapon-section__body">
+            
+            {{!-- Loaded Ammo Display --}}
+            {{#if hasLoadedAmmo}}
+            <div class="rt-loaded-ammo-banner">
+              <div class="rt-loaded-ammo-banner__header">
+                <i class="fa-solid fa-bullseye"></i>
+                <span class="rt-loaded-ammo-banner__name">{{loadedAmmoLabel}}</span>
+                <button type="button" 
+                        class="rt-btn rt-btn--icon rt-btn--danger rt-btn--sm" 
+                        data-action="ejectAmmo"
+                        title="Eject Ammunition">
+                  <i class="fa-solid fa-eject"></i>
+                </button>
+              </div>
+              {{#if loadedAmmoData.modifiers}}
+              <div class="rt-loaded-ammo-banner__effects">
+                {{#if (ne loadedAmmoData.modifiers.damage 0)}}
+                <span class="rt-ammo-effect">Damage {{#if (gt loadedAmmoData.modifiers.damage 0)}}+{{/if}}{{loadedAmmoData.modifiers.damage}}</span>
+                {{/if}}
+                {{#if (ne loadedAmmoData.modifiers.penetration 0)}}
+                <span class="rt-ammo-effect">Pen {{#if (gt loadedAmmoData.modifiers.penetration 0)}}+{{/if}}{{loadedAmmoData.modifiers.penetration}}</span>
+                {{/if}}
+                {{#if (ne loadedAmmoData.modifiers.range 0)}}
+                <span class="rt-ammo-effect">Range {{#if (gt loadedAmmoData.modifiers.range 0)}}+{{/if}}{{loadedAmmoData.modifiers.range}}m</span>
+                {{/if}}
+                {{#if (gt loadedAmmoData.addedQualities.length 0)}}
+                <span class="rt-ammo-effect">+{{join loadedAmmoData.addedQualities ", "}}</span>
+                {{/if}}
+              </div>
+              {{/if}}
+            </div>
+            {{else}}
+            <div class="rt-ammo-dropzone">
+              <i class="fa-solid fa-bullseye"></i>
+              <p>Standard Ammunition</p>
+              <p class="rt-ammo-dropzone__hint">Drag ammunition here to load special ammo</p>
+            </div>
+            {{/if}}
+            
             <div class="rt-field-row">
               <div class="rt-field rt-field--small">
                 <label>Current</label>

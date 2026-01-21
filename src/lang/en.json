@@ -1400,11 +1400,22 @@
     },
 
     "RT.Reload": {
-        "Free": "Free",
-        "Half": "Half",
-        "Full": "Full",
-        "2Full": "2 Full",
-        "3Full": "3 Full"
+        "Free": "Free Action",
+        "Half": "Half Action",
+        "Full": "Full Action",
+        "2Full": "2 Full Actions",
+        "3Full": "3 Full Actions",
+        "Title": "Reload Weapon",
+        "AlreadyFull": "Weapon is already fully loaded",
+        "NotUsesAmmo": "Weapon does not use ammunition",
+        "InvalidWeapon": "Invalid weapon",
+        "OutOfTurn": "Reload Out of Turn",
+        "OutOfTurnWarning": "It is not your turn. Reload anyway? This will not track action economy.",
+        "RequiresAction": "Reload requires: {cost}",
+        "CustomisedBonus": "Customised quality halves reload time",
+        "ActionCost": "Action Cost",
+        "ActionsSpent": "Actions Spent",
+        "AmmunitionStatus": "Ammunition Status"
     },
 
     "RT.WeaponClass": {

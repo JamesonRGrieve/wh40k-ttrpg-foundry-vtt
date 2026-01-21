@@ -70,6 +70,27 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                 choices: ['-', 'free', 'half', 'full', '2-full', '3-full'],
             }),
 
+            // Loaded ammunition (reference to ammunition item)
+            loadedAmmo: new fields.SchemaField(
+                {
+                    uuid: new fields.StringField({ required: false, blank: true }),
+                    name: new fields.StringField({ required: false, blank: true }),
+                    // Cached modifier values from loaded ammo
+                    modifiers: new fields.SchemaField(
+                        {
+                            damage: new fields.NumberField({ required: false, initial: 0, integer: true }),
+                            penetration: new fields.NumberField({ required: false, initial: 0, integer: true }),
+                            range: new fields.NumberField({ required: false, initial: 0, integer: true }),
+                        },
+                        { required: false },
+                    ),
+                    // Cached qualities
+                    addedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
+                    removedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
+                },
+                { required: false },
+            ),
+
             // Modifications (references to weaponModification items)
             modifications: new fields.ArrayField(
                 new fields.SchemaField({
@@ -170,6 +191,13 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                 this._modificationModifiers.weight += mod.cachedModifiers.weight ?? 0;
             }
         }
+
+        // Add loaded ammunition modifiers
+        if (this.loadedAmmo?.uuid && this.loadedAmmo.modifiers) {
+            this._modificationModifiers.damage += this.loadedAmmo.modifiers.damage ?? 0;
+            this._modificationModifiers.penetration += this.loadedAmmo.modifiers.penetration ?? 0;
+            this._modificationModifiers.range += this.loadedAmmo.modifiers.range ?? 0;
+        }
     }
 
     /* -------------------------------------------- */
@@ -214,7 +242,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
-     * Get effective qualities (base + craftsmanship-derived).
+     * Get effective qualities (base + craftsmanship-derived + ammo).
      * Applies Rogue Trader craftsmanship rules for ranged weapons:
      * - Poor: Gain Unreliable (or jam on any miss if already Unreliable)
      * - Good: Gain Reliable (or cancel Unreliable)
@@ -253,6 +281,22 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                     qualities.delete('unreliable');
                     qualities.delete('overheats');
                     break;
+            }
+        }
+
+        // Apply loaded ammunition quality modifications
+        if (this.loadedAmmo?.uuid) {
+            // Add qualities from ammo
+            if (this.loadedAmmo.addedQualities) {
+                for (const quality of this.loadedAmmo.addedQualities) {
+                    qualities.add(quality);
+                }
+            }
+            // Remove qualities blocked by ammo
+            if (this.loadedAmmo.removedQualities) {
+                for (const quality of this.loadedAmmo.removedQualities) {
+                    qualities.delete(quality);
+                }
             }
         }
 
@@ -394,6 +438,80 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
+     * Get available fire modes for this weapon.
+     * Returns an array of {mode, label, rof, modifier, description} objects.
+     * @type {Array<{mode: string, label: string, rof: number, modifier: number, description: string, actionType: string}>}
+     */
+    get availableFireModes() {
+        if (!this.isRangedWeapon) return [];
+
+        const modes = [];
+        const rof = this.attack.rateOfFire;
+        const hasStorm = this.effectiveSpecial.has('storm');
+
+        // Single Shot - always available for ranged weapons
+        if (rof.single) {
+            modes.push({
+                mode: 'single',
+                label: 'Single Shot',
+                rof: 1,
+                modifier: 0,
+                description: 'Fire a single shot',
+                actionType: 'half',
+            });
+        }
+
+        // Semi-Auto - available if semi > 0
+        if (rof.semi > 0) {
+            const semiRof = hasStorm ? rof.semi * 2 : rof.semi;
+            modes.push({
+                mode: 'semi',
+                label: `Semi-Auto (${semiRof})`,
+                rof: semiRof,
+                modifier: 0,
+                description: 'Additional hit per 2 DoS',
+                actionType: 'half',
+            });
+        }
+
+        // Full-Auto - available if full > 0
+        if (rof.full > 0) {
+            const fullRof = hasStorm ? rof.full * 2 : rof.full;
+            modes.push({
+                mode: 'full',
+                label: `Full-Auto (${fullRof})`,
+                rof: fullRof,
+                modifier: -10,
+                description: 'Additional hit per DoS',
+                actionType: 'half',
+            });
+        }
+
+        return modes;
+    }
+
+    /**
+     * Get the effective RoF for a fire mode (accounting for Storm quality).
+     * @param {string} mode - Fire mode: 'single', 'semi', or 'full'
+     * @returns {number} - Effective rate of fire
+     */
+    getEffectiveRoF(mode) {
+        const rof = this.attack.rateOfFire;
+        const hasStorm = this.effectiveSpecial.has('storm');
+
+        switch (mode) {
+            case 'single':
+                return 1;
+            case 'semi':
+                return hasStorm ? rof.semi * 2 : rof.semi;
+            case 'full':
+                return hasStorm ? rof.full * 2 : rof.full;
+            default:
+                return 1;
+        }
+    }
+
+    /**
      * Get the reload time label.
      * @type {string}
      */
@@ -407,6 +525,48 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             '3-full': game.i18n.localize('RT.Reload.3Full'),
         };
         return labels[this.reload] ?? this.reload;
+    }
+
+    /**
+     * Get effective reload time accounting for Customised quality.
+     * Customised quality halves reload time.
+     * @type {string}
+     */
+    get effectiveReloadTime() {
+        const baseReload = this.reload;
+        
+        // Check for Customised quality
+        if (!this.effectiveSpecial?.has('customised')) {
+            return baseReload;
+        }
+
+        // Customised halves reload time
+        const reloadMap = {
+            '3-full': '2-full',
+            '2-full': 'full',
+            'full': 'half',
+            'half': 'half', // Already minimum
+            'free': 'free',
+            '-': '-',
+        };
+
+        return reloadMap[baseReload] || baseReload;
+    }
+
+    /**
+     * Get effective reload time label.
+     * @type {string}
+     */
+    get effectiveReloadLabel() {
+        const labels = {
+            '-': '-',
+            'free': game.i18n.localize('RT.Reload.Free'),
+            'half': game.i18n.localize('RT.Reload.Half'),
+            'full': game.i18n.localize('RT.Reload.Full'),
+            '2-full': game.i18n.localize('RT.Reload.2Full'),
+            '3-full': game.i18n.localize('RT.Reload.3Full'),
+        };
+        return labels[this.effectiveReloadTime] ?? this.effectiveReloadTime;
     }
 
     /**
@@ -638,6 +798,23 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         return this.isTwoHanded ? game.i18n.localize('RT.Weapon.TwoHanded') : game.i18n.localize('RT.Weapon.OneHanded');
     }
 
+    /**
+     * Check if weapon has loaded ammunition.
+     * @type {boolean}
+     */
+    get hasLoadedAmmo() {
+        return !!this.loadedAmmo?.uuid;
+    }
+
+    /**
+     * Get loaded ammunition display name.
+     * @type {string}
+     */
+    get loadedAmmoLabel() {
+        if (!this.hasLoadedAmmo) return 'Standard';
+        return this.loadedAmmo.name || 'Unknown';
+    }
+
     /* -------------------------------------------- */
     /*  Actions                                     */
     /* -------------------------------------------- */
@@ -654,13 +831,88 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
-     * Reload the weapon.
+     * Reload the weapon using the ReloadActionManager.
+     * This method validates action economy and handles Customised quality.
+     * @param {object} options - Reload options
+     * @param {boolean} options.skipValidation - Skip action economy validation
+     * @param {boolean} options.force - Force reload even if already full
+     * @returns {Promise<{success: boolean, message: string, actionsSpent: object}>}
+     */
+    async reload(options = {}) {
+        // Dynamic import to avoid circular dependency
+        const { ReloadActionManager } = await import('../../actions/reload-action-manager.mjs');
+        return ReloadActionManager.reloadWeapon(this.parent, options);
+    }
+
+    /**
+     * Simple reload (legacy method for backward compatibility).
+     * Reloads to max without validation.
      * @param {number} [amount]   Amount to reload (defaults to full).
      * @returns {Promise<Item>}
+     * @deprecated Use reload() instead for full action economy support
      */
-    async reload(amount = null) {
+    async reloadSimple(amount = null) {
         if (!this.usesAmmo) return this.parent;
         const newValue = amount ?? this.clip.max;
         return this.parent?.update({ 'system.clip.value': Math.min(newValue, this.clip.max) });
+    }
+}
+
+    /**
+     * Load ammunition into the weapon.
+     * @param {Item} ammoItem - The ammunition item to load
+     * @returns {Promise<Item>} - The updated weapon
+     */
+    async loadAmmo(ammoItem) {
+        if (!ammoItem || ammoItem.type !== 'ammunition') {
+            ui.notifications.warn('Invalid ammunition item');
+            return this.parent;
+        }
+
+        // Cache ammunition modifiers
+        const loadedAmmoData = {
+            uuid: ammoItem.uuid,
+            name: ammoItem.name,
+            modifiers: {
+                damage: ammoItem.system.modifiers?.damage ?? 0,
+                penetration: ammoItem.system.modifiers?.penetration ?? 0,
+                range: ammoItem.system.modifiers?.range ?? 0,
+            },
+            addedQualities: ammoItem.system.addedQualities || new Set(),
+            removedQualities: ammoItem.system.removedQualities || new Set(),
+        };
+
+        await this.parent?.update({
+            'system.loadedAmmo': loadedAmmoData,
+            'system.clip.value': this.clip.max, // Reload on ammo change
+        });
+
+        ui.notifications.info(`${ammoItem.name} loaded into ${this.parent.name}`);
+        return this.parent;
+    }
+
+    /**
+     * Eject loaded ammunition from the weapon.
+     * @returns {Promise<Item>} - The updated weapon
+     */
+    async ejectAmmo() {
+        if (!this.hasLoadedAmmo) {
+            ui.notifications.warn('No ammunition loaded');
+            return this.parent;
+        }
+
+        await this.parent?.update({
+            'system.loadedAmmo': {
+                uuid: '',
+                name: '',
+                modifiers: { damage: 0, penetration: 0, range: 0 },
+                addedQualities: new Set(),
+                removedQualities: new Set(),
+            },
+            'system.clip.value': 0, // Empty clip on eject
+        });
+
+        ui.notifications.info(`Ammunition ejected from ${this.parent.name}`);
+        return this.parent;
     }
 }

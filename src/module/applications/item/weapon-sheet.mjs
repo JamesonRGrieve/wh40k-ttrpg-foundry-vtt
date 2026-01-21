@@ -3,6 +3,7 @@
  */
 
 import ContainerItemSheet from './container-item-sheet.mjs';
+import { ReloadActionManager } from '../../actions/reload-action-manager.mjs';
 
 /**
  * Sheet for weapon items with support for weapon modifications and ammunition.
@@ -23,6 +24,8 @@ export default class WeaponSheet extends ContainerItemSheet {
             toggleModificationActive: WeaponSheet.#toggleModificationActive,
             viewModification: WeaponSheet.#viewModification,
             removeModification: WeaponSheet.#removeModification,
+            loadAmmo: WeaponSheet.#loadAmmo,
+            ejectAmmo: WeaponSheet.#ejectAmmo,
         },
         position: {
             width: 650,
@@ -166,6 +169,19 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Check if weapon has any modifications affecting stats
         context.hasModificationEffects = system._modificationModifiers && Object.values(system._modificationModifiers).some((v) => v !== 0);
+
+        // Loaded ammunition data
+        context.hasLoadedAmmo = system.hasLoadedAmmo;
+        context.loadedAmmoLabel = system.loadedAmmoLabel;
+        if (system.hasLoadedAmmo) {
+            context.loadedAmmoData = {
+                name: system.loadedAmmo.name,
+                uuid: system.loadedAmmo.uuid,
+                modifiers: system.loadedAmmo.modifiers,
+                addedQualities: Array.from(system.loadedAmmo.addedQualities || []),
+                removedQualities: Array.from(system.loadedAmmo.removedQualities || []),
+            };
+        }
 
         // Convenience flags
         context.hasActions = this.isEditable && this.item.actor;
@@ -401,13 +417,31 @@ export default class WeaponSheet extends ContainerItemSheet {
 
     /**
      * Handle reload button click.
+     * Uses the ReloadActionManager to validate and perform reload.
      * @this {WeaponSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #onReload(event, target) {
-        await this.item.system.reload();
-        ui.notifications.info(`${this.item.name} reloaded.`);
+        const actor = this.item.actor;
+
+        // Perform reload with validation
+        const skipValidation = event.shiftKey; // Hold Shift to skip validation
+        const result = await ReloadActionManager.reloadWeapon(this.item, {
+            skipValidation,
+        });
+
+        // Show result notification
+        if (result.success) {
+            ui.notifications.info(result.message);
+
+            // Send to chat if actor is present
+            if (actor) {
+                await ReloadActionManager.sendReloadToChat(actor, this.item, result);
+            }
+        } else {
+            ui.notifications.warn(result.message);
+        }
     }
 
     /* -------------------------------------------- */
@@ -576,6 +610,88 @@ export default class WeaponSheet extends ContainerItemSheet {
 
     /* -------------------------------------------- */
 
+    /**
+     * Load ammunition into weapon.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #loadAmmo(event, target) {
+        const ammoUuid = target.dataset.ammoUuid;
+        if (!ammoUuid) return;
+
+        const ammoItem = await fromUuid(ammoUuid);
+        if (!ammoItem) {
+            ui.notifications.error('Ammunition item not found');
+            return;
+        }
+
+        await this.item.system.loadAmmo(ammoItem);
+        this.render();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Eject loaded ammunition.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #ejectAmmo(event, target) {
+        await this.item.system.ejectAmmo();
+        this.render();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle dropping ammunition onto the weapon.
+     * @param {Item} ammoItem - The ammunition item
+     * @returns {Promise<boolean>}
+     * @private
+     */
+    async _onDropAmmunition(ammoItem) {
+        // Validate ammunition compatibility
+        if (!this._canLoadAmmunition(ammoItem)) {
+            return false;
+        }
+
+        // Load ammunition
+        await this.item.system.loadAmmo(ammoItem);
+        return true;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Check if ammunition can be loaded into this weapon.
+     * @param {Item} ammoItem - The ammunition item
+     * @returns {boolean}
+     * @private
+     */
+    _canLoadAmmunition(ammoItem) {
+        const weapon = this.item.system;
+
+        // Must use ammo
+        if (!weapon.usesAmmo) {
+            ui.notifications.warn('This weapon does not use ammunition');
+            return false;
+        }
+
+        // Check weapon type compatibility
+        if (ammoItem.system.weaponTypes?.size > 0) {
+            if (!ammoItem.system.weaponTypes.has(weapon.type)) {
+                ui.notifications.warn(`${ammoItem.name} is not compatible with ${weapon.typeLabel} weapons`);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /* -------------------------------------------- */
+
     /** @override */
     async _onDrop(event) {
         event.preventDefault();
@@ -595,6 +711,11 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Handle weaponModification drops
         if (droppedItem.type === 'weaponModification') {
             return this._onDropModification(droppedItem);
+        }
+
+        // Handle ammunition drops
+        if (droppedItem.type === 'ammunition') {
+            return this._onDropAmmunition(droppedItem);
         }
 
         // Fallback to parent container behavior for other item types

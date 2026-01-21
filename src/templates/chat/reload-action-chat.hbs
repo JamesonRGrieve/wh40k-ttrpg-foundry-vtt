@@ -1,0 +1,103 @@
+{{!-- 
+  Reload Action Chat Card
+  Shows reload information including action cost and Customised quality effects
+--}}
+<div class="rt-chat-card rt-reload-card">
+  {{!-- Header --}}
+  <div class="rt-chat-card__header rt-reload-card__header">
+    <div class="rt-chat-card__title">
+      <i class="fa-solid fa-rotate-right"></i>
+      <span>Reload</span>
+    </div>
+    <div class="rt-chat-card__subtitle">
+      {{weapon.name}}
+    </div>
+  </div>
+
+  {{!-- Body --}}
+  <div class="rt-chat-card__body">
+    {{!-- Ammo Status --}}
+    <div class="rt-reload-status">
+      <div class="rt-reload-status__label">
+        <i class="fa-solid fa-database"></i>
+        <span>Ammunition</span>
+      </div>
+      <div class="rt-reload-status__value">
+        <span class="rt-reload-status__clip">{{clipCurrent}}/{{clipMax}}</span>
+        <div class="rt-reload-status__bar">
+          <div class="rt-reload-status__bar-fill" 
+               style="width: {{multiply (divide clipCurrent clipMax) 100}}%"></div>
+        </div>
+      </div>
+    </div>
+
+    {{!-- Action Cost --}}
+    <div class="rt-reload-cost">
+      <div class="rt-reload-cost__label">
+        <i class="fa-solid fa-hourglass-half"></i>
+        <span>Action Cost</span>
+      </div>
+      <div class="rt-reload-cost__value">
+        {{#if hasCustomised}}
+        <span class="rt-reload-cost__original" style="text-decoration: line-through;">
+          {{baseReloadTime}}
+        </span>
+        <i class="fa-solid fa-arrow-right"></i>
+        {{/if}}
+        <span class="rt-reload-cost__effective {{#if hasCustomised}}rt-reload-cost--modified{{/if}}">
+          {{effectiveReloadTime}}
+        </span>
+        {{#if hasCustomised}}
+        <span class="rt-reload-cost__badge" title="Customised quality halves reload time">
+          <i class="fa-solid fa-wrench"></i>
+          Customised
+        </span>
+        {{/if}}
+      </div>
+    </div>
+
+    {{!-- Actions Spent --}}
+    {{#if result.actionsSpent}}
+    <div class="rt-reload-actions">
+      <div class="rt-reload-actions__label">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Actions Spent</span>
+      </div>
+      <div class="rt-reload-actions__value">
+        {{#if (gt result.actionsSpent.full 0)}}
+        <span class="rt-reload-action-badge rt-reload-action-badge--full">
+          {{result.actionsSpent.full}} Full Action{{#if (gt result.actionsSpent.full 1)}}s{{/if}}
+        </span>
+        {{/if}}
+        {{#if (gt result.actionsSpent.half 0)}}
+        <span class="rt-reload-action-badge rt-reload-action-badge--half">
+          {{result.actionsSpent.half}} Half Action{{#if (gt result.actionsSpent.half 1)}}s{{/if}}
+        </span>
+        {{/if}}
+        {{#unless (or (gt result.actionsSpent.full 0) (gt result.actionsSpent.half 0))}}
+        <span class="rt-reload-action-badge rt-reload-action-badge--free">
+          <i class="fa-solid fa-gift"></i>
+          Free Action
+        </span>
+        {{/unless}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Result Message --}}
+    {{#if result.message}}
+    <div class="rt-reload-message">
+      <i class="fa-solid {{#if result.success}}fa-check-circle{{else}}fa-exclamation-triangle{{/if}}"></i>
+      <span>{{result.message}}</span>
+    </div>
+    {{/if}}
+  </div>
+
+  {{!-- Footer --}}
+  <div class="rt-chat-card__footer">
+    <div class="rt-chat-card__actor">
+      <img src="{{actor.img}}" alt="{{actor.name}}" />
+      <span>{{actor.name}}</span>
+    </div>
+  </div>
+</div>
