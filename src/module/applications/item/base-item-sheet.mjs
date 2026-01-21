@@ -24,6 +24,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
     static DEFAULT_OPTIONS = {
         actions: {
             editImage: BaseItemSheet.#onEditImage,
+            toggleEditMode: BaseItemSheet.#toggleEditMode,
             effectCreate: BaseItemSheet.#effectCreate,
             effectEdit: BaseItemSheet.#effectEdit,
             effectDelete: BaseItemSheet.#effectDelete,
@@ -366,6 +367,20 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
             },
         });
         await fp.browse();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle edit mode for actor-owned items.
+     * @this {BaseItemSheet}
+     * @param {PointerEvent} event  The triggering event.
+     * @param {HTMLElement} target  The action target.
+     */
+    static async #toggleEditMode(event, target) {
+        if (!this.canEdit) return;
+        this.#editMode = !this.#editMode;
+        this.render();
     }
 
     /* -------------------------------------------- */

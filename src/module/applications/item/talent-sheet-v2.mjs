@@ -25,7 +25,6 @@ export default class TalentSheetV2 extends BaseItemSheet {
         classes: ['rogue-trader', 'sheet', 'item', 'talent-sheet-v2'],
         actions: {
             ...super.DEFAULT_OPTIONS?.actions,
-            toggleEditMode: TalentSheetV2.#toggleEditMode,
             rollTalent: TalentSheetV2.#rollTalent,
             postToChat: TalentSheetV2.#postToChat,
             viewGrantedItem: TalentSheetV2.#viewGrantedItem,
@@ -70,61 +69,6 @@ export default class TalentSheetV2 extends BaseItemSheet {
     };
 
     /* -------------------------------------------- */
-    /*  Instance Properties                         */
-    /* -------------------------------------------- */
-
-    /**
-     * Whether the sheet is in edit mode (for character-owned talents).
-     * Compendium items are always in view mode.
-     * @type {boolean}
-     */
-    #editMode = false;
-
-    /* -------------------------------------------- */
-    /*  Properties                                  */
-    /* -------------------------------------------- */
-
-    /**
-     * Whether this talent is owned by a character (editable copy).
-     * @type {boolean}
-     */
-    get isOwnedByActor() {
-        return !!this.item.actor;
-    }
-
-    /**
-     * Whether this talent is from a compendium (read-only).
-     * @type {boolean}
-     */
-    get isCompendiumItem() {
-        return this.item.pack !== null;
-    }
-
-    /**
-     * Whether the sheet should show edit controls.
-     * @type {boolean}
-     */
-    get canEdit() {
-        // Compendium items are always read-only
-        if (this.isCompendiumItem) return false;
-        // Must be editable by user
-        return this.isEditable;
-    }
-
-    /**
-     * Whether the sheet is currently in edit mode.
-     * @type {boolean}
-     */
-    get inEditMode() {
-        // Compendium items are never in edit mode
-        if (this.isCompendiumItem) return false;
-        // For actor-owned items, use toggle state
-        // For world items, always allow editing if editable
-        if (!this.isOwnedByActor) return this.isEditable;
-        return this.#editMode && this.isEditable;
-    }
-
-    /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
@@ -132,12 +76,6 @@ export default class TalentSheetV2 extends BaseItemSheet {
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
         const system = this.item.system;
-
-        // Edit mode state
-        context.canEdit = this.canEdit;
-        context.inEditMode = this.inEditMode;
-        context.isOwnedByActor = this.isOwnedByActor;
-        context.isCompendiumItem = this.isCompendiumItem;
 
         // Tab state
         context.tabs = this._getTabs();
@@ -803,20 +741,6 @@ export default class TalentSheetV2 extends BaseItemSheet {
 
     /* -------------------------------------------- */
     /*  Action Handlers                             */
-    /* -------------------------------------------- */
-
-    /**
-     * Toggle edit mode for owned talents.
-     * @this {TalentSheetV2}
-     * @param {PointerEvent} event - The triggering event
-     * @param {HTMLElement} target - The action target
-     */
-    static async #toggleEditMode(event, target) {
-        if (!this.canEdit) return;
-        this.#editMode = !this.#editMode;
-        this.render();
-    }
-
     /* -------------------------------------------- */
 
     /**

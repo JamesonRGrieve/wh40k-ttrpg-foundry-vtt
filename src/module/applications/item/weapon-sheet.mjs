@@ -16,7 +16,6 @@ export default class WeaponSheet extends ContainerItemSheet {
         actions: {
             reload: WeaponSheet.#onReload,
             addModification: WeaponSheet.#onAddModification,
-            toggleEditMode: WeaponSheet.#toggleEditMode,
             rollAttack: WeaponSheet.#rollAttack,
             rollDamage: WeaponSheet.#rollDamage,
             openQuality: WeaponSheet.#openQuality,
@@ -65,59 +64,8 @@ export default class WeaponSheet extends ContainerItemSheet {
     };
 
     /* -------------------------------------------- */
-    /*  Instance Properties                         */
-    /* -------------------------------------------- */
-
-    /**
-     * Whether the sheet is in edit mode (for actor-owned weapons).
-     * Compendium items are always in view mode.
-     * @type {boolean}
-     */
-    #editMode = false;
-
-    /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
-
-    /**
-     * Whether this weapon is owned by an actor (editable copy).
-     * @type {boolean}
-     */
-    get isOwnedByActor() {
-        return !!this.item.actor;
-    }
-
-    /**
-     * Whether this weapon is from a compendium (read-only).
-     * @type {boolean}
-     */
-    get isCompendiumItem() {
-        return this.item.pack !== null;
-    }
-
-    /**
-     * Whether the sheet should show edit controls.
-     * @type {boolean}
-     */
-    get canEdit() {
-        // Compendium items are always read-only
-        if (this.isCompendiumItem) return false;
-        // Must be editable by user
-        return this.isEditable;
-    }
-
-    /**
-     * Whether the sheet is currently in edit mode.
-     * @type {boolean}
-     */
-    get inEditMode() {
-        // Compendium items are never in edit mode
-        if (this.isCompendiumItem) return false;
-        // For actor-owned items, use toggle state
-        // For world items, always allow editing if editable
-        if (!this.isOwnedByActor) return this.isEditable;
-        return this.#editMode && this.isEditable;
-    }
 
     /**
      * Prepare weapon quality tooltip data.
@@ -140,12 +88,6 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Add CONFIG reference for templates
         context.CONFIG = CONFIG;
-
-        // Edit mode state
-        context.canEdit = this.canEdit;
-        context.inEditMode = this.inEditMode;
-        context.isOwnedByActor = this.isOwnedByActor;
-        context.isCompendiumItem = this.isCompendiumItem;
 
         // Tab state
         context.tabs = this._getTabs();
@@ -388,20 +330,6 @@ export default class WeaponSheet extends ContainerItemSheet {
 
     /* -------------------------------------------- */
     /*  Action Handlers                             */
-    /* -------------------------------------------- */
-
-    /**
-     * Toggle edit mode for owned weapons.
-     * @this {WeaponSheet}
-     * @param {PointerEvent} event - The triggering event
-     * @param {HTMLElement} target - The action target
-     */
-    static async #toggleEditMode(event, target) {
-        if (!this.canEdit) return;
-        this.#editMode = !this.#editMode;
-        this.render();
-    }
-
     /* -------------------------------------------- */
 
     /**

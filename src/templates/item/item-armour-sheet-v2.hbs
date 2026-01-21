@@ -302,14 +302,14 @@
           <div class="rt-armour-section__header">
             <i class="fas fa-star"></i>
             <h3>Special Properties</h3>
-            {{#if item.system.hasProperties}}
-            <span class="rt-armour-section__count">{{item.system.propertiesArray.length}}</span>
+            {{#if propertiesArray}}
+            <span class="rt-armour-section__count">{{propertiesArray.length}}</span>
             {{/if}}
           </div>
           <div class="rt-armour-section__body">
-            {{#if item.system.hasProperties}}
+            {{#if propertiesArray.length}}
             <div class="rt-property-tags">
-              {{#each item.system.propertiesArray as |prop|}}
+              {{#each propertiesArray as |prop|}}
               <div class="rt-property-tag">
                 <span class="rt-property-tag__label">{{prop.label}}</span>
                 <button type="button" class="rt-property-tag__remove" 
@@ -342,14 +342,14 @@
         </div>
 
         {{!-- Property Descriptions --}}
-        {{#if item.system.hasProperties}}
+        {{#if propertiesArray.length}}
         <div class="rt-armour-section">
           <div class="rt-armour-section__header">
             <i class="fas fa-info-circle"></i>
             <h3>Property Descriptions</h3>
           </div>
           <div class="rt-armour-section__body">
-            {{#each item.system.propertiesArray as |prop|}}
+            {{#each propertiesArray as |prop|}}
             <div class="rt-property-detail">
               <div class="rt-property-detail__name">
                 <i class="fas fa-star"></i>
@@ -374,22 +374,22 @@
             <i class="fas fa-wrench"></i>
             <h3>Modification Slots</h3>
             <span class="rt-armour-section__count">
-              {{item.system.modifications.length}} / {{item.system.modificationSlots}}
+              {{modificationsArray.length}} / {{system.modificationSlots}}
             </span>
           </div>
           <div class="rt-armour-section__body">
             <div class="rt-mod-slots">
               <label>Total Slots:</label>
-              <input type="number" name="system.modificationSlots" value="{{item.system.modificationSlots}}" 
+              <input type="number" name="system.modificationSlots" value="{{system.modificationSlots}}" 
                      data-dtype="Number" min="0" max="10" />
               <span class="rt-mod-slots__available">
-                {{item.system.availableModSlots}} available
+                {{system.availableModSlots}} available
               </span>
             </div>
             
-            {{#if item.system.modifications.length}}
+            {{#if modificationsArray.length}}
             <div class="rt-mod-list">
-              {{#each item.system.modifications as |mod idx|}}
+              {{#each modificationsArray as |mod idx|}}
               <div class="rt-mod-item">
                 <div class="rt-mod-item__info">
                   <i class="fas fa-wrench"></i>
