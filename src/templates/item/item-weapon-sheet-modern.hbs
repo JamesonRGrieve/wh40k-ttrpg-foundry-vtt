@@ -609,7 +609,7 @@
             {{#if (gt modificationsData.length 0)}}
             <div class="rt-mods-list">
               {{#each modificationsData as |mod|}}
-              <div class="rt-mod-card {{unless mod.active}}rt-mod-card--inactive{{/unless}}" data-mod-index="{{mod.index}}">
+              <div class="rt-mod-card {{#if mod.active}}{{else}}rt-mod-card--inactive{{/if}}" data-mod-index="{{mod.index}}">
                 <div class="rt-mod-card__header">
                   <div class="rt-mod-card__title">
                     <i class="fa-solid fa-wrench"></i>
