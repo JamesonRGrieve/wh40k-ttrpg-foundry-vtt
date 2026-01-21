@@ -312,6 +312,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get effective damage formula (base + modifications).
+     * NOTE: This does NOT include Strength Bonus, which is added dynamically at roll time.
+     * Strength Bonus is applied in the actor's rollWeaponDamage() method.
      * @type {string}
      */
     get effectiveDamageFormula() {

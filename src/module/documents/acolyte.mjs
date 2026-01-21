@@ -19,29 +19,64 @@ const SKILL_ALIASES = {
  * @extends {RogueTraderBaseActor}
  */
 export class RogueTraderAcolyte extends RogueTraderBaseActor {
-
     /* -------------------------------------------- */
     /*  Getters                                     */
     /* -------------------------------------------- */
 
-    get backpack() { return this.system.backpack; }
-    get skills() { return this.system.skills; }
-    get fatigue() { return this.system.fatigue; }
-    get fate() { return this.system.fate; }
-    get psy() { return this.system.psy; }
-    get bio() { return this.system.bio; }
-    get experience() { return this.system.experience; }
-    get insanity() { return this.system.insanity; }
-    get corruption() { return this.system.corruption; }
-    get aptitudes() { return this.system.aptitudes; }
-    get armour() { return this.system.armour; }
-    get encumbrance() { return this.system.encumbrance; }
-    get backgroundEffects() { return this.system.backgroundEffects; }
-    get originPath() { return this.system.originPath; }
-    get originPathItems() { return this.items.filter((item) => item.isOriginPath); }
-    get navigatorPowers() { return this.items.filter((item) => item.isNavigatorPower); }
-    get shipRoles() { return this.items.filter((item) => item.isShipRole); }
-    get conditions() { return this.items.filter((item) => item.isCondition); }
+    get backpack() {
+        return this.system.backpack;
+    }
+    get skills() {
+        return this.system.skills;
+    }
+    get fatigue() {
+        return this.system.fatigue;
+    }
+    get fate() {
+        return this.system.fate;
+    }
+    get psy() {
+        return this.system.psy;
+    }
+    get bio() {
+        return this.system.bio;
+    }
+    get experience() {
+        return this.system.experience;
+    }
+    get insanity() {
+        return this.system.insanity;
+    }
+    get corruption() {
+        return this.system.corruption;
+    }
+    get aptitudes() {
+        return this.system.aptitudes;
+    }
+    get armour() {
+        return this.system.armour;
+    }
+    get encumbrance() {
+        return this.system.encumbrance;
+    }
+    get backgroundEffects() {
+        return this.system.backgroundEffects;
+    }
+    get originPath() {
+        return this.system.originPath;
+    }
+    get originPathItems() {
+        return this.items.filter((item) => item.isOriginPath);
+    }
+    get navigatorPowers() {
+        return this.items.filter((item) => item.isNavigatorPower);
+    }
+    get shipRoles() {
+        return this.items.filter((item) => item.isShipRole);
+    }
+    get conditions() {
+        return this.items.filter((item) => item.isCondition);
+    }
 
     /* -------------------------------------------- */
     /*  Data Preparation                            */
@@ -135,15 +170,16 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
      */
     getSituationalModifiers(type, key = null) {
         const modifiers = [];
-        
+
         // Collect from all modifier-providing items
-        const modifierItems = this.items.filter(item =>
-            item.isTalent ||
-            item.isTrait ||
-            item.isCondition ||
-            (item.type === 'armour' && item.system.equipped) ||
-            (item.type === 'cybernetic' && item.system.equipped) ||
-            (item.type === 'gear' && item.system.equipped)
+        const modifierItems = this.items.filter(
+            (item) =>
+                item.isTalent ||
+                item.isTrait ||
+                item.isCondition ||
+                (item.type === 'armour' && item.system.equipped) ||
+                (item.type === 'cybernetic' && item.system.equipped) ||
+                (item.type === 'gear' && item.system.equipped),
         );
 
         for (const item of modifierItems) {
@@ -158,9 +194,9 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                     key: mod.key,
                     value: mod.value,
                     condition: mod.condition,
-                    icon: mod.icon || "fa-solid fa-exclamation-triangle",
+                    icon: mod.icon || 'fa-solid fa-exclamation-triangle',
                     source: item.name,
-                    itemId: item.id
+                    itemId: item.id,
                 });
             }
         }
@@ -174,7 +210,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
      * @returns {Array} Array of situational modifier objects
      */
     getCharacteristicSituationalModifiers(charKey) {
-        return this.getSituationalModifiers("characteristics", charKey);
+        return this.getSituationalModifiers('characteristics', charKey);
     }
 
     /**
@@ -183,7 +219,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
      * @returns {Array} Array of situational modifier objects
      */
     getSkillSituationalModifiers(skillKey) {
-        return this.getSituationalModifiers("skills", skillKey);
+        return this.getSituationalModifiers('skills', skillKey);
     }
 
     /**
@@ -192,7 +228,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
      * @returns {Array} Array of situational modifier objects
      */
     getCombatSituationalModifiers(combatKey = null) {
-        return this.getSituationalModifiers("combat", combatKey);
+        return this.getSituationalModifiers('combat', combatKey);
     }
 
     /* -------------------------------------------- */
@@ -210,7 +246,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         const char = this.system.characteristics?.[charKey];
         if (!char) {
             foundry.applications.api.Toast.warning(`Characteristic "${charKey}" not found`, {
-                duration: 3000
+                duration: 3000,
             });
             return null;
         }
@@ -227,10 +263,10 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             flavor: flavor,
             name: flavor,
             speaker: ChatMessage.getSpeaker({ actor: this }),
-            type: "characteristic",
+            type: 'characteristic',
             characteristic: charKey,
             situationalModifiers,
-            ...options
+            ...options,
         });
     }
 
@@ -246,7 +282,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         let skill = this.skills[resolvedSkillName];
         if (!skill) {
             foundry.applications.api.Toast.warning(`Unable to find skill ${skillName}`, {
-                duration: 3000
+                duration: 3000,
             });
             return null;
         }
@@ -273,10 +309,10 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             flavor: `${label} Test`,
             name: label,
             speaker: ChatMessage.getSpeaker({ actor: this }),
-            type: "skill",
+            type: 'skill',
             skill: resolvedSkillName,
             situationalModifiers,
-            ...options
+            ...options,
         });
     }
 
@@ -287,13 +323,29 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     async rollWeaponDamage(weapon) {
         if (!weapon.system.equipped) {
             foundry.applications.api.Toast.warning('Actor must have weapon equipped!', {
-                duration: 3000
+                duration: 3000,
             });
             return;
         }
+
+        // Calculate damage with Strength Bonus for melee/thrown weapons
+        const isMelee = weapon.system.melee || weapon.system.isMeleeWeapon;
+        const isThrown = weapon.system.class === 'thrown';
+        const isGrenade = weapon.system.special?.includes('grenade');
+
+        // Add SB for melee weapons and thrown weapons (except grenades)
+        const includeStrengthBonus = isMelee || (isThrown && !isGrenade);
+        const strengthBonus = includeStrengthBonus ? this.system.characteristics.strength.bonus : 0;
+
+        // Build damage object with SB included
+        const damageData = {
+            formula: weapon.system.damage.formula,
+            bonus: (weapon.system.damage.bonus || 0) + strengthBonus,
+        };
+
         await prepareDamageRoll({
             name: weapon.name,
-            damage: weapon.system.damage,
+            damage: damageData,
             damageType: weapon.system.damageType,
             penetration: weapon.system.penetration,
             targetActor: () => {
@@ -302,7 +354,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                     const target = targetedObjects.values().next().value;
                     return target.actor;
                 }
-            }
+            },
         });
     }
 
@@ -332,7 +384,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             case 'weapon':
                 if (!item.system.equipped) {
                     foundry.applications.api.Toast.warning('Actor must have weapon equipped!', {
-                        duration: 3000
+                        duration: 3000,
                     });
                     return;
                 }
@@ -356,7 +408,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             case 'forceField':
                 if (!item.system.equipped || !item.system.activated) {
                     foundry.applications.api.Toast.warning('Actor must have force field equipped and activated!', {
-                        duration: 3000
+                        duration: 3000,
                     });
                     return;
                 }
@@ -371,8 +423,8 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                         rollData: {
                             actor: this,
                             item: item,
-                            pr: this.psy.rating
-                        }
+                            pr: this.psy.rating,
+                        },
                     }),
                 });
         }
@@ -393,7 +445,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                 return;
             default:
                 return foundry.applications.api.Toast.warning(`No actions implemented for item type: ${item.type}`, {
-                    duration: 3000
+                    duration: 3000,
                 });
         }
     }
@@ -418,7 +470,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         const roll = await D100Roll.evaluate({
             actor: this,
             target: char.total,
-            configure: false
+            configure: false,
         });
 
         return roll;
@@ -433,7 +485,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         const roll = await D100Roll.evaluate({
             actor: this,
             target: targetNumber,
-            configure: false
+            configure: false,
         });
 
         return roll;
@@ -472,12 +524,12 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             return {
                 source: rollCheckSource,
                 target: rollCheckTarget,
-                success: success
+                success: success,
             };
         } else {
             return {
                 source: rollCheckSource,
-                success: rollCheckSource.isSuccess
+                success: rollCheckSource.isSuccess,
             };
         }
     }
@@ -529,12 +581,14 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     }
 
     hasTalentFuzzyWords(words) {
-        return !!this.items.filter((i) => i.type === 'talent').find((t) => {
-            for (const word of words) {
-                if (!t.name.includes(word)) return false;
-            }
-            return true;
-        });
+        return !!this.items
+            .filter((i) => i.type === 'talent')
+            .find((t) => {
+                for (const word of words) {
+                    if (!t.name.includes(word)) return false;
+                }
+                return true;
+            });
     }
 
     /* -------------------------------------------- */
@@ -543,7 +597,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
 
     async spendFate() {
         await this.update({
-            "system.fate.value": this.system.fate.value - 1
+            'system.fate.value': this.system.fate.value - 1,
         });
     }
 }
