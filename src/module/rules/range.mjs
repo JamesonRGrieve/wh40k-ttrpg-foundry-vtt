@@ -1,4 +1,5 @@
 import { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.mjs';
+import { calculateRangeModifier } from '../utils/range-calculator.mjs';
 
 /**
  * @param rollData {WeaponRollData}
@@ -15,14 +16,17 @@ async function calculateWeaponMaxRange(rollData) {
         return;
     }
 
+    // Get base range from weapon
     let range;
-    if (Number.isInteger(weapon.system.range)) {
-        range = weapon.system.range;
-    } else if (weapon.system.range === '' || weapon.system.range === 'N/A') {
+    const weaponRange = weapon.system.attack?.range?.value || weapon.system.range;
+
+    if (Number.isInteger(weaponRange)) {
+        range = weaponRange;
+    } else if (weaponRange === '' || weaponRange === 'N/A') {
         range = 0;
     } else {
         try {
-            const rangeCalculation = new Roll(weapon.system.range, rollData);
+            const rangeCalculation = new Roll(String(weaponRange), rollData);
             rangeCalculation.evaluateSync();
             range = rangeCalculation.total ?? 0;
         } catch (error) {
@@ -38,12 +42,12 @@ async function calculateWeaponMaxRange(rollData) {
 
     //Check Forearm Mounting
     if (rollData.hasWeaponModification('Forearm Weapon Mounting')) {
-        range = Math.floor(range * .66);
+        range = Math.floor(range * 0.66);
     }
 
     //Check Pistol Grip
     if (rollData.hasWeaponModification('Pistol Grip')) {
-        range = Math.floor(range * .5);
+        range = Math.floor(range * 0.5);
     }
 
     rollData.maxRange = range;
@@ -78,37 +82,38 @@ async function calculatePsychicAbilityMaxRange(rollData) {
 }
 
 /**
+ * Calculate range bracket and bonus using the new range calculator system.
  * @param rollData {RollData}
  */
 function calculateRangeNameAndBonus(rollData) {
-    if(rollData.weapon && rollData.weapon.isMelee) {
+    if (rollData.weapon && rollData.weapon.isMelee) {
         rollData.rangeName = 'Melee';
         rollData.rangeBonus = 0;
+        rollData.rangeBracket = 'melee';
+        rollData.isMeltaRange = false;
         return;
     }
 
     const targetDistance = rollData.distance ?? 0;
     const maxRange = rollData.maxRange ?? 0;
 
-    if (targetDistance === 0) {
-        rollData.rangeName = 'Self';
-        rollData.rangeBonus = 0;
-    } else if (targetDistance === 2) {
-        rollData.rangeName = 'Point Blank';
-        rollData.rangeBonus = 30;
-    } else if (targetDistance <= maxRange / 2) {
-        rollData.rangeName = 'Short Range';
-        rollData.rangeBonus = 10;
-    } else if (targetDistance <= maxRange * 2) {
-        rollData.rangeName = 'Normal Range';
-        rollData.rangeBonus = 0;
-    } else if (targetDistance <= maxRange * 3) {
-        rollData.rangeName = 'Long Range';
-        rollData.rangeBonus = -10;
-    } else {
-        rollData.rangeName = 'Extreme Range';
-        rollData.rangeBonus = -30;
-    }
+    // Get weapon qualities if available
+    const weaponQualities = rollData.weapon?.system?.effectiveSpecial || new Set();
+
+    // Use new range calculator
+    const rangeInfo = calculateRangeModifier({
+        distance: targetDistance,
+        weaponRange: maxRange,
+        weaponQualities: weaponQualities,
+        isRangedWeapon: true,
+    });
+
+    // Store range information in rollData
+    rollData.rangeName = rangeInfo.label;
+    rollData.rangeBonus = rangeInfo.modifier;
+    rollData.rangeBracket = rangeInfo.bracket;
+    rollData.rangeModifiedBy = rangeInfo.modifiedBy;
+    rollData.isMeltaRange = rangeInfo.isMeltaRange;
 }
 
 /**
@@ -123,6 +128,7 @@ export async function calculateWeaponRange(rollData) {
         const aiming = rollData.modifiers['aim'] > 0;
         if (aiming && (rollData.hasWeaponModification('Telescopic Sight') || rollData.hasWeaponModification('Omni-Scope'))) {
             rollData.rangeBonus = 0;
+            rollData.rangeModifiedBy = 'telescopic-sight';
         }
     }
 }

@@ -20,6 +20,7 @@
 @import 'src/scss/prompts/index';
 @import 'src/scss/dialogs/loadout-preset-dialog';
 @import 'src/scss/dialogs/confirmation-dialog';
+@import 'src/scss/dialogs/righteous-fury-dialog';
 @import 'src/scss/dialogs/effect-creation-dialog';
 @import 'src/scss/dialogs/talent-editor-dialog';
 @import 'src/scss/dialogs/npc-quick-create';
@@ -120,18 +121,18 @@
         padding: 1rem;
         background: rgba(0, 0, 0, 0.3);
         border-bottom: 2px solid var(--color-border-dark);
-        
+
         h1 {
             margin: 0 0 0.5rem 0;
             font-size: 1.5rem;
             color: var(--color-text-light);
-            
+
             i {
                 margin-right: 0.5rem;
                 color: var(--color-warm-2);
             }
         }
-        
+
         p {
             margin: 0;
             color: var(--color-text-dark);
@@ -151,44 +152,45 @@
         background: rgba(0, 0, 0, 0.2);
         border-right: 1px solid var(--color-border-dark);
         overflow-y: auto;
-        
+
         h3 {
             margin: 0 0 1rem 0;
             font-size: 1.1rem;
             color: var(--color-text-light);
             border-bottom: 1px solid var(--color-border-dark);
             padding-bottom: 0.5rem;
-            
+
             i {
                 margin-right: 0.5rem;
             }
         }
-        
+
         .filter-group {
             margin-bottom: 1rem;
-            
+
             label {
                 display: block;
                 margin-bottom: 0.25rem;
                 font-weight: bold;
                 color: var(--color-text-light);
             }
-            
-            input, select {
+
+            input,
+            select {
                 width: 100%;
                 padding: 0.5rem;
                 background: rgba(0, 0, 0, 0.3);
                 border: 1px solid var(--color-border-dark);
                 color: var(--color-text-light);
                 border-radius: 3px;
-                
+
                 &:focus {
                     outline: none;
                     border-color: var(--color-warm-2);
                 }
             }
         }
-        
+
         .clear-filters {
             width: 100%;
             padding: 0.5rem;
@@ -197,28 +199,28 @@
             color: white;
             border-radius: 3px;
             cursor: pointer;
-            
+
             &:hover {
                 background: var(--color-cool-3);
             }
-            
+
             i {
                 margin-right: 0.5rem;
             }
         }
-        
+
         .filter-divider {
             height: 1px;
             background: var(--color-border-dark);
             margin: 1.5rem 0;
         }
-        
+
         .filter-subheader {
             margin: 0 0 1rem 0;
             font-size: 0.95rem;
             color: #d4af37;
             font-weight: 600;
-            
+
             i {
                 margin-right: 0.5rem;
             }
@@ -230,19 +232,19 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        
+
         .results-header {
             padding: 1rem;
             background: rgba(0, 0, 0, 0.1);
             border-bottom: 1px solid var(--color-border-dark);
-            
+
             h3 {
                 margin: 0;
                 font-size: 1.1rem;
                 color: var(--color-text-light);
             }
         }
-        
+
         .results-list {
             flex: 1;
             overflow-y: auto;
@@ -288,13 +290,13 @@
         border-radius: 4px;
         cursor: pointer;
         transition: all 0.2s;
-        
+
         &:hover {
             background: rgba(0, 0, 0, 0.4);
             border-color: var(--color-warm-2);
             transform: translateX(4px);
         }
-        
+
         .item-image {
             width: 40px;
             height: 40px;
@@ -303,51 +305,51 @@
             margin-right: 1rem;
             border: 1px solid var(--color-border-dark);
         }
-        
+
         .item-details {
             flex: 1;
-            
+
             .item-name {
                 margin: 0 0 0.25rem 0;
                 font-size: 1rem;
                 color: var(--color-text-light);
             }
-            
+
             .item-meta {
                 display: flex;
                 gap: 0.5rem;
                 flex-wrap: wrap;
-                
+
                 span {
                     font-size: 0.75rem;
                     padding: 0.25rem 0.5rem;
                     border-radius: 3px;
                     background: rgba(0, 0, 0, 0.3);
-                    
+
                     &.item-type {
                         background: var(--color-cool-4);
                         color: white;
                     }
-                    
+
                     &.item-source {
                         background: var(--color-warm-4);
                         color: white;
                     }
-                    
+
                     &.item-pack {
                         background: var(--color-border-dark);
                         color: var(--color-text-light);
                     }
                 }
             }
-            
+
             // Armour-specific stats display
             .item-stats--armour {
                 display: flex;
                 gap: 0.5rem;
                 margin: 0.5rem 0;
                 flex-wrap: wrap;
-                
+
                 .stat-badge {
                     display: inline-flex;
                     align-items: center;
@@ -359,74 +361,74 @@
                     font-size: 0.75rem;
                     font-weight: 600;
                     color: #fff;
-                    
+
                     i {
                         font-size: 0.85rem;
                         opacity: 0.9;
                     }
-                    
+
                     &--type {
                         background: linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, rgba(212, 175, 55, 0.15) 100%);
                         border-color: rgba(212, 175, 55, 0.5);
                     }
-                    
+
                     &--ap {
                         font-family: 'Courier New', monospace;
                         font-weight: 700;
                     }
-                    
+
                     &--coverage {
                         font-family: monospace;
                         letter-spacing: 1px;
                         font-size: 0.7rem;
                     }
-                    
+
                     &--agility {
                         background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(52, 152, 219, 0.1) 100%);
                         border-color: rgba(52, 152, 219, 0.4);
                     }
-                    
+
                     // Type-specific colors
                     &--flak {
                         background: linear-gradient(135deg, rgba(149, 165, 166, 0.2) 0%, rgba(149, 165, 166, 0.1) 100%);
                         border-color: rgba(149, 165, 166, 0.4);
                     }
-                    
+
                     &--mesh {
                         background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(52, 152, 219, 0.1) 100%);
                         border-color: rgba(52, 152, 219, 0.4);
                     }
-                    
+
                     &--carapace {
                         background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(46, 204, 113, 0.1) 100%);
                         border-color: rgba(46, 204, 113, 0.4);
                     }
-                    
+
                     &--power,
                     &--light-power {
                         background: linear-gradient(135deg, rgba(155, 89, 182, 0.2) 0%, rgba(155, 89, 182, 0.1) 100%);
                         border-color: rgba(155, 89, 182, 0.4);
                     }
-                    
+
                     &--xenos {
                         background: linear-gradient(135deg, rgba(231, 76, 60, 0.2) 0%, rgba(231, 76, 60, 0.1) 100%);
                         border-color: rgba(231, 76, 60, 0.4);
                     }
-                    
+
                     &--void {
                         background: linear-gradient(135deg, rgba(52, 73, 94, 0.2) 0%, rgba(52, 73, 94, 0.1) 100%);
                         border-color: rgba(52, 73, 94, 0.4);
                     }
                 }
             }
-            
+
             // Armour modification stats display
             .item-stats--armour-mod {
                 display: flex;
                 gap: 0.5rem;
                 margin: 0.5rem 0;
                 flex-wrap: wrap;
-                
+
                 .stat-badge {
                     display: inline-flex;
                     align-items: center;
@@ -438,27 +440,27 @@
                     font-size: 0.75rem;
                     font-weight: 600;
                     color: #fff;
-                    
+
                     i {
                         font-size: 0.85rem;
                         opacity: 0.9;
                     }
-                    
+
                     &--restrictions {
                         background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(52, 152, 219, 0.1) 100%);
                         border-color: rgba(52, 152, 219, 0.4);
                     }
-                    
+
                     &--modifier {
                         background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(46, 204, 113, 0.1) 100%);
                         border-color: rgba(46, 204, 113, 0.4);
-                        
+
                         &.stat-badge--negative {
                             background: linear-gradient(135deg, rgba(231, 76, 60, 0.2) 0%, rgba(231, 76, 60, 0.1) 100%);
                             border-color: rgba(231, 76, 60, 0.4);
                         }
                     }
-                    
+
                     &--properties {
                         background: linear-gradient(135deg, rgba(155, 89, 182, 0.2) 0%, rgba(155, 89, 182, 0.1) 100%);
                         border-color: rgba(155, 89, 182, 0.4);
@@ -472,13 +474,13 @@
         text-align: center;
         padding: 3rem;
         color: var(--color-text-dark);
-        
+
         i {
             font-size: 3rem;
             margin-bottom: 1rem;
             opacity: 0.5;
         }
-        
+
         p {
             font-size: 1.1rem;
         }
@@ -498,7 +500,7 @@
         overflow: hidden !important;
         height: 100% !important;
     }
-    
+
     // The wrapper takes full height and doesn't scroll
     .rt-wrapper {
         display: flex !important;
@@ -508,18 +510,20 @@
         overflow: hidden !important;
         height: 100% !important;
     }
-    
+
     // The form fills the wrapper and is a flex column layout
-    .rt-sheet, .rt-actor {
+    .rt-sheet,
+    .rt-actor {
         display: flex !important;
         flex-direction: column !important;
         flex: 1 1 auto !important;
         min-height: 0 !important;
         overflow: hidden !important;
     }
-    
+
     // For ApplicationV2 PARTS: form is the layout container
-    form.sheet-body, .window-app.rogue-trader form {
+    form.sheet-body,
+    .window-app.rogue-trader form {
         display: flex !important;
         flex-direction: column !important;
         flex: 1 1 auto !important;
@@ -527,18 +531,19 @@
         overflow: hidden !important;
         gap: 0 !important;
     }
-    
+
     // ============================================
     // HEADER LAYOUT - Complete Rebuild
     // ============================================
-    
+
     // Header container - auto height, overflow for HUD dropdowns
-    .rt-character-header, .rt-header {
+    .rt-character-header,
+    .rt-header {
         flex: 0 0 auto !important;
         overflow: visible !important;
         z-index: 10 !important;
     }
-    
+
     // Main header layout - two columns
     .rt-header-layout {
         display: flex !important;
@@ -547,7 +552,7 @@
         padding: 8px 12px !important;
         align-items: flex-start !important;
     }
-    
+
     // LEFT: Bio section (portrait + fields)
     .rt-header-bio {
         display: flex !important;
@@ -558,14 +563,14 @@
         min-width: 220px !important;
         max-width: 280px !important;
     }
-    
+
     .rt-portrait-box {
         width: 72px !important;
         height: 72px !important;
         flex-shrink: 0 !important;
         cursor: pointer !important;
     }
-    
+
     .rt-portrait-box .rt-portrait {
         width: 72px !important;
         height: 72px !important;
@@ -574,11 +579,11 @@
         border-radius: 4px !important;
         transition: border-color 0.2s !important;
     }
-    
+
     .rt-portrait-box:hover .rt-portrait {
         border-color: var(--rt-gold, #d4af37) !important;
     }
-    
+
     .rt-bio-fields {
         display: flex !important;
         flex-direction: column !important;
@@ -586,7 +591,7 @@
         flex: 1 !important;
         min-width: 0 !important;
     }
-    
+
     .rt-bio-name {
         font-size: 1.1em !important;
         font-weight: bold !important;
@@ -598,32 +603,32 @@
         width: 100% !important;
         margin-bottom: 4px !important;
     }
-    
+
     .rt-bio-name:focus {
         outline: none !important;
         border-bottom-color: var(--rt-gold, #d4af37) !important;
     }
-    
+
     .rt-bio-row {
         display: flex !important;
         align-items: baseline !important;
         gap: 6px !important;
         font-size: 0.8em !important;
     }
-    
+
     .rt-bio-label {
         font-weight: 600 !important;
         color: var(--rt-text-medium) !important;
         min-width: 40px !important;
     }
-    
+
     .rt-bio-value {
         color: var(--rt-text-dark) !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
     }
-    
+
     .rt-bio-input {
         flex: 1 !important;
         border: none !important;
@@ -633,12 +638,12 @@
         padding: 1px 4px !important;
         min-width: 50px !important;
     }
-    
+
     .rt-bio-input:focus {
         outline: none !important;
         border-bottom-color: var(--rt-gold, #d4af37) !important;
     }
-    
+
     // RIGHT: Characteristics HUD (V1 enhanced)
     .rt-header-stats {
         flex: 1 !important;
@@ -646,13 +651,13 @@
         justify-content: flex-end !important;
         overflow: visible !important;
     }
-    
+
     // Ensure stats bar displays properly in header
     .rt-header-stats .rt-stats-bar {
         flex-wrap: nowrap !important;
         overflow: visible !important;
     }
-    
+
     // Navigation bar (tabs) - horizontal strip
     nav.rt-navigation {
         display: flex !important;
@@ -662,7 +667,7 @@
         background: rgba(0, 0, 0, 0.2) !important;
         flex: 0 0 auto !important;
     }
-    
+
     nav.rt-navigation .rt-nav-item {
         padding: 6px 12px !important;
         border-radius: 4px !important;
@@ -671,16 +676,16 @@
         text-transform: uppercase !important;
         font-size: 0.85em !important;
     }
-    
+
     nav.rt-navigation .rt-nav-item:hover {
         background: rgba(255, 255, 255, 0.1) !important;
     }
-    
+
     nav.rt-navigation .rt-nav-item.active {
         background: rgba(196, 135, 29, 0.3) !important;
         border-bottom: 2px solid #c4871d !important;
     }
-    
+
     // Legacy rt-main-layout for compatibility
     .rt-main-layout {
         display: grid !important;
@@ -691,16 +696,17 @@
         overflow: hidden !important;
         grid-column: auto !important;
     }
-    
+
     // The body scrolls and takes remaining space
-    .rt-body, #tab-body {
+    .rt-body,
+    #tab-body {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         min-height: 0 !important;
         flex: 1 1 auto !important;
         grid-column: auto !important;
     }
-    
+
     // Tabs should be block/flex, not 6-column grid
     .rt-body .tab,
     #tab-body .tab,
@@ -708,7 +714,7 @@
     #tab-body section.tab {
         display: none !important;
     }
-    
+
     .rt-body .tab.active,
     #tab-body .tab.active,
     .rt-body section.tab.active,
@@ -718,7 +724,7 @@
         gap: 12px !important;
         padding: 12px !important;
     }
-    
+
     // ============================================
     // CHARACTERISTIC HUD V1 - APPV2 OVERRIDE
     // ============================================
@@ -753,7 +759,7 @@
         border-radius: 6px !important;
         overflow: hidden !important;
         border: 2px solid var(--rt-border-color, #4a3728) !important;
-        box-shadow: 0 2px 8px var(--rt-shadow-medium, rgba(0,0,0,0.2)) !important;
+        box-shadow: 0 2px 8px var(--rt-shadow-medium, rgba(0, 0, 0, 0.2)) !important;
         flex-shrink: 0 !important;
     }
 
@@ -853,7 +859,7 @@
         background: var(--rt-hud-bg, linear-gradient(180deg, #f5f0e6 0%, #ede8dc 100%)) !important;
         border: 1px solid var(--rt-border-color-strong, rgba(140, 120, 90, 0.5)) !important;
         border-radius: 8px !important;
-        box-shadow: inset 0 1px 0 var(--rt-text-shadow, rgba(255,255,255,0.3)), 0 2px 6px var(--rt-shadow-soft, rgba(0,0,0,0.1)) !important;
+        box-shadow: inset 0 1px 0 var(--rt-text-shadow, rgba(255, 255, 255, 0.3)), 0 2px 6px var(--rt-shadow-soft, rgba(0, 0, 0, 0.1)) !important;
         z-index: 1 !important;
     }
 
@@ -867,7 +873,7 @@
         min-width: 0 !important;
         position: relative !important;
         text-align: center !important;
-        background: var(--rt-hud-item-bg, rgba(255,255,255,0.5)) !important;
+        background: var(--rt-hud-item-bg, rgba(255, 255, 255, 0.5)) !important;
         border: 1px solid var(--rt-border-color, rgba(140, 120, 90, 0.3)) !important;
         border-radius: 6px !important;
         transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
@@ -875,7 +881,7 @@
 
     .rt-char-hud-item:hover {
         transform: translateY(-1px) !important;
-        box-shadow: 0 4px 12px var(--rt-shadow-medium, rgba(0,0,0,0.15)) !important;
+        box-shadow: 0 4px 12px var(--rt-shadow-medium, rgba(0, 0, 0, 0.15)) !important;
     }
 
     .rt-char-hud-item.rt-char-buffed {
@@ -919,14 +925,14 @@
         gap: 1px !important;
         background: var(--rt-circle-bg, linear-gradient(180deg, #f4d03f 0%, #d4af37 70%, #b8860b 100%)) !important;
         border: 2px solid var(--rt-border-color-strong, #8b6914) !important;
-        box-shadow: inset 0 1px 2px var(--rt-text-shadow, rgba(0,0,0,0.1)), 0 3px 8px var(--rt-shadow-soft, rgba(0,0,0,0.15)) !important;
+        box-shadow: inset 0 1px 2px var(--rt-text-shadow, rgba(0, 0, 0, 0.1)), 0 3px 8px var(--rt-shadow-soft, rgba(0, 0, 0, 0.15)) !important;
     }
 
     .rt-char-hud-mod {
         font-size: 1.2em !important;
         font-weight: 700 !important;
         color: var(--rt-text-dark, #1a1510) !important;
-        text-shadow: 0 1px 0 rgba(255,255,255,0.3) !important;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) !important;
     }
 
     .rt-char-hud-mod-label {
@@ -978,7 +984,7 @@
         background: var(--rt-panel-bg-solid, #f8f4ec) !important;
         border: 1px solid var(--rt-border-color, rgba(140, 120, 90, 0.5)) !important;
         border-radius: 8px !important;
-        box-shadow: 0 6px 16px var(--rt-shadow-medium, rgba(0,0,0,0.2)) !important;
+        box-shadow: 0 6px 16px var(--rt-shadow-medium, rgba(0, 0, 0, 0.2)) !important;
         z-index: 20 !important;
 
         // Show when expanded
@@ -1024,7 +1030,7 @@
         grid-template-rows: auto 1fr !important;
         gap: 0 !important;
     }
-    
+
     // Main layout container for sidebar + body
     #main.rt-main-layout {
         display: grid !important;
@@ -1035,7 +1041,7 @@
         min-height: 0 !important;
         overflow: hidden !important;
     }
-    
+
     // Sidebar navigation - vertical
     nav.rt-navigation.rt-sidebar-nav {
         display: flex !important;
@@ -1048,7 +1054,7 @@
         min-width: 100px !important;
         max-width: 120px !important;
     }
-    
+
     nav.rt-sidebar-nav .rt-nav-item {
         display: block !important;
         padding: 6px 8px !important;
@@ -1060,16 +1066,16 @@
         text-align: left !important;
         white-space: nowrap !important;
     }
-    
+
     nav.rt-sidebar-nav .rt-nav-item:hover {
         background: rgba(255, 255, 255, 0.1) !important;
     }
-    
+
     nav.rt-sidebar-nav .rt-nav-item.active {
         background: rgba(196, 135, 29, 0.3) !important;
         border-left: 3px solid #c4871d !important;
     }
-    
+
     // Body takes remaining space in sidebar variant
     .rt-body {
         overflow-y: auto !important;

@@ -1,0 +1,54 @@
+{{!-- Righteous Fury Confirmation Prompt --}}
+<form class="rt-form">
+    <div class="rt-fury-prompt">
+        <div class="rt-fury-prompt__header">
+            <div class="rt-fury-prompt__icon">⚡</div>
+            <h2 class="rt-fury-prompt__title">Righteous Fury!</h2>
+        </div>
+        
+        <div class="rt-fury-prompt__body">
+            {{#unless hasRolled}}
+                <p class="rt-fury-prompt__description">
+                    You scored a devastating hit with <strong>{{weaponName}}</strong>!
+                </p>
+                <p class="rt-fury-prompt__instructions">
+                    Roll to confirm with <strong>{{characteristic}}</strong> (Target: {{target}})
+                </p>
+                
+                <div class="rt-fury-prompt__actions">
+                    <button type="button" class="rt-btn rt-btn--primary" data-action="roll">
+                        <i class="fas fa-dice-d20"></i>
+                        Roll Confirmation
+                    </button>
+                </div>
+            {{else}}
+                <div class="rt-fury-prompt__result {{#if success}}rt-fury-prompt__result--success{{else}}rt-fury-prompt__result--failure{{/if}}">
+                    <div class="rt-fury-prompt__roll-value">{{confirmationRoll.total}}</div>
+                    <div class="rt-fury-prompt__roll-label">vs {{target}}</div>
+                </div>
+                
+                {{#if success}}
+                    <div class="rt-fury-prompt__success">
+                        <h3>⚡ Confirmed! ⚡</h3>
+                        <p>Additional d10 damage and critical effect!</p>
+                        {{#if (gt dos 0)}}
+                            <p class="rt-fury-prompt__dos">{{dos}} Degrees of Success</p>
+                        {{/if}}
+                    </div>
+                {{else}}
+                    <div class="rt-fury-prompt__failure">
+                        <h3>Not Confirmed</h3>
+                        <p>The blow was powerful, but not devastating.</p>
+                    </div>
+                {{/if}}
+                
+                <div class="rt-fury-prompt__actions">
+                    <button type="button" class="rt-btn rt-btn--primary" data-action="cancel">
+                        <i class="fas fa-check"></i>
+                        Continue
+                    </button>
+                </div>
+            {{/unless}}
+        </div>
+    </div>
+</form>

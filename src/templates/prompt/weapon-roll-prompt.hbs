@@ -126,6 +126,18 @@
                         <span class="rt-prompt__range-label">{{rangeName}}</span>
                         <span class="rt-prompt__range-value {{#if (gt rangeBonus 0)}}rt-prompt__range-value--positive{{else if (lt rangeBonus 0)}}rt-prompt__range-value--negative{{else}}rt-prompt__range-value--neutral{{/if}}">{{#if (gt rangeBonus 0)}}+{{/if}}{{rangeBonus}}</span>
                     </div>
+                    {{#if this.rangeModifiedBy}}
+                        <div class="rt-prompt__hint">
+                            <i class="fas fa-info-circle"></i>
+                            Range modifier affected by {{this.rangeModifiedBy}}
+                        </div>
+                    {{/if}}
+                    {{#if this.isMeltaRange}}
+                        <div class="rt-prompt__hint rt-prompt__hint--melta">
+                            <i class="fas fa-fire"></i>
+                            Melta: Double penetration at this range
+                        </div>
+                    {{/if}}
                 {{/if}}
                 {{#if this.modifiers.attack}}
                     <div class="rt-prompt__field">

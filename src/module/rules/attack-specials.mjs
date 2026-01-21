@@ -1,6 +1,7 @@
 import { RollData } from '../rolls/roll-data.mjs';
 import { calculateAmmoAttackSpecials } from './ammo.mjs';
 import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.mjs';
+import { applyQualityModifiersToRollData } from './weapon-quality-effects.mjs';
 
 export async function updateAttackSpecials(rollData) {
     rollData.attackSpecials = [];
@@ -16,8 +17,8 @@ export async function updateAttackSpecials(rollData) {
     }
 
     // Las Variable Setting
-    if(rollData.lasMode) {
-        switch(rollData.lasMode) {
+    if (rollData.lasMode) {
+        switch (rollData.lasMode) {
             case 'Standard':
                 break;
             case 'Overload':
@@ -28,13 +29,13 @@ export async function updateAttackSpecials(rollData) {
                 });
                 rollData.attackSpecials.push({
                     name: rollData.lasMode,
-                    level: true
+                    level: true,
                 });
                 break;
             case 'Overcharge':
                 rollData.attackSpecials.push({
                     name: rollData.lasMode,
-                    level: true
+                    level: true,
                 });
                 break;
         }
@@ -85,6 +86,9 @@ export async function calculateAttackSpecialAttackBonuses(rollData) {
                 break;
         }
     }
+
+    // Apply weapon quality effects (Phase 1: Accurate aim bonus)
+    applyQualityModifiersToRollData(rollData);
 }
 
 export function attackSpecials() {
@@ -244,6 +248,10 @@ export function attackSpecials() {
         {
             name: 'Vengeful',
             hasLevel: true,
+        },
+        {
+            name: 'Gauss',
+            hasLevel: false,
         },
     ];
 }

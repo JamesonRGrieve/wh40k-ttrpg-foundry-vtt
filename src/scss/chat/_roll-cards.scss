@@ -11,24 +11,24 @@
 
 #chat-log .message.flexcol,
 .rt-chat {
-  // These local vars inherit from global theme vars
-  --rt-card-bg: var(--rt-panel-bg-solid);
-  --rt-card-border: var(--rt-gold);
-  --rt-card-text: var(--rt-text-dark);
-  --rt-card-muted: var(--rt-text-muted);
-  --rt-card-gold: var(--rt-gold);
-  --rt-card-gold-dark: var(--rt-gold-dark);
-  --rt-card-success: var(--rt-success-primary);
-  --rt-card-success-glow: rgba(45, 138, 78, 0.4);
-  --rt-card-fail: var(--rt-danger-primary);
-  --rt-card-fail-glow: rgba(168, 50, 50, 0.4);
-  
-  font-family: 'Roboto', sans-serif;
-  color: var(--rt-card-text);
-  
-  * {
-    box-sizing: border-box;
-  }
+    // These local vars inherit from global theme vars
+    --rt-card-bg: var(--rt-panel-bg-solid);
+    --rt-card-border: var(--rt-gold);
+    --rt-card-text: var(--rt-text-dark);
+    --rt-card-muted: var(--rt-text-muted);
+    --rt-card-gold: var(--rt-gold);
+    --rt-card-gold-dark: var(--rt-gold-dark);
+    --rt-card-success: var(--rt-success-primary);
+    --rt-card-success-glow: rgba(45, 138, 78, 0.4);
+    --rt-card-fail: var(--rt-danger-primary);
+    --rt-card-fail-glow: rgba(168, 50, 50, 0.4);
+
+    font-family: 'Roboto', sans-serif;
+    color: var(--rt-card-text);
+
+    * {
+        box-sizing: border-box;
+    }
 }
 
 // ============================================
@@ -39,71 +39,78 @@
 
 // Target Foundry's chat log container
 #chat-log {
-  // Dark mode for all messages
-  body.theme-dark & {
-    .message {
-      background: var(--rt-panel-bg-solid) !important;
-      border-color: var(--rt-border-color) !important;
-      color: var(--rt-text-dark) !important;
-      
-      .message-header {
-        background: rgba(40, 35, 30, 0.8) !important;
-        border-bottom-color: var(--rt-border-color) !important;
-        color: var(--rt-text-dark) !important;
-        
-        .message-sender {
-          color: var(--rt-gold) !important;
-        }
-        
-        .message-metadata {
-          color: var(--rt-text-muted) !important;
-          
-          .message-timestamp {
-            color: var(--rt-text-subtle) !important;
-          }
-        }
-      }
-      
-      .message-content {
-        background: transparent !important;
-        color: var(--rt-text-dark) !important;
-        
-        p, span, div, td, th, li {
-          color: var(--rt-text-dark) !important;
-        }
-        
-        a {
-          color: var(--rt-gold) !important;
-          
-          &:hover {
-            color: var(--rt-gold-bright) !important;
-          }
-        }
-        
-        strong, b {
-          color: var(--rt-text-dark) !important;
-        }
-        
-        em, i {
-          color: var(--rt-text-medium) !important;
-        }
-        
-        // Tables in chat
-        table {
-          background: transparent !important;
-          
-          th {
-            background: var(--rt-panel-bg) !important;
+    // Dark mode for all messages
+    body.theme-dark & {
+        .message {
+            background: var(--rt-panel-bg-solid) !important;
             border-color: var(--rt-border-color) !important;
-          }
-          
-          td {
-            border-color: var(--rt-border-color) !important;
-          }
+            color: var(--rt-text-dark) !important;
+
+            .message-header {
+                background: rgba(40, 35, 30, 0.8) !important;
+                border-bottom-color: var(--rt-border-color) !important;
+                color: var(--rt-text-dark) !important;
+
+                .message-sender {
+                    color: var(--rt-gold) !important;
+                }
+
+                .message-metadata {
+                    color: var(--rt-text-muted) !important;
+
+                    .message-timestamp {
+                        color: var(--rt-text-subtle) !important;
+                    }
+                }
+            }
+
+            .message-content {
+                background: transparent !important;
+                color: var(--rt-text-dark) !important;
+
+                p,
+                span,
+                div,
+                td,
+                th,
+                li {
+                    color: var(--rt-text-dark) !important;
+                }
+
+                a {
+                    color: var(--rt-gold) !important;
+
+                    &:hover {
+                        color: var(--rt-gold-bright) !important;
+                    }
+                }
+
+                strong,
+                b {
+                    color: var(--rt-text-dark) !important;
+                }
+
+                em,
+                i {
+                    color: var(--rt-text-medium) !important;
+                }
+
+                // Tables in chat
+                table {
+                    background: transparent !important;
+
+                    th {
+                        background: var(--rt-panel-bg) !important;
+                        border-color: var(--rt-border-color) !important;
+                    }
+
+                    td {
+                        border-color: var(--rt-border-color) !important;
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
 
 // ============================================
@@ -111,39 +118,37 @@
 // ============================================
 
 .rt-roll-card {
-  position: relative;
-  background: var(--rt-card-bg);
-  border: 2px solid var(--rt-card-border);
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 
-    0 4px 12px var(--rt-shadow-medium),
-    inset 0 1px 0 var(--rt-accent-overlay);
-  
-  // Decorative corner accents
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--rt-card-gold);
-    pointer-events: none;
-  }
-  
-  &::before {
-    top: 4px;
-    left: 4px;
-    border-right: none;
-    border-bottom: none;
-  }
-  
-  &::after {
-    bottom: 4px;
-    right: 4px;
-    border-left: none;
-    border-top: none;
-  }
+    position: relative;
+    background: var(--rt-card-bg);
+    border: 2px solid var(--rt-card-border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px var(--rt-shadow-medium), inset 0 1px 0 var(--rt-accent-overlay);
+
+    // Decorative corner accents
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--rt-card-gold);
+        pointer-events: none;
+    }
+
+    &::before {
+        top: 4px;
+        left: 4px;
+        border-right: none;
+        border-bottom: none;
+    }
+
+    &::after {
+        bottom: 4px;
+        right: 4px;
+        border-left: none;
+        border-top: none;
+    }
 }
 
 // ============================================
@@ -151,36 +156,36 @@
 // ============================================
 
 .rt-roll-card__header {
-  position: relative;
-  padding: 12px 16px;
-  background: linear-gradient(90deg, var(--rt-accent-overlay) 0%, transparent 100%);
-  border-bottom: 1px solid var(--rt-border-color);
-  
-  .rt-roll-card__actor {
-    font-size: 0.75rem;
-    color: var(--rt-card-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 4px;
-  }
-  
-  .rt-roll-card__title {
-    font-family: 'Cinzel', serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--rt-card-gold);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin: 0;
-    text-shadow: 0 2px 4px var(--rt-shadow-medium);
-  }
-  
-  .rt-roll-card__subtitle {
-    font-size: 0.85rem;
-    color: var(--rt-card-text);
-    margin-top: 2px;
-    opacity: 0.9;
-  }
+    position: relative;
+    padding: 12px 16px;
+    background: linear-gradient(90deg, var(--rt-accent-overlay) 0%, transparent 100%);
+    border-bottom: 1px solid var(--rt-border-color);
+
+    .rt-roll-card__actor {
+        font-size: 0.75rem;
+        color: var(--rt-card-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 4px;
+    }
+
+    .rt-roll-card__title {
+        font-family: 'Cinzel', serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--rt-card-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0;
+        text-shadow: 0 2px 4px var(--rt-shadow-medium);
+    }
+
+    .rt-roll-card__subtitle {
+        font-size: 0.85rem;
+        color: var(--rt-card-text);
+        margin-top: 2px;
+        opacity: 0.9;
+    }
 }
 
 // ============================================
@@ -188,7 +193,7 @@
 // ============================================
 
 .rt-roll-card__body {
-  padding: 12px 16px;
+    padding: 12px 16px;
 }
 
 // ============================================
@@ -196,50 +201,44 @@
 // ============================================
 
 .rt-roll-card__divider {
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--rt-card-gold) 20%,
-    var(--rt-card-gold) 80%,
-    transparent 100%
-  );
-  margin: 10px 0;
-  opacity: 0.5;
-  
-  &--ornate {
-    position: relative;
-    height: 12px;
-    background: transparent;
-    
-    &::before {
-      content: '⬥';
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      color: var(--rt-card-gold);
-      font-size: 10px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--rt-card-gold) 20%, var(--rt-card-gold) 80%, transparent 100%);
+    margin: 10px 0;
+    opacity: 0.5;
+
+    &--ornate {
+        position: relative;
+        height: 12px;
+        background: transparent;
+
+        &::before {
+            content: '⬥';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--rt-card-gold);
+            font-size: 10px;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                var(--rt-card-gold) 30%,
+                transparent 48%,
+                transparent 52%,
+                var(--rt-card-gold) 70%,
+                transparent 100%
+            );
+        }
     }
-    
-    &::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        var(--rt-card-gold) 30%,
-        transparent 48%,
-        transparent 52%,
-        var(--rt-card-gold) 70%,
-        transparent 100%
-      );
-    }
-  }
 }
 
 // ============================================
@@ -247,35 +246,35 @@
 // ============================================
 
 .rt-roll-card__row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 0;
-  font-size: 0.9rem;
-  
-  &--modifier {
-    padding-left: 12px;
-    border-left: 2px solid var(--rt-border-color);
-    margin-left: 4px;
-  }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 0.9rem;
+
+    &--modifier {
+        padding-left: 12px;
+        border-left: 2px solid var(--rt-border-color);
+        margin-left: 4px;
+    }
 }
 
 .rt-roll-card__label {
-  color: var(--rt-card-muted);
-  font-weight: 500;
+    color: var(--rt-card-muted);
+    font-weight: 500;
 }
 
 .rt-roll-card__value {
-  font-weight: 600;
-  color: var(--rt-card-text);
-  
-  &--positive {
-    color: var(--rt-success-secondary);
-  }
-  
-  &--negative {
-    color: var(--rt-danger-secondary);
-  }
+    font-weight: 600;
+    color: var(--rt-card-text);
+
+    &--positive {
+        color: var(--rt-success-secondary);
+    }
+
+    &--negative {
+        color: var(--rt-danger-secondary);
+    }
 }
 
 // ============================================
@@ -283,26 +282,26 @@
 // ============================================
 
 .rt-roll-card__target {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  margin: 8px 0;
-  background: var(--rt-accent-overlay);
-  border: 1px solid var(--rt-border-color);
-  border-radius: 4px;
-  
-  .rt-roll-card__label {
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  
-  .rt-roll-card__value {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--rt-card-gold);
-  }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: var(--rt-accent-overlay);
+    border: 1px solid var(--rt-border-color);
+    border-radius: 4px;
+
+    .rt-roll-card__label {
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .rt-roll-card__value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--rt-card-gold);
+    }
 }
 
 // ============================================
@@ -310,68 +309,60 @@
 // ============================================
 
 .rt-roll-card__result {
-  position: relative;
-  text-align: center;
-  padding: 16px;
-  margin: 12px 0;
-  border-radius: 4px;
-  
-  &--success {
-    background: var(--rt-success-bg);
-    border: 2px solid var(--rt-success-primary);
-    box-shadow: 
-      0 0 20px var(--rt-card-success-glow),
-      inset 0 0 30px rgba(45, 138, 78, 0.1);
-    
-    .rt-roll-card__result-label {
-      color: var(--rt-success-secondary);
+    position: relative;
+    text-align: center;
+    padding: 16px;
+    margin: 12px 0;
+    border-radius: 4px;
+
+    &--success {
+        background: var(--rt-success-bg);
+        border: 2px solid var(--rt-success-primary);
+        box-shadow: 0 0 20px var(--rt-card-success-glow), inset 0 0 30px rgba(45, 138, 78, 0.1);
+
+        .rt-roll-card__result-label {
+            color: var(--rt-success-secondary);
+        }
     }
-  }
-  
-  &--failure {
-    background: var(--rt-danger-bg);
-    border: 2px solid var(--rt-danger-primary);
-    box-shadow: 
-      0 0 20px var(--rt-card-fail-glow),
-      inset 0 0 30px rgba(168, 50, 50, 0.1);
-    
-    .rt-roll-card__result-label {
-      color: var(--rt-danger-secondary);
+
+    &--failure {
+        background: var(--rt-danger-bg);
+        border: 2px solid var(--rt-danger-primary);
+        box-shadow: 0 0 20px var(--rt-card-fail-glow), inset 0 0 30px rgba(168, 50, 50, 0.1);
+
+        .rt-roll-card__result-label {
+            color: var(--rt-danger-secondary);
+        }
     }
-  }
-  
-  &--critical {
-    animation: critical-pulse 1s ease-in-out infinite alternate;
-  }
+
+    &--critical {
+        animation: critical-pulse 1s ease-in-out infinite alternate;
+    }
 }
 
 @keyframes critical-pulse {
-  from {
-    box-shadow: 
-      0 0 20px var(--rt-card-success-glow),
-      inset 0 0 30px rgba(45, 138, 78, 0.1);
-  }
-  to {
-    box-shadow: 
-      0 0 40px var(--rt-card-success-glow),
-      inset 0 0 50px rgba(45, 138, 78, 0.2);
-  }
+    from {
+        box-shadow: 0 0 20px var(--rt-card-success-glow), inset 0 0 30px rgba(45, 138, 78, 0.1);
+    }
+    to {
+        box-shadow: 0 0 40px var(--rt-card-success-glow), inset 0 0 50px rgba(45, 138, 78, 0.2);
+    }
 }
 
 .rt-roll-card__result-label {
-  font-family: 'Cinzel', serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin-bottom: 4px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 4px;
 }
 
 .rt-roll-card__result-roll {
-  font-size: 2.5rem;
-  font-weight: 700;
-  line-height: 1;
-  text-shadow: 0 2px 8px var(--rt-shadow-medium);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 2px 8px var(--rt-shadow-medium);
 }
 
 // ============================================
@@ -379,38 +370,38 @@
 // ============================================
 
 .rt-roll-card__degrees {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 8px 16px;
-  background: var(--rt-panel-bg-translucent);
-  border-radius: 4px;
-  
-  .rt-roll-card__degrees-count {
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-  
-  .rt-roll-card__degrees-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    opacity: 0.8;
-  }
-  
-  &--success {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 8px 16px;
+    background: var(--rt-panel-bg-translucent);
+    border-radius: 4px;
+
     .rt-roll-card__degrees-count {
-      color: var(--rt-success-secondary);
+        font-size: 1.5rem;
+        font-weight: 700;
     }
-  }
-  
-  &--failure {
-    .rt-roll-card__degrees-count {
-      color: var(--rt-danger-secondary);
+
+    .rt-roll-card__degrees-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.8;
     }
-  }
+
+    &--success {
+        .rt-roll-card__degrees-count {
+            color: var(--rt-success-secondary);
+        }
+    }
+
+    &--failure {
+        .rt-roll-card__degrees-count {
+            color: var(--rt-danger-secondary);
+        }
+    }
 }
 
 // ============================================
@@ -418,27 +409,27 @@
 // ============================================
 
 .rt-roll-card__notice {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 14px;
-  margin: 8px 0;
-  background: var(--rt-warning-bg);
-  border-left: 3px solid var(--rt-warning-primary);
-  border-radius: 0 4px 4px 0;
-  
-  .rt-roll-card__notice-label {
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--rt-warning-secondary);
-  }
-  
-  .rt-roll-card__notice-value {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--rt-card-text);
-  }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    margin: 8px 0;
+    background: var(--rt-warning-bg);
+    border-left: 3px solid var(--rt-warning-primary);
+    border-radius: 0 4px 4px 0;
+
+    .rt-roll-card__notice-label {
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--rt-warning-secondary);
+    }
+
+    .rt-roll-card__notice-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--rt-card-text);
+    }
 }
 
 // ============================================
@@ -446,53 +437,53 @@
 // ============================================
 
 .rt-roll-card__damage {
-  padding: 12px;
-  margin: 8px 0;
-  background: var(--rt-wounds-bg);
-  border: 1px solid var(--rt-wounds-border);
-  border-radius: 4px;
-  
-  .rt-roll-card__damage-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--rt-wounds-border);
-    
-    .rt-roll-card__damage-title {
-      font-family: 'Cinzel', serif;
-      font-size: 0.9rem;
-      color: var(--rt-wounds-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+    padding: 12px;
+    margin: 8px 0;
+    background: var(--rt-wounds-bg);
+    border: 1px solid var(--rt-wounds-border);
+    border-radius: 4px;
+
+    .rt-roll-card__damage-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--rt-wounds-border);
+
+        .rt-roll-card__damage-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            color: var(--rt-wounds-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .rt-roll-card__damage-location {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            background: var(--rt-panel-bg-translucent);
+            border-radius: 3px;
+            color: var(--rt-card-muted);
+        }
     }
-    
-    .rt-roll-card__damage-location {
-      font-size: 0.8rem;
-      padding: 2px 8px;
-      background: var(--rt-panel-bg-translucent);
-      border-radius: 3px;
-      color: var(--rt-card-muted);
+
+    .rt-roll-card__damage-value {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--rt-wounds-secondary);
+        text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
     }
-  }
-  
-  .rt-roll-card__damage-value {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--rt-wounds-secondary);
-    text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-  }
-  
-  .rt-roll-card__damage-type {
-    text-align: center;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--rt-card-muted);
-    margin-top: 4px;
-  }
+
+    .rt-roll-card__damage-type {
+        text-align: center;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--rt-card-muted);
+        margin-top: 4px;
+    }
 }
 
 // ============================================
@@ -500,38 +491,38 @@
 // ============================================
 
 .rt-roll-card__hit {
-  margin: 12px 0;
-  padding: 10px;
-  background: var(--rt-panel-bg-translucent);
-  border: 1px solid var(--rt-border-color);
-  border-radius: 4px;
-  
-  .rt-roll-card__hit-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    
-    .rt-roll-card__hit-number {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--rt-card-gold);
-      color: var(--color-bg-primary);
-      font-weight: 700;
-      font-size: 0.8rem;
-      border-radius: 50%;
+    margin: 12px 0;
+    padding: 10px;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color);
+    border-radius: 4px;
+
+    .rt-roll-card__hit-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+
+        .rt-roll-card__hit-number {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--rt-card-gold);
+            color: var(--color-bg-primary);
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: 50%;
+        }
+
+        .rt-roll-card__hit-location {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--rt-card-text);
+        }
     }
-    
-    .rt-roll-card__hit-location {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--rt-card-text);
-    }
-  }
 }
 
 // ============================================
@@ -539,39 +530,85 @@
 // ============================================
 
 .rt-roll-card__fury {
-  margin: 8px 0;
-  padding: 12px;
-  background: var(--rt-fate-bg);
-  border: 2px solid var(--rt-gold-bright);
-  border-radius: 4px;
-  text-align: center;
-  animation: fury-glow 1.5s ease-in-out infinite alternate;
-  
-  .rt-roll-card__fury-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--rt-gold-bright);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-  }
-  
-  .rt-roll-card__fury-effect {
-    font-size: 0.85rem;
-    color: var(--rt-card-text);
-    margin-top: 8px;
-    line-height: 1.4;
-  }
+    margin: 8px 0;
+    padding: 12px;
+    background: var(--rt-fate-bg);
+    border: 2px solid var(--rt-gold-bright);
+    border-radius: 4px;
+    text-align: center;
+
+    .rt-roll-card__fury-title {
+        font-family: 'Cinzel', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--rt-gold-bright);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .rt-roll-card__fury-bonus {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0;
+        padding: 6px 12px;
+        background: rgba(255, 215, 0, 0.1);
+        border-radius: 3px;
+
+        .rt-roll-card__fury-label {
+            font-size: 0.85rem;
+            color: var(--rt-text-medium);
+            font-weight: 600;
+        }
+
+        .rt-roll-card__fury-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--rt-gold-bright);
+        }
+    }
+
+    .rt-roll-card__fury-effect {
+        font-size: 0.85rem;
+        color: var(--rt-card-text);
+        margin-top: 8px;
+        line-height: 1.4;
+    }
+
+    .rt-roll-card__fury-text {
+        font-size: 0.85rem;
+        color: var(--rt-text-muted);
+        margin-top: 6px;
+        font-style: italic;
+    }
+
+    // Confirmed RF - dramatic glow animation
+    &--confirmed {
+        animation: fury-glow 1.5s ease-in-out infinite alternate;
+        border-color: var(--rt-gold-bright);
+    }
+
+    // Not confirmed - subdued appearance
+    &--not-confirmed {
+        background: var(--rt-panel-bg);
+        border-color: var(--rt-text-muted);
+
+        .rt-roll-card__fury-title {
+            color: var(--rt-text-medium);
+            text-shadow: none;
+        }
+    }
 }
 
 @keyframes fury-glow {
-  from {
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-  }
-  to {
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
-  }
+    from {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+    to {
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+    }
 }
 
 // ============================================
@@ -579,81 +616,81 @@
 // ============================================
 
 .rt-roll-card__controls {
-  display: flex;
-  gap: 6px;
-  padding: 10px 16px;
-  margin-top: 8px;
-  background: var(--rt-panel-bg-translucent);
-  border-top: 1px solid var(--rt-border-color);
+    display: flex;
+    gap: 6px;
+    padding: 10px 16px;
+    margin-top: 8px;
+    background: var(--rt-panel-bg-translucent);
+    border-top: 1px solid var(--rt-border-color);
 }
 
 .rt-roll-card__btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background: var(--rt-btn-bg);
-  border: 1px solid var(--rt-border-color);
-  border-radius: 4px;
-  color: var(--rt-card-gold);
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  .material-icons {
-    font-size: 16px;
-  }
-  
-  &:hover {
-    background: var(--rt-btn-bg-hover);
-    border-color: var(--rt-card-gold);
-    box-shadow: 0 0 12px var(--rt-gold-glow);
-    transform: translateY(-1px);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
-  
-  &--damage {
-    background: var(--rt-wounds-bg);
-    border-color: var(--rt-wounds-border);
-    color: var(--rt-wounds-secondary);
-    
-    &:hover {
-      background: rgba(139, 0, 0, 0.2);
-      border-color: var(--rt-wounds-primary);
-      box-shadow: 0 0 12px rgba(139, 0, 0, 0.4);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--rt-btn-bg);
+    border: 1px solid var(--rt-border-color);
+    border-radius: 4px;
+    color: var(--rt-card-gold);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .material-icons {
+        font-size: 16px;
     }
-  }
-  
-  &--fate {
-    background: var(--rt-powers-bg);
-    border-color: var(--rt-powers-border);
-    color: var(--rt-powers-secondary);
-    
+
     &:hover {
-      background: rgba(106, 32, 144, 0.2);
-      border-color: var(--rt-powers-primary);
-      box-shadow: 0 0 12px rgba(106, 32, 144, 0.4);
+        background: var(--rt-btn-bg-hover);
+        border-color: var(--rt-card-gold);
+        box-shadow: 0 0 12px var(--rt-gold-glow);
+        transform: translateY(-1px);
     }
-  }
-  
-  &--disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    
-    &:hover {
-      transform: none;
-      box-shadow: none;
-      background: var(--rt-btn-bg);
+
+    &:active {
+        transform: translateY(0);
     }
-  }
+
+    &--damage {
+        background: var(--rt-wounds-bg);
+        border-color: var(--rt-wounds-border);
+        color: var(--rt-wounds-secondary);
+
+        &:hover {
+            background: rgba(139, 0, 0, 0.2);
+            border-color: var(--rt-wounds-primary);
+            box-shadow: 0 0 12px rgba(139, 0, 0, 0.4);
+        }
+    }
+
+    &--fate {
+        background: var(--rt-powers-bg);
+        border-color: var(--rt-powers-border);
+        color: var(--rt-powers-secondary);
+
+        &:hover {
+            background: rgba(106, 32, 144, 0.2);
+            border-color: var(--rt-powers-primary);
+            box-shadow: 0 0 12px rgba(106, 32, 144, 0.4);
+        }
+    }
+
+    &--disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+
+        &:hover {
+            transform: none;
+            box-shadow: none;
+            background: var(--rt-btn-bg);
+        }
+    }
 }
 
 // ============================================
@@ -661,42 +698,42 @@
 // ============================================
 
 .rt-roll-card__text {
-  padding: 8px 12px;
-  margin: 8px 0;
-  background: var(--rt-panel-bg-translucent);
-  border-left: 2px solid var(--rt-card-gold);
-  border-radius: 0 4px 4px 0;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  max-height: 150px;
-  overflow-y: auto;
-  
-  p {
-    margin: 0 0 8px 0;
-    
-    &:last-child {
-      margin-bottom: 0;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: var(--rt-panel-bg-translucent);
+    border-left: 2px solid var(--rt-card-gold);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    max-height: 150px;
+    overflow-y: auto;
+
+    p {
+        margin: 0 0 8px 0;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
-  }
 }
 
 .rt-roll-card__effect {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 6px 0;
-  font-size: 0.85rem;
-  
-  .rt-roll-card__effect-name {
-    font-weight: 600;
-    color: var(--rt-card-gold);
-    flex-shrink: 0;
-  }
-  
-  .rt-roll-card__effect-desc {
-    color: var(--rt-card-text);
-    opacity: 0.9;
-  }
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 0.85rem;
+
+    .rt-roll-card__effect-name {
+        font-weight: 600;
+        color: var(--rt-card-gold);
+        flex-shrink: 0;
+    }
+
+    .rt-roll-card__effect-desc {
+        color: var(--rt-card-text);
+        opacity: 0.9;
+    }
 }
 
 // ============================================
@@ -704,11 +741,11 @@
 // ============================================
 
 .rt-roll-card__collapse {
-  margin-top: 8px;
-  
-  &[hidden] {
-    display: none;
-  }
+    margin-top: 8px;
+
+    &[hidden] {
+        display: none;
+    }
 }
 
 // ============================================
@@ -716,7 +753,7 @@
 // ============================================
 
 .rt-roll-card__dice {
-  display: none;
+    display: none;
 }
 
 // ============================================
@@ -724,29 +761,29 @@
 // ============================================
 
 .rt-degree-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 8px;
-  padding: 2px 8px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-radius: 3px;
-  vertical-align: middle;
-  
-  &--success {
-    background: var(--rt-success-bg);
-    border: 1px solid var(--rt-success-primary);
-    color: var(--rt-success-secondary);
-  }
-  
-  &--failure {
-    background: var(--rt-danger-bg);
-    border: 1px solid var(--rt-danger-primary);
-    color: var(--rt-danger-secondary);
-  }
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 3px;
+    vertical-align: middle;
+
+    &--success {
+        background: var(--rt-success-bg);
+        border: 1px solid var(--rt-success-primary);
+        color: var(--rt-success-secondary);
+    }
+
+    &--failure {
+        background: var(--rt-danger-bg);
+        border: 1px solid var(--rt-danger-primary);
+        color: var(--rt-danger-secondary);
+    }
 }
 
 // ============================================
@@ -754,13 +791,13 @@
 // ============================================
 
 .rt-message-portrait {
-  width: 28px;
-  height: 28px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid var(--rt-gold);
-  margin-right: 8px;
-  box-shadow: 0 2px 4px var(--rt-shadow-medium);
+    width: 28px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--rt-gold);
+    margin-right: 8px;
+    box-shadow: 0 2px 4px var(--rt-shadow-medium);
 }
 
 // ============================================
@@ -768,45 +805,45 @@
 // ============================================
 
 .rt-dice-summary {
-  margin-top: 8px;
-  padding: 8px;
-  background: var(--rt-panel-bg-translucent);
-  border-radius: 4px;
-  font-size: 0.85rem;
-  line-height: 1.5;
+    margin-top: 8px;
+    padding: 8px;
+    background: var(--rt-panel-bg-translucent);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    line-height: 1.5;
 }
 
 .rt-dice-target {
-  color: var(--rt-text-muted);
-  font-weight: 500;
+    color: var(--rt-text-muted);
+    font-weight: 500;
 }
 
 .rt-dice-success {
-  color: var(--rt-success-secondary);
-  font-weight: 600;
+    color: var(--rt-success-secondary);
+    font-weight: 600;
 }
 
 .rt-dice-failure {
-  color: var(--rt-danger-secondary);
-  font-weight: 600;
+    color: var(--rt-danger-secondary);
+    font-weight: 600;
 }
 
 .rt-dice-critical {
-  color: var(--rt-gold-bright);
-  font-weight: 700;
-  text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
+    color: var(--rt-gold-bright);
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
 }
 
 .rt-dice-fumble {
-  color: var(--rt-red-bright);
-  font-weight: 700;
-  text-shadow: 0 0 6px rgba(255, 68, 68, 0.5);
+    color: var(--rt-red-bright);
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(255, 68, 68, 0.5);
 }
 
 .rt-dice-doubles {
-  color: var(--rt-warning-primary);
-  font-weight: 600;
-  font-style: italic;
+    color: var(--rt-warning-primary);
+    font-weight: 600;
+    font-style: italic;
 }
 
 // ============================================
@@ -814,61 +851,61 @@
 // ============================================
 
 .rt-roll-card__qualities {
-  margin-bottom: 16px;
-  padding: 12px;
-  background: linear-gradient(135deg, rgba(75, 192, 115, 0.08) 0%, rgba(75, 192, 115, 0.03) 100%);
-  border-left: 3px solid rgba(75, 192, 115, 0.5);
-  border-radius: 4px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(75, 192, 115, 0.08) 0%, rgba(75, 192, 115, 0.03) 100%);
+    border-left: 3px solid rgba(75, 192, 115, 0.5);
+    border-radius: 4px;
 }
 
 .rt-roll-card__qualities-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
 }
 
 .rt-roll-card__qualities-title {
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--rt-card-text);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--rt-card-text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .rt-roll-card__qualities-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
 .rt-quality-tag {
-  display: inline-block;
-  padding: 4px 10px;
-  background: rgba(75, 192, 115, 0.15);
-  border: 1px solid rgba(75, 192, 115, 0.3);
-  border-radius: 4px;
-  color: #4bc073;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: help;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: rgba(75, 192, 115, 0.25);
-    border-color: rgba(75, 192, 115, 0.5);
-    transform: translateY(-1px);
-  }
-  
-  // Dark theme support
-  body.theme-dark & {
-    background: rgba(75, 192, 115, 0.2);
-    border-color: rgba(75, 192, 115, 0.4);
-    color: #5dd68c;
-    
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(75, 192, 115, 0.15);
+    border: 1px solid rgba(75, 192, 115, 0.3);
+    border-radius: 4px;
+    color: #4bc073;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: help;
+    transition: all 0.2s ease;
+
     &:hover {
-      background: rgba(75, 192, 115, 0.3);
-      border-color: rgba(75, 192, 115, 0.6);
+        background: rgba(75, 192, 115, 0.25);
+        border-color: rgba(75, 192, 115, 0.5);
+        transform: translateY(-1px);
     }
-  }
+
+    // Dark theme support
+    body.theme-dark & {
+        background: rgba(75, 192, 115, 0.2);
+        border-color: rgba(75, 192, 115, 0.4);
+        color: #5dd68c;
+
+        &:hover {
+            background: rgba(75, 192, 115, 0.3);
+            border-color: rgba(75, 192, 115, 0.6);
+        }
+    }
 }

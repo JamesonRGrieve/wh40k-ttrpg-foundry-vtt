@@ -191,11 +191,24 @@
                                 {{/each}}
                                 
                                 {{!-- Righteous Fury --}}
-                                {{#each righteousFury as |fury|}}
-                                    <div class="rt-roll-card__fury">
-                                        <div class="rt-roll-card__fury-title">⚡ Righteous Fury! ⚡</div>
-                                        <div class="rt-roll-card__fury-effect">Critical Level {{fury.roll.total}}: {{fury.effect}}</div>
-                                    </div>
+                                {{#each hit.righteousFury as |fury|}}
+                                    {{#if fury.confirmed}}
+                                        <div class="rt-roll-card__fury rt-roll-card__fury--confirmed">
+                                            <div class="rt-roll-card__fury-title">⚡ Righteous Fury Confirmed! ⚡</div>
+                                            <div class="rt-roll-card__fury-bonus">
+                                                <span class="rt-roll-card__fury-label">Bonus Damage:</span>
+                                                <span class="rt-roll-card__fury-value">+{{fury.bonusDamage}}</span>
+                                            </div>
+                                            <div class="rt-roll-card__fury-effect">Critical Level {{fury.critRoll.total}}: {{fury.effect}}</div>
+                                        </div>
+                                    {{else}}
+                                        <div class="rt-roll-card__fury rt-roll-card__fury--not-confirmed">
+                                            <div class="rt-roll-card__fury-title">⚡ Righteous Fury (Not Confirmed)</div>
+                                            <div class="rt-roll-card__fury-text">
+                                                Rolled {{fury.dieResult}} (threshold: {{fury.threshold}}), but failed confirmation roll.
+                                            </div>
+                                        </div>
+                                    {{/if}}
                                 {{/each}}
                                 
                                 {{!-- Assign Damage Button --}}
