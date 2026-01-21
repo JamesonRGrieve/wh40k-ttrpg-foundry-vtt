@@ -1,0 +1,72 @@
+Name|Effect
+Accurate|When Aiming
+Balanced|+10 bonus to WS Tests to parry
+Blast (X)|Weapon hit creates Area of Effect explosion of X Metre radius. Roll Damage once and apply to everyone within this area. Dodging Area of Effect Attacks requires moving up to Agility Bonus Metres to leave explosion radius
+Cleansing Fire|"A Target Struck by a weapon with this quality must make a +0 Willpower Test or catch on fire. If this weapon quality is added to a weapon with the ""Flame"" quality"
+Concussive (X)|Target makes Toughness Test with -10*X
+Corrosive|Reduce AP of hit location location by 1d10
+Crippling (X)|If target suffers at least 1 Wound from this weapon
+Customised|Half Reload Time of Weapon
+Daemon Wep|Weapon Contains an Imprisoned Daemon. Requires Daemonic Mastery Test to Wield(Opposed Willpower vs imprisoned Daemon
+Decay (X)|Any Living Creature that suffers Critical Damage (including that of Zealous Hatred/Righteous Fury) must make -10*X Toughness Test or instantly die.
+Defensive|+15 Bonus to Parrying Tests
+Devastating (X)|"If Targeting a Horde of Enemies, a successful hit reduces the Horde's Magnitude by an addional amount equal to X.
+DW: Weapon also always does at least 1 Cohesion damage if it hits even if it does not wound."
+Fast|Those attempting to Parry an attack from this weapon suffer -20.
+Felling (X)|"Reduces Toughness Bonus gained as a result of Unnatural Toughness by X. Doesn't reduce base Toughness Bonus.
+(EG: Unnatural Toughness(+4) with TB 4 would result in TB 8, Felling (5) would reduce this back to TB 4)"
+Flame|If target takes damage from this weapon
+Flexible|Weapon cannot be parried.
+Force|Counts as Best craftmanship Mono Weapon to non psyker/Navigator. Adds Psy Rating to Pen and Damage
+Gauss|Weapon generates Righteous Fury/Zealous Hatred on a 9 or 10. If it would not deal damage even after this
+Graviton|When weapon hits
+Gyro-Stabilised|"Never counts targets as further away than ""Long Range"" (maximum ranges still apply). Heavy Weapons with this quality reduce firing without bracing penalty to -20."
+Hallucinogenic (X)|Target makes Toughness with -10*X
+Haywire (X)|Effects X metre radius
+Inaccurate|Weapon cannot benefit from Aim Action
+Indirect|Can be fired when the enemy is not seen with help of a spotter. Shots scatter 1d10 metres on a hit and 2d10 metres on a miss. An ally with an Auspex can spot as an action
+Indirect (X)|Can be fired when the enemy is not seen with help of a spotter. Attack always requires Full Action with -10 to Test. If Successful test
+Integrated Weapon|Weapon is attached to user
+Irradiated(X)|When a character is hit by this weapon
+Lance|Increase penetration by base weapon PEN value with every Degree of Success on BS Test after first.
+Living Ammunition|Weapon grows
+Maximal|Can choose to fire this weapon on Maximal Setting
+Melta|Double Penetration at short range
+Necron Wep|When not used by a Necron
+Ogryn-Proof|Characters with the Clumsy Trait can use these weapons without penalty.
+Overcharge|Can choose to expend 3x Ammo to gain Concussive (+2)
+Overcharge (X)|User can choose to increase weapon's damage by X
+Overheats|On an attack roll of 91 or higher
+Power Field|Increases Damage and Penetration (accounted in stats). 75% chance to destroy opponents weapon when parrying unless weapon is Power Fielded
+Primitive (X)|Damage Rolls above X count as if X was Rolled (although a roll of 0 still causes Righteous Fury). HB: Ignore if hitting Primitive/Natural Armour.
+Proven (X)|Damage Rolls below X count as if X was Rolled
+Razor-Sharp|If attack roll results in three or more Degrees of Success
+Reactive|Weapon fires in a straight line to the Range of the weapon. Firer can take a -10 penalty to attack to try to hit second target within 2m of the original target.
+Recharge|Weapon cannot fire on a Round if it fired on the previous Round.
+Reliable|If a weapon would jam
+Rune Wep|The rare result of a Daemon Weapon surviving its imprisoned Daemon escaping it. It no longer has any Daemon Weapon Traits
+Sanctified|"Weapon damage counts as ""Holy"""
+Scatter |"At Point Blank Range, +10 to hit and +3 Damage. At Short Range, +10 to hit. At any longer ranges, -3 damage.
+Alternative: When firing at Point Blank Range score an additional hit per two DoS, however double AP at Long or Extreme Range."
+Shocking|If Target takes any damage from weapon
+SM Wep.|Designed for Space Marines
+Smoke (X)|"Creates X Metre diameter Smoke Screen that lasts 1d10+10 Rounds or less in adverse weather conditions. Smoke hampers vision.
+If no X Value, Default to Smokescreen of 3d10 metre diameter for 2d10 Rounds, may be effected by bad weather"
+Snare (X)|Target makes Agility Test with -10*X. Failiure causes target to be immobilised
+Spray|Do not Roll Ballistic Skill Test when attacking
+Storm|"Double Number of hits and ammo expended when firing. (EG: Full Auto causes 2 hits per DoS), up to weapon RoF.
+(Rogue Trader): Also Max number of hits is double RoF and Dodging this weapon dodges two hits, +2 per DoS."
+Tainted|Weapon bears the Mark of Chaos
+Tearing|Roll additional 1d10 for Damage and drop lowest rolled dice.
+Toxic|If target takes any wounds
+Toxic (X)|If target takes any wounds
+Twin-Linked|+20 to Hit but use Twice as much Ammo
+Unbalanced|Suffer -10 to Parry Attempts
+Unreliable|Weapon jams on roll of 91 or higher
+Unstable|When Weapon hits
+Unwieldy|Weapon Cannot Parry
+Vengeful (X)|Weapon causes Righteous Fury on a value of X or higher.
+Warp Weapon|Ignores Cover and Non-Warded Armour AP. However
+Witch-Edge|"Those (Almost Always Eldar) who possess the ""Secret of the Seers"" Talent may access this quality. Weapons with it add a damage bonus of twice wielder's strength bonus"
+Daemonbane|When used against Daemons
+Rune Wep (alt.)|The rare result of a Daemon Weapon surviving its imprisoned Daemon escaping it. It no longer has any Daemon Weapon Traits

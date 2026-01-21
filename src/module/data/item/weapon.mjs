@@ -215,30 +215,42 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get effective qualities (base + craftsmanship-derived).
+     * Applies Rogue Trader craftsmanship rules for ranged weapons:
+     * - Poor: Gain Unreliable (or jam on any miss if already Unreliable)
+     * - Good: Gain Reliable (or cancel Unreliable)
+     * - Best: Never jams or overheats (gain Reliable, remove Overheats)
+     *
      * @type {Set<string>}
      */
     get effectiveSpecial() {
         const qualities = new Set(this.special || []);
 
-        // Add craftsmanship-derived qualities for ranged weapons
+        // Add craftsmanship-derived qualities for RANGED weapons only
+        // Melee weapons get toHit/damage modifiers instead
         if (!this.melee && !this.isMeleeWeapon) {
+            const hasUnreliable = qualities.has('unreliable');
+
             switch (this.craftsmanship) {
                 case 'poor':
-                    qualities.add('unreliable-2');
-                    break;
-                case 'cheap':
+                    // Poor: Gain Unreliable quality
+                    // NOTE: If already Unreliable, jams on any miss (handled in roll logic, not here)
                     qualities.add('unreliable');
                     break;
+
                 case 'good':
+                    // Good: Gain Reliable OR cancel Unreliable
+                    if (hasUnreliable) {
+                        qualities.delete('unreliable');
+                    } else {
+                        qualities.add('reliable');
+                    }
+                    break;
+
+                case 'best':
+                    // Best: Never jams or overheats
+                    // Add Reliable quality and remove Overheats
                     qualities.add('reliable');
                     qualities.delete('unreliable');
-                    qualities.delete('unreliable-2');
-                    break;
-                case 'best':
-                case 'master-crafted':
-                    qualities.add('never-jam');
-                    qualities.delete('unreliable');
-                    qualities.delete('unreliable-2');
                     qualities.delete('overheats');
                     break;
             }
@@ -249,40 +261,39 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get craftsmanship-derived stat modifiers.
+     * Applies Rogue Trader craftsmanship rules:
+     *
+     * MELEE WEAPONS:
+     * - Poor: -10 to attack and parry
+     * - Good: +5 to attack
+     * - Best: +10 to attack, +1 damage
+     *
+     * RANGED WEAPONS:
+     * - Qualities handled in effectiveSpecial getter
+     *
      * @type {object}
      */
     get craftsmanshipModifiers() {
         const mods = {
             toHit: 0, // WS/BS modifier
             damage: 0, // Damage bonus
-            weight: 1.0, // Weight multiplier
+            weight: 1.0, // Weight multiplier (for future use)
         };
 
+        // Apply modifiers for MELEE weapons only
+        // Ranged weapons get quality changes instead (see effectiveSpecial)
         if (this.melee || this.isMeleeWeapon) {
-            // Melee WS modifiers
             switch (this.craftsmanship) {
                 case 'poor':
-                    mods.toHit = -15;
-                    break;
-                case 'cheap':
-                    mods.toHit = -10;
+                    mods.toHit = -10; // -10 to attack and parry
                     break;
                 case 'good':
-                    mods.toHit = 5;
+                    mods.toHit = 5; // +5 to attack
                     break;
                 case 'best':
-                    mods.toHit = 10;
-                    mods.damage = 1;
+                    mods.toHit = 10; // +10 to attack
+                    mods.damage = 1; // +1 damage
                     break;
-                case 'master-crafted':
-                    mods.toHit = 20;
-                    mods.damage = 2;
-                    break;
-            }
-        } else {
-            // Ranged BS modifiers
-            if (this.craftsmanship === 'master-crafted') {
-                mods.toHit = 10;
             }
         }
 
@@ -291,11 +302,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Check if weapon has any craftsmanship-derived qualities.
+     * Only ranged weapons with non-common craftsmanship.
      * @type {boolean}
      */
     get hasCraftsmanshipQualities() {
         if (this.melee || this.isMeleeWeapon) return false;
-        return ['poor', 'cheap', 'good', 'best', 'master-crafted'].includes(this.craftsmanship);
+        return ['poor', 'good', 'best'].includes(this.craftsmanship);
     }
 
     /**

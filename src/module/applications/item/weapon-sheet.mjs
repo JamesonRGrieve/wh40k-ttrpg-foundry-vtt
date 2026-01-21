@@ -139,11 +139,11 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Prepare qualities array for clickable tags
         context.qualitiesArray = Array.from(system.effectiveSpecial || []).map((q) => {
-            const def = CONFIG.ROGUE_TRADER.getQualityDefinition?.(q) || {};
+            const def = CONFIG.ROGUE_TRADER?.getQualityDefinition?.(q) || null;
             return {
                 identifier: q,
-                label: def.label || q,
-                description: def.description || '',
+                label: def?.label || q,
+                description: def?.description || '',
             };
         });
 
@@ -344,9 +344,11 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Try to find the quality in compendiums
         // For now, show a tooltip with the description
-        const def = CONFIG.ROGUE_TRADER.getQualityDefinition?.(identifier);
+        const def = CONFIG.ROGUE_TRADER?.getQualityDefinition?.(identifier);
         if (def) {
             ui.notifications.info(`${def.label}: ${def.description}`);
+        } else {
+            ui.notifications.warn(`Quality "${identifier}" not found.`);
         }
     }
 
