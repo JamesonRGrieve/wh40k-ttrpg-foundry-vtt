@@ -61,6 +61,59 @@ ROGUE_TRADER.craftsmanships = {
     common: { label: 'RT.Craftsmanship.Common', modifier: 0 },
     good: { label: 'RT.Craftsmanship.Good', modifier: 5 },
     best: { label: 'RT.Craftsmanship.Best', modifier: 10 },
+    exceptional: { label: 'RT.Craftsmanship.Exceptional', modifier: 0 }, // Astartes-grade
+    master: { label: 'RT.Craftsmanship.Master', modifier: 0 }, // Master-crafted Astartes
+};
+
+/**
+ * Centralized craftsmanship rules for all item types.
+ * Defines mechanical effects per craftsmanship tier per item type.
+ * @type {Object}
+ */
+ROGUE_TRADER.craftsmanshipRules = {
+    weapon: {
+        melee: {
+            poor: { toHit: -10 },
+            common: {},
+            good: { toHit: 5 },
+            best: { toHit: 10, damage: 1 },
+            exceptional: { toHit: 5, damage: 1 }, // Astartes
+            master: { toHit: 10, damage: 2 }, // Master Astartes
+        },
+        ranged: {
+            poor: { qualities: ['unreliable'] },
+            common: {},
+            good: { qualities: ['reliable'], removeQualities: ['unreliable'] },
+            best: { qualities: ['reliable'], removeQualities: ['unreliable', 'overheats'] },
+            exceptional: { qualities: ['reliable'], removeQualities: ['unreliable'] }, // Astartes
+            master: { qualities: ['reliable'], removeQualities: ['unreliable', 'overheats'] }, // Master Astartes
+        },
+    },
+    armour: {
+        poor: { agility: -10 },
+        common: {},
+        good: { firstAttackBonus: 1 }, // +1 AP on first attack per round
+        best: { armourBonus: 1, weight: 0.5 }, // +1 AP permanent, half weight
+        exceptional: {}, // No special Astartes armour rules
+        master: {}, // No special Astartes armour rules
+    },
+    gear: {
+        poor: { weight: 1.1 }, // +10% weight
+        common: {},
+        good: { weight: 0.9 }, // -10% weight
+        best: { weight: 0.8 }, // -20% weight
+        exceptional: { weight: 0.9 }, // Same as good
+        master: { weight: 0.8 }, // Same as best
+    },
+    forceField: {
+        // Overload ranges by craftsmanship
+        poor: { overloadRange: [1, 20] }, // 01-20
+        common: { overloadRange: [1, 10] }, // 01-10
+        good: { overloadRange: [1, 5] }, // 01-05
+        best: { overloadRange: [1, 1] }, // 01 only (1% chance)
+        exceptional: { overloadRange: [1, 5] }, // Same as good
+        master: { overloadRange: [1, 1] }, // Same as best
+    },
 };
 
 /* -------------------------------------------- */

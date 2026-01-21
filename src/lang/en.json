@@ -1250,7 +1250,9 @@
             "Common": "Common",
             "Good": "Good",
             "Best": "Best",
-            "MasterCrafted": "Master-Crafted"
+            "MasterCrafted": "Master-Crafted",
+            "Exceptional": "Exceptional",
+            "Master": "Master"
         },
         "WeaponQuality": {
             "Accurate": "Accurate",

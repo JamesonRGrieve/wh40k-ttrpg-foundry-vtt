@@ -264,6 +264,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * - Poor: Gain Unreliable (or jam on any miss if already Unreliable)
      * - Good: Gain Reliable (or cancel Unreliable)
      * - Best: Never jams or overheats (gain Reliable, remove Overheats)
+     * - Exceptional (Astartes): Gain Reliable (or cancel Unreliable)
+     * - Master (Astartes): Never jams or overheats (like Best)
      *
      * @type {Set<string>}
      */
@@ -298,6 +300,22 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                     qualities.delete('unreliable');
                     qualities.delete('overheats');
                     break;
+
+                case 'exceptional':
+                    // Exceptional (Astartes): Gain Reliable OR cancel Unreliable
+                    if (hasUnreliable) {
+                        qualities.delete('unreliable');
+                    } else {
+                        qualities.add('reliable');
+                    }
+                    break;
+
+                case 'master':
+                    // Master (Astartes): Never jams or overheats (like Best)
+                    qualities.add('reliable');
+                    qualities.delete('unreliable');
+                    qualities.delete('overheats');
+                    break;
             }
         }
 
@@ -328,9 +346,13 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * - Poor: -10 to attack and parry
      * - Good: +5 to attack
      * - Best: +10 to attack, +1 damage
+     * - Exceptional (Astartes): +5 to attack, +1 damage
+     * - Master (Astartes): +10 to attack, +2 damage
      *
      * RANGED WEAPONS:
      * - Qualities handled in effectiveSpecial getter
+     * - Exceptional (Astartes): Gain Reliable (or cancel Unreliable)
+     * - Master (Astartes): Never jams or overheats (like Best)
      *
      * @type {object}
      */
@@ -355,6 +377,14 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                     mods.toHit = 10; // +10 to attack
                     mods.damage = 1; // +1 damage
                     break;
+                case 'exceptional': // Astartes-grade
+                    mods.toHit = 5; // +5 to attack
+                    mods.damage = 1; // +1 damage
+                    break;
+                case 'master': // Master-crafted Astartes
+                    mods.toHit = 10; // +10 to attack
+                    mods.damage = 2; // +2 damage
+                    break;
             }
         }
 
@@ -368,7 +398,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get hasCraftsmanshipQualities() {
         if (this.melee || this.isMeleeWeapon) return false;
-        return ['poor', 'good', 'best'].includes(this.craftsmanship);
+        return ['poor', 'good', 'best', 'exceptional', 'master'].includes(this.craftsmanship);
     }
 
     /**
