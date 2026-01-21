@@ -315,6 +315,9 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Prepare dynasty tab data
         context.dynastyData = this._prepareDynastyData();
 
+        // Prepare active modifiers panel (Phase 5 Integration)
+        context.activeModifiers = this.prepareActiveModifiers();
+
         return context;
     }
 
