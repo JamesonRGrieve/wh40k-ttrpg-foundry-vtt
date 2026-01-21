@@ -1,10 +1,17 @@
 /**
- * @file Weapon Quality Effects - Phase 1 (Simple Qualities)
+ * @file Weapon Quality Effects - Phase 1-4 (Simple + Complex + Advanced + Exotic Qualities)
  * Handles mechanical effects for weapon qualities in combat.
  *
  * Phase 1 Scope:
  * - Category B: Accurate, Balanced, Defensive, Fast, Unbalanced, Unwieldy
  * - Category C (subset): Tearing, Melta
+ *
+ * Phase 4 Scope (Exotic):
+ * - Force: Psyker Psy Rating bonus to damage
+ * - Warp Weapon: Ignore non-warded armor
+ * - Witch-Edge: Eldar Strength Bonus modifier
+ * - Daemonbane: vs Daemon bonuses
+ * - Gauss/Vengeful: RF threshold modifiers
  *
  * Architecture:
  * - Modular effect handlers for each quality
@@ -25,45 +32,77 @@ import { RollData, WeaponRollData } from '../rolls/roll-data.mjs';
  */
 export const WEAPON_QUALITY_EFFECTS = {
     // Category B: Attack/Parry Modifiers
-    accurate: {
+    'accurate': {
         type: 'attack',
         aimBonus: 10, // +10 BS when using Aim action
         description: '+10 BS when using Aim action',
     },
-    balanced: {
+    'balanced': {
         type: 'parry',
         parryBonus: 10, // +10 WS for parry
         description: '+10 WS when parrying with this weapon',
     },
-    defensive: {
+    'defensive': {
         type: 'parry',
         parryBonus: 15, // +15 WS for parry
         description: '+15 WS when parrying with this weapon',
     },
-    fast: {
+    'fast': {
         type: 'parry',
         enemyParryPenalty: -20, // Enemies suffer -20 to parry this weapon
         description: 'Enemies suffer -20 when attempting to parry this weapon',
     },
-    unbalanced: {
+    'unbalanced': {
         type: 'parry',
         parryPenalty: -10, // -10 to parry attempts with this weapon
         description: '-10 WS when parrying with this weapon',
     },
-    unwieldy: {
+    'unwieldy': {
         type: 'parry',
         cannotParry: true, // Cannot parry with this weapon
         description: 'Cannot parry with this weapon',
     },
 
     // Category C (subset): Damage/Penetration Modifiers
-    tearing: {
+    'tearing': {
         type: 'damage',
         description: 'Roll 2d10 for damage dice, drop the lowest (already implemented in damage-data.mjs)',
     },
-    melta: {
+    'melta': {
         type: 'penetration',
         description: 'Double penetration at short range (includes Point Blank and Short Range)',
+    },
+
+    // Phase 4: Exotic Qualities
+    'force': {
+        type: 'damage',
+        description: 'Psyker adds Psy Rating to damage',
+        requiresPsyker: true,
+    },
+    'warp-weapon': {
+        type: 'penetration',
+        description: 'Ignores armor that is not warded (force fields and warded armor still apply)',
+        ignoresNonWardedArmor: true,
+    },
+    'witch-edge': {
+        type: 'damage',
+        description: 'Eldar wielders add their Strength Bonus twice',
+        requiresEldar: true,
+    },
+    'daemonbane': {
+        type: 'damage',
+        description: '+2d10 damage against Daemons',
+        bonusVsDaemons: true,
+    },
+    'gauss': {
+        type: 'righteous-fury',
+        description: 'Righteous Fury triggers on 9 or 10 on damage die',
+        rfThreshold: 9,
+    },
+    'vengeful': {
+        type: 'righteous-fury',
+        description: 'Righteous Fury triggers on 8, 9, or 10 on damage die (replaces standard RF)',
+        rfThreshold: 8,
     },
 };
 
@@ -250,6 +289,115 @@ export function calculateQualityPenetrationModifiers(damageContext) {
 }
 
 /* -------------------------------------------- */
+/*  Exotic Quality Effects (Phase 4)            */
+/* -------------------------------------------- */
+
+/**
+ * Calculate damage modifiers from exotic weapon qualities.
+ * Called during damage calculation to apply exotic quality effects.
+ *
+ * @param {Object} damageContext - Context object with weapon and actor info
+ * @param {Item} damageContext.weapon - The weapon item
+ * @param {Actor} damageContext.actor - The actor wielding the weapon
+ * @param {Actor} damageContext.target - The target actor (if any)
+ * @param {number} damageContext.baseDamage - Base damage value
+ * @returns {Object} Object with damage modifiers { qualityName: value }
+ */
+export function calculateExoticQualityDamageModifiers(damageContext) {
+    const modifiers = {};
+    const { weapon, actor, target } = damageContext;
+
+    if (!weapon || !actor) return modifiers;
+
+    // Force: Psyker adds Psy Rating to damage
+    if (weaponHasQuality(weapon, 'force')) {
+        const psyRating = actor.system?.psyker?.psyRating || 0;
+        if (psyRating > 0) {
+            modifiers['Force (Psy Rating)'] = psyRating;
+        }
+    }
+
+    // Witch-Edge: Eldar wielders add Strength Bonus twice (total: 2x SB)
+    // Note: Standard SB is already added for melee weapons, so we add it once more
+    if (weaponHasQuality(weapon, 'witch-edge')) {
+        const isEldar = actor.system?.species?.toLowerCase().includes('eldar') || actor.system?.traits?.some((t) => t.name?.toLowerCase().includes('eldar'));
+        if (isEldar && weapon.system?.isMeleeWeapon) {
+            const strengthBonus = actor.system?.characteristics?.strength?.bonus || 0;
+            modifiers['Witch-Edge (Extra SB)'] = strengthBonus;
+        }
+    }
+
+    // Daemonbane: +2d10 damage against Daemons
+    if (weaponHasQuality(weapon, 'daemonbane') && target) {
+        const isDaemon =
+            target.system?.traits?.some((t) => t.name?.toLowerCase().includes('daemon') || t.name?.toLowerCase().includes('daemonic')) ||
+            target.system?.species?.toLowerCase().includes('daemon');
+
+        if (isDaemon) {
+            modifiers['Daemonbane (vs Daemon)'] = '2d10';
+        }
+    }
+
+    return modifiers;
+}
+
+/**
+ * Check if weapon ignores armor due to Warp Weapon quality.
+ * Returns true if armor should be ignored (for non-warded armor).
+ *
+ * @param {Item} weapon - The weapon item
+ * @param {Item} armor - The armor item (if any)
+ * @returns {boolean} True if weapon ignores this armor
+ */
+export function weaponIgnoresArmor(weapon, armor) {
+    if (!weapon || !armor) return false;
+
+    // Warp Weapon: Ignores non-warded armor
+    if (weaponHasQuality(weapon, 'warp-weapon')) {
+        // Check if armor is warded
+        const isWarded = armor.system?.special?.has('warded') || armor.system?.effectiveSpecial?.has('warded');
+        return !isWarded; // Ignore if NOT warded
+    }
+
+    return false;
+}
+
+/**
+ * Get Righteous Fury threshold for weapon.
+ * Returns the damage die value that triggers Righteous Fury.
+ *
+ * @param {Item} weapon - The weapon item
+ * @returns {number} RF threshold (standard is 10)
+ */
+export function getRighteousFuryThreshold(weapon) {
+    if (!weapon) return 10; // Standard RF threshold
+
+    // Gauss: RF on 9-10
+    if (weaponHasQuality(weapon, 'gauss')) {
+        return WEAPON_QUALITY_EFFECTS.gauss.rfThreshold;
+    }
+
+    // Vengeful: RF on 8-10 (most permissive, check last)
+    if (weaponHasQuality(weapon, 'vengeful')) {
+        return WEAPON_QUALITY_EFFECTS.vengeful.rfThreshold;
+    }
+
+    return 10; // Standard RF threshold
+}
+
+/**
+ * Check if a damage die result triggers Righteous Fury for this weapon.
+ *
+ * @param {Item} weapon - The weapon item
+ * @param {number} dieResult - The d10 damage die result
+ * @returns {boolean} True if this triggers RF
+ */
+export function checkRighteousFury(weapon, dieResult) {
+    const threshold = getRighteousFuryThreshold(weapon);
+    return dieResult >= threshold;
+}
+
+/* -------------------------------------------- */
 /*  Integration Helpers                         */
 /* -------------------------------------------- */
 
@@ -308,7 +456,7 @@ export function getWeaponQualitySummary(weapon, context = 'all') {
 
 /**
  * Main integration point for weapon quality effects.
- * Provides all Phase 1 quality handlers in one object.
+ * Provides all Phase 1-4 quality handlers in one object.
  */
 export const WeaponQualityEffects = {
     // Constants
@@ -329,6 +477,12 @@ export const WeaponQualityEffects = {
 
     // Penetration modifiers
     calculateQualityPenetrationModifiers,
+
+    // Exotic quality handlers (Phase 4)
+    calculateExoticQualityDamageModifiers,
+    weaponIgnoresArmor,
+    getRighteousFuryThreshold,
+    checkRighteousFury,
 
     // Display helpers
     getWeaponQualitySummary,

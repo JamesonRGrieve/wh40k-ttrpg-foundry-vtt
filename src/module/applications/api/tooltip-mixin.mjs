@@ -3,13 +3,14 @@
  * Works with TooltipsRT system for rich tooltip display
  */
 
-import { 
-    prepareCharacteristicTooltipData, 
+import {
+    prepareCharacteristicTooltipData,
     prepareSkillTooltipData,
     prepareArmorTooltipData,
     prepareWeaponTooltipData,
-    prepareModifierTooltipData
-} from "../components/rt-tooltip.mjs";
+    prepareModifierTooltipData,
+    prepareQualityTooltipData,
+} from '../components/rt-tooltip.mjs';
 
 /**
  * Mixin to add rich tooltip data preparation helpers to sheets.
@@ -83,6 +84,18 @@ export default function TooltipMixin(Base) {
          */
         prepareModifierTooltip(title, sources) {
             return prepareModifierTooltipData(title, sources);
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Prepare weapon quality tooltip data.
+         * @param {string} identifier  Quality identifier (e.g., "tearing", "blast-5").
+         * @param {number} [level]     Optional quality level.
+         * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+         */
+        prepareQualityTooltip(identifier, level = null) {
+            return prepareQualityTooltipData(identifier, level);
         }
     };
 }

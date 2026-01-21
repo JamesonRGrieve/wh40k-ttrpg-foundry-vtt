@@ -13,30 +13,20 @@
     background: linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(30, 30, 30, 0.98) 100%);
     border: 2px solid var(--rt-bronze, #cd7f32);
     border-radius: 4px;
-    box-shadow:
-        0 8px 16px rgba(0, 0, 0, 0.8),
-        0 0 30px rgba(212, 175, 55, 0.3),
-        inset 0 1px 0 rgba(212, 175, 55, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(212, 175, 55, 0.2);
     color: var(--rt-bone, #e8dcc8);
-    font-family: var(--rt-font-body, "Garamond", serif);
+    font-family: var(--rt-font-body, 'Garamond', serif);
     font-size: 0.9rem;
 
     // Parchment texture overlay
     &::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background:
-            repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(212, 175, 55, 0.03) 2px,
-                rgba(212, 175, 55, 0.03) 4px
-            );
+        background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(212, 175, 55, 0.03) 2px, rgba(212, 175, 55, 0.03) 4px);
         pointer-events: none;
         border-radius: 4px;
         z-index: -1;
@@ -53,7 +43,7 @@
 
         .rt-tooltip__title {
             margin: 0;
-            font-family: var(--rt-font-header, "Caslon Antique", serif);
+            font-family: var(--rt-font-header, 'Caslon Antique', serif);
             font-size: 1.1rem;
             font-weight: bold;
             color: var(--rt-gold, #d4af37);
@@ -363,6 +353,76 @@
 #tooltip.rt-tooltip--weapon {
     .rt-tooltip__header {
         background: linear-gradient(135deg, rgba(178, 34, 34, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%);
+    }
+}
+
+#tooltip.rt-tooltip--quality {
+    .rt-tooltip__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(143, 76, 38, 0.25) 100%);
+    }
+
+    .rt-tooltip__title {
+        flex: 1;
+    }
+
+    .rt-tooltip__badge {
+        padding: 4px 8px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        border-radius: 3px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(246, 208, 163, 0.9);
+        white-space: nowrap;
+
+        &--simple-modifier {
+            border-color: rgba(74, 132, 72, 0.4);
+            color: rgba(178, 234, 176, 0.9);
+        }
+
+        &--damage-modifier {
+            border-color: rgba(182, 62, 46, 0.4);
+            color: rgba(246, 151, 139, 0.9);
+        }
+    }
+
+    .rt-tooltip__info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: rgba(212, 175, 55, 0.08);
+        border-left: 2px solid rgba(212, 175, 55, 0.4);
+        border-radius: 2px;
+        font-size: 0.75rem;
+        color: rgba(240, 232, 220, 0.85);
+
+        i {
+            color: var(--rt-gold);
+        }
+    }
+
+    .rt-tooltip__source-ref {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(212, 175, 55, 0.15);
+        font-size: 0.7rem;
+        font-style: italic;
+        color: rgba(246, 208, 163, 0.7);
+
+        i {
+            font-size: 0.8rem;
+            color: var(--rt-gold);
+        }
     }
 }
 

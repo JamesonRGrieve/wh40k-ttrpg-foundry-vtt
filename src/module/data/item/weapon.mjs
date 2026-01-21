@@ -97,6 +97,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                     uuid: new fields.StringField({ required: true }),
                     name: new fields.StringField({ required: true }),
                     active: new fields.BooleanField({ required: true, initial: true }),
+                    category: new fields.StringField({ required: false, initial: 'accessory' }),
                     // Cached modifier values for display and aggregation
                     cachedModifiers: new fields.SchemaField(
                         {
