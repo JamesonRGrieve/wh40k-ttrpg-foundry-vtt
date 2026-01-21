@@ -11,7 +11,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class ShipComponentSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["ship-component"],
+        classes: ["rogue-trader", "sheet", "item", "ship-component"],
         position: {
             width: 600,
             height: 700

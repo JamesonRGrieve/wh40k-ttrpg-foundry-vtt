@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class PeerEnemySheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["peer-enemy"],
+        classes: ["rogue-trader", "sheet", "item", "peer-enemy"],
         position: {
             width: 500,
             height: 380

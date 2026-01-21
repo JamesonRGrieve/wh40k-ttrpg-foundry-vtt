@@ -11,7 +11,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class SkillSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["skill"],
+        classes: ["rogue-trader", "sheet", "item", "skill"],
         position: {
             width: 600,
             height: 700

@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class TraitSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["trait"],
+        classes: ["rogue-trader", "sheet", "item", "trait"],
         position: {
             width: 600,
             height: 720

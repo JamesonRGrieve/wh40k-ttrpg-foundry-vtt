@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class ForceFieldSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["force-field"],
+        classes: ["rogue-trader", "sheet", "item", "force-field"],
         position: {
             width: 540,
             height: 620
