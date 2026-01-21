@@ -17,6 +17,16 @@
         {{!-- Main Display: Star Pips Only --}}
         <div class="rt-fate-display-compact">
 
+            {{!-- Stat Breakdown Button --}}
+            <button 
+                type="button" 
+                class="rt-stat-breakdown-btn rt-stat-breakdown-btn--compact"
+                data-action="showStatBreakdown"
+                data-stat-key="fate"
+                title="Show fate calculation">
+                <i class="fa-solid fa-calculator"></i>
+            </button>
+
             {{!-- Star Pip Display --}}
             <div class="rt-fate-pips-compact">
                 {{#if (gt system.fate.max 0)}}

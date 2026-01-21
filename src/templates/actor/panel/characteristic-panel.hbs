@@ -17,6 +17,14 @@
                         data-rt-tooltip="characteristic"
                         data-rt-tooltip-data="{{this.tooltipData}}"
                     >{{this.short}}</span>
+                    <button 
+                        type="button" 
+                        class="rt-stat-breakdown-btn"
+                        data-action="showStatBreakdown"
+                        data-stat-key="{{name}}"
+                        title="Show stat breakdown">
+                        <i class="fa-solid fa-calculator"></i>
+                    </button>
                     <span class="rt-char-total" title="Current total">{{this.total}}</span>
                 </summary>
                 <div class="rt-char-controls">

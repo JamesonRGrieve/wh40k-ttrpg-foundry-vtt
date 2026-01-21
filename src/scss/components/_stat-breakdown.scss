@@ -157,6 +157,53 @@
 // ============================================
 // Style for elements that can show breakdowns
 
+.rt-stat-breakdown-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: var(--color-text-secondary, #94a3b8);
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.6;
+
+    i {
+        font-size: 0.75rem;
+    }
+
+    &:hover {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    &--inline {
+        margin-left: 4px;
+    }
+
+    &--compact {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 10;
+    }
+
+    &--tiny {
+        width: 16px;
+        height: 16px;
+
+        i {
+            font-size: 0.65rem;
+        }
+    }
+}
+
 [data-stat-breakdown],
 [data-action='showStatBreakdown'] {
     position: relative;
