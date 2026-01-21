@@ -98,6 +98,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
             dh: CONFIG.rt || ROGUE_TRADER,
             isEditable: this.isEditable,
             editable: this.isEditable, // Alias for template compatibility with {{editor}} helper
+            owner: this.item.isOwner, // Required for {{editor}} helper
             rollableClass: this.isEditable ? 'rollable' : '',
             // Tab state
             tabs: this._getTabs(),
