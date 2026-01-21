@@ -264,7 +264,11 @@
             <h3>Mechanical Effect</h3>
           </div>
           <div class="rt-gear-section__body rt-gear-section__body--editor">
-            {{editor content=system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
+            {{#if inEditMode}}
+            {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.effect}}}</div>
+            {{/if}}
           </div>
         </div>
 
@@ -275,7 +279,11 @@
             <h3>Description</h3>
           </div>
           <div class="rt-gear-section__body rt-gear-section__body--editor">
-            {{editor content=system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+            {{#if inEditMode}}
+            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.description.value}}}</div>
+            {{/if}}
           </div>
         </div>
 

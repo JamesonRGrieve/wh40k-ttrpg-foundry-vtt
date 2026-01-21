@@ -76,9 +76,13 @@
                     <h3><i class="fas fa-magic"></i> Effect</h3>
                 </div>
                 <div class="rt-panel__content">
+                    {{#if inEditMode}}
                     <div class="rt-editor-container">
                         {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
                     </div>
+                    {{else}}
+                    <div class="rt-description-content">{{{system.effect}}}</div>
+                    {{/if}}
                 </div>
             </div>
         </div>
@@ -90,8 +94,18 @@
                     <h3><i class="fas fa-scroll"></i> Description</h3>
                 </div>
                 <div class="rt-panel__content">
+                    {{#if inEditMode}}
                     <div class="rt-editor-container">
                         {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+                    </div>
+                    {{else}}
+                    <div class="rt-description-content">{{{system.description.value}}}</div>
+                    {{/if}}
+                </div>
+            </div>
+                <div class="rt-panel__content">
+                    <div class="rt-editor-container">
+                        {{editor content=system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
                     </div>
                 </div>
             </div>
