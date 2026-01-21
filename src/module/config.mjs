@@ -1027,6 +1027,11 @@ ROGUE_TRADER.weaponQualities = {
         description: 'RT.WeaponQuality.UnstableDesc',
         hasLevel: false,
     },
+    'volatile': {
+        label: 'RT.WeaponQuality.Volatile',
+        description: 'RT.WeaponQuality.VolatileDesc',
+        hasLevel: false,
+    },
     'integrated-weapon': {
         label: 'RT.WeaponQuality.IntegratedWeapon',
         description: 'RT.WeaponQuality.IntegratedWeaponDesc',

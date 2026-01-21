@@ -1,63 +1,61 @@
 {
-  "name": "Dark Eldar Mindphase Gauntlet",
-  "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
-  "system": {
-    "identifier": "dark-eldar-mindphase-gauntlet",
-    "class": "melee",
-    "type": "exotic",
-    "twoHanded": false,
-    "melee": true,
-    "attack": {
-      "type": "melee",
-      "characteristic": "weaponSkill",
-      "modifier": 0,
-      "range": {
-        "value": 0,
-        "units": "m",
-        "special": ""
-      },
-      "rateOfFire": {
-        "single": false,
-        "semi": 0,
-        "full": 0
-      }
+    "name": "Dark Eldar Mindphase Gauntlet",
+    "type": "weapon",
+    "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+    "system": {
+        "identifier": "dark-eldar-mindphase-gauntlet",
+        "class": "melee",
+        "type": "exotic",
+        "twoHanded": false,
+        "melee": true,
+        "attack": {
+            "type": "melee",
+            "characteristic": "weaponSkill",
+            "modifier": 0,
+            "range": {
+                "value": 0,
+                "units": "m",
+                "special": ""
+            },
+            "rateOfFire": {
+                "single": false,
+                "semi": 0,
+                "full": 0
+            }
+        },
+        "damage": {
+            "formula": "1d10",
+            "type": "impact",
+            "bonus": 0,
+            "penetration": 0
+        },
+        "special": [],
+        "clip": {
+            "max": 0,
+            "value": 0,
+            "type": ""
+        },
+        "reload": "-",
+        "weight": 4,
+        "availability": "unique",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Special:</b> None</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creatures hit by this must make +0 Strength Test and +0 Willpower Test, failing either or both causes creature gain 1 fatigue and be stunned for 1 round per combined DoF. </p>"
+        },
+        "modifications": [],
+        "notes": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creatures hit by this must make +0 Strength Test and +0 Willpower Test, failing either or both causes creature gain 1 fatigue and be stunned for 1 round per combined DoF. ",
+        "source": "RT: The Soul Reaver",
+        "requiredTraining": ""
     },
-    "damage": {
-      "formula": "1d10",
-      "type": "impact",
-      "bonus": 0,
-      "penetration": 0
-    },
-    "special": [
-      "-"
-    ],
-    "clip": {
-      "max": 0,
-      "value": 0,
-      "type": ""
-    },
-    "reload": "-",
-    "weight": 4,
-    "availability": "unique",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 0,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Special:</b> -</p><p><b>Note:</b> Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creatures hit by this must make +0 Strength Test and +0 Willpower Test, failing either or both causes creature gain 1 fatigue and be stunned for 1 round per combined DoF. </p>"
-    },
-    "modifications": [],
-    "notes": "Very Rare Availability if acquired from Dark Eldar Settlement, may not be acquirable elsewhere. Creatures hit by this must make +0 Strength Test and +0 Willpower Test, failing either or both causes creature gain 1 fatigue and be stunned for 1 round per combined DoF. ",
-    "source": "RT: The Soul Reaver",
-    "requiredTraining": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "fIEmLmK2dWumUH4H"
+    "effects": [],
+    "flags": {},
+    "_id": "fIEmLmK2dWumUH4H"
 }

@@ -1,66 +1,61 @@
 {
-  "name": "Bulkhead Shears (alt.)",
-  "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
-  "system": {
-    "identifier": "bulkhead-shears-alt",
-    "class": "melee",
-    "type": "primitive",
-    "twoHanded": false,
-    "melee": true,
-    "attack": {
-      "type": "melee",
-      "characteristic": "weaponSkill",
-      "modifier": 0,
-      "range": {
-        "value": 0,
-        "units": "m",
-        "special": ""
-      },
-      "rateOfFire": {
-        "single": false,
-        "semi": 0,
-        "full": 0
-      }
+    "name": "Bulkhead Shears (alt.)",
+    "type": "weapon",
+    "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+    "system": {
+        "identifier": "bulkhead-shears-alt",
+        "class": "melee",
+        "type": "primitive",
+        "twoHanded": false,
+        "melee": true,
+        "attack": {
+            "type": "melee",
+            "characteristic": "weaponSkill",
+            "modifier": 0,
+            "range": {
+                "value": 0,
+                "units": "m",
+                "special": ""
+            },
+            "rateOfFire": {
+                "single": false,
+                "semi": 0,
+                "full": 0
+            }
+        },
+        "damage": {
+            "formula": "2d10",
+            "type": "rending",
+            "bonus": 13,
+            "penetration": 6
+        },
+        "special": ["sm-wep", "tearing", "unwieldy"],
+        "clip": {
+            "max": 0,
+            "value": 0,
+            "type": ""
+        },
+        "reload": "-",
+        "weight": 10,
+        "availability": "very-rare",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 17,
+            "currency": "renown"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Special:</b> Space Marine Weapon, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted and consisting of two adamantine blades powered by hydraulics. Useful for cutting through objects and people.</p>"
+        },
+        "modifications": [],
+        "notes": "Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted and consisting of two adamantine blades powered by hydraulics. Useful for cutting through objects and people.",
+        "source": "DW: Errata",
+        "requiredTraining": ""
     },
-    "damage": {
-      "formula": "2d10",
-      "type": "rending",
-      "bonus": 13,
-      "penetration": 6
-    },
-    "special": [
-      "sm",
-      "wep",
-      "tearing",
-      "unwieldy"
-    ],
-    "clip": {
-      "max": 0,
-      "value": 0,
-      "type": ""
-    },
-    "reload": "-",
-    "weight": 10,
-    "availability": "very-rare",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 17,
-      "currency": "renown"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Special:</b> SM, Wep, Tearing, Unwieldy</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted and consisting of two adamantine blades powered by hydraulics. Useful for cutting through objects and people.</p>"
-    },
-    "modifications": [],
-    "notes": "Space Marines Only, not easily acquirable. Two-Handed and Harness Mounted and consisting of two adamantine blades powered by hydraulics. Useful for cutting through objects and people.",
-    "source": "DW: Errata",
-    "requiredTraining": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "2XqqHM0Tr2hLtRdE"
+    "effects": [],
+    "flags": {},
+    "_id": "2XqqHM0Tr2hLtRdE"
 }

@@ -1,0 +1,99 @@
+{
+  "summary": {
+    "totalPackQualities": 128,
+    "totalConfigQualities": 74,
+    "typosFound": 0,
+    "missingInConfig": 0,
+    "invalidFormats": 0,
+    "validLeveled": 76,
+    "unusedInPacks": 15,
+    "otherMismatches": 0
+  },
+  "critical": {
+    "typos": [],
+    "invalidLevelFormats": [],
+    "missingInConfig": [],
+    "mismatches": []
+  },
+  "info": {
+    "unusedInPacks": [
+      "unreliable-2",
+      "shock",
+      "bolt",
+      "chain",
+      "las",
+      "plasma",
+      "power",
+      "grenade",
+      "launcher",
+      "lance",
+      "irradiated",
+      "reactive",
+      "customised",
+      "sp",
+      "never-jam"
+    ],
+    "validLeveledSample": [
+      {
+        "packQuality": "blast-1",
+        "base": "blast",
+        "level": 1,
+        "usage": 19
+      },
+      {
+        "packQuality": "blast-10",
+        "base": "blast",
+        "level": 10,
+        "usage": 15
+      },
+      {
+        "packQuality": "blast-12",
+        "base": "blast",
+        "level": 12,
+        "usage": 1
+      },
+      {
+        "packQuality": "blast-15",
+        "base": "blast",
+        "level": 15,
+        "usage": 1
+      },
+      {
+        "packQuality": "blast-2",
+        "base": "blast",
+        "level": 2,
+        "usage": 27
+      },
+      {
+        "packQuality": "blast-3",
+        "base": "blast",
+        "level": 3,
+        "usage": 31
+      },
+      {
+        "packQuality": "blast-4",
+        "base": "blast",
+        "level": 4,
+        "usage": 15
+      },
+      {
+        "packQuality": "blast-5",
+        "base": "blast",
+        "level": 5,
+        "usage": 23
+      },
+      {
+        "packQuality": "blast-6",
+        "base": "blast",
+        "level": 6,
+        "usage": 5
+      },
+      {
+        "packQuality": "blast-8",
+        "base": "blast",
+        "level": 8,
+        "usage": 1
+      }
+    ]
+  }
+}

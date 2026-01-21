@@ -1,64 +1,61 @@
 {
-  "name": "Tyranid Heavy Venom Cannon (alt.)",
-  "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
-  "system": {
-    "identifier": "tyranid-heavy-venom-cannon-alt",
-    "class": "heavy",
-    "type": "exotic",
-    "twoHanded": true,
-    "melee": false,
-    "attack": {
-      "type": "ranged",
-      "characteristic": "ballisticSkill",
-      "modifier": 0,
-      "range": {
-        "value": 100,
-        "units": "m",
-        "special": ""
-      },
-      "rateOfFire": {
-        "single": true,
-        "semi": 0,
-        "full": 0
-      }
+    "name": "Tyranid Heavy Venom Cannon (alt.)",
+    "type": "weapon",
+    "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+    "system": {
+        "identifier": "tyranid-heavy-venom-cannon-alt",
+        "class": "heavy",
+        "type": "exotic",
+        "twoHanded": true,
+        "melee": false,
+        "attack": {
+            "type": "ranged",
+            "characteristic": "ballisticSkill",
+            "modifier": 0,
+            "range": {
+                "value": 100,
+                "units": "m",
+                "special": ""
+            },
+            "rateOfFire": {
+                "single": true,
+                "semi": 0,
+                "full": 0
+            }
+        },
+        "damage": {
+            "formula": "4d10",
+            "type": "impact",
+            "bonus": 10,
+            "penetration": 6
+        },
+        "special": ["living-ammunition", "toxic-1", "blast-5"],
+        "clip": {
+            "max": 0,
+            "value": 0,
+            "type": ""
+        },
+        "reload": "-",
+        "weight": 0,
+        "availability": "common",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Special:</b> Living Ammunition Toxic (1d10), Blast (5)</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.</p>"
+        },
+        "modifications": [],
+        "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.",
+        "source": "DW: Core Rulebook",
+        "requiredTraining": ""
     },
-    "damage": {
-      "formula": "4d10",
-      "type": "impact",
-      "bonus": 10,
-      "penetration": 6
-    },
-    "special": [
-      "living-ammunition-toxic",
-      "blast-5"
-    ],
-    "clip": {
-      "max": 0,
-      "value": 0,
-      "type": ""
-    },
-    "reload": "-",
-    "weight": 0,
-    "availability": "common",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 0,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Special:</b> Living Ammunition Toxic (1d10), Blast (5)</p><p><b>Note:</b> Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.</p>"
-    },
-    "modifications": [],
-    "notes": "Can only be wielded by Tyranids, weapon usually dies when the tyranid it is fused to dies.",
-    "source": "DW: Core Rulebook",
-    "requiredTraining": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "rh1RBhO590yH4hN4"
+    "effects": [],
+    "flags": {},
+    "_id": "rh1RBhO590yH4hN4"
 }
