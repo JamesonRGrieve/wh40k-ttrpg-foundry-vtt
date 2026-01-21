@@ -1,182 +1,219 @@
-{{!-- Modern Critical Injury Sheet --}}
-<form class="rt-item-sheet rt-injury-sheet" autocomplete="off">
-  
-  {{!-- Header with Image and Title --}}
-  <div class="rt-item-sheet__header">
-    <div class="rt-item-sheet__image-wrapper">
-      <img class="rt-item-sheet__image" 
-           src="{{item.img}}" 
-           data-edit="img" 
-           alt="{{item.name}}" 
-           title="{{item.name}}" />
-      <i class="fas {{item.system.damageTypeIcon}} rt-damage-icon"></i>
-    </div>
+{{!-- 
+  Rogue Trader Critical Injury Item Sheet - V2 Redesign
+  Matches weapon/armour sheet patterns with modern ApplicationV2 structure
+--}}
+<div class="rt-critical-injury-sheet">
+  <form autocomplete="off">
     
-    <div class="rt-item-sheet__title-area">
-      <input class="rt-item-sheet__name-input" 
-             name="name" 
-             type="text" 
-             value="{{item.name}}" 
-             placeholder="Injury Name" />
-      
-      <div class="rt-injury-badges">
-        <span class="rt-badge rt-badge--{{item.system.severityClass}}">
-          {{item.system.severityLabel}}
-        </span>
-        {{#if item.system.permanent}}
-        <span class="rt-badge rt-badge--permanent">
-          <i class="fas fa-infinity"></i> {{localize "RT.CriticalInjury.Permanent"}}
-        </span>
-        {{/if}}
-      </div>
-    </div>
-  </div>
-  
-  {{!-- Main Panel - Injury Details --}}
-  <div class="rt-item-sheet__panel">
-    <div class="rt-injury-grid">
-      
-      {{!-- Damage Type --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Compact injury identity with inline stats
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="rt-injury-header">
+      <div class="rt-injury-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="rt-injury-header__image-overlay">
           <i class="fas {{item.system.damageTypeIcon}}"></i>
-          {{localize "RT.CriticalInjury.DamageType"}}
-        </label>
-        <select class="rt-field__select" name="system.damageType" data-dtype="String">
-          {{#select item.system.damageType}}
-          <option value="impact">{{localize "RT.DamageType.Impact"}}</option>
-          <option value="rending">{{localize "RT.DamageType.Rending"}}</option>
-          <option value="explosive">{{localize "RT.DamageType.Explosive"}}</option>
-          <option value="energy">{{localize "RT.DamageType.Energy"}}</option>
-          {{/select}}
-        </select>
+        </div>
       </div>
       
-      {{!-- Body Part --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
-          <i class="fas {{item.system.bodyPartIcon}}"></i>
-          {{localize "RT.CriticalInjury.BodyPart"}}
-        </label>
-        <select class="rt-field__select" name="system.bodyPart" data-dtype="String">
-          {{#select item.system.bodyPart}}
-          <option value="head">{{localize "RT.BodyPart.Head"}}</option>
-          <option value="arm">{{localize "RT.BodyPart.Arm"}}</option>
-          <option value="body">{{localize "RT.BodyPart.Body"}}</option>
-          <option value="leg">{{localize "RT.BodyPart.Leg"}}</option>
-          {{/select}}
-        </select>
+      <div class="rt-injury-header__info">
+        <input type="text" class="rt-injury-header__name" name="name" value="{{item.name}}" placeholder="Critical Injury Name" />
+        
+        <div class="rt-injury-header__meta">
+          <span class="rt-injury-badge rt-injury-badge--damage rt-injury-badge--{{item.system.damageType}}" title="Damage Type">
+            <i class="fas {{item.system.damageTypeIcon}}"></i>
+            {{item.system.damageTypeLabel}}
+          </span>
+          <span class="rt-injury-badge rt-injury-badge--location" title="Body Location">
+            <i class="fas {{item.system.bodyPartIcon}}"></i>
+            {{item.system.bodyPartLabel}}
+          </span>
+          <span class="rt-injury-badge rt-injury-badge--severity rt-injury-badge--{{item.system.severityClass}}" title="Severity Level">
+            <i class="fas fa-chart-line"></i>
+            Severity {{item.system.severity}}
+          </span>
+          {{#if item.system.permanent}}
+          <span class="rt-injury-badge rt-injury-badge--permanent" title="Permanent Injury">
+            <i class="fas fa-infinity"></i>
+            Permanent
+          </span>
+          {{/if}}
+        </div>
       </div>
-      
-      {{!-- Severity --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
-          <i class="fas fa-chart-line"></i>
-          {{localize "RT.CriticalInjury.Severity"}}
-        </label>
-        <input class="rt-field__input" 
-               type="number" 
+    </header>
+
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         SEVERITY INDICATOR: Visual slider showing severity 1-10
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-injury-severity">
+      <div class="rt-injury-severity__header">
+        <i class="fas fa-chart-line"></i>
+        <span>Severity Level</span>
+      </div>
+      <div class="rt-injury-severity__slider">
+        <input type="range" 
                name="system.severity" 
-               value="{{item.system.severity}}" 
                min="1" 
-               max="10"
-               data-dtype="Number" />
+               max="10" 
+               value="{{item.system.severity}}" 
+               data-dtype="Number"
+               class="rt-injury-severity__input" />
+        <div class="rt-injury-severity__labels">
+          <span class="rt-injury-severity__label rt-injury-severity__label--min">Minor (1)</span>
+          <span class="rt-injury-severity__label rt-injury-severity__label--current">
+            <strong>{{item.system.severity}}</strong>
+          </span>
+          <span class="rt-injury-severity__label rt-injury-severity__label--max">Fatal (10)</span>
+        </div>
+        <div class="rt-injury-severity__zones">
+          <span class="rt-injury-severity__zone rt-injury-severity__zone--minor" title="Minor (1-3)"></span>
+          <span class="rt-injury-severity__zone rt-injury-severity__zone--moderate" title="Moderate (4-6)"></span>
+          <span class="rt-injury-severity__zone rt-injury-severity__zone--severe" title="Severe (7-9)"></span>
+          <span class="rt-injury-severity__zone rt-injury-severity__zone--fatal" title="Fatal (10)"></span>
+        </div>
       </div>
-      
-      {{!-- Permanent Checkbox --}}
-      <div class="rt-field rt-field--checkbox">
-        <label class="rt-field__label">
-          <input type="checkbox" 
-                 name="system.permanent" 
-                 {{checked item.system.permanent}} />
-          <span>{{localize "RT.CriticalInjury.Permanent"}}</span>
-        </label>
-      </div>
     </div>
-  </div>
-  
-  {{!-- Effect Description (Rich HTML) --}}
-  <div class="rt-item-sheet__panel">
-    <div class="rt-field">
-      <label class="rt-field__label">
-        <i class="fas fa-file-medical"></i>
-        {{localize "RT.CriticalInjury.Effect"}}
-      </label>
-      {{#if inEditMode}}
-      {{editor content=system.effect 
-               target="system.effect" 
-               button=true 
-               editable=true 
-               engine="prosemirror"}}
-      {{else}}
-      <div class="rt-description-content">{{{system.effect}}}</div>
-      {{/if}}
-    </div>
-  </div>
-  
-  {{!-- Notes Field --}}
-  <div class="rt-item-sheet__panel">
-    <div class="rt-field">
-      <label class="rt-field__label">
-        <i class="fas fa-sticky-note"></i>
-        {{localize "RT.CriticalInjury.Notes"}}
-      </label>
-      <textarea class="rt-field__textarea" 
-                name="system.notes" 
-                rows="3"
-                placeholder="Additional notes...">{{item.system.notes}}</textarea>
-    </div>
-  </div>
-  
-  {{!-- Source Reference --}}
-  <div class="rt-item-sheet__panel rt-source-panel">
-    <div class="rt-field">
-      <label class="rt-field__label">
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="rt-tabs rt-tabs--injury rt-injury-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-injury-tab active" data-tab="details" data-group="primary">
+        <i class="fas fa-info-circle"></i>
+        <span>Details</span>
+      </button>
+      <button type="button" class="rt-tab rt-injury-tab" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
-        Source Book
-      </label>
-      <input class="rt-field__input" 
-             name="system.source.book" 
-             type="text" 
-             value="{{system.source.book}}" 
-             placeholder="Rogue Trader Core" />
+        <span>Description</span>
+      </button>
+    </nav>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-injury-content rt-tab-content rt-tab-content--injury scrollable">
+      
+      {{!-- DETAILS TAB --}}
+      <div class="rt-injury-panel tab active" data-tab="details" data-group="primary">
+        
+        {{!-- Basic Properties --}}
+        <div class="rt-injury-section">
+          <div class="rt-injury-section__header">
+            <i class="fas fa-cog"></i>
+            <h3>Injury Properties</h3>
+          </div>
+          <div class="rt-injury-section__body">
+            <div class="rt-field-grid rt-field-grid--2col">
+              <div class="rt-field">
+                <label>Damage Type</label>
+                <select name="system.damageType">
+                  <option value="impact" {{#if (eq item.system.damageType "impact")}}selected{{/if}}>Impact</option>
+                  <option value="rending" {{#if (eq item.system.damageType "rending")}}selected{{/if}}>Rending</option>
+                  <option value="explosive" {{#if (eq item.system.damageType "explosive")}}selected{{/if}}>Explosive</option>
+                  <option value="energy" {{#if (eq item.system.damageType "energy")}}selected{{/if}}>Energy</option>
+                </select>
+              </div>
+              <div class="rt-field">
+                <label>Body Location</label>
+                <select name="system.bodyPart">
+                  <option value="head" {{#if (eq item.system.bodyPart "head")}}selected{{/if}}>Head</option>
+                  <option value="arm" {{#if (eq item.system.bodyPart "arm")}}selected{{/if}}>Arm</option>
+                  <option value="body" {{#if (eq item.system.bodyPart "body")}}selected{{/if}}>Body</option>
+                  <option value="leg" {{#if (eq item.system.bodyPart "leg")}}selected{{/if}}>Leg</option>
+                </select>
+              </div>
+              <div class="rt-field">
+                <label>Severity (1-10)</label>
+                <input type="number" name="system.severity" value="{{item.system.severity}}" 
+                       data-dtype="Number" min="1" max="10" />
+              </div>
+              <div class="rt-field rt-field--checkbox">
+                <label>
+                  <input type="checkbox" name="system.permanent" {{checked item.system.permanent}} />
+                  <span>Permanent Injury</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Effect --}}
+        <div class="rt-injury-section">
+          <div class="rt-injury-section__header">
+            <i class="fas fa-file-medical"></i>
+            <h3>Injury Effect</h3>
+          </div>
+          <div class="rt-injury-section__body rt-injury-section__body--editor">
+            {{#if inEditMode}}
+            {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.effect}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Notes --}}
+        <div class="rt-injury-section">
+          <div class="rt-injury-section__header">
+            <i class="fas fa-sticky-note"></i>
+            <h3>GM Notes</h3>
+          </div>
+          <div class="rt-injury-section__body">
+            <textarea name="system.notes" rows="3" placeholder="Treatment details, duration, special circumstances...">{{item.system.notes}}</textarea>
+          </div>
+        </div>
+
+      </div>
+
+      {{!-- DESCRIPTION TAB --}}
+      <div class="rt-injury-panel tab" data-tab="description" data-group="primary">
+        
+        {{!-- Full Description --}}
+        <div class="rt-injury-section">
+          <div class="rt-injury-section__header">
+            <i class="fas fa-book"></i>
+            <h3>Description</h3>
+          </div>
+          <div class="rt-injury-section__body rt-injury-section__body--editor">
+            {{#if inEditMode}}
+            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+            {{else}}
+            <div class="rt-description-content">{{{system.description.value}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Source --}}
+        <div class="rt-injury-section">
+          <div class="rt-injury-section__header">
+            <i class="fas fa-book-open"></i>
+            <h3>Source</h3>
+          </div>
+          <div class="rt-injury-section__body">
+            <div class="rt-field-grid rt-field-grid--3col">
+              <div class="rt-field">
+                <label>Source Book</label>
+                <input type="text" name="system.source.book" value="{{system.source.book}}" 
+                       placeholder="Rogue Trader Core" />
+              </div>
+              <div class="rt-field">
+                <label>Page</label>
+                <input type="text" name="system.source.page" value="{{system.source.page}}" 
+                       placeholder="254" />
+              </div>
+              <div class="rt-field">
+                <label>Custom Reference</label>
+                <input type="text" name="system.source.custom" value="{{system.source.custom}}" 
+                       placeholder="Homebrew" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
-    
-    <div class="rt-field">
-      <label class="rt-field__label">Page</label>
-      <input class="rt-field__input rt-field__input--short" 
-             name="system.source.page" 
-             type="text" 
-             value="{{system.source.page}}" 
-             placeholder="254" />
-    </div>
-    
-    <div class="rt-field">
-      <label class="rt-field__label">Custom Reference</label>
-      <input class="rt-field__input" 
-             name="system.source.custom" 
-             type="text" 
-             value="{{system.source.custom}}" 
-             placeholder="Homebrew / Variant" />
-    </div>
-  </div>
-  
-  {{!-- Description (Legacy field for chat display) --}}
-  <div class="rt-item-sheet__panel">
-    <div class="rt-field">
-      <label class="rt-field__label">
-        <i class="fas fa-align-left"></i>
-        Description (for chat)
-      </label>
-      {{#if inEditMode}}
-      {{editor content=system.description.value 
-               target="system.description.value" 
-               button=true 
-               editable=true 
-               engine="prosemirror"}}
-      {{else}}
-      <div class="rt-description-content">{{{system.description.value}}}</div>
-      {{/if}}
-    </div>
-  </div>
-</form>
+
+  </form>
+</div>

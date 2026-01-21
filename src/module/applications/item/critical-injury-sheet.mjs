@@ -6,14 +6,15 @@ import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for critical injury items.
+ * Displays injury details with severity slider and body location visual.
  */
 export default class CriticalInjurySheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['rogue-trader', 'sheet', 'item', 'critical-injury'],
         position: {
-            width: 500,
-            height: 400,
+            width: 560,
+            height: 620,
         },
     };
 
@@ -41,4 +42,30 @@ export default class CriticalInjurySheet extends BaseItemSheet {
     tabGroups = {
         primary: 'details',
     };
+
+    /* -------------------------------------------- */
+    /*  Context Preparation                         */
+    /* -------------------------------------------- */
+
+    /** @override */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+
+        // Add injury-specific context
+        context.damageTypes = {
+            impact: 'Impact',
+            rending: 'Rending',
+            explosive: 'Explosive',
+            energy: 'Energy',
+        };
+
+        context.bodyParts = {
+            head: 'Head',
+            arm: 'Arm',
+            body: 'Body',
+            leg: 'Leg',
+        };
+
+        return context;
+    }
 }
