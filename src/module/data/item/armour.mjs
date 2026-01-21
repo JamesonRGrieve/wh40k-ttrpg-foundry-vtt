@@ -213,6 +213,23 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Modifications
+            modifications: new fields.ArrayField(
+                new fields.SchemaField({
+                    uuid: new fields.StringField({ required: true }),
+                    name: new fields.StringField({ required: true }),
+                    active: new fields.BooleanField({ required: true, initial: true }),
+                    cachedModifiers: new fields.SchemaField({
+                        armourPoints: new fields.NumberField({ required: false, integer: true }),
+                        maxAgility: new fields.NumberField({ required: false, integer: true }),
+                    }),
+                }),
+                { required: true, initial: [] },
+            ),
+
+            // Number of modification slots
+            modificationSlots: new fields.NumberField({ required: true, initial: 2, min: 0, max: 10, integer: true }),
         };
     }
 

@@ -1,0 +1,238 @@
+// ============================================
+// Item Sheet Shared Base Styles
+// ============================================
+// Base wrapper and common styles inherited by all item sheets
+
+// ────────────────────────────────────────────
+// CSS Variables (Item Sheets)
+// ────────────────────────────────────────────
+
+:root {
+    // Translucent backgrounds
+    --rt-item-panel-bg: rgba(20, 20, 30, 0.85);
+    --rt-item-panel-border: rgba(100, 100, 120, 0.3);
+    --rt-item-panel-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    // Stat colors
+    --rt-stat-positive: #4ade80;
+    --rt-stat-negative: #f87171;
+    --rt-stat-neutral: #94a3b8;
+
+    // Item type accent colors
+    --rt-weapon-accent: #ef4444;
+    --rt-armour-accent: #3b82f6;
+    --rt-gear-accent: #f59e0b;
+    --rt-talent-accent: #a855f7;
+    --rt-trait-accent: #ec4899;
+    --rt-condition-beneficial: #22c55e;
+    --rt-condition-harmful: #ef4444;
+    --rt-condition-neutral: #94a3b8;
+    --rt-skill-accent: #06b6d4;
+    --rt-cybernetic-accent: #64748b;
+    --rt-force-field-accent: #8b5cf6;
+
+    // Spacing
+    --rt-item-spacing-xs: 4px;
+    --rt-item-spacing-sm: 8px;
+    --rt-item-spacing-md: 12px;
+    --rt-item-spacing-lg: 16px;
+    --rt-item-spacing-xl: 24px;
+
+    // Border radius
+    --rt-item-radius-sm: 4px;
+    --rt-item-radius-md: 6px;
+    --rt-item-radius-lg: 8px;
+    --rt-item-radius-pill: 9999px;
+
+    // Typography
+    --rt-item-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --rt-item-font-size-xs: 0.75rem;
+    --rt-item-font-size-sm: 0.875rem;
+    --rt-item-font-size-base: 1rem;
+    --rt-item-font-size-lg: 1.125rem;
+    --rt-item-font-size-xl: 1.25rem;
+}
+
+// ────────────────────────────────────────────
+// Base Item Sheet Wrapper
+// ────────────────────────────────────────────
+
+.rt-item-sheet {
+    font-family: var(--rt-item-font-family);
+    font-size: var(--rt-item-font-size-base);
+    color: var(--color-text-primary, #e2e8f0);
+    background: var(--color-background-primary, #1e293b);
+
+    // Reset box-sizing
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        gap: 0;
+    }
+
+    // Scrollable content areas
+    .scrollable {
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(100, 100, 120, 0.4);
+            border-radius: 4px;
+
+            &:hover {
+                background: rgba(100, 100, 120, 0.6);
+            }
+        }
+    }
+
+    // Empty state text
+    .rt-empty-text {
+        color: var(--color-text-secondary, #94a3b8);
+        font-style: italic;
+        opacity: 0.7;
+    }
+}
+
+// ────────────────────────────────────────────
+// Common Section Styles
+// ────────────────────────────────────────────
+
+.rt-item-section,
+.rt-armour-section,
+.rt-weapon-section,
+.rt-talent-section {
+    margin-bottom: var(--rt-item-spacing-md);
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: var(--rt-item-spacing-sm);
+        padding: var(--rt-item-spacing-sm) var(--rt-item-spacing-md);
+        background: var(--rt-item-panel-bg);
+        border-bottom: 1px solid var(--rt-item-panel-border);
+
+        i {
+            opacity: 0.7;
+        }
+
+        h3 {
+            margin: 0;
+            font-size: var(--rt-item-font-size-base);
+            font-weight: 600;
+            flex: 1;
+        }
+    }
+
+    &__count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px 8px;
+        background: rgba(100, 100, 120, 0.3);
+        border-radius: var(--rt-item-radius-pill);
+        font-size: var(--rt-item-font-size-xs);
+        font-weight: 600;
+    }
+
+    &__body {
+        padding: var(--rt-item-spacing-md);
+        background: rgba(0, 0, 0, 0.1);
+
+        &--editor {
+            padding: var(--rt-item-spacing-sm);
+        }
+    }
+}
+
+// ────────────────────────────────────────────
+// Form Field Grid Layouts
+// ────────────────────────────────────────────
+
+.rt-field-grid {
+    display: grid;
+    gap: var(--rt-item-spacing-md);
+
+    &--2col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    &--3col {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    &--4col {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    // Responsive: collapse to single column on small screens
+    @media (max-width: 500px) {
+        &--2col,
+        &--3col,
+        &--4col {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+.rt-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-spacing-xs);
+
+    label {
+        font-size: var(--rt-item-font-size-sm);
+        font-weight: 500;
+        color: var(--color-text-secondary, #cbd5e1);
+
+        small {
+            font-weight: 400;
+            opacity: 0.7;
+        }
+    }
+
+    input[type='text'],
+    input[type='number'],
+    select,
+    textarea {
+        padding: 6px 10px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--rt-item-panel-border);
+        border-radius: var(--rt-item-radius-sm);
+        color: var(--color-text-primary, #e2e8f0);
+        font-family: inherit;
+        font-size: var(--rt-item-font-size-sm);
+        transition: border-color 0.2s, background 0.2s;
+
+        &:focus {
+            outline: none;
+            border-color: var(--color-accent, #3b82f6);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        &::placeholder {
+            color: var(--color-text-tertiary, #64748b);
+            opacity: 0.6;
+        }
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 60px;
+    }
+}

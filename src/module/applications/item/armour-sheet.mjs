@@ -73,6 +73,12 @@ export default class ArmourSheet extends ContainerItemSheet {
         // Convert coverage Set to array for template
         context.coverageArray = Array.from(this.item.system.coverage || []);
 
+        // Add propertiesArray for safe template access
+        context.propertiesArray = this.item.system.propertiesArray || [];
+
+        // Add modifications array for safe template access
+        context.modificationsArray = this.item.system.modifications || [];
+
         return context;
     }
 
