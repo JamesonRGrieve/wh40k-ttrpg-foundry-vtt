@@ -1,10 +1,8 @@
 import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.mjs';
 import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.mjs';
 import { getCriticalDamage } from '../rules/critical-damage.mjs';
-import {
-    calculateWeaponModifiersDamageBonuses,
-    calculateWeaponModifiersPenetrationBonuses,
-} from '../rules/weapon-modifiers.mjs';
+import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.mjs';
+import { calculateQualityPenetrationModifiers } from '../rules/weapon-quality-effects.mjs';
 
 export class DamageData {
     template = '';
@@ -65,7 +63,7 @@ export class Hit {
         }
 
         // Determine Righteous Fury Effects
-        for(const righteousFury of hit.righteousFury) {
+        for (const righteousFury of hit.righteousFury) {
             righteousFury.effect = getCriticalDamage(hit.damageType, hit.location, righteousFury.roll.total);
         }
 
@@ -96,18 +94,20 @@ export class Hit {
         }
 
         let rollFormula = actionItem.system.damage;
-        if(!rollFormula || rollFormula === '') {
+        if (!rollFormula || rollFormula === '') {
             rollFormula = 0;
         }
         this.damageRoll = new Roll(rollFormula, attackData.rollData);
 
         if (attackData.rollData.hasAttackSpecial('Tearing')) {
             game.rt.log('Modifying dice due to tearing');
-            this.damageRoll.terms.filter(term => term instanceof foundry.dice.terms.Die).forEach(die => {
-                if (die.modifiers.includes('kh')) return;
-                die.modifiers.push('kh' + die.number);
-                die.number += 1;
-            });
+            this.damageRoll.terms
+                .filter((term) => term instanceof foundry.dice.terms.Die)
+                .forEach((die) => {
+                    if (die.modifiers.includes('kh')) return;
+                    die.modifiers.push('kh' + die.number);
+                    die.number += 1;
+                });
         }
 
         await this.damageRoll.evaluate();
@@ -124,7 +124,7 @@ export class Hit {
                     // Righteous fury hit
                     const righteousFuryRoll = new Roll('1d5', {});
                     await righteousFuryRoll.evaluate();
-                    this.righteousFury.push({roll: righteousFuryRoll, effect: ''});
+                    this.righteousFury.push({ roll: righteousFuryRoll, effect: '' });
 
                     // DeathDealer
                     if (actionItem.isMelee) {
@@ -168,7 +168,6 @@ export class Hit {
                 const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
                 this.modifiers['deathdealer melee'] = Math.ceil(perBonus / 2);
             }
-
         } else if (actionItem.isRanged) {
             // Scatter
             if (attackData.rollData.hasAttackSpecial('Scatter')) {
@@ -243,7 +242,7 @@ export class Hit {
             this.penetration = rollFormula;
         } else if (rollFormula === '') {
             this.penetration = 0;
-        }  else {
+        } else {
             this.hasPenetrationRoll = true;
             try {
                 this.penetrationRoll = new Roll(rollFormula, attackData.rollData);
@@ -303,10 +302,10 @@ export class Hit {
         this.damageType = actionItem.system.damageType;
 
         if (attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
-            if(!attackData.rollData.attackSpecials.find(s => s.name === 'Concussive')) {
+            if (!attackData.rollData.attackSpecials.find((s) => s.name === 'Concussive')) {
                 attackData.rollData.attackSpecials.push({
                     name: 'Concussive',
-                    level: 2
+                    level: 2,
                 });
             }
         }
@@ -316,18 +315,29 @@ export class Hit {
         }
 
         for (const special of attackData.rollData.attackSpecials) {
-            switch(special.name.toLowerCase()) {
+            switch (special.name.toLowerCase()) {
                 case 'blast':
                     this.addEffect(special.name, `Everyone within ${special.level}m of the location is hit!`);
                     break;
                 case 'concussive':
-                    this.addEffect(special.name, `Target must pass Toughness test with ${special.level * -10} or be Stunned for 1 round per DoF. If the attack did more damage than the targets Strength Bonus, it is knocked Prone!`);
+                    this.addEffect(
+                        special.name,
+                        `Target must pass Toughness test with ${
+                            special.level * -10
+                        } or be Stunned for 1 round per DoF. If the attack did more damage than the targets Strength Bonus, it is knocked Prone!`,
+                    );
                     break;
                 case 'corrosive':
-                    this.addEffect(special.name, `The targets armor melts with [[1d10]] of armour being destroyed! Additional damage is dealt as wounds and not reduced by toughness.`);
+                    this.addEffect(
+                        special.name,
+                        `The targets armor melts with [[1d10]] of armour being destroyed! Additional damage is dealt as wounds and not reduced by toughness.`,
+                    );
                     break;
                 case 'crippling':
-                    this.addEffect(special.name, `If the target suffers a wound it is considered crippled. If they take more than a half action on a turn, they suffer ${special.level} damage not reduced by Armour or Toughness!`);
+                    this.addEffect(
+                        special.name,
+                        `If the target suffers a wound it is considered crippled. If they take more than a half action on a turn, they suffer ${special.level} damage not reduced by Armour or Toughness!`,
+                    );
                     break;
                 case 'felling':
                     this.addEffect(special.name, `The targets unnatural toughness is reduced by ${special.level} while calculating wounds!`);
@@ -349,18 +359,30 @@ export class Hit {
                     this.addEffect(special.name, `The attack deviates [[ 1d10 - ${bs}]]m (minimum of 0m) off course to the ${scatterDirection()}!`);
                     break;
                 case 'shocking':
-                    this.addEffect(special.name, `Target must pass a Challenging (+0) Toughness test. If he fails, he suffers 1 level of Fatigue and is Stunned for a number of rounds equal to half of his degrees of failure (rounding up).`);
+                    this.addEffect(
+                        special.name,
+                        `Target must pass a Challenging (+0) Toughness test. If he fails, he suffers 1 level of Fatigue and is Stunned for a number of rounds equal to half of his degrees of failure (rounding up).`,
+                    );
                     break;
                 case 'snare':
-                    this.addEffect(special.name, `Target must pass Agility test with ${special.level * -10} or become immobilised. An immobilised target can attempt no actions other than trying to escape. As a Full Action, they can make a Strength or Agility test with ${special.level * -10} to burst free or wriggle out.`);
+                    this.addEffect(
+                        special.name,
+                        `Target must pass Agility test with ${
+                            special.level * -10
+                        } or become immobilised. An immobilised target can attempt no actions other than trying to escape. As a Full Action, they can make a Strength or Agility test with ${
+                            special.level * -10
+                        } to burst free or wriggle out.`,
+                    );
                     break;
                 case 'toxic':
-                    this.addEffect(special.name, `Target must pass Toughness test with ${special.level * -10} or suffer [[1d10]] ${actionItem.system.damageType} damage.`);
+                    this.addEffect(
+                        special.name,
+                        `Target must pass Toughness test with ${special.level * -10} or suffer [[1d10]] ${actionItem.system.damageType} damage.`,
+                    );
                     break;
                 case 'warp':
                     this.addEffect(special.name, `Ignores mundane armor and cover! Holy armor negates this.`);
                     break;
-
             }
         }
     }
@@ -368,8 +390,8 @@ export class Hit {
     addEffect(name, effect) {
         this.effects.push({
             name: name,
-            effect: effect
-        })
+            effect: effect,
+        });
     }
 }
 

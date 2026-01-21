@@ -3,9 +3,9 @@ import { preparePsychicPowerRoll } from '../applications/prompts/psychic-power-d
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 import { SYSTEM_ID } from '../constants.mjs';
+import { calculateTokenDistance } from '../utils/range-calculator.mjs';
 
 export class TargetedActionManager {
-
     initializeHooks() {
         // Initialize Scene Control Buttons
         Hooks.on('getSceneControlButtons', (controls) => {
@@ -25,29 +25,14 @@ export class TargetedActionManager {
                     };
                 }
             } catch (error) {
-                game.rt.log('Unable to add game bar icon.', error)
+                game.rt.log('Unable to add game bar icon.', error);
             }
         });
     }
 
     tokenDistance(token1, token2) {
-        if (!token1 || !token2) return 0;
-
-        let distance = canvas.grid.measurePath([token1, token2]);
-        if (token1.document && token2.document) {
-            if (token1.document.elevation !== token2.document.elevation) {
-                let h_diff =
-                    token2.document.elevation > token1.document.elevation
-                        ? token2.document.elevation - token1.document.elevation
-                        : token1.document.elevation - token2.document.elevation;
-
-                return Math.floor(Math.sqrt(Math.pow(h_diff, 2) + Math.pow(distance.distance, 2)));
-            } else {
-                return Math.floor(distance.distance);
-            }
-        } else {
-            return 0;
-        }
+        // Use the new range calculator for consistent distance calculation
+        return calculateTokenDistance(token1, token2);
     }
 
     getSourceToken(source) {
@@ -59,7 +44,7 @@ export class TargetedActionManager {
             const controlledObjects = game.canvas.tokens.controlledObjects;
             if (!controlledObjects || controlledObjects.size === 0) {
                 ui.notifications.warn('You need to control a token!');
-                return
+                return;
             }
             if (controlledObjects.size > 1) {
                 ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
@@ -105,7 +90,7 @@ export class TargetedActionManager {
         // Source
         const sourceToken = this.getSourceToken(source);
         const sourceActorData = sourceToken ? sourceToken.actor : source;
-        if(!sourceActorData) return;
+        if (!sourceActorData) return;
 
         // Target
         const targetToken = this.getTargetToken(target);
