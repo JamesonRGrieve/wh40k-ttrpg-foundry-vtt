@@ -262,44 +262,6 @@ export class WeaponRollData extends RollData {
         await calculateWeaponRange(this);
         this.updateBaseTarget();
     }
-        this.canAim = this.action !== 'All Out Attack';
-        this.isLasWeapon = this.weapon.system.type === 'Las';
-        this.isSpray = this.hasAttackSpecial('Spray');
-        this.isStun = this.action === 'Stun';
-        this.isFeint = this.action === 'Feint';
-        this.isKnockDown = this.action === 'Knock Down';
-
-        this.ignoreModifiers = this.isSpray || this.isStun;
-        this.ignoreDegrees = this.isSpray || this.isStun;
-        this.ignoreSuccess = this.isSpray;
-        this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown;
-        this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown;
-        this.isThrown = this.weapon.isThrown;
-
-        this.isOpposed = this.isKnockDown || this.isFeint;
-        if (this.isOpposed && this.targetActor) {
-            if (this.isFeint) {
-                this.opposedTarget = this.targetActor?.characteristics?.weaponSkill?.total ?? 0;
-                this.opposedChar = 'WS';
-            } else if (this.isKnockDown) {
-                this.opposedTarget = this.targetActor?.characteristics?.strength?.total ?? 0;
-                this.opposedChar = 'S';
-            }
-        }
-
-        await updateWeaponModifiers(this);
-        await updateAttackSpecials(this);
-        updateAvailableCombatActions(this);
-        calculateCombatActionModifier(this);
-        if (this.weapon.usesAmmo) {
-            this.usesAmmo = true;
-            calculateAmmoInformation(this);
-        } else {
-            this.usesAmmo = false;
-        }
-        await calculateWeaponRange(this);
-        this.updateBaseTarget();
-    }
 
     initialize() {
         this.baseTarget = 0;
