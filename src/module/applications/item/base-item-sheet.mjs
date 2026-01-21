@@ -90,6 +90,7 @@ export default class BaseItemSheet extends PrimarySheetMixin(ApplicationV2Mixin(
             ...(await super._prepareContext(options)),
             item: this.item,
             data: this.item, // Legacy compatibility
+            document: this.item, // Required for V13 {{editor}} helper
             system: this.item.system,
             source: this.isEditable ? this.item.system._source : this.item.system,
             fields: this.item.system.schema?.fields ?? {},
