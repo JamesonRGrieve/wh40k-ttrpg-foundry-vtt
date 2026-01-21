@@ -1,0 +1,255 @@
+/**
+ * Active Modifiers Panel
+ * Shows all active modifiers affecting the character
+ */
+
+.rt-panel--modifiers {
+    margin-bottom: 16px;
+}
+
+.rt-modifier-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: rgba(168, 85, 247, 0.2);
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #a855f7;
+}
+
+/* Modifiers List */
+.rt-modifiers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Modifier Group */
+.rt-modifier-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rt-modifier-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--rt-text-secondary, rgba(255, 255, 255, 0.8));
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    i {
+        font-size: 1.1em;
+        opacity: 0.8;
+    }
+}
+
+/* Modifier Item */
+.rt-modifier-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid transparent;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.3);
+        transform: translateX(2px);
+    }
+
+    // Type-specific border colors
+    &--condition {
+        border-left-color: rgba(245, 158, 11, 0.6);
+
+        &.rt-modifier-item--harmful {
+            border-left-color: rgba(239, 68, 68, 0.6);
+        }
+
+        &.rt-modifier-item--beneficial {
+            border-left-color: rgba(34, 197, 94, 0.6);
+        }
+    }
+
+    &--talent {
+        border-left-color: rgba(168, 85, 247, 0.6);
+    }
+
+    &--trait {
+        border-left-color: rgba(59, 130, 246, 0.6);
+    }
+
+    &--equipment {
+        border-left-color: rgba(100, 116, 139, 0.6);
+    }
+
+    &--effect {
+        border-left-color: rgba(236, 72, 153, 0.6);
+    }
+
+    // Inactive state
+    &--inactive {
+        opacity: 0.5;
+
+        .rt-modifier-item-name {
+            text-decoration: line-through;
+        }
+    }
+}
+
+.rt-modifier-item-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid var(--rt-panel-border, rgba(255, 255, 255, 0.1));
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.rt-modifier-item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0; // Allow text truncation
+}
+
+.rt-modifier-item-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--rt-text-primary, #fff);
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover {
+        color: var(--rt-accent, #fbbf24);
+    }
+}
+
+.rt-modifier-stacks {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 6px;
+    background: rgba(245, 158, 11, 0.3);
+    border-radius: 10px;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #f59e0b;
+}
+
+.rt-modifier-item-description {
+    font-size: 0.9em;
+    color: var(--rt-text-secondary, rgba(255, 255, 255, 0.7));
+    line-height: 1.4;
+}
+
+.rt-modifier-item-duration {
+    font-size: 0.85em;
+    color: var(--rt-text-disabled, rgba(255, 255, 255, 0.5));
+    font-style: italic;
+}
+
+.rt-modifier-item-toggle {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--rt-panel-border, rgba(255, 255, 255, 0.1));
+    border-radius: 4px;
+    color: var(--rt-text-secondary, rgba(255, 255, 255, 0.7));
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    i {
+        font-size: 1.2em;
+    }
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: var(--rt-accent, #fbbf24);
+        color: var(--rt-accent, #fbbf24);
+    }
+
+    // Active toggle
+    .rt-modifier-item:not(.rt-modifier-item--inactive) & {
+        color: #4ade80;
+    }
+}
+
+/* Empty State */
+.rt-modifiers-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 32px 16px;
+    color: var(--rt-text-disabled, rgba(255, 255, 255, 0.4));
+    text-align: center;
+
+    i {
+        font-size: 2em;
+        opacity: 0.5;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.95em;
+        font-style: italic;
+    }
+}
+
+/* Collapsed State */
+.rt-panel--modifiers.rt-panel--collapsed {
+    .rt-panel-body {
+        display: none;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .rt-modifier-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .rt-modifier-item-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .rt-modifier-item-toggle {
+        align-self: flex-end;
+        margin-top: -32px;
+    }
+}

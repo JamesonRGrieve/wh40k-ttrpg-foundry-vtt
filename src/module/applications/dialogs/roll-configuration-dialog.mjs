@@ -1,7 +1,7 @@
 /**
  * @file RollConfigurationDialog - General roll configuration dialog
  * ApplicationV2 dialog for configuring d100 tests
- * 
+ *
  * Features:
  * - Display target number
  * - Difficulty modifier presets
@@ -13,36 +13,36 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class RollConfigurationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        id: "roll-configuration-{id}",
-        classes: ["rogue-trader", "roll-configuration-dialog"],
-        tag: "form",
+        id: 'roll-configuration-{id}',
+        classes: ['rogue-trader', 'roll-configuration-dialog'],
+        tag: 'form',
         window: {
-            title: "RT.Roll.ConfigureRoll",
-            icon: "fa-solid fa-dice-d20",
+            title: 'RT.Roll.ConfigureRoll',
+            icon: 'fa-solid fa-dice-d20',
             minimizable: false,
-            resizable: false
+            resizable: false,
         },
         position: {
             width: 400,
-            height: "auto"
+            height: 'auto',
         },
         form: {
             handler: RollConfigurationDialog.#onSubmit,
             submitOnChange: false,
-            closeOnSubmit: true
+            closeOnSubmit: true,
         },
         actions: {
             selectDifficulty: RollConfigurationDialog.#selectDifficulty,
             toggleSituational: RollConfigurationDialog.#toggleSituational,
-            cancel: RollConfigurationDialog.#cancel
-        }
+            cancel: RollConfigurationDialog.#cancel,
+            viewModifierSource: RollConfigurationDialog.#viewModifierSource,
+        },
     };
 
     /* -------------------------------------------- */
@@ -50,8 +50,8 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/dialogs/roll-configuration.hbs"
-        }
+            template: 'systems/rogue-trader/templates/dialogs/roll-configuration.hbs',
+        },
     };
 
     /* -------------------------------------------- */
@@ -63,19 +63,19 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @type {Array<{label: string, value: number, key: string}>}
      */
     static DIFFICULTY_PRESETS = [
-        { key: "trivial", label: "RT.Difficulty.Trivial", value: 60 },
-        { key: "elementary", label: "RT.Difficulty.Elementary", value: 50 },
-        { key: "easy", label: "RT.Difficulty.Easy", value: 40 },
-        { key: "routine", label: "RT.Difficulty.Routine", value: 30 },
-        { key: "ordinary", label: "RT.Difficulty.Ordinary", value: 20 },
-        { key: "challenging", label: "RT.Difficulty.Challenging", value: 10 },
-        { key: "difficult", label: "RT.Difficulty.Difficult", value: 0 },
-        { key: "hard", label: "RT.Difficulty.Hard", value: -10 },
-        { key: "veryHard", label: "RT.Difficulty.VeryHard", value: -20 },
-        { key: "arduous", label: "RT.Difficulty.Arduous", value: -30 },
-        { key: "punishing", label: "RT.Difficulty.Punishing", value: -40 },
-        { key: "hellish", label: "RT.Difficulty.Hellish", value: -50 },
-        { key: "infernal", label: "RT.Difficulty.Infernal", value: -60 }
+        { key: 'trivial', label: 'RT.Difficulty.Trivial', value: 60 },
+        { key: 'elementary', label: 'RT.Difficulty.Elementary', value: 50 },
+        { key: 'easy', label: 'RT.Difficulty.Easy', value: 40 },
+        { key: 'routine', label: 'RT.Difficulty.Routine', value: 30 },
+        { key: 'ordinary', label: 'RT.Difficulty.Ordinary', value: 20 },
+        { key: 'challenging', label: 'RT.Difficulty.Challenging', value: 10 },
+        { key: 'difficult', label: 'RT.Difficulty.Difficult', value: 0 },
+        { key: 'hard', label: 'RT.Difficulty.Hard', value: -10 },
+        { key: 'veryHard', label: 'RT.Difficulty.VeryHard', value: -20 },
+        { key: 'arduous', label: 'RT.Difficulty.Arduous', value: -30 },
+        { key: 'punishing', label: 'RT.Difficulty.Punishing', value: -40 },
+        { key: 'hellish', label: 'RT.Difficulty.Hellish', value: -50 },
+        { key: 'infernal', label: 'RT.Difficulty.Infernal', value: -60 },
     ];
 
     /* -------------------------------------------- */
@@ -98,7 +98,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * Selected difficulty key
      * @type {string}
      */
-    selectedDifficulty = "difficult";
+    selectedDifficulty = 'difficult';
 
     /**
      * Custom modifier value
@@ -133,7 +133,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         super(options);
         this.config = foundry.utils.deepClone(config);
         this.actor = config.actor || null;
-        this.selectedDifficulty = config.difficulty || "difficult";
+        this.selectedDifficulty = config.difficulty || 'difficult';
         this.customModifier = config.customModifier || 0;
     }
 
@@ -146,16 +146,14 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const context = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
-        const difficultyPreset = this.constructor.DIFFICULTY_PRESETS.find(
-            p => p.key === this.selectedDifficulty
-        ) || { value: 0 };
+        const difficultyPreset = this.constructor.DIFFICULTY_PRESETS.find((p) => p.key === this.selectedDifficulty) || { value: 0 };
         const difficultyModifier = difficultyPreset.value;
 
         // Calculate situational modifier from active checkboxes
         const situationalModifierTotal = this._calculateSituationalTotal();
 
         // Calculate total modifier and final target
-        const totalModifier = difficultyModifier + this.customModifier + situationalModifierTotal;
+        const totalModifier = difficultyModifier + this.customModifier + situationalModifierTotal + permanentModifierTotal;
         const baseTarget = this.config.target || 0;
         const finalTarget = Math.max(1, Math.min(100, baseTarget + totalModifier));
 
@@ -168,49 +166,65 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         }));
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
+        // Prepare permanent modifiers (from items, conditions, etc.)
+        const permanentModifiers = (this.config.permanentModifiers || []).map(mod => ({
+            ...mod,
+            valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
+            hasSource: !!mod.uuid
+        }));
+        const hasPermanentModifiers = permanentModifiers.length > 0;
+
+        // Calculate permanent modifier total
+        const permanentModifierTotal = permanentModifiers.reduce((sum, mod) => sum + (mod.value || 0), 0);
+
         return {
             ...context,
             // Actor info
             actor: this.actor,
-            actorName: this.actor?.name || "",
-            actorImg: this.actor?.img || "icons/svg/mystery-man.svg",
-            
+            actorName: this.actor?.name || '',
+            actorImg: this.actor?.img || 'icons/svg/mystery-man.svg',
+
             // Roll info
-            rollName: this.config.flavor || this.config.name || "Test",
+            rollName: this.config.flavor || this.config.name || 'Test',
             baseTarget: baseTarget,
             finalTarget: finalTarget,
-            
+
             // Modifiers
             difficultyModifier: difficultyModifier,
             customModifier: this.customModifier,
             situationalModifierTotal,
+            permanentModifierTotal,
             totalModifier: totalModifier,
             
             // Situational modifiers
             situationalModifiers,
             hasSituationalModifiers,
-            
+
+            // Permanent modifiers
+            permanentModifiers,
+            hasPermanentModifiers,
+
             // Difficulty presets
-            difficulties: this.constructor.DIFFICULTY_PRESETS.map(d => ({
+            difficulties: this.constructor.DIFFICULTY_PRESETS.map((d) => ({
                 ...d,
                 label: game.i18n.localize(d.label),
                 selected: d.key === this.selectedDifficulty,
-                cssClass: d.value > 0 ? "positive" : (d.value < 0 ? "negative" : "neutral")
+                cssClass: d.value > 0 ? 'positive' : d.value < 0 ? 'negative' : 'neutral',
             })),
             selectedDifficulty: this.selectedDifficulty,
-            
+
             // Roll modes - V13: rollModes values are objects with a label property
             rollModes: Object.entries(CONFIG.Dice.rollModes).map(([key, mode]) => ({
                 key: key,
                 label: game.i18n.localize(mode.label),
-                selected: key === (this.config.rollMode || game.settings.get("core", "rollMode"))
+                selected: key === (this.config.rollMode || game.settings.get('core', 'rollMode')),
             })),
-            
+
             // Form buttons
             buttons: [
-                { type: "submit", icon: "fa-solid fa-dice-d20", label: "RT.Roll.Roll", cssClass: "primary" },
-                { type: "button", action: "cancel", icon: "fa-solid fa-times", label: "Cancel" }
-            ]
+                { type: 'submit', icon: 'fa-solid fa-dice-d20', label: 'RT.Roll.Roll', cssClass: 'primary' },
+                { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
+            ],
         };
     }
 
@@ -237,13 +251,13 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         // Add live update for custom modifier
         const customInput = this.element.querySelector('input[name="customModifier"]');
         if (customInput) {
-            customInput.addEventListener("change", this.#onCustomModifierChange.bind(this));
+            customInput.addEventListener('change', this.#onCustomModifierChange.bind(this));
         }
 
         // Add live update for difficulty select
         const difficultySelect = this.element.querySelector('select[name="difficulty"]');
         if (difficultySelect) {
-            difficultySelect.addEventListener("change", this.#onDifficultyChange.bind(this));
+            difficultySelect.addEventListener('change', this.#onDifficultyChange.bind(this));
         }
     }
 
@@ -257,7 +271,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      */
     #onCustomModifierChange(event) {
         this.customModifier = parseInt(event.currentTarget.value) || 0;
-        this.render({ parts: ["form"] });
+        this.render({ parts: ['form'] });
     }
 
     /**
@@ -266,17 +280,38 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      */
     #onDifficultyChange(event) {
         this.selectedDifficulty = event.currentTarget.value;
-        this.render({ parts: ["form"] });
+        this.render({ parts: ['form'] });
     }
 
     /**
-     * Handle difficulty button click
-     * @param {Event} event
+     * Cancel the dialog
+     * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #selectDifficulty(event, target) {
-        this.selectedDifficulty = target.dataset.difficulty;
-        this.render({ parts: ["form"] });
+    static #cancel(event, target) {
+        // Note: 'this' is bound to the instance by ApplicationV2 action handler system
+        this.close();
+    }
+
+    /**
+     * View the source of a permanent modifier
+     * @param {PointerEvent} event
+     * @param {HTMLElement} target
+     */
+    static async #viewModifierSource(event, target) {
+        const uuid = target.dataset.uuid;
+        if (!uuid) return;
+
+        const item = await fromUuid(uuid);
+        if (item) {
+            // Check for Shift+Click to post to chat
+            if (event.shiftKey) {
+                item.toMessage();
+            } else {
+                // Default: open sheet
+                item.sheet.render(true);
+            }
+        }
     }
 
     /**
@@ -292,7 +327,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         } else {
             this.activeSituationalModifiers.add(modId);
         }
-        this.render({ parts: ["form"] });
+        this.render({ parts: ['form'] });
     }
 
     /**
@@ -316,9 +351,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const data = foundry.utils.expandObject(formData.object);
 
         // Get final values
-        const difficultyPreset = this.constructor.DIFFICULTY_PRESETS.find(
-            p => p.key === data.difficulty
-        ) || { value: 0 };
+        const difficultyPreset = this.constructor.DIFFICULTY_PRESETS.find((p) => p.key === data.difficulty) || { value: 0 };
 
         // Calculate situational modifier total
         const situationalTotal = this._calculateSituationalTotal();
@@ -336,8 +369,8 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
                 ...this.config.modifiers,
                 difficulty: difficultyPreset.value,
                 custom: parseInt(data.customModifier) || 0,
-                situational: situationalTotal
-            }
+                situational: situationalTotal,
+            },
         };
 
         if (this.#resolve) {

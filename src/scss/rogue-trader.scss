@@ -39,6 +39,8 @@
 
 // Global components (appended to document.body, not inside wrappers)
 @import 'src/scss/components/rt-tooltip';
+@import 'src/scss/components/item-preview';
+@import 'src/scss/components/active-modifiers';
 
 // Armour panel - needs to work both inside rt-wrapper and in ApplicationV2 sheets
 @import 'src/scss/components/armour';
