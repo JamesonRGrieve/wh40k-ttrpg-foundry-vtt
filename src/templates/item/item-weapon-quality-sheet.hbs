@@ -1,130 +1,220 @@
-{{!-- Rogue Trader Weapon Quality Sheet - Modern Design --}}
-<form class="rt-item-sheet rt-weapon-quality-sheet" autocomplete="off">
-    {{!-- Header --}}
-    <div class="rt-item-sheet__header">
-        <div class="rt-item-sheet__image-wrapper" data-action="editImage" data-edit="img">
-            <img class="rt-item-sheet__image" src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" />
-            <div class="rt-item-sheet__image-overlay">
-                <i class="fas fa-edit"></i>
-            </div>
+{{!-- 
+  Rogue Trader Weapon Quality Item Sheet - V2 Redesign
+  Clean reference-card style for weapon quality definitions
+--}}
+<div class="rt-weapon-quality-sheet">
+  <form autocomplete="off">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Simple quality identity
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="rt-quality-header">
+      <div class="rt-quality-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="rt-quality-header__image-overlay">
+          <i class="fas fa-star"></i>
         </div>
-        <div class="rt-item-sheet__title-area">
-            <div class="rt-item-sheet__name-field">
-                <label class="rt-item-sheet__name-label">Quality Name</label>
-                <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Quality Name" />
-            </div>
-            <div class="rt-item-sheet__type-badge">
-                <i class="fas fa-star"></i>
-                <span>Weapon Quality</span>
-            </div>
+      </div>
+      
+      <div class="rt-quality-header__info">
+        <input type="text" class="rt-quality-header__name" name="name" value="{{item.name}}" placeholder="Quality Name" />
+        
+        <div class="rt-quality-header__meta">
+          <span class="rt-quality-badge rt-quality-badge--type" title="Item Type">
+            <i class="fas fa-star"></i>
+            Weapon Quality
+          </span>
+          {{#if system.hasLevel}}
+          <span class="rt-quality-badge rt-quality-badge--level" title="Has Level">
+            <i class="fas fa-sort-numeric-up"></i>
+            Level {{system.level}}
+          </span>
+          {{/if}}
         </div>
+      </div>
+    </header>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         STAT BAR: Quick reference stats
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="rt-quality-stats">
+      <div class="rt-quality-stat">
+        <div class="rt-quality-stat__icon">
+          <i class="fas fa-fingerprint"></i>
+        </div>
+        <div class="rt-quality-stat__content">
+          <span class="rt-quality-stat__label">Identifier</span>
+          <span class="rt-quality-stat__value">{{system.identifier}}</span>
+        </div>
+      </div>
+      
+      <div class="rt-quality-stat">
+        <div class="rt-quality-stat__icon">
+          <i class="fas fa-sort-numeric-up"></i>
+        </div>
+        <div class="rt-quality-stat__content">
+          <span class="rt-quality-stat__label">Has Level</span>
+          <span class="rt-quality-stat__value">{{#if system.hasLevel}}Yes{{else}}No{{/if}}</span>
+        </div>
+      </div>
+      
+      {{#if system.hasLevel}}
+      <div class="rt-quality-stat">
+        <div class="rt-quality-stat__icon">
+          <i class="fas fa-hashtag"></i>
+        </div>
+        <div class="rt-quality-stat__content">
+          <span class="rt-quality-stat__label">Level</span>
+          <span class="rt-quality-stat__value">{{system.level}}</span>
+        </div>
+      </div>
+      {{/if}}
     </div>
-    
-    {{!-- Tab Navigation --}}
-    <nav class="rt-tabs" data-group="primary">
-        <a class="rt-tab {{#if (eq tabs.details.active true)}}active{{/if}}" data-tab="details" data-group="primary">
-            <i class="fas fa-cog"></i> Details
-        </a>
-        <a class="rt-tab {{#if (eq tabs.description.active true)}}active{{/if}}" data-tab="description" data-group="primary">
-            <i class="fas fa-scroll"></i> Description
-        </a>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="rt-tabs rt-tabs--quality rt-quality-tabs" data-group="primary">
+      <button type="button" class="rt-tab rt-quality-tab active" data-tab="effect" data-group="primary">
+        <i class="fas fa-bolt"></i>
+        <span>Effect</span>
+      </button>
+      <button type="button" class="rt-tab rt-quality-tab" data-tab="details" data-group="primary">
+        <i class="fas fa-cog"></i>
+        <span>Details</span>
+      </button>
+      <button type="button" class="rt-tab rt-quality-tab" data-tab="description" data-group="primary">
+        <i class="fas fa-book"></i>
+        <span>Description</span>
+      </button>
     </nav>
-    
-    {{!-- Tab Content --}}
-    <section class="rt-tab-content">
-        {{!-- Details Tab --}}
-        <div class="tab {{#if (eq tabs.details.active true)}}active{{/if}}" data-tab="details" data-group="primary">
-            <div class="rt-panel">
-                <div class="rt-panel__header">
-                    <h3><i class="fas fa-cog"></i> Quality Properties</h3>
-                </div>
-                <div class="rt-panel__content">
-                    {{!-- Identifier --}}
-                    <div class="rt-form-group">
-                        <label class="rt-form-label">Identifier</label>
-                        <input class="rt-input" name="system.identifier" type="text" value="{{system.identifier}}" placeholder="unique-identifier" />
-                        <p class="rt-form-hint">Unique identifier for this quality (lowercase, hyphenated)</p>
-                    </div>
-                    
-                    {{!-- Has Level --}}
-                    <div class="rt-form-group rt-form-group--inline">
-                        <label class="rt-checkbox-label">
-                            <input name="system.hasLevel" type="checkbox" {{checked system.hasLevel}} />
-                            <span>Has Level/Rating</span>
-                        </label>
-                        <p class="rt-form-hint">Check if this quality has a numeric level (e.g., Blast (X))</p>
-                    </div>
-                    
-                    {{!-- Level --}}
-                    {{#if system.hasLevel}}
-                    <div class="rt-form-group">
-                        <label class="rt-form-label">Level</label>
-                        <input class="rt-input rt-input--number" name="system.level" type="number" value="{{system.level}}" min="0" placeholder="0" />
-                    </div>
-                    {{/if}}
-                    
-                    {{!-- Notes --}}
-                    <div class="rt-form-group">
-                        <label class="rt-form-label">Notes</label>
-                        <textarea class="rt-textarea" name="system.notes" rows="3" placeholder="Additional notes or legacy data">{{system.notes}}</textarea>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="rt-panel">
-                <div class="rt-panel__header">
-                    <h3><i class="fas fa-magic"></i> Effect</h3>
-                </div>
-                <div class="rt-panel__content">
-                    {{#if inEditMode}}
-                    <div class="rt-editor-container">
-                        {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
-                    </div>
-                    {{else}}
-                    <div class="rt-description-content">{{{system.effect}}}</div>
-                    {{/if}}
-                </div>
-            </div>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <section class="rt-quality-content rt-tab-content rt-tab-content--quality">
+      
+      {{!-- EFFECT TAB (Primary) --}}
+      <div class="rt-quality-panel tab active" data-tab="effect" data-group="primary">
+        
+        <div class="rt-quality-section rt-quality-section--effect">
+          <div class="rt-quality-section__header">
+            <i class="fas fa-bolt"></i>
+            <h3>Mechanical Effect</h3>
+          </div>
+          <div class="rt-quality-section__body rt-quality-section__body--editor">
+            {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+          </div>
         </div>
         
-        {{!-- Description Tab --}}
-        <div class="tab {{#if (eq tabs.description.active true)}}active{{/if}}" data-tab="description" data-group="primary">
-            <div class="rt-panel">
-                <div class="rt-panel__header">
-                    <h3><i class="fas fa-scroll"></i> Description</h3>
-                </div>
-                <div class="rt-panel__content">
-                    {{#if inEditMode}}
-                    <div class="rt-editor-container">
-                        {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
-                    </div>
-                    {{else}}
-                    <div class="rt-description-content">{{{system.description.value}}}</div>
-                    {{/if}}
-                </div>
+        {{#if system.hasLevel}}
+        <div class="rt-quality-section">
+          <div class="rt-quality-section__header">
+            <i class="fas fa-info-circle"></i>
+            <h3>Level Explanation</h3>
+          </div>
+          <div class="rt-quality-section__body">
+            <p class="rt-hint-text">
+              This quality has a numeric level (X). The level is displayed as <strong>{{item.name}} ({{system.level}})</strong> 
+              when applied to a weapon. The effect above should reference the level value where applicable.
+            </p>
+          </div>
+        </div>
+        {{/if}}
+        
+      </div>
+
+      {{!-- DETAILS TAB --}}
+      <div class="rt-quality-panel tab" data-tab="details" data-group="primary">
+        
+        <div class="rt-quality-section">
+          <div class="rt-quality-section__header">
+            <i class="fas fa-cog"></i>
+            <h3>Quality Properties</h3>
+          </div>
+          <div class="rt-quality-section__body">
+            
+            <div class="rt-field">
+              <label>Identifier</label>
+              <input type="text" name="system.identifier" value="{{system.identifier}}" 
+                     placeholder="e.g., tearing, blast, unwieldy" />
+              <p class="rt-field-hint">Unique identifier (lowercase, hyphenated)</p>
             </div>
             
-            <div class="rt-panel">
-                <div class="rt-panel__header">
-                    <h3><i class="fas fa-book"></i> Source</h3>
-                </div>
-                <div class="rt-panel__content">
-                    <div class="rt-form-row">
-                        <div class="rt-form-group rt-form-group--half">
-                            <label class="rt-form-label">Book</label>
-                            <input class="rt-input" name="system.source.book" type="text" value="{{system.source.book}}" placeholder="Book Name" />
-                        </div>
-                        <div class="rt-form-group rt-form-group--half">
-                            <label class="rt-form-label">Page</label>
-                            <input class="rt-input" name="system.source.page" type="text" value="{{system.source.page}}" placeholder="123" />
-                        </div>
-                    </div>
-                    <div class="rt-form-group">
-                        <label class="rt-form-label">Custom Source</label>
-                        <input class="rt-input" name="system.source.custom" type="text" value="{{system.source.custom}}" placeholder="Custom source reference" />
-                    </div>
-                </div>
+            <div class="rt-field rt-field--checkbox">
+              <label>
+                <input type="checkbox" name="system.hasLevel" {{checked system.hasLevel}} />
+                <span>Quality Has Numeric Level</span>
+              </label>
+              <p class="rt-field-hint">Check if this quality takes a level parameter (e.g., Blast (X), Tearing (X))</p>
             </div>
+            
+            {{#if system.hasLevel}}
+            <div class="rt-field">
+              <label>Default Level</label>
+              <input type="number" name="system.level" value="{{system.level}}" 
+                     data-dtype="Number" min="0" />
+              <p class="rt-field-hint">Default level value for this quality</p>
+            </div>
+            {{/if}}
+            
+          </div>
         </div>
+        
+        <div class="rt-quality-section">
+          <div class="rt-quality-section__header">
+            <i class="fas fa-sticky-note"></i>
+            <h3>Notes</h3>
+          </div>
+          <div class="rt-quality-section__body">
+            <textarea name="system.notes" rows="4" placeholder="Additional notes, legacy data, GM notes...">{{system.notes}}</textarea>
+          </div>
+        </div>
+        
+      </div>
+
+      {{!-- DESCRIPTION TAB --}}
+      <div class="rt-quality-panel tab" data-tab="description" data-group="primary">
+        
+        <div class="rt-quality-section">
+          <div class="rt-quality-section__header">
+            <i class="fas fa-book"></i>
+            <h3>Full Description</h3>
+          </div>
+          <div class="rt-quality-section__body rt-quality-section__body--editor">
+            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+          </div>
+        </div>
+        
+        <div class="rt-quality-section">
+          <div class="rt-quality-section__header">
+            <i class="fas fa-book-open"></i>
+            <h3>Source</h3>
+          </div>
+          <div class="rt-quality-section__body">
+            <div class="rt-field-row">
+              <div class="rt-field">
+                <label>Source Book</label>
+                <input type="text" name="system.source.book" value="{{system.source.book}}" 
+                       placeholder="Rogue Trader Core" />
+              </div>
+              <div class="rt-field">
+                <label>Page</label>
+                <input type="text" name="system.source.page" value="{{system.source.page}}" 
+                       placeholder="127" />
+              </div>
+            </div>
+            <div class="rt-field">
+              <label>Custom Reference</label>
+              <input type="text" name="system.source.custom" value="{{system.source.custom}}" 
+                     placeholder="Homebrew, Errata, etc." />
+            </div>
+          </div>
+        </div>
+        
+      </div>
+
     </section>
-</form>
+
+  </form>
+</div>
