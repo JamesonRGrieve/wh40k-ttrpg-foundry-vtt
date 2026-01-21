@@ -153,13 +153,19 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Prepare qualities array for clickable tags
         context.qualitiesArray = Array.from(system.effectiveSpecial || []).map((q) => {
-            const def = CONFIG.ROGUE_TRADER?.getQualityDefinition?.(q) || null;
             // Parse level from quality identifier if present
             const match = q.match(/-(\d+)$/);
             const level = match ? parseInt(match[1]) : null;
+
+            // Get localized label using CONFIG helper
+            const label = CONFIG.ROGUE_TRADER?.getQualityLabel?.(q, level) || q;
+
+            // Get definition for description
+            const def = CONFIG.ROGUE_TRADER?.getQualityDefinition?.(q) || null;
+
             return {
                 identifier: q,
-                label: def?.label || q,
+                label,
                 description: def?.description || '',
                 level,
             };
