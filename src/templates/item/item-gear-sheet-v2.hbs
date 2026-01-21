@@ -1,18 +1,18 @@
 {{!-- 
-  Rogue Trader Gear Item Sheet - V2 Complete Redesign
-  Matches weapon sheet pattern with modern ApplicationV2 structure
+  Rogue Trader Gear Item Sheet - V2 Redesign
+  Compact 2-column layout with consumable emphasis
 --}}
 <div class="rt-gear-sheet">
   <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
-         HEADER: Compact gear identity with category
+         HEADER: Compact gear identity with category icon overlay
     ═══════════════════════════════════════════════════════════════════ --}}
     <header class="rt-gear-header">
       <div class="rt-gear-header__image" data-action="editImage" data-edit="img">
         <img src="{{item.img}}" alt="{{item.name}}" />
         <div class="rt-gear-header__image-overlay">
-          <i class="fas fa-edit"></i>
+          <i class="fas {{categoryIcon}}"></i>
         </div>
       </div>
       
@@ -20,7 +20,7 @@
         <input type="text" class="rt-gear-header__name" name="name" value="{{item.name}}" placeholder="Gear Name" />
         
         <div class="rt-gear-header__meta">
-          <span class="rt-gear-badge rt-gear-badge--category rt-gear-badge--{{system.category}}" title="Category">
+          <span class="rt-gear-badge rt-gear-badge--category" title="Category">
             <i class="fas {{categoryIcon}}"></i>
             {{categoryLabel}}
           </span>
@@ -38,25 +38,15 @@
           {{/if}}
         </div>
       </div>
-      
-      <div class="rt-gear-header__equipped">
-        <label class="rt-toggle-equipped" title="Toggle Equipped">
-          <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
-          <span class="rt-toggle-equipped__indicator">
-            <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
-          </span>
-          <span class="rt-toggle-equipped__label">{{#if system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
-        </label>
-      </div>
     </header>
 
     {{!-- ═══════════════════════════════════════════════════════════════════
-         STAT BAR: Key gear statistics
+         STAT BAR: Key gear statistics with quick adjusters
     ═══════════════════════════════════════════════════════════════════ --}}
     <div class="rt-gear-stats">
       <div class="rt-gear-stat rt-gear-stat--category">
         <div class="rt-gear-stat__icon">
-          <i class="fas fa-tag"></i>
+          <i class="fas {{categoryIcon}}"></i>
         </div>
         <div class="rt-gear-stat__content">
           <span class="rt-gear-stat__label">Category</span>
@@ -70,7 +60,7 @@
         </div>
         <div class="rt-gear-stat__content">
           <span class="rt-gear-stat__label">Quantity</span>
-          <span class="rt-gear-stat__value">{{system.quantity}}</span>
+          <span class="rt-gear-stat__value">×{{system.quantity}}</span>
         </div>
       </div>
       
@@ -80,7 +70,27 @@
         </div>
         <div class="rt-gear-stat__content">
           <span class="rt-gear-stat__label">Weight</span>
-          <span class="rt-gear-stat__value">{{system.totalWeight}}kg</span>
+          <span class="rt-gear-stat__value">{{system.effectiveTotalWeight}}kg</span>
+        </div>
+      </div>
+      
+      <div class="rt-gear-stat rt-gear-stat--availability">
+        <div class="rt-gear-stat__icon">
+          <i class="fas fa-shop"></i>
+        </div>
+        <div class="rt-gear-stat__content">
+          <span class="rt-gear-stat__label">Availability</span>
+          <span class="rt-gear-stat__value">{{system.availabilityLabel}}</span>
+        </div>
+      </div>
+      
+      <div class="rt-gear-stat rt-gear-stat--cost">
+        <div class="rt-gear-stat__icon">
+          <i class="fas fa-coins"></i>
+        </div>
+        <div class="rt-gear-stat__content">
+          <span class="rt-gear-stat__label">Cost</span>
+          <span class="rt-gear-stat__value">{{system.cost.value}}₮</span>
         </div>
       </div>
     </div>
@@ -89,16 +99,22 @@
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
     <nav class="rt-tabs rt-tabs--gear rt-gear-tabs" data-group="primary">
-      <button type="button" class="rt-tab rt-gear-tab active" data-tab="details" data-group="primary">
-        <i class="fas fa-circle-info"></i>
-        <span>Details</span>
+      <button type="button" class="rt-tab rt-gear-tab active" data-tab="overview" data-group="primary">
+        <i class="fas fa-info-circle"></i>
+        <span>Overview</span>
       </button>
+      {{#if hasLimitedUses}}
+      <button type="button" class="rt-tab rt-gear-tab" data-tab="usage" data-group="primary">
+        <i class="fas fa-hourglass-half"></i>
+        <span>Usage</span>
+      </button>
+      {{/if}}
       <button type="button" class="rt-tab rt-gear-tab" data-tab="description" data-group="primary">
-        <i class="fas fa-scroll"></i>
-        <span>Info</span>
+        <i class="fas fa-book"></i>
+        <span>Description</span>
       </button>
       <button type="button" class="rt-tab rt-gear-tab" data-tab="effects" data-group="primary">
-        <i class="fas fa-magic"></i>
+        <i class="fas fa-sparkles"></i>
         <span>Effects</span>
       </button>
     </nav>
@@ -108,110 +124,171 @@
     ═══════════════════════════════════════════════════════════════════ --}}
     <section class="rt-gear-content rt-tab-content rt-tab-content--gear">
       
-      {{!-- DETAILS TAB --}}
-      <div class="rt-gear-panel tab active" data-tab="details" data-group="primary">
+      {{!-- OVERVIEW TAB --}}
+      <div class="rt-gear-panel tab active" data-tab="overview" data-group="primary">
         
-        {{!-- Category & Classification --}}
-        <div class="rt-gear-section">
-          <div class="rt-gear-section__header">
-            <i class="fas fa-tags"></i>
-            <h3>Classification</h3>
-          </div>
-          <div class="rt-gear-section__body">
-            <div class="rt-field">
-              <label>Category</label>
-              <select name="system.category">
-                <option value="general" {{#if (eq system.category "general")}}selected{{/if}}>General Equipment</option>
-                <option value="tools" {{#if (eq system.category "tools")}}selected{{/if}}>Tools</option>
-                <option value="drugs" {{#if (eq system.category "drugs")}}selected{{/if}}>Drugs & Consumables</option>
-                <option value="medical" {{#if (eq system.category "medical")}}selected{{/if}}>Medical Supplies</option>
-                <option value="tech" {{#if (eq system.category "tech")}}selected{{/if}}>Tech & Electronics</option>
-                <option value="clothing" {{#if (eq system.category "clothing")}}selected{{/if}}>Clothing</option>
-                <option value="survival" {{#if (eq system.category "survival")}}selected{{/if}}>Survival Gear</option>
-                <option value="religious" {{#if (eq system.category "religious")}}selected{{/if}}>Religious Items</option>
-                <option value="luxury" {{#if (eq system.category "luxury")}}selected{{/if}}>Luxury Goods</option>
-                <option value="documents" {{#if (eq system.category "documents")}}selected{{/if}}>Documents</option>
-              </select>
+        {{!-- 2-Column Layout --}}
+        <div class="rt-gear-grid">
+          
+          {{!-- LEFT COLUMN --}}
+          <div class="rt-gear-column">
+            
+            {{!-- Category & Classification --}}
+            <div class="rt-gear-section">
+              <div class="rt-gear-section__header">
+                <i class="fas fa-tags"></i>
+                <h3>Classification</h3>
+              </div>
+              <div class="rt-gear-section__body">
+                <div class="rt-field">
+                  <label>Category</label>
+                  <select name="system.category">
+                    <option value="general" {{#if (eq system.category "general")}}selected{{/if}}>General Equipment</option>
+                    <option value="tools" {{#if (eq system.category "tools")}}selected{{/if}}>Tools</option>
+                    <option value="drugs" {{#if (eq system.category "drugs")}}selected{{/if}}>Drugs</option>
+                    <option value="consumable" {{#if (eq system.category "consumable")}}selected{{/if}}>Consumable</option>
+                    <option value="medical" {{#if (eq system.category "medical")}}selected{{/if}}>Medical</option>
+                    <option value="tech" {{#if (eq system.category "tech")}}selected{{/if}}>Tech</option>
+                    <option value="clothing" {{#if (eq system.category "clothing")}}selected{{/if}}>Clothing</option>
+                    <option value="survival" {{#if (eq system.category "survival")}}selected{{/if}}>Survival</option>
+                    <option value="communications" {{#if (eq system.category "communications")}}selected{{/if}}>Communications</option>
+                    <option value="detection" {{#if (eq system.category "detection")}}selected{{/if}}>Detection</option>
+                    <option value="religious" {{#if (eq system.category "religious")}}selected{{/if}}>Religious</option>
+                    <option value="luxury" {{#if (eq system.category "luxury")}}selected{{/if}}>Luxury</option>
+                    <option value="contraband" {{#if (eq system.category "contraband")}}selected{{/if}}>Contraband</option>
+                  </select>
+                </div>
+                
+                <div class="rt-field">
+                  <label>Craftsmanship</label>
+                  <select name="system.craftsmanship">
+                    <option value="poor" {{#if (eq system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
+                    <option value="common" {{#if (eq system.craftsmanship "common")}}selected{{/if}}>Common</option>
+                    <option value="good" {{#if (eq system.craftsmanship "good")}}selected{{/if}}>Good</option>
+                    <option value="best" {{#if (eq system.craftsmanship "best")}}selected{{/if}}>Best</option>
+                  </select>
+                </div>
+                
+                <div class="rt-field">
+                  <label>Availability</label>
+                  <select name="system.availability">
+                    <option value="ubiquitous" {{#if (eq system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
+                    <option value="abundant" {{#if (eq system.availability "abundant")}}selected{{/if}}>Abundant</option>
+                    <option value="plentiful" {{#if (eq system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
+                    <option value="common" {{#if (eq system.availability "common")}}selected{{/if}}>Common</option>
+                    <option value="average" {{#if (eq system.availability "average")}}selected{{/if}}>Average</option>
+                    <option value="scarce" {{#if (eq system.availability "scarce")}}selected{{/if}}>Scarce</option>
+                    <option value="rare" {{#if (eq system.availability "rare")}}selected{{/if}}>Rare</option>
+                    <option value="very-rare" {{#if (eq system.availability "very-rare")}}selected{{/if}}>Very Rare</option>
+                    <option value="extremely-rare" {{#if (eq system.availability "extremely-rare")}}selected{{/if}}>Extremely Rare</option>
+                    <option value="near-unique" {{#if (eq system.availability "near-unique")}}selected{{/if}}>Near Unique</option>
+                    <option value="unique" {{#if (eq system.availability "unique")}}selected{{/if}}>Unique</option>
+                  </select>
+                </div>
+              </div>
             </div>
+            
+            {{!-- Storage --}}
+            <div class="rt-gear-section">
+              <div class="rt-gear-section__header">
+                <i class="fas fa-box"></i>
+                <h3>Storage</h3>
+              </div>
+              <div class="rt-gear-section__body">
+                <div class="rt-checkbox-group">
+                  <label class="rt-checkbox">
+                    <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
+                    <i class="fas {{#if system.equipped}}fa-check-square{{else}}fa-square{{/if}}"></i>
+                    <span>Equipped</span>
+                  </label>
+                  <label class="rt-checkbox">
+                    <input type="checkbox" name="system.inBackpack" {{checked system.inBackpack}} />
+                    <i class="fas {{#if system.inBackpack}}fa-check-square{{else}}fa-square{{/if}}"></i>
+                    <span>In Backpack</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
           </div>
+          
+          {{!-- RIGHT COLUMN --}}
+          <div class="rt-gear-column">
+            
+            {{!-- Physical Properties --}}
+            <div class="rt-gear-section">
+              <div class="rt-gear-section__header">
+                <i class="fas fa-cubes"></i>
+                <h3>Physical Properties</h3>
+              </div>
+              <div class="rt-gear-section__body">
+                <div class="rt-field">
+                  <label>Quantity</label>
+                  <input type="number" name="system.quantity" value="{{system.quantity}}" 
+                         data-dtype="Number" min="1" />
+                </div>
+                
+                <div class="rt-field">
+                  <label>Weight per Unit (kg)</label>
+                  <input type="number" name="system.weight" value="{{system.weight}}" 
+                         data-dtype="Number" min="0" step="0.1" />
+                </div>
+                
+                <div class="rt-field">
+                  <label>Total Weight</label>
+                  <input type="text" value="{{system.effectiveTotalWeight}} kg" disabled />
+                </div>
+              </div>
+            </div>
+            
+            {{!-- Economic --}}
+            <div class="rt-gear-section">
+              <div class="rt-gear-section__header">
+                <i class="fas fa-coins"></i>
+                <h3>Economic</h3>
+              </div>
+              <div class="rt-gear-section__body">
+                <div class="rt-field">
+                  <label>Cost (Thrones)</label>
+                  <input type="number" name="system.cost.value" value="{{system.cost.value}}" 
+                         data-dtype="Number" min="0" />
+                </div>
+              </div>
+            </div>
+            
+            {{!-- Consumable Toggle --}}
+            <div class="rt-gear-section">
+              <div class="rt-gear-section__header">
+                <i class="fas fa-flask"></i>
+                <h3>Consumable</h3>
+              </div>
+              <div class="rt-gear-section__body">
+                <label class="rt-checkbox">
+                  <input type="checkbox" name="system.consumable" {{checked system.consumable}} />
+                  <i class="fas {{#if system.consumable}}fa-check-square{{else}}fa-square{{/if}}"></i>
+                  <span>Has Limited Uses</span>
+                </label>
+                
+                {{#if system.consumable}}
+                <div class="rt-field" style="margin-top: 8px;">
+                  <label>Maximum Uses</label>
+                  <input type="number" name="system.uses.max" value="{{system.uses.max}}" 
+                         data-dtype="Number" min="0" />
+                </div>
+                {{/if}}
+              </div>
+            </div>
+            
+          </div>
+          
         </div>
+        
+      </div>
 
-        {{!-- Physical Properties --}}
-        <div class="rt-gear-section">
-          <div class="rt-gear-section__header">
-            <i class="fas fa-cubes"></i>
-            <h3>Physical Properties</h3>
-          </div>
-          <div class="rt-gear-section__body">
-            <div class="rt-field-row">
-              <div class="rt-field">
-                <label>Weight (kg)</label>
-                <input type="number" name="system.weight" value="{{system.weight}}" 
-                       data-dtype="Number" min="0" step="0.1" />
-              </div>
-              <div class="rt-field">
-                <label>Quantity</label>
-                <input type="number" name="system.quantity" value="{{system.quantity}}" 
-                       data-dtype="Number" min="1" />
-              </div>
-            </div>
-            <div class="rt-field-row">
-              <div class="rt-field">
-                <label>Availability</label>
-                <select name="system.availability">
-                  <option value="ubiquitous" {{#if (eq system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
-                  <option value="abundant" {{#if (eq system.availability "abundant")}}selected{{/if}}>Abundant</option>
-                  <option value="plentiful" {{#if (eq system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
-                  <option value="common" {{#if (eq system.availability "common")}}selected{{/if}}>Common</option>
-                  <option value="average" {{#if (eq system.availability "average")}}selected{{/if}}>Average</option>
-                  <option value="scarce" {{#if (eq system.availability "scarce")}}selected{{/if}}>Scarce</option>
-                  <option value="rare" {{#if (eq system.availability "rare")}}selected{{/if}}>Rare</option>
-                  <option value="very-rare" {{#if (eq system.availability "very-rare")}}selected{{/if}}>Very Rare</option>
-                  <option value="extremely-rare" {{#if (eq system.availability "extremely-rare")}}selected{{/if}}>Extremely Rare</option>
-                  <option value="near-unique" {{#if (eq system.availability "near-unique")}}selected{{/if}}>Near Unique</option>
-                  <option value="unique" {{#if (eq system.availability "unique")}}selected{{/if}}>Unique</option>
-                </select>
-              </div>
-              <div class="rt-field">
-                <label>Craftsmanship</label>
-                <select name="system.craftsmanship">
-                  <option value="poor" {{#if (eq system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
-                  <option value="common" {{#if (eq system.craftsmanship "common")}}selected{{/if}}>Common</option>
-                  <option value="good" {{#if (eq system.craftsmanship "good")}}selected{{/if}}>Good</option>
-                  <option value="best" {{#if (eq system.craftsmanship "best")}}selected{{/if}}>Best</option>
-                </select>
-              </div>
-            </div>
-            <div class="rt-field">
-              <label>Cost (Thrones)</label>
-              <input type="number" name="system.cost.value" value="{{system.cost.value}}" 
-                     data-dtype="Number" min="0" />
-            </div>
-          </div>
-        </div>
-
-        {{!-- Storage Location --}}
-        <div class="rt-gear-section">
-          <div class="rt-gear-section__header">
-            <i class="fas fa-box"></i>
-            <h3>Storage</h3>
-          </div>
-          <div class="rt-gear-section__body">
-            <div class="rt-field-row rt-field-row--checkboxes">
-              <label class="rt-checkbox">
-                <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
-                <span>Equipped</span>
-              </label>
-              <label class="rt-checkbox">
-                <input type="checkbox" name="system.inBackpack" {{checked system.inBackpack}} />
-                <span>In Backpack</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {{!-- Consumable / Limited Uses --}}
-        {{#if hasLimitedUses}}
+      {{!-- USAGE TAB (if consumable) --}}
+      {{#if hasLimitedUses}}
+      <div class="rt-gear-panel tab" data-tab="usage" data-group="primary">
+        
         <div class="rt-gear-section rt-gear-section--consumable">
           <div class="rt-gear-section__header">
             <i class="fas fa-hourglass-half"></i>
@@ -221,11 +298,23 @@
             </span>
           </div>
           <div class="rt-gear-section__body">
+            
+            {{!-- Uses Bar --}}
+            <div class="rt-uses-bar">
+              <div class="rt-uses-bar__track">
+                <div class="rt-uses-bar__fill {{#if usesExhausted}}rt-uses-bar__fill--empty{{/if}}" 
+                     style="width: {{multiply (divide system.uses.value system.uses.max) 100}}%"></div>
+              </div>
+              <div class="rt-uses-bar__label">
+                {{system.uses.value}} / {{system.uses.max}} Uses Remaining
+              </div>
+            </div>
+            
             <div class="rt-field-row">
               <div class="rt-field">
                 <label>Current Uses</label>
                 <input type="number" name="system.uses.value" value="{{system.uses.value}}" 
-                       data-dtype="Number" min="0" />
+                       data-dtype="Number" min="0" max="{{system.uses.max}}" />
               </div>
               <div class="rt-field">
                 <label>Maximum Uses</label>
@@ -233,68 +322,64 @@
                        data-dtype="Number" min="0" />
               </div>
             </div>
+            
             <div class="rt-field">
               <label>Duration / Recovery</label>
-              <input type="text" name="system.uses.duration" value="{{system.uses.duration}}" 
-                     placeholder="1 hour, 1d6 rounds, etc." />
+              <input type="text" name="system.duration" value="{{system.duration}}" 
+                     placeholder="e.g., 1 hour, 1d6 rounds, permanent" />
             </div>
+            
+            {{!-- Quick Actions --}}
             <div class="rt-consumable-actions">
-              <button type="button" class="rt-btn rt-btn--secondary" data-action="consumeUse">
+              <button type="button" class="rt-btn rt-btn--secondary" data-action="consumeUse" {{#if usesExhausted}}disabled{{/if}}>
                 <i class="fas fa-minus"></i>
                 Use One
               </button>
               <button type="button" class="rt-btn rt-btn--primary" data-action="resetUses">
                 <i class="fas fa-redo"></i>
-                Reset Uses
+                Reset to Max
               </button>
             </div>
+            
           </div>
         </div>
-        {{/if}}
-
+        
       </div>
+      {{/if}}
 
       {{!-- DESCRIPTION TAB --}}
       <div class="rt-gear-panel tab" data-tab="description" data-group="primary">
         
-        {{!-- Effect --}}
+        {{!-- Mechanical Effect --}}
         <div class="rt-gear-section">
           <div class="rt-gear-section__header">
             <i class="fas fa-bolt"></i>
             <h3>Mechanical Effect</h3>
           </div>
           <div class="rt-gear-section__body rt-gear-section__body--editor">
-            {{#if inEditMode}}
             {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
-            {{else}}
-            <div class="rt-description-content">{{{system.effect}}}</div>
-            {{/if}}
           </div>
         </div>
 
-        {{!-- Description --}}
+        {{!-- Full Description --}}
         <div class="rt-gear-section">
           <div class="rt-gear-section__header">
             <i class="fas fa-book"></i>
             <h3>Description</h3>
           </div>
           <div class="rt-gear-section__body rt-gear-section__body--editor">
-            {{#if inEditMode}}
             {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
-            {{else}}
-            <div class="rt-description-content">{{{system.description.value}}}</div>
-            {{/if}}
           </div>
         </div>
 
-        {{!-- Notes --}}
+        {{!-- GM Notes --}}
         <div class="rt-gear-section">
           <div class="rt-gear-section__header">
             <i class="fas fa-sticky-note"></i>
-            <h3>Notes</h3>
+            <h3>GM Notes</h3>
           </div>
           <div class="rt-gear-section__body">
-            <textarea name="system.notes" rows="4" placeholder="GM notes, special rules, etc.">{{system.notes}}</textarea>
+            <textarea name="system.notes" rows="4" placeholder="Special rules, GM notes, etc.">{{system.notes}}</textarea>
           </div>
         </div>
 
@@ -306,7 +391,7 @@
           </div>
           <div class="rt-gear-section__body">
             <input type="text" name="system.source" value="{{system.source}}" 
-                   placeholder="Rogue Trader Core Rulebook, pg. 123" />
+                   placeholder="e.g., Rogue Trader Core Rulebook pg. 123" />
           </div>
         </div>
 

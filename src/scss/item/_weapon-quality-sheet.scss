@@ -1,14 +1,13 @@
 // ============================================
-// Rogue Trader Gear Sheet Styles
+// Rogue Trader Weapon Quality Sheet Styles
 // ============================================
-// Modern gear item sheet styling
-// Matches weapon sheet pattern with utility-themed colors
+// Clean reference-card style for weapon quality definitions
 
 // ============================================
-// GEAR SHEET BASE
+// QUALITY SHEET BASE
 // ============================================
 
-.rt-gear-sheet {
+.rt-weapon-quality-sheet {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -31,18 +30,18 @@
 // HEADER
 // ============================================
 
-.rt-gear-header {
+.rt-quality-header {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px;
-    background: linear-gradient(135deg, var(--rt-equipment-bg) 0%, transparent 100%);
-    border-bottom: 2px solid var(--rt-equipment-border);
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, transparent 100%);
+    border-bottom: 2px solid rgba(249, 115, 22, 0.3);
 
     &__image {
         position: relative;
-        width: 64px;
-        height: 64px;
+        width: 56px;
+        height: 56px;
         flex-shrink: 0;
         border: 2px solid var(--rt-bronze);
         border-radius: 6px;
@@ -60,7 +59,7 @@
             transform: scale(1.05);
             box-shadow: 0 4px 12px var(--rt-shadow-medium);
 
-            .rt-gear-header__image-overlay {
+            .rt-quality-header__image-overlay {
                 opacity: 1;
             }
         }
@@ -72,13 +71,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(249, 115, 22, 0.7);
         opacity: 0;
         transition: opacity 0.2s ease;
 
         i {
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
     }
 
@@ -95,14 +94,14 @@
         border: none;
         border-bottom: 1px solid transparent;
         font-family: 'Cinzel', serif;
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         font-weight: 600;
         color: var(--rt-text-dark);
         transition: border-color 0.2s ease;
 
         &:hover,
         &:focus {
-            border-bottom-color: var(--rt-gold);
+            border-bottom-color: rgba(249, 115, 22, 0.6);
             outline: none;
         }
     }
@@ -114,65 +113,33 @@
         margin-top: 6px;
         padding-left: 8px;
     }
-
-    &__equipped {
-        flex-shrink: 0;
-    }
 }
 
 // ============================================
-// GEAR BADGES
+// QUALITY BADGES
 // ============================================
 
-.rt-gear-badge {
+.rt-quality-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     padding: 3px 8px;
     border-radius: 4px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.03em;
 
-    &--category {
-        background: var(--rt-equipment-bg);
-        border: 1px solid var(--rt-equipment-border);
-        color: var(--rt-equipment-primary);
+    &--type {
+        background: rgba(249, 115, 22, 0.15);
+        border: 1px solid rgba(249, 115, 22, 0.4);
+        color: rgb(249, 115, 22);
     }
 
-    &--quantity {
-        background: var(--rt-panel-bg-translucent);
-        border: 1px solid var(--rt-border-color-light);
-        color: var(--rt-text-medium);
-    }
-
-    &--craft {
-        border: 1px solid;
-
-        &.rt-gear-badge--poor {
-            background: rgba(139, 0, 0, 0.1);
-            border-color: rgba(139, 0, 0, 0.4);
-            color: var(--rt-red);
-        }
-
-        &.rt-gear-badge--common {
-            background: var(--rt-panel-bg-translucent);
-            border-color: var(--rt-border-color-light);
-            color: var(--rt-text-muted);
-        }
-
-        &.rt-gear-badge--good {
-            background: rgba(45, 90, 45, 0.1);
-            border-color: rgba(45, 90, 45, 0.4);
-            color: var(--rt-green);
-        }
-
-        &.rt-gear-badge--best {
-            background: rgba(212, 175, 55, 0.15);
-            border-color: rgba(212, 175, 55, 0.5);
-            color: var(--rt-gold);
-        }
+    &--level {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        color: rgb(59, 130, 246);
     }
 }
 
@@ -180,7 +147,7 @@
 // STAT BAR
 // ============================================
 
-.rt-gear-stats {
+.rt-quality-stats {
     display: flex;
     flex-wrap: wrap;
     gap: 2px;
@@ -189,12 +156,12 @@
     border-bottom: 1px solid var(--rt-border-color-light);
 }
 
-.rt-gear-stat {
+.rt-quality-stat {
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
-    min-width: 60px;
+    min-width: 80px;
     padding: 8px 6px;
     background: var(--rt-panel-bg);
     border-radius: 4px;
@@ -202,7 +169,7 @@
 
     &__icon {
         font-size: 1rem;
-        color: var(--rt-bronze);
+        color: rgba(249, 115, 22, 0.8);
         margin-bottom: 4px;
     }
 
@@ -223,25 +190,9 @@
 
     &__value {
         font-family: 'Cinzel', serif;
-        font-size: 1rem;
-        font-weight: 700;
+        font-size: 0.95rem;
+        font-weight: 600;
         color: var(--rt-text-dark);
-    }
-
-    // Stat variants
-    &--category {
-        .rt-gear-stat__icon {
-            color: var(--rt-equipment-primary);
-        }
-        .rt-gear-stat__value {
-            color: var(--rt-equipment-primary);
-        }
-    }
-
-    &--quantity {
-        .rt-gear-stat__icon {
-            color: var(--rt-bronze);
-        }
     }
 }
 
@@ -249,7 +200,7 @@
 // TAB NAVIGATION
 // ============================================
 
-.rt-gear-tabs {
+.rt-quality-tabs {
     display: flex;
     gap: 2px;
     padding: 0 12px;
@@ -257,7 +208,7 @@
     border-bottom: 1px solid var(--rt-border-color);
 }
 
-.rt-gear-tab {
+.rt-quality-tab {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -281,9 +232,9 @@
     }
 
     &.active {
-        color: var(--rt-equipment-primary);
-        border-bottom-color: var(--rt-equipment-primary);
-        background: var(--rt-equipment-bg);
+        color: rgb(249, 115, 22);
+        border-bottom-color: rgb(249, 115, 22);
+        background: rgba(249, 115, 22, 0.08);
     }
 }
 
@@ -291,12 +242,11 @@
 // TAB CONTENT
 // ============================================
 
-.rt-gear-content {
+.rt-quality-content {
     flex: 1;
     overflow-y: auto;
     padding: 12px;
 
-    // Scrollbar styling
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -315,7 +265,7 @@
     }
 }
 
-.rt-gear-panel {
+.rt-quality-panel {
     display: none;
 
     &.active {
@@ -327,7 +277,7 @@
 // SECTIONS
 // ============================================
 
-.rt-gear-section {
+.rt-quality-section {
     background: var(--rt-panel-bg);
     border: 1px solid var(--rt-border-color-light);
     border-radius: 6px;
@@ -357,22 +307,6 @@
         }
     }
 
-    &__badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: 600;
-
-        &--danger {
-            background: var(--rt-danger-bg);
-            border: 1px solid var(--rt-red);
-            color: var(--rt-red-bright);
-        }
-    }
-
     &__body {
         padding: 12px;
 
@@ -385,144 +319,29 @@
         }
     }
 
-    &--full .rt-gear-section__body {
-        padding: 0;
-    }
+    &--effect {
+        border-color: rgba(249, 115, 22, 0.3);
 
-    &--consumable {
-        border-color: var(--rt-warning-primary);
+        .rt-quality-section__header {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.12) 0%, transparent 100%);
+            border-bottom-color: rgba(249, 115, 22, 0.2);
 
-        .rt-gear-section__header {
-            background: linear-gradient(135deg, var(--rt-warning-bg) 0%, transparent 100%);
-            border-bottom-color: var(--rt-warning-primary);
+            i {
+                color: rgb(249, 115, 22);
+            }
         }
     }
 }
 
 // ============================================
-// CONSUMABLE ACTIONS
-// ============================================
-
-.rt-consumable-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-// ============================================
-// 2-COLUMN GRID LAYOUT
-// ============================================
-
-.rt-gear-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-
-    @media (max-width: 600px) {
-        grid-template-columns: 1fr;
-    }
-}
-
-.rt-gear-column {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-// ============================================
-// USES BAR (Consumable Visual)
-// ============================================
-
-.rt-uses-bar {
-    margin-bottom: 12px;
-
-    &__track {
-        position: relative;
-        width: 100%;
-        height: 24px;
-        background: var(--rt-panel-bg-translucent);
-        border: 1px solid var(--rt-border-color-light);
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    &__fill {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background: linear-gradient(90deg, var(--rt-green) 0%, var(--rt-green-light) 100%);
-        transition: width 0.3s ease, background 0.3s ease;
-
-        &--empty {
-            background: linear-gradient(90deg, var(--rt-red) 0%, var(--rt-red-bright) 100%);
-        }
-    }
-
-    &__label {
-        margin-top: 6px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-align: center;
-        color: var(--rt-text-medium);
-    }
-}
-
-// ============================================
-// CHECKBOX GROUP
-// ============================================
-
-.rt-checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.rt-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    border-radius: 4px;
-
-    &:hover {
-        background: var(--rt-panel-bg-translucent);
-    }
-
-    input[type='checkbox'] {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    i {
-        font-size: 1.1rem;
-        color: var(--rt-bronze);
-        transition: color 0.2s ease;
-    }
-
-    input[type='checkbox']:checked + i {
-        color: var(--rt-green);
-    }
-
-    span {
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--rt-text-dark);
-    }
-}
-
-// ============================================
-// FIELD ENHANCEMENTS
+// FIELD STYLES
 // ============================================
 
 .rt-field {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 
     &:last-child {
         margin-bottom: 0;
@@ -550,14 +369,8 @@
 
         &:focus {
             outline: none;
-            border-color: var(--rt-gold);
-            box-shadow: 0 0 0 2px var(--rt-gold-translucent);
-        }
-
-        &:disabled {
-            background: var(--rt-panel-bg-translucent);
-            color: var(--rt-text-muted);
-            cursor: not-allowed;
+            border-color: rgba(249, 115, 22, 0.6);
+            box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.1);
         }
     }
 
@@ -565,15 +378,65 @@
         resize: vertical;
         min-height: 80px;
     }
+
+    &-hint {
+        margin: 2px 0 0 0;
+        font-size: 0.7rem;
+        font-style: italic;
+        color: var(--rt-text-muted);
+    }
+
+    &--checkbox {
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: none;
+            transition: background 0.2s ease;
+
+            &:hover {
+                background: var(--rt-panel-bg-translucent);
+            }
+        }
+
+        input[type='checkbox'] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+    }
 }
 
 .rt-field-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 
     @media (max-width: 500px) {
         grid-template-columns: 1fr;
+    }
+}
+
+// ============================================
+// HINT TEXT
+// ============================================
+
+.rt-hint-text {
+    margin: 0;
+    padding: 10px;
+    background: rgba(59, 130, 246, 0.08);
+    border-left: 3px solid rgba(59, 130, 246, 0.5);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--rt-text-medium);
+
+    strong {
+        color: var(--rt-text-dark);
+        font-weight: 600;
     }
 }

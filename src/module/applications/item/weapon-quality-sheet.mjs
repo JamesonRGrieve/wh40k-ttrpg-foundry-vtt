@@ -31,6 +31,7 @@ export default class WeaponQualitySheet extends BaseItemSheet {
 
     /** @override */
     static TABS = [
+        { tab: 'effect', group: 'primary', label: 'Effect' },
         { tab: 'details', group: 'primary', label: 'Details' },
         { tab: 'description', group: 'primary', label: 'Description' },
     ];
@@ -39,6 +40,6 @@ export default class WeaponQualitySheet extends BaseItemSheet {
 
     /** @override */
     tabGroups = {
-        primary: 'details',
+        primary: 'effect',
     };
 }

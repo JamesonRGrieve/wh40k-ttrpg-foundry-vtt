@@ -35,8 +35,9 @@ export default class GearSheet extends BaseItemSheet {
 
     /** @override */
     static TABS = [
-        { tab: 'details', group: 'primary', label: 'Details' },
-        { tab: 'description', group: 'primary', label: 'Info' },
+        { tab: 'overview', group: 'primary', label: 'Overview' },
+        { tab: 'usage', group: 'primary', label: 'Usage' },
+        { tab: 'description', group: 'primary', label: 'Description' },
         { tab: 'effects', group: 'primary', label: 'Effects' },
     ];
 
@@ -44,7 +45,7 @@ export default class GearSheet extends BaseItemSheet {
 
     /** @override */
     tabGroups = {
-        primary: 'details',
+        primary: 'overview',
     };
 
     /* -------------------------------------------- */
