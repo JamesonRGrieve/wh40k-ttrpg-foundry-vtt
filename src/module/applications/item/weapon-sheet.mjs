@@ -487,13 +487,35 @@ export default class WeaponSheet extends ContainerItemSheet {
         const identifier = target.dataset.identifier;
         if (!identifier) return;
 
-        // Try to find the quality in compendiums
-        // For now, show a tooltip with the description
-        const def = CONFIG.ROGUE_TRADER?.getQualityDefinition?.(identifier);
-        if (def) {
-            ui.notifications.info(`${def.label}: ${def.description}`);
+        // Try to find the quality in the weapon qualities compendium
+        const pack = game.packs.get('rogue-trader.rt-items-weapon-qualities');
+        if (!pack) {
+            ui.notifications.warn('Weapon qualities compendium not found.');
+            return;
+        }
+
+        // Search for the quality by identifier
+        const index = await pack.getIndex();
+        const qualityEntry = index.find((e) => {
+            // Match by identifier (strip level suffix)
+            const baseId = identifier.replace(/-\d+$/, '').replace(/-x$/i, '');
+            return e.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === baseId;
+        });
+
+        if (qualityEntry) {
+            // Open the quality sheet
+            const quality = await pack.getDocument(qualityEntry._id);
+            quality?.sheet.render(true);
         } else {
-            ui.notifications.warn(`Quality "${identifier}" not found.`);
+            // Fallback: show tooltip from CONFIG
+            const def = CONFIG.ROGUE_TRADER?.getQualityDefinition?.(identifier);
+            if (def) {
+                const label = game.i18n.localize(def.label);
+                const description = game.i18n.localize(def.description);
+                ui.notifications.info(`${label}: ${description}`);
+            } else {
+                ui.notifications.warn(`Quality "${identifier}" not found.`);
+            }
         }
     }
 
