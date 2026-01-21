@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000tzjdju",
+  "name": "Rending Critical - Leg",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_leg_consolidated",
+    "damageType": "rending",
+    "bodyPart": "leg",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>The attack knocks the limb backwards, painfully twisting it awkwardly. The target suffers 1 level of Fatigue.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The target's kneecap splits open. He must make a Challenging (+0) Agility test or fall Prone and suffer Blood Loss as the injured extremity hits the ground.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The attack rips a length of flesh from the leg. The target suffers Blood Loss and suffers [[1d5]] Agility damage.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The attack rips the kneecap free from the target's leg, and he collapses to the ground. The target is knocked Prone and suffers [[1d10]] Agility Damage. His Movement values are halved (rounding up) until he receives medical attention.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>In a spray of blood, the target's leg is deeply slashed, exposing bone, sinew, and muscle. The target suffers Blood Loss. He must make a Challenging (+0) Toughness test; if he fails, permanently reduce his Agility characteristic by 1.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The blow slices a couple of centimetres off the end of the target's foot. The target suffers Blood Loss. He must make a Challenging (+0) Toughness test. If he succeeds, his Movement is halved (rounding up) until he receives medical attention. If he fails, he suffers the Lost Foot condition (see page 243).</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>The force of the blow cuts deep into the leg, grinding against bone and tearing ligaments apart. The target is Stunned for 1 round, is knocked Prone, and suffers Blood Loss. The leg is Useless until the target receives medical attention.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>In a single bloody hack the target's leg is lopped off, spurting its vital fluids across the ground. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he is Stunned for [[1d10]] rounds and suffers Blood Loss. He suffers the Lost Leg condition (see page 243).</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>With a meaty chop, the leg comes away at the hip. The target pitches to the ground howling in agony before dying.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>With a meaty chop, the leg comes away at the hip. The target pitches to the ground howling in agony before dying. The tide of blood is so intense that, for the remainder of the encounter, any character who makes a Run or Charge action within 6 metres of the corpse must make a Challenging (+0) Agility test or be knocked Prone.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Leg (Severity 10)</strong></p><p>With a meaty chop, the leg comes away at the hip. The target pitches to the ground howling in agony before dying. The tide of blood is so intense that, for the remainder of the encounter, any character who makes a Run or Charge action within 6 metres of the corpse must make a Challenging (+0) Agility test or be knocked Prone.</p>",
+      "chat": "",
+      "summary": "Rending Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

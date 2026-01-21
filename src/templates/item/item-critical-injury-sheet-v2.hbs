@@ -32,7 +32,7 @@
             <i class="fas fa-chart-line"></i>
             Severity {{item.system.severity}}
           </span>
-          {{#if item.system.permanent}}
+          {{#if item.system.isPermanent}}
           <span class="rt-injury-badge rt-injury-badge--permanent" title="Permanent Injury">
             <i class="fas fa-infinity"></i>
             Permanent
@@ -58,6 +58,7 @@
                max="10" 
                value="{{item.system.severity}}" 
                data-dtype="Number"
+               data-action="changeSeverity"
                class="rt-injury-severity__input" />
         <div class="rt-injury-severity__labels">
           <span class="rt-injury-severity__label rt-injury-severity__label--min">Minor (1)</span>
@@ -142,13 +143,34 @@
         <div class="rt-injury-section">
           <div class="rt-injury-section__header">
             <i class="fas fa-file-medical"></i>
-            <h3>Injury Effect</h3>
+            <h3>Injury Effect{{#if item.system.isConsolidated}} (Severity {{item.system.severity}}){{/if}}</h3>
           </div>
           <div class="rt-injury-section__body rt-injury-section__body--editor">
             {{#if inEditMode}}
-            {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+              {{#if item.system.isConsolidated}}
+                {{!-- Consolidated format: Show all severity levels for editing --}}
+                {{#each item.system.availableSeverities as |sev|}}
+                  <div class="rt-severity-effect-editor">
+                    <label><strong>Severity {{sev}}:</strong></label>
+                    {{editor content=(lookup item.system.effects sev).text target=(concat "system.effects." sev ".text") button=true editable=true engine="prosemirror"}}
+                    <label>
+                      <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked (lookup item.system.effects sev).permanent}} />
+                      <span>Permanent</span>
+                    </label>
+                  </div>
+                {{/each}}
+              {{else}}
+                {{!-- Legacy format: Single effect editor --}}
+                {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+              {{/if}}
             {{else}}
-            <div class="rt-description-content">{{{system.effect}}}</div>
+              {{!-- View mode: Show current severity effect --}}
+              <div class="rt-description-content">{{{item.system.currentEffect}}}</div>
+              {{#if item.system.isConsolidated}}
+                <div class="rt-injury-severity-preview">
+                  <p><em>This injury has effects for all severity levels 1-10. Change the severity slider to preview different effects.</em></p>
+                </div>
+              {{/if}}
             {{/if}}
           </div>
         </div>

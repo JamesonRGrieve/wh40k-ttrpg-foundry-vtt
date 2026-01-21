@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000zedl7v",
+  "name": "Impact Critical - Arm",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_arm_consolidated",
+    "damageType": "impact",
+    "bodyPart": "arm",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>The attack strikes the target's limb with a powerful blow. He drops anything he was holding in that hand.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The strike leaves a deep bruise, possibly causing minor fractures in the arm. The target suffers 1 level of Fatigue.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The impact smashes into the arm or whatever the target is holding, ripping it away and leaving the target reeling from the pain. He is Stunned for 1 round and drops anything he was holding in that hand. Roll 1d10; on a result of 1, anything the target was holding in that hand is badly damaged and unusable until repaired.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The impact crushes flesh and bone. The target drops anything he was holding in that hand, and must make a Challenging (+0) Toughness test or suffer [[1d10]] Weapon Skill and [[1d10]] Ballistic Skill damage.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>Muscle and bone take a pounding as the attack rips into the arm. The limb is Useless until the target receives medical attention.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The attack pulverises the target's hand, crushing and breaking [[1d5]] fingers. The target suffers 1 level of Fatigue. He must make a Challenging (+0) Toughness test; if he fails, permanently reduce his Weapon Skill and Ballistic Skill characteristics by 2.</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>With a loud snap, the arm bone is shattered and left hanging limply at the target's side, dribbling blood onto the ground. The target suffers Blood Loss. The arm is Useless until the target receives medical attention.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The force of the attack takes the arm off just below the shoulder, showering blood and gore across the ground. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he suffers [[1d5]] levels of Fatigue, is Stunned for [[1d10]] rounds, and suffers Blood Loss. He also now suffers from the Lost Arm condition (see page 242).</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>In a rain of blood, gore, and meat, the target's arm is removed from his body. Screaming incoherently, he twists about in agony for a few seconds before collapsing to the ground and dying.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>In a rain of blood, gore, and meat, the target's arm is removed from his body. Screaming incoherently, he twists about in agony for a few seconds before collapsing to the ground and dying. As the arm is removed by the force of the attack, bone, chunks of flesh, clothing, and armour fragments fly about like blood-soaked shrapnel. Each target within 2 metres suffers a single hit for 1d5-3 Impact damage to a randomly determined Hit Location.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Arm (Severity 10)</strong></p><p>In a rain of blood, gore, and meat, the target's arm is removed from his body. Screaming incoherently, he twists about in agony for a few seconds before collapsing to the ground and dying. As the arm is removed by the force of the attack, bone, chunks of flesh, clothing, and armour fragments fly about like blood-soaked shrapnel. Each target within 2 metres suffers a single hit for 1d5-3 Impact damage to a randomly determined Hit Location.</p>",
+      "chat": "",
+      "summary": "Impact Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

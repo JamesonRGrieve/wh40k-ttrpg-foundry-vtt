@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000675edw",
+  "name": "Rending Critical - Head",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_head_consolidated",
+    "damageType": "rending",
+    "bodyPart": "head",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>The attack tears a painful rent in the target's face. If he is wearing a helmet, he suffers no ill effects; otherwise, he suffers 1 level of Fatigue.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The attack slices open the target's scalp, which immediately begins to bleed profusely, spilling into his eyes. The target suffers a -10 penalty to Weapon Skill and Ballistic Skill tests for the next [[1d10]] rounds. He must pass a Challenging (+0) Toughness test or suffer Blood Loss.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The attack rips open the target's face with a vicious shredding sound. He is Stunned for 1 round and suffers Blood Loss. If he is wearing a helmet, it is torn off.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The attack slices across one of the target's eye sockets, possibly scooping out the eye. The target suffers [[1d10]] Perception damage. He must make a Routine (+20) Toughness; test if he fails, he suffers the Lost Eye condition (see page 242).</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>The attack tears the target's helmet from his head. If he is not wearing a helmet, the target instead loses an ear and is Deafened until he receives medical attention. If he loses an ear, he must also must pass a Challenging (+0) Toughness test or have his Fellowship characteristic permanently reduced by 1. The target is Stunned for [[1d5]] rounds.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The blow rips violently across the target's face, taking with it an important feature. He suffers [[1d5]] levels of Fatigue and suffers Blood Loss. Roll [[1d10]] to see what the target has lost.\n1-3: Eye (see the Lost Eye condition on page 242),\n4-7: Nose (permanently reduce his Fellowship characteristic by [[1d10]]),\n8-10: Ear (the target is Deafened until he receives medical attention).</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>In a splatter of skin and teeth, the attack removes most of the target's face. The strike might not have slain him, but the target's words are forever slurred as a result of this vicious injury. The target is Stunned for 1 round and suffers Blood Loss. He is permanently Blinded. Permanently reduce his Fellowship characteristic by 1d10.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The blow slices into the side of the target's head causing his eyes to pop out and his brain to ooze down his cheek like spilled jelly. He is dead before he hits the ground.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>With a sound not unlike a wet sponge being torn in half, the target's head flies free of its body and sails through the air, landing harmlessly [[2d10]] metres away with a soggy thud. The target is instantly slain.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>With a sound not unlike a wet sponge being torn in half, the target's head flies free of its body and sails through the air, landing harmlessly [[2d10]] metres away with a soggy thud. The target is instantly slain. The target's neck spews blood in a torrent, drenching all those within [[1d5]] metres and forcing each effected target to make a Challenging (+0) Agility test. Each character who fails the Test suffers a -10 penalty to Weapon Skill and Ballistic Skill tests for 1 round, as gore fills his eyes or fouls his visor.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Head (Severity 10)</strong></p><p>With a sound not unlike a wet sponge being torn in half, the target's head flies free of its body and sails through the air, landing harmlessly [[2d10]] metres away with a soggy thud. The target is instantly slain. The target's neck spews blood in a torrent, drenching all those within [[1d5]] metres and forcing each effected target to make a Challenging (+0) Agility test. Each character who fails the Test suffers a -10 penalty to Weapon Skill and Ballistic Skill tests for 1 round, as gore fills his eyes or fouls his visor.</p>",
+      "chat": "",
+      "summary": "Rending Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

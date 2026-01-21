@@ -16,6 +16,9 @@ export default class CriticalInjurySheet extends BaseItemSheet {
             width: 560,
             height: 620,
         },
+        actions: {
+            changeSeverity: CriticalInjurySheet.#changeSeverity,
+        },
     };
 
     /* -------------------------------------------- */
@@ -67,5 +70,22 @@ export default class CriticalInjurySheet extends BaseItemSheet {
         };
 
         return context;
+    }
+
+    /* -------------------------------------------- */
+    /*  Action Handlers                             */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle severity change - re-render to update displayed effect.
+     * @this {CriticalInjurySheet}
+     * @param {PointerEvent} event - Triggering event
+     * @param {HTMLElement} target - Action target
+     */
+    static async #changeSeverity(event, target) {
+        const newSeverity = parseInt(target.value);
+        if (newSeverity !== this.item.system.severity) {
+            await this.item.update({ 'system.severity': newSeverity });
+        }
     }
 }

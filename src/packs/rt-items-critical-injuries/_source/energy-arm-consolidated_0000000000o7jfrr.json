@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000o7jfrr",
+  "name": "Energy Critical - Arm",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_arm_consolidated",
+    "damageType": "energy",
+    "bodyPart": "arm",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>The attack grazes the target’s arm, causing it to spasm uncontrollably with pain. All tests involving that arm suffer a –30 penalty for [[1d5]] rounds</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The attack smashes into the arm, sending currents of energy crackling down to the fingers and up to the shoulder. The target suffers 1 level of Fatigue, and that arm is Useless for [[1d5]] rounds.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The arm suffers superficial burns inflicting no small amount of pain on the target. The target suffers [[1d5]] levels of Fatigue, and can take only a Half Action during his next turn.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The shock of the attack causes the character to temporarily lose control of his autonomous functions. He is Stunned for 1 round and is knocked Prone. The arm is Useless for [[1d10]] rounds.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>The attack causes energy to course through the target’s arm. He is Stunned for 1 round, and the arm is Useless until the target receives medical treatment.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The attack wreathes the arm in flame, scorching clothing and armour, and temporarily fusing together the target’s fingers. The target suffers [[1d5]] levels of Fatigue and [[1d5]] Weapon Skill and Ballistic Skill damage, and he must make a Challenging (+0) Toughness test for suffer the Lost Hand condition.</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>With a terrible snapping sound, the heat of the attack boils the marrow in the target’s arm, causing it to crack or even shatter. The target suffers [[1d5]] levels of Fatigue and is Stunned for 1 round. His arm is Useless until it is repaired.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>Energy ripples across the target’s arm, causing skin and muscle to slough disgustingly from the target’s limb, revealing a sticky red mess of sinew and bone. The target suffers [[1d10]] levels of Fatigue and must make a Challenging (+0) Toughness test or be Stunned for [[1d5]] rounds. He now suffers from the Lost Arm condition.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>Fire consumes the target’s arm, burning the flesh to a crisp right down to the bone. The target must make an immediate Challenging (+0) Toughness test or die from shock. If he survives, the target suffers [[1d10]] levels of Fatigue and is Stunned for 1 round. The target now suffers from the Lost Arm condition.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The attack reduces the arm to a cloud of crimson ash and sends the target crumbling to the ground. He immediately dies from shock, clutching his smoking stump.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Arm (Severity 10)</strong></p><p>The attack reduces the arm to a cloud of crimson ash and sends the target crumbling to the ground. He immediately dies from shock, clutching his smoking stump.</p>",
+      "chat": "",
+      "summary": "Energy Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.155Z"
+    }
+  }
+}
