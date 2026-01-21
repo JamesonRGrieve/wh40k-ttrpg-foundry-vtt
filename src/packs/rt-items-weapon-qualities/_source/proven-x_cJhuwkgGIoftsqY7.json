@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
+    "identifier": "proven-x",
+    "hasLevel": false,
+    "level": null,
     "effect": "Damage Rolls below X count as if X was Rolled",
+    "notes": "",
     "description": {
       "value": "<p>Damage Rolls below X count as if X was Rolled</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

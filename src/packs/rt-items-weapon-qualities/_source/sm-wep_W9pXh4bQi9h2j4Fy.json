@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
+    "identifier": "sm-wep",
+    "hasLevel": false,
+    "level": null,
     "effect": "Designed for Space Marines, those that aren't suffer -20 to use if they don't have Unnatural Strength(4+). Ranged Weapons also count as one size larger (Pistol->Basic->Heavy->Still Heavy), whilst one-handed Melee weapons need two hands, and can't wield two-handed (HB - Size: Hulking+ solves this).",
+    "notes": "",
     "description": {
       "value": "<p>Designed for Space Marines, those that aren't suffer -20 to use if they don't have Unnatural Strength(4+). Ranged Weapons also count as one size larger (Pistol->Basic->Heavy->Still Heavy), whilst one-handed Melee weapons need two hands, and can't wield two-handed (HB - Size: Hulking+ solves this).</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

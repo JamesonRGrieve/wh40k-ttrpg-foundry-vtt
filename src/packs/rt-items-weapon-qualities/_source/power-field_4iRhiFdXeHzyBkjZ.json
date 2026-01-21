@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
-    "effect": 130,
+    "identifier": "power-field",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 130</p>",
+    "notes": "",
     "description": {
       "value": "<p>130</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

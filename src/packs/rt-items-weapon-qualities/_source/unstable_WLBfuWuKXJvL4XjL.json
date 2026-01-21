@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
-    "effect": 6,
+    "identifier": "unstable",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 6</p>",
+    "notes": "",
     "description": {
       "value": "<p>6</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

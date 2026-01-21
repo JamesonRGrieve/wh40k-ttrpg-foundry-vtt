@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
-    "effect": 40,
+    "identifier": "flame",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 40</p>",
+    "notes": "",
     "description": {
       "value": "<p>40</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

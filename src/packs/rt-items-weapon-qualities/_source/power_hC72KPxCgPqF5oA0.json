@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
-    "effect": 80,
+    "identifier": "power",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 80</p>",
+    "notes": "",
     "description": {
       "value": "<p>80</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

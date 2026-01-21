@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
+    "identifier": "hallucinogenic-x",
+    "hasLevel": false,
+    "level": null,
     "effect": "Target makes Toughness with -10*X, failiure means rolling on Halluciongenic Effects Table (Table 5-5), lasting 1 round + 1 per degree of failiure. +20 to test if wearing respirator or in sealed armour.",
+    "notes": "",
     "description": {
       "value": "<p>Target makes Toughness with -10*X, failiure means rolling on Halluciongenic Effects Table (Table 5-5), lasting 1 round + 1 per degree of failiure. +20 to test if wearing respirator or in sealed armour.</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

@@ -37,11 +37,12 @@ import {
     JournalEntryItemSheet,
     OriginPathSheet,
     WeaponModSheet,
+    WeaponQualitySheet,
     AttackSpecialSheet,
     ShipComponentSheet,
     ShipWeaponSheet,
     ShipUpgradeSheet,
-    NPCTemplateSheet
+    NPCTemplateSheet,
 } from './applications/item/_module.mjs';
 
 import { RTCompendiumBrowser } from './applications/compendium-browser.mjs';
@@ -66,14 +67,13 @@ import { TooltipsRT } from './applications/components/_module.mjs';
 import * as characterCreation from './applications/character-creation/_module.mjs';
 import * as npcApplications from './applications/npc/_module.mjs';
 
-import * as documents from './documents/_module.mjs'
+import * as documents from './documents/_module.mjs';
 import { SYSTEM_ID } from './constants.mjs';
 
 export { SYSTEM_ID };
 
 export class HooksManager {
     static registerHooks() {
-
         Hooks.once('init', HooksManager.init);
         Hooks.on('ready', HooksManager.ready);
         Hooks.on('hotbarDrop', HooksManager.hotbarDrop);
@@ -235,223 +235,230 @@ Enable Debug with: game.rt.debug = true
         const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig;
 
         // Unregister core V1 actor sheet and register V2 actor sheets
-        DocumentSheetConfig.unregisterSheet(Actor, "core", foundry.appv1.sheets.ActorSheet);
+        DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheet, {
-            types: ["acolyte", "character"],
+            types: ['acolyte', 'character'],
             makeDefault: true,
-            label: "RT.Sheet.Acolyte"
+            label: 'RT.Sheet.Acolyte',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheetSidebar, {
-            types: ["acolyte", "character"],
+            types: ['acolyte', 'character'],
             makeDefault: false,
-            label: "RT.Sheet.AcolyteSidebar"
+            label: 'RT.Sheet.AcolyteSidebar',
         });
         // Legacy NPC type uses Acolyte sheet as fallback (for existing npc actors)
         // TODO: Add migration to convert "npc" to "npcV2" type
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheet, {
-            types: ["npc"],
+            types: ['npc'],
             makeDefault: true,
-            label: "RT.Sheet.NPCLegacy"
+            label: 'RT.Sheet.NPCLegacy',
         });
         // NPC V2 sheet - modern redesign for npcV2 actors
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheetV2, {
-            types: ["npcV2"],
+            types: ['npcV2'],
             makeDefault: true,
-            label: "RT.Sheet.NPCV2"
+            label: 'RT.Sheet.NPCV2',
         });
         // Vehicle V2 sheet - for npcV2 actors with primaryUse="vehicle"
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheetV2, {
-            types: ["npcV2"],
+            types: ['npcV2'],
             makeDefault: false,
-            label: "RT.Sheet.VehicleV2"
+            label: 'RT.Sheet.VehicleV2',
         });
         // Legacy vehicle sheet
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
-            types: ["vehicle"],
+            types: ['vehicle'],
             makeDefault: true,
-            label: "RT.Sheet.Vehicle"
+            label: 'RT.Sheet.Vehicle',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, StarshipSheet, {
-            types: ["starship"],
+            types: ['starship'],
             makeDefault: true,
-            label: "RT.Sheet.Starship"
+            label: 'RT.Sheet.Starship',
         });
 
         // Unregister core V1 item sheet and register V2 item sheets
-        DocumentSheetConfig.unregisterSheet(Item, "core", foundry.appv1.sheets.ItemSheet);
-        
+        DocumentSheetConfig.unregisterSheet(Item, 'core', foundry.appv1.sheets.ItemSheet);
+
         // Default item sheet for unspecified types
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, BaseItemSheet, {
             makeDefault: true,
-            label: "RT.Sheet.Item"
+            label: 'RT.Sheet.Item',
         });
-        
+
         // Weapon sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, WeaponSheet, {
-            types: ["weapon"],
+            types: ['weapon'],
             makeDefault: true,
-            label: "RT.Sheet.Weapon"
+            label: 'RT.Sheet.Weapon',
         });
-        
+
         // Armour sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ArmourSheet, {
-            types: ["armour"],
+            types: ['armour'],
             makeDefault: true,
-            label: "RT.Sheet.Armour"
+            label: 'RT.Sheet.Armour',
         });
-        
+
         // Talent sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, TalentSheet, {
-            types: ["talent"],
+            types: ['talent'],
             makeDefault: true,
-            label: "RT.Sheet.Talent"
+            label: 'RT.Sheet.Talent',
         });
-        
+
         // Trait sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, TraitSheet, {
-            types: ["trait"],
+            types: ['trait'],
             makeDefault: true,
-            label: "RT.Sheet.Trait"
+            label: 'RT.Sheet.Trait',
         });
-        
+
         // Gear sheet (consumables, drugs, tools, gear)
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, GearSheet, {
-            types: ["gear", "consumable", "drug", "tool"],
+            types: ['gear', 'consumable', 'drug', 'tool'],
             makeDefault: true,
-            label: "RT.Sheet.Gear"
+            label: 'RT.Sheet.Gear',
         });
-        
+
         // Ammunition sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, AmmoSheet, {
-            types: ["ammunition"],
+            types: ['ammunition'],
             makeDefault: true,
-            label: "RT.Sheet.Ammunition"
+            label: 'RT.Sheet.Ammunition',
         });
-        
+
         // Psychic Power sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, PsychicPowerSheet, {
-            types: ["psychicPower"],
+            types: ['psychicPower'],
             makeDefault: true,
-            label: "RT.Sheet.PsychicPower"
+            label: 'RT.Sheet.PsychicPower',
         });
-        
+
         // Skill sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, SkillSheet, {
-            types: ["skill"],
+            types: ['skill'],
             makeDefault: true,
-            label: "RT.Sheet.Skill"
+            label: 'RT.Sheet.Skill',
         });
-        
+
         // Cybernetic sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, CyberneticSheet, {
-            types: ["cybernetic"],
+            types: ['cybernetic'],
             makeDefault: true,
-            label: "RT.Sheet.Cybernetic"
+            label: 'RT.Sheet.Cybernetic',
         });
-        
+
         // Force Field sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ForceFieldSheet, {
-            types: ["forceField"],
+            types: ['forceField'],
             makeDefault: true,
-            label: "RT.Sheet.ForceField"
+            label: 'RT.Sheet.ForceField',
         });
-        
+
         // Critical Injury sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, CriticalInjurySheet, {
-            types: ["criticalInjury"],
+            types: ['criticalInjury'],
             makeDefault: true,
-            label: "RT.Sheet.CriticalInjury"
+            label: 'RT.Sheet.CriticalInjury',
         });
-        
+
         // Condition sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ConditionSheet, {
-            types: ["condition"],
+            types: ['condition'],
             makeDefault: true,
-            label: "RT.Sheet.Condition"
+            label: 'RT.Sheet.Condition',
         });
-        
+
         // Combat Action sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, CombatActionSheet, {
-            types: ["combatAction"],
+            types: ['combatAction'],
             makeDefault: true,
-            label: "RT.Sheet.CombatAction"
+            label: 'RT.Sheet.CombatAction',
         });
-        
+
         // Storage Location sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, StorageLocationSheet, {
-            types: ["storageLocation"],
+            types: ['storageLocation'],
             makeDefault: true,
-            label: "RT.Sheet.StorageLocation"
+            label: 'RT.Sheet.StorageLocation',
         });
-        
+
         // Peer/Enemy sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, PeerEnemySheet, {
-            types: ["peer", "enemy"],
+            types: ['peer', 'enemy'],
             makeDefault: true,
-            label: "RT.Sheet.PeerEnemy"
+            label: 'RT.Sheet.PeerEnemy',
         });
-        
+
         // Journal Entry sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, JournalEntryItemSheet, {
-            types: ["journalEntry"],
+            types: ['journalEntry'],
             makeDefault: true,
-            label: "RT.Sheet.JournalEntry"
+            label: 'RT.Sheet.JournalEntry',
         });
-        
+
         // Origin Path sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, OriginPathSheet, {
-            types: ["originPath"],
+            types: ['originPath'],
             makeDefault: true,
-            label: "RT.Sheet.OriginPath"
+            label: 'RT.Sheet.OriginPath',
         });
-        
+
         // Weapon Modification sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, WeaponModSheet, {
-            types: ["weaponModification"],
+            types: ['weaponModification'],
             makeDefault: true,
-            label: "RT.Sheet.WeaponMod"
+            label: 'RT.Sheet.WeaponMod',
         });
-        
+
         // Armour Modification sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ArmourModSheet, {
-            types: ["armourModification"],
+            types: ['armourModification'],
             makeDefault: true,
-            label: "RT.Sheet.ArmourMod"
+            label: 'RT.Sheet.ArmourMod',
         });
-        
+
         // Attack Special sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, AttackSpecialSheet, {
-            types: ["attackSpecial"],
+            types: ['attackSpecial'],
             makeDefault: true,
-            label: "RT.Sheet.AttackSpecial"
+            label: 'RT.Sheet.AttackSpecial',
         });
-        
+
+        // Weapon Quality sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, WeaponQualitySheet, {
+            types: ['weaponQuality'],
+            makeDefault: true,
+            label: 'RT.Sheet.WeaponQuality',
+        });
+
         // Ship Component sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ShipComponentSheet, {
-            types: ["shipComponent"],
+            types: ['shipComponent'],
             makeDefault: true,
-            label: "RT.Sheet.ShipComponent"
+            label: 'RT.Sheet.ShipComponent',
         });
-        
+
         // Ship Weapon sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ShipWeaponSheet, {
-            types: ["shipWeapon"],
+            types: ['shipWeapon'],
             makeDefault: true,
-            label: "RT.Sheet.ShipWeapon"
+            label: 'RT.Sheet.ShipWeapon',
         });
-        
+
         // Ship Upgrade sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ShipUpgradeSheet, {
-            types: ["shipUpgrade"],
+            types: ['shipUpgrade'],
             makeDefault: true,
-            label: "RT.Sheet.ShipUpgrade"
+            label: 'RT.Sheet.ShipUpgrade',
         });
-        
+
         // NPC Template sheet
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, NPCTemplateSheet, {
-            types: ["npcTemplate"],
+            types: ['npcTemplate'],
             makeDefault: true,
-            label: "RT.Sheet.NPCTemplate"
+            label: 'RT.Sheet.NPCTemplate',
         });
 
         RogueTraderSettings.registerSettings();
@@ -465,7 +472,7 @@ Enable Debug with: game.rt.debug = true
         game.rt.tooltips = new TooltipsRT();
         await game.rt.tooltips.initialize();
 
-        game.tours.register(SYSTEM_ID, "main-tour", new DHTourMain());
+        game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
 
         if (!game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.processActiveEffectsDuringCombat)) {
             DHCombatActionManager.disableHooks();
@@ -515,22 +522,20 @@ Enable Debug with: game.rt.debug = true
      */
     static getActorSheetClass(actor, sheetData) {
         // Only handle npcV2 actors
-        if (actor.type !== "npcV2") return;
-        
+        if (actor.type !== 'npcV2') return;
+
         // Check primaryUse field
         const primaryUse = actor.system?.primaryUse;
-        
+
         // Auto-select vehicle sheet for vehicle/ship NPCs
-        if (primaryUse === "vehicle" || primaryUse === "ship") {
+        if (primaryUse === 'vehicle' || primaryUse === 'ship') {
             // Find VehicleSheetV2 in registered sheets
-            const vehicleSheet = Object.values(sheetData).find(s => 
-                s.id === "rogue-trader.VehicleSheetV2"
-            );
+            const vehicleSheet = Object.values(sheetData).find((s) => s.id === 'rogue-trader.VehicleSheetV2');
             if (vehicleSheet) {
                 return vehicleSheet.id;
             }
         }
-        
+
         // Default to NPCSheetV2 for standard NPCs
         return null; // Let default handling work
     }

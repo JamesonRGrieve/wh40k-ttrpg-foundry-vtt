@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
-    "effect": 2,
+    "identifier": "witch-edge",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 2</p>",
+    "notes": "",
     "description": {
       "value": "<p>2</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

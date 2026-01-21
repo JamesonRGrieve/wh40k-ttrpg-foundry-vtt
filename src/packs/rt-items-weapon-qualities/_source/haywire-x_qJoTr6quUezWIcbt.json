@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
+    "identifier": "haywire-x",
+    "hasLevel": false,
+    "level": null,
     "effect": "Effects X metre radius, roll 1d10+X on Haywire field effects table. Each round, strength lessens by 1 step.",
+    "notes": "",
     "description": {
       "value": "<p>Effects X metre radius, roll 1d10+X on Haywire field effects table. Each round, strength lessens by 1 step.</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

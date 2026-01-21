@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
+    "identifier": "indirect-x",
+    "hasLevel": false,
+    "level": null,
     "effect": "Can be fired when the enemy is not seen with help of a spotter. Attack always requires Full Action with -10 to Test. If Successful test, scatter 1d10-BS Metres, Missed shots scatter Xd10 metres. A Comrade may assist in firing, removing -10 penalty and missed hits instead scattering Xd5 metres.",
+    "notes": "",
     "description": {
       "value": "<p>Can be fired when the enemy is not seen with help of a spotter. Attack always requires Full Action with -10 to Test. If Successful test, scatter 1d10-BS Metres, Missed shots scatter Xd10 metres. A Comrade may assist in firing, removing -10 penalty and missed hits instead scattering Xd5 metres.</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

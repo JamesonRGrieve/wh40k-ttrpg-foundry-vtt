@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
+    "identifier": "primitive-x",
+    "hasLevel": false,
+    "level": null,
     "effect": "Damage Rolls above X count as if X was Rolled (although a roll of 0 still causes Righteous Fury). HB: Ignore if hitting Primitive/Natural Armour.",
+    "notes": "",
     "description": {
       "value": "<p>Damage Rolls above X count as if X was Rolled (although a roll of 0 still causes Righteous Fury). HB: Ignore if hitting Primitive/Natural Armour.</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},

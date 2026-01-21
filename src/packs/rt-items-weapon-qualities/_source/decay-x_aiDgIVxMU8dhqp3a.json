@@ -3,18 +3,14 @@
   "type": "weaponQuality",
   "img": "icons/svg/aura.svg",
   "system": {
+    "identifier": "decay-x",
+    "hasLevel": false,
+    "level": null,
     "effect": "Any Living Creature that suffers Critical Damage (including that of Zealous Hatred/Righteous Fury) must make -10*X Toughness Test or instantly die.",
+    "notes": "",
     "description": {
       "value": "<p>Any Living Creature that suffers Critical Damage (including that of Zealous Hatred/Righteous Fury) must make -10*X Toughness Test or instantly die.</p>"
-    },
-    "rating": 0,
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "toHit": 0,
-      "range": 0
-    },
-    "specialEffect": ""
+    }
   },
   "effects": [],
   "flags": {},
