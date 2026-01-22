@@ -258,53 +258,38 @@
 .rt-row-actions {
   display: flex;
   gap: 2px;
+  align-self: flex-end;
   align-items: center;
   margin-left: auto;
   flex-shrink: 0;
+  width: 100px;
 }
 
-// Talent favorite button
-.rt-talent-favorite {
+
+
+.rt-action-btn {
   background: none;
   border: none;
-  padding: 4px 6px;
-  color: $rt-text-muted;
+  color: var(--rt-text-muted);
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
+  padding: 4px 6px;
   border-radius: 3px;
+  transition: all 0.2s ease;
+  font-size: 1rem;
   
   &:hover {
     background: rgba($rt-color-gold, 0.1);
     color: $rt-color-gold;
     transform: scale(1.1);
   }
-  
+
   &.active {
     color: $rt-color-gold;
-    
+
     i {
       filter: drop-shadow(0 0 2px rgba($rt-color-gold, 0.5));
     }
   }
-}
-
-.rt-action-btn {
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--rt-text-muted);
-  cursor: pointer;
-  padding: 4px 6px;
-  border-radius: 3px;
-  transition: all 0.15s ease;
-  font-size: 0.8rem;
-  
-  &:hover {
-    color: var(--rt-text-dark);
-    background: var(--rt-panel-bg-translucent);
-    border-color: var(--rt-border-color-light);
-  }
-  
   &.rt-btn-expand {
     i {
       transition: transform 0.2s ease;
