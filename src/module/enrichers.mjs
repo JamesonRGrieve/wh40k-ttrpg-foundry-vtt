@@ -369,8 +369,8 @@ async function handleEnricherClick(event) {
             break;
 
         // Modifiers and armor are display-only (no click action)
-        case "modifier":
-        case "armor":
+        case 'modifier':
+        case 'armor':
         default:
             break;
     }
@@ -500,19 +500,4 @@ async function enrichCondition(match, options) {
 
     return span;
 }
-            break;
 
-        case 'skill':
-            if (actor.rollSkill) {
-                const [skillKey, specialization] = config.split(':');
-                await actor.rollSkill(skillKey, specialization);
-            }
-            break;
-
-        // Modifiers and armor are display-only (no click action)
-        case 'modifier':
-        case 'armor':
-        default:
-            break;
-    }
-}
