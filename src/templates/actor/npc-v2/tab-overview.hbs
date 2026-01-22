@@ -167,9 +167,13 @@
               Quick Notes
               {{#if editable}}<i class="fa-solid fa-pen-to-square rt-edit-hint"></i>{{/if}}
             </label>
+            {{#if editable}}
             <div class="rt-editor-mini">
               {{editor content=system.quickNotes target="system.quickNotes" button=true editable=editable engine="prosemirror"}}
             </div>
+            {{else}}
+            <div class="rt-note-display">{{{system.quickNotes}}}</div>
+            {{/if}}
           </div>
           <div class="rt-note-field rt-note-field--editable">
             <label>
@@ -177,9 +181,13 @@
               Tactics
               {{#if editable}}<i class="fa-solid fa-pen-to-square rt-edit-hint"></i>{{/if}}
             </label>
+            {{#if editable}}
             <div class="rt-editor-mini">
               {{editor content=system.tactics target="system.tactics" button=true editable=editable engine="prosemirror"}}
             </div>
+            {{else}}
+            <div class="rt-note-display">{{{system.tactics}}}</div>
+            {{/if}}
           </div>
         </div>
         <div class="rt-meta-fields">

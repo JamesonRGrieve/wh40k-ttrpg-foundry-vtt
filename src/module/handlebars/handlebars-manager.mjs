@@ -172,6 +172,9 @@ export class HandlebarManager {
             // Item panels
             'systems/rogue-trader/templates/item/panel/active-effects-panel.hbs',
             'systems/rogue-trader/templates/item/panel/modifiers-editor-panel.hbs',
+
+            // Component templates
+            'systems/rogue-trader/templates/components/active-modifiers-panel.hbs',
         ];
 
         return foundry.applications.handlebars.loadTemplates(templates);
