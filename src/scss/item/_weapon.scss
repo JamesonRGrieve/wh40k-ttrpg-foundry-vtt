@@ -325,30 +325,35 @@
         }
 
         &--medium {
-            grid-column: span 2;
+            grid-column: span 1;
             grid-row: span 1;
-            aspect-ratio: 2 / 1;
+            aspect-ratio: 1 / 1;
 
             .rt-iconic-stat__shape {
-                font-size: 1.2rem;
-                margin-bottom: 4px;
+                font-size: 1rem;
+                margin-bottom: 3px;
             }
 
             .rt-iconic-stat__value {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
 
             .rt-iconic-stat__label {
                 font-size: 0.6rem;
             }
 
-            // Shrink to 1x1 on narrow containers
-            @container (max-width: 380px) {
-                grid-column: span 1;
-                aspect-ratio: 1 / 1;
+            // Expand to 2x1 when there's enough space (wide containers)
+            @container (min-width: 550px) {
+                grid-column: span 2;
+                aspect-ratio: 2 / 1;
+
+                .rt-iconic-stat__shape {
+                    font-size: 1.2rem;
+                    margin-bottom: 4px;
+                }
 
                 .rt-iconic-stat__value {
-                    font-size: 0.9rem;
+                    font-size: 1rem;
                 }
             }
         }
