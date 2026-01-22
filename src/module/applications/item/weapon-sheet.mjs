@@ -34,7 +34,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         },
         position: {
             width: 450,
-            height: 350,
+            height: 400,
         },
         window: {
             resizable: true,
