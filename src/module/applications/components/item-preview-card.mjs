@@ -23,7 +23,7 @@ export function ItemPreviewMixin(Base) {
         static DEFAULT_OPTIONS = {
             actions: {
                 ...super.DEFAULT_OPTIONS?.actions,
-                toggleItemPreview: ItemPreviewMixin.#toggleItemPreview,
+                toggleItemPreview: this.#toggleItemPreview,
             },
         };
 
