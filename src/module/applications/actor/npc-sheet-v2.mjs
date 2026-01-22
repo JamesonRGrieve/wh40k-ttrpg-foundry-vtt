@@ -337,6 +337,11 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @protected
      */
     _prepareOverviewContext(context) {
+        // Ensure items array exists
+        if (!context.items) {
+            context.items = Array.from(this.actor.items);
+        }
+
         // Pinned abilities for overview
         const pinnedIds = context.system.pinnedAbilities || [];
         context.pinnedAbilities = context.items.filter((i) => pinnedIds.includes(i.id) && (i.type === 'talent' || i.type === 'trait'));
@@ -574,6 +579,11 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @protected
      */
     _prepareAbilitiesContext(context) {
+        // Ensure items array exists
+        if (!context.items) {
+            context.items = Array.from(this.actor.items);
+        }
+
         const pinnedIds = context.system.pinnedAbilities || [];
 
         // Talents
