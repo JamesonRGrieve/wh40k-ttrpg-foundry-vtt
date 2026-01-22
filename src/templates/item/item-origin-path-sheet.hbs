@@ -424,7 +424,7 @@
           
           <div class="rt-editor-container">
             {{#if inEditMode}}
-            {{editor content=(or system.effectText "") target="system.effectText" button=true owner=owner editable=editable engine="prosemirror"}}
+            {{editor content=system.effectText target="system.effectText" button=true editable=true engine="prosemirror"}}
             {{else}}
             <div class="rt-description-content">{{{system.effectText}}}</div>
             {{/if}}
@@ -443,7 +443,7 @@
           
           <div class="rt-editor-container">
             {{#if inEditMode}}
-            {{editor content=(or system.description.value "") target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}}
+            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
             {{else}}
             <div class="rt-description-content">{{{system.description.value}}}</div>
             {{/if}}

@@ -103,7 +103,7 @@
             <h3>Mechanical Effect</h3>
           </div>
           <div class="rt-quality-section__body rt-quality-section__body--editor">
-            {{editor content=(or system.effect "") target="system.effect" button=true owner=owner editable=editable engine="prosemirror"}}
+            {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
           </div>
         </div>
         
@@ -182,7 +182,7 @@
             <h3>Full Description</h3>
           </div>
           <div class="rt-quality-section__body rt-quality-section__body--editor">
-            {{editor content=(or system.description.value "") target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}}
+            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
           </div>
         </div>
         
