@@ -43,14 +43,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             height: 700,
         },
         form: {
-            handler: StatBlockParser.#onSubmit,
+            handler: this.#onSubmit,
             submitOnChange: false,
             closeOnSubmit: true,
         },
         actions: {
-            parse: StatBlockParser.#onParse,
-            cancel: StatBlockParser.#onCancel,
-            clearInput: StatBlockParser.#onClearInput,
+            parse: this.#onParse,
+            cancel: this.#onCancel,
+            clearInput: this.#onClearInput,
         },
     };
 
