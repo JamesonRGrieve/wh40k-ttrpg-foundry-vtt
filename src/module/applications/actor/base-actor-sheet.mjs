@@ -183,6 +183,9 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
         if (context.editable === undefined) {
             context.editable = this.isEditable;
         }
+        if (context.owner === undefined) {
+            context.owner = this.actor.isOwner;
+        }
 
         return context;
     }
