@@ -18,6 +18,11 @@
     font-size: 0.875rem;
     overflow: hidden;
 
+    // Enable container queries for responsive layout
+    .window-content {
+        container-type: inline-size;
+    }
+
     form {
         display: flex;
         flex-direction: column;
@@ -216,14 +221,14 @@
 
     .rt-weapon-mosaic {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
         grid-auto-rows: minmax(60px, auto);
         gap: 8px;
         padding: 12px;
 
-        // Responsive adjustments
-        @media (max-width: 550px) {
-            grid-template-columns: repeat(4, 1fr);
+        // Tighten card min width for narrow windows
+        @container (max-width: 520px) {
+            grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
         }
     }
 
@@ -1782,6 +1787,14 @@
 
             label {
                 left: 8px;
+                top: 8px;
+                transform: translateY(0) scale(0.75);
+            }
+
+            // Override default centering behavior for narrow number inputs
+            input ~ label {
+                top: 8px;
+                transform: translateY(0) scale(0.75);
             }
         }
 
@@ -1866,7 +1879,7 @@
 
     .rt-rof-grid {
         display: flex;
-        align-items: end;
+        align-items: center;
         gap: 12px;
         margin-top: 8px;
     }
