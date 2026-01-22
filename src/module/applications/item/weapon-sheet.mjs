@@ -19,6 +19,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             addModification: WeaponSheet.#onAddModification,
             rollAttack: WeaponSheet.#rollAttack,
             rollDamage: WeaponSheet.#rollDamage,
+            expendAmmo: WeaponSheet.#expendAmmo,
             openQuality: WeaponSheet.#openQuality,
             nestedItemEdit: WeaponSheet.#nestedItemEdit,
             nestedItemDelete: WeaponSheet.#nestedItemDelete,
@@ -144,6 +145,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         context.effectivePenetration = system.effectivePenetration;
         context.effectiveToHit = system.effectiveToHit;
         context.effectiveWeight = system.effectiveWeight;
+        context.fullDamageFormula = system.fullDamageFormula;
 
         // Prepare modifications data for display
         context.modificationsData = (system.modifications || []).map((mod, index) => ({
@@ -402,6 +404,39 @@ export default class WeaponSheet extends ContainerItemSheet {
             speaker: ChatMessage.getSpeaker({ actor }),
             flavor: `${this.item.name} - Damage`,
         });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Expend one round of ammunition.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #expendAmmo(event, target) {
+        const system = this.item.system;
+
+        // Check if weapon uses ammo
+        if (!system.usesAmmo) {
+            ui.notifications.warn('This weapon does not use ammunition.');
+            return;
+        }
+
+        // Check if there's ammo to spend
+        if (system.clip.value <= 0) {
+            ui.notifications.warn(`${this.item.name} is out of ammunition!`);
+            return;
+        }
+
+        // Decrement ammo by 1
+        const newValue = system.clip.value - 1;
+        await this.item.update({ 'system.clip.value': newValue });
+
+        // Show feedback
+        if (newValue === 0) {
+            ui.notifications.warn(`${this.item.name} is now empty!`);
+        }
     }
 
     /* -------------------------------------------- */

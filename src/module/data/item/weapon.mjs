@@ -420,6 +420,22 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
+     * Get full damage formula for display, including +SB indicator for melee weapons.
+     * This is intended for UI display to show users what the complete damage formula will be.
+     * @type {string}
+     */
+    get fullDamageFormula() {
+        const baseFormula = this.effectiveDamageFormula;
+
+        // Melee weapons add Strength Bonus to damage
+        if (this.isMeleeWeapon) {
+            return `${baseFormula}+SB`;
+        }
+
+        return baseFormula;
+    }
+
+    /**
      * Get effective penetration (base + modifications).
      * @type {number}
      */
