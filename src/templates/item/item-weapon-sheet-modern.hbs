@@ -1,825 +1,616 @@
 {{!-- 
-  Rogue Trader Weapon Item Sheet V2 - Modern Redesign
-  3-tab structure: Overview (combat-first), Properties (editable), Effects
+  Rogue Trader Weapon Item Sheet V3 - Modern Single-Page Redesign
+  Features: Sticky header+stats, FAB actions, collapsible sections, color-coded stats
 --}}
-<div class="rt-item-sheet rt-weapon-sheet-v2">
+<div class="rt-item-sheet rt-weapon-sheet-v3">
   <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
-         HEADER WITH EDIT TOGGLE
+         STICKY HEADER AREA (Header + Stats)
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="rt-weapon-header">
-      <div class="rt-item-image rt-item-image--sm" data-edit="img" data-action="editImage">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-      </div>
-
-      <div class="rt-item-title">
-        {{#if inEditMode}}
-        <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Weapon Name" />
-        {{else}}
-        <h2 class="rt-item-title__name rt-item-title__name--readonly">{{item.name}}</h2>
-        {{/if}}
-        
-        <div class="rt-item-meta rt-weapon-meta">
-          <span class="rt-meta-badge rt-meta-badge--weapon" title="Weapon">
-            <i class="fa-solid fa-gun"></i>
-            Weapon
-          </span>
-          <span class="rt-meta-badge rt-meta-badge--weapon-class" title="Weapon Class">
-            <i class="fa-solid {{system.classIcon}}"></i>
-            {{system.classLabel}}
-          </span>
-          <span class="rt-meta-badge rt-meta-badge--weapon-type" title="Weapon Type">
-            <i class="fa-solid {{system.typeIcon}}"></i>
-            {{system.typeLabel}}
-          </span>
-          {{#if (ne system.craftsmanship "common")}}
-          <span class="rt-meta-badge rt-meta-badge--weapon-craft rt-meta-badge--{{system.craftsmanship}}" title="Craftsmanship">
-            <i class="fa-solid fa-hammer"></i>
-            {{system.craftsmanshipLabel}}
-          </span>
-          {{/if}}
-          {{#if system.twoHanded}}
-          <span class="rt-meta-badge rt-meta-badge--weapon-hands" title="Two-Handed">
-            <i class="fa-solid fa-hands"></i>
-            Two-Handed
-          </span>
-          {{/if}}
-        </div>
-      </div>
-
-      <div class="rt-weapon-header-actions">
-        {{#if isOwnedByActor}}
-        <label class="rt-toggle-equipped" title="Toggle Equipped">
-          <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
-          <span class="rt-toggle-equipped__indicator">
-            <i class="fa-solid {{#if system.equipped}}fa-circle-check{{else}}fa-circle{{/if}}"></i>
-          </span>
-          <span class="rt-toggle-equipped__label">{{#if system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
-        </label>
-        {{/if}}
-        
-        {{#if canEdit}}
-        <button type="button" class="rt-edit-toggle {{#if inEditMode}}active{{/if}}"
-                data-action="toggleEditMode"
-                data-tooltip="{{#if inEditMode}}Exit Edit Mode{{else}}Edit Mode{{/if}}">
-          <i class="fa-solid {{#if inEditMode}}fa-lock-open{{else}}fa-pen-to-square{{/if}}"></i>
-        </button>
-        {{/if}}
-      </div>
-    </header>
-
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         STICKY STAT BAR - Shows effective* values
-    ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-weapon-stats rt-weapon-stats--sticky">
-      {{!-- Damage --}}
-      <div class="rt-weapon-stat rt-weapon-stat--damage {{#if hasModificationEffects}}rt-weapon-stat--modified{{/if}}">
-        <div class="rt-weapon-stat__icon">
-          <i class="fa-solid fa-burst"></i>
-          {{#if hasModificationEffects}}
-          <span class="rt-weapon-stat__modified-badge" title="Modified by equipment">
-            <i class="fa-solid fa-wrench"></i>
-          </span>
-          {{/if}}
-        </div>
-        <div class="rt-weapon-stat__content">
-          <span class="rt-weapon-stat__value">{{effectiveDamageLabel}}</span>
-          <span class="rt-weapon-stat__label">Damage</span>
-        </div>
-      </div>
+    <div class="rt-weapon-sticky-header">
       
-      {{!-- Penetration --}}
-      <div class="rt-weapon-stat rt-weapon-stat--pen {{#if hasModificationEffects}}rt-weapon-stat--modified{{/if}}">
-        <div class="rt-weapon-stat__icon">
-          <i class="fa-solid fa-bullseye"></i>
-          {{#if hasModificationEffects}}
-          <span class="rt-weapon-stat__modified-badge" title="Modified by equipment">
-            <i class="fa-solid fa-wrench"></i>
-          </span>
+      {{!-- HEADER WITH EDIT TOGGLE --}}
+      <header class="rt-weapon-header">
+        <div class="rt-item-image rt-item-image--sm" data-edit="img" data-action="editImage">
+          <img src="{{item.img}}" alt="{{item.name}}" />
+        </div>
+
+        <div class="rt-item-title">
+          {{#if inEditMode}}
+          <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Weapon Name" />
+          {{else}}
+          <h2 class="rt-item-title__name rt-item-title__name--readonly">{{item.name}}</h2>
+          {{/if}}
+          
+          <div class="rt-item-meta rt-weapon-meta">
+            <span class="rt-meta-badge rt-meta-badge--weapon-class" title="{{system.classLabel}}">
+              <i class="fa-solid fa-{{#if system.isMeleeWeapon}}sword{{else}}gun{{/if}}"></i>
+              {{system.classLabel}}
+            </span>
+            <span class="rt-meta-badge rt-meta-badge--weapon-type" title="{{system.typeLabel}}">
+              {{system.typeLabel}}
+            </span>
+            {{#if (ne system.craftsmanship "common")}}
+            <span class="rt-meta-badge rt-meta-badge--craft rt-meta-badge--{{system.craftsmanship}}" title="Craftsmanship">
+              {{system.craftsmanshipLabel}}
+            </span>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="rt-weapon-header-actions">
+          {{#if isOwnedByActor}}
+          <label class="rt-toggle-equipped" title="Toggle Equipped">
+            <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
+            <span class="rt-toggle-equipped__indicator">
+              <i class="fa-solid {{#if system.equipped}}fa-circle-check{{else}}fa-circle{{/if}}"></i>
+            </span>
+          </label>
+          {{/if}}
+          
+          {{#if canEdit}}
+          <button type="button" class="rt-edit-toggle {{#if inEditMode}}active{{/if}}"
+                  data-action="toggleEditMode"
+                  data-tooltip="{{#if inEditMode}}Exit Edit Mode{{else}}Edit Mode{{/if}}">
+            <i class="fa-solid {{#if inEditMode}}fa-lock-open{{else}}fa-pen-to-square{{/if}}"></i>
+          </button>
           {{/if}}
         </div>
-        <div class="rt-weapon-stat__content">
-          <span class="rt-weapon-stat__value">{{effectivePenetration}}</span>
-          <span class="rt-weapon-stat__label">Pen</span>
+      </header>
+
+      {{!-- COLOR-CODED STAT CARDS --}}
+      <div class="rt-weapon-stats">
+        {{!-- Damage Card --}}
+        <div class="rt-stat-card rt-stat-card--damage {{#if hasModificationEffects}}rt-stat-card--modified{{/if}}">
+          <div class="rt-stat-card__icon">
+            <i class="fa-solid fa-burst"></i>
+          </div>
+          <div class="rt-stat-card__value">{{effectiveDamageLabel}}</div>
+          <div class="rt-stat-card__label">Damage</div>
         </div>
-      </div>
-      
-      {{#if (ne effectiveToHit 0)}}
-      {{!-- To Hit Modifier --}}
-      <div class="rt-weapon-stat rt-weapon-stat--tohit">
-        <div class="rt-weapon-stat__icon">
-          <i class="fa-solid fa-crosshairs"></i>
+        
+        {{!-- Penetration Card --}}
+        <div class="rt-stat-card rt-stat-card--pen {{#if hasModificationEffects}}rt-stat-card--modified{{/if}}">
+          <div class="rt-stat-card__icon">
+            <i class="fa-solid fa-bullseye"></i>
+          </div>
+          <div class="rt-stat-card__value">{{effectivePenetration}}</div>
+          <div class="rt-stat-card__label">Pen</div>
         </div>
-        <div class="rt-weapon-stat__content">
-          <span class="rt-weapon-stat__value {{#if (gt effectiveToHit 0)}}rt-weapon-stat__value--positive{{else}}rt-weapon-stat__value--negative{{/if}}">
+        
+        {{!-- To Hit (if non-zero) --}}
+        {{#if (ne effectiveToHit 0)}}
+        <div class="rt-stat-card rt-stat-card--tohit">
+          <div class="rt-stat-card__icon">
+            <i class="fa-solid fa-crosshairs"></i>
+          </div>
+          <div class="rt-stat-card__value {{#if (gt effectiveToHit 0)}}rt-stat-card__value--positive{{else}}rt-stat-card__value--negative{{/if}}">
             {{#if (gt effectiveToHit 0)}}+{{/if}}{{effectiveToHit}}
-          </span>
-          <span class="rt-weapon-stat__label">To Hit</span>
+          </div>
+          <div class="rt-stat-card__label">To Hit</div>
         </div>
-      </div>
-      {{/if}}
-      
-      {{!-- Range (Ranged weapons only) --}}
-      {{#if system.isRangedWeapon}}
-      <div class="rt-weapon-stat rt-weapon-stat--range">
-        <div class="rt-weapon-stat__icon">
-          <i class="fa-solid fa-arrows-left-right"></i>
+        {{/if}}
+        
+        {{!-- Range (Ranged only) --}}
+        {{#if system.isRangedWeapon}}
+        <div class="rt-stat-card rt-stat-card--range">
+          <div class="rt-stat-card__icon">
+            <i class="fa-solid fa-arrows-left-right"></i>
+          </div>
+          <div class="rt-stat-card__value">{{system.rangeLabel}}</div>
+          <div class="rt-stat-card__label">Range</div>
         </div>
-        <div class="rt-weapon-stat__content">
-          <span class="rt-weapon-stat__value">{{system.rangeLabel}}</span>
-          <span class="rt-weapon-stat__label">Range</span>
+        
+        {{!-- Rate of Fire --}}
+        <div class="rt-stat-card rt-stat-card--rof">
+          <div class="rt-stat-card__icon">
+            <i class="fa-solid fa-bolt-lightning"></i>
+          </div>
+          <div class="rt-stat-card__value">{{system.rateOfFireLabel}}</div>
+          <div class="rt-stat-card__label">RoF</div>
         </div>
-      </div>
-      
-      {{!-- Rate of Fire --}}
-      <div class="rt-weapon-stat rt-weapon-stat--rof">
-        <div class="rt-weapon-stat__icon">
-          <i class="fa-solid fa-bolt"></i>
+        {{/if}}
+        
+        {{!-- Clip (if uses ammo) --}}
+        {{#if system.usesAmmo}}
+        <div class="rt-stat-card rt-stat-card--clip rt-stat-card--ammo-{{system.ammoStatus}}">
+          <div class="rt-stat-card__icon">
+            <i class="fa-solid fa-box-archive"></i>
+          </div>
+          <div class="rt-stat-card__value">{{system.clip.value}}/{{system.clip.max}}</div>
+          <div class="rt-stat-card__label">Clip</div>
+          <div class="rt-stat-card__bar">
+            <div class="rt-stat-card__bar-fill" style="width: {{system.ammoPercentage}}%"></div>
+          </div>
         </div>
-        <div class="rt-weapon-stat__content">
-          <span class="rt-weapon-stat__value">{{system.rateOfFireLabel}}</span>
-          <span class="rt-weapon-stat__label">RoF</span>
-        </div>
-      </div>
-      {{/if}}
-      
-      {{!-- Clip (if uses ammo) --}}
-      {{#if system.usesAmmo}}
-      <div class="rt-weapon-stat rt-weapon-stat--clip rt-weapon-stat--ammo-{{system.ammoStatus}}">
-        <div class="rt-weapon-stat__icon">
-          <i class="fa-solid fa-database"></i>
-        </div>
-        <div class="rt-weapon-stat__content">
-          <span class="rt-weapon-stat__value">{{system.clip.value}}/{{system.clip.max}}</span>
-          <span class="rt-weapon-stat__label">Clip</span>
-        </div>
-        <div class="rt-weapon-stat__bar">
-          <div class="rt-weapon-stat__bar-fill" style="width: {{system.ammoPercentage}}%"></div>
-        </div>
-      </div>
-      {{/if}}
-      
-      {{!-- Weight --}}
-      <div class="rt-weapon-stat rt-weapon-stat--weight">
-        <div class="rt-weapon-stat__icon">
-          <i class="fa-solid fa-weight-hanging"></i>
-        </div>
-        <div class="rt-weapon-stat__content">
-          <span class="rt-weapon-stat__value">{{effectiveWeight}}kg</span>
-          <span class="rt-weapon-stat__label">Weight</span>
+        {{/if}}
+        
+        {{!-- Weight --}}
+        <div class="rt-stat-card rt-stat-card--weight">
+          <div class="rt-stat-card__icon">
+            <i class="fa-solid fa-weight-hanging"></i>
+          </div>
+          <div class="rt-stat-card__value">{{effectiveWeight}}<small>kg</small></div>
+          <div class="rt-stat-card__label">Weight</div>
         </div>
       </div>
     </div>
 
     {{!-- ═══════════════════════════════════════════════════════════════════
-         TAB NAVIGATION (3 TABS)
+         SCROLLABLE BODY
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-tabs rt-tabs--weapon rt-weapon-tabs" data-group="primary">
-      <button type="button" class="rt-tab rt-weapon-tab active" data-tab="overview" data-group="primary">
-        <i class="fa-solid fa-crosshairs"></i>
-        <span>Overview</span>
-      </button>
-      <button type="button" class="rt-tab rt-weapon-tab" data-tab="properties" data-group="primary">
-        <i class="fa-solid fa-sliders"></i>
-        <span>Properties</span>
-      </button>
-      <button type="button" class="rt-tab rt-weapon-tab" data-tab="effects" data-group="primary">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
-        <span>Effects</span>
-      </button>
-    </nav>
-
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         TAB CONTENT
-    ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="rt-weapon-content rt-tab-content rt-tab-content--weapon">
+    <div class="rt-weapon-body">
       
-      {{!-- ─────────────────────────────────────────────────────────────────
-           OVERVIEW TAB: Combat-first view with quick actions
-      ───────────────────────────────────────────────────────────────── --}}
-      <div class="rt-weapon-panel tab active" data-tab="overview" data-group="primary">
-        
-        {{!-- Quick Roll Buttons --}}
-        {{#if isOwnedByActor}}
-        <div class="rt-weapon-actions">
-          <button type="button" class="rt-btn rt-btn--attack" data-action="rollAttack">
-            <i class="fa-solid fa-crosshairs"></i>
-            <span>Attack</span>
+      {{!-- QUALITIES - Inline Pill Badges --}}
+      {{#if qualitiesArray.length}}
+      <div class="rt-qualities-bar">
+        <div class="rt-qualities-bar__label">
+          <i class="fa-solid fa-star"></i>
+          <span>Qualities</span>
+        </div>
+        <div class="rt-qualities-bar__pills">
+          {{#each qualitiesArray}}
+          <button type="button" class="rt-quality-pill"
+                  data-action="openQuality"
+                  data-identifier="{{identifier}}"
+                  data-rt-tooltip="quality"
+                  data-rt-tooltip-data="{{@root.prepareQualityTooltip identifier level}}"
+                  data-tooltip-direction="UP">
+            {{label}}
           </button>
-          <button type="button" class="rt-btn rt-btn--damage" data-action="rollDamage">
-            <i class="fa-solid fa-burst"></i>
-            <span>Damage</span>
-          </button>
-          {{#if system.usesAmmo}}
-          <button type="button" class="rt-btn rt-btn--reload {{#if (eq system.clip.value system.clip.max)}}rt-btn--disabled{{/if}}" 
-                  data-action="reload"
-                  data-tooltip="{{#if (eq system.clip.value system.clip.max)}}Already fully loaded{{else}}Reload ({{system.reloadLabel}}){{#if system.effectiveSpecial.has 'customised'}} - Customised: halves reload time{{/if}}{{/if}}"
-                  {{#if (eq system.clip.value system.clip.max)}}disabled{{/if}}>
-            <i class="fa-solid fa-rotate-right"></i>
-            <span>Reload</span>
-            {{#if (ne system.reload "free")}}
-            <span class="rt-btn__badge">{{system.reloadLabel}}</span>
-            {{/if}}
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
+      
+      {{!-- LOADED AMMO BANNER (if loaded) --}}
+      {{#if (and system.usesAmmo hasLoadedAmmo)}}
+      <div class="rt-loaded-ammo-card">
+        <div class="rt-loaded-ammo-card__header">
+          <i class="fa-solid fa-circle-dot"></i>
+          <span class="rt-loaded-ammo-card__name">{{loadedAmmoLabel}}</span>
+          {{#if isOwnedByActor}}
+          <button type="button" class="rt-btn rt-btn--icon rt-btn--ghost" data-action="ejectAmmo" title="Eject">
+            <i class="fa-solid fa-eject"></i>
           </button>
           {{/if}}
         </div>
+        {{#if loadedAmmoData.modifiers}}
+        <div class="rt-loaded-ammo-card__effects">
+          {{#if (ne loadedAmmoData.modifiers.damage 0)}}
+          <span class="rt-ammo-mod {{#if (gt loadedAmmoData.modifiers.damage 0)}}rt-ammo-mod--positive{{else}}rt-ammo-mod--negative{{/if}}">
+            Dmg {{#if (gt loadedAmmoData.modifiers.damage 0)}}+{{/if}}{{loadedAmmoData.modifiers.damage}}
+          </span>
+          {{/if}}
+          {{#if (ne loadedAmmoData.modifiers.penetration 0)}}
+          <span class="rt-ammo-mod {{#if (gt loadedAmmoData.modifiers.penetration 0)}}rt-ammo-mod--positive{{else}}rt-ammo-mod--negative{{/if}}">
+            Pen {{#if (gt loadedAmmoData.modifiers.penetration 0)}}+{{/if}}{{loadedAmmoData.modifiers.penetration}}
+          </span>
+          {{/if}}
+          {{#if (gt loadedAmmoData.addedQualities.length 0)}}
+          <span class="rt-ammo-mod rt-ammo-mod--quality">+{{join loadedAmmoData.addedQualities ", "}}</span>
+          {{/if}}
+        </div>
         {{/if}}
-        
-        {{!-- Craftsmanship Effects --}}
-        {{#if (ne system.craftsmanship "common")}}
-        <div class="rt-weapon-section rt-weapon-section--craftsmanship">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-hammer"></i>
-            <h3>{{system.craftsmanshipLabel}} Craftsmanship</h3>
-          </div>
-          <div class="rt-weapon-section__body">
-            <div class="rt-craftsmanship-effects">
-              {{#if system.craftsmanshipModifiers.toHit}}
-              <div class="rt-craftsmanship-effect">
-                <span class="rt-craftsmanship-effect__label">To Hit</span>
-                <span class="rt-craftsmanship-effect__value {{#if (gt system.craftsmanshipModifiers.toHit 0)}}rt-craftsmanship-effect__value--positive{{else}}rt-craftsmanship-effect__value--negative{{/if}}">
-                  {{#if (gt system.craftsmanshipModifiers.toHit 0)}}+{{/if}}{{system.craftsmanshipModifiers.toHit}}
-                </span>
-              </div>
+      </div>
+      {{/if}}
+
+      {{!-- MODIFICATIONS CARDS (Integrated) --}}
+      {{#if modificationsData.length}}
+      <div class="rt-mods-inline">
+        {{#each modificationsData as |mod|}}
+        <div class="rt-mod-chip {{#unless mod.active}}rt-mod-chip--inactive{{/unless}}">
+          <i class="fa-solid {{mod.categoryIcon}}"></i>
+          <span>{{mod.name}}</span>
+          <button type="button" class="rt-mod-chip__toggle" 
+                  data-action="toggleModificationActive" 
+                  data-mod-index="{{mod.index}}"
+                  title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
+            <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+          </button>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+      
+      {{!-- ─────────────────────────────────────────────────────────────────
+           COLLAPSIBLE SECTIONS
+      ───────────────────────────────────────────────────────────────── --}}
+      
+      {{!-- COMBAT STATISTICS --}}
+      <section class="rt-section">
+        <header class="rt-section__header" data-action="toggleSection" data-section="combat">
+          <i class="fa-solid fa-swords"></i>
+          <span>Combat Statistics</span>
+          <i class="fa-solid fa-chevron-down rt-section__toggle"></i>
+        </header>
+        <div class="rt-section__body" data-section-content="combat">
+          <div class="rt-form-grid rt-form-grid--2col">
+            {{!-- Damage Formula --}}
+            <div class="rt-form-field">
+              <label>Damage</label>
+              {{#if inEditMode}}
+              <input type="text" name="system.damage.formula" value="{{system.damage.formula}}" placeholder="1d10" />
+              {{else}}
+              <div class="rt-form-field__value">{{system.damage.formula}}</div>
               {{/if}}
-              {{#if system.craftsmanshipModifiers.damage}}
-              <div class="rt-craftsmanship-effect">
-                <span class="rt-craftsmanship-effect__label">Damage</span>
-                <span class="rt-craftsmanship-effect__value rt-craftsmanship-effect__value--positive">
-                  +{{system.craftsmanshipModifiers.damage}}
-                </span>
-              </div>
+            </div>
+            
+            {{!-- Damage Bonus --}}
+            <div class="rt-form-field rt-form-field--narrow">
+              <label>Bonus</label>
+              {{#if inEditMode}}
+              <input type="number" name="system.damage.bonus" value="{{system.damage.bonus}}" />
+              {{else}}
+              <div class="rt-form-field__value">{{system.damage.bonus}}</div>
               {{/if}}
-              {{#if system.hasCraftsmanshipQualities}}
-              <div class="rt-craftsmanship-effect rt-craftsmanship-effect--quality">
-                <span class="rt-craftsmanship-effect__label">Special</span>
-                <span class="rt-craftsmanship-effect__value">
-                  {{#if (eq system.craftsmanship "poor")}}Unreliable (91+){{/if}}
-                  {{#if (eq system.craftsmanship "cheap")}}Unreliable (96+){{/if}}
-                  {{#if (eq system.craftsmanship "good")}}Reliable{{/if}}
-                  {{#if (or (eq system.craftsmanship "best") (eq system.craftsmanship "master-crafted"))}}Never Jams{{/if}}
-                </span>
-              </div>
+            </div>
+            
+            {{!-- Penetration --}}
+            <div class="rt-form-field rt-form-field--narrow">
+              <label>Penetration</label>
+              {{#if inEditMode}}
+              <input type="number" name="system.damage.penetration" value="{{system.damage.penetration}}" />
+              {{else}}
+              <div class="rt-form-field__value">{{system.damage.penetration}}</div>
+              {{/if}}
+            </div>
+            
+            {{!-- Damage Type --}}
+            <div class="rt-form-field">
+              <label>Type</label>
+              {{#if inEditMode}}
+              <select name="system.damage.type">
+                {{#each @root.damageTypes as |dtype key|}}
+                <option value="{{key}}" {{#if (eq key @root.system.damage.type)}}selected{{/if}}>{{dtype.label}}</option>
+                {{/each}}
+              </select>
+              {{else}}
+              <div class="rt-form-field__value">{{system.damage.typeLabel}}</div>
+              {{/if}}
+            </div>
+            
+            {{!-- Weapon Class --}}
+            <div class="rt-form-field">
+              <label>Class</label>
+              {{#if inEditMode}}
+              <select name="system.class">
+                {{#each @root.weaponClasses as |wclass key|}}
+                <option value="{{key}}" {{#if (eq key @root.system.class)}}selected{{/if}}>{{wclass.label}}</option>
+                {{/each}}
+              </select>
+              {{else}}
+              <div class="rt-form-field__value">{{system.classLabel}}</div>
+              {{/if}}
+            </div>
+            
+            {{!-- Weapon Type --}}
+            <div class="rt-form-field">
+              <label>Type</label>
+              {{#if inEditMode}}
+              <select name="system.type">
+                {{#each @root.weaponTypes as |wtype key|}}
+                <option value="{{key}}" {{#if (eq key @root.system.type)}}selected{{/if}}>{{wtype.label}}</option>
+                {{/each}}
+              </select>
+              {{else}}
+              <div class="rt-form-field__value">{{system.typeLabel}}</div>
               {{/if}}
             </div>
           </div>
+          
+          {{!-- Checkboxes Row --}}
+          {{#if inEditMode}}
+          <div class="rt-form-checkboxes">
+            <label class="rt-checkbox">
+              <input type="checkbox" name="system.twoHanded" {{checked system.twoHanded}} />
+              <span><i class="fa-solid fa-hands"></i> Two-Handed</span>
+            </label>
+            <label class="rt-checkbox">
+              <input type="checkbox" name="system.melee" {{checked system.melee}} />
+              <span><i class="fa-solid fa-sword"></i> Can Melee</span>
+            </label>
+          </div>
+          {{/if}}
         </div>
-        {{/if}}
-        
-        {{!-- Loaded Ammunition Display (Overview) --}}
-        {{#if (and system.usesAmmo hasLoadedAmmo)}}
-        <div class="rt-weapon-section rt-weapon-section--ammo">
-          <div class="rt-weapon-section__header">
+      </section>
+      
+      {{!-- RANGED ATTACK (if ranged) --}}
+      {{#if system.isRangedWeapon}}
+      <section class="rt-section">
+        <header class="rt-section__header" data-action="toggleSection" data-section="ranged">
+          <i class="fa-solid fa-crosshairs"></i>
+          <span>Ranged Attack</span>
+          <i class="fa-solid fa-chevron-down rt-section__toggle"></i>
+        </header>
+        <div class="rt-section__body" data-section-content="ranged">
+          <div class="rt-form-grid rt-form-grid--2col">
+            {{!-- Range --}}
+            <div class="rt-form-field">
+              <label>Range (m)</label>
+              {{#if inEditMode}}
+              <input type="number" name="system.attack.range.value" value="{{system.attack.range.value}}" />
+              {{else}}
+              <div class="rt-form-field__value">{{system.attack.range.value}}m</div>
+              {{/if}}
+            </div>
+            
+            {{!-- Special Range --}}
+            <div class="rt-form-field">
+              <label>Special</label>
+              {{#if inEditMode}}
+              <input type="text" name="system.attack.range.special" value="{{system.attack.range.special}}" placeholder="SBx3" />
+              {{else}}
+              <div class="rt-form-field__value">{{system.attack.range.special}}</div>
+              {{/if}}
+            </div>
+          </div>
+          
+          {{!-- Rate of Fire --}}
+          {{#if inEditMode}}
+          <div class="rt-rof-grid">
+            <label class="rt-checkbox">
+              <input type="checkbox" name="system.attack.rateOfFire.single" {{checked system.attack.rateOfFire.single}} />
+              <span>Single (S)</span>
+            </label>
+            <div class="rt-form-field rt-form-field--narrow">
+              <label>Semi</label>
+              <input type="number" name="system.attack.rateOfFire.semi" value="{{system.attack.rateOfFire.semi}}" min="0" />
+            </div>
+            <div class="rt-form-field rt-form-field--narrow">
+              <label>Full</label>
+              <input type="number" name="system.attack.rateOfFire.full" value="{{system.attack.rateOfFire.full}}" min="0" />
+            </div>
+          </div>
+          {{else}}
+          <div class="rt-form-field">
+            <label>Rate of Fire</label>
+            <div class="rt-form-field__value">{{system.rateOfFireLabel}}</div>
+          </div>
+          {{/if}}
+        </div>
+      </section>
+      {{/if}}
+      
+      {{!-- AMMUNITION (if uses ammo) --}}
+      {{#if system.usesAmmo}}
+      <section class="rt-section">
+        <header class="rt-section__header" data-action="toggleSection" data-section="ammunition">
+          <i class="fa-solid fa-box-archive"></i>
+          <span>Ammunition</span>
+          <i class="fa-solid fa-chevron-down rt-section__toggle"></i>
+        </header>
+        <div class="rt-section__body" data-section-content="ammunition">
+          <div class="rt-form-grid rt-form-grid--3col">
+            {{!-- Current --}}
+            <div class="rt-form-field rt-form-field--narrow">
+              <label>Current</label>
+              {{#if inEditMode}}
+              <input type="number" name="system.clip.value" value="{{system.clip.value}}" min="0" />
+              {{else}}
+              <div class="rt-form-field__value">{{system.clip.value}}</div>
+              {{/if}}
+            </div>
+            
+            {{!-- Max --}}
+            <div class="rt-form-field rt-form-field--narrow">
+              <label>Max</label>
+              {{#if inEditMode}}
+              <input type="number" name="system.clip.max" value="{{system.clip.max}}" min="0" />
+              {{else}}
+              <div class="rt-form-field__value">{{system.clip.max}}</div>
+              {{/if}}
+            </div>
+            
+            {{!-- Reload Time --}}
+            <div class="rt-form-field">
+              <label>Reload</label>
+              {{#if inEditMode}}
+              <select name="system.reload">
+                {{#each @root.reloadTimes as |rt key|}}
+                <option value="{{key}}" {{#if (eq key @root.system.reload)}}selected{{/if}}>{{rt.label}}</option>
+                {{/each}}
+              </select>
+              {{else}}
+              <div class="rt-form-field__value">{{system.reloadLabel}}</div>
+              {{/if}}
+            </div>
+          </div>
+          
+          {{!-- Ammo Dropzone --}}
+          {{#unless hasLoadedAmmo}}
+          <div class="rt-ammo-dropzone">
             <i class="fa-solid fa-bullseye"></i>
-            <h3>Loaded: {{loadedAmmoLabel}}</h3>
+            <p>Standard Ammunition</p>
+            <p class="rt-hint">Drag special ammo here to load</p>
           </div>
-          <div class="rt-weapon-section__body">
-            <div class="rt-loaded-ammo-effects">
-              {{#if (ne loadedAmmoData.modifiers.damage 0)}}
-              <div class="rt-loaded-ammo-effect">
-                <span class="rt-loaded-ammo-effect__label">Damage</span>
-                <span class="rt-loaded-ammo-effect__value {{#if (gt loadedAmmoData.modifiers.damage 0)}}rt-loaded-ammo-effect__value--positive{{else}}rt-loaded-ammo-effect__value--negative{{/if}}">
-                  {{#if (gt loadedAmmoData.modifiers.damage 0)}}+{{/if}}{{loadedAmmoData.modifiers.damage}}
-                </span>
-              </div>
-              {{/if}}
-              {{#if (ne loadedAmmoData.modifiers.penetration 0)}}
-              <div class="rt-loaded-ammo-effect">
-                <span class="rt-loaded-ammo-effect__label">Penetration</span>
-                <span class="rt-loaded-ammo-effect__value {{#if (gt loadedAmmoData.modifiers.penetration 0)}}rt-loaded-ammo-effect__value--positive{{else}}rt-loaded-ammo-effect__value--negative{{/if}}">
-                  {{#if (gt loadedAmmoData.modifiers.penetration 0)}}+{{/if}}{{loadedAmmoData.modifiers.penetration}}
-                </span>
-              </div>
-              {{/if}}
-              {{#if (ne loadedAmmoData.modifiers.range 0)}}
-              <div class="rt-loaded-ammo-effect">
-                <span class="rt-loaded-ammo-effect__label">Range</span>
-                <span class="rt-loaded-ammo-effect__value {{#if (gt loadedAmmoData.modifiers.range 0)}}rt-loaded-ammo-effect__value--positive{{else}}rt-loaded-ammo-effect__value--negative{{/if}}">
-                  {{#if (gt loadedAmmoData.modifiers.range 0)}}+{{/if}}{{loadedAmmoData.modifiers.range}}m
-                </span>
-              </div>
-              {{/if}}
-              {{#if (gt loadedAmmoData.addedQualities.length 0)}}
-              <div class="rt-loaded-ammo-effect rt-loaded-ammo-effect--qualities">
-                <span class="rt-loaded-ammo-effect__label">Added Qualities</span>
-                <span class="rt-loaded-ammo-effect__value">{{join loadedAmmoData.addedQualities ", "}}</span>
-              </div>
+          {{/unless}}
+        </div>
+      </section>
+      {{/if}}
+      
+      {{!-- ACQUISITION --}}
+      <section class="rt-section">
+        <header class="rt-section__header" data-action="toggleSection" data-section="acquisition">
+          <i class="fa-solid fa-coins"></i>
+          <span>Acquisition</span>
+          <i class="fa-solid fa-chevron-down rt-section__toggle"></i>
+        </header>
+        <div class="rt-section__body" data-section-content="acquisition">
+          <div class="rt-form-grid rt-form-grid--2col">
+            {{!-- Availability --}}
+            <div class="rt-form-field">
+              <label>Availability</label>
+              {{#if inEditMode}}
+              <select name="system.availability">
+                {{#each @root.availabilities as |avail key|}}
+                <option value="{{key}}" {{#if (eq key @root.system.availability)}}selected{{/if}}>{{avail.label}}</option>
+                {{/each}}
+              </select>
+              {{else}}
+              <div class="rt-form-field__value">{{system.availabilityLabel}}</div>
               {{/if}}
             </div>
-            {{#if isOwnedByActor}}
-            <button type="button" class="rt-btn rt-btn--secondary rt-btn--sm rt-btn--block" data-action="ejectAmmo">
-              <i class="fa-solid fa-eject"></i>
-              <span>Eject Ammunition</span>
-            </button>
-            {{/if}}
-          </div>
-        </div>
-        {{/if}}
-        
-        {{!-- Clickable Quality Tags --}}
-        {{#if qualitiesArray}}
-        <div class="rt-weapon-section">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-star"></i>
-            <h3>Qualities</h3>
-            <span class="rt-weapon-section__count">{{qualitiesArray.length}}</span>
-          </div>
-          <div class="rt-weapon-section__body">
-            <div class="rt-quality-tags">
-              {{#each qualitiesArray}}
-              <div class="rt-quality-tag rt-quality-tag--clickable"
-                   data-action="openQuality"
-                   data-identifier="{{identifier}}"
-                   data-rt-tooltip="quality"
-                   data-rt-tooltip-data="{{@root.prepareQualityTooltip identifier level}}"
-                   data-tooltip-direction="UP">
-                <i class="fa-solid fa-star"></i>
-                <span>{{label}}</span>
-                <i class="fa-solid fa-external-link-alt"></i>
-              </div>
-              {{/each}}
+            
+            {{!-- Craftsmanship --}}
+            <div class="rt-form-field">
+              <label>Craftsmanship</label>
+              {{#if inEditMode}}
+              <select name="system.craftsmanship">
+                {{#each @root.craftsmanships as |craft key|}}
+                <option value="{{key}}" {{#if (eq key @root.system.craftsmanship)}}selected{{/if}}>{{craft.label}}</option>
+                {{/each}}
+              </select>
+              {{else}}
+              <div class="rt-form-field__value">{{system.craftsmanshipLabel}}</div>
+              {{/if}}
+            </div>
+            
+            {{!-- Weight --}}
+            <div class="rt-form-field rt-form-field--narrow">
+              <label>Weight (kg)</label>
+              {{#if inEditMode}}
+              <input type="number" name="system.weight" value="{{system.weight}}" step="0.1" min="0" />
+              {{else}}
+              <div class="rt-form-field__value">{{system.weight}}kg</div>
+              {{/if}}
+            </div>
+            
+            {{!-- Source --}}
+            <div class="rt-form-field">
+              <label>Source</label>
+              {{#if inEditMode}}
+              <input type="text" name="system.source" value="{{system.source}}" placeholder="Core p.XX" />
+              {{else}}
+              <div class="rt-form-field__value">{{system.source}}</div>
+              {{/if}}
             </div>
           </div>
         </div>
-        {{/if}}
-        
-        {{!-- Description --}}
-        {{#if system.description.value}}
-        <div class="rt-weapon-section">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-scroll"></i>
-            <h3>Description</h3>
+      </section>
+      
+      {{!-- DESCRIPTION --}}
+      <section class="rt-section">
+        <header class="rt-section__header" data-action="toggleSection" data-section="description">
+          <i class="fa-solid fa-scroll"></i>
+          <span>Description</span>
+          <i class="fa-solid fa-chevron-down rt-section__toggle"></i>
+        </header>
+        <div class="rt-section__body rt-section__body--prose" data-section-content="description">
+          {{#if inEditMode}}
+          {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+          {{else}}
+          <div class="rt-prose">{{{system.description.value}}}</div>
+          {{/if}}
+          
+          {{!-- Notes (edit mode only) --}}
+          {{#if inEditMode}}
+          <div class="rt-form-field rt-form-field--full">
+            <label>Notes</label>
+            <textarea name="system.notes" rows="2" placeholder="Personal notes...">{{system.notes}}</textarea>
           </div>
-          <div class="rt-weapon-section__body">
-            <div class="rt-description-content">{{{system.description.value}}}</div>
-          </div>
+          {{/if}}
         </div>
-        {{/if}}
-        
-        {{!-- Weapon Modifications --}}
-        {{#if (gt modificationsData.length 0)}}
-        <div class="rt-weapon-section">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-wrench"></i>
-            <h3>Modifications</h3>
-            <span class="rt-weapon-section__count">{{modificationsData.length}}</span>
-          </div>
-          <div class="rt-weapon-section__body">
-            <div class="rt-modifications-banner">
-              <div class="rt-modifications-banner__header">
-                <i class="fa-solid fa-wrench"></i>
-                <span>{{modificationsData.length}} Modification{{#if (gt modificationsData.length 1)}}s{{/if}} Installed</span>
+      </section>
+      
+      {{!-- MODIFICATIONS SECTION (for adding/managing) --}}
+      {{#if inEditMode}}
+      <section class="rt-section">
+        <header class="rt-section__header" data-action="toggleSection" data-section="modifications">
+          <i class="fa-solid fa-wrench"></i>
+          <span>Modifications</span>
+          {{#if modificationsData.length}}
+          <span class="rt-badge">{{modificationsData.length}}</span>
+          {{/if}}
+          <i class="fa-solid fa-chevron-down rt-section__toggle"></i>
+        </header>
+        <div class="rt-section__body" data-section-content="modifications">
+          {{#if modificationsData.length}}
+          <div class="rt-mods-list" data-drop-zone="modifications">
+            {{#each modificationsData as |mod|}}
+            <div class="rt-mod-card {{#unless mod.active}}rt-mod-card--inactive{{/unless}}" data-mod-index="{{mod.index}}">
+              <div class="rt-mod-card__info">
+                <i class="fa-solid {{mod.categoryIcon}}"></i>
+                <span class="rt-mod-card__name">{{mod.name}}</span>
               </div>
-              <div class="rt-modifications-banner__summary">
-                {{#each modificationsData}}
-                {{#if active}}
-                <span class="rt-mod-badge" data-tooltip="{{name}}">{{name}}</span>
-                {{/if}}
+              {{#if mod.hasEffects}}
+              <div class="rt-mod-card__effects">
+                {{#each mod.effects}}
+                <span class="rt-mod-effect">{{this}}</span>
                 {{/each}}
               </div>
-            </div>
-          </div>
-        </div>
-        {{/if}}
-        
-      </div>
-      
-      {{!-- ─────────────────────────────────────────────────────────────────
-           PROPERTIES TAB: All editable fields
-      ───────────────────────────────────────────────────────────────── --}}
-      <div class="rt-weapon-panel tab" data-tab="properties" data-group="primary">
-        
-        {{#if (not inEditMode)}}
-        <div class="rt-edit-notice">
-          <i class="fa-solid fa-info-circle"></i>
-          <span>{{#if isCompendiumItem}}Compendium items are read-only{{else if isOwnedByActor}}Click the edit button to modify properties{{else}}This item is view-only{{/if}}</span>
-        </div>
-        {{/if}}
-        
-        {{!-- Combat Stats Section --}}
-        <div class="rt-weapon-section">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-swords"></i>
-            <h3>Combat Statistics</h3>
-          </div>
-          <div class="rt-weapon-section__body">
-            <div class="rt-field-row">
-              <div class="rt-field">
-                <label>Damage Formula</label>
-                {{#if inEditMode}}
-                <input type="text" name="system.damage.formula" value="{{system.damage.formula}}" placeholder="1d10" />
-                {{else}}
-                <div class="rt-field-value">{{system.damage.formula}}</div>
-                {{/if}}
-              </div>
-              <div class="rt-field rt-field--small">
-                <label>Bonus</label>
-                {{#if inEditMode}}
-                <input type="number" name="system.damage.bonus" value="{{system.damage.bonus}}" />
-                {{else}}
-                <div class="rt-field-value">{{system.damage.bonus}}</div>
-                {{/if}}
-              </div>
-              <div class="rt-field rt-field--small">
-                <label>Pen</label>
-                {{#if inEditMode}}
-                <input type="number" name="system.damage.penetration" value="{{system.damage.penetration}}" />
-                {{else}}
-                <div class="rt-field-value">{{system.damage.penetration}}</div>
-                {{/if}}
-              </div>
-              <div class="rt-field">
-                <label>Type</label>
-                {{#if inEditMode}}
-                <select name="system.damage.type">
-                  {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.damageTypes) selected=system.damage.type}}
-                </select>
-                {{else}}
-                <div class="rt-field-value">{{system.damage.typeLabel}}</div>
-                {{/if}}
-              </div>
-            </div>
-            
-            <div class="rt-field-row">
-              <div class="rt-field">
-                <label>Class</label>
-                {{#if inEditMode}}
-                <select name="system.class">
-                  {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.weaponClasses) selected=system.class}}
-                </select>
-                {{else}}
-                <div class="rt-field-value">{{system.classLabel}}</div>
-                {{/if}}
-              </div>
-              <div class="rt-field">
-                <label>Type</label>
-                {{#if inEditMode}}
-                <select name="system.type">
-                  {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.weaponTypes) selected=system.type}}
-                </select>
-                {{else}}
-                <div class="rt-field-value">{{system.typeLabel}}</div>
-                {{/if}}
-              </div>
-            </div>
-            
-            {{#if inEditMode}}
-            <div class="rt-field-row rt-field-row--checkboxes">
-              <label class="rt-checkbox">
-                <input type="checkbox" name="system.twoHanded" {{checked system.twoHanded}} />
-                <span><i class="fa-solid fa-hands"></i> Two-Handed</span>
-              </label>
-              <label class="rt-checkbox">
-                <input type="checkbox" name="system.melee" {{checked system.melee}} />
-                <span><i class="fa-solid fa-sword"></i> Can Melee</span>
-              </label>
-            </div>
-            {{/if}}
-          </div>
-        </div>
-        
-        {{!-- Ranged Attack Section --}}
-        {{#if system.isRangedWeapon}}
-        <div class="rt-weapon-section">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-crosshairs"></i>
-            <h3>Ranged Attack</h3>
-          </div>
-          <div class="rt-weapon-section__body">
-            <div class="rt-field-row">
-              <div class="rt-field">
-                <label>Range (m)</label>
-                {{#if inEditMode}}
-                <input type="number" name="system.attack.range.value" value="{{system.attack.range.value}}" />
-                {{else}}
-                <div class="rt-field-value">{{system.attack.range.value}}m</div>
-                {{/if}}
-              </div>
-              <div class="rt-field">
-                <label>Special Range</label>
-                {{#if inEditMode}}
-                <input type="text" name="system.attack.range.special" value="{{system.attack.range.special}}" placeholder="SBx3" />
-                {{else}}
-                <div class="rt-field-value">{{system.attack.range.special}}</div>
-                {{/if}}
-              </div>
-            </div>
-            
-            <div class="rt-field-row">
-              {{#if inEditMode}}
-              <label class="rt-checkbox">
-                <input type="checkbox" name="system.attack.rateOfFire.single" {{checked system.attack.rateOfFire.single}} />
-                <span>Single (S)</span>
-              </label>
-              <div class="rt-field rt-field--small">
-                <label>Semi-Auto</label>
-                <input type="number" name="system.attack.rateOfFire.semi" value="{{system.attack.rateOfFire.semi}}" min="0" />
-              </div>
-              <div class="rt-field rt-field--small">
-                <label>Full-Auto</label>
-                <input type="number" name="system.attack.rateOfFire.full" value="{{system.attack.rateOfFire.full}}" min="0" />
-              </div>
-              {{else}}
-              <div class="rt-field-value">Rate of Fire: {{system.rateOfFireLabel}}</div>
               {{/if}}
-            </div>
-          </div>
-        </div>
-        {{/if}}
-        
-        {{!-- Ammunition Section --}}
-        {{#if system.usesAmmo}}
-        <div class="rt-weapon-section">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-database"></i>
-            <h3>Ammunition</h3>
-          </div>
-          <div class="rt-weapon-section__body">
-            
-            {{!-- Loaded Ammo Display --}}
-            {{#if hasLoadedAmmo}}
-            <div class="rt-loaded-ammo-banner">
-              <div class="rt-loaded-ammo-banner__header">
-                <i class="fa-solid fa-bullseye"></i>
-                <span class="rt-loaded-ammo-banner__name">{{loadedAmmoLabel}}</span>
-                <button type="button" 
-                        class="rt-btn rt-btn--icon rt-btn--danger rt-btn--sm" 
-                        data-action="ejectAmmo"
-                        title="Eject Ammunition">
-                  <i class="fa-solid fa-eject"></i>
+              <div class="rt-mod-card__actions">
+                <button type="button" class="rt-btn rt-btn--icon rt-btn--ghost" 
+                        data-action="viewModification" data-mod-index="{{mod.index}}" title="View">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+                <button type="button" class="rt-btn rt-btn--icon rt-btn--ghost rt-btn--danger" 
+                        data-action="removeModification" data-mod-index="{{mod.index}}" title="Remove">
+                  <i class="fa-solid fa-trash"></i>
                 </button>
               </div>
-              {{#if loadedAmmoData.modifiers}}
-              <div class="rt-loaded-ammo-banner__effects">
-                {{#if (ne loadedAmmoData.modifiers.damage 0)}}
-                <span class="rt-ammo-effect">Damage {{#if (gt loadedAmmoData.modifiers.damage 0)}}+{{/if}}{{loadedAmmoData.modifiers.damage}}</span>
-                {{/if}}
-                {{#if (ne loadedAmmoData.modifiers.penetration 0)}}
-                <span class="rt-ammo-effect">Pen {{#if (gt loadedAmmoData.modifiers.penetration 0)}}+{{/if}}{{loadedAmmoData.modifiers.penetration}}</span>
-                {{/if}}
-                {{#if (ne loadedAmmoData.modifiers.range 0)}}
-                <span class="rt-ammo-effect">Range {{#if (gt loadedAmmoData.modifiers.range 0)}}+{{/if}}{{loadedAmmoData.modifiers.range}}m</span>
-                {{/if}}
-                {{#if (gt loadedAmmoData.addedQualities.length 0)}}
-                <span class="rt-ammo-effect">+{{join loadedAmmoData.addedQualities ", "}}</span>
-                {{/if}}
-              </div>
-              {{/if}}
             </div>
-            {{else}}
-            <div class="rt-ammo-dropzone">
-              <i class="fa-solid fa-bullseye"></i>
-              <p>Standard Ammunition</p>
-              <p class="rt-ammo-dropzone__hint">Drag ammunition here to load special ammo</p>
-            </div>
-            {{/if}}
-            
-            <div class="rt-field-row">
-              <div class="rt-field rt-field--small">
-                <label>Current</label>
-                {{#if inEditMode}}
-                <input type="number" name="system.clip.value" value="{{system.clip.value}}" min="0" />
-                {{else}}
-                <div class="rt-field-value">{{system.clip.value}}</div>
-                {{/if}}
-              </div>
-              <div class="rt-field rt-field--small">
-                <label>Max</label>
-                {{#if inEditMode}}
-                <input type="number" name="system.clip.max" value="{{system.clip.max}}" min="0" />
-                {{else}}
-                <div class="rt-field-value">{{system.clip.max}}</div>
-                {{/if}}
-              </div>
-              <div class="rt-field">
-                <label>Reload Time</label>
-                {{#if inEditMode}}
-                <select name="system.reload">
-                  <option value="-" {{#if (eq system.reload "-")}}selected{{/if}}>—</option>
-                  <option value="free" {{#if (eq system.reload "free")}}selected{{/if}}>Free Action</option>
-                  <option value="half" {{#if (eq system.reload "half")}}selected{{/if}}>Half Action</option>
-                  <option value="full" {{#if (eq system.reload "full")}}selected{{/if}}>Full Action</option>
-                  <option value="2-full" {{#if (eq system.reload "2-full")}}selected{{/if}}>2 Full Actions</option>
-                  <option value="3-full" {{#if (eq system.reload "3-full")}}selected{{/if}}>3 Full Actions</option>
-                </select>
-                {{else}}
-                <div class="rt-field-value">{{system.reloadLabel}}</div>
-                {{/if}}
-              </div>
-            </div>
+            {{/each}}
           </div>
-        </div>
-        {{/if}}
-        
-        {{!-- Acquisition Section --}}
-        <div class="rt-weapon-section">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-coins"></i>
-            <h3>Acquisition</h3>
-          </div>
-          <div class="rt-weapon-section__body">
-            <div class="rt-field-row">
-              <div class="rt-field">
-                <label>Availability</label>
-                {{#if inEditMode}}
-                <select name="system.availability">
-                  {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.availabilities) selected=system.availability}}
-                </select>
-                {{else}}
-                <div class="rt-field-value">{{system.availabilityLabel}}</div>
-                {{/if}}
-              </div>
-              <div class="rt-field">
-                <label>Craftsmanship</label>
-                {{#if inEditMode}}
-                <select name="system.craftsmanship">
-                  {{selectOptions (arrayToObject CONFIG.ROGUE_TRADER.craftsmanships) selected=system.craftsmanship}}
-                </select>
-                {{else}}
-                <div class="rt-field-value">{{system.craftsmanshipLabel}}</div>
-                {{/if}}
-              </div>
-            </div>
-            <div class="rt-field-row">
-              <div class="rt-field rt-field--small">
-                <label>Weight (kg)</label>
-                {{#if inEditMode}}
-                <input type="number" name="system.weight" value="{{system.weight}}" step="0.1" min="0" />
-                {{else}}
-                <div class="rt-field-value">{{system.weight}}kg</div>
-                {{/if}}
-              </div>
-              <div class="rt-field">
-                <label>Source</label>
-                {{#if inEditMode}}
-                <input type="text" name="system.source" value="{{system.source}}" placeholder="Core Rulebook p.XX" />
-                {{else}}
-                <div class="rt-field-value">{{system.source}}</div>
-                {{/if}}
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {{!-- Description Editor --}}
-        <div class="rt-weapon-section rt-weapon-section--full">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-scroll"></i>
-            <h3>Description</h3>
-          </div>
-          <div class="rt-weapon-section__body">
-            <div class="rt-prose-editor">
-              {{#if inEditMode}}
-              {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
-              {{else}}
-              <div class="rt-description-content">{{{system.description.value}}}</div>
-              {{/if}}
-            </div>
-          </div>
-        </div>
-        
-        {{!-- Notes --}}
-        {{#if inEditMode}}
-        <div class="rt-weapon-section">
-          <div class="rt-weapon-section__header">
-            <i class="fa-solid fa-sticky-note"></i>
-            <h3>Notes</h3>
-          </div>
-          <div class="rt-weapon-section__body">
-            <textarea name="system.notes" rows="3" placeholder="Personal notes...">{{system.notes}}</textarea>
-          </div>
-        </div>
-        {{/if}}
-        
-        {{!-- Modifications Section --}}
-        <div class="rt-weapon-section">
-          <div class="rt-weapon-section__header">
+          {{else}}
+          <div class="rt-empty-state rt-mod-dropzone" data-drop-zone="modifications">
             <i class="fa-solid fa-wrench"></i>
-            <h3>Modifications</h3>
-            {{#if (gt modificationsData.length 0)}}
-            <span class="rt-weapon-section__count">{{modificationsData.length}}</span>
-            {{/if}}
+            <p>No modifications</p>
+            <p class="rt-hint">Drag modifications from compendium</p>
           </div>
-          <div class="rt-weapon-section__body">
-            {{#if (gt modificationsData.length 0)}}
-            <div class="rt-mods-list" data-drop-zone="modifications">
-              {{#each modificationsData as |mod|}}
-               <div class="rt-mod-card {{#if mod.active}}{{else}}rt-mod-card--inactive{{/if}}" data-mod-index="{{mod.index}}">
-                <div class="rt-mod-card__header">
-                  <div class="rt-mod-card__title">
-                    <span class="rt-mod-category-icon" data-tooltip="{{mod.category}}" title="{{mod.category}}">
-                      <i class="fa-solid {{mod.categoryIcon}}"></i>
-                    </span>
-                    <span class="rt-mod-card__name">{{mod.name}}</span>
-                  </div>
-                  <div class="rt-mod-card__actions">
-                    {{!-- Active/Inactive Toggle --}}
-                    <button type="button"
-                            class="rt-btn rt-btn--icon rt-mod-toggle {{#if mod.active}}rt-mod-toggle--active{{/if}}"
-                            data-action="toggleModificationActive"
-                            data-mod-index="{{mod.index}}"
-                            title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
-                      <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
-                    </button>
-
-                    {{!-- View/Edit Button --}}
-                    <button type="button"
-                            class="rt-btn rt-btn--icon"
-                            data-action="viewModification"
-                            data-mod-index="{{mod.index}}"
-                            title="View Details">
-                      <i class="fa-solid fa-eye"></i>
-                    </button>
-
-                    {{#if ../inEditMode}}
-                    {{!-- Remove Button --}}
-                    <button type="button"
-                            class="rt-btn rt-btn--icon rt-btn--danger"
-                            data-action="removeModification"
-                            data-mod-index="{{mod.index}}"
-                            title="Remove">
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
-                    {{/if}}
-                  </div>
-                </div>
-
-                {{!-- Mod Effects Summary --}}
-                {{#if mod.hasEffects}}
-                <div class="rt-mod-card__effects">
-                  {{#each mod.effects}}
-                  <span class="rt-mod-effect">{{this}}</span>
-                  {{/each}}
-                </div>
-                {{/if}}
-              </div>
-              {{/each}}
-            </div>
-            {{else}}
-            <div class="rt-empty-state rt-empty-state--mods rt-mod-dropzone" data-drop-zone="modifications">
-              <i class="fa-solid fa-wrench"></i>
-              <p>No modifications installed</p>
-              {{#if inEditMode}}
-              <p class="rt-empty-hint">Drag weapon modifications here from compendium</p>
-              <div class="rt-dropzone-info">
-                <div class="rt-dropzone-info__header">
-                  <i class="fa-solid fa-info-circle"></i>
-                  <span>Compatible Modifications</span>
-                </div>
-                <div class="rt-dropzone-info__body">
-                  <div class="rt-dropzone-compatibility">
-                    <div class="rt-dropzone-compat__item">
-                      <i class="fa-solid fa-check-circle"></i>
-                      <span>Weapon Class: <strong>{{system.classLabel}}</strong></span>
-                    </div>
-                    <div class="rt-dropzone-compat__item">
-                      <i class="fa-solid fa-check-circle"></i>
-                      <span>Weapon Type: <strong>{{system.typeLabel}}</strong></span>
-                    </div>
-                  </div>
-                  <div class="rt-dropzone-categories">
-                    <span class="rt-dropzone-category__label">Common Categories:</span>
-                    <div class="rt-mod-category-badges">
-                      <span class="rt-mod-category-badge" data-tooltip="Scopes, sights, targeting aids">
-                        <i class="fa-solid fa-crosshairs"></i>
-                        Sight
-                      </span>
-                      <span class="rt-mod-category-badge" data-tooltip="Barrels, suppressors, extensions">
-                        <i class="fa-solid fa-gun"></i>
-                        Barrel
-                      </span>
-                      <span class="rt-mod-category-badge" data-tooltip="Stocks, grips, stabilizers">
-                        <i class="fa-solid fa-wrench"></i>
-                        Stock
-                      </span>
-                      <span class="rt-mod-category-badge" data-tooltip="Magazines, ammo feeds">
-                        <i class="fa-solid fa-database"></i>
-                        Magazine
-                      </span>
-                      <span class="rt-mod-category-badge" data-tooltip="Other modifications">
-                        <i class="fa-solid fa-cog"></i>
-                        Accessory
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {{/if}}
-            </div>
-            {{/if}}
-          </div>
+          {{/if}}
         </div>
-        
-      </div>
+      </section>
+      {{/if}}
       
-      {{!-- ─────────────────────────────────────────────────────────────────
-           EFFECTS TAB: Active Effects
-      ───────────────────────────────────────────────────────────────── --}}
-      <div class="rt-weapon-panel tab" data-tab="effects" data-group="primary">
-        {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
-      </div>
+      {{!-- ACTIVE EFFECTS (collapsed by default in view mode) --}}
+      {{#if effects.length}}
+      <section class="rt-section rt-section--effects">
+        <header class="rt-section__header" data-action="toggleSection" data-section="effects">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Active Effects</span>
+          <span class="rt-badge">{{effects.length}}</span>
+          <i class="fa-solid fa-chevron-down rt-section__toggle"></i>
+        </header>
+        <div class="rt-section__body" data-section-content="effects">
+          {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+        </div>
+      </section>
+      {{/if}}
       
-    </section>
+    </div>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         FAB (Floating Action Button)
+    ═══════════════════════════════════════════════════════════════════ --}}
+    {{#if isOwnedByActor}}
+    <div class="rt-fab-container {{#if fabExpanded}}expanded{{/if}}">
+      <button type="button" class="rt-fab rt-fab--main" data-action="toggleFab" title="Actions">
+        <i class="fa-solid fa-dice-d20"></i>
+      </button>
+      <div class="rt-fab-actions">
+        <button type="button" class="rt-fab rt-fab--attack" data-action="rollAttack" title="Attack Roll">
+          <i class="fa-solid fa-crosshairs"></i>
+          <span>Attack</span>
+        </button>
+        <button type="button" class="rt-fab rt-fab--damage" data-action="rollDamage" title="Damage Roll">
+          <i class="fa-solid fa-burst"></i>
+          <span>Damage</span>
+        </button>
+        {{#if system.usesAmmo}}
+        <button type="button" class="rt-fab rt-fab--reload {{#if (eq system.clip.value system.clip.max)}}rt-fab--disabled{{/if}}" 
+                data-action="reload" 
+                title="Reload ({{system.reloadLabel}})"
+                {{#if (eq system.clip.value system.clip.max)}}disabled{{/if}}>
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Reload</span>
+        </button>
+        {{/if}}
+      </div>
+    </div>
+    {{/if}}
+
   </form>
 </div>

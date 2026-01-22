@@ -8,11 +8,12 @@ import { ReloadActionManager } from '../../actions/reload-action-manager.mjs';
 
 /**
  * Sheet for weapon items with support for weapon modifications and ammunition.
+ * Redesigned as a single-page layout with FAB action buttons.
  */
 export default class WeaponSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'item', 'weapon', 'rt-weapon-sheet-v2'],
+        classes: ['rogue-trader', 'sheet', 'item', 'weapon', 'rt-weapon-sheet-v3'],
         actions: {
             reload: WeaponSheet.#onReload,
             addModification: WeaponSheet.#onAddModification,
@@ -26,10 +27,12 @@ export default class WeaponSheet extends ContainerItemSheet {
             removeModification: WeaponSheet.#removeModification,
             loadAmmo: WeaponSheet.#loadAmmo,
             ejectAmmo: WeaponSheet.#ejectAmmo,
+            toggleFab: WeaponSheet.#toggleFab,
+            toggleSection: WeaponSheet.#toggleSection,
         },
         position: {
-            width: 650,
-            height: 700,
+            width: 600,
+            height: 600,
         },
         window: {
             resizable: true,
@@ -43,25 +46,23 @@ export default class WeaponSheet extends ContainerItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/rogue-trader/templates/item/item-weapon-sheet-modern.hbs',
-            scrollable: ['.rt-tab-content'],
+            scrollable: ['.rt-weapon-body'],
         },
     };
 
     /* -------------------------------------------- */
 
-    /** @override */
-    static TABS = [
-        { tab: 'overview', group: 'primary', label: 'RT.Tabs.Overview' },
-        { tab: 'properties', group: 'primary', label: 'RT.Tabs.Properties' },
-        { tab: 'effects', group: 'primary', label: 'RT.Tabs.Effects' },
-    ];
+    /**
+     * Track collapsed sections state.
+     * @type {Set<string>}
+     */
+    #collapsedSections = new Set();
 
-    /* -------------------------------------------- */
-
-    /** @override */
-    tabGroups = {
-        primary: 'overview',
-    };
+    /**
+     * Track FAB expanded state.
+     * @type {boolean}
+     */
+    #fabExpanded = false;
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -86,12 +87,23 @@ export default class WeaponSheet extends ContainerItemSheet {
         const context = await super._prepareContext(options);
         const system = this.item.system;
 
-        // Add CONFIG reference for templates
+        // Add CONFIG reference for templates - ensure dropdown options are available
         context.CONFIG = CONFIG;
 
-        // Tab state
-        context.tabs = this._getTabs();
-        context.activeTab = this.tabGroups.primary;
+        // Explicitly pass dropdown options for selectOptions helper
+        context.weaponClasses = CONFIG.ROGUE_TRADER?.weaponClasses || {};
+        context.weaponTypes = CONFIG.ROGUE_TRADER?.weaponTypes || {};
+        context.damageTypes = CONFIG.ROGUE_TRADER?.damageTypes || {};
+        context.availabilities = CONFIG.ROGUE_TRADER?.availabilities || {};
+        context.craftsmanships = CONFIG.ROGUE_TRADER?.craftsmanships || {};
+        context.reloadTimes = {
+            '-': { label: '—' },
+            'free': { label: 'Free Action' },
+            'half': { label: 'Half Action' },
+            'full': { label: 'Full Action' },
+            '2-full': { label: '2 Full Actions' },
+            '3-full': { label: '3 Full Actions' },
+        };
 
         // Prepare qualities array for clickable tags
         context.qualitiesArray = Array.from(system.effectiveSpecial || []).map((q) => {
@@ -153,6 +165,14 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Convenience flags
         context.hasActions = this.isEditable && this.item.actor;
+
+        // FAB state
+        context.fabExpanded = this.#fabExpanded;
+
+        // Collapsed sections state
+        context.collapsedSections = Object.fromEntries(
+            ['combat', 'ranged', 'ammunition', 'acquisition', 'description', 'modifications'].map((s) => [s, this.#collapsedSections.has(s)]),
+        );
 
         return context;
     }
@@ -691,6 +711,53 @@ export default class WeaponSheet extends ContainerItemSheet {
     static async #ejectAmmo(event, target) {
         await this.item.system.ejectAmmo();
         this.render();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle the FAB menu open/closed.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static #toggleFab(event, target) {
+        this.#fabExpanded = !this.#fabExpanded;
+        const fab = this.element.querySelector('.rt-fab-container');
+        if (fab) {
+            fab.classList.toggle('expanded', this.#fabExpanded);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle a collapsible section.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static #toggleSection(event, target) {
+        const sectionName = target.dataset.section;
+        if (!sectionName) return;
+
+        if (this.#collapsedSections.has(sectionName)) {
+            this.#collapsedSections.delete(sectionName);
+        } else {
+            this.#collapsedSections.add(sectionName);
+        }
+
+        const section = this.element.querySelector(`[data-section-content="${sectionName}"]`);
+        if (section) {
+            section.classList.toggle('collapsed', this.#collapsedSections.has(sectionName));
+        }
+
+        // Update toggle icon
+        const icon = target.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('fa-chevron-down', !this.#collapsedSections.has(sectionName));
+            icon.classList.toggle('fa-chevron-right', this.#collapsedSections.has(sectionName));
+        }
     }
 
     /* -------------------------------------------- */
