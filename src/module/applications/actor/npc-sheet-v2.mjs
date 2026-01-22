@@ -128,18 +128,11 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options) {
-        const context = {
-            actor: this.actor,
-            system: this.actor.system,
-            source: this.isEditable ? this.actor.system._source : this.actor.system,
-            fields: this.actor.system.schema?.fields ?? {},
-            effects: this.actor.getEmbeddedCollection('ActiveEffect').contents,
-            items: Array.from(this.actor.items),
-            limited: this.actor.limited,
-            rollableClass: this.isEditable ? 'rollable' : '',
-            isGM: game.user.isGM,
-            editable: this.isEditable,
-        };
+        // Call parent to get base ApplicationV2 context setup
+        const context = await super._prepareContext(options);
+
+        // Add NPC-specific context properties
+        context.isGM = game.user.isGM;
 
         // Prepare threat tier for header display
         context.threatTier = this.actor.system.threatTier;

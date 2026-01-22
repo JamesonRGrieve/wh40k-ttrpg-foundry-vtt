@@ -64,6 +64,8 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/actor/panel/trait-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/loadout-equipment-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/backpack-split-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/equipment-slots-panel.hbs',
+            'systems/rogue-trader/templates/actor/panel/partials/equipment-slot.hbs',
             'systems/rogue-trader/templates/actor/panel/psy-panel.hbs',
             'systems/rogue-trader/templates/actor/panel/psy-rating-panel-v2.hbs',
             'systems/rogue-trader/templates/actor/panel/psychic-powers-panel.hbs',
