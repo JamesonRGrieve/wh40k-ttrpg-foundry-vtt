@@ -169,7 +169,7 @@
             </label>
             {{#if editable}}
             <div class="rt-editor-mini">
-              {{editor content=(or system.quickNotes "") target="system.quickNotes" button=true owner=owner editable=editable engine="prosemirror"}}
+              {{editor system.quickNotes target="system.quickNotes" button=true editable=editable engine="prosemirror"}}
             </div>
             {{else}}
             <div class="rt-note-display">{{{system.quickNotes}}}</div>
@@ -183,7 +183,7 @@
             </label>
             {{#if editable}}
             <div class="rt-editor-mini">
-              {{editor content=(or system.tactics "") target="system.tactics" button=true owner=owner editable=editable engine="prosemirror"}}
+              {{editor system.tactics target="system.tactics" button=true editable=editable engine="prosemirror"}}
             </div>
             {{else}}
             <div class="rt-note-display">{{{system.tactics}}}</div>

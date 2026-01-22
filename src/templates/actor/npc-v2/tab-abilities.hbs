@@ -178,10 +178,9 @@
       <div class="rt-panel-body">
         {{#if editable}}
         <div class="rt-editor-wrapper">
-          {{editor content=(or system.specialAbilities "")
+          {{editor system.specialAbilities
                    target="system.specialAbilities"
                    button=true
-                   owner=owner
                    editable=editable
                    engine="prosemirror"
                   }}
@@ -211,7 +210,7 @@
       <div class="rt-panel-body">
         {{#if editable}}
         <div class="rt-editor-wrapper">
-          {{editor content=(or system.description "") target="system.description" button=true owner=owner editable=editable engine="prosemirror"}}
+          {{editor system.description target="system.description" button=true editable=editable engine="prosemirror"}}
         </div>
         {{else}}
         <div class="rt-description-content">{{{system.description}}}</div>

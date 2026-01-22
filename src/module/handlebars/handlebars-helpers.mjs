@@ -206,10 +206,19 @@ export function registerHandlebarsHelpers() {
      * Commonly used with editor helper: {{editor content=(or system.field "") ...}}
      */
     Handlebars.registerHelper('or', function (...args) {
-        // Remove the options object that Handlebars appends
-        const values = args.slice(0, -1);
+        // Handlebars appends an options object as the last argument
+        // We need to check if the last arg is the options object
+        const lastArg = args[args.length - 1];
+        const isOptions = lastArg && typeof lastArg === 'object' && 'hash' in lastArg;
+
+        // Get values, excluding the options object
+        const values = isOptions ? args.slice(0, -1) : args;
+
         // Return the first truthy value, or the last value if all are falsy
-        return values.find((v) => v) ?? values[values.length - 1];
+        for (let i = 0; i < values.length; i++) {
+            if (values[i]) return values[i];
+        }
+        return values[values.length - 1] ?? '';
     });
 
     Handlebars.registerHelper('arrayIncludes', function (field, array) {
