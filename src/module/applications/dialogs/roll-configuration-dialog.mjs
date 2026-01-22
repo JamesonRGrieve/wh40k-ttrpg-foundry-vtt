@@ -33,15 +33,14 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             height: 'auto',
         },
         form: {
-            handler: RollConfigurationDialog.#onSubmit,
+            handler: this.#onSubmit,
             submitOnChange: false,
             closeOnSubmit: true,
         },
         actions: {
-            selectDifficulty: RollConfigurationDialog.#selectDifficulty,
-            toggleSituational: RollConfigurationDialog.#toggleSituational,
-            cancel: RollConfigurationDialog.#cancel,
-            viewModifierSource: RollConfigurationDialog.#viewModifierSource,
+            toggleSituational: this.#toggleSituational,
+            cancel: this.#cancel,
+            viewModifierSource: this.#viewModifierSource,
         },
     };
 
@@ -153,10 +152,10 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const situationalModifierTotal = this._calculateSituationalTotal();
 
         // Prepare permanent modifiers (from items, conditions, etc.)
-        const permanentModifiers = (this.config.permanentModifiers || []).map(mod => ({
+        const permanentModifiers = (this.config.permanentModifiers || []).map((mod) => ({
             ...mod,
             valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
-            hasSource: !!mod.uuid
+            hasSource: !!mod.uuid,
         }));
         const hasPermanentModifiers = permanentModifiers.length > 0;
 
@@ -173,7 +172,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             ...mod,
             id: `sit-${index}`,
             active: this.activeSituationalModifiers.has(`sit-${index}`),
-            valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString()
+            valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
         }));
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
@@ -195,7 +194,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             situationalModifierTotal,
             permanentModifierTotal,
             totalModifier: totalModifier,
-            
+
             // Situational modifiers
             situationalModifiers,
             hasSituationalModifiers,
@@ -328,17 +327,6 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             this.activeSituationalModifiers.add(modId);
         }
         this.render({ parts: ['form'] });
-    }
-
-    /**
-     * Handle cancel button
-     * @this {RollConfigurationDialog}
-     * @param {Event} event
-     * @param {HTMLElement} target
-     */
-    static #cancel(event, target) {
-        // Note: 'this' is bound to the instance by ApplicationV2 action handler system
-        this.close();
     }
 
     /**

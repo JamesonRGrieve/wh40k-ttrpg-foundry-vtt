@@ -1,7 +1,7 @@
 /**
  * @file AcquisitionDialog - Profit Factor test dialog for acquiring items
  * ApplicationV2 dialog for Rogue Trader acquisition tests
- * 
+ *
  * Features:
  * - Auto-calculate availability modifiers
  * - Common modifier checkboxes
@@ -16,35 +16,34 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class AcquisitionDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        id: "acquisition-dialog-{id}",
-        classes: ["rogue-trader", "acquisition-dialog"],
-        tag: "form",
+        id: 'acquisition-dialog-{id}',
+        classes: ['rogue-trader', 'acquisition-dialog'],
+        tag: 'form',
         window: {
-            title: "RT.Acquisition.Title",
-            icon: "fa-solid fa-coins",
+            title: 'RT.Acquisition.Title',
+            icon: 'fa-solid fa-coins',
             minimizable: false,
-            resizable: false
+            resizable: false,
         },
         position: {
             width: 480,
-            height: "auto"
+            height: 'auto',
         },
         form: {
-            handler: AcquisitionDialog.#onSubmit,
+            handler: this.#onSubmit,
             submitOnChange: false,
-            closeOnSubmit: true
+            closeOnSubmit: true,
         },
         actions: {
-            toggleModifier: AcquisitionDialog.#toggleModifier,
-            roll: AcquisitionDialog.#roll
-        }
+            toggleModifier: this.#toggleModifier,
+            roll: this.#roll,
+        },
     };
 
     /* -------------------------------------------- */
@@ -52,8 +51,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/dialogs/acquisition-dialog.hbs"
-        }
+            template: 'systems/rogue-trader/templates/dialogs/acquisition-dialog.hbs',
+        },
     };
 
     /* -------------------------------------------- */
@@ -109,9 +108,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     get title() {
-        return this.item 
-            ? `Acquire: ${this.item.name}` 
-            : "Profit Factor Acquisition Test";
+        return this.item ? `Acquire: ${this.item.name}` : 'Profit Factor Acquisition Test';
     }
 
     /* -------------------------------------------- */
@@ -126,7 +123,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         const pf = this.actor.system.rogueTrader?.profitFactor || { current: 0, starting: 0 };
         context.profitFactor = {
             current: pf.current,
-            starting: pf.starting
+            starting: pf.starting,
         };
 
         // Item data
@@ -135,9 +132,9 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
                 name: this.item.name,
                 img: this.item.img,
                 type: this.item.type,
-                availability: this.item.system?.availability || "Common",
-                craftsmanship: this.item.system?.craftsmanship || "Common",
-                cost: this.item.system?.cost || 0
+                availability: this.item.system?.availability || 'Common',
+                craftsmanship: this.item.system?.craftsmanship || 'Common',
+                cost: this.item.system?.cost || 0,
             };
 
             // Calculate availability modifier
@@ -151,22 +148,22 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
         // Common modifiers
         context.commonModifiers = [
-            { key: "haggling", label: "Haggling Successful", value: 10, selected: this.selectedModifiers.has("haggling") },
-            { key: "rushed", label: "Rushed Purchase", value: -10, selected: this.selectedModifiers.has("rushed") },
-            { key: "supplier", label: "Known Supplier", value: 5, selected: this.selectedModifiers.has("supplier") },
-            { key: "bulk", label: "Bulk Purchase", value: -5, selected: this.selectedModifiers.has("bulk") },
-            { key: "rare", label: "Rare Market", value: -10, selected: this.selectedModifiers.has("rare") }
+            { key: 'haggling', label: 'Haggling Successful', value: 10, selected: this.selectedModifiers.has('haggling') },
+            { key: 'rushed', label: 'Rushed Purchase', value: -10, selected: this.selectedModifiers.has('rushed') },
+            { key: 'supplier', label: 'Known Supplier', value: 5, selected: this.selectedModifiers.has('supplier') },
+            { key: 'bulk', label: 'Bulk Purchase', value: -5, selected: this.selectedModifiers.has('bulk') },
+            { key: 'rare', label: 'Rare Market', value: -10, selected: this.selectedModifiers.has('rare') },
         ];
 
         // Calculate totals
         context.baseModifier = context.availabilityModifier + context.craftsmanshipModifier;
-        
+
         let commonTotal = 0;
         for (const mod of context.commonModifiers) {
             if (mod.selected) commonTotal += mod.value;
         }
         context.commonTotal = commonTotal;
-        
+
         context.customModifier = this.customModifier;
         context.totalModifier = context.baseModifier + commonTotal + this.customModifier;
         context.finalTarget = pf.current + context.totalModifier;
@@ -187,16 +184,16 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      */
     _getAvailabilityModifier(availability) {
         const modifiers = {
-            "Abundant": 30,
-            "Plentiful": 20,
-            "Common": 10,
-            "Average": 0,
-            "Scarce": -10,
-            "Rare": -20,
-            "Very Rare": -30,
-            "Extremely Rare": -40,
-            "Near Unique": -50,
-            "Unique": -60
+            'Abundant': 30,
+            'Plentiful': 20,
+            'Common': 10,
+            'Average': 0,
+            'Scarce': -10,
+            'Rare': -20,
+            'Very Rare': -30,
+            'Extremely Rare': -40,
+            'Near Unique': -50,
+            'Unique': -60,
         };
         return modifiers[availability] || 0;
     }
@@ -211,10 +208,10 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      */
     _getCraftsmanshipModifier(craftsmanship) {
         const modifiers = {
-            "Poor": 10,
-            "Common": 0,
-            "Good": -10,
-            "Best": -20
+            Poor: 10,
+            Common: 0,
+            Good: -10,
+            Best: -20,
         };
         return modifiers[craftsmanship] || 0;
     }
@@ -227,7 +224,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getRecentAcquisitions() {
-        const history = this.actor.getFlag("rogue-trader", "acquisitionHistory") || [];
+        const history = this.actor.getFlag('rogue-trader', 'acquisitionHistory') || [];
         return history.slice(-5).reverse(); // Last 5, most recent first
     }
 
@@ -243,7 +240,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      */
     static async #toggleModifier(event, target) {
         const key = target.dataset.modifier;
-        
+
         if (this.selectedModifiers.has(key)) {
             this.selectedModifiers.delete(key);
         } else {
@@ -265,7 +262,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     static async #onSubmit(event, form, formData) {
         // Get custom modifier
         this.customModifier = parseInt(formData.object.customModifier) || 0;
-        
+
         // This will trigger roll
         return true;
     }
@@ -291,7 +288,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         const finalTarget = context.finalTarget;
 
         // Roll d100
-        const roll = await new Roll("1d100").evaluate();
+        const roll = await new Roll('1d100').evaluate();
         const success = roll.total <= finalTarget;
         const dos = Math.floor((finalTarget - roll.total) / 10);
 
@@ -302,7 +299,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             target: finalTarget,
             success,
             dos,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         });
 
         // Create chat message
@@ -315,20 +312,20 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             modifiers: {
                 base: context.baseModifier,
                 common: context.commonTotal,
-                custom: this.customModifier
-            }
+                custom: this.customModifier,
+            },
         });
 
         // On success, add item to inventory
         if (success && this.item) {
-            await this.actor.createEmbeddedDocuments("Item", [this.item]);
+            await this.actor.createEmbeddedDocuments('Item', [this.item]);
             ui.notifications.info(`Acquired ${this.item.name}`);
         }
 
         // Critical failure: reduce PF
         if (dos <= -3) {
             const newPF = Math.max(0, this.actor.system.rogueTrader.profitFactor.current - 1);
-            await this.actor.update({ "system.rogueTrader.profitFactor.current": newPF });
+            await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF });
             ui.notifications.warn(`Critical failure! Profit Factor reduced to ${newPF}`);
         }
 
@@ -338,7 +335,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
                 success,
                 dos,
                 roll: roll.total,
-                target: finalTarget
+                target: finalTarget,
             });
         }
 
@@ -355,13 +352,13 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _logAcquisition(data) {
-        const history = this.actor.getFlag("rogue-trader", "acquisitionHistory") || [];
+        const history = this.actor.getFlag('rogue-trader', 'acquisitionHistory') || [];
         history.push(data);
-        
+
         // Keep last 20
         if (history.length > 20) history.shift();
-        
-        await this.actor.setFlag("rogue-trader", "acquisitionHistory", history);
+
+        await this.actor.setFlag('rogue-trader', 'acquisitionHistory', history);
     }
 
     /* -------------------------------------------- */
@@ -372,24 +369,21 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _createAcquisitionMessage(data) {
-        const content = await renderTemplate(
-            "systems/rogue-trader/templates/chat/acquisition-test.hbs",
-            {
-                actor: this.actor,
-                item: data.item,
-                roll: data.roll.total,
-                target: data.target,
-                success: data.success,
-                dos: data.dos,
-                modifiers: data.modifiers
-            }
-        );
+        const content = await renderTemplate('systems/rogue-trader/templates/chat/acquisition-test.hbs', {
+            actor: this.actor,
+            item: data.item,
+            roll: data.roll.total,
+            target: data.target,
+            success: data.success,
+            dos: data.dos,
+            modifiers: data.modifiers,
+        });
 
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content,
-            flavor: "Profit Factor Acquisition Test",
-            rolls: [data.roll]
+            flavor: 'Profit Factor Acquisition Test',
+            rolls: [data.roll],
         });
     }
 
