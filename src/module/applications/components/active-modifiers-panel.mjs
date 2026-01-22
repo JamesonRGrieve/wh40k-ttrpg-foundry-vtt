@@ -26,9 +26,9 @@ export function ActiveModifiersMixin(Base) {
         static DEFAULT_OPTIONS = {
             actions: {
                 ...super.DEFAULT_OPTIONS?.actions,
-                toggleModifier: ActiveModifiersMixin.#toggleModifier,
-                viewModifierSource: ActiveModifiersMixin.#viewModifierSource,
-                toggleModifiersPanel: ActiveModifiersMixin.#toggleModifiersPanel,
+                toggleModifier: this.#toggleModifier,
+                viewModifierSource: this.#viewModifierSource,
+                toggleModifiersPanel: this.#toggleModifiersPanel,
             },
         };
 
