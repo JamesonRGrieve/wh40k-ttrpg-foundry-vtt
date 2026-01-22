@@ -1,0 +1,104 @@
+{{!-- Equipment Slot Partial - Individual Slot Component --}}
+{{!-- Displays single equipment slot with item or empty state --}}
+
+<div class="rt-equipment-slot {{#if slot.isEmpty}}rt-equipment-slot--empty{{else}}rt-equipment-slot--filled{{/if}} rt-equipment-slot--{{slot.id}}"
+     data-slot-id="{{slot.id}}"
+     data-accepts="{{join slot.accepts ','}}"
+     title="{{slot.label}}">
+    
+    {{#if slot.isEmpty}}
+        {{!-- Empty Slot --}}
+        <div class="rt-slot-empty">
+            <div class="rt-slot-icon-wrapper">
+                <i class="{{slot.icon}} rt-slot-icon"></i>
+            </div>
+            <div class="rt-slot-label">{{slot.label}}</div>
+            <div class="rt-slot-dropzone">
+                <i class="fa-solid fa-plus"></i>
+                <span>Drop Here</span>
+            </div>
+        </div>
+    {{else}}
+        {{!-- Filled Slot --}}
+        <div class="rt-slot-filled" data-item-id="{{slot.item.id}}" draggable="true">
+            {{!-- Item Image --}}
+            <div class="rt-slot-item-image">
+                <img src="{{slot.item.img}}" alt="{{slot.item.name}}" />
+                
+                {{!-- Item Type Badge --}}
+                <div class="rt-slot-item-badge rt-slot-item-badge--{{slot.item.type}}">
+                    {{#if (eq slot.item.type 'weapon')}}
+                        <i class="fa-solid fa-crosshairs"></i>
+                    {{else if (eq slot.item.type 'armour')}}
+                        <i class="fa-solid fa-shield"></i>
+                    {{else if (eq slot.item.type 'forceField')}}
+                        <i class="fa-solid fa-shield-halved"></i>
+                    {{else}}
+                        <i class="fa-solid fa-box"></i>
+                    {{/if}}
+                </div>
+                
+                {{!-- Quick Stats Overlay (for weapons) --}}
+                {{#if (eq slot.item.type 'weapon')}}
+                    <div class="rt-slot-quick-stats">
+                        <span class="rt-quick-stat" title="Damage">{{slot.item.system.damage.formula}}</span>
+                        {{#if slot.item.system.clip}}
+                            <span class="rt-quick-stat rt-quick-stat--ammo" title="Ammo">
+                                {{slot.item.system.clip.current}}/{{slot.item.system.clip.max}}
+                            </span>
+                        {{/if}}
+                    </div>
+                {{/if}}
+                
+                {{!-- Armour Points Overlay (for armour) --}}
+                {{#if (and showAP (eq slot.item.type 'armour'))}}
+                    <div class="rt-slot-armour-ap">
+                        {{#if slot.item.system.armourPoints.head}}
+                            <span class="rt-ap-value" title="Head AP">H: {{slot.item.system.armourPoints.head}}</span>
+                        {{/if}}
+                        {{#if slot.item.system.armourPoints.body}}
+                            <span class="rt-ap-value" title="Body AP">B: {{slot.item.system.armourPoints.body}}</span>
+                        {{/if}}
+                    </div>
+                {{/if}}
+            </div>
+            
+            {{!-- Item Name --}}
+            <div class="rt-slot-item-name {{#if compact}}rt-slot-item-name--compact{{/if}}">
+                {{slot.item.name}}
+            </div>
+            
+            {{!-- Item Actions --}}
+            <div class="rt-slot-item-actions">
+                <button 
+                    type="button" 
+                    class="rt-slot-action rt-slot-action--preview" 
+                    data-action="toggleItemPreview" 
+                    data-item-id="{{slot.item.id}}"
+                    title="Show details">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                
+                <button 
+                    type="button" 
+                    class="rt-slot-action rt-slot-action--unequip" 
+                    data-action="unequipFromSlot" 
+                    data-item-id="{{slot.item.id}}"
+                    title="Unequip">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                
+                {{#if (eq slot.item.type 'weapon')}}
+                    <button 
+                        type="button" 
+                        class="rt-slot-action rt-slot-action--roll" 
+                        data-action="itemRoll" 
+                        data-item-id="{{slot.item.id}}"
+                        title="Attack">
+                        <i class="fa-solid fa-crosshairs"></i>
+                    </button>
+                {{/if}}
+            </div>
+        </div>
+    {{/if}}
+</div>
