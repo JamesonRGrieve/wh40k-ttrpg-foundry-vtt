@@ -154,6 +154,7 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
             items: Array.from(this.actor.items),
             limited: this.actor.limited,
             editable: this.isEditable,
+            owner: this.actor.isOwner, // Required for V13 {{editor}} helper
             rollableClass: this.isEditable ? 'rollable' : '',
         };
 
