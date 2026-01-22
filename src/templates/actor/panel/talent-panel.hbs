@@ -21,14 +21,7 @@
             <option value="{{cat}}" {{#if (eq ../talentsFilter.category cat)}}selected{{/if}}>{{cat}}</option>
             {{/each}}
         </select>
-        
-        <select class="rt-filter-select" name="talents-tier" data-action="filterTalents">
-            <option value="">All Tiers</option>
-            <option value="1" {{#if (eq talentsFilter.tier "1")}}selected{{/if}}>Tier 1</option>
-            <option value="2" {{#if (eq talentsFilter.tier "2")}}selected{{/if}}>Tier 2</option>
-            <option value="3" {{#if (eq talentsFilter.tier "3")}}selected{{/if}}>Tier 3</option>
-        </select>
-        
+
         {{#if (or talentsFilter.search talentsFilter.category talentsFilter.tier)}}
         <button type="button" class="rt-filter-clear" data-action="clearTalentsFilter" title="Clear Filters">
             <i class="fas fa-times"></i>
@@ -76,9 +69,9 @@
                 
                 <div class="rt-row-actions">
                     <button type="button" class="rt-action-btn" data-action="toggleItemPreview" data-item-id="{{talent.id}}" title="Quick Preview">
-                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-chevron-up"></i>
                     </button>
-                    <button type="button" class="rt-talent-favorite {{#if talent.isFavorite}}active{{/if}}" 
+                    <button type="button" class="rt-action-btn {{#if talent.isFavorite}}active{{/if}}"
                             data-action="toggleFavoriteTalent" data-item-id="{{talent.id}}"
                             title="{{#if talent.isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                         <i class="{{#if talent.isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
