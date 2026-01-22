@@ -33,15 +33,15 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             height: 'auto',
         },
         form: {
-            handler: this.#onSubmit,
+            handler: RollConfigurationDialog.#onSubmit,
             submitOnChange: false,
             closeOnSubmit: true,
         },
         actions: {
-            selectDifficulty: this.#selectDifficulty,
-            toggleSituational: this.#toggleSituational,
-            cancel: this.#cancel,
-            viewModifierSource: this.#viewModifierSource,
+            selectDifficulty: RollConfigurationDialog.#selectDifficulty,
+            toggleSituational: RollConfigurationDialog.#toggleSituational,
+            cancel: RollConfigurationDialog.#cancel,
+            viewModifierSource: RollConfigurationDialog.#viewModifierSource,
         },
     };
 
@@ -152,6 +152,17 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         // Calculate situational modifier from active checkboxes
         const situationalModifierTotal = this._calculateSituationalTotal();
 
+        // Prepare permanent modifiers (from items, conditions, etc.)
+        const permanentModifiers = (this.config.permanentModifiers || []).map(mod => ({
+            ...mod,
+            valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
+            hasSource: !!mod.uuid
+        }));
+        const hasPermanentModifiers = permanentModifiers.length > 0;
+
+        // Calculate permanent modifier total
+        const permanentModifierTotal = permanentModifiers.reduce((sum, mod) => sum + (mod.value || 0), 0);
+
         // Calculate total modifier and final target
         const totalModifier = difficultyModifier + this.customModifier + situationalModifierTotal + permanentModifierTotal;
         const baseTarget = this.config.target || 0;
@@ -165,17 +176,6 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString()
         }));
         const hasSituationalModifiers = situationalModifiers.length > 0;
-
-        // Prepare permanent modifiers (from items, conditions, etc.)
-        const permanentModifiers = (this.config.permanentModifiers || []).map(mod => ({
-            ...mod,
-            valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
-            hasSource: !!mod.uuid
-        }));
-        const hasPermanentModifiers = permanentModifiers.length > 0;
-
-        // Calculate permanent modifier total
-        const permanentModifierTotal = permanentModifiers.reduce((sum, mod) => sum + (mod.value || 0), 0);
 
         return {
             ...context,
