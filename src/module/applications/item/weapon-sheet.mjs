@@ -33,8 +33,8 @@ export default class WeaponSheet extends ContainerItemSheet {
             toggleBody: WeaponSheet.#toggleBody,
         },
         position: {
-            width: 600,
-            height: 450,
+            width: 450,
+            height: 350,
         },
         window: {
             resizable: true,
