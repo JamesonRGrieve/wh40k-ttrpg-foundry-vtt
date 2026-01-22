@@ -146,6 +146,7 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
         const context = {
             ...(await super._prepareContext(options)),
             actor: this.actor,
+            document: this.actor, // Required for V13 {{editor}} helper
             system: this.actor.system,
             source: this.isEditable ? this.actor.system._source : this.actor.system,
             fields: this.actor.system.schema?.fields ?? {},
@@ -174,7 +175,10 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
     async _preparePartContext(partId, context, options) {
         context = await super._preparePartContext(partId, context, options);
 
-        // Ensure editable flag is available (required for editor helpers)
+        // Ensure required properties for editor helpers are available
+        if (context.document === undefined) {
+            context.document = this.actor;
+        }
         if (context.editable === undefined) {
             context.editable = this.isEditable;
         }
