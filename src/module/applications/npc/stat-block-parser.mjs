@@ -43,14 +43,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             height: 700,
         },
         form: {
-            handler: this.#onSubmit,
+            handler: StatBlockParser._onSubmit,
             submitOnChange: false,
             closeOnSubmit: true,
         },
         actions: {
-            parse: this.#onParse,
-            cancel: this.#onCancel,
-            clearInput: this.#onClearInput,
+            parse: StatBlockParser._onParse,
+            cancel: StatBlockParser._onCancel,
+            clearInput: StatBlockParser._onClearInput,
         },
     };
 
@@ -1258,7 +1258,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
    * @param {PointerEvent} event
    * @param {HTMLElement} target
    */
-  static async #onParse(event, target) {
+  static async _onParse(event, target) {
     const result = StatBlockParser.parse(this.#rawInput);
     
     this.#parsedData = result.data;
@@ -1275,7 +1275,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async #onSubmit(event, form, formData) {
+    static async _onSubmit(event, form, formData) {
         if (!this.#parsedData) {
             ui.notifications.error('No valid data to import. Parse input first.');
             return;
@@ -1335,7 +1335,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCancel(event, target) {
+    static async _onCancel(event, target) {
         this.#submitted = false;
         if (this.#resolve) this.#resolve(null);
         await this.close();
@@ -1346,7 +1346,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
    * @param {PointerEvent} event
    * @param {HTMLElement} target
    */
-  static async #onClearInput(event, target) {
+  static async _onClearInput(event, target) {
     this.#rawInput = "";
     this.#parsedData = null;
     this.#errors = [];
