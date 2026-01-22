@@ -1,6 +1,6 @@
 {{!-- 
   Rogue Trader Weapon Item Sheet V3 - Modern Single-Page Redesign
-  Features: Sticky header+stats, FAB actions, collapsible sections, color-coded stats
+  Features: Sticky header+stats, action cards in mosaic, collapsible sections, color-coded stats
 --}}
 <div class="rt-item-sheet rt-weapon-sheet-v3">
   <form autocomplete="off">
@@ -17,18 +17,17 @@
         </div>
 
         <div class="rt-item-title">
-          {{#if inEditMode}}
-          <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Weapon Name" />
-          {{else}}
-          <h2 class="rt-item-title__name rt-item-title__name--readonly">{{item.name}}</h2>
-          {{/if}}
+          <input type="text" class="rt-item-title__name {{#unless inEditMode}}rt-input--readonly{{/unless}}" 
+                 name="name" value="{{item.name}}" placeholder="Weapon Name" 
+                 {{#unless inEditMode}}readonly{{/unless}} />
           
           <div class="rt-item-meta rt-weapon-meta">
-            <span class="rt-meta-badge rt-meta-badge--weapon-class" title="{{system.classLabel}}">
+            <span class="rt-meta-badge rt-meta-badge--weapon-class" title="Weapon Class: {{system.classLabel}}">
               <i class="fa-solid fa-{{#if system.isMeleeWeapon}}sword{{else}}gun{{/if}}"></i>
               {{system.classLabel}}
             </span>
-            <span class="rt-meta-badge rt-meta-badge--weapon-type" title="{{system.typeLabel}}">
+            <span class="rt-meta-badge rt-meta-badge--weapon-type" title="Weapon Type: {{system.typeLabel}}">
+              <i class="fa-solid {{system.typeIcon}}"></i>
               {{system.typeLabel}}
             </span>
             {{#if (ne system.craftsmanship "common")}}
@@ -61,15 +60,32 @@
 
       {{!-- ICONIC STAT MOSAIC --}}
       <div class="rt-weapon-mosaic">
-        {{!-- Damage - Skull (Large, 2x) --}}
-        <div class="rt-iconic-stat rt-iconic-stat--damage rt-iconic-stat--large {{#if hasModificationEffects}}rt-iconic-stat--modified{{/if}}"
-             data-tooltip="Damage">
+        {{!-- Attack Action Card (if owned by actor) --}}
+        {{#if isOwnedByActor}}
+        <div class="rt-iconic-stat rt-iconic-stat--action rt-iconic-stat--attack rt-iconic-stat--medium"
+             data-action="rollAttack"
+             data-tooltip="Roll Attack">
+          <div class="rt-iconic-stat__shape">
+            <i class="fa-solid fa-crosshairs"></i>
+          </div>
+          <div class="rt-iconic-stat__content">
+            <span class="rt-iconic-stat__value">Attack</span>
+            <span class="rt-iconic-stat__label">d100</span>
+          </div>
+          <div class="rt-iconic-stat__glow"></div>
+        </div>
+        {{/if}}
+        
+        {{!-- Damage Card (clickable to roll if owned) --}}
+        <div class="rt-iconic-stat rt-iconic-stat--damage rt-iconic-stat--large {{#if hasModificationEffects}}rt-iconic-stat--modified{{/if}} {{#if isOwnedByActor}}rt-iconic-stat--clickable{{/if}}"
+             {{#if isOwnedByActor}}data-action="rollDamage"{{/if}}
+             data-tooltip="{{#if isOwnedByActor}}Click to Roll Damage{{else}}Damage Formula{{/if}}">
           <div class="rt-iconic-stat__shape">
             <i class="fa-solid fa-skull"></i>
           </div>
           <div class="rt-iconic-stat__content">
-            <span class="rt-iconic-stat__value">{{effectiveDamageLabel}}</span>
-            <span class="rt-iconic-stat__label">Damage</span>
+            <span class="rt-iconic-stat__value">{{fullDamageFormula}}</span>
+            <span class="rt-iconic-stat__label">Damage Formula</span>
           </div>
           <div class="rt-iconic-stat__glow"></div>
         </div>
@@ -82,7 +98,7 @@
           </div>
           <div class="rt-iconic-stat__content">
             <span class="rt-iconic-stat__value">{{effectivePenetration}}</span>
-            <span class="rt-iconic-stat__label">Pen</span>
+            <span class="rt-iconic-stat__label">Penetration</span>
           </div>
           <div class="rt-iconic-stat__glow"></div>
         </div>
@@ -92,7 +108,7 @@
         <div class="rt-iconic-stat rt-iconic-stat--tohit rt-iconic-stat--medium"
              data-tooltip="To Hit Modifier">
           <div class="rt-iconic-stat__shape">
-            <i class="fa-solid fa-crosshairs"></i>
+            <i class="fa-solid fa-bullseye"></i>
           </div>
           <div class="rt-iconic-stat__content">
             <span class="rt-iconic-stat__value {{#if (gt effectiveToHit 0)}}rt-iconic-stat__value--positive{{else}}rt-iconic-stat__value--negative{{/if}}">
@@ -109,7 +125,7 @@
         <div class="rt-iconic-stat rt-iconic-stat--range rt-iconic-stat--medium"
              data-tooltip="Range">
           <div class="rt-iconic-stat__shape">
-            <i class="fa-solid fa-bullseye"></i>
+            <i class="fa-solid fa-ruler"></i>
           </div>
           <div class="rt-iconic-stat__content">
             <span class="rt-iconic-stat__value">{{system.rangeLabel}}</span>
@@ -132,10 +148,11 @@
         </div>
         {{/if}}
         
-        {{!-- Clip - Magazine (Small, with progress) --}}
+        {{!-- Clip - Magazine (clickable to decrement if owned) --}}
         {{#if system.usesAmmo}}
-        <div class="rt-iconic-stat rt-iconic-stat--clip rt-iconic-stat--small rt-iconic-stat--ammo-{{system.ammoStatus}}"
-             data-tooltip="Ammunition">
+        <div class="rt-iconic-stat rt-iconic-stat--clip rt-iconic-stat--small rt-iconic-stat--ammo-{{system.ammoStatus}} {{#if isOwnedByActor}}rt-iconic-stat--clickable{{/if}}"
+             {{#if isOwnedByActor}}data-action="expendAmmo"{{/if}}
+             data-tooltip="{{#if isOwnedByActor}}Click to Spend Ammo{{else}}Ammunition{{/if}}">
           <div class="rt-iconic-stat__shape">
             <i class="fa-solid fa-gun"></i>
           </div>
@@ -146,6 +163,22 @@
           <div class="rt-iconic-stat__progress" style="--progress: {{system.ammoPercentage}}%"></div>
           <div class="rt-iconic-stat__glow"></div>
         </div>
+        
+        {{!-- Reload Action Card (if owned by actor and uses ammo) --}}
+        {{#if isOwnedByActor}}
+        <div class="rt-iconic-stat rt-iconic-stat--action rt-iconic-stat--reload rt-iconic-stat--small {{#if (eq system.clip.value system.clip.max)}}rt-iconic-stat--disabled{{/if}}"
+             data-action="reload"
+             data-tooltip="Reload ({{system.reloadLabel}})">
+          <div class="rt-iconic-stat__shape">
+            <i class="fa-solid fa-rotate-right"></i>
+          </div>
+          <div class="rt-iconic-stat__content">
+            <span class="rt-iconic-stat__value">Reload</span>
+            <span class="rt-iconic-stat__label">{{system.reloadLabel}}</span>
+          </div>
+          <div class="rt-iconic-stat__glow"></div>
+        </div>
+        {{/if}}
         {{/if}}
         
         {{!-- Weight - Scale (Small) --}}
@@ -254,98 +287,85 @@
         </header>
         <div class="rt-section__body" data-section-content="combat">
           <div class="rt-form-grid rt-form-grid--2col">
-            {{!-- Damage Formula (single field) --}}
-            {{#if inEditMode}}
+            {{!-- Damage Formula --}}
             <div class="rt-float-field">
-              <input type="text" name="system.damage.formula" value="{{system.damage.formula}}" placeholder=" " id="damage-formula" />
+              <input type="text" name="system.damage.formula" value="{{system.damage.formula}}" 
+                     placeholder=" " id="damage-formula" 
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="damage-formula">Damage Formula</label>
               <span class="rt-float-field__bar"></span>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Damage</label>
-              <div class="rt-form-field__value">{{system.damage.formula}}</div>
+            
+            {{!-- Damage Bonus --}}
+            <div class="rt-float-field rt-float-field--narrow">
+              <input type="number" name="system.damage.bonus" value="{{system.damage.bonus}}" 
+                     placeholder=" " id="damage-bonus"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
+              <label for="damage-bonus">Bonus</label>
+              <span class="rt-float-field__bar"></span>
             </div>
-            {{/if}}
             
             {{!-- Penetration --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--narrow">
-              <input type="number" name="system.damage.penetration" value="{{system.damage.penetration}}" placeholder=" " id="penetration" />
+              <input type="number" name="system.damage.penetration" value="{{system.damage.penetration}}" 
+                     placeholder=" " id="penetration"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="penetration">Penetration</label>
               <span class="rt-float-field__bar"></span>
             </div>
-            {{else}}
-            <div class="rt-form-field rt-form-field--narrow">
-              <label>Penetration</label>
-              <div class="rt-form-field__value">{{system.damage.penetration}}</div>
-            </div>
-            {{/if}}
             
             {{!-- Damage Type --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--select">
-              <select name="system.damage.type" id="damage-type">
+              <select name="system.damage.type" id="damage-type"
+                      class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                      {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions damageTypes selected=system.damage.type labelAttr="label"}}
               </select>
               <label for="damage-type">Damage Type</label>
               <i class="fa-solid fa-chevron-down rt-float-field__arrow"></i>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Type</label>
-              <div class="rt-form-field__value">{{system.damage.typeLabel}}</div>
-            </div>
-            {{/if}}
             
             {{!-- Weapon Class --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--select">
-              <select name="system.class" id="weapon-class">
+              <select name="system.class" id="weapon-class"
+                      class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                      {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions weaponClasses selected=system.class labelAttr="label"}}
               </select>
-              <label for="weapon-class">Class</label>
+              <label for="weapon-class">Weapon Class</label>
               <i class="fa-solid fa-chevron-down rt-float-field__arrow"></i>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Class</label>
-              <div class="rt-form-field__value">{{system.classLabel}}</div>
-            </div>
-            {{/if}}
             
             {{!-- Weapon Type --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--select">
-              <select name="system.type" id="weapon-type">
+              <select name="system.type" id="weapon-type"
+                      class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                      {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions weaponTypes selected=system.type labelAttr="label"}}
               </select>
               <label for="weapon-type">Weapon Type</label>
               <i class="fa-solid fa-chevron-down rt-float-field__arrow"></i>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Type</label>
-              <div class="rt-form-field__value">{{system.typeLabel}}</div>
-            </div>
-            {{/if}}
           </div>
           
           {{!-- Toggle Switches Row --}}
-          {{#if inEditMode}}
           <div class="rt-toggle-row">
-            <label class="rt-toggle-switch">
-              <input type="checkbox" name="system.twoHanded" {{checked system.twoHanded}} />
+            <label class="rt-toggle-switch {{#unless inEditMode}}rt-toggle-switch--readonly{{/unless}}">
+              <input type="checkbox" name="system.twoHanded" {{checked system.twoHanded}} 
+                     {{#unless inEditMode}}disabled{{/unless}} />
               <span class="rt-toggle-switch__slider"></span>
               <span class="rt-toggle-switch__label"><i class="fa-solid fa-hands"></i> Two-Handed</span>
             </label>
-            <label class="rt-toggle-switch">
-              <input type="checkbox" name="system.melee" {{checked system.melee}} />
+            <label class="rt-toggle-switch {{#unless inEditMode}}rt-toggle-switch--readonly{{/unless}}">
+              <input type="checkbox" name="system.melee" {{checked system.melee}} 
+                     {{#unless inEditMode}}disabled{{/unless}} />
               <span class="rt-toggle-switch__slider"></span>
               <span class="rt-toggle-switch__label"><i class="fa-solid fa-sword"></i> Can Melee</span>
             </label>
           </div>
-          {{/if}}
         </div>
       </section>
       
@@ -360,58 +380,50 @@
         <div class="rt-section__body" data-section-content="ranged">
           <div class="rt-form-grid rt-form-grid--2col">
             {{!-- Range --}}
-            {{#if inEditMode}}
             <div class="rt-float-field">
-              <input type="number" name="system.attack.range.value" value="{{system.attack.range.value}}" placeholder=" " id="range-value" />
+              <input type="number" name="system.attack.range.value" value="{{system.attack.range.value}}" 
+                     placeholder=" " id="range-value"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="range-value">Range (m)</label>
               <span class="rt-float-field__bar"></span>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Range (m)</label>
-              <div class="rt-form-field__value">{{system.attack.range.value}}m</div>
-            </div>
-            {{/if}}
             
             {{!-- Special Range --}}
-            {{#if inEditMode}}
             <div class="rt-float-field">
-              <input type="text" name="system.attack.range.special" value="{{system.attack.range.special}}" placeholder=" " id="range-special" />
+              <input type="text" name="system.attack.range.special" value="{{system.attack.range.special}}" 
+                     placeholder=" " id="range-special"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="range-special">Special</label>
               <span class="rt-float-field__bar"></span>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Special</label>
-              <div class="rt-form-field__value">{{system.attack.range.special}}</div>
-            </div>
-            {{/if}}
           </div>
           
           {{!-- Rate of Fire --}}
-          {{#if inEditMode}}
           <div class="rt-rof-grid">
-            <label class="rt-checkbox">
-              <input type="checkbox" name="system.attack.rateOfFire.single" {{checked system.attack.rateOfFire.single}} />
+            <label class="rt-checkbox {{#unless inEditMode}}rt-checkbox--readonly{{/unless}}">
+              <input type="checkbox" name="system.attack.rateOfFire.single" {{checked system.attack.rateOfFire.single}}
+                     {{#unless inEditMode}}disabled{{/unless}} />
               <span>Single (S)</span>
             </label>
             <div class="rt-float-field rt-float-field--narrow">
-              <input type="number" name="system.attack.rateOfFire.semi" value="{{system.attack.rateOfFire.semi}}" min="0" placeholder=" " id="rof-semi" />
+              <input type="number" name="system.attack.rateOfFire.semi" value="{{system.attack.rateOfFire.semi}}" 
+                     min="0" placeholder=" " id="rof-semi"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="rof-semi">Semi</label>
               <span class="rt-float-field__bar"></span>
             </div>
             <div class="rt-float-field rt-float-field--narrow">
-              <input type="number" name="system.attack.rateOfFire.full" value="{{system.attack.rateOfFire.full}}" min="0" placeholder=" " id="rof-full" />
+              <input type="number" name="system.attack.rateOfFire.full" value="{{system.attack.rateOfFire.full}}" 
+                     min="0" placeholder=" " id="rof-full"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="rof-full">Full</label>
               <span class="rt-float-field__bar"></span>
             </div>
           </div>
-          {{else}}
-          <div class="rt-form-field">
-            <label>Rate of Fire</label>
-            <div class="rt-form-field__value">{{system.rateOfFireLabel}}</div>
-          </div>
-          {{/if}}
         </div>
       </section>
       {{/if}}
@@ -427,48 +439,35 @@
         <div class="rt-section__body" data-section-content="ammunition">
           <div class="rt-form-grid rt-form-grid--3col">
             {{!-- Current --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--narrow">
-              <input type="number" name="system.clip.value" value="{{system.clip.value}}" min="0" placeholder=" " id="clip-current" />
+              <input type="number" name="system.clip.value" value="{{system.clip.value}}" 
+                     min="0" placeholder=" " id="clip-current"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="clip-current">Current</label>
               <span class="rt-float-field__bar"></span>
             </div>
-            {{else}}
-            <div class="rt-form-field rt-form-field--narrow">
-              <label>Current</label>
-              <div class="rt-form-field__value">{{system.clip.value}}</div>
-            </div>
-            {{/if}}
             
             {{!-- Max --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--narrow">
-              <input type="number" name="system.clip.max" value="{{system.clip.max}}" min="0" placeholder=" " id="clip-max" />
+              <input type="number" name="system.clip.max" value="{{system.clip.max}}" 
+                     min="0" placeholder=" " id="clip-max"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="clip-max">Max</label>
               <span class="rt-float-field__bar"></span>
             </div>
-            {{else}}
-            <div class="rt-form-field rt-form-field--narrow">
-              <label>Max</label>
-              <div class="rt-form-field__value">{{system.clip.max}}</div>
-            </div>
-            {{/if}}
             
             {{!-- Reload Time --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--select">
-              <select name="system.reload" id="reload-time">
+              <select name="system.reload" id="reload-time"
+                      class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                      {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions reloadTimes selected=system.reload labelAttr="label"}}
               </select>
               <label for="reload-time">Reload</label>
               <i class="fa-solid fa-chevron-down rt-float-field__arrow"></i>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Reload</label>
-              <div class="rt-form-field__value">{{system.reloadLabel}}</div>
-            </div>
-            {{/if}}
           </div>
           
           {{!-- Ammo Dropzone --}}
@@ -493,64 +492,46 @@
         <div class="rt-section__body" data-section-content="acquisition">
           <div class="rt-form-grid rt-form-grid--2col">
             {{!-- Availability --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--select">
-              <select name="system.availability" id="availability">
+              <select name="system.availability" id="availability"
+                      class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                      {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions availabilities selected=system.availability labelAttr="label"}}
               </select>
               <label for="availability">Availability</label>
               <i class="fa-solid fa-chevron-down rt-float-field__arrow"></i>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Availability</label>
-              <div class="rt-form-field__value">{{system.availabilityLabel}}</div>
-            </div>
-            {{/if}}
             
             {{!-- Craftsmanship --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--select">
-              <select name="system.craftsmanship" id="craftsmanship">
+              <select name="system.craftsmanship" id="craftsmanship"
+                      class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                      {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions craftsmanships selected=system.craftsmanship labelAttr="label"}}
               </select>
               <label for="craftsmanship">Craftsmanship</label>
               <i class="fa-solid fa-chevron-down rt-float-field__arrow"></i>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Craftsmanship</label>
-              <div class="rt-form-field__value">{{system.craftsmanshipLabel}}</div>
-            </div>
-            {{/if}}
             
             {{!-- Weight --}}
-            {{#if inEditMode}}
             <div class="rt-float-field rt-float-field--narrow">
-              <input type="number" name="system.weight" value="{{system.weight}}" step="0.1" min="0" placeholder=" " id="weight" />
+              <input type="number" name="system.weight" value="{{system.weight}}" 
+                     step="0.1" min="0" placeholder=" " id="weight"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="weight">Weight (kg)</label>
               <span class="rt-float-field__bar"></span>
             </div>
-            {{else}}
-            <div class="rt-form-field rt-form-field--narrow">
-              <label>Weight (kg)</label>
-              <div class="rt-form-field__value">{{system.weight}}kg</div>
-            </div>
-            {{/if}}
             
             {{!-- Source --}}
-            {{#if inEditMode}}
             <div class="rt-float-field">
-              <input type="text" name="system.source" value="{{system.source}}" placeholder=" " id="source" />
+              <input type="text" name="system.source" value="{{system.source}}" 
+                     placeholder=" " id="source"
+                     class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                     {{#unless inEditMode}}readonly{{/unless}} />
               <label for="source">Source</label>
               <span class="rt-float-field__bar"></span>
             </div>
-            {{else}}
-            <div class="rt-form-field">
-              <label>Source</label>
-              <div class="rt-form-field__value">{{system.source}}</div>
-            </div>
-            {{/if}}
           </div>
         </div>
       </section>
@@ -578,13 +559,13 @@
           </div>
           {{/if}}
           
-          {{!-- Notes (edit mode only) --}}
-          {{#if inEditMode}}
+          {{!-- Notes --}}
           <div class="rt-form-field rt-form-field--full" style="padding: 10px 12px;">
             <label>Notes</label>
-            <textarea name="system.notes" rows="2" placeholder="Personal notes...">{{system.notes}}</textarea>
+            <textarea name="system.notes" rows="2" placeholder="Personal notes..."
+                      class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                      {{#unless inEditMode}}readonly{{/unless}}>{{system.notes}}</textarea>
           </div>
-          {{/if}}
         </div>
       </section>
       
@@ -655,36 +636,6 @@
       {{/if}}
       
     </div>
-
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         FAB (Floating Action Button)
-    ═══════════════════════════════════════════════════════════════════ --}}
-    {{#if isOwnedByActor}}
-    <div class="rt-fab-container {{#if fabExpanded}}expanded{{/if}}">
-      <button type="button" class="rt-fab rt-fab--main" data-action="toggleFab" title="Actions">
-        <i class="fa-solid fa-dice-d20"></i>
-      </button>
-      <div class="rt-fab-actions">
-        <button type="button" class="rt-fab rt-fab--attack" data-action="rollAttack" title="Attack Roll">
-          <i class="fa-solid fa-crosshairs"></i>
-          <span>Attack</span>
-        </button>
-        <button type="button" class="rt-fab rt-fab--damage" data-action="rollDamage" title="Damage Roll">
-          <i class="fa-solid fa-burst"></i>
-          <span>Damage</span>
-        </button>
-        {{#if system.usesAmmo}}
-        <button type="button" class="rt-fab rt-fab--reload {{#if (eq system.clip.value system.clip.max)}}rt-fab--disabled{{/if}}" 
-                data-action="reload" 
-                title="Reload ({{system.reloadLabel}})"
-                {{#if (eq system.clip.value system.clip.max)}}disabled{{/if}}>
-          <i class="fa-solid fa-rotate-right"></i>
-          <span>Reload</span>
-        </button>
-        {{/if}}
-      </div>
-    </div>
-    {{/if}}
 
   </form>
 </div>
