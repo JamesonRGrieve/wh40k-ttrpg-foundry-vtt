@@ -161,32 +161,35 @@
           <div class="rt-iconic-stat__glow"></div>
         </div>
         
-        {{!-- Qualities Cell (spans bottom) --}}
-        {{#if qualitiesArray.length}}
-        <div class="rt-iconic-stat rt-iconic-stat--qualities rt-iconic-stat--wide">
+        {{!-- Individual Quality Cards --}}
+        {{#each qualitiesArray}}
+        <div class="rt-iconic-stat rt-iconic-stat--quality rt-iconic-stat--small"
+             data-action="openQuality"
+             data-identifier="{{identifier}}"
+             data-rt-tooltip="quality"
+             data-rt-tooltip-data="{{@root.prepareQualityTooltip identifier level}}">
           <div class="rt-iconic-stat__shape">
             <i class="fa-solid fa-star"></i>
           </div>
-          <div class="rt-iconic-stat__qualities">
-            {{#each qualitiesArray}}
-            <button type="button" class="rt-quality-chip"
-                    data-action="openQuality"
-                    data-identifier="{{identifier}}"
-                    data-rt-tooltip="quality"
-                    data-rt-tooltip-data="{{@root.prepareQualityTooltip identifier level}}">
-              {{label}}
-            </button>
-            {{/each}}
+          <div class="rt-iconic-stat__content">
+            <span class="rt-iconic-stat__value rt-iconic-stat__value--quality">{{label}}</span>
           </div>
+          <div class="rt-iconic-stat__glow"></div>
         </div>
-        {{/if}}
+        {{/each}}
       </div>
+      
+      {{!-- Body Toggle Button --}}
+      <button type="button" class="rt-body-toggle" data-action="toggleBody" title="{{#if bodyCollapsed}}Show Details{{else}}Hide Details{{/if}}">
+        <span class="rt-body-toggle__label">{{#if bodyCollapsed}}Show Details{{else}}Hide Details{{/if}}</span>
+        <i class="fa-solid {{#if bodyCollapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}} rt-body-toggle__icon"></i>
+      </button>
     </div>
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          SCROLLABLE BODY
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-weapon-body">
+    <div class="rt-weapon-body {{#if bodyCollapsed}}collapsed{{/if}}">
       
       {{!-- LOADED AMMO BANNER (if loaded) --}}
       {{#if (and system.usesAmmo hasLoadedAmmo)}}
@@ -251,31 +254,17 @@
         </header>
         <div class="rt-section__body" data-section-content="combat">
           <div class="rt-form-grid rt-form-grid--2col">
-            {{!-- Damage Formula --}}
+            {{!-- Damage Formula (single field) --}}
             {{#if inEditMode}}
             <div class="rt-float-field">
               <input type="text" name="system.damage.formula" value="{{system.damage.formula}}" placeholder=" " id="damage-formula" />
-              <label for="damage-formula">Damage</label>
+              <label for="damage-formula">Damage Formula</label>
               <span class="rt-float-field__bar"></span>
             </div>
             {{else}}
             <div class="rt-form-field">
               <label>Damage</label>
               <div class="rt-form-field__value">{{system.damage.formula}}</div>
-            </div>
-            {{/if}}
-            
-            {{!-- Damage Bonus --}}
-            {{#if inEditMode}}
-            <div class="rt-float-field rt-float-field--narrow">
-              <input type="number" name="system.damage.bonus" value="{{system.damage.bonus}}" placeholder=" " id="damage-bonus" />
-              <label for="damage-bonus">Bonus</label>
-              <span class="rt-float-field__bar"></span>
-            </div>
-            {{else}}
-            <div class="rt-form-field rt-form-field--narrow">
-              <label>Bonus</label>
-              <div class="rt-form-field__value">{{system.damage.bonus}}</div>
             </div>
             {{/if}}
             
@@ -342,16 +331,18 @@
             {{/if}}
           </div>
           
-          {{!-- Checkboxes Row --}}
+          {{!-- Toggle Switches Row --}}
           {{#if inEditMode}}
-          <div class="rt-form-checkboxes">
-            <label class="rt-checkbox">
+          <div class="rt-toggle-row">
+            <label class="rt-toggle-switch">
               <input type="checkbox" name="system.twoHanded" {{checked system.twoHanded}} />
-              <span><i class="fa-solid fa-hands"></i> Two-Handed</span>
+              <span class="rt-toggle-switch__slider"></span>
+              <span class="rt-toggle-switch__label"><i class="fa-solid fa-hands"></i> Two-Handed</span>
             </label>
-            <label class="rt-checkbox">
+            <label class="rt-toggle-switch">
               <input type="checkbox" name="system.melee" {{checked system.melee}} />
-              <span><i class="fa-solid fa-sword"></i> Can Melee</span>
+              <span class="rt-toggle-switch__slider"></span>
+              <span class="rt-toggle-switch__label"><i class="fa-solid fa-sword"></i> Can Melee</span>
             </label>
           </div>
           {{/if}}

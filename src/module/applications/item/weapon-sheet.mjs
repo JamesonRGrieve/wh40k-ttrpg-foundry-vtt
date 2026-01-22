@@ -29,10 +29,11 @@ export default class WeaponSheet extends ContainerItemSheet {
             ejectAmmo: WeaponSheet.#ejectAmmo,
             toggleFab: WeaponSheet.#toggleFab,
             toggleSection: WeaponSheet.#toggleSection,
+            toggleBody: WeaponSheet.#toggleBody,
         },
         position: {
             width: 600,
-            height: 600,
+            height: 450,
         },
         window: {
             resizable: true,
@@ -64,6 +65,12 @@ export default class WeaponSheet extends ContainerItemSheet {
      */
     #fabExpanded = false;
 
+    /**
+     * Track body collapsed state (starts collapsed by default).
+     * @type {boolean}
+     */
+    #bodyCollapsed = true;
+
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -91,11 +98,12 @@ export default class WeaponSheet extends ContainerItemSheet {
         context.CONFIG = CONFIG;
 
         // Explicitly pass dropdown options for selectOptions helper
-        context.weaponClasses = CONFIG.ROGUE_TRADER?.weaponClasses || {};
-        context.weaponTypes = CONFIG.ROGUE_TRADER?.weaponTypes || {};
-        context.damageTypes = CONFIG.ROGUE_TRADER?.damageTypes || {};
-        context.availabilities = CONFIG.ROGUE_TRADER?.availabilities || {};
-        context.craftsmanships = CONFIG.ROGUE_TRADER?.craftsmanships || {};
+        // Use CONFIG.rt which is the registered config object
+        context.weaponClasses = CONFIG.rt?.weaponClasses || {};
+        context.weaponTypes = CONFIG.rt?.weaponTypes || {};
+        context.damageTypes = CONFIG.rt?.damageTypes || {};
+        context.availabilities = CONFIG.rt?.availabilities || {};
+        context.craftsmanships = CONFIG.rt?.craftsmanships || {};
         context.reloadTimes = {
             '-': { label: '—' },
             'free': { label: 'Free Action' },
@@ -104,6 +112,9 @@ export default class WeaponSheet extends ContainerItemSheet {
             '2-full': { label: '2 Full Actions' },
             '3-full': { label: '3 Full Actions' },
         };
+
+        // Body collapse state - start collapsed by default
+        context.bodyCollapsed = this.#bodyCollapsed;
 
         // Prepare qualities array for clickable tags
         context.qualitiesArray = Array.from(system.effectiveSpecial || []).map((q) => {
@@ -758,6 +769,36 @@ export default class WeaponSheet extends ContainerItemSheet {
             icon.classList.toggle('fa-chevron-down', !this.#collapsedSections.has(sectionName));
             icon.classList.toggle('fa-chevron-right', this.#collapsedSections.has(sectionName));
         }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle the main body section collapsed/expanded.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static #toggleBody(event, target) {
+        this.#bodyCollapsed = !this.#bodyCollapsed;
+
+        const body = this.element.querySelector('.rt-weapon-body');
+        if (body) {
+            body.classList.toggle('collapsed', this.#bodyCollapsed);
+        }
+
+        // Update toggle icon
+        const icon = target.querySelector('.rt-body-toggle__icon');
+        if (icon) {
+            icon.classList.toggle('fa-chevron-down', !this.#bodyCollapsed);
+            icon.classList.toggle('fa-chevron-up', this.#bodyCollapsed);
+        }
+
+        // Adjust window height
+        const expandedHeight = 700;
+        const collapsedHeight = 450;
+        const newHeight = this.#bodyCollapsed ? collapsedHeight : expandedHeight;
+        this.setPosition({ height: newHeight });
     }
 
     /* -------------------------------------------- */
