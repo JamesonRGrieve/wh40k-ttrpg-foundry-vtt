@@ -228,7 +228,11 @@
         padding: 12px;
 
         // Adjust column count based on container width
-        @container (max-width: 420px) {
+        @container (max-width: 300px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @container (min-width: 301px) and (max-width: 420px) {
             grid-template-columns: repeat(4, 1fr);
         }
 
