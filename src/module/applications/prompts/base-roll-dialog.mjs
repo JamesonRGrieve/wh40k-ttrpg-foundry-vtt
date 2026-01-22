@@ -3,7 +3,7 @@
  * Based on dnd5e's RollConfigurationDialog pattern for Foundry V13+
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
+import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -26,24 +26,24 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: 'form',
-        classes: ['rogue-trader', 'dialog', 'roll-dialog', 'standard-form'],
+        tag: "form",
+        classes: ["rogue-trader", "dialog", "roll-dialog", "standard-form"],
         actions: {
-            roll: this.#onRoll,
-            cancel: this.#onCancel,
+            roll: BaseRollDialog.#onRoll,
+            cancel: BaseRollDialog.#onCancel
         },
         form: {
-            handler: this.#onFormSubmit,
+            handler: BaseRollDialog.#onFormSubmit,
             submitOnChange: true,
-            closeOnSubmit: false,
+            closeOnSubmit: false
         },
         position: {
-            width: 500,
+            width: 500
         },
         window: {
             minimizable: false,
-            resizable: false,
-        },
+            resizable: false
+        }
     };
 
     /* -------------------------------------------- */
@@ -51,9 +51,9 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static PARTS = {
         form: {
-            template: 'systems/rogue-trader/templates/prompt/base-roll-prompt.hbs',
-            scrollable: [''],
-        },
+            template: "systems/rogue-trader/templates/prompt/base-roll-prompt.hbs",
+            scrollable: [""]
+        }
     };
 
     /* -------------------------------------------- */
@@ -95,7 +95,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
             ...this.rollData,
             rollData: this.rollData,
             dh: CONFIG.rt,
-            isEditable: true,
+            isEditable: true
         };
     }
 
@@ -113,7 +113,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     static async #onFormSubmit(event, form, formData) {
         const data = foundry.utils.expandObject(formData.object);
         this._updateRollData(data);
-
+        
         if (this.rollData.update) {
             await this.rollData.update();
         }

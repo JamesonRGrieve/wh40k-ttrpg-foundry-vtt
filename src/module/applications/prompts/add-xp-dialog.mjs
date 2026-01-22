@@ -2,7 +2,7 @@
  * @file AddXPDialog - V2 dialog for adding/subtracting XP
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
+import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -24,25 +24,25 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: 'form',
-        classes: ['rogue-trader', 'dialog', 'add-xp-dialog', 'standard-form'],
+        tag: "form",
+        classes: ["rogue-trader", "dialog", "add-xp-dialog", "standard-form"],
         actions: {
-            apply: this.#onApply,
-            cancel: this.#onCancel,
+            apply: AddXPDialog.#onApply,
+            cancel: AddXPDialog.#onCancel
         },
         form: {
-            handler: this.#onFormChange,
+            handler: AddXPDialog.#onFormChange,
             submitOnChange: true,
-            closeOnSubmit: false,
+            closeOnSubmit: false
         },
         position: {
-            width: 400,
+            width: 400
         },
         window: {
-            title: 'Adjust Total XP',
+            title: "Adjust Total XP",
             minimizable: false,
-            resizable: false,
-        },
+            resizable: false
+        }
     };
 
     /* -------------------------------------------- */
@@ -50,9 +50,9 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static PARTS = {
         form: {
-            template: 'systems/rogue-trader/templates/prompt/add-xp-prompt.hbs',
-            scrollable: [''],
-        },
+            template: "systems/rogue-trader/templates/prompt/add-xp-prompt.hbs",
+            scrollable: [""]
+        }
     };
 
     /* -------------------------------------------- */
@@ -80,7 +80,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
         const context = await super._prepareContext(options);
         const currentTotal = this.actor.system?.experience?.total ?? 0;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
-
+        
         return {
             ...context,
             actor: this.actor,
@@ -88,7 +88,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
             xpAmount: this.xpAmount,
             newTotal,
             isAddition: this.xpAmount >= 0,
-            absAmount: Math.abs(this.xpAmount),
+            absAmount: Math.abs(this.xpAmount)
         };
     }
 
@@ -103,9 +103,9 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
         if (input) {
             input.focus();
             input.select();
-
+            
             // Auto-select on focus for easy editing
-            input.addEventListener('focus', (event) => {
+            input.addEventListener("focus", (event) => {
                 event.target.select();
             });
         }
@@ -140,20 +140,20 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
      */
     static async #onApply(event, target) {
         event.preventDefault();
-
+        
         if (this.xpAmount === 0) {
             await this.close();
             return;
         }
-
+        
         const currentTotal = this.actor.system?.experience?.total ?? 0;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
-
-        await this.actor.update({ 'system.experience.total': newTotal });
-
-        const verb = this.xpAmount > 0 ? 'added' : 'removed';
+        
+        await this.actor.update({ "system.experience.total": newTotal });
+        
+        const verb = this.xpAmount > 0 ? "added" : "removed";
         ui.notifications.info(`${Math.abs(this.xpAmount)} XP ${verb}. Total: ${newTotal}`);
-
+        
         await this.close();
     }
 

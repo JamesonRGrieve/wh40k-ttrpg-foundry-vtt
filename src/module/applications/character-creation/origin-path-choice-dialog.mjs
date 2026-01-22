@@ -1,47 +1,48 @@
 /**
  * Origin Path Choice Dialog
- *
+ * 
  * Modal dialog for selecting choices when an origin path item
  * has multiple options (e.g., "Choose 1 of 3 talents").
  */
 
-import { findSkillUuid } from '../../helpers/skill-uuid-helper.mjs';
+import { findSkillUuid } from "../../helpers/skill-uuid-helper.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'origin-choice-dialog'],
-        tag: 'form',
+        classes: ["rogue-trader", "origin-choice-dialog"],
+        tag: "form",
         window: {
-            title: 'RT.OriginPath.MakeChoices',
-            icon: 'fa-solid fa-list-check',
+            title: "RT.OriginPath.MakeChoices",
+            icon: "fa-solid fa-list-check",
             minimizable: false,
-            resizable: true,
+            resizable: true
         },
         position: {
             width: 700,
-            height: 'auto',
+            height: "auto"
         },
         actions: {
-            toggleOption: this.#toggleOption,
-            confirm: this.#confirm,
-            cancel: this.#cancel,
-            viewItem: this.#viewItem,
+            toggleOption: OriginPathChoiceDialog.#toggleOption,
+            confirm: OriginPathChoiceDialog.#confirm,
+            cancel: OriginPathChoiceDialog.#cancel,
+            viewItem: OriginPathChoiceDialog.#viewItem
         },
         form: {
-            handler: this.#onSubmit,
+            handler: OriginPathChoiceDialog.#onSubmit,
             submitOnChange: false,
-            closeOnSubmit: true,
-        },
+            closeOnSubmit: true
+        }
     };
 
     /** @override */
     static PARTS = {
         form: {
-            template: 'systems/rogue-trader/templates/character-creation/origin-path-choice-dialog.hbs',
-        },
+            template: "systems/rogue-trader/templates/character-creation/origin-path-choice-dialog.hbs"
+        }
     };
 
     /* -------------------------------------------- */
@@ -53,7 +54,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     constructor(item, actor, options = {}) {
         super(options);
-
+        
         /**
          * The origin path item
          * @type {object}
@@ -101,67 +102,63 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         context.item = this.item;
         context.itemName = this.item.name;
         context.itemImg = this.item.img;
-
+        
         // Prepare choices with selection state
-        context.choices = await Promise.all(
-            this.pendingChoices.map(async (choice) => {
-                const selections = this.selections.get(choice.label) || new Set();
-                const remaining = choice.count - selections.size;
-
-                return {
-                    type: choice.type,
-                    typeLabel: this._getChoiceTypeLabel(choice.type),
-                    label: choice.label,
-                    count: choice.count,
-                    remaining: remaining,
-                    options: await Promise.all(
-                        (choice.options || []).map(async (option) => {
-                            // Handle both string and object option formats
-                            const optValue = typeof option === 'string' ? option : option.value || option.label;
-                            const optLabel = typeof option === 'string' ? option : option.label || option.value;
-                            const optDesc = typeof option === 'object' ? option.description : null;
-
-                            // Extract UUID from option.uuid OR from grants (talents/skills/traits/equipment)
-                            let optUuid = typeof option === 'object' ? option.uuid : null;
-                            if (!optUuid && typeof option === 'object' && option.grants) {
-                                // Check grants for items with UUIDs
-                                const grants = option.grants;
-                                if (grants.talents?.length > 0 && grants.talents[0].uuid) {
-                                    optUuid = grants.talents[0].uuid;
-                                } else if (grants.skills?.length > 0) {
-                                    // Handle skills - they may need UUID lookup
-                                    const skillData = grants.skills[0];
-                                    if (skillData.uuid) {
-                                        optUuid = skillData.uuid;
-                                    } else {
-                                        // Parse skill name and specialization, then look up UUID
-                                        const skillName = skillData.name || skillData;
-                                        const specialization = skillData.specialization || null;
-                                        optUuid = await findSkillUuid(skillName, specialization);
-                                    }
-                                } else if (grants.traits?.length > 0 && grants.traits[0].uuid) {
-                                    optUuid = grants.traits[0].uuid;
-                                } else if (grants.equipment?.length > 0 && grants.equipment[0].uuid) {
-                                    optUuid = grants.equipment[0].uuid;
-                                }
+        context.choices = await Promise.all(this.pendingChoices.map(async choice => {
+            const selections = this.selections.get(choice.label) || new Set();
+            const remaining = choice.count - selections.size;
+            
+            return {
+                type: choice.type,
+                typeLabel: this._getChoiceTypeLabel(choice.type),
+                label: choice.label,
+                count: choice.count,
+                remaining: remaining,
+                options: await Promise.all((choice.options || []).map(async option => {
+                    // Handle both string and object option formats
+                    const optValue = typeof option === "string" ? option : (option.value || option.label);
+                    const optLabel = typeof option === "string" ? option : (option.label || option.value);
+                    const optDesc = typeof option === "object" ? option.description : null;
+                    
+                    // Extract UUID from option.uuid OR from grants (talents/skills/traits/equipment)
+                    let optUuid = typeof option === "object" ? option.uuid : null;
+                    if (!optUuid && typeof option === "object" && option.grants) {
+                        // Check grants for items with UUIDs
+                        const grants = option.grants;
+                        if (grants.talents?.length > 0 && grants.talents[0].uuid) {
+                            optUuid = grants.talents[0].uuid;
+                        } else if (grants.skills?.length > 0) {
+                            // Handle skills - they may need UUID lookup
+                            const skillData = grants.skills[0];
+                            if (skillData.uuid) {
+                                optUuid = skillData.uuid;
+                            } else {
+                                // Parse skill name and specialization, then look up UUID
+                                const skillName = skillData.name || skillData;
+                                const specialization = skillData.specialization || null;
+                                optUuid = await findSkillUuid(skillName, specialization);
                             }
-
-                            return {
-                                value: optValue,
-                                label: optLabel,
-                                description: optDesc,
-                                uuid: optUuid,
-                                selected: selections.has(optValue),
-                                disabled: !selections.has(optValue) && remaining <= 0,
-                            };
-                        }),
-                    ),
-                };
-            }),
-        );
+                        } else if (grants.traits?.length > 0 && grants.traits[0].uuid) {
+                            optUuid = grants.traits[0].uuid;
+                        } else if (grants.equipment?.length > 0 && grants.equipment[0].uuid) {
+                            optUuid = grants.equipment[0].uuid;
+                        }
+                    }
+                    
+                    return {
+                        value: optValue,
+                        label: optLabel,
+                        description: optDesc,
+                        uuid: optUuid,
+                        selected: selections.has(optValue),
+                        disabled: !selections.has(optValue) && remaining <= 0
+                    };
+                }))
+            };
+        }));
 
         // Check if all choices are complete
-        context.allChoicesComplete = context.choices.every((c) => c.remaining === 0);
+        context.allChoicesComplete = context.choices.every(c => c.remaining === 0);
 
         return context;
     }
@@ -174,13 +171,13 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     _getChoiceTypeLabel(type) {
         const labels = {
-            talent: 'Talent',
-            skill: 'Skill',
-            characteristic: 'Characteristic',
-            equipment: 'Equipment',
-            trait: 'Trait',
+            talent: "Talent",
+            skill: "Skill",
+            characteristic: "Characteristic",
+            equipment: "Equipment",
+            trait: "Trait"
         };
-        return labels[type] || type || 'Choice';
+        return labels[type] || type || "Choice";
     }
 
     /* -------------------------------------------- */
@@ -200,7 +197,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         if (!choiceLabel || !optionValue) return;
 
         // Get the choice config
-        const choice = this.pendingChoices.find((c) => c.label === choiceLabel);
+        const choice = this.pendingChoices.find(c => c.label === choiceLabel);
         if (!choice) return;
 
         // Get current selections for this choice
@@ -240,13 +237,13 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     static async #confirm(event, target) {
         // Validate all choices are complete
-        const incomplete = this.pendingChoices.filter((choice) => {
+        const incomplete = this.pendingChoices.filter(choice => {
             const selections = this.selections.get(choice.label) || new Set();
             return selections.size < choice.count;
         });
 
         if (incomplete.length > 0) {
-            ui.notifications.warn('Please complete all required choices.');
+            ui.notifications.warn("Please complete all required choices.");
             return;
         }
 
@@ -285,19 +282,19 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     static async #viewItem(event, target) {
         event.stopPropagation(); // Don't trigger parent card click
-        event.preventDefault(); // Prevent default button behavior
-
+        event.preventDefault();  // Prevent default button behavior
+        
         const uuid = target.dataset.uuid;
         if (!uuid) return;
-
+        
         try {
             const item = await fromUuid(uuid);
             if (item) {
                 item.sheet.render(true);
             }
         } catch (error) {
-            console.warn('Could not load item:', uuid, error);
-            ui.notifications.warn('Could not find that item.');
+            console.warn("Could not load item:", uuid, error);
+            ui.notifications.warn("Could not find that item.");
         }
     }
 
@@ -325,14 +322,14 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     static async show(item, actor) {
         const dialog = new OriginPathChoiceDialog(item, actor);
-
+        
         // Create promise that will be resolved when user confirms/cancels
-        const result = new Promise((resolve) => {
+        const result = new Promise(resolve => {
             dialog._resolvePromise = resolve;
         });
 
         await dialog.render(true);
-
+        
         return result;
     }
 }
