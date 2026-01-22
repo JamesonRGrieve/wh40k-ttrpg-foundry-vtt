@@ -1,7 +1,7 @@
 /**
  * @file ConfirmationDialog - ApplicationV2 replacement for Dialog.confirm()
  * Provides a modern, consistent confirmation dialog UI
- * 
+ *
  * Usage:
  *   const confirmed = await ConfirmationDialog.confirm({
  *     title: "Delete Item",
@@ -14,31 +14,30 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class ConfirmationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        id: "confirmation-dialog-{id}",
-        classes: ["rogue-trader", "confirmation-dialog"],
-        tag: "div",
+        id: 'confirmation-dialog-{id}',
+        classes: ['rogue-trader', 'confirmation-dialog'],
+        tag: 'div',
         window: {
-            title: "Confirm",
-            icon: "fa-solid fa-question-circle",
+            title: 'Confirm',
+            icon: 'fa-solid fa-question-circle',
             minimizable: false,
             resizable: false,
-            contentClasses: ["standard-form"]
+            contentClasses: ['standard-form'],
         },
         position: {
             width: 400,
-            height: "auto"
+            height: 'auto',
         },
         actions: {
-            confirm: ConfirmationDialog.#onConfirm,
-            cancel: ConfirmationDialog.#onCancel
-        }
+            confirm: this.#onConfirm,
+            cancel: this.#onCancel,
+        },
     };
 
     /* -------------------------------------------- */
@@ -46,8 +45,8 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /** @override */
     static PARTS = {
         content: {
-            template: "systems/rogue-trader/templates/dialogs/confirmation.hbs"
-        }
+            template: 'systems/rogue-trader/templates/dialogs/confirmation.hbs',
+        },
     };
 
     /* -------------------------------------------- */
@@ -89,11 +88,11 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     constructor(config = {}, options = {}) {
         super(options);
         this.#config = {
-            title: config.title || "Confirm",
-            content: config.content || "Are you sure?",
-            confirmLabel: config.confirmLabel || "Confirm",
-            cancelLabel: config.cancelLabel || "Cancel",
-            rejectOnClose: config.rejectOnClose ?? false
+            title: config.title || 'Confirm',
+            content: config.content || 'Are you sure?',
+            confirmLabel: config.confirmLabel || 'Confirm',
+            cancelLabel: config.cancelLabel || 'Cancel',
+            rejectOnClose: config.rejectOnClose ?? false,
         };
     }
 
@@ -115,7 +114,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
             ...context,
             content: this.#config.content,
             confirmLabel: this.#config.confirmLabel,
-            cancelLabel: this.#config.cancelLabel
+            cancelLabel: this.#config.cancelLabel,
         };
     }
 
@@ -125,11 +124,10 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
 
     /**
      * Handle confirm button click
-     * @this {ConfirmationDialog}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onConfirm(event, target) {
+    async #onConfirm(event, target) {
         this.#resolved = true;
         this.#resolve?.(true);
         await this.close();
@@ -139,11 +137,10 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
 
     /**
      * Handle cancel button click
-     * @this {ConfirmationDialog}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCancel(event, target) {
+    async #onCancel(event, target) {
         this.#resolved = true;
         this.#resolve?.(false);
         await this.close();
@@ -185,12 +182,12 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
      * Show a confirmation dialog and wait for user response
      * @param {object} config         Dialog configuration
      * @param {string} [config.title]         Dialog window title
-     * @param {string} [config.content]       Dialog content/message  
+     * @param {string} [config.content]       Dialog content/message
      * @param {string} [config.confirmLabel]  Label for confirm button
      * @param {string} [config.cancelLabel]   Label for cancel button
      * @returns {Promise<boolean>}  True if confirmed, false if cancelled
      * @static
-     * 
+     *
      * @example
      * const confirmed = await ConfirmationDialog.confirm({
      *   title: "Delete Item",
