@@ -128,7 +128,7 @@
                     </div>
                     <div class="rt-panel__content">
                         {{#if inEditMode}}
-                          {{editor content=(or system.effect "") target="system.effect" button=true owner=owner editable=editable engine="prosemirror"}}
+                          {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
                         {{else}}
                           <div class="rt-description-content">{{{system.effect}}}</div>
                         {{/if}}
@@ -152,7 +152,7 @@
                     </div>
                     <div class="rt-panel__content">
                         {{#if inEditMode}}
-                          {{editor content=(or system.description.value "") target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}}
+                          {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
                         {{else}}
                           <div class="rt-description-content">{{{system.description.value}}}</div>
                         {{/if}}

@@ -119,7 +119,7 @@
           <div class="rt-form-field rt-form-field--full">
             <label class="rt-label">Full Description</label>
             {{#if inEditMode}}
-              {{editor content=(or system.description.value "") target="system.description.value" button=true owner=owner editable=editable}}
+              {{editor content=system.description.value target="system.description.value" button=true owner=owner editable=true}}
             {{else}}
               <div class="rt-description-content">{{{system.description.value}}}</div>
             {{/if}}
