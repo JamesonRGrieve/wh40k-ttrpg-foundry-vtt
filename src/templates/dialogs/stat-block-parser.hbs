@@ -20,7 +20,7 @@
     </button>
   </div>
 
-  {{!-- Errors/Warnings --}}
+  {{!-- Errors/Warnings/Info --}}
   {{#if hasErrors}}
   <div class="parse-messages errors">
     <h4><i class="fa-solid fa-circle-exclamation"></i> {{localize "RT.NPC.Import.Errors"}}</h4>
@@ -37,6 +37,17 @@
     <h4><i class="fa-solid fa-triangle-exclamation"></i> {{localize "RT.NPC.Import.Warnings"}}</h4>
     <ul>
       {{#each warnings}}
+      <li>{{this}}</li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+
+  {{#if hasInfo}}
+  <div class="parse-messages info">
+    <h4><i class="fa-solid fa-circle-info"></i> {{localize "RT.NPC.Import.Info"}}</h4>
+    <ul>
+      {{#each info}}
       <li>{{this}}</li>
       {{/each}}
     </ul>
