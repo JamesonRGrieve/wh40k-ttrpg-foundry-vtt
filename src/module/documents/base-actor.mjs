@@ -337,7 +337,7 @@ export class RogueTraderBaseActor extends Actor {
      */
     #getSkillBreakdown(skillKey, skill) {
         const charShort = skill.characteristic;
-        const characteristic = this.#findCharacteristic(charShort);
+        const characteristic = this._findCharacteristic(charShort);
         const baseTarget = characteristic.total || 0;
 
         const breakdown = {
