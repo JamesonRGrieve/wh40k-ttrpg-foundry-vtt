@@ -828,6 +828,9 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Backpack fill percentage
         const backpackMax = enc.backpack_max || 1;
         context.backpackPercent = Math.min(100, Math.round((enc.backpack_value / backpackMax) * 100));
+
+        // Prepare equipment slots data (from EquipmentLoadoutMixin)
+        context.equipmentSlots = this._prepareEquipmentSlots(context);
     }
 
     /* -------------------------------------------- */

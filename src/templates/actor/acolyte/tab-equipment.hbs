@@ -1,5 +1,11 @@
 {{!-- Acolyte Sheet Equipment Tab --}}
 {{!-- This part renders the Equipment tab content --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    {{> systems/rogue-trader/templates/actor/panel/loadout-equipment-panel.hbs}}
+    {{!-- NEW: Equipment Slots Panel (visual slot view) --}}
+    {{> systems/rogue-trader/templates/actor/panel/equipment-slots-panel.hbs}}
+    
+    {{!-- EXISTING: Loadout Equipment Panel (list view) --}}
+    {{#if (ne equipmentSlots.viewMode 'slots')}}
+        {{> systems/rogue-trader/templates/actor/panel/loadout-equipment-panel.hbs}}
+    {{/if}}
 </section>
