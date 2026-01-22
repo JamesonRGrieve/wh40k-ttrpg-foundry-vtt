@@ -170,6 +170,20 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
 
     /* -------------------------------------------- */
 
+    /** @inheritDoc */
+    async _preparePartContext(partId, context, options) {
+        context = await super._preparePartContext(partId, context, options);
+
+        // Ensure editable flag is available (required for editor helpers)
+        if (context.editable === undefined) {
+            context.editable = this.isEditable;
+        }
+
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
     /**
      * Prepare characteristics with progress ring calculations.
      * @param {object} context  Context being prepared.

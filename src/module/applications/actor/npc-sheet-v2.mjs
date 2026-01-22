@@ -295,11 +295,6 @@ export default class NPCSheetV2 extends BaseActorSheet {
     async _preparePartContext(partId, context, options) {
         context = await super._preparePartContext(partId, context, options);
 
-        // Ensure editable flag is available (required for editor helpers)
-        if (context.editable === undefined) {
-            context.editable = this.isEditable;
-        }
-
         // Add tab metadata for all tab parts
         const tabParts = ['overview', 'combat', 'abilities'];
         if (tabParts.includes(partId)) {
