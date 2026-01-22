@@ -1,6 +1,6 @@
 /**
  * @file TalentEditorDialog - Dialog for editing complex talent fields
- *
+ * 
  * Provides tabbed interface for editing:
  * - Prerequisites (text, characteristics, skills, talents)
  * - Modifiers (characteristics, skills, combat, resources, other)
@@ -15,33 +15,34 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends ApplicationV2
  */
 export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        id: 'talent-editor-dialog',
-        classes: ['rogue-trader', 'dialog', 'talent-editor-dialog'],
-        tag: 'form',
+        id: "talent-editor-dialog",
+        classes: ["rogue-trader", "dialog", "talent-editor-dialog"],
+        tag: "form",
         form: {
-            handler: this.#formHandler,
-            closeOnSubmit: true,
+            handler: TalentEditorDialog.#formHandler,
+            closeOnSubmit: true
         },
         actions: {
-            addItem: this.#addItem,
-            removeItem: this.#removeItem,
-            switchSection: this.#switchSection,
+            addItem: TalentEditorDialog.#addItem,
+            removeItem: TalentEditorDialog.#removeItem,
+            switchSection: TalentEditorDialog.#switchSection
         },
         position: {
             width: 700,
-            height: 650,
+            height: 650
         },
         window: {
-            title: 'Edit Talent Data',
-            icon: 'fa-solid fa-pen-ruler',
-            resizable: true,
-        },
+            title: "Edit Talent Data",
+            icon: "fa-solid fa-pen-ruler",
+            resizable: true
+        }
     };
 
     /* -------------------------------------------- */
@@ -49,9 +50,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /** @override */
     static PARTS = {
         form: {
-            template: 'systems/rogue-trader/templates/dialogs/talent-editor-dialog.hbs',
-            scrollable: ['.ted-content'],
-        },
+            template: "systems/rogue-trader/templates/dialogs/talent-editor-dialog.hbs",
+            scrollable: [".ted-content"]
+        }
     };
 
     /* -------------------------------------------- */
@@ -68,7 +69,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * Current active section.
      * @type {string}
      */
-    #activeSection = 'prerequisites';
+    #activeSection = "prerequisites";
 
     /* -------------------------------------------- */
     /*  Constructor                                 */
@@ -77,7 +78,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     constructor(options = {}) {
         super(options);
         this.item = options.item;
-        this.#activeSection = options.initialSection || 'prerequisites';
+        this.#activeSection = options.initialSection || "prerequisites";
     }
 
     /* -------------------------------------------- */
@@ -96,39 +97,39 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /** @override */
     async _prepareContext(options) {
         const system = this.item.system;
-
+        
         // Prepare characteristic options
         const characteristicOptions = this._getCharacteristicOptions();
         const skillOptions = this._getSkillOptions();
         const combatOptions = this._getCombatModifierOptions();
         const resourceOptions = this._getResourceOptions();
         const trainingLevelOptions = this._getTrainingLevelOptions();
-
+        
         return {
             item: this.item,
             system: system,
             activeSection: this.#activeSection,
-
+            
             // Section data
             prerequisites: this._preparePrerequisitesData(system),
             modifiers: this._prepareModifiersEditData(system),
             situational: this._prepareSituationalEditData(system),
             grants: this._prepareGrantsEditData(system),
-
+            
             // Options for selects
             characteristicOptions,
             skillOptions,
             combatOptions,
             resourceOptions,
             trainingLevelOptions,
-
+            
             // Section states
             sections: {
-                prerequisites: this.#activeSection === 'prerequisites',
-                modifiers: this.#activeSection === 'modifiers',
-                situational: this.#activeSection === 'situational',
-                grants: this.#activeSection === 'grants',
-            },
+                prerequisites: this.#activeSection === "prerequisites",
+                modifiers: this.#activeSection === "modifiers",
+                situational: this.#activeSection === "situational",
+                grants: this.#activeSection === "grants"
+            }
         };
     }
 
@@ -142,21 +143,21 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _preparePrerequisitesData(system) {
         const prereqs = system.prerequisites || {};
-
+        
         // Convert characteristics object to array for template iteration
         const characteristicReqs = Object.entries(prereqs.characteristics || {})
             .filter(([_, value]) => value > 0)
             .map(([key, value]) => ({
                 key,
                 label: this._getCharacteristicLabel(key),
-                value,
+                value
             }));
-
+        
         return {
-            text: prereqs.text || '',
+            text: prereqs.text || "",
             characteristics: characteristicReqs,
-            skills: (prereqs.skills || []).map((s) => ({ name: s })),
-            talents: (prereqs.talents || []).map((t) => ({ name: t })),
+            skills: (prereqs.skills || []).map(s => ({ name: s })),
+            talents: (prereqs.talents || []).map(t => ({ name: t }))
         };
     }
 
@@ -170,58 +171,58 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _prepareModifiersEditData(system) {
         const mods = system.modifiers || {};
-
+        
         // Convert characteristics object to array
         const characteristics = Object.entries(mods.characteristics || {})
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._getCharacteristicLabel(key),
-                value,
+                value
             }));
-
+        
         // Convert skills object to array
         const skills = Object.entries(mods.skills || {})
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._formatSkillLabel(key),
-                value,
+                value
             }));
-
+        
         // Combat modifiers
         const combat = Object.entries(mods.combat || {})
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._getCombatLabel(key),
-                value,
+                value
             }));
-
+        
         // Resource modifiers
         const resources = Object.entries(mods.resources || {})
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._getResourceLabel(key),
-                value,
+                value
             }));
-
+        
         // Other modifiers
         const other = (mods.other || []).map((mod, index) => ({
             index,
-            key: mod.key || '',
-            label: mod.label || '',
+            key: mod.key || "",
+            label: mod.label || "",
             value: mod.value || 0,
-            mode: mod.mode || 'add',
+            mode: mod.mode || "add"
         }));
-
+        
         return {
             characteristics,
             skills,
             combat,
             resources,
-            other,
+            other
         };
     }
 
@@ -235,29 +236,29 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _prepareSituationalEditData(system) {
         const situational = system.modifiers?.situational || {};
-
+        
         return {
             characteristics: (situational.characteristics || []).map((mod, index) => ({
                 index,
-                key: mod.key || '',
+                key: mod.key || "",
                 label: this._getCharacteristicLabel(mod.key),
                 value: mod.value || 0,
-                condition: mod.condition || '',
+                condition: mod.condition || ""
             })),
             skills: (situational.skills || []).map((mod, index) => ({
                 index,
-                key: mod.key || '',
+                key: mod.key || "",
                 label: this._formatSkillLabel(mod.key),
                 value: mod.value || 0,
-                condition: mod.condition || '',
+                condition: mod.condition || ""
             })),
             combat: (situational.combat || []).map((mod, index) => ({
                 index,
-                key: mod.key || '',
+                key: mod.key || "",
                 label: this._getCombatLabel(mod.key),
                 value: mod.value || 0,
-                condition: mod.condition || '',
-            })),
+                condition: mod.condition || ""
+            }))
         };
     }
 
@@ -271,31 +272,31 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _prepareGrantsEditData(system) {
         const grants = system.grants || {};
-
+        
         return {
             skills: (grants.skills || []).map((skill, index) => ({
                 index,
-                name: skill.name || '',
-                specialization: skill.specialization || '',
-                level: skill.level || 'trained',
+                name: skill.name || "",
+                specialization: skill.specialization || "",
+                level: skill.level || "trained"
             })),
             talents: (grants.talents || []).map((talent, index) => ({
                 index,
-                name: talent.name || '',
-                specialization: talent.specialization || '',
-                uuid: talent.uuid || '',
+                name: talent.name || "",
+                specialization: talent.specialization || "",
+                uuid: talent.uuid || ""
             })),
             traits: (grants.traits || []).map((trait, index) => ({
                 index,
-                name: trait.name || '',
+                name: trait.name || "",
                 level: trait.level ?? null,
-                uuid: trait.uuid || '',
+                uuid: trait.uuid || ""
             })),
             specialAbilities: (grants.specialAbilities || []).map((ability, index) => ({
                 index,
-                name: ability.name || '',
-                description: ability.description || '',
-            })),
+                name: ability.name || "",
+                description: ability.description || ""
+            }))
         };
     }
 
@@ -310,16 +311,16 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getCharacteristicOptions() {
         return [
-            { value: 'weaponSkill', label: 'Weapon Skill (WS)' },
-            { value: 'ballisticSkill', label: 'Ballistic Skill (BS)' },
-            { value: 'strength', label: 'Strength (S)' },
-            { value: 'toughness', label: 'Toughness (T)' },
-            { value: 'agility', label: 'Agility (Ag)' },
-            { value: 'intelligence', label: 'Intelligence (Int)' },
-            { value: 'perception', label: 'Perception (Per)' },
-            { value: 'willpower', label: 'Willpower (WP)' },
-            { value: 'fellowship', label: 'Fellowship (Fel)' },
-            { value: 'influence', label: 'Influence (Inf)' },
+            { value: "weaponSkill", label: "Weapon Skill (WS)" },
+            { value: "ballisticSkill", label: "Ballistic Skill (BS)" },
+            { value: "strength", label: "Strength (S)" },
+            { value: "toughness", label: "Toughness (T)" },
+            { value: "agility", label: "Agility (Ag)" },
+            { value: "intelligence", label: "Intelligence (Int)" },
+            { value: "perception", label: "Perception (Per)" },
+            { value: "willpower", label: "Willpower (WP)" },
+            { value: "fellowship", label: "Fellowship (Fel)" },
+            { value: "influence", label: "Influence (Inf)" }
         ];
     }
 
@@ -330,62 +331,20 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getSkillOptions() {
         const skills = [
-            'acrobatics',
-            'athletics',
-            'awareness',
-            'barter',
-            'blather',
-            'carouse',
-            'charm',
-            'chemUse',
-            'ciphers',
-            'climb',
-            'command',
-            'commerce',
-            'commonLore',
-            'concealment',
-            'contortionist',
-            'deceive',
-            'demolition',
-            'disguise',
-            'dodge',
-            'drive',
-            'evaluate',
-            'forbiddenLore',
-            'gamble',
-            'inquiry',
-            'interrogation',
-            'intimidate',
-            'invocation',
-            'lipReading',
-            'literacy',
-            'logic',
-            'medicae',
-            'navigation',
-            'parry',
-            'performer',
-            'pilot',
-            'psyniscience',
-            'scholasticLore',
-            'scrutiny',
-            'search',
-            'secretTongue',
-            'security',
-            'shadowing',
-            'silentMove',
-            'sleightOfHand',
-            'speakLanguage',
-            'stealth',
-            'survival',
-            'swim',
-            'techUse',
-            'tracking',
-            'trade',
-            'wrangling',
+            "acrobatics", "athletics", "awareness", "barter", "blather", "carouse",
+            "charm", "chemUse", "ciphers", "climb", "command", "commerce",
+            "commonLore", "concealment", "contortionist", "deceive", "demolition",
+            "disguise", "dodge", "drive", "evaluate", "forbiddenLore", "gamble",
+            "inquiry", "interrogation", "intimidate", "invocation", "lipReading",
+            "literacy", "logic", "medicae", "navigation", "parry", "performer",
+            "pilot", "psyniscience", "scholasticLore", "scrutiny", "search",
+            "secretTongue", "security", "shadowing", "silentMove", "sleightOfHand",
+            "speakLanguage", "stealth", "survival", "swim", "techUse", "tracking",
+            "trade", "wrangling"
         ];
-        return skills.map((s) => ({
+        return skills.map(s => ({
             value: s,
-            label: this._formatSkillLabel(s),
+            label: this._formatSkillLabel(s)
         }));
     }
 
@@ -396,12 +355,12 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getCombatModifierOptions() {
         return [
-            { value: 'attack', label: 'Attack Bonus' },
-            { value: 'damage', label: 'Damage Bonus' },
-            { value: 'penetration', label: 'Penetration' },
-            { value: 'defense', label: 'Defense Bonus' },
-            { value: 'initiative', label: 'Initiative' },
-            { value: 'speed', label: 'Movement Speed' },
+            { value: "attack", label: "Attack Bonus" },
+            { value: "damage", label: "Damage Bonus" },
+            { value: "penetration", label: "Penetration" },
+            { value: "defense", label: "Defense Bonus" },
+            { value: "initiative", label: "Initiative" },
+            { value: "speed", label: "Movement Speed" }
         ];
     }
 
@@ -412,10 +371,10 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getResourceOptions() {
         return [
-            { value: 'wounds', label: 'Wounds' },
-            { value: 'fate', label: 'Fate Points' },
-            { value: 'insanity', label: 'Insanity Threshold' },
-            { value: 'corruption', label: 'Corruption Threshold' },
+            { value: "wounds", label: "Wounds" },
+            { value: "fate", label: "Fate Points" },
+            { value: "insanity", label: "Insanity Threshold" },
+            { value: "corruption", label: "Corruption Threshold" }
         ];
     }
 
@@ -426,9 +385,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getTrainingLevelOptions() {
         return [
-            { value: 'trained', label: 'Trained' },
-            { value: 'plus10', label: '+10' },
-            { value: 'plus20', label: '+20' },
+            { value: "trained", label: "Trained" },
+            { value: "plus10", label: "+10" },
+            { value: "plus20", label: "+20" }
         ];
     }
 
@@ -444,16 +403,16 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getCharacteristicLabel(key) {
         const labels = {
-            weaponSkill: 'Weapon Skill',
-            ballisticSkill: 'Ballistic Skill',
-            strength: 'Strength',
-            toughness: 'Toughness',
-            agility: 'Agility',
-            intelligence: 'Intelligence',
-            perception: 'Perception',
-            willpower: 'Willpower',
-            fellowship: 'Fellowship',
-            influence: 'Influence',
+            weaponSkill: "Weapon Skill",
+            ballisticSkill: "Ballistic Skill",
+            strength: "Strength",
+            toughness: "Toughness",
+            agility: "Agility",
+            intelligence: "Intelligence",
+            perception: "Perception",
+            willpower: "Willpower",
+            fellowship: "Fellowship",
+            influence: "Influence"
         };
         return labels[key] || key;
     }
@@ -465,11 +424,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _formatSkillLabel(key) {
-        if (!key) return '';
-        return key
-            .replace(/([A-Z])/g, ' $1')
-            .replace(/^./, (str) => str.toUpperCase())
-            .trim();
+        if (!key) return "";
+        return key.replace(/([A-Z])/g, " $1").replace(/^./, str => str.toUpperCase()).trim();
     }
 
     /**
@@ -480,12 +436,12 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getCombatLabel(key) {
         const labels = {
-            attack: 'Attack Bonus',
-            damage: 'Damage Bonus',
-            penetration: 'Penetration',
-            defense: 'Defense Bonus',
-            initiative: 'Initiative',
-            speed: 'Movement Speed',
+            attack: "Attack Bonus",
+            damage: "Damage Bonus",
+            penetration: "Penetration",
+            defense: "Defense Bonus",
+            initiative: "Initiative",
+            speed: "Movement Speed"
         };
         return labels[key] || key;
     }
@@ -498,10 +454,10 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getResourceLabel(key) {
         const labels = {
-            wounds: 'Wounds',
-            fate: 'Fate Points',
-            insanity: 'Insanity Threshold',
-            corruption: 'Corruption Threshold',
+            wounds: "Wounds",
+            fate: "Fate Points",
+            insanity: "Insanity Threshold",
+            corruption: "Corruption Threshold"
         };
         return labels[key] || key;
     }
@@ -513,7 +469,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /** @override */
     async _onRender(context, options) {
         await super._onRender(context, options);
-
+        
         // Set up section tab handlers
         this._setupSectionTabs();
     }
@@ -523,23 +479,23 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _setupSectionTabs() {
-        const tabs = this.element.querySelectorAll('.ted-section-tab');
-        tabs.forEach((tab) => {
-            tab.addEventListener('click', (event) => {
+        const tabs = this.element.querySelectorAll(".ted-section-tab");
+        tabs.forEach(tab => {
+            tab.addEventListener("click", (event) => {
                 event.preventDefault();
                 const section = tab.dataset.section;
                 if (!section) return;
-
+                
                 // Update active tab
-                tabs.forEach((t) => t.classList.remove('active'));
-                tab.classList.add('active');
-
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                
                 // Show/hide panels
-                const panels = this.element.querySelectorAll('.ted-section-panel');
-                panels.forEach((panel) => {
-                    panel.classList.toggle('active', panel.dataset.section === section);
+                const panels = this.element.querySelectorAll(".ted-section-panel");
+                panels.forEach(panel => {
+                    panel.classList.toggle("active", panel.dataset.section === section);
                 });
-
+                
                 this.#activeSection = section;
             });
         });
@@ -558,14 +514,14 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     static async #formHandler(event, form, formData) {
         const data = foundry.utils.expandObject(formData.object);
-
+        
         // Process the form data into the proper structure
         const updateData = {};
-
+        
         // Process prerequisites
         if (data.prerequisites) {
-            updateData['system.prerequisites.text'] = data.prerequisites.text || '';
-
+            updateData["system.prerequisites.text"] = data.prerequisites.text || "";
+            
             // Convert characteristics array back to object
             const charReqs = {};
             if (data.prerequisites.characteristics) {
@@ -575,8 +531,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     }
                 }
             }
-            updateData['system.prerequisites.characteristics'] = charReqs;
-
+            updateData["system.prerequisites.characteristics"] = charReqs;
+            
             // Process skills array
             const skillReqs = [];
             if (data.prerequisites.skills) {
@@ -584,8 +540,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     if (entry.name) skillReqs.push(entry.name);
                 }
             }
-            updateData['system.prerequisites.skills'] = skillReqs;
-
+            updateData["system.prerequisites.skills"] = skillReqs;
+            
             // Process talents array
             const talentReqs = [];
             if (data.prerequisites.talents) {
@@ -593,9 +549,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     if (entry.name) talentReqs.push(entry.name);
                 }
             }
-            updateData['system.prerequisites.talents'] = talentReqs;
+            updateData["system.prerequisites.talents"] = talentReqs;
         }
-
+        
         // Process modifiers
         if (data.modifiers) {
             // Characteristics
@@ -607,8 +563,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     }
                 }
             }
-            updateData['system.modifiers.characteristics'] = charMods;
-
+            updateData["system.modifiers.characteristics"] = charMods;
+            
             // Skills
             const skillMods = {};
             if (data.modifiers.skills) {
@@ -618,8 +574,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     }
                 }
             }
-            updateData['system.modifiers.skills'] = skillMods;
-
+            updateData["system.modifiers.skills"] = skillMods;
+            
             // Combat
             if (data.modifiers.combat) {
                 for (const entry of Object.values(data.modifiers.combat)) {
@@ -628,7 +584,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     }
                 }
             }
-
+            
             // Resources
             if (data.modifiers.resources) {
                 for (const entry of Object.values(data.modifiers.resources)) {
@@ -637,7 +593,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     }
                 }
             }
-
+            
             // Other modifiers
             const otherMods = [];
             if (data.modifiers.other) {
@@ -647,14 +603,14 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                             key: entry.key,
                             label: entry.label || entry.key,
                             value: parseInt(entry.value) || 0,
-                            mode: entry.mode || 'add',
+                            mode: entry.mode || "add"
                         });
                     }
                 }
             }
-            updateData['system.modifiers.other'] = otherMods;
+            updateData["system.modifiers.other"] = otherMods;
         }
-
+        
         // Process situational modifiers
         if (data.situational) {
             // Characteristics - icon is derived, don't save it
@@ -665,13 +621,13 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         sitCharMods.push({
                             key: entry.key,
                             value: parseInt(entry.value) || 0,
-                            condition: entry.condition,
+                            condition: entry.condition
                         });
                     }
                 }
             }
-            updateData['system.modifiers.situational.characteristics'] = sitCharMods;
-
+            updateData["system.modifiers.situational.characteristics"] = sitCharMods;
+            
             // Skills - icon is derived, don't save it
             const sitSkillMods = [];
             if (data.situational.skills) {
@@ -680,13 +636,13 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         sitSkillMods.push({
                             key: entry.key,
                             value: parseInt(entry.value) || 0,
-                            condition: entry.condition,
+                            condition: entry.condition
                         });
                     }
                 }
             }
-            updateData['system.modifiers.situational.skills'] = sitSkillMods;
-
+            updateData["system.modifiers.situational.skills"] = sitSkillMods;
+            
             // Combat - icon is derived, don't save it
             const sitCombatMods = [];
             if (data.situational.combat) {
@@ -695,14 +651,14 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         sitCombatMods.push({
                             key: entry.key,
                             value: parseInt(entry.value) || 0,
-                            condition: entry.condition,
+                            condition: entry.condition
                         });
                     }
                 }
             }
-            updateData['system.modifiers.situational.combat'] = sitCombatMods;
+            updateData["system.modifiers.situational.combat"] = sitCombatMods;
         }
-
+        
         // Process grants
         if (data.grants) {
             // Skills
@@ -712,14 +668,14 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     if (entry.name) {
                         grantedSkills.push({
                             name: entry.name,
-                            specialization: entry.specialization || '',
-                            level: entry.level || 'trained',
+                            specialization: entry.specialization || "",
+                            level: entry.level || "trained"
                         });
                     }
                 }
             }
-            updateData['system.grants.skills'] = grantedSkills;
-
+            updateData["system.grants.skills"] = grantedSkills;
+            
             // Talents
             const grantedTalents = [];
             if (data.grants.talents) {
@@ -727,14 +683,14 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     if (entry.name) {
                         grantedTalents.push({
                             name: entry.name,
-                            specialization: entry.specialization || '',
-                            uuid: entry.uuid || '',
+                            specialization: entry.specialization || "",
+                            uuid: entry.uuid || ""
                         });
                     }
                 }
             }
-            updateData['system.grants.talents'] = grantedTalents;
-
+            updateData["system.grants.talents"] = grantedTalents;
+            
             // Traits
             const grantedTraits = [];
             if (data.grants.traits) {
@@ -743,13 +699,13 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         grantedTraits.push({
                             name: entry.name,
                             level: entry.level ? parseInt(entry.level) : null,
-                            uuid: entry.uuid || '',
+                            uuid: entry.uuid || ""
                         });
                     }
                 }
             }
-            updateData['system.grants.traits'] = grantedTraits;
-
+            updateData["system.grants.traits"] = grantedTraits;
+            
             // Special Abilities
             const grantedAbilities = [];
             if (data.grants.specialAbilities) {
@@ -757,14 +713,14 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     if (entry.name) {
                         grantedAbilities.push({
                             name: entry.name,
-                            description: entry.description || '',
+                            description: entry.description || ""
                         });
                     }
                 }
             }
-            updateData['system.grants.specialAbilities'] = grantedAbilities;
+            updateData["system.grants.specialAbilities"] = grantedAbilities;
         }
-
+        
         // Update the item
         await this.item.update(updateData);
         ui.notifications.info(`Updated ${this.item.name}`);
@@ -779,19 +735,19 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     static async #addItem(event, target) {
         const { category, type } = target.dataset;
         if (!category || !type) return;
-
+        
         // Find the container and add a new row
         const container = this.element.querySelector(`.ted-list[data-category="${category}"][data-type="${type}"]`);
         if (!container) return;
-
+        
         // Get current count for indexing
-        const existingRows = container.querySelectorAll('.ted-list-row');
+        const existingRows = container.querySelectorAll(".ted-list-row");
         const newIndex = existingRows.length;
-
+        
         // Create new row based on type
         const newRow = this._createNewRow(category, type, newIndex);
         if (newRow) {
-            container.insertAdjacentHTML('beforeend', newRow);
+            container.insertAdjacentHTML("beforeend", newRow);
         }
     }
 
@@ -805,24 +761,24 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _createNewRow(category, type, index) {
         const characteristicOptions = this._getCharacteristicOptions()
-            .map((o) => `<option value="${o.value}">${o.label}</option>`)
-            .join('');
+            .map(o => `<option value="${o.value}">${o.label}</option>`)
+            .join("");
         const skillOptions = this._getSkillOptions()
-            .map((o) => `<option value="${o.value}">${o.label}</option>`)
-            .join('');
+            .map(o => `<option value="${o.value}">${o.label}</option>`)
+            .join("");
         const combatOptions = this._getCombatModifierOptions()
-            .map((o) => `<option value="${o.value}">${o.label}</option>`)
-            .join('');
+            .map(o => `<option value="${o.value}">${o.label}</option>`)
+            .join("");
         const resourceOptions = this._getResourceOptions()
-            .map((o) => `<option value="${o.value}">${o.label}</option>`)
-            .join('');
+            .map(o => `<option value="${o.value}">${o.label}</option>`)
+            .join("");
         const trainingOptions = this._getTrainingLevelOptions()
-            .map((o) => `<option value="${o.value}">${o.label}</option>`)
-            .join('');
-
+            .map(o => `<option value="${o.value}">${o.label}</option>`)
+            .join("");
+        
         // Build row based on category and type
         switch (`${category}.${type}`) {
-            case 'prerequisites.characteristics':
+            case "prerequisites.characteristics":
                 return `
                     <div class="ted-list-row">
                         <select name="prerequisites.characteristics.${index}.key">
@@ -832,22 +788,22 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         <input type="number" name="prerequisites.characteristics.${index}.value" value="0" min="0" placeholder="Min value" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'prerequisites.skills':
+            
+            case "prerequisites.skills":
                 return `
                     <div class="ted-list-row">
                         <input type="text" name="prerequisites.skills.${index}.name" value="" placeholder="Skill name (e.g., Dodge, Parry)" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'prerequisites.talents':
+            
+            case "prerequisites.talents":
                 return `
                     <div class="ted-list-row">
                         <input type="text" name="prerequisites.talents.${index}.name" value="" placeholder="Talent name" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'modifiers.characteristics':
+            
+            case "modifiers.characteristics":
                 return `
                     <div class="ted-list-row">
                         <select name="modifiers.characteristics.${index}.key">
@@ -857,8 +813,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         <input type="number" name="modifiers.characteristics.${index}.value" value="0" placeholder="+/-" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'modifiers.skills':
+            
+            case "modifiers.skills":
                 return `
                     <div class="ted-list-row">
                         <select name="modifiers.skills.${index}.key">
@@ -868,8 +824,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         <input type="number" name="modifiers.skills.${index}.value" value="0" placeholder="+/-" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'modifiers.combat':
+            
+            case "modifiers.combat":
                 return `
                     <div class="ted-list-row">
                         <select name="modifiers.combat.${index}.key">
@@ -879,8 +835,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         <input type="number" name="modifiers.combat.${index}.value" value="0" placeholder="+/-" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'modifiers.resources':
+            
+            case "modifiers.resources":
                 return `
                     <div class="ted-list-row">
                         <select name="modifiers.resources.${index}.key">
@@ -890,8 +846,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         <input type="number" name="modifiers.resources.${index}.value" value="0" placeholder="+/-" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'modifiers.other':
+            
+            case "modifiers.other":
                 return `
                     <div class="ted-list-row ted-list-row--wide">
                         <input type="text" name="modifiers.other.${index}.key" value="" placeholder="Key (e.g., movement)" />
@@ -904,8 +860,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </select>
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'situational.characteristics':
+            
+            case "situational.characteristics":
                 return `
                     <div class="ted-list-row ted-list-row--stacked">
                         <div class="ted-row-inline">
@@ -918,8 +874,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </div>
                         <textarea name="situational.characteristics.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When fighting in melee combat')"></textarea>
                     </div>`;
-
-            case 'situational.skills':
+            
+            case "situational.skills":
                 return `
                     <div class="ted-list-row ted-list-row--stacked">
                         <div class="ted-row-inline">
@@ -932,8 +888,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </div>
                         <textarea name="situational.skills.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When performing acrobatic maneuvers')"></textarea>
                     </div>`;
-
-            case 'situational.combat':
+            
+            case "situational.combat":
                 return `
                     <div class="ted-list-row ted-list-row--stacked">
                         <div class="ted-row-inline">
@@ -946,8 +902,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </div>
                         <textarea name="situational.combat.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When attacking from surprise')"></textarea>
                     </div>`;
-
-            case 'grants.skills':
+            
+            case "grants.skills":
                 return `
                     <div class="ted-list-row ted-list-row--wide">
                         <input type="text" name="grants.skills.${index}.name" value="" placeholder="Skill name" />
@@ -957,8 +913,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </select>
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'grants.talents':
+            
+            case "grants.talents":
                 return `
                     <div class="ted-list-row ted-list-row--wide">
                         <input type="text" name="grants.talents.${index}.name" value="" placeholder="Talent name" />
@@ -966,8 +922,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         <input type="text" name="grants.talents.${index}.uuid" value="" placeholder="UUID (optional)" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'grants.traits':
+            
+            case "grants.traits":
                 return `
                     <div class="ted-list-row ted-list-row--wide">
                         <input type="text" name="grants.traits.${index}.name" value="" placeholder="Trait name" />
@@ -975,15 +931,15 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         <input type="text" name="grants.traits.${index}.uuid" value="" placeholder="UUID (optional)" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
-            case 'grants.specialAbilities':
+            
+            case "grants.specialAbilities":
                 return `
                     <div class="ted-list-row ted-list-row--column">
                         <input type="text" name="grants.specialAbilities.${index}.name" value="" placeholder="Ability name" />
                         <textarea name="grants.specialAbilities.${index}.description" rows="2" placeholder="Description"></textarea>
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
-
+            
             default:
                 return null;
         }
@@ -996,7 +952,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {HTMLElement} target - The clicked button
      */
     static async #removeItem(event, target) {
-        const row = target.closest('.ted-list-row');
+        const row = target.closest(".ted-list-row");
         if (row) {
             row.remove();
         }
@@ -1011,7 +967,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     static async #switchSection(event, target) {
         const section = target.dataset.section;
         if (!section) return;
-
+        
         this.#activeSection = section;
         await this.render({ force: true });
     }

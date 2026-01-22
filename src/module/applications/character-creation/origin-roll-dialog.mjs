@@ -11,45 +11,46 @@
  * - Result storage
  */
 
-import { evaluateWoundsFormula, evaluateFateFormula } from '../../utils/formula-evaluator.mjs';
+import { evaluateWoundsFormula, evaluateFateFormula } from "../../utils/formula-evaluator.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginRollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+
     /** @override */
     static DEFAULT_OPTIONS = {
-        id: 'origin-roll-dialog-{rollType}',
-        classes: ['rogue-trader', 'origin-roll-dialog'],
-        tag: 'form',
+        id: "origin-roll-dialog-{rollType}",
+        classes: ["rogue-trader", "origin-roll-dialog"],
+        tag: "form",
         window: {
-            title: 'Roll Starting Stat',
-            icon: 'fa-solid fa-dice',
+            title: "Roll Starting Stat",
+            icon: "fa-solid fa-dice",
             minimizable: false,
-            resizable: false,
+            resizable: false
         },
         position: {
             width: 600,
-            height: 'auto',
+            height: "auto"
         },
         actions: {
-            roll: this.#roll,
-            accept: this.#accept,
-            reroll: this.#reroll,
-            manual: this.#manual,
-            cancel: this.#cancel,
+            roll: OriginRollDialog.#roll,
+            accept: OriginRollDialog.#accept,
+            reroll: OriginRollDialog.#reroll,
+            manual: OriginRollDialog.#manual,
+            cancel: OriginRollDialog.#cancel
         },
         form: {
-            handler: this.#onSubmit,
+            handler: OriginRollDialog.#onSubmit,
             submitOnChange: false,
-            closeOnSubmit: false,
-        },
+            closeOnSubmit: false
+        }
     };
 
     /** @override */
     static PARTS = {
         form: {
-            template: 'systems/rogue-trader/templates/character-creation/origin-roll-dialog.hbs',
-        },
+            template: "systems/rogue-trader/templates/character-creation/origin-roll-dialog.hbs"
+        }
     };
 
     /* -------------------------------------------- */
@@ -107,7 +108,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
     /** @override */
     get title() {
-        const typeLabel = this.rollType === 'wounds' ? 'Wounds' : 'Fate Points';
+        const typeLabel = this.rollType === "wounds" ? "Wounds" : "Fate Points";
         return `Roll Starting ${typeLabel}`;
     }
 
@@ -120,7 +121,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const context = await super._prepareContext(options);
 
         context.rollType = this.rollType;
-        context.rollTypeLabel = this.rollType === 'wounds' ? 'Wounds' : 'Fate Points';
+        context.rollTypeLabel = this.rollType === "wounds" ? "Wounds" : "Fate Points";
         context.formula = this.formula;
         context.description = this._getDescription();
         context.originName = this.context.originItem.name;
@@ -133,7 +134,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         context.showHistory = this.rollHistory.length > 1;
 
         // Actor context for formula display
-        if (this.rollType === 'wounds') {
+        if (this.rollType === "wounds") {
             const tb = this.context.actor.system.characteristics?.toughness?.bonus || 0;
             context.actorTB = tb;
             context.expandedFormula = this._expandWoundsFormula(this.formula, tb);
@@ -148,12 +149,12 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @private
      */
     _getDescription() {
-        if (this.rollType === 'wounds') {
-            return 'Roll to determine your starting Wounds. This represents your ability to withstand damage.';
-        } else if (this.rollType === 'fate') {
-            return 'Roll to determine your starting Fate Points. Fate Points allow you to avoid death and re-roll critical tests.';
+        if (this.rollType === "wounds") {
+            return "Roll to determine your starting Wounds. This represents your ability to withstand damage.";
+        } else if (this.rollType === "fate") {
+            return "Roll to determine your starting Fate Points. Fate Points allow you to avoid death and re-roll critical tests.";
         }
-        return '';
+        return "";
     }
 
     /**
@@ -186,9 +187,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         try {
             // Evaluate the formula based on type
-            if (this.rollType === 'wounds') {
+            if (this.rollType === "wounds") {
                 this.rollResult = await this._rollWounds();
-            } else if (this.rollType === 'fate') {
+            } else if (this.rollType === "fate") {
                 this.rollResult = await this._rollFate();
             }
 
@@ -196,7 +197,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             this.rollHistory.push({
                 timestamp: Date.now(),
                 result: this.rollResult.total,
-                breakdown: this.rollResult.breakdown,
+                breakdown: this.rollResult.breakdown
             });
 
             // Send to chat
@@ -204,9 +205,10 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
             // Re-render to show result
             await this.render();
+
         } catch (error) {
-            console.error('Error rolling:', error);
-            ui.notifications.error('Error rolling dice. Check console for details.');
+            console.error("Error rolling:", error);
+            ui.notifications.error("Error rolling dice. Check console for details.");
         }
     }
 
@@ -220,7 +222,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         event.preventDefault();
 
         if (!this.rollResult) {
-            ui.notifications.warn('Please roll or input a value first!');
+            ui.notifications.warn("Please roll or input a value first!");
             return;
         }
 
@@ -233,10 +235,10 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
     /**
      * Re-roll the dice - returns to initial state so player can choose roll or manual.
-     *
+     * 
      * This clears the current result and re-renders the dialog to show the initial state
      * with both "Roll For Me" and "I'll Roll Myself" options available again.
-     *
+     * 
      * @param {Event} event - The triggering event
      * @param {HTMLElement} target - The target element
      * @private
@@ -263,11 +265,11 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         const formula = this.formula;
         const rollType = this.rollType;
-
-        if (rollType === 'wounds') {
+        
+        if (rollType === "wounds") {
             // For wounds, handle the full formula including static components
             await this._handleManualWounds();
-        } else if (rollType === 'fate') {
+        } else if (rollType === "fate") {
             // For fate, handle the conditional formula
             await this._handleManualFate();
         }
@@ -281,22 +283,22 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const formula = this.formula;
         const actor = this.context.actor;
         const tb = actor.system.characteristics?.toughness?.bonus || 0;
-
+        
         // Check if this is a 1d5 formula
         const is1d5 = /1d5/.test(formula);
         const is1d10 = /1d10/.test(formula);
-
-        let instructionText = is1d5
-            ? 'Roll 1d10 and enter the result (it will be divided by 2, rounded up for 1d5):'
-            : is1d10
-            ? 'Roll 1d10 and enter the result:'
-            : 'Enter the dice result:';
-
+        
+        let instructionText = is1d5 
+            ? "Roll 1d10 and enter the result (it will be divided by 2, rounded up for 1d5):"
+            : is1d10 
+                ? "Roll 1d10 and enter the result:"
+                : "Enter the dice result:";
+        
         // Show expanded formula with TB value
         const expandedFormula = formula.replace(/(\d+)xTB/gi, (match, multiplier) => {
             return `${multiplier}×${tb}`;
         });
-
+        
         let hintText = `<strong>Formula:</strong> <code>${formula}</code> = <code>${expandedFormula}</code>`;
         if (is1d5) {
             hintText += `<br><strong>Note:</strong> For 1d5, roll a d10 and divide by 2, rounded up.`;
@@ -304,7 +306,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         // Prompt for dice roll only
         const diceValue = await Dialog.prompt({
-            title: 'Manual Wounds Roll',
+            title: "Manual Wounds Roll",
             content: `
                 <form>
                     <div class="form-group">
@@ -318,7 +320,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                 const input = html.find('input[name="value"]').val();
                 return parseInt(input);
             },
-            rejectClose: false,
+            rejectClose: false
         });
 
         if (!diceValue || isNaN(diceValue)) return;
@@ -329,11 +331,11 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         if (is1d5) {
             diceResult = Math.ceil(diceValue / 2);
         }
-
+        
         // Calculate static components
         let staticTotal = 0;
         let breakdownParts = [];
-
+        
         // Handle TB multiplier
         const tbMatch = formula.match(/(\d+)xTB/i);
         if (tbMatch) {
@@ -341,14 +343,14 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             staticTotal += multiplier * tb;
             breakdownParts.push(`${multiplier}×${tb}`);
         }
-
+        
         // Handle the dice
         if (is1d5) {
             breakdownParts.push(`[${diceResult}]`);
         } else if (is1d10) {
             breakdownParts.push(`[${diceResult}]`);
         }
-
+        
         // Handle additional static modifiers like +2
         const additionalMatch = formula.match(/\+(\d+)$/);
         if (additionalMatch) {
@@ -356,7 +358,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             staticTotal += additional;
             breakdownParts.push(`${additional}`);
         }
-
+        
         const finalValue = staticTotal + diceResult;
         const breakdownText = `${breakdownParts.join(' + ')} = ${finalValue}`;
 
@@ -367,14 +369,14 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             total: finalValue,
             breakdown: breakdownText,
             manual: true,
-            timestamp: Date.now(),
+            timestamp: Date.now()
         };
 
         // Add to history
         this.rollHistory.push({
             timestamp: Date.now(),
             result: finalValue,
-            breakdown: breakdownText,
+            breakdown: breakdownText
         });
 
         // Re-render to show result
@@ -387,22 +389,20 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      */
     async _handleManualFate() {
         const formula = this.formula;
-
+        
         // Parse the conditional format: "(1-5|=2),(6-10|=3)"
         const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;
         const conditions = [...formula.matchAll(conditionRegex)];
-
+        
         // Build options description
-        let optionsText = conditions
-            .map((match) => {
-                const [, min, max, outcome] = match;
-                return `${min}-${max} → ${outcome} Fate Points`;
-            })
-            .join('<br>');
+        let optionsText = conditions.map(match => {
+            const [, min, max, outcome] = match;
+            return `${min}-${max} → ${outcome} Fate Points`;
+        }).join('<br>');
 
         // Prompt for the d10 roll
         const diceValue = await Dialog.prompt({
-            title: 'Manual Fate Roll',
+            title: "Manual Fate Roll",
             content: `
                 <form>
                     <div class="form-group">
@@ -416,15 +416,15 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                 const input = html.find('input[name="value"]').val();
                 return parseInt(input);
             },
-            rejectClose: false,
+            rejectClose: false
         });
 
         if (!diceValue || isNaN(diceValue)) return;
 
         // Find matching condition
         let result = 0;
-        let matchedRange = '';
-
+        let matchedRange = "";
+        
         for (const match of conditions) {
             const [, min, max, outcome] = match;
             const minVal = parseInt(min);
@@ -448,14 +448,14 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             total: result,
             breakdown: breakdownText,
             manual: true,
-            timestamp: Date.now(),
+            timestamp: Date.now()
         };
 
         // Add to history
         this.rollHistory.push({
             timestamp: Date.now(),
             result: result,
-            breakdown: breakdownText,
+            breakdown: breakdownText
         });
 
         // Re-render to show result
@@ -522,13 +522,13 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const breakdown = this._formatWoundsBreakdown(formula, tb, roll);
 
         return {
-            type: 'wounds',
+            type: "wounds",
             formula: formula,
             expandedFormula: diceFormula,
             total: roll.total,
             breakdown: breakdown,
             roll: roll,
-            timestamp: Date.now(),
+            timestamp: Date.now()
         };
     }
 
@@ -544,7 +544,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         // This means: roll 1d10, if 1-5 → 2 fate, if 6-10 → 3 fate
 
         // Roll 1d10
-        const roll = new Roll('1d10');
+        const roll = new Roll("1d10");
         await roll.evaluate();
         const rolledValue = roll.total;
 
@@ -553,7 +553,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const conditions = [...formula.matchAll(conditionRegex)];
 
         let result = 0;
-        let matchedRange = '';
+        let matchedRange = "";
 
         for (const match of conditions) {
             const [, min, max, outcome] = match;
@@ -571,13 +571,13 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const breakdown = `Rolled ${rolledValue} on 1d10 (${matchedRange} → ${result} Fate Points)`;
 
         return {
-            type: 'fate',
+            type: "fate",
             formula: formula,
             rolled: rolledValue,
             total: result,
             breakdown: breakdown,
             roll: roll,
-            timestamp: Date.now(),
+            timestamp: Date.now()
         };
     }
 
@@ -601,12 +601,12 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         });
 
         // Find dice terms and show their results
-        const diceTerms = roll.terms.filter((t) => t instanceof foundry.dice.terms.Die);
+        const diceTerms = roll.terms.filter(t => t instanceof foundry.dice.terms.Die);
         if (diceTerms.length > 0) {
             breakdown = breakdown.replace(/(\d+)d(\d+)/g, (match) => {
                 const term = diceTerms.shift();
                 if (term) {
-                    const results = term.results.map((r) => r.result).join('+');
+                    const results = term.results.map(r => r.result).join('+');
                     return `[${results}]`;
                 }
                 return match;
@@ -630,21 +630,24 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             origin: this.context.originItem.name,
             originImg: this.context.originItem.img,
             rollType: this.rollType,
-            rollTypeLabel: this.rollType === 'wounds' ? 'Wounds' : 'Fate Points',
+            rollTypeLabel: this.rollType === "wounds" ? "Wounds" : "Fate Points",
             formula: this.formula,
             result: this.rollResult.total,
             breakdown: this.rollResult.breakdown,
-            timestamp: new Date(this.rollResult.timestamp).toLocaleTimeString(),
+            timestamp: new Date(this.rollResult.timestamp).toLocaleTimeString()
         };
 
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/origin-roll-card.hbs', templateData);
+        const html = await renderTemplate(
+            "systems/rogue-trader/templates/chat/origin-roll-card.hbs",
+            templateData
+        );
 
         return ChatMessage.create({
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.context.actor }),
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
             rolls: [this.rollResult.roll],
-            sound: CONFIG.sounds.dice,
+            sound: CONFIG.sounds.dice
         });
     }
 
@@ -663,7 +666,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const dialog = new OriginRollDialog(rollType, formula, context);
 
         // Create promise that will be resolved when user accepts/cancels
-        const result = new Promise((resolve) => {
+        const result = new Promise(resolve => {
             dialog._resolvePromise = resolve;
         });
 
