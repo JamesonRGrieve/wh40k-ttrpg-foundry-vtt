@@ -33,15 +33,15 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             height: 'auto',
         },
         form: {
-            handler: RollConfigurationDialog.#onSubmit,
+            handler: this.#onSubmit,
             submitOnChange: false,
             closeOnSubmit: true,
         },
         actions: {
-            selectDifficulty: RollConfigurationDialog.#selectDifficulty,
-            toggleSituational: RollConfigurationDialog.#toggleSituational,
-            cancel: RollConfigurationDialog.#cancel,
-            viewModifierSource: RollConfigurationDialog.#viewModifierSource,
+            selectDifficulty: this.#selectDifficulty,
+            toggleSituational: this.#toggleSituational,
+            cancel: this.#cancel,
+            viewModifierSource: this.#viewModifierSource,
         },
     };
 
