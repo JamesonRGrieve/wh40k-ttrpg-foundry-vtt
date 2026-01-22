@@ -9,6 +9,6 @@
   </header>
   
   <div class="rt-panel-body">
-    {{editor content=system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+    {{editor content=(or system.description.value "") target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}}
   </div>
 </div>

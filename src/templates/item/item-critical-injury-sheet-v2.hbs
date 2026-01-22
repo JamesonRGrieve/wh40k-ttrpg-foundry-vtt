@@ -152,7 +152,7 @@
                 {{#each item.system.availableSeverities as |sev|}}
                   <div class="rt-severity-effect-editor">
                     <label><strong>Severity {{sev}}:</strong></label>
-                    {{editor content=(lookup item.system.effects sev).text target=(concat "system.effects." sev ".text") button=true editable=true engine="prosemirror"}}
+                    {{editor content=(or (lookup item.system.effects sev).text "") target=(concat "system.effects." sev ".text") button=true owner=owner editable=editable engine="prosemirror"}}
                     <label>
                       <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked (lookup item.system.effects sev).permanent}} />
                       <span>Permanent</span>
@@ -161,7 +161,7 @@
                 {{/each}}
               {{else}}
                 {{!-- Legacy format: Single effect editor --}}
-                {{editor content=system.effect target="system.effect" button=true editable=true engine="prosemirror"}}
+                {{editor content=(or system.effect "") target="system.effect" button=true owner=owner editable=editable engine="prosemirror"}}
               {{/if}}
             {{else}}
               {{!-- View mode: Show current severity effect --}}
@@ -199,7 +199,7 @@
           </div>
           <div class="rt-injury-section__body rt-injury-section__body--editor">
             {{#if inEditMode}}
-            {{editor content=system.description.value target="system.description.value" button=true editable=true engine="prosemirror"}}
+            {{editor content=(or system.description.value "") target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}}
             {{else}}
             <div class="rt-description-content">{{{system.description.value}}}</div>
             {{/if}}
