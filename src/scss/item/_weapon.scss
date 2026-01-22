@@ -222,20 +222,18 @@
     .rt-weapon-mosaic {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        grid-auto-rows: 1fr;
+        grid-auto-rows: minmax(60px, auto);
+        grid-auto-flow: dense;
         gap: 8px;
         padding: 12px;
-        aspect-ratio: 6 / 2;
 
         // Adjust column count based on container width
         @container (max-width: 420px) {
             grid-template-columns: repeat(4, 1fr);
-            aspect-ratio: 4 / 2;
         }
 
         @container (min-width: 600px) {
             grid-template-columns: repeat(8, 1fr);
-            aspect-ratio: 8 / 2;
         }
     }
 
@@ -256,6 +254,7 @@
         aspect-ratio: 1 / 1;
         grid-column: span 1;
         grid-row: span 1;
+        min-height: 60px;
 
         // Base sizes for 1x1 square
         .rt-iconic-stat__shape {
@@ -273,24 +272,55 @@
             text-transform: uppercase;
         }
 
-        // Size variants - ALL maintain square/double-square aspect ratios
+        // Size variants with responsive adjustments
         &--large {
             grid-column: span 2;
-            grid-row: span 1;
-            aspect-ratio: 2 / 1;
+            grid-row: span 2;
+            aspect-ratio: 1 / 1;
             padding: 10px 8px;
 
             .rt-iconic-stat__shape {
-                font-size: 1.8rem;
-                margin-bottom: 6px;
+                font-size: 2rem;
+                margin-bottom: 8px;
             }
 
             .rt-iconic-stat__value {
-                font-size: 1.3rem;
+                font-size: 1.4rem;
             }
 
             .rt-iconic-stat__label {
-                font-size: 0.65rem;
+                font-size: 0.7rem;
+            }
+
+            // Shrink to 2x1 on medium containers
+            @container (max-width: 520px) {
+                grid-row: span 1;
+                aspect-ratio: 2 / 1;
+
+                .rt-iconic-stat__shape {
+                    font-size: 1.5rem;
+                    margin-bottom: 6px;
+                }
+
+                .rt-iconic-stat__value {
+                    font-size: 1.2rem;
+                }
+            }
+
+            // Shrink to 1x1 on narrow containers
+            @container (max-width: 380px) {
+                grid-column: span 1;
+                grid-row: span 1;
+                aspect-ratio: 1 / 1;
+
+                .rt-iconic-stat__shape {
+                    font-size: 1.2rem;
+                    margin-bottom: 4px;
+                }
+
+                .rt-iconic-stat__value {
+                    font-size: 1rem;
+                }
             }
         }
 
@@ -310,6 +340,16 @@
 
             .rt-iconic-stat__label {
                 font-size: 0.6rem;
+            }
+
+            // Shrink to 1x1 on narrow containers
+            @container (max-width: 380px) {
+                grid-column: span 1;
+                aspect-ratio: 1 / 1;
+
+                .rt-iconic-stat__value {
+                    font-size: 0.9rem;
+                }
             }
         }
 
@@ -1721,7 +1761,8 @@
         input,
         select {
             width: 100%;
-            padding: 22px 12px 6px;
+            min-height: 42px;
+            padding: 24px 12px 8px;
             background: rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 6px;
@@ -1760,7 +1801,7 @@
             left: 12px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: rgba(202, 210, 222, 0.6);
             pointer-events: none;
@@ -1813,7 +1854,7 @@
             max-width: 100px;
 
             input {
-                padding: 22px 8px 6px;
+                padding: 24px 8px 8px;
             }
 
             label {
