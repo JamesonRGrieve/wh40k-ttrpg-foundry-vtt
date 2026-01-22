@@ -169,10 +169,10 @@ export function EquipmentLoadoutMixin(Base) {
         static DEFAULT_OPTIONS = {
             actions: {
                 ...super.DEFAULT_OPTIONS?.actions,
-                equipToSlot: EquipmentLoadoutMixin.#equipToSlot,
-                unequipFromSlot: EquipmentLoadoutMixin.#unequipFromSlot,
-                swapSlots: EquipmentLoadoutMixin.#swapSlots,
-                toggleSlotView: EquipmentLoadoutMixin.#toggleSlotView,
+                equipToSlot: this.#equipToSlot,
+                unequipFromSlot: this.#unequipFromSlot,
+                swapSlots: this.#swapSlots,
+                toggleSlotView: this.#toggleSlotView,
             },
         };
 
