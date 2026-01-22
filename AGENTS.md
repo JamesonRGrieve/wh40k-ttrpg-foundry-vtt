@@ -20,17 +20,60 @@ Foundry V13 game system for Rogue Trader RPG (Warhammer 40K, Dark Heresy 2e rule
 Every ticket needs:
 
 -   **Title**: Clear, actionable (e.g., "Fix weapon quality label display")
--   **Type**: `bug`, `feature`, or `task`
+-   **Type**: `bug`, `feature`, `task`, or `epic`
 -   **Priority**: 0-4 (0=critical, 2=default, 4=backlog)
 -   **Description**: What and why (2-3 sentences minimum)
 -   **Design Notes**: How you plan to implement (files to touch, approach)
 -   **Acceptance Criteria**: Checklist of "done" conditions
+-   **Labels**: Tag with relevant categories (optional but recommended)
+-   **Dependencies**: Link blocking issues (optional)
+-   **Parent**: For epics, use parent/child hierarchies (optional)
+
+#### Basic Ticket
 
 ```bash
-bd create --title="Fix X" --type=bug --priority=1 \
-  --description="Detailed description of the problem and solution approach" \
-  --design="Files: x.mjs, y.hbs. Approach: ..." \
-  --acceptance="- [ ] Criterion 1\n- [ ] Criterion 2"
+bd create --title="Fix weapon quality label display" \
+  --type=bug --priority=1 \
+  --description="Quality labels show identifiers instead of names. Need to map identifiers to localized labels." \
+  --design="Files: weapon-sheet.mjs, quality-tags.hbs. Use CONFIG.rt.weaponQualities mapping." \
+  --acceptance="- [ ] Quality labels show proper names\n- [ ] Localized strings used\n- [ ] Works in edit and view mode"
+```
+
+#### With Labels
+
+```bash
+bd create --title="Add weapon comparison dialog" \
+  --type=feature --priority=2 \
+  --labels="ui,weapons,combat" \
+  --description="Side-by-side comparison of weapon stats for players choosing equipment."
+```
+
+#### Epic with Child Tasks
+
+```bash
+# Create parent epic
+bd create --title="Weapon System Overhaul" --type=epic --priority=1 \
+  --description="Comprehensive weapon system improvements"
+# Returns: RogueTraderVTT-abc
+
+# Create child tasks (auto-numbered .1, .2, .3)
+bd create --title="Add weapon qualities system" --type=task --priority=1 \
+  --parent=RogueTraderVTT-abc
+
+bd create --title="Implement weapon modifications" --type=task --priority=1 \
+  --parent=RogueTraderVTT-abc
+```
+
+#### With Dependencies
+
+```bash
+# Create blocker first
+bd create --title="Create quality DataModel" --type=task --priority=0
+# Returns: RogueTraderVTT-xyz
+
+# Create dependent work
+bd create --title="Add quality sheet UI" --type=task --priority=1 \
+  --deps="RogueTraderVTT-xyz"  # This blocks until xyz is closed
 ```
 
 ### Session Workflow
@@ -46,6 +89,28 @@ bd update <id> --notes="Progress update, findings, blockers..."
 # END: Close and sync (MANDATORY)
 bd close <id> --reason="Summary of what was done"
 bd sync && git push                   # NEVER skip this
+```
+
+### Essential Commands
+
+```bash
+# Finding Work
+bd ready                           # Show issues ready to work (no blockers)
+bd list --status=open              # All open issues
+bd list --status=in_progress       # Your active work
+bd show <id>                       # Detailed issue view
+bd blocked                         # Show blocked issues
+
+# Managing Issues
+bd update <id> --priority=1        # Change priority
+bd update <id> --add-label=ui      # Add label
+bd dep add <issue> <blocker>       # Add dependency (issue depends on blocker)
+bd dep remove <issue> <blocker>    # Remove dependency
+
+# Closing Work
+bd close <id1> <id2> <id3>         # Close multiple (efficient)
+bd close <id> --reason="Done"      # Close with reason
+bd reopen <id>                     # Reopen if needed
 ```
 
 ### When to Use Beads vs TodoWrite
