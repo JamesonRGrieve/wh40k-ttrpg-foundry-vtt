@@ -176,6 +176,7 @@
       </div>
       
       <div class="rt-panel-body">
+        {{#if editable}}
         <div class="rt-editor-wrapper">
           {{editor content=system.specialAbilities
                    target="system.specialAbilities"
@@ -184,6 +185,16 @@
                    engine="prosemirror"
                   }}
         </div>
+        {{else}}
+        {{#if system.specialAbilities}}
+        <div class="rt-special-content">{{{system.specialAbilities}}}</div>
+        {{else}}
+        <div class="rt-empty-state rt-empty-state--inline">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>No special abilities defined</span>
+        </div>
+        {{/if}}
+        {{/if}}
       </div>
     </div>
 
@@ -197,9 +208,13 @@
         {{/if}}
       </div>
       <div class="rt-panel-body">
+        {{#if editable}}
         <div class="rt-editor-wrapper">
           {{editor content=system.description target="system.description" button=true editable=editable engine="prosemirror"}}
         </div>
+        {{else}}
+        <div class="rt-description-content">{{{system.description}}}</div>
+        {{/if}}
       </div>
     </div>
 
