@@ -1,7 +1,7 @@
 /**
  * @file StatBlockParser - Import NPC data from various formats
  * Phase 6: Advanced GM Tools
- * 
+ *
  * Provides:
  * - Parse JSON stat blocks
  * - Parse structured text (common stat block layouts)
@@ -10,10 +10,10 @@
  * - Comprehensive validation with detailed feedback
  */
 
-import ThreatCalculator from "./threat-calculator.mjs";
-import { SkillKeyHelper } from "../../helpers/skill-key-helper.mjs";
-import StatBlockValidator from "../../utils/stat-block-validator.mjs";
-import TextPatternExtractor from "../../utils/text-pattern-extractor.mjs";
+import ThreatCalculator from './threat-calculator.mjs';
+import { SkillKeyHelper } from '../../helpers/skill-key-helper.mjs';
+import StatBlockValidator from '../../utils/stat-block-validator.mjs';
+import TextPatternExtractor from '../../utils/text-pattern-extractor.mjs';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -176,29 +176,29 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      */
     #parsedData = null;
 
-  /**
-   * Parse errors.
-   * @type {Array<string>}
-   */
-  #errors = [];
+    /**
+     * Parse errors.
+     * @type {Array<string>}
+     */
+    #errors = [];
 
-  /**
-   * Parse warnings.
-   * @type {Array<string>}
-   */
-  #warnings = [];
+    /**
+     * Parse warnings.
+     * @type {Array<string>}
+     */
+    #warnings = [];
 
-  /**
-   * Parse info messages.
-   * @type {Array<string>}
-   */
-  #info = [];
+    /**
+     * Parse info messages.
+     * @type {Array<string>}
+     */
+    #info = [];
 
-  /**
-   * Promise resolver.
-   * @type {Function|null}
-   */
-  #resolve = null;
+    /**
+     * Promise resolver.
+     * @type {Function|null}
+     */
+    #resolve = null;
 
     /**
      * Whether submission occurred.
@@ -210,44 +210,42 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-  /** @override */
-  async _prepareContext(options) {
-    const context = await super._prepareContext(options);
-    const parsedData = this.#parsedData;
-    const previewSkills = parsedData?.system?.trainedSkills
-      ? Object.values(parsedData.system.trainedSkills)
-      : [];
-    const previewTalents = parsedData?.items?.filter((item) => item.type === "talent") ?? [];
-    const previewTraits = parsedData?.items?.filter((item) => item.type === "trait") ?? [];
-    const previewWeapons = parsedData?.system?.weapons?.simple ?? [];
+    /** @override */
+    async _prepareContext(options) {
+        const context = await super._prepareContext(options);
+        const parsedData = this.#parsedData;
+        const previewSkills = parsedData?.system?.trainedSkills ? Object.values(parsedData.system.trainedSkills) : [];
+        const previewTalents = parsedData?.items?.filter((item) => item.type === 'talent') ?? [];
+        const previewTraits = parsedData?.items?.filter((item) => item.type === 'trait') ?? [];
+        const previewWeapons = parsedData?.system?.weapons?.simple ?? [];
 
-    return {
-      ...context,
-      rawInput: this.#rawInput,
-      parsedData: this.#parsedData,
-      previewSkills,
-      previewTalents,
-      previewTraits,
-      previewWeapons,
-      hasPreviewSkills: previewSkills.length > 0,
-      hasPreviewTalents: previewTalents.length > 0,
-      hasPreviewTraits: previewTraits.length > 0,
-      hasPreviewWeapons: previewWeapons.length > 0,
-      errors: this.#errors,
-      warnings: this.#warnings,
-      info: this.#info,
-      hasParsed: this.#parsedData !== null,
-      hasErrors: this.#errors.length > 0,
-      hasWarnings: this.#warnings.length > 0,
-      hasInfo: this.#info.length > 0,
-      canImport: this.#parsedData !== null && this.#errors.length === 0,
-      buttons: [
-        { type: "button", action: "parse", icon: "fa-solid fa-magnifying-glass", label: "RT.NPC.Import.Parse", cssClass: "secondary" },
-        { type: "submit", icon: "fa-solid fa-file-import", label: "RT.NPC.Import.Import", cssClass: "primary", disabled: !this.#parsedData },
-        { type: "button", action: "cancel", icon: "fa-solid fa-times", label: "Cancel" }
-      ]
-    };
-  }
+        return {
+            ...context,
+            rawInput: this.#rawInput,
+            parsedData: this.#parsedData,
+            previewSkills,
+            previewTalents,
+            previewTraits,
+            previewWeapons,
+            hasPreviewSkills: previewSkills.length > 0,
+            hasPreviewTalents: previewTalents.length > 0,
+            hasPreviewTraits: previewTraits.length > 0,
+            hasPreviewWeapons: previewWeapons.length > 0,
+            errors: this.#errors,
+            warnings: this.#warnings,
+            info: this.#info,
+            hasParsed: this.#parsedData !== null,
+            hasErrors: this.#errors.length > 0,
+            hasWarnings: this.#warnings.length > 0,
+            hasInfo: this.#info.length > 0,
+            canImport: this.#parsedData !== null && this.#errors.length === 0,
+            buttons: [
+                { type: 'button', action: 'parse', icon: 'fa-solid fa-magnifying-glass', label: 'RT.NPC.Import.Parse', cssClass: 'secondary' },
+                { type: 'submit', icon: 'fa-solid fa-file-import', label: 'RT.NPC.Import.Import', cssClass: 'primary', disabled: !this.#parsedData },
+                { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
+            ],
+        };
+    }
 
     /** @override */
     _onRender(context, options) {
@@ -266,111 +264,72 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /*  Parsing Methods                             */
     /* -------------------------------------------- */
 
-  /**
-   * Parse input text and detect format.
-   * @param {string} input - Raw input text.
-   * @returns {Object} Parsed NPC data with validation.
-   */
-  static parse(input) {
-    const trimmed = input.trim();
+    /**
+     * Parse input text and detect format.
+     * @param {string} input - Raw input text.
+     * @returns {Object} Parsed NPC data with validation.
+     */
+    static parse(input) {
+        const trimmed = input.trim();
 
-    if (!trimmed) {
-      return {
-        data: null,
-        errors: ["No stat block text provided."],
-        warnings: [],
-        info: []
-      };
-    }
-    
-    let parseResult;
-    
-    // Detect JSON
-    if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
-      parseResult = this.parseJSON(trimmed);
-    } else {
-      // Parse as text
-      parseResult = this.parseText(trimmed);
-    }
+        if (!trimmed) {
+            return {
+                data: null,
+                errors: ['No stat block text provided.'],
+                warnings: [],
+                info: [],
+            };
+        }
 
-    // Run validation on parsed data if we have any
-    if (parseResult.data) {
-      const validation = StatBlockValidator.validate(parseResult.data);
-      
-      // Merge validation results with parse results
-      parseResult.errors = [...parseResult.errors, ...validation.errors];
-      parseResult.warnings = [...parseResult.warnings, ...validation.warnings];
-      parseResult.info = validation.info || [];
-    }
-
-    return parseResult;
-  }
+        let parseResult;
 
         // Detect JSON
         if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
-            return this.parseJSON(trimmed);
+            parseResult = this.parseJSON(trimmed);
+        } else {
+            // Parse as text
+            parseResult = this.parseText(trimmed);
         }
 
-        // Otherwise, parse as text
-        return this.parseText(trimmed);
+        // Run validation on parsed data if we have any
+        if (parseResult.data) {
+            const validation = StatBlockValidator.validate(parseResult.data);
+
+            // Merge validation results with parse results
+            parseResult.errors = [...parseResult.errors, ...validation.errors];
+            parseResult.warnings = [...parseResult.warnings, ...validation.warnings];
+            parseResult.info = validation.info || [];
+        }
+
+        return parseResult;
     }
 
-  /**
-   * Parse JSON format input.
-   * @param {string} input - JSON string.
-   * @returns {Object} Parsed data with validation.
-   */
-  static parseJSON(input) {
-    const result = {
-      data: null,
-      errors: [],
-      warnings: [],
-      info: []
-    };
-    
-    try {
-      const parsed = JSON.parse(input);
-      
-      // Check if it's a full actor export
-      if (parsed.system && parsed.type) {
-        result.data = {
-          name: parsed.name || "Imported NPC",
-          img: parsed.img || "icons/svg/mystery-man.svg",
-          type: parsed.type === "npcV2" ? "npcV2" : "npcV2",
-          system: parsed.system,
-          items: parsed.items || []
+    /**
+     * Parse JSON format input.
+     * @param {string} input - JSON string.
+     * @returns {Object} Parsed data with validation.
+     */
+    static parseJSON(input) {
+        const result = {
+            data: null,
+            errors: [],
+            warnings: [],
+            info: [],
         };
-      }
-      // Check if it's just system data
-      else if (parsed.characteristics || parsed.threatLevel) {
-        result.data = {
-          name: parsed.name || "Imported NPC",
-          img: "icons/svg/mystery-man.svg",
-          type: "npcV2",
-          system: parsed,
-          items: []
-        };
-      }
-      else {
-        result.errors.push("Unrecognized JSON format. Expected actor export or system data.");
-      }
-      
-      // Validate required fields
-      if (result.data) {
-        if (!result.data.system.characteristics) {
-          result.warnings.push("No characteristics found. Default values will be used.");
-        }
-        if (!result.data.system.wounds) {
-          result.warnings.push("No wounds found. Default value will be used.");
-        }
-      }
-      
-    } catch (err) {
-      result.errors.push(`Invalid JSON: ${err.message}`);
-    }
-    
-    return result;
-  }
+
+        try {
+            const parsed = JSON.parse(input);
+
+            // Check if it's a full actor export
+            if (parsed.system && parsed.type) {
+                result.data = {
+                    name: parsed.name || 'Imported NPC',
+                    img: parsed.img || 'icons/svg/mystery-man.svg',
+                    type: parsed.type === 'npcV2' ? 'npcV2' : 'npcV2',
+                    system: parsed.system,
+                    items: parsed.items || [],
+                };
+            }
             // Check if it's just system data
             else if (parsed.characteristics || parsed.threatLevel) {
                 result.data = {
@@ -400,120 +359,34 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return result;
     }
 
-  /**
-   * Parse structured text format.
-   * @param {string} input - Text input.
-   * @returns {Object} Parsed data with validation.
-   */
-  static parseText(input) {
-    const result = {
-      data: null,
-      errors: [],
-      warnings: [],
-      info: []
-    };
-    const sanitized = this._normalizeInput(input);
-    const lines = this._splitLines(sanitized);
+    /**
+     * Parse structured text format.
+     * @param {string} input - Text input.
+     * @returns {Object} Parsed data with validation.
+     */
+    static parseText(input) {
+        const result = {
+            data: null,
+            errors: [],
+            warnings: [],
+            info: [],
+        };
+        const sanitized = this._normalizeInput(input);
+        const lines = this._splitLines(sanitized);
 
-    // Start with default NPC data
-    const systemData = ThreatCalculator.generateNPCData({ threatLevel: 5 });
+        // Start with default NPC data
+        const systemData = ThreatCalculator.generateNPCData({ threatLevel: 5 });
 
-    // Extract name
-    const name = this._extractName(lines, sanitized);
+        // Extract name
+        const name = this._extractName(lines, sanitized);
 
-    // Extract characteristics
-    const characteristicResult = this._parseCharacteristics(lines, sanitized);
-    if (characteristicResult.hasValues) {
-      this._applyCharacteristics(systemData, characteristicResult);
-    } else {
-      result.warnings.push("No characteristics found. Using defaults based on threat level.");
-    }
-
-    // Extract wounds
-    const wounds = this._parseWounds(sanitized);
-    if (wounds !== null) {
-      systemData.wounds.max = wounds;
-      systemData.wounds.value = wounds;
-    } else {
-      result.warnings.push("No wounds found. Using default value.");
-    }
-
-    // Extract movement
-    const movement = this._parseMovement(sanitized);
-    if (movement) {
-      systemData.movement.half = movement.half;
-      systemData.movement.full = movement.full;
-      systemData.movement.charge = movement.charge;
-      systemData.movement.run = movement.run;
-    }
-
-    // Extract armour
-    const armourText = this._extractSection(lines, "armour") || this._extractSection(lines, "armor");
-    const armour = this._parseArmour(armourText || sanitized);
-    if (armour) {
-      if (armour.mode === "locations") {
-        systemData.armour.mode = "locations";
-        systemData.armour.locations = armour.locations;
-      } else {
-        systemData.armour.mode = "simple";
-        systemData.armour.total = armour.total;
-      }
-    }
-
-    // Extract threat level
-    const threatLevel = this._parseThreatLevel(sanitized);
-    if (threatLevel) {
-      systemData.threatLevel = threatLevel;
-    }
-
-    // Extract NPC type
-    const typeMatch = sanitized.match(this.PATTERNS.npcType);
-    if (typeMatch) {
-      systemData.type = typeMatch[1].toLowerCase();
-    }
-
-    // Extract skills
-    const skillsText = this._extractSection(lines, "skills") || this._extractSkillSectionFallback(sanitized);
-    const skills = this._parseSkills(skillsText);
-    if (skills.hasEntries) {
-      systemData.trainedSkills = { ...systemData.trainedSkills, ...skills.trainedSkills };
-    }
-
-    // Extract weapons
-    const weaponText = this._extractSection(lines, "weapons") || this._extractWeaponSectionFallback(sanitized);
-    const weapons = this._parseWeapons(weaponText);
-    if (weapons.length > 0) {
-      systemData.weapons.mode = "simple";
-      systemData.weapons.simple = weapons;
-    }
-
-    // Extract talents
-    const talentsText = this._extractSection(lines, "talents");
-    const talentItems = this._parseTalents(talentsText);
-
-    // Extract traits
-    const traitsText = this._extractSection(lines, "traits");
-    const traitResult = this._parseTraits(traitsText);
-    const traitItems = traitResult.items;
-    this._applyTraitAdjustments(systemData, traitResult.parsedTraits);
-
-    // Additional notes
-    const additionalText = this._extractSection(lines, "additional") || this._extractSection(lines, "notes");
-    if (additionalText) {
-      systemData.description = additionalText;
-    }
-
-    // Build final data
-    result.data = {
-      name,
-      img: "icons/svg/mystery-man.svg",
-      type: "npcV2",
-      system: systemData,
-      items: [...talentItems, ...traitItems]
-    };
-
-    return result;
-  }
+        // Extract characteristics
+        const characteristicResult = this._parseCharacteristics(lines, sanitized);
+        if (characteristicResult.hasValues) {
+            this._applyCharacteristics(systemData, characteristicResult);
+        } else {
+            result.warnings.push('No characteristics found. Using defaults based on threat level.');
+        }
 
         // Extract wounds
         const wounds = this._parseWounds(sanitized);
@@ -601,19 +474,12 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return result;
     }
 
-  static _normalizeInput(input) {
-    return TextPatternExtractor.normalizeInput(input);
-  }
-
-  static _splitLines(input) {
-    return TextPatternExtractor.splitLines(input);
-  }
+    static _normalizeInput(input) {
+        return TextPatternExtractor.normalizeInput(input);
+    }
 
     static _splitLines(input) {
-        return input
-            .split('\n')
-            .map((line) => line.trim())
-            .filter((line) => line.length > 0);
+        return TextPatternExtractor.splitLines(input);
     }
 
     static _extractName(lines, input) {
@@ -629,10 +495,10 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return firstLine;
     }
 
-  static _looksLikeCharacteristicHeader(line) {
-    const required = ["WS", "BS", "S", "T", "Ag", "Int", "Per", "WP", "Fel"];
-    return TextPatternExtractor.looksLikeHeader(line, required);
-  }
+    static _looksLikeCharacteristicHeader(line) {
+        const required = ['WS', 'BS', 'S', 'T', 'Ag', 'Int', 'Per', 'WP', 'Fel'];
+        return TextPatternExtractor.looksLikeHeader(line, required);
+    }
 
     static _parseCharacteristics(lines, input) {
         const result = {
@@ -1119,40 +985,36 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return { baseName, specializations };
     }
 
-  static _extractSection(lines, label) {
-    return TextPatternExtractor.extractSection(lines, label, this.SECTION_HEADERS);
-  }
+    static _extractSection(lines, label) {
+        return TextPatternExtractor.extractSection(lines, label, this.SECTION_HEADERS);
+    }
 
-  static _isSectionHeader(line) {
-    return TextPatternExtractor.isSectionHeader(line, this.SECTION_HEADERS);
-  }
+    static _isSectionHeader(line) {
+        return TextPatternExtractor.isSectionHeader(line, this.SECTION_HEADERS);
+    }
 
-  static _splitList(text) {
-    return TextPatternExtractor.splitList(text);
-  }
+    static _splitList(text) {
+        return TextPatternExtractor.splitList(text);
+    }
 
-  static _cleanEntry(entry) {
-    return TextPatternExtractor.cleanEntry(entry);
-  }
+    static _cleanEntry(entry) {
+        return TextPatternExtractor.cleanEntry(entry);
+    }
 
-  static _extractValueTokens(line) {
-    return TextPatternExtractor.extractValueTokens(line);
-  }
+    static _extractValueTokens(line) {
+        return TextPatternExtractor.extractValueTokens(line);
+    }
 
-  static _extractParentheticalNumbers(line) {
-    return TextPatternExtractor.extractParentheticalNumbers(line);
-  }
+    static _extractParentheticalNumbers(line) {
+        return TextPatternExtractor.extractParentheticalNumbers(line);
+    }
 
-  static _parseNumericValue(value) {
-    return TextPatternExtractor.parseNumericValue(value);
-  }
+    static _parseNumericValue(value) {
+        return TextPatternExtractor.parseNumericValue(value);
+    }
 
-  static _toSkillKey(text, capitalize = false) {
-    return TextPatternExtractor.toKey(text, capitalize);
-  }
-            return content.trim();
-        }
-        return '';
+    static _toSkillKey(text, capitalize = false) {
+        return TextPatternExtractor.toKey(text, capitalize);
     }
 
     static _extractSkillSectionFallback(input) {
@@ -1165,55 +1027,6 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return match ? match[1].trim() : '';
     }
 
-    static _isSectionHeader(line) {
-        const lower = line.toLowerCase();
-        return this.SECTION_HEADERS.some((header) => lower.startsWith(header));
-    }
-
-    static _splitList(text) {
-        const entries = [];
-        let buffer = '';
-        let depth = 0;
-        for (const char of text) {
-            if (char === '(') depth += 1;
-            if (char === ')') depth = Math.max(0, depth - 1);
-            if ((char === ',' || char === ';') && depth === 0) {
-                entries.push(buffer.trim());
-                buffer = '';
-                continue;
-            }
-            buffer += char;
-        }
-        if (buffer.trim()) entries.push(buffer.trim());
-        return entries.filter((entry) => entry.length > 0);
-    }
-
-    static _cleanEntry(entry) {
-        return entry
-            .replace(/\.+$/, '')
-            .replace(/\s{2,}/g, ' ')
-            .trim();
-    }
-
-    static _extractValueTokens(line) {
-        const tokens = line
-            .split(/\s+/)
-            .map((token) => token.trim())
-            .filter(Boolean);
-        return tokens.map((token) => token.replace(/[^\d-]/g, ''));
-    }
-
-    static _extractParentheticalNumbers(line) {
-        return [...line.matchAll(/\((\d+)\)/g)].map((match) => parseInt(match[1], 10));
-    }
-
-    static _parseNumericValue(value) {
-        if (!value) return 0;
-        if (value === '-' || value === '--') return 0;
-        const parsed = parseInt(value, 10);
-        return Number.isNaN(parsed) ? 0 : parsed;
-    }
-
     static _characteristicKeyFromShort(short) {
         if (!short) return null;
         const normalized = this._normalizeShortCharacteristic(short);
@@ -1223,16 +1036,6 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     static _normalizeShortCharacteristic(short) {
         return short.replace(/\./g, '').replace(/\s+/g, '');
-    }
-
-    static _toSkillKey(text, capitalize = false) {
-        const cleaned = text.replace(/[^A-Za-z0-9]/g, ' ').trim();
-        const parts = cleaned.split(/\s+/).filter(Boolean);
-        if (parts.length === 0) return '';
-        const [first, ...rest] = parts;
-        const key = [first.toLowerCase(), ...rest.map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())].join('');
-        if (!capitalize) return key;
-        return key.charAt(0).toUpperCase() + key.slice(1);
     }
 
     static _unnaturalCharacteristicKey(name) {
@@ -1253,21 +1056,21 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /*  Event Handlers                              */
     /* -------------------------------------------- */
 
-  /**
-   * Handle parse button.
-   * @param {PointerEvent} event
-   * @param {HTMLElement} target
-   */
-  static async _onParse(event, target) {
-    const result = StatBlockParser.parse(this.#rawInput);
-    
-    this.#parsedData = result.data;
-    this.#errors = result.errors;
-    this.#warnings = result.warnings;
-    this.#info = result.info || [];
-    
-    this.render({ parts: ["form"] });
-  }
+    /**
+     * Handle parse button.
+     * @param {PointerEvent} event
+     * @param {HTMLElement} target
+     */
+    static async _onParse(event, target) {
+        const result = StatBlockParser.parse(this.#rawInput);
+
+        this.#parsedData = result.data;
+        this.#errors = result.errors;
+        this.#warnings = result.warnings;
+        this.#info = result.info || [];
+
+        this.render({ parts: ['form'] });
+    }
 
     /**
      * Handle form submission.
@@ -1341,19 +1144,19 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         await this.close();
     }
 
-  /**
-   * Handle clear input button.
-   * @param {PointerEvent} event
-   * @param {HTMLElement} target
-   */
-  static async _onClearInput(event, target) {
-    this.#rawInput = "";
-    this.#parsedData = null;
-    this.#errors = [];
-    this.#warnings = [];
-    this.#info = [];
-    this.render({ parts: ["form"] });
-  }
+    /**
+     * Handle clear input button.
+     * @param {PointerEvent} event
+     * @param {HTMLElement} target
+     */
+    static async _onClearInput(event, target) {
+        this.#rawInput = '';
+        this.#parsedData = null;
+        this.#errors = [];
+        this.#warnings = [];
+        this.#info = [];
+        this.render({ parts: ['form'] });
+    }
 
     /* -------------------------------------------- */
     /*  Lifecycle                                   */
