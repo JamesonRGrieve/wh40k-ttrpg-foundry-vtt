@@ -65,7 +65,7 @@
                                 <th class="rt-col-weight">Weight</th>
                             </tr>
                         </thead>
-                        <tbody class="item-drop">
+                        <tbody>
                             {{#each allCarriedItems as |item|}}
                             <tr class="rt-item-row item-drag {{#if item.system.equipped}}rt-row-equipped{{else if item.system.inBackpack}}rt-row-stowed{{/if}}" 
                                 data-item-id="{{item.id}}" 
@@ -130,12 +130,11 @@
                                 <th class="rt-col-name">Item</th>
                                 <th class="rt-col-type">Type</th>
                                 <th class="rt-col-weight">Weight</th>
-                                <th class="rt-col-status">Status</th>
                             </tr>
                         </thead>
-                        <tbody class="item-drop">
+                        <tbody>
                             {{#each allShipItems as |item|}}
-                            <tr class="rt-item-row rt-row-ship item-drag" 
+                            <tr class="rt-item-row rt-row-ship"
                                 data-item-id="{{item.id}}" 
                                 data-item-type="{{item.type}}"
                                 draggable="true">
@@ -156,14 +155,6 @@
                                     {{else}}
                                     <span class="rt-item-weight rt-weight-none">—</span>
                                     {{/if}}
-                                </td>
-                                <td class="rt-col-status">
-                                    <span class="rt-status-badge rt-badge-ship">
-                                        <i class="fas fa-warehouse"></i> Ship
-                                    </span>
-                                </td>
-                                <td class="rt-col-actions">
-                                    {{!-- Removed arrow button - use drag-drop only --}}
                                 </td>
                             </tr>
                             {{/each}}
