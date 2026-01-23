@@ -1568,7 +1568,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             half: { label: 'Half Move', icon: 'fa-walking', description: 'Move and take other actions' },
             full: { label: 'Full Move', icon: 'fa-shoe-prints', description: 'Move with no other actions' },
             charge: { label: 'Charge', icon: 'fa-running', description: 'Move and attack with +20 bonus' },
-            run: { label: 'Run', icon: 'fa-wind', description: 'Run at full speed (Agility test may be required)' }
+            run: { label: 'Run', icon: 'fa-wind', description: 'Run at full speed (Agility test may be required)' },
         };
 
         const movement = movementData[movementType];
@@ -1586,8 +1586,8 @@ export default class AcolyteSheet extends BaseActorSheet {
                 movementLabel: movement.label,
                 distance: distance,
                 icon: movement.icon,
-                description: movement.description
-            })
+                description: movement.description,
+            }),
         };
 
         // Create chat message
@@ -2213,7 +2213,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         event.preventDefault();
         // Default to rogueTrader career for now
         // TODO: Get career from actor.system.originPath.career or rogueTrader.careerPath
-        const careerKey = 'rogueTrader';
+        const careerKey = this.actor.originPath.career;
         AdvancementDialog.open(this.actor, { careerKey });
     }
 
@@ -2297,25 +2297,25 @@ export default class AcolyteSheet extends BaseActorSheet {
     static async #showUtilityMenu(event, target) {
         event.preventDefault();
         event.stopPropagation();
-        
+
         const options = this._getUtilityMenuOptions();
         if (options.length === 0) return;
-        
+
         // Create a simple context menu programmatically
         const menu = document.createElement('div');
         menu.className = 'rt-context-menu rt-utility-menu';
         menu.style.position = 'fixed';
         menu.style.zIndex = '1000';
-        
+
         // Position the menu
         const rect = target.getBoundingClientRect();
         menu.style.left = `${rect.left}px`;
         menu.style.top = `${rect.bottom + 5}px`;
-        
+
         // Add menu items
-        options.forEach(option => {
+        options.forEach((option) => {
             if (option.condition && !option.condition()) return;
-            
+
             const item = document.createElement('div');
             item.className = 'context-menu-item';
             item.innerHTML = `${option.icon} ${option.name}`;
@@ -2325,7 +2325,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             });
             menu.appendChild(item);
         });
-        
+
         // Add close listener
         const closeMenu = (e) => {
             if (!menu.contains(e.target)) {
@@ -2333,7 +2333,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                 document.removeEventListener('click', closeMenu);
             }
         };
-        
+
         document.body.appendChild(menu);
         document.addEventListener('click', closeMenu);
     }
@@ -2345,7 +2345,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     /** @override */
     _createCustomContextMenus() {
         super._createCustomContextMenus();
-        
+
         // Note: Utility menu is now handled via action instead of context menu
     }
 
@@ -2357,16 +2357,16 @@ export default class AcolyteSheet extends BaseActorSheet {
     _getUtilityMenuOptions() {
         return [
             {
-                name: game.i18n.localize("RT.Utility.SetupCharacteristics"),
+                name: game.i18n.localize('RT.Utility.SetupCharacteristics'),
                 icon: '<i class="fa-solid fa-dice-d20"></i>',
-                callback: () => CharacteristicSetupDialog.open(this.actor)
+                callback: () => CharacteristicSetupDialog.open(this.actor),
             },
             {
-                name: game.i18n.localize("RT.Utility.SetupOriginPath"),
+                name: game.i18n.localize('RT.Utility.SetupOriginPath'),
                 icon: '<i class="fa-solid fa-route"></i>',
                 callback: () => this._openOriginPathBuilder(),
-                condition: () => !!game.rt?.openOriginPathBuilder
-            }
+                condition: () => !!game.rt?.openOriginPathBuilder,
+            },
         ];
     }
 
@@ -2379,10 +2379,10 @@ export default class AcolyteSheet extends BaseActorSheet {
             if (game.rt?.openOriginPathBuilder) {
                 await game.rt.openOriginPathBuilder(this.actor);
             } else {
-                ui.notifications.warn(game.i18n.localize("RT.Utility.OriginPathNotAvailable"));
+                ui.notifications.warn(game.i18n.localize('RT.Utility.OriginPathNotAvailable'));
             }
         } catch (error) {
-            ui.notifications.error(`${game.i18n.localize("RT.Utility.OriginPathError")}: ${error.message}`);
+            ui.notifications.error(`${game.i18n.localize('RT.Utility.OriginPathError')}: ${error.message}`);
             console.error('Origin Path Builder error:', error);
         }
     }
