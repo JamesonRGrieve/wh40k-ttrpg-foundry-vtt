@@ -384,8 +384,8 @@
 }
 
 .rt-col-name {
-    min-width: 0; /* override the larger min-width if necessary */
-    overflow: hidden;
+    width: auto;
+    min-width: 120px;
 }
 
 .rt-col-type {
@@ -395,17 +395,12 @@
 }
 
 .rt-col-weight {
-    width: 50px;
-    max-width: 50px;
-    min-width: 50px;
+    width: 80px;
+    max-width: 80px;
+    min-width: 80px;
     text-align: right;
 }
 
-.rt-col-status {
-    width: 90px;
-    max-width: 90px;
-    min-width: 90px;
-}
 
 .rt-col-actions {
     width: 40px;
