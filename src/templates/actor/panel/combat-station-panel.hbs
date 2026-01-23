@@ -38,14 +38,13 @@
                     </div>
                     <div class="rt-vital-stat-body">
                         <div class="rt-vital-readout">
-                            <span class="rt-vital-value">{{system.wounds.value}}</span>
-                            <span class="rt-vital-max-label">/ {{system.wounds.max}}</span>
+                            <span class="rt-combat-vital-value">{{system.wounds.value}}</span>
+                            <span class="rt-combat-vital-max-label">/ {{system.wounds.max}}</span>
                         </div>
                         <div class="rt-vital-bar-wrapper">
                             <div class="rt-vital-bar-track">
                                 <div class="rt-vital-bar-progress rt-wounds-progress" style="--progress: {{percent system.wounds.value system.wounds.max}}%"></div>
                             </div>
-                            <span class="rt-vital-percent">{{percent system.wounds.value system.wounds.max}}%</span>
                         </div>
                     </div>
                     {{#if (gt system.wounds.critical 0)}}
