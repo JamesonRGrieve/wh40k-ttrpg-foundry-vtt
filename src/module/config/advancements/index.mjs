@@ -9,6 +9,10 @@ import * as RogueTrader from './rogue-trader.mjs';
 import * as ArchMilitant from './arch-militant.mjs';
 import * as Astropath from './astropath.mjs';
 import * as Explorator from './explorator.mjs';
+import * as Missionary from './missionary.mjs';
+import * as Navigator from './navigator.mjs';
+import * as Seneschal from './seneschal.mjs';
+import * as VoidMaster from './void-master.mjs';
 
 /**
  * Registry of all career advancement configurations
@@ -18,7 +22,11 @@ const CAREER_REGISTRY = {
   rogueTrader: RogueTrader,
   archMilitant: ArchMilitant,
   astropath: Astropath,
-  explorator: Explorator
+  explorator: Explorator,
+  missionary: Missionary,
+  navigator: Navigator,
+  seneschal: Seneschal,
+  voidMaster: VoidMaster
 };
 
 /**
