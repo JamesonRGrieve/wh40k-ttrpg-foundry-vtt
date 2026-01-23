@@ -25,7 +25,7 @@
 // Left side contains vitals, armour, and weapons in a nested grid
 .rt-combat-left-side {
   display: grid;
-  grid-template-columns: minmax(220px, 250px) minmax(280px, 320px);  // Vitals + Armour
+  grid-template-columns: minmax(220px, 250px) 1fr;  // Vitals/armour + weapons
   gap: $rt-space-md;
   grid-auto-rows: min-content;
   
@@ -728,68 +728,11 @@
 .rt-panel-forcefield .rt-panel-header i { color: $rt-accent-powers; }
 
 // ============================================
-// REACTIONS PANEL
-// ============================================
-
-.rt-reactions-row {
-  display: flex;
-  gap: $rt-space-sm;
-}
-
-.rt-reaction-btn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: $rt-space-sm;
-  background: $rt-bg-paper;
-  border: 1px solid $rt-border-medium;
-  border-radius: $rt-radius-md;
-  cursor: pointer;
-  transition: all $rt-transition-fast;
-  
-  i {
-    font-size: 1rem;
-    color: $rt-accent-skills;
-  }
-  
-  &:hover {
-    border-color: $rt-accent-skills;
-    transform: translateY(-1px);
-  }
-}
-
-.rt-reaction-label {
-  font-size: $rt-font-size-xs;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-}
-
-.rt-reaction-target {
-  font-size: $rt-font-size-base;
-  font-weight: 700;
-  color: $rt-accent-skills;
-}
-
-// ============================================
 // COMBAT ACTIONS PANEL
 // ============================================
 
-.rt-combat-actions-panel {
-  margin-top: $rt-space-sm;
-}
-
-// Compact view (collapsed)
-.rt-actions-compact {
-  display: flex;
-  flex-direction: column;
-  gap: $rt-space-xs;
-}
-
 // Action groups
-.rt-actions-group {
+.rt-combat-actions-group {
   display: flex;
   flex-direction: column;
   gap: $rt-space-sm;
@@ -800,7 +743,7 @@
   }
 }
 
-.rt-actions-group-header {
+.rt-combat-actions-group-header {
   display: flex;
   align-items: center;
   gap: $rt-space-xs;
@@ -810,12 +753,12 @@
   border-radius: 0 4px 4px 0;
 }
 
-.rt-group-icon {
+.rt-combat-group-icon {
   font-size: 0.85rem;
   color: $rt-accent-gold;
 }
 
-.rt-actions-group-label {
+.rt-combat-actions-group-label {
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -824,23 +767,13 @@
 }
 
 // Action button grid
-.rt-actions-grid {
+.rt-combat-actions-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 6px;
 }
 
-.rt-actions-grid-2col {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.rt-actions-row {
-  display: flex;
-  gap: $rt-space-xs;
-}
-
 // Action button
-.rt-action-btn {
+.rt-combat-action-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -897,7 +830,7 @@
   }
 }
 
-.rt-action-name {
+.rt-combat-action-name {
   font-size: 0.65rem;
   font-weight: 600;
   text-align: center;
@@ -905,7 +838,7 @@
   color: $rt-text-primary;
 }
 
-.rt-action-type {
+.rt-combat-action-type {
   font-size: 0.55rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -914,7 +847,7 @@
   opacity: 0.8;
 }
 
-.rt-action-value {
+.rt-combat-action-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 0.85rem;
   font-weight: 700;
@@ -925,38 +858,29 @@
   border: 1px solid rgba(var(--action-color-rgb, 201, 162, 39), 0.3);
 }
 
-// Initiative-specific styling
-.rt-action-initiative {
-  .rt-action-value {
-    background: rgba($rt-accent-talents, 0.15);
-    border-color: rgba($rt-accent-talents, 0.4);
-    color: $rt-accent-talents;
-  }
-}
-
 // Action type colors
-.rt-action-attack {
+.rt-combat-action-attack {
   --action-color: #{$rt-accent-combat};
   --action-color-rgb: 168, 32, 32;
 }
 
-.rt-action-movement {
+.rt-combat-action-movement {
   --action-color: #{$rt-accent-equipment};
   --action-color-rgb: 58, 95, 95;
 }
 
-.rt-action-reaction {
+.rt-combat-action-reaction {
   --action-color: #{$rt-accent-skills};
   --action-color-rgb: 42, 122, 154;
 }
 
-.rt-action-utility {
+.rt-combat-action-utility {
   --action-color: #{$rt-accent-talents};
   --action-color-rgb: 160, 120, 24;
 }
 
 // Info box
-.rt-actions-info {
+.rt-combat-actions-info {
   display: flex;
   align-items: flex-start;
   gap: $rt-space-xs;
@@ -980,69 +904,6 @@
     color: $rt-text-primary;
     font-weight: 700;
   }
-}
-
-// ============================================
-// INITIATIVE PANEL
-// ============================================
-
-// ============================================
-// QUICK ACTIONS
-// ============================================
-
-.rt-panel-quick-actions {
-  .rt-panel-body {
-    display: flex;
-    flex-direction: column;
-    gap: $rt-space-md;
-  }
-}
-
-.rt-initiative-inline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: $rt-space-sm;
-  background: rgba($rt-accent-gold, 0.08);
-  border-radius: $rt-radius-md;
-  border: 1px solid rgba($rt-accent-gold, 0.2);
-}
-
-.rt-initiative-label {
-  font-size: $rt-font-size-sm;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-text-secondary);
-}
-
-.rt-quick-actions-row {
-  display: flex;
-  gap: $rt-space-sm;
-}
-
-.rt-quick-action-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $rt-space-xs;
-  padding: $rt-space-sm;
-  background: linear-gradient(180deg, $rt-accent-combat 0%, darken($rt-accent-combat, 10%) 100%);
-  border: none;
-  border-radius: $rt-radius-md;
-  color: #fff;
-  font-size: $rt-font-size-sm;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all $rt-transition-fast;
-  
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: $rt-shadow-md;
-  }
-  
-  i { font-size: 0.9em; }
 }
 
 // ============================================
@@ -1114,111 +975,6 @@
 }
 
 // ============================================
-// MOVEMENT PANEL
-// ============================================
-
-.rt-movement-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.rt-move-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  min-height: 50px;
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.9) 0%, 
-    rgba(245, 243, 238, 0.7) 100%);
-  border: 2px solid rgba(74, 55, 40, 0.15);
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: $rt-accent-combat;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-  
-  &:hover {
-    background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 1) 0%, 
-      rgba(250, 245, 235, 0.9) 100%);
-    border-color: rgba(168, 32, 32, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    
-    &::before {
-      opacity: 1;
-    }
-    
-    .rt-move-icon {
-      transform: scale(1.15);
-      color: $rt-accent-combat;
-    }
-    
-    .rt-move-value {
-      color: $rt-accent-combat;
-    }
-  }
-}
-
-.rt-move-icon {
-  font-size: 1.2rem;
-  color: rgba(168, 32, 32, 0.6);
-  flex-shrink: 0;
-  transition: all 0.2s ease;
-}
-
-.rt-move-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  flex: 1;
-  min-width: 0;
-}
-
-.rt-move-label {
-  font-size: 0.5rem;
-  font-weight: 700;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  line-height: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.rt-move-value {
-  font-family: 'Modesto Condensed', serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  line-height: 1;
-  transition: color 0.2s ease;
-  white-space: nowrap;
-}
-
-// Specific movement type styling
-.rt-move-half .rt-move-icon { color: rgba(168, 32, 32, 0.5); }
-.rt-move-full .rt-move-icon { color: rgba(168, 32, 32, 0.6); }
-.rt-move-charge .rt-move-icon { color: rgba(168, 32, 32, 0.75); }
-.rt-move-run .rt-move-icon { color: rgba(168, 32, 32, 0.9); }
-
-// ============================================
 // FORCE FIELD
 // ============================================
 
@@ -1257,8 +1013,7 @@
 // ============================================
 
 .rt-panel-arsenal {
-  margin-top: $rt-space-lg;
-  padding-top: $rt-space-md;
+  margin-top: $rt-space-sm;
   border-top: 2px solid rgba($rt-accent-talents, 0.15);
   position: relative;
   display: flex;
