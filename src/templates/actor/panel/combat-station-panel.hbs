@@ -330,7 +330,6 @@
                             <div class="table-cell">Class</div>
                             <div class="table-cell">Damage</div>
                             <div class="table-cell">Range</div>
-                            <div class="table-cell--last">Actions</div>
                         </div>
                         {{#each actor.items as |item|}}
                         {{#if item.isWeapon}}
@@ -349,17 +348,6 @@
                             <div class="table-cell">{{item.system.class}}</div>
                             <div class="table-cell">{{item.system.damageLabel}}</div>
                             <div class="table-cell">{{item.system.rangeLabel}}</div>
-                            <div class="table-cell--last">
-                                <label class="rt-control-button item-roll" data-item-id="{{item.id}}" title="Attack Roll">
-                                    <i class="fas fa-dice-d20"></i>
-                                </label>
-                                <label class="rt-control-button item-damage" data-item-id="{{item.id}}" title="Damage Roll">
-                                    <i class="fas fa-bolt"></i>
-                                </label>
-                                <label class="rt-control-button item-delete" data-item-id="{{item.id}}" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </label>
-                            </div>
                         </div>
                         {{/if}}
                         {{/each}}

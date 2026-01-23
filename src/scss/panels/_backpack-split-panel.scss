@@ -22,25 +22,9 @@
 
 .rt-backpack-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: $rt-space-md $rt-space-lg;
     background: linear-gradient(180deg, rgba($rt-color-gold, 0.12), rgba($rt-color-gold, 0.04));
     border-bottom: 1px solid $rt-border-light;
-}
-
-.rt-backpack-title {
-    display: flex;
-    align-items: center;
-    gap: $rt-space-sm;
-    font-family: $rt-font-heading;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: $rt-color-gold;
-
-    i {
-        font-size: 1.2rem;
-    }
 }
 
 .rt-encumbrance-display {
@@ -711,15 +695,6 @@
    Header
    ======================================== */
 
-.rt-backpack-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: $rt-space-md $rt-space-lg;
-    background: linear-gradient(180deg, rgba($rt-color-gold, 0.12), rgba($rt-color-gold, 0.04));
-    border-bottom: 1px solid $rt-border-light;
-}
-
 .rt-backpack-title {
     display: flex;
     align-items: center;
@@ -737,6 +712,7 @@
 .rt-encumbrance-display {
     display: flex;
     align-items: center;
+    align-self: flex-end;
     gap: $rt-space-sm;
 }
 
@@ -910,6 +886,7 @@
 }
 
 .rt-column-body {
+    display: flex;
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
