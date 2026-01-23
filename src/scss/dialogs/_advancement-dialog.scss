@@ -1,0 +1,529 @@
+// ============================================
+// Advancement Dialog Styles
+// ============================================
+// Modern, sleek interface for character advancement purchases
+// Uses .rt-adv prefix for all classes
+
+// ============================================
+// Variables
+// ============================================
+$adv-card-bg: rgba(40, 35, 28, 0.8);
+$adv-card-border: rgba(120, 100, 80, 0.4);
+$adv-card-hover-border: $rt-color-gold;
+$adv-purchased-glow: rgba(45, 80, 22, 0.6);
+$adv-blocked-opacity: 0.5;
+$adv-transition-fast: 150ms ease;
+$adv-transition-normal: 250ms ease;
+
+// ============================================
+// Main Container
+// ============================================
+.advancement-dialog {
+  background: var(--color-bg-secondary);
+  
+  .window-content {
+    padding: 0;
+    background: transparent;
+  }
+}
+
+.rt-adv {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+// ============================================
+// Header with XP Display
+// ============================================
+.rt-adv__header {
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(30, 25, 20, 0.95), rgba(40, 35, 28, 0.9));
+  border-bottom: 2px solid $rt-color-gold-dark;
+}
+
+.rt-adv__xp-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rt-adv__xp-bar {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.rt-adv__xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, $rt-color-gold-dark, $rt-color-gold);
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: xp-shimmer 2s infinite;
+  }
+}
+
+@keyframes xp-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.rt-adv__xp-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.rt-adv__xp-available {
+  color: $rt-color-gold;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  
+  i {
+    color: $rt-color-gold-light;
+  }
+  
+  strong {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+}
+
+.rt-adv__xp-total {
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+}
+
+// ============================================
+// Tab Navigation
+// ============================================
+.rt-adv__tabs {
+  display: flex;
+  gap: 0;
+  background: rgba(30, 25, 20, 0.8);
+  border-bottom: 1px solid $adv-card-border;
+}
+
+.rt-adv__tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all $adv-transition-fast;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-primary);
+  }
+  
+  &--active {
+    color: $rt-color-gold;
+    border-bottom-color: $rt-color-gold;
+    background: rgba(201, 162, 39, 0.1);
+    
+    i {
+      color: $rt-color-gold-light;
+    }
+  }
+  
+  i {
+    font-size: 1rem;
+  }
+}
+
+// ============================================
+// Content Area
+// ============================================
+.rt-adv__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.rt-adv__panel {
+  animation: fadeIn $adv-transition-normal;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ============================================
+// Characteristic Cards Grid
+// ============================================
+.rt-adv__char-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.rt-adv__char-card {
+  background: $adv-card-bg;
+  border: 1px solid $adv-card-border;
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all $adv-transition-fast;
+  
+  &:hover:not(&--maxed) {
+    border-color: $adv-card-hover-border;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  &--maxed {
+    opacity: 0.7;
+    background: rgba(45, 80, 22, 0.15);
+    border-color: rgba(45, 80, 22, 0.4);
+  }
+  
+  &--purchased {
+    animation: purchasePulse 0.6s ease-out;
+  }
+}
+
+@keyframes purchasePulse {
+  0% { box-shadow: 0 0 0 0 $adv-purchased-glow; }
+  50% { box-shadow: 0 0 20px 10px $adv-purchased-glow; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.rt-adv__char-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.rt-adv__char-abbr {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $rt-color-gold;
+  font-family: 'Cinzel', serif;
+}
+
+.rt-adv__char-value {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.rt-adv__char-name {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+// Tier Progress Dots
+.rt-adv__char-tiers {
+  display: flex;
+  gap: 6px;
+  margin: 0.3rem 0;
+}
+
+.rt-adv__tier-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid $adv-card-border;
+  transition: all $adv-transition-fast;
+  
+  &--purchased {
+    background: $rt-color-gold;
+    border-color: $rt-color-gold-light;
+    box-shadow: 0 0 4px $rt-color-gold;
+  }
+  
+  &--current {
+    border-color: $rt-color-gold;
+    animation: currentPulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes currentPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4); }
+  50% { box-shadow: 0 0 6px 2px rgba(201, 162, 39, 0.6); }
+}
+
+// Purchase Button
+.rt-adv__char-btn {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
+  border: 1px solid $rt-color-gold-dark;
+  border-radius: 4px;
+  color: $rt-color-gold-light;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: all $adv-transition-fast;
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));
+    border-color: $rt-color-gold;
+    transform: scale(1.02);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.rt-adv__char-tier-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.rt-adv__char-cost {
+  font-weight: 600;
+  
+  &--expensive {
+    color: $rt-color-crimson-light;
+  }
+}
+
+.rt-adv__char-status {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  
+  &--maxed {
+    color: rgba(45, 80, 22, 1);
+    background: rgba(45, 80, 22, 0.2);
+    
+    i {
+      color: $rt-color-gold;
+    }
+  }
+  
+  &--cant-afford {
+    color: var(--color-text-secondary);
+    opacity: 0.7;
+  }
+}
+
+// ============================================
+// Skills & Talents List
+// ============================================
+.rt-adv__advance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rt-adv__advance-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  background: $adv-card-bg;
+  border: 1px solid $adv-card-border;
+  border-radius: 6px;
+  transition: all $adv-transition-fast;
+  
+  &:hover:not(&--owned):not(&--blocked) {
+    border-color: $adv-card-hover-border;
+    background: rgba(50, 45, 35, 0.9);
+  }
+  
+  &--owned {
+    background: rgba(45, 80, 22, 0.15);
+    border-color: rgba(45, 80, 22, 0.3);
+    opacity: 0.8;
+  }
+  
+  &--blocked {
+    opacity: $adv-blocked-opacity;
+    
+    .rt-adv__advance-name {
+      color: var(--color-text-secondary);
+    }
+  }
+  
+  &--cant-afford {
+    .rt-adv__advance-cost {
+      color: $rt-color-crimson-light;
+    }
+  }
+  
+  &--purchased {
+    animation: purchasePulse 0.6s ease-out;
+  }
+}
+
+.rt-adv__advance-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.rt-adv__advance-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.rt-adv__advance-badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: fit-content;
+  
+  &--owned {
+    background: rgba(45, 80, 22, 0.3);
+    color: #7cb342;
+  }
+}
+
+.rt-adv__advance-prereq {
+  font-size: 0.7rem;
+  color: $rt-color-warning;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: help;
+  
+  i {
+    font-size: 0.65rem;
+  }
+}
+
+.rt-adv__advance-btn {
+  padding: 0.4rem 0.8rem;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
+  border: 1px solid $rt-color-gold-dark;
+  border-radius: 4px;
+  color: $rt-color-gold-light;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $adv-transition-fast;
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));
+    border-color: $rt-color-gold;
+    transform: scale(1.05);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.rt-adv__advance-blocked {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-secondary);
+  cursor: help;
+  
+  i {
+    color: $rt-color-warning;
+  }
+}
+
+.rt-adv__advance-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-text-secondary);
+  
+  i {
+    color: #7cb342;
+  }
+  
+  &--cant-afford {
+    i {
+      color: $rt-color-crimson-light;
+    }
+  }
+}
+
+.rt-adv__advance-cost {
+  font-weight: 500;
+}
+
+// ============================================
+// Empty State
+// ============================================
+.rt-adv__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  
+  i {
+    font-size: 3rem;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+// ============================================
+// Reduced Motion
+// ============================================
+@media (prefers-reduced-motion: reduce) {
+  .rt-adv__xp-fill::after {
+    animation: none;
+  }
+  
+  .rt-adv__tier-dot--current {
+    animation: none;
+  }
+  
+  .rt-adv__char-card--purchased,
+  .rt-adv__advance-card--purchased {
+    animation: none;
+  }
+  
+  .rt-adv__panel {
+    animation: none;
+  }
+}
