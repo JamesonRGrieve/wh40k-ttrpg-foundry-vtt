@@ -265,9 +265,7 @@
   width: 100px;
 }
 
-
-
-.rt-action-btn {
+.rt-talent-action-btn {
   background: none;
   border: none;
   color: var(--rt-text-muted);
@@ -285,11 +283,11 @@
 
   &.active {
     color: $rt-color-gold;
-
     i {
       filter: drop-shadow(0 0 2px rgba($rt-color-gold, 0.5));
     }
   }
+
   &.rt-btn-expand {
     i {
       transition: transform 0.2s ease;
