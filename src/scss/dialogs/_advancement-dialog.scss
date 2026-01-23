@@ -108,6 +108,71 @@ $adv-transition-normal: 250ms ease;
 }
 
 // ============================================
+// No Career Blocked State
+// ============================================
+.rt-adv__blocked-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  flex: 1;
+  animation: fadeIn $adv-transition-normal;
+}
+
+.rt-adv__blocked-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(139, 105, 20, 0.15);
+  border: 2px dashed rgba(139, 105, 20, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  
+  i {
+    font-size: 2.5rem;
+    color: $rt-color-warning;
+    opacity: 0.7;
+  }
+}
+
+.rt-adv__blocked-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: $rt-color-gold;
+  margin: 0 0 0.75rem 0;
+}
+
+.rt-adv__blocked-message {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  max-width: 360px;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+}
+
+.rt-adv__blocked-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(201, 162, 39, 0.1);
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: $rt-color-gold-light;
+  
+  i {
+    font-size: 1rem;
+    color: $rt-color-gold;
+  }
+}
+
+// ============================================
 // Tab Navigation
 // ============================================
 .rt-adv__tabs {
@@ -390,14 +455,37 @@ $adv-transition-normal: 250ms ease;
 
 .rt-adv__advance-info {
   display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .rt-adv__advance-name {
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--color-text-primary);
+}
+
+.rt-adv__advance-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all $adv-transition-fast;
+  
+  i {
+    font-size: 0.7rem;
+  }
+  
+  &:hover {
+    color: $rt-color-gold;
+    background: rgba(201, 162, 39, 0.15);
+  }
 }
 
 .rt-adv__advance-badge {

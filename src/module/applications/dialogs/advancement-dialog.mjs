@@ -39,7 +39,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     actions: {
       purchaseCharacteristic: AdvancementDialog.#purchaseCharacteristic,
       purchaseAdvance: AdvancementDialog.#purchaseAdvance,
-      switchTab: AdvancementDialog.#switchTab
+      switchTab: AdvancementDialog.#switchTab,
+      openCompendiumItem: AdvancementDialog.#openCompendiumItem
     }
   };
 
@@ -115,6 +116,23 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+
+    // Check if character has completed origin path (has career selected)
+    const originCareer = this.actor.system.originPath?.career;
+    context.hasCareer = !!originCareer && originCareer.trim() !== '';
+    context.originCareerName = originCareer || null;
+
+    // If no career, show blocked state
+    if (!context.hasCareer) {
+      context.xp = {
+        total: this.actor.system.experience?.total ?? 0,
+        used: this.actor.system.experience?.used ?? 0,
+        available: getAvailableXP(this.actor),
+        usedPercent: 0
+      };
+      return context;
+    }
+
     const career = getCareerAdvancements(this.careerKey);
 
     // XP Summary
@@ -582,5 +600,54 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     // Create the item on the actor
     await this.actor.createEmbeddedDocuments('Item', [talentData]);
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Open compendium item sheet for reference
+   * @param {Event} event
+   * @param {HTMLElement} target
+   */
+  static async #openCompendiumItem(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const itemName = target.dataset.name;
+    const itemType = target.dataset.type;
+    
+    if (!itemName) return;
+
+    // Search for the item in compendiums
+    for (const pack of game.packs.filter(p => p.documentName === 'Item')) {
+      const index = await pack.getIndex({ fields: ['name', 'type'] });
+      const match = index.find(i => 
+        i.type === itemType && 
+        i.name.toLowerCase() === itemName.toLowerCase()
+      );
+      
+      if (match) {
+        const doc = await pack.getDocument(match._id);
+        doc.sheet.render(true);
+        return;
+      }
+    }
+
+    // If not found as exact type, try searching all items
+    for (const pack of game.packs.filter(p => p.documentName === 'Item')) {
+      const index = await pack.getIndex({ fields: ['name', 'type'] });
+      const match = index.find(i => 
+        i.name.toLowerCase() === itemName.toLowerCase()
+      );
+      
+      if (match) {
+        const doc = await pack.getDocument(match._id);
+        doc.sheet.render(true);
+        return;
+      }
+    }
+
+    // Not found
+    ui.notifications.warn(game.i18n.format('RT.Advancement.ItemNotFound', { name: itemName }));
   }
 }
