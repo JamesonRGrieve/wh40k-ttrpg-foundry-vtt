@@ -19,6 +19,21 @@
     </div>
   </header>
 
+  {{!-- No Career Selected - Blocked State --}}
+  {{#unless hasCareer}}
+  <div class="rt-adv__blocked-state">
+    <div class="rt-adv__blocked-icon">
+      <i class="fas fa-route"></i>
+    </div>
+    <h3 class="rt-adv__blocked-title">{{localize "RT.Advancement.NoCareerTitle"}}</h3>
+    <p class="rt-adv__blocked-message">{{localize "RT.Advancement.NoCareerMessage"}}</p>
+    <div class="rt-adv__blocked-hint">
+      <i class="fas fa-info-circle"></i>
+      <span>{{localize "RT.Advancement.NoCareerHint"}}</span>
+    </div>
+  </div>
+  {{else}}
+
   {{!-- Tab Navigation --}}
   <nav class="rt-adv__tabs">
     {{#each tabs}}
@@ -104,6 +119,13 @@
         >
           <div class="rt-adv__advance-info">
             <span class="rt-adv__advance-name">{{this.displayName}}</span>
+            <a class="rt-adv__advance-link" 
+               data-action="openCompendiumItem" 
+               data-name="{{this.displayName}}" 
+               data-type="skill"
+               title="{{localize 'RT.Advancement.ViewInCompendium'}}">
+              <i class="fas fa-external-link-alt"></i>
+            </a>
             {{#if this.owned}}
             <span class="rt-adv__advance-badge rt-adv__advance-badge--owned">
               <i class="fas fa-check"></i> {{localize "RT.Advancement.Owned"}}
@@ -162,6 +184,13 @@
         >
           <div class="rt-adv__advance-info">
             <span class="rt-adv__advance-name">{{this.displayName}}</span>
+            <a class="rt-adv__advance-link" 
+               data-action="openCompendiumItem" 
+               data-name="{{this.displayName}}" 
+               data-type="talent"
+               title="{{localize 'RT.Advancement.ViewInCompendium'}}">
+              <i class="fas fa-external-link-alt"></i>
+            </a>
             {{#if this.owned}}
             <span class="rt-adv__advance-badge rt-adv__advance-badge--owned">
               <i class="fas fa-check"></i> {{localize "RT.Advancement.Owned"}}
@@ -213,4 +242,5 @@
     {{/if}}
 
   </div>
+  {{/unless}}
 </div>

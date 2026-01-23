@@ -1566,6 +1566,11 @@
         "RequiresPrereq": "Requires prerequisite",
         "NoSkillsAvailable": "No skills available at this rank",
         "NoTalentsAvailable": "No talents available at this rank",
+        "NoCareerTitle": "No Career Selected",
+        "NoCareerMessage": "You must complete your Origin Path and select a career before you can purchase advancements.",
+        "NoCareerHint": "Open the Biography tab and use the Origin Path Builder",
+        "ViewInCompendium": "View in Compendium",
+        "ItemNotFound": "Could not find {name} in compendiums",
         "Purchased": "Purchased {name} for {cost} XP",
         "PurchasedCharacteristic": "Purchased {char} ({tier}) for {cost} XP",
         "Prereq": {
