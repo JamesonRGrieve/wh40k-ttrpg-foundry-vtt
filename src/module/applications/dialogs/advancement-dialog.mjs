@@ -10,6 +10,7 @@ import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.m
 import { 
   getCareerAdvancements, 
   getNextCharacteristicCost,
+  getCareerKeyFromName,
   TIER_ORDER 
 } from '../../config/advancements/index.mjs';
 
@@ -119,7 +120,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     // Check if character has completed origin path (has career selected)
     const originCareer = this.actor.system.originPath?.career;
-    context.hasCareer = !!originCareer && originCareer.trim() !== '';
+    const careerKey = getCareerKeyFromName(originCareer);
+    context.hasCareer = !!careerKey;
     context.originCareerName = originCareer || null;
 
     // If no career, show blocked state
@@ -133,6 +135,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
       return context;
     }
 
+    // Use the mapped career key
+    this.careerKey = careerKey;
     const career = getCareerAdvancements(this.careerKey);
 
     // XP Summary

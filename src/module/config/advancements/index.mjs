@@ -120,6 +120,46 @@ export function getAvailableCareers() {
 }
 
 /**
+ * Map a career name (from origin path) to its registry key
+ * @param {string} careerName - The career name (e.g., "Arch-Militant", "Rogue Trader")
+ * @returns {string|null} The career key or null if not found
+ */
+export function getCareerKeyFromName(careerName) {
+  if (!careerName) return null;
+  
+  const normalized = careerName.toLowerCase().trim();
+  
+  // Direct mapping of common name variations to keys
+  const nameToKey = {
+    'rogue trader': 'rogueTrader',
+    'roguetrader': 'rogueTrader',
+    'arch-militant': 'archMilitant',
+    'archmilitant': 'archMilitant',
+    'arch militant': 'archMilitant',
+    'astropath': 'astropath',
+    'astropath transcendent': 'astropath',
+    'explorator': 'explorator',
+    'missionary': 'missionary',
+    'navigator': 'navigator',
+    'seneschal': 'seneschal',
+    'void-master': 'voidMaster',
+    'voidmaster': 'voidMaster',
+    'void master': 'voidMaster'
+  };
+  
+  if (nameToKey[normalized]) {
+    return nameToKey[normalized];
+  }
+  
+  // Fallback: check if it matches a key directly
+  if (CAREER_REGISTRY[careerName]) {
+    return careerName;
+  }
+  
+  return null;
+}
+
+/**
  * Check if a career exists in the registry
  * @param {string} careerKey - The career key to check
  * @returns {boolean}
