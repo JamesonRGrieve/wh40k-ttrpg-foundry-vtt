@@ -342,6 +342,7 @@
 .rt-item-row {
     cursor: grab;
     transition: background 0.15s ease;
+    width: 100%;
     height: 28px;
 
     &:hover {
