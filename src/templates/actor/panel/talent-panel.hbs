@@ -68,19 +68,16 @@
                 </div>
                 
                 <div class="rt-row-actions">
-                    <button type="button" class="rt-action-btn" data-action="toggleItemPreview" data-item-id="{{talent.id}}" title="Quick Preview">
-                        <i class="fas fa-chevron-up"></i>
-                    </button>
-                    <button type="button" class="rt-action-btn {{#if talent.isFavorite}}active{{/if}}"
+                    <button type="button" class="rt-talent-action-btn {{#if talent.isFavorite}}active{{/if}}"
                             data-action="toggleFavoriteTalent" data-item-id="{{talent.id}}"
                             title="{{#if talent.isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                         <i class="{{#if talent.isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
                     </button>
-                    <button type="button" class="rt-action-btn" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Send to Chat">
+                    <button type="button" class="rt-talent-action-btn" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Send to Chat">
                         <i class="fas fa-comment"></i>
                     </button>
-                    <button type="button" class="rt-action-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
-                        <i class="fas fa-trash"></i>
+                    <button type="button" class="rt-talent-action-btn" data-action="toggleItemPreview" data-item-id="{{talent.id}}" title="Quick Preview">
+                        <i class="fas fa-chevron-up"></i>
                     </button>
                 </div>
             </div>
