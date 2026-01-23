@@ -339,7 +339,7 @@
     }
 }
 
-.rt-item-row {
+.rt-backpack-item-row {
     cursor: grab;
     transition: background 0.15s ease;
     width: 100%;
@@ -368,8 +368,6 @@
     }
 
     td {
-        display: table-cell;
-        box-sizing: border-box;
         padding: 2px 6px;
         vertical-align: middle;
         overflow: hidden;
