@@ -262,7 +262,9 @@ Reusable partials in `templates/item/panel/`:
 
 ### Class Naming
 
-All classes use `.rt-` prefix. Pattern: `.rt-{component}--{modifier}`
+All classes use `.rt-{panel_abbreviation}` prefix. 
+YOU MUST also prepend the panel abbreviation for uniqueness.
+Pattern: `.rt-{panel_abbreviation}_{component}--{modifier}`
 
 ### Template Context Rule
 
