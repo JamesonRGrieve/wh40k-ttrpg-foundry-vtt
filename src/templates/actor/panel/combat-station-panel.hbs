@@ -260,26 +260,26 @@
                     </div>
                     <div class="rt-vital-stat-body">
                         <div class="rt-mobility-speeds-inline">
-                            <div class="rt-speed-inline rt-speed-half">
+                            <button type="button" class="rt-speed-inline rt-speed-half" data-action="vocalizeMovement" data-movement-type="half" title="Click to announce movement">
                                 <i class="fas fa-walking"></i>
                                 <span class="rt-speed-value">{{system.movement.half}}m</span>
                                 <span class="rt-speed-label">Half</span>
-                            </div>
-                            <div class="rt-speed-inline rt-speed-full">
+                            </button>
+                            <button type="button" class="rt-speed-inline rt-speed-full" data-action="vocalizeMovement" data-movement-type="full" title="Click to announce movement">
                                 <i class="fas fa-shoe-prints"></i>
                                 <span class="rt-speed-value">{{system.movement.full}}m</span>
                                 <span class="rt-speed-label">Full</span>
-                            </div>
-                            <div class="rt-speed-inline rt-speed-charge">
+                            </button>
+                            <button type="button" class="rt-speed-inline rt-speed-charge" data-action="vocalizeMovement" data-movement-type="charge" title="Click to announce movement">
                                 <i class="fas fa-running"></i>
                                 <span class="rt-speed-value">{{system.movement.charge}}m</span>
                                 <span class="rt-speed-label">Charge</span>
-                            </div>
-                            <div class="rt-speed-inline rt-speed-run">
+                            </button>
+                            <button type="button" class="rt-speed-inline rt-speed-run" data-action="vocalizeMovement" data-movement-type="run" title="Click to announce movement">
                                 <i class="fas fa-wind"></i>
                                 <span class="rt-speed-value">{{system.movement.run}}m</span>
                                 <span class="rt-speed-label">Run</span>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -332,12 +332,7 @@
                         </div>
                         {{#each actor.items as |item|}}
                         {{#if item.isWeapon}}
-                        <div class="table-row item-drag {{#if item.system.equipped}}rt-row-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
-                            <div class="table-cell--settingstoggle">
-                                <label class="rt-control-button item-edit" data-item-id="{{item.id}}">
-                                    <i class="fas fa-cog"></i>
-                                </label>
-                            </div>
+                        <div class="table-row item-drag item-edit {{#if item.system.equipped}}rt-row-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
                             <div class="table-cell--left">
                                 <span class="rt-weapon-name-cell">
                                     {{#if item.system.equipped}}<i class="fas fa-check-circle rt-equipped-icon"></i>{{/if}}
