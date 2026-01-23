@@ -3,15 +3,12 @@
 
 <div class="rt-panel rt-panel-backpack-split">
     {{!-- Panel Header with Encumbrance Bar --}}
-    <div class="rt-panel-header rt-backpack-header">
-        <div class="rt-backpack-title">
-            <i class="fas fa-boxes"></i>
-            <span class="rt-panel-title">Inventory</span>
-        </div>
+    <div class="rt-panel-header">
+        <span class="rt-panel-title"><i class="fas fa-boxes"></i> Inventory</span>
         <div class="rt-encumbrance-display">
             <span class="rt-enc-label">Carry:</span>
             <div class="rt-encumbrance-bar-container">
-                <div class="rt-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}rt-enc-danger{{else if (gte encumbrancePercent 75)}}rt-enc-warning{{else if (gte encumbrancePercent 50)}}rt-enc-caution{{/if}}" 
+                <div class="rt-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}rt-enc-danger{{else if (gte encumbrancePercent 75)}}rt-enc-warning{{else if (gte encumbrancePercent 50)}}rt-enc-caution{{/if}}"
                      style="width: {{encumbrancePercent}}%"></div>
             </div>
             <span class="rt-enc-value">{{actor.encumbrance.current}} / {{actor.encumbrance.max}} kg</span>
@@ -66,7 +63,6 @@
                                 <th class="rt-col-name">Item</th>
                                 <th class="rt-col-type">Type</th>
                                 <th class="rt-col-weight">Weight</th>
-                                <th class="rt-col-status">Status</th>
                             </tr>
                         </thead>
                         <tbody class="item-drop">
@@ -91,21 +87,6 @@
                                     <span class="rt-item-weight">{{item.system.weight}}</span>
                                     {{else}}
                                     <span class="rt-item-weight rt-weight-none">—</span>
-                                    {{/if}}
-                                </td>
-                                <td class="rt-col-status">
-                                    {{#if item.system.equipped}}
-                                    <span class="rt-status-badge rt-badge-equipped">
-                                        <i class="fas fa-check-circle"></i> Equipped
-                                    </span>
-                                    {{else if item.system.inBackpack}}
-                                    <span class="rt-status-badge rt-badge-backpack">
-                                        <i class="fas fa-suitcase"></i> Stowed
-                                    </span>
-                                    {{else}}
-                                    <span class="rt-status-badge rt-badge-carried">
-                                        <i class="fas fa-user"></i> Carried
-                                    </span>
                                     {{/if}}
                                 </td>
                             </tr>

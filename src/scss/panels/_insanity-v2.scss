@@ -634,27 +634,6 @@
     }
   }
 
-  // Drop zone styling (matches purple/brain theme)
-  .rt-insanity-edit-section .rt-dropzone {
-    .rt-dropzone-icon {
-      color: rgba(147, 51, 234, 0.5); // Purple brain icon
-    }
-    
-    .rt-dropzone-text {
-      color: rgba(147, 51, 234, 0.7);
-    }
-    
-    &:hover {
-      .rt-dropzone-icon {
-        color: rgba(147, 51, 234, 0.8);
-      }
-      
-      .rt-dropzone-text {
-        color: rgba(147, 51, 234, 0.9);
-      }
-    }
-  }
-
   // Empty state - lighter purple (no disorders yet)
   .rt-insanity-edit-section .rt-dropzone-empty {
     .rt-dropzone-icon {
