@@ -6,13 +6,19 @@
  */
 
 import * as RogueTrader from './rogue-trader.mjs';
+import * as ArchMilitant from './arch-militant.mjs';
+import * as Astropath from './astropath.mjs';
+import * as Explorator from './explorator.mjs';
 
 /**
  * Registry of all career advancement configurations
  * @type {Object<string, Object>}
  */
 const CAREER_REGISTRY = {
-  rogueTrader: RogueTrader
+  rogueTrader: RogueTrader,
+  archMilitant: ArchMilitant,
+  astropath: Astropath,
+  explorator: Explorator
 };
 
 /**
