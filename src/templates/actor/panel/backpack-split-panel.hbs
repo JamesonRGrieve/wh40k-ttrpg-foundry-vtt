@@ -67,7 +67,7 @@
                         </thead>
                         <tbody>
                             {{#each allCarriedItems as |item|}}
-                            <tr class="rt-item-row"
+                            <tr class="rt-backpack-item-row"
                                 data-item-id="{{item.id}}" 
                                 data-item-type="{{item.type}}"
                                 draggable="true">
@@ -123,7 +123,7 @@
             <div class="rt-column-body rt-dropzone-area" data-drop-zone="ship">
                 {{#if allShipItems.length}}
                 <div class="rt-inventory-table">
-                    <table class="rt-item-table">
+                    <table class="rt-backpack-item-table">
                         <thead>
                             <tr>
                                 <th class="rt-col-icon"></th>
