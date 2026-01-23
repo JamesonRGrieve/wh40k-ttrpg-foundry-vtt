@@ -15,7 +15,7 @@
             {{#each rollsBank}}
             <div class="csd-roll-chip {{#if isEmpty}}empty{{/if}} {{#if isAssigned}}assigned{{/if}}"
                  data-roll-index="{{index}}"
-                 draggable="{{#unless isEmpty}}{{#unless isAssigned}}true{{/unless}}{{/unless}}">
+                 {{#unless isEmpty}}{{#unless isAssigned}}draggable="true"{{/unless}}{{/unless}}>
                 <span class="csd-roll-value">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
                 <span class="csd-roll-label">{{localize "RT.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
             </div>
