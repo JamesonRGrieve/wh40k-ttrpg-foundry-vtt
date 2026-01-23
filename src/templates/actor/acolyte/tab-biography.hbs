@@ -173,15 +173,8 @@
                 {{/if}}
             </div>
         {{!-- End of Origin Path Panel --}}
-        </div>
-    {{!-- End of Left Column --}}
-        
-        {{!-- Right Column: Experience & Journal/Notes --}}
-        <div class="rt-bio-col">
-            {{!-- Experience Panel (moved above connections) --}}
-            {{> systems/rogue-trader/templates/actor/panel/experience-panel-v2.hbs}}
-            
-            {{!-- Connections Panel --}}
+
+        {{!-- Connections Panel --}}
             <div class="rt-panel">
                 <div class="rt-panel-header">
                     <span class="rt-panel-title"><i class="fas fa-users"></i> Connections</span>
@@ -223,6 +216,15 @@
                     </div>
                 </div>
             </div>
+        {{!-- End of Connections Panel --}}
+
+        </div>
+    {{!-- End of Left Column --}}
+        
+        {{!-- Right Column: Experience & Journal/Notes --}}
+        <div class="rt-bio-col">
+            {{!-- Experience Panel (moved above connections) --}}
+            {{> systems/rogue-trader/templates/actor/panel/experience-panel-v2.hbs}}
             
             {{!-- Character Notes / Journal --}}
             <div class="rt-panel rt-panel-journal">

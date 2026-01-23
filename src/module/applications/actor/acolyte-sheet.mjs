@@ -133,11 +133,6 @@ export default class AcolyteSheet extends BaseActorSheet {
             container: { classes: ['rt-body'], id: 'tab-body' },
             scrollable: [''],
         },
-        status: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tab-status.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
         combat: {
             template: 'systems/rogue-trader/templates/actor/acolyte/tab-combat.hbs',
             container: { classes: ['rt-body'], id: 'tab-body' },
@@ -163,11 +158,6 @@ export default class AcolyteSheet extends BaseActorSheet {
             container: { classes: ['rt-body'], id: 'tab-body' },
             scrollable: [''],
         },
-        dynasty: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tab-dynasty.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
         biography: {
             template: 'systems/rogue-trader/templates/actor/acolyte/tab-biography.hbs',
             container: { classes: ['rt-body'], id: 'tab-body' },
@@ -183,13 +173,11 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     static TABS = [
         { tab: 'overview', label: 'RT.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
-        { tab: 'status', label: 'RT.Tabs.Status', group: 'primary', cssClass: 'tab-status' },
-        { tab: 'combat', label: 'RT.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
         { tab: 'skills', label: 'RT.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
-        { tab: 'talents', label: 'RT.Tabs.Talents', group: 'primary', cssClass: 'tab-talents' },
+        { tab: 'combat', label: 'RT.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
         { tab: 'equipment', label: 'RT.Tabs.Equipment', group: 'primary', cssClass: 'tab-equipment' },
+        { tab: 'talents', label: 'RT.Tabs.Talents', group: 'primary', cssClass: 'tab-talents' },
         { tab: 'powers', label: 'RT.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
-        { tab: 'dynasty', label: 'RT.Tabs.Dynasty', group: 'primary', cssClass: 'tab-dynasty' },
         { tab: 'biography', label: 'RT.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
     ];
 

@@ -18,32 +18,6 @@
         </div>
     </div>
 
-    {{!-- Search & Filter Controls --}}
-    <div class="rt-backpack-controls">
-        <div class="rt-search-box">
-            <i class="fas fa-search rt-search-icon"></i>
-            <input type="search"
-                   class="rt-backpack-search"
-                   placeholder="Search all items..."
-                   data-action="filterEquipment"
-                   autocomplete="off">
-            <button type="button" class="rt-search-clear" data-action="clearEquipmentSearch" title="Clear search">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="rt-filter-controls">
-            <select class="rt-equipment-type-filter" data-action="filterEquipment">
-                <option value="">All Types</option>
-                <option value="weapon">Weapons</option>
-                <option value="armour">Armour</option>
-                <option value="gear">Gear</option>
-                <option value="cybernetic">Cybernetics</option>
-                <option value="forceField">Force Fields</option>
-                <option value="ammunition">Ammunition</option>
-            </select>
-        </div>
-    </div>
-
     {{!-- Split Panel Body --}}
     <div class="rt-panel-body rt-split-container">
         {{!-- LEFT: Backpack --}}
@@ -151,7 +125,7 @@
                                 </td>
                                 <td class="rt-col-weight">
                                     {{#if item.system.weight}}
-                                    <span class="rt-item-weight">{{item.system.weight}}</span>
+                                    <span class="rt-item-weight">{{item.system.weight}}kg</span>
                                     {{else}}
                                     <span class="rt-item-weight rt-weight-none">—</span>
                                     {{/if}}
