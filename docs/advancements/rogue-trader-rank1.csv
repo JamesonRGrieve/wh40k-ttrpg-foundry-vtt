@@ -1,0 +1,21 @@
+Advance Cost, Type, Prerequisites
+Awareness, 100, Skill,
+Command, 100, Skill,
+Commerce, 100, Skill,
+Charm, 100, Skill,
+Ciphers (Rogue Trader), 100, Skill,
+Common Lore (Imperium), 100, Skill,
+Common Lore (Rogue Traders), 100, Skill,
+Dodge, 100, Skill,
+Evaluate, 100, Skill,
+Literacy, 100, Skill,
+Pilot (Space Craft), 100, Skill,
+Scholastic Lore (Astromancy), 100, Skill,
+Secret Tongue (Rogue Trader), 100, Skill,
+Speak Language (Trader's Cant), 100, Skill,
+Air of Authority, 100, Talent, Fel 30
+Ambidextrous, 200, Talent, Ag 30
+Melee Weapon Training (Primitive), 200, Talent,
+Renowned Warrant, 200, Talent,
+Pistol Weapon Training (Universal), 500, Talent,
+Melee Weapon Training (Universal), 500, Talent,
