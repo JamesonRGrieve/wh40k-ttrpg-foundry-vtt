@@ -33,6 +33,7 @@ $adv-transition-normal: 250ms ease;
   height: 100%;
   gap: 0;
   font-family: 'Roboto', sans-serif;
+
 }
 
 // ============================================
@@ -112,6 +113,7 @@ $adv-transition-normal: 250ms ease;
 // ============================================
 .rt-adv__blocked-state {
   display: flex;
+  background: var(--rt-panel-bg);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -222,6 +224,7 @@ $adv-transition-normal: 250ms ease;
 // Content Area
 // ============================================
 .rt-adv__content {
+  background: var(--rt-panel-bg);
   flex: 1;
   overflow-y: auto;
   padding: 1rem;

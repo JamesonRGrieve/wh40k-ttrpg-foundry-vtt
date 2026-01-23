@@ -109,10 +109,10 @@ export default class CharacterData extends CreatureTemplate {
 
       // ===== EXPERIENCE =====
       experience: new SchemaField({
-        used: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-        total: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+        used: new NumberField({ required: true, initial: 4500, min: 0, integer: true }),
+        total: new NumberField({ required: true, initial: 5000, min: 0, integer: true }),
         // Derived
-        available: new NumberField({ required: true, initial: 0, integer: true }),
+        available: new NumberField({ required: true, initial: 500, integer: true }),
         spentCharacteristics: new NumberField({ required: true, initial: 0, integer: true }),
         spentSkills: new NumberField({ required: true, initial: 0, integer: true }),
         spentTalents: new NumberField({ required: true, initial: 0, integer: true }),
