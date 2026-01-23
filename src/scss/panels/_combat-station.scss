@@ -788,7 +788,7 @@
   border-radius: $rt-radius-md;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 60px;
+  min-height: 80px;
   min-width: 80px;
   position: relative;
   overflow: hidden;
@@ -1050,7 +1050,7 @@
   .table-row--head,
   .table-row {
     display: grid;
-    grid-template-columns: 1.5rem 2fr 1fr 1fr 1fr 4rem;
+    grid-template-columns: 1.5rem 2fr 1fr 1fr 4rem;
     align-items: center;
     gap: $rt-space-xs;
     padding: $rt-space-xs $rt-space-sm;

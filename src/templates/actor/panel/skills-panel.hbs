@@ -7,7 +7,7 @@
                 <div class="rt-skill-info">
                     <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <div class="rt-skill-name-wrapper">
-                        <button type="button" class="rt-skill-name" 
+                        <button type="button" class="rt-skill-name"
                                 data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                                 data-rt-tooltip="skill" data-rt-tooltip-data="{{entry.[1].tooltipData}}"
                                 data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
@@ -33,14 +33,6 @@
                     <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
                 </div>
                 <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
-                    <button 
-                        type="button" 
-                        class="rt-stat-breakdown-btn"
-                        data-action="showStatBreakdown"
-                        data-stat-key="{{entry.[0]}}"
-                        title="Show stat breakdown">
-                        <i class="fa-solid fa-calculator"></i>
-                    </button>
                     <span>{{entry.[1].current}}</span>
                 </div>
             </div>
@@ -79,14 +71,6 @@
                     <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
                 </div>
                 <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
-                    <button 
-                        type="button" 
-                        class="rt-stat-breakdown-btn"
-                        data-action="showStatBreakdown"
-                        data-stat-key="{{entry.[0]}}"
-                        title="Show stat breakdown">
-                        <i class="fa-solid fa-calculator"></i>
-                    </button>
                     <span>{{entry.[1].current}}</span>
                 </div>
             </div>
