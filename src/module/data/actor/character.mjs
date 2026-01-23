@@ -1,6 +1,15 @@
 import CreatureTemplate from "./templates/creature.mjs";
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField, SetField } = foundry.data.fields;
+
+/**
+ * List of characteristic keys used for character generation (excludes Influence).
+ * @type {string[]}
+ */
+const GENERATION_CHARACTERISTICS = [
+  'weaponSkill', 'ballisticSkill', 'strength', 'toughness',
+  'agility', 'intelligence', 'perception', 'willpower', 'fellowship'
+];
 
 /**
  * Data model for Character (Acolyte) actors.
@@ -133,7 +142,35 @@ export default class CharacterData extends CreatureTemplate {
 
       // Wounds modifier tracking
       totalWoundsModifier: new NumberField({ required: true, initial: 0, integer: true }),
-      totalFateModifier: new NumberField({ required: true, initial: 0, integer: true })
+      totalFateModifier: new NumberField({ required: true, initial: 0, integer: true }),
+
+      // ===== CHARACTER GENERATION =====
+      characterGeneration: new SchemaField({
+        // Track raw dice rolls (2D20 summed for each characteristic)
+        rolls: new ArrayField(
+          new NumberField({ required: true, initial: 0, integer: true, min: 0, max: 40 }),
+          { initial: [] }
+        ),
+        // Maps characteristic key to roll index (0-8), or null if unassigned
+        assignments: new SchemaField(
+          Object.fromEntries(
+            GENERATION_CHARACTERISTICS.map(key => [
+              key,
+              new NumberField({ required: false, nullable: true, initial: null, integer: true, min: 0, max: 8 })
+            ])
+          )
+        ),
+        // Custom base values (for non-human races)
+        customBases: new SchemaField({
+          enabled: new BooleanField({ initial: false }),
+          ...Object.fromEntries(
+            GENERATION_CHARACTERISTICS.map(key => [
+              key,
+              new NumberField({ required: true, initial: 25, integer: true, min: 0 })
+            ])
+          )
+        })
+      })
     };
   }
 

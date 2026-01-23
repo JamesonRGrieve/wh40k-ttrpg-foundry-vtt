@@ -1,0 +1,122 @@
+{{!-- Characteristic Setup Dialog Template --}}
+<form class="csd-form" autocomplete="off">
+    {{!-- Header Instructions --}}
+    <div class="csd-instructions">
+        <p>{{localize "RT.CharacteristicSetup.Instructions"}}</p>
+    </div>
+
+    {{!-- Rolls Bank --}}
+    <section class="csd-section csd-rolls-bank" data-drop-zone="bank">
+        <h3 class="csd-section-header">
+            <i class="fa-solid fa-dice-d20"></i>
+            {{localize "RT.CharacteristicSetup.RollsBank"}}
+        </h3>
+        <div class="csd-rolls-container">
+            {{#each rollsBank}}
+            <div class="csd-roll-chip {{#if isEmpty}}empty{{/if}} {{#if isAssigned}}assigned{{/if}}"
+                 data-roll-index="{{index}}"
+                 draggable="{{#unless isEmpty}}{{#unless isAssigned}}true{{/unless}}{{/unless}}">
+                <span class="csd-roll-value">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
+                <span class="csd-roll-label">{{localize "RT.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
+            </div>
+            {{/each}}
+        </div>
+        <p class="csd-bank-hint">{{localize "RT.CharacteristicSetup.ClickToEdit"}}</p>
+    </section>
+
+    {{!-- Characteristics Grid --}}
+    <section class="csd-section csd-characteristics">
+        <h3 class="csd-section-header">
+            <i class="fa-solid fa-user-gear"></i>
+            {{localize "RT.CharacteristicSetup.Characteristics"}}
+        </h3>
+        <div class="csd-char-grid">
+            {{#each characteristicRows}}
+            <div class="csd-char-row">
+                {{#each this}}
+                <div class="csd-char-slot {{#if hasRoll}}has-roll{{else}}empty{{/if}}"
+                     data-characteristic="{{key}}">
+                    <div class="csd-char-header">
+                        <span class="csd-char-short">{{short}}</span>
+                        <span class="csd-char-name">{{label}}</span>
+                    </div>
+                    <div class="csd-char-body">
+                        <div class="csd-char-base">
+                            {{#if @root.advancedMode}}
+                            <input type="number" class="csd-base-input" 
+                                   value="{{base}}" 
+                                   data-characteristic="{{key}}"
+                                   min="0" max="99">
+                            {{else}}
+                            <span class="csd-base-value">{{base}}</span>
+                            {{/if}}
+                            <span class="csd-base-label">{{localize "RT.CharacteristicSetup.Base"}}</span>
+                        </div>
+                        <span class="csd-char-plus">+</span>
+                        <div class="csd-char-roll-slot">
+                            {{#if hasRoll}}
+                            <div class="csd-assigned-roll" 
+                                 draggable="true"
+                                 data-roll-index="{{assignedIndex}}"
+                                 data-characteristic="{{key}}">
+                                {{rollValue}}
+                            </div>
+                            {{else}}
+                            <div class="csd-drop-zone">
+                                <i class="fa-solid fa-arrow-down"></i>
+                            </div>
+                            {{/if}}
+                        </div>
+                        <span class="csd-char-equals">=</span>
+                        <div class="csd-char-total {{#if hasRoll}}has-value{{/if}}">
+                            {{#if hasRoll}}{{total}}{{else}}??{{/if}}
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            {{/each}}
+        </div>
+    </section>
+
+    {{!-- Advanced Mode Toggle --}}
+    <div class="csd-advanced-toggle">
+        <button type="button" class="csd-toggle-btn" data-action="toggleAdvanced">
+            <i class="fa-solid {{#if advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
+            {{#if advancedMode}}
+            {{localize "RT.CharacteristicSetup.AdvancedModeOn"}}
+            {{else}}
+            {{localize "RT.CharacteristicSetup.AdvancedModeOff"}}
+            {{/if}}
+        </button>
+        <span class="csd-toggle-hint">{{localize "RT.CharacteristicSetup.AdvancedHint"}}</span>
+    </div>
+
+    {{!-- Preview Summary --}}
+    <section class="csd-section csd-preview">
+        <h3 class="csd-section-header">
+            <i class="fa-solid fa-chart-bar"></i>
+            {{localize "RT.CharacteristicSetup.Preview"}}
+        </h3>
+        <div class="csd-preview-bar">
+            {{#each preview}}
+            <div class="csd-preview-stat {{#unless hasValue}}empty{{/unless}}">
+                <span class="csd-preview-label">{{short}}</span>
+                <span class="csd-preview-value">{{#if hasValue}}{{total}}{{else}}—{{/if}}</span>
+            </div>
+            {{/each}}
+        </div>
+    </section>
+
+    {{!-- Footer Actions --}}
+    <footer class="csd-footer">
+        <button type="button" class="csd-btn csd-btn-secondary" data-action="reset">
+            <i class="fa-solid fa-rotate-left"></i>
+            {{localize "RT.CharacteristicSetup.Reset"}}
+        </button>
+        <button type="button" class="csd-btn csd-btn-primary" data-action="apply" {{#unless canApply}}disabled{{/unless}}>
+            <i class="fa-solid fa-check"></i>
+            {{localize "RT.CharacteristicSetup.Apply"}}
+        </button>
+    </footer>
+</form>

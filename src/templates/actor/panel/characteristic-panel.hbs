@@ -1,6 +1,14 @@
 {{!-- Compact Characteristics Panel - Expandable Rows --}}
 <div class="rt-panel rt-char-panel">
-    <h1 class="rt-panel-header">Characteristics</h1>
+    <h1 class="rt-panel-header">
+        Characteristics
+        <button type="button" 
+                class="rt-char-setup-btn" 
+                data-action="openCharacteristicSetup"
+                title="{{localize 'RT.CharacteristicSetup.OpenSetup'}}">
+            <i class="fa-solid fa-sliders"></i>
+        </button>
+    </h1>
     <div class="rt-char-list">
         {{#each actor.characteristics as |characteristic name|}}
             {{!-- Filter out Influence (Inf) - not a real RT characteristic --}}

@@ -14,6 +14,7 @@ import { HandlebarManager } from '../../handlebars/handlebars-manager.mjs';
 import LoadoutPresetDialog from '../dialogs/loadout-preset-dialog.mjs';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.mjs';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.mjs';
+import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.mjs';
 
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
@@ -101,6 +102,9 @@ export default class AcolyteSheet extends BaseActorSheet {
 
             // Biography actions
             'openOriginPathBuilder': AcolyteSheet.#openOriginPathBuilder,
+
+            // Characteristic setup
+            'openCharacteristicSetup': AcolyteSheet.#openCharacteristicSetup,
 
             // Misc actions
             'bonusVocalize': AcolyteSheet.#bonusVocalize,
@@ -2249,6 +2253,18 @@ export default class AcolyteSheet extends BaseActorSheet {
             });
             console.error('Origin Path Builder error:', error);
         }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Open the characteristic setup dialog.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering event.
+     * @param {HTMLElement} target  Element that triggered the event.
+     */
+    static async #openCharacteristicSetup(event, target) {
+        await CharacteristicSetupDialog.open(this.actor);
     }
 
     /* -------------------------------------------- */
