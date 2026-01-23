@@ -233,6 +233,7 @@
 }
 
 .rt-column-body {
+    position: relative;
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
@@ -303,6 +304,10 @@
 }
 
 .rt-item-table {
+    width: 100%;
+    table-layout: fixed; /* prevents auto expansion from content */
+    box-sizing: border-box;
+    min-width: 0;        /* allow shrinking inside flex children */
     border-collapse: collapse;
     font-size: 0.8rem;
 
@@ -379,8 +384,8 @@
 }
 
 .rt-col-name {
-    width: auto;
-    min-width: 120px;
+    min-width: 0; /* override the larger min-width if necessary */
+    overflow: hidden;
 }
 
 .rt-col-type {
