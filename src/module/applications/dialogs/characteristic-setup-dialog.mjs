@@ -289,11 +289,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
       chip.addEventListener('dragend', this.#onDragEnd.bind(this));
     });
     
-    // Roll input blur/change
-    html.querySelectorAll('.csd-roll-input').forEach(input => {
-      input.addEventListener('blur', this.#onRollInputBlur.bind(this));
-      input.addEventListener('keydown', this.#onRollInputKeydown.bind(this));
-    });
+    // Note: Roll input blur/keydown listeners are attached dynamically
+    // when the input is created in #onRollChipClick
     
     // Characteristic slots as drop targets
     html.querySelectorAll('.csd-char-slot').forEach(slot => {
@@ -348,6 +345,10 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     input.value = currentValue || '';
     input.placeholder = '2-40';
     input.dataset.rollIndex = index;
+    
+    // Attach event listeners to the dynamically created input
+    input.addEventListener('blur', this.#onRollInputBlur.bind(this));
+    input.addEventListener('keydown', this.#onRollInputKeydown.bind(this));
     
     // Replace chip content with input
     const valueEl = chip.querySelector('.csd-roll-value');
