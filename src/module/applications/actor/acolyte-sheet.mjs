@@ -2280,11 +2280,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         event.preventDefault();
         event.stopPropagation();
         
-        // Get the sheet instance from the event
-        const sheet = target.closest('.window-content')?.closest('.application')?.app;
-        if (!sheet) return;
-        
-        const options = sheet._getUtilityMenuOptions();
+        const options = this._getUtilityMenuOptions();
         if (options.length === 0) return;
         
         // Create a simple context menu programmatically
