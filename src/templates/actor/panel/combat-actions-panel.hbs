@@ -1,5 +1,5 @@
 {{!-- Combat Actions Panel - Comprehensive Quick Reference --}}
-<div class="rt-panel rt-combat-actions-panel">
+<div class="rt-panel">
     <div class="rt-panel-header">
         <span class="rt-panel-title">
             <i class="fas fa-fist-raised"></i> Combat Actions
@@ -8,131 +8,122 @@
 
     <div class="rt-panel-body">
         {{!-- ATTACK ACTIONS --}}
-        <div class="rt-actions-group">
-            <div class="rt-actions-group-header">
+        <div class="rt-combat-actions-group">
+            <div class="rt-combat-actions-group-header">
                 <i class="fas fa-crosshairs rt-group-icon"></i>
-                <span class="rt-actions-group-label">Attack Actions</span>
+                <span class="rt-combat-actions-group-label">Attack Actions</span>
             </div>
-            <div class="rt-actions-grid">
+            <div class="rt-combat-actions-grid">
                 {{#each dh.combatActions.attacks as |action|}}
                 <button type="button"
-                        class="rt-action-btn rt-action-attack"
+                        class="rt-combat-action-btn rt-combat-action-attack"
                         data-action="vocalizeCombatAction"
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
                         title="{{localize action.label}}">
                     <i class="fas {{action.icon}}"></i>
-                    <span class="rt-action-name">{{localize action.label}}</span>
-                    <span class="rt-action-type">{{action.type}}</span>
+                    <span class="rt-combat-action-name">{{localize action.label}}</span>
+                    <span class="rt-combat-action-type">{{action.type}}</span>
                 </button>
                 {{/each}}
             </div>
         </div>
 
         {{!-- MOVEMENT ACTIONS --}}
-        <div class="rt-actions-group">
-            <div class="rt-actions-group-header">
+        <div class="rt-combat-actions-group">
+            <div class="rt-combat-actions-group-header">
                 <i class="fas fa-walking rt-group-icon"></i>
-                <span class="rt-actions-group-label">Movement Actions</span>
+                <span class="rt-combat-actions-group-label">Movement Actions</span>
             </div>
-            <div class="rt-actions-grid">
+            <div class="rt-combat-actions-grid">
                 {{#each dh.combatActions.movement as |action|}}
                 <button type="button"
-                        class="rt-action-btn rt-action-movement"
+                        class="rt-combat-action-btn rt-combat-action-movement"
                         data-action="vocalizeCombatAction"
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
                         title="{{localize action.label}}">
                     <i class="fas {{action.icon}}"></i>
-                    <span class="rt-action-name">{{localize action.label}}</span>
-                    <span class="rt-action-type">{{action.type}}</span>
+                    <span class="rt-combat-action-name">{{localize action.label}}</span>
+                    <span class="rt-combat-action-type">{{action.type}}</span>
                 </button>
                 {{/each}}
             </div>
         </div>
 
         {{!-- REACTION ACTIONS --}}
-        <div class="rt-actions-group">
-            <div class="rt-actions-group-header">
+        <div class="rt-combat-actions-group">
+            <div class="rt-combat-actions-group-header">
                 <i class="fas fa-bolt rt-group-icon"></i>
-                <span class="rt-actions-group-label">Reactions</span>
+                <span class="rt-combat-actions-group-label">Reactions</span>
             </div>
-            <div class="rt-actions-grid rt-actions-grid-2col">
+            <div class="rt-combat-actions-grid">
                 {{!-- Dodge --}}
                 <button type="button"
-                        class="rt-action-btn rt-action-reaction"
+                        class="rt-combat-action-btn rt-combat-action-reaction"
                         data-action="dodge"
                         data-tooltip
                         aria-label="Dodge: Reaction"
                         title="Dodge">
                     <i class="fas fa-running"></i>
-                    <span class="rt-action-name">Dodge</span>
-                    <span class="rt-action-type">Reaction</span>
+                    <span class="rt-combat-action-name">Dodge</span>
+                    <span class="rt-combat-action-type">Reaction</span>
                 </button>
                 {{!-- Parry --}}
                 <button type="button"
-                        class="rt-action-btn rt-action-reaction"
+                        class="rt-combat-action-btn rt-combat-action-reaction"
                         data-action="parry"
                         data-tooltip
                         aria-label="Parry: Reaction"
                         title="Parry">
                     <i class="fas fa-shield-alt"></i>
-                    <span class="rt-action-name">Parry</span>
-                    <span class="rt-action-type">Reaction</span>
+                    <span class="rt-combat-action-name">Parry</span>
+                    <span class="rt-combat-action-type">Reaction</span>
                 </button>
             </div>
         </div>
 
         {{!-- UTILITY ACTIONS --}}
-        <div class="rt-actions-group">
-            <div class="rt-actions-group-header">
+        <div class="rt-combat-actions-group">
+            <div class="rt-combat-actions-group-header">
                 <i class="fas fa-tools rt-group-icon"></i>
-                <span class="rt-actions-group-label">Utility Actions</span>
+                <span class="rt-combat-actions-group-label">Utility Actions</span>
             </div>
-            <div class="rt-actions-grid">
+            <div class="rt-combat-actions-grid">
                 {{!-- Initiative --}}
                 <button type="button"
-                        class="rt-action-btn rt-action-utility rt-action-initiative"
+                        class="rt-combat-action-btn rt-combat-action-utility"
                         data-action="initiative"
                         title="Roll Initiative (Current: {{system.initiative.total}})">
                     <i class="fas fa-dice-d20"></i>
                     <span class="rt-action-name">Initiative</span>
                     <span class="rt-action-value">
                         {{system.initiative.total}}
-                        <button 
-                            type="button" 
-                            class="rt-stat-breakdown-btn rt-stat-breakdown-btn--inline"
-                            data-action="showStatBreakdown"
-                            data-stat-key="initiative"
-                            title="Show initiative calculation"
-                            onclick="event.stopPropagation();">
-                            <i class="fa-solid fa-calculator"></i>
-                        </button>
                     </span>
                 </button>
                 {{!-- Assign Damage --}}
                 <button type="button"
-                        class="rt-action-btn rt-action-utility"
+                        class="rt-combat-action-btn rt-combat-action-utility"
                         data-action="assign-damage"
                         title="Assign Damage">
                     <i class="fas fa-heart-broken"></i>
-                    <span class="rt-action-name">Assign Damage</span>
-                    <span class="rt-action-type">Tool</span>
+                    <span class="rt-combat-action-name">Assign Damage</span>
+                    <span class="rt-combat-action-type">Tool</span>
                 </button>
                 {{!-- Other utility actions from config --}}
                 {{#each dh.combatActions.utility as |action|}}
                 <button type="button"
-                        class="rt-action-btn rt-action-utility"
+                        class="rt-combat-action-btn rt-combat-action-utility"
                         data-action="vocalizeCombatAction"
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
                         title="{{localize action.label}}">
                     <i class="fas {{action.icon}}"></i>
-                    <span class="rt-action-name">{{localize action.label}}</span>
-                    <span class="rt-action-type">{{action.type}}</span>
+                    <span class="rt-combat-action-name">{{localize action.label}}</span>
+                    <span class="rt-combat-action-type">{{action.type}}</span>
                 </button>
                 {{/each}}
             </div>
@@ -140,24 +131,24 @@
 
         {{!-- COMBAT TALENTS --}}
         {{#if combatTalents.length}}
-        <div class="rt-actions-group">
-            <div class="rt-actions-group-header">
+        <div class="rt-combat-actions-group">
+            <div class="rt-combat-actions-group-header">
                 <i class="fas fa-star rt-group-icon"></i>
-                <span class="rt-actions-group-label">Combat Talents</span>
+                <span class="rt-combat-actions-group-label">Combat Talents</span>
             </div>
-            <div class="rt-actions-grid">
+            <div class="rt-combat-actions-grid">
                 {{#each combatTalents as |talent|}}
                 <button type="button"
-                        class="rt-action-btn rt-action-attack"
+                        class="rt-combat-action-btn rt-combat-action-attack"
                         data-action="itemVocalize"
                         data-item-id="{{talent.id}}"
                         data-tooltip
                         aria-label="{{talent.name}}"
                         title="{{talent.name}}">
                     <i class="fas fa-star"></i>
-                    <span class="rt-action-name">{{talent.name}}</span>
+                    <span class="rt-combat-action-name">{{talent.name}}</span>
                     {{#if talent.system.tier}}
-                    <span class="rt-action-type">T{{talent.system.tier}}</span>
+                    <span class="rt-combat-action-type">T{{talent.system.tier}}</span>
                     {{/if}}
                 </button>
                 {{/each}}
@@ -166,7 +157,7 @@
         {{/if}}
 
         {{!-- Info Note --}}
-        <div class="rt-actions-info">
+        <div class="rt-combat-actions-info">
             <i class="fas fa-info-circle"></i>
             <span>Click any action for a detailed description. Action types: <strong>Half</strong> (½ turn), <strong>Full</strong> (full turn), <strong>Reaction</strong> (out of turn).</span>
         </div>

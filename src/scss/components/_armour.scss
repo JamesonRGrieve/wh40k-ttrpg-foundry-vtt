@@ -4,31 +4,12 @@
 // ============================================
 
 .rt-armour-panel {
-  // Ensure the panel displays with fallback values
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  
-  .rt-panel-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--rt-space-sm, 8px);
-    width: 100%;
-    
-    .rt-panel-title {
-      flex: 1;
-      white-space: nowrap;
-    }
-  }
-  
+
   .rt-panel-body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: var(--rt-space-sm, 8px);
-    padding-top: var(--rt-space-sm, 8px);
     background: var(--rt-panel-body-bg, rgba(40, 35, 30, 0.6));
     min-height: auto;
   }
@@ -191,7 +172,7 @@
 
 .rt-box-body {
   grid-area: body;
-  grid-row: 2 / 4;  // Spans rows 2-3 (arms and legs row)
+  grid-row: 2 / 3;  // Spans rows 2-3 (arms and legs row)
   min-height: 140px;
   align-self: stretch;
   
