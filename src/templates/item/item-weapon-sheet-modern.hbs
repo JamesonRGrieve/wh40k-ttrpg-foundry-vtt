@@ -79,13 +79,13 @@
         {{!-- Damage Card (clickable to roll if owned) --}}
         <div class="rt-iconic-stat rt-iconic-stat--damage rt-iconic-stat--large {{#if hasModificationEffects}}rt-iconic-stat--modified{{/if}} {{#if isOwnedByActor}}rt-iconic-stat--clickable{{/if}}"
              {{#if isOwnedByActor}}data-action="rollDamage"{{/if}}
-             data-tooltip="{{#if isOwnedByActor}}Click to Roll Damage{{else}}Damage Formula{{/if}}">
+             data-tooltip="{{#if isOwnedByActor}}Click to Roll Damage{{else}}Damage{{/if}}">
           <div class="rt-iconic-stat__shape">
             <i class="fa-solid fa-skull"></i>
           </div>
           <div class="rt-iconic-stat__content">
             <span class="rt-iconic-stat__value">{{fullDamageFormula}}</span>
-            <span class="rt-iconic-stat__label">Damage Formula</span>
+            <span class="rt-iconic-stat__label">Damage</span>
           </div>
           <div class="rt-iconic-stat__glow"></div>
         </div>
@@ -293,7 +293,7 @@
                      placeholder=" " id="damage-formula" 
                      class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="damage-formula">Damage Formula</label>
+              <label for="damage-formula">Damage Dice</label>
               <span class="rt-float-field__bar"></span>
             </div>
             
