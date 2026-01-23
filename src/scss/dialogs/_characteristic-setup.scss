@@ -1,0 +1,591 @@
+/**
+ * Characteristic Setup Dialog Styles
+ * Modern, sleek dialog for setting up characteristic rolls during character creation.
+ * Matches the existing teal/bronze characteristic HUD aesthetic.
+ */
+
+// ============================================
+// Variables (matching characteristic HUD)
+// ============================================
+$csd-primary: rgba(36, 107, 131, 1);
+$csd-primary-light: rgba(36, 107, 131, 0.3);
+$csd-primary-dark: #1a4f61;
+$csd-gold: #d4af37;
+$csd-bronze: #b08d57;
+$csd-bone: #e8dcc4;
+$csd-success: #4caf50;
+$csd-danger: #dc143c;
+
+// ============================================
+// Dialog Container
+// ============================================
+.characteristic-setup-dialog {
+  .window-content {
+    padding: 0;
+    background: linear-gradient(180deg, #1a1a24 0%, #0d0d12 100%);
+  }
+}
+
+.csd-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+// ============================================
+// Instructions
+// ============================================
+.csd-instructions {
+  text-align: center;
+  color: $csd-bone;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  padding: 0.5rem 1rem;
+  background: rgba($csd-primary, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba($csd-primary, 0.2);
+  
+  p {
+    margin: 0;
+  }
+}
+
+// ============================================
+// Section Headers
+// ============================================
+.csd-section {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba($csd-primary, 0.3);
+  padding: 1rem;
+  transition: border-color 0.3s ease;
+  
+  &.drop-valid {
+    border-color: $csd-gold;
+    background: rgba($csd-gold, 0.05);
+  }
+  
+  &.drop-hover {
+    border-color: $csd-gold;
+    box-shadow: 0 0 15px rgba($csd-gold, 0.3);
+  }
+}
+
+.csd-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba($csd-primary, 0.3);
+  color: $csd-primary;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  
+  i {
+    color: $csd-gold;
+  }
+}
+
+// ============================================
+// Rolls Bank
+// ============================================
+.csd-rolls-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.csd-roll-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 65px;
+  background: linear-gradient(135deg, rgba($csd-primary, 0.2), rgba($csd-primary, 0.1));
+  border: 2px solid rgba($csd-primary, 0.4);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  
+  &:hover:not(.assigned):not(.empty) {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-color: $csd-primary;
+  }
+  
+  &.empty {
+    border-style: dashed;
+    opacity: 0.6;
+    cursor: pointer;
+    
+    &:hover {
+      opacity: 0.9;
+      border-color: $csd-gold;
+    }
+    
+    .csd-roll-value {
+      color: rgba($csd-bone, 0.5);
+    }
+  }
+  
+  &.assigned {
+    opacity: 0.3;
+    cursor: not-allowed;
+    
+    &::after {
+      content: '✓';
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      font-size: 0.7rem;
+      color: $csd-success;
+    }
+  }
+  
+  &.dragging {
+    opacity: 0.4;
+    transform: scale(0.95);
+    cursor: grabbing;
+  }
+  
+  &[draggable="true"] {
+    cursor: grab;
+  }
+}
+
+.csd-roll-value {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: $csd-bone;
+  line-height: 1;
+}
+
+.csd-roll-label {
+  font-size: 0.65rem;
+  color: rgba($csd-bone, 0.6);
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.csd-roll-input {
+  width: 45px;
+  height: 30px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid $csd-gold;
+  border-radius: 4px;
+  color: $csd-bone;
+  outline: none;
+  
+  &:focus {
+    box-shadow: 0 0 8px rgba($csd-gold, 0.5);
+  }
+  
+  &::placeholder {
+    color: rgba($csd-bone, 0.3);
+    font-size: 0.7rem;
+  }
+}
+
+.csd-bank-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba($csd-bone, 0.5);
+  margin: 0.5rem 0 0 0;
+  font-style: italic;
+}
+
+// ============================================
+// Characteristics Grid
+// ============================================
+.csd-char-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.csd-char-row {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.csd-char-slot {
+  flex: 1;
+  max-width: 200px;
+  background: linear-gradient(135deg, rgba($csd-primary, 0.15), rgba($csd-primary, 0.05));
+  border: 2px solid rgba($csd-primary, 0.35);
+  border-radius: 8px;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: rgba($csd-primary, 0.6);
+  }
+  
+  &.empty {
+    .csd-char-total {
+      color: rgba($csd-bone, 0.3);
+    }
+  }
+  
+  &.has-roll {
+    border-color: rgba($csd-success, 0.5);
+    background: linear-gradient(135deg, rgba($csd-success, 0.1), rgba($csd-primary, 0.05));
+  }
+  
+  // Drop states
+  &.drop-valid {
+    border-color: $csd-gold;
+    background: linear-gradient(135deg, rgba($csd-gold, 0.15), rgba($csd-gold, 0.05));
+  }
+  
+  &.drop-hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba($csd-gold, 0.4);
+    border-style: solid;
+  }
+  
+  // Snap animation
+  &.snap-to-slot {
+    animation: csd-snap 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+@keyframes csd-snap {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.08); }
+  60% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+.csd-char-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba($csd-primary, 0.2);
+}
+
+.csd-char-short {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: $csd-primary;
+}
+
+.csd-char-name {
+  font-size: 0.7rem;
+  color: rgba($csd-bone, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.csd-char-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.csd-char-base {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.csd-base-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $csd-bone;
+}
+
+.csd-base-input {
+  width: 40px;
+  height: 26px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba($csd-gold, 0.5);
+  border-radius: 4px;
+  color: $csd-bone;
+  
+  &:focus {
+    outline: none;
+    border-color: $csd-gold;
+    box-shadow: 0 0 6px rgba($csd-gold, 0.4);
+  }
+}
+
+.csd-base-label {
+  font-size: 0.55rem;
+  color: rgba($csd-bone, 0.5);
+  text-transform: uppercase;
+}
+
+.csd-char-plus,
+.csd-char-equals {
+  font-size: 1rem;
+  font-weight: bold;
+  color: rgba($csd-bone, 0.6);
+}
+
+.csd-char-roll-slot {
+  width: 45px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.csd-drop-zone {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba($csd-primary, 0.4);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  
+  i {
+    color: rgba($csd-bone, 0.3);
+    font-size: 1rem;
+    animation: csd-bounce 2s ease-in-out infinite;
+  }
+}
+
+@keyframes csd-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+.csd-assigned-roll {
+  width: 40px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba($csd-success, 0.3), rgba($csd-success, 0.15));
+  border: 2px solid rgba($csd-success, 0.6);
+  border-radius: 6px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: $csd-bone;
+  cursor: grab;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border-color: $csd-gold;
+  }
+  
+  &.dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+  }
+}
+
+.csd-char-total {
+  min-width: 40px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($csd-primary, 0.2);
+  border: 2px solid rgba($csd-primary, 0.4);
+  border-radius: 6px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: $csd-bone;
+  transition: all 0.3s ease;
+  
+  &.has-value {
+    background: rgba($csd-gold, 0.15);
+    border-color: rgba($csd-gold, 0.5);
+    color: $csd-gold;
+    animation: csd-value-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+@keyframes csd-value-pop {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+// ============================================
+// Advanced Mode Toggle
+// ============================================
+.csd-advanced-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+.csd-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba($csd-primary, 0.2);
+  border: 1px solid rgba($csd-primary, 0.4);
+  border-radius: 6px;
+  color: $csd-bone;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba($csd-gold, 0.2);
+    border-color: rgba($csd-gold, 0.5);
+  }
+  
+  i {
+    color: $csd-gold;
+  }
+}
+
+.csd-toggle-hint {
+  font-size: 0.75rem;
+  color: rgba($csd-bone, 0.5);
+  font-style: italic;
+}
+
+// ============================================
+// Preview Bar
+// ============================================
+.csd-preview-bar {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.csd-preview-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  background: rgba($csd-primary, 0.15);
+  border-radius: 4px;
+  min-width: 50px;
+  transition: all 0.3s ease;
+  
+  &.empty {
+    opacity: 0.4;
+  }
+  
+  &:not(.empty) {
+    background: rgba($csd-gold, 0.1);
+    
+    .csd-preview-value {
+      color: $csd-gold;
+    }
+  }
+}
+
+.csd-preview-label {
+  font-size: 0.7rem;
+  color: rgba($csd-bone, 0.7);
+  text-transform: uppercase;
+}
+
+.csd-preview-value {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: $csd-bone;
+}
+
+// ============================================
+// Footer Actions
+// ============================================
+.csd-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba($csd-primary, 0.2);
+}
+
+.csd-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.csd-btn-secondary {
+  background: rgba($csd-primary, 0.2);
+  border: 1px solid rgba($csd-primary, 0.4);
+  color: $csd-bone;
+  
+  &:hover:not(:disabled) {
+    background: rgba($csd-primary, 0.3);
+    border-color: rgba($csd-primary, 0.6);
+  }
+}
+
+.csd-btn-primary {
+  background: linear-gradient(135deg, $csd-gold, darken($csd-gold, 15%));
+  border: 1px solid $csd-gold;
+  color: #1a1a24;
+  
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, lighten($csd-gold, 10%), $csd-gold);
+    box-shadow: 0 2px 12px rgba($csd-gold, 0.4);
+    transform: translateY(-1px);
+  }
+}
+
+// ============================================
+// Drag Active State (whole dialog)
+// ============================================
+.characteristic-setup-dialog.drag-active {
+  .csd-char-slot:not(.has-roll) {
+    animation: csd-pulse-border 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes csd-pulse-border {
+  0%, 100% { border-color: rgba($csd-primary, 0.35); }
+  50% { border-color: rgba($csd-gold, 0.6); }
+}
+
+// ============================================
+// Accessibility - Reduced Motion
+// ============================================
+@media (prefers-reduced-motion: reduce) {
+  .csd-roll-chip,
+  .csd-char-slot,
+  .csd-assigned-roll,
+  .csd-char-total,
+  .csd-btn,
+  .csd-drop-zone i {
+    animation: none !important;
+    transition: none !important;
+  }
+}
