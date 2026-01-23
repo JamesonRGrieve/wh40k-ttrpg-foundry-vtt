@@ -692,6 +692,29 @@
         border-bottom: 2px solid #c4871d !important;
     }
 
+    // Utility menu button in tabs
+    nav.rt-navigation .rt-utility-menu-btn {
+        margin-left: auto !important;
+        padding: 6px 8px !important;
+        background: transparent !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 4px !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        font-size: 0.9rem !important;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
+            border-color: rgba(196, 135, 29, 0.5) !important;
+        }
+
+        i {
+            margin: 0 !important;
+        }
+    }
+
     // Legacy rt-main-layout for compatibility
     .rt-main-layout {
         display: grid !important;

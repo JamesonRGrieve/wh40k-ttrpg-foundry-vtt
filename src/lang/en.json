@@ -77,6 +77,13 @@
             "Applied": "Characteristic values have been updated!",
             "OpenSetup": "Setup Characteristics"
         },
+        "Utility": {
+            "MenuTooltip": "Utility Actions",
+            "SetupCharacteristics": "Setup Characteristic Rolls",
+            "SetupOriginPath": "Setup Origin Path",
+            "OriginPathNotAvailable": "Origin Path Builder not available",
+            "OriginPathError": "Failed to open Origin Path Builder"
+        },
         "RighteousFury": {
             "Title": "⚡ Righteous Fury! ⚡",
             "Triggered": "Righteous Fury Triggered!",

@@ -15,6 +15,7 @@ import LoadoutPresetDialog from '../dialogs/loadout-preset-dialog.mjs';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.mjs';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.mjs';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.mjs';
+import { RTContextMenu } from '../api/context-menu-mixin.mjs';
 
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
@@ -2265,6 +2266,59 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     static async #openCharacteristicSetup(event, target) {
         await CharacteristicSetupDialog.open(this.actor);
+    }
+
+    /* -------------------------------------------- */
+    /*  Context Menu Implementation                 */
+    /* -------------------------------------------- */
+
+    /** @override */
+    _createCustomContextMenus() {
+        super._createCustomContextMenus();
+        
+        // Create utility menu for the utility button
+        new RTContextMenu(this.element, "[data-utility-menu]", [], {
+            onOpen: () => this._getUtilityMenuOptions(),
+            jQuery: false
+        });
+    }
+
+    /**
+     * Get utility menu options.
+     * @returns {ContextMenuEntry[]}
+     * @protected
+     */
+    _getUtilityMenuOptions() {
+        return [
+            {
+                name: game.i18n.localize("RT.Utility.SetupCharacteristics"),
+                icon: '<i class="fa-solid fa-dice-d20"></i>',
+                callback: () => CharacteristicSetupDialog.open(this.actor)
+            },
+            {
+                name: game.i18n.localize("RT.Utility.SetupOriginPath"),
+                icon: '<i class="fa-solid fa-route"></i>',
+                callback: () => this._openOriginPathBuilder(),
+                condition: () => !!game.rt?.openOriginPathBuilder
+            }
+        ];
+    }
+
+    /**
+     * Open the Origin Path Builder utility.
+     * @protected
+     */
+    async _openOriginPathBuilder() {
+        try {
+            if (game.rt?.openOriginPathBuilder) {
+                await game.rt.openOriginPathBuilder(this.actor);
+            } else {
+                ui.notifications.warn(game.i18n.localize("RT.Utility.OriginPathNotAvailable"));
+            }
+        } catch (error) {
+            ui.notifications.error(`${game.i18n.localize("RT.Utility.OriginPathError")}: ${error.message}`);
+            console.error('Origin Path Builder error:', error);
+        }
     }
 
     /* -------------------------------------------- */
