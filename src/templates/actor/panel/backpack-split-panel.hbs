@@ -67,7 +67,7 @@
                         </thead>
                         <tbody>
                             {{#each allCarriedItems as |item|}}
-                            <tr class="rt-item-row {{#if item.system.equipped}}rt-row-equipped{{else if item.system.inBackpack}}rt-row-stowed{{/if}}"
+                            <tr class="rt-item-row"
                                 data-item-id="{{item.id}}" 
                                 data-item-type="{{item.type}}"
                                 draggable="true">
