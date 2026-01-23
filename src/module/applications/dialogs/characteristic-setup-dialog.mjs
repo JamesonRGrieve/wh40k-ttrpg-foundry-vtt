@@ -142,7 +142,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
    * @private
    */
   #initializeState() {
-    const genData = this.#actor.system.characterGeneration || {};
+    const genData = this.#actor?.system?.characterGeneration || {};
     
     // Initialize rolls - either from actor or empty array of 9 zeros
     this.#rolls = Array.isArray(genData.rolls) && genData.rolls.length === 9
@@ -173,27 +173,32 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     
+    // Ensure rolls array is initialized
+    if (!Array.isArray(this.#rolls) || this.#rolls.length !== 9) {
+      this.#rolls = Array(9).fill(0);
+    }
+    
     // Build rolls bank data
     const rollsBank = this.#rolls.map((value, index) => ({
       index,
       displayIndex: index + 1,
-      value,
-      isEmpty: value === 0,
+      value: value || 0,
+      isEmpty: !value || value === 0,
       isAssigned: this.#isRollAssigned(index)
     }));
     
     // Build characteristics data
     const characteristics = GENERATION_CHARACTERISTICS.map(key => {
-      const charData = this.#actor.system.characteristics[key];
-      const assignedIndex = this.#assignments[key];
-      const rollValue = assignedIndex !== null ? this.#rolls[assignedIndex] : null;
-      const base = this.#advancedMode ? this.#customBases[key] : DEFAULT_BASE;
+      const charData = this.#actor.system.characteristics?.[key] || {};
+      const assignedIndex = this.#assignments?.[key] ?? null;
+      const rollValue = (assignedIndex !== null && this.#rolls[assignedIndex]) ? this.#rolls[assignedIndex] : null;
+      const base = this.#advancedMode ? (this.#customBases?.[key] ?? DEFAULT_BASE) : DEFAULT_BASE;
       const total = rollValue !== null ? base + rollValue : null;
       
       return {
         key,
-        label: charData.label,
-        short: charData.short,
+        label: charData.label || key,
+        short: charData.short || key.substring(0, 2).toUpperCase(),
         base,
         rollValue,
         assignedIndex,
@@ -241,6 +246,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
    * @private
    */
   #isRollAssigned(index) {
+    if (!this.#assignments) return false;
     return Object.values(this.#assignments).includes(index);
   }
 
