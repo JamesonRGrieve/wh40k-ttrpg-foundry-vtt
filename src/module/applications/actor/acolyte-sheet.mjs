@@ -107,6 +107,9 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Characteristic setup
             'openCharacteristicSetup': AcolyteSheet.#openCharacteristicSetup,
 
+            // Utility menu
+            'showUtilityMenu': AcolyteSheet.#showUtilityMenu,
+
             // Misc actions
             'bonusVocalize': AcolyteSheet.#bonusVocalize,
         },
@@ -2268,6 +2271,59 @@ export default class AcolyteSheet extends BaseActorSheet {
         await CharacteristicSetupDialog.open(this.actor);
     }
 
+    /**
+     * Show the utility menu.
+     * @param {Event} event     The originating click event
+     * @param {HTMLElement} target  The capturing HTML element which defined a [data-action]
+     */
+    static async #showUtilityMenu(event, target) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        // Get the sheet instance from the event
+        const sheet = target.closest('.window-content')?.closest('.application')?.app;
+        if (!sheet) return;
+        
+        const options = sheet._getUtilityMenuOptions();
+        if (options.length === 0) return;
+        
+        // Create a simple context menu programmatically
+        const menu = document.createElement('div');
+        menu.className = 'rt-context-menu rt-utility-menu';
+        menu.style.position = 'fixed';
+        menu.style.zIndex = '1000';
+        
+        // Position the menu
+        const rect = target.getBoundingClientRect();
+        menu.style.left = `${rect.left}px`;
+        menu.style.top = `${rect.bottom + 5}px`;
+        
+        // Add menu items
+        options.forEach(option => {
+            if (option.condition && !option.condition()) return;
+            
+            const item = document.createElement('div');
+            item.className = 'context-menu-item';
+            item.innerHTML = `${option.icon} ${option.name}`;
+            item.addEventListener('click', () => {
+                option.callback();
+                menu.remove();
+            });
+            menu.appendChild(item);
+        });
+        
+        // Add close listener
+        const closeMenu = (e) => {
+            if (!menu.contains(e.target)) {
+                menu.remove();
+                document.removeEventListener('click', closeMenu);
+            }
+        };
+        
+        document.body.appendChild(menu);
+        document.addEventListener('click', closeMenu);
+    }
+
     /* -------------------------------------------- */
     /*  Context Menu Implementation                 */
     /* -------------------------------------------- */
@@ -2276,11 +2332,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     _createCustomContextMenus() {
         super._createCustomContextMenus();
         
-        // Create utility menu for the utility button
-        new RTContextMenu(this.element, "[data-utility-menu]", [], {
-            onOpen: () => this._getUtilityMenuOptions(),
-            jQuery: false
-        });
+        // Note: Utility menu is now handled via action instead of context menu
     }
 
     /**

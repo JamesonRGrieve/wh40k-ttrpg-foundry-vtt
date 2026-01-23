@@ -721,6 +721,37 @@
         }
     }
 
+    // Utility menu dropdown
+    .rt-utility-menu {
+        background: rgba(40, 40, 40, 0.95) !important;
+        border: 1px solid rgba(196, 135, 29, 0.5) !important;
+        border-radius: 4px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+        min-width: 200px !important;
+        padding: 4px 0 !important;
+
+        .context-menu-item {
+            padding: 8px 12px !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+            cursor: pointer !important;
+            font-size: 0.9rem !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            
+            &:hover {
+                background: rgba(196, 135, 29, 0.2) !important;
+                color: rgba(255, 255, 255, 1) !important;
+            }
+            
+            i {
+                width: 16px !important;
+                text-align: center !important;
+                flex-shrink: 0 !important;
+            }
+        }
+    }
+
     // Legacy rt-main-layout for compatibility
     .rt-main-layout {
         display: grid !important;
