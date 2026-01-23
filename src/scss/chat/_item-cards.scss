@@ -602,3 +602,165 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 }
+
+// ============================================
+// Movement Chat Card
+// ============================================
+
+.rt-movement-card {
+  --rt-movement-bg: var(--rt-panel-bg-solid);
+  --rt-movement-border: var(--rt-gold);
+  --rt-movement-text: var(--rt-text-dark);
+  
+  position: relative;
+  background: var(--rt-movement-bg);
+  border: 2px solid var(--rt-movement-border);
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+  color: var(--rt-movement-text);
+  box-shadow: 0 4px 12px var(--rt-shadow-medium);
+  
+  .rt-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(138, 122, 106, 0.15) 0%, transparent 100%);
+    border-bottom: 1px solid var(--rt-border-color);
+  }
+  
+  .rt-card-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(138, 122, 106, 0.2), rgba(138, 122, 106, 0.1));
+    border: 2px solid rgba(138, 122, 106, 0.3);
+    flex-shrink: 0;
+    
+    i {
+      font-size: 1.25rem;
+      opacity: 0.9;
+    }
+  }
+  
+  .rt-card-title-area {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .rt-card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--rt-gold-dark);
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+  }
+  
+  .rt-card-subtitle {
+    font-size: 0.75rem;
+    color: var(--rt-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .rt-card-body {
+    padding: 12px;
+  }
+  
+  .rt-movement-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .rt-movement-value {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    
+    .rt-movement-distance {
+      font-family: 'Modesto Condensed', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--rt-gold-dark);
+    }
+    
+    .rt-movement-unit {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--rt-text-muted);
+      text-transform: lowercase;
+    }
+  }
+  
+  .rt-movement-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    i {
+      font-size: 0.85rem;
+    }
+  }
+  
+  .rt-movement-description {
+    padding: 8px 12px;
+    background: rgba(138, 122, 106, 0.08);
+    border-left: 3px solid rgba(138, 122, 106, 0.3);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--rt-text-medium);
+  }
+  
+  // Movement type specific styling
+  &--half {
+    .rt-card-icon-wrapper i { color: #27ae60; }
+    .rt-movement-type-badge {
+      background: rgba(#27ae60, 0.15);
+      color: darken(#27ae60, 15%);
+      border: 1px solid rgba(#27ae60, 0.3);
+    }
+  }
+  
+  &--full {
+    .rt-card-icon-wrapper i { color: #2980b9; }
+    .rt-movement-type-badge {
+      background: rgba(#2980b9, 0.15);
+      color: darken(#2980b9, 15%);
+      border: 1px solid rgba(#2980b9, 0.3);
+    }
+  }
+  
+  &--charge {
+    .rt-card-icon-wrapper i { color: #e67e22; }
+    .rt-movement-type-badge {
+      background: rgba(#e67e22, 0.15);
+      color: darken(#e67e22, 15%);
+      border: 1px solid rgba(#e67e22, 0.3);
+    }
+  }
+  
+  &--run {
+    .rt-card-icon-wrapper i { color: #c0392b; }
+    .rt-movement-type-badge {
+      background: rgba(#c0392b, 0.15);
+      color: darken(#c0392b, 15%);
+      border: 1px solid rgba(#c0392b, 0.3);
+    }
+  }
+}

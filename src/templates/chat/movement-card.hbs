@@ -1,0 +1,30 @@
+{{!-- Movement Chat Card --}}
+<div class="rt-chat-card rt-movement-card rt-movement-card--{{movementType}}">
+  <header class="rt-card-header">
+    <div class="rt-card-icon-wrapper">
+      <i class="fas {{icon}} rt-card-icon"></i>
+    </div>
+    <div class="rt-card-title-area">
+      <h3 class="rt-card-title">{{actor}}</h3>
+      <div class="rt-card-subtitle">Movement: {{movementLabel}}</div>
+    </div>
+  </header>
+  
+  <div class="rt-card-body">
+    <div class="rt-movement-display">
+      <div class="rt-movement-value">
+        <span class="rt-movement-distance">{{distance}}</span>
+        <span class="rt-movement-unit">meters</span>
+      </div>
+      <div class="rt-movement-type-badge rt-badge rt-badge--{{movementType}}">
+        <i class="fas {{icon}}"></i> {{movementLabel}}
+      </div>
+    </div>
+    
+    {{#if description}}
+    <div class="rt-movement-description">
+      {{{description}}}
+    </div>
+    {{/if}}
+  </div>
+</div>

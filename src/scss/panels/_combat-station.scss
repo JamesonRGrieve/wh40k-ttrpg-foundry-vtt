@@ -403,10 +403,19 @@
   padding: 4px 8px;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
   border-radius: 3px;
-  transition: background 0.2s ease;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 100%;
   
   &:hover {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
   }
   
   i {
@@ -1066,7 +1075,7 @@
   .table-row--head,
   .table-row {
     display: grid;
-    grid-template-columns: 1.5rem 2fr 1fr 1fr 4rem;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     align-items: center;
     gap: $rt-space-xs;
     padding: $rt-space-xs $rt-space-sm;
@@ -1083,8 +1092,13 @@
     padding: $rt-space-sm;
   }
   
-  .table-row:hover {
-    background: rgba($rt-accent-combat, 0.04);
+  .table-row {
+    cursor: pointer;
+    transition: background 0.2s ease;
+    
+    &:hover {
+      background: rgba($rt-accent-combat, 0.04);
+    }
   }
   
   .table-cell,

@@ -33,6 +33,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             'toggleFavoriteAction': AcolyteSheet.#toggleFavoriteAction,
             'combatAction': AcolyteSheet.#combatAction,
             'vocalizeCombatAction': AcolyteSheet.#vocalizeCombatAction,
+            'vocalizeMovement': AcolyteSheet.#vocalizeMovement,
 
             // Stat adjustment actions
             'adjustStat': AcolyteSheet.#adjustStat,
@@ -1537,6 +1538,46 @@ export default class AcolyteSheet extends BaseActorSheet {
                 subtypes: actionConfig.subtypes?.join(', ') || '',
                 icon: actionConfig.icon,
             }),
+        };
+
+        // Create chat message
+        await ChatMessage.create(chatData);
+    }
+
+    /**
+     * Handle vocalizing movement to chat.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #vocalizeMovement(event, target) {
+        const movementType = target.dataset.movementType;
+        if (!movementType) return;
+
+        const movementData = {
+            half: { label: 'Half Move', icon: 'fa-walking', description: 'Move and take other actions' },
+            full: { label: 'Full Move', icon: 'fa-shoe-prints', description: 'Move with no other actions' },
+            charge: { label: 'Charge', icon: 'fa-running', description: 'Move and attack with +20 bonus' },
+            run: { label: 'Run', icon: 'fa-wind', description: 'Run at full speed (Agility test may be required)' }
+        };
+
+        const movement = movementData[movementType];
+        if (!movement) return;
+
+        const distance = this.actor.system.movement[movementType];
+
+        // Prepare chat data
+        const chatData = {
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: await renderTemplate('systems/rogue-trader/templates/chat/movement-card.hbs', {
+                actor: this.actor.name,
+                movementType: movementType,
+                movementLabel: movement.label,
+                distance: distance,
+                icon: movement.icon,
+                description: movement.description
+            })
         };
 
         // Create chat message
