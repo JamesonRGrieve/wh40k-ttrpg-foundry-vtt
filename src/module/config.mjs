@@ -1448,6 +1448,47 @@ ROGUE_TRADER.combatActions = {
 };
 
 /* -------------------------------------------- */
+/*  Careers                                     */
+/* -------------------------------------------- */
+
+/**
+ * Available character careers.
+ * @type {Object<string, {label: string, description: string}>}
+ */
+ROGUE_TRADER.careers = {
+  rogueTrader: { label: 'RT.Career.RogueTrader', description: 'RT.Career.RogueTraderDesc' },
+  archMilitant: { label: 'RT.Career.ArchMilitant', description: 'RT.Career.ArchMilitantDesc' },
+  astropath: { label: 'RT.Career.Astropath', description: 'RT.Career.AstropathDesc' },
+  explorator: { label: 'RT.Career.Explorator', description: 'RT.Career.ExploratorDesc' },
+  missionary: { label: 'RT.Career.Missionary', description: 'RT.Career.MissionaryDesc' },
+  navigator: { label: 'RT.Career.Navigator', description: 'RT.Career.NavigatorDesc' },
+  seneschal: { label: 'RT.Career.Seneschal', description: 'RT.Career.SeneschalDesc' },
+  voidMaster: { label: 'RT.Career.VoidMaster', description: 'RT.Career.VoidMasterDesc' }
+};
+
+/* -------------------------------------------- */
+/*  Advancement Tiers                           */
+/* -------------------------------------------- */
+
+/**
+ * Characteristic advancement tier labels.
+ * Each tier represents a +5 advance to a characteristic.
+ * @type {Object<string, {label: string, index: number}>}
+ */
+ROGUE_TRADER.advancementTiers = {
+  simple: { label: 'RT.Advancement.Tier.Simple', index: 0 },
+  intermediate: { label: 'RT.Advancement.Tier.Intermediate', index: 1 },
+  trained: { label: 'RT.Advancement.Tier.Trained', index: 2 },
+  expert: { label: 'RT.Advancement.Tier.Expert', index: 3 }
+};
+
+/**
+ * Tier order for progression
+ * @type {string[]}
+ */
+ROGUE_TRADER.tierOrder = ['simple', 'intermediate', 'trained', 'expert'];
+
+/* -------------------------------------------- */
 /*  Export                                      */
 /* -------------------------------------------- */
 

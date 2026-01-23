@@ -1544,6 +1544,64 @@
         "InstallCost": "Installation Cost"
     },
 
+    "RT.Advancement": {
+        "Title": "Character Advancement",
+        "TitleWithCareer": "{career} Advancement",
+        "XPAvailable": "XP Available",
+        "XPUsed": "XP Used",
+        "Tab": {
+            "Characteristics": "Characteristics",
+            "Skills": "Skills",
+            "Talents": "Talents"
+        },
+        "Tier": {
+            "Simple": "Simple",
+            "Intermediate": "Intermediate",
+            "Trained": "Trained",
+            "Expert": "Expert"
+        },
+        "Maxed": "Maxed",
+        "Owned": "Owned",
+        "CannotAfford": "Not enough XP",
+        "RequiresPrereq": "Requires prerequisite",
+        "NoSkillsAvailable": "No skills available at this rank",
+        "NoTalentsAvailable": "No talents available at this rank",
+        "Purchased": "Purchased {name} for {cost} XP",
+        "PurchasedCharacteristic": "Purchased {char} ({tier}) for {cost} XP",
+        "Prereq": {
+            "Characteristic": "Requires {char} {required}+ (current: {current})",
+            "SkillMissing": "Requires {skill} skill",
+            "SkillLevel": "Requires {skill} at {level}",
+            "TalentMissing": "Requires {talent} talent"
+        },
+        "Error": {
+            "MaxedOut": "This characteristic is already at maximum",
+            "CannotAfford": "Not enough XP to purchase this advancement",
+            "PrerequisitesNotMet": "Prerequisites not met: {reasons}",
+            "InsufficientXP": "Not enough XP (cost: {cost}, available: {available})",
+            "TransactionFailed": "Failed to spend XP"
+        }
+    },
+
+    "RT.Career": {
+        "RogueTrader": "Rogue Trader",
+        "RogueTraderDesc": "A scion of a powerful dynasty, holder of a sacred Warrant of Trade.",
+        "ArchMilitant": "Arch-Militant",
+        "ArchMilitantDesc": "A warrior born, trained in the arts of war and destruction.",
+        "Astropath": "Astropath Transcendent",
+        "AstropathDesc": "A soul-bound psyker who transmits messages across the void.",
+        "Explorator": "Explorator",
+        "ExploratorDesc": "A Tech-Priest of Mars, seeker of lost knowledge.",
+        "Missionary": "Missionary",
+        "MissionaryDesc": "A zealous servant of the Imperial Creed.",
+        "Navigator": "Navigator",
+        "NavigatorDesc": "A mutant noble who guides ships through the Warp.",
+        "Seneschal": "Seneschal",
+        "SeneschalDesc": "A master of trade, diplomacy, and information.",
+        "VoidMaster": "Void-Master",
+        "VoidMasterDesc": "A seasoned spacefarer and ship commander."
+    },
+
     "RT.Combat.Action": {
         "StandardAttack": "Standard Attack",
         "StandardAttackDesc": "Make one melee or ranged attack.",

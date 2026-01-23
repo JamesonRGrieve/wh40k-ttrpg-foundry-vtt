@@ -15,6 +15,7 @@ import LoadoutPresetDialog from '../dialogs/loadout-preset-dialog.mjs';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.mjs';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.mjs';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.mjs';
+import AdvancementDialog from '../dialogs/advancement-dialog.mjs';
 import { RTContextMenu } from '../api/context-menu-mixin.mjs';
 
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
@@ -95,6 +96,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
             // Experience actions
             'customXP': AcolyteSheet.#customXP,
+            'openAdvancement': AcolyteSheet.#openAdvancement,
 
             // Active Effect actions
             'createEffect': AcolyteSheet.#createEffect,
@@ -2197,6 +2199,22 @@ export default class AcolyteSheet extends BaseActorSheet {
         event.preventDefault();
         const { openAddXPDialog } = await import('../prompts/add-xp-dialog.mjs');
         await openAddXPDialog(this.actor);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Open the advancement dialog for spending XP.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #openAdvancement(event, target) {
+        event.preventDefault();
+        // Default to rogueTrader career for now
+        // TODO: Get career from actor.system.originPath.career or rogueTrader.careerPath
+        const careerKey = 'rogueTrader';
+        AdvancementDialog.open(this.actor, { careerKey });
     }
 
     /* -------------------------------------------- */
