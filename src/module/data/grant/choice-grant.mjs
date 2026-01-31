@@ -90,6 +90,13 @@ export default class ChoiceGrantData extends BaseGrantData {
       return result;
     }
 
+    // Handle missing/undefined options gracefully
+    const choiceOptions = this.options ?? [];
+    if (choiceOptions.length === 0) {
+      result.notifications.push("Choice grant has no options to apply");
+      return result;
+    }
+
     const selectedOptions = data.selected ?? [];
 
     // Validate selection count
@@ -111,7 +118,7 @@ export default class ChoiceGrantData extends BaseGrantData {
 
     // Apply each selected option
     for (const optionLabel of selectedOptions) {
-      const option = this.options.find(o => o.label === optionLabel);
+      const option = choiceOptions.find(o => o.label === optionLabel);
       if (!option) {
         result.errors.push(`Unknown option: ${optionLabel}`);
         continue;
@@ -121,8 +128,9 @@ export default class ChoiceGrantData extends BaseGrantData {
       result.notifications.push(`Selected: ${optionLabel}`);
 
       // Apply each grant in this option
-      for (let i = 0; i < option.grants.length; i++) {
-        const grantConfig = option.grants[i];
+      const grants = option.grants ?? [];
+      for (let i = 0; i < grants.length; i++) {
+        const grantConfig = grants[i];
         const grantKey = `${optionLabel}:${i}`;
 
         const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
@@ -203,17 +211,21 @@ export default class ChoiceGrantData extends BaseGrantData {
   validate() {
     const errors = super.validate();
 
-    if (this.options.length === 0) {
+    // Handle missing/undefined options gracefully
+    const options = this.options ?? [];
+
+    if (options.length === 0) {
       errors.push("Choice grant has no options");
     }
 
-    if (this.count > this.options.length && !this.allowDuplicates) {
-      errors.push(`Cannot select ${this.count} from ${this.options.length} options without duplicates`);
+    if (this.count > options.length && !this.allowDuplicates) {
+      errors.push(`Cannot select ${this.count} from ${options.length} options without duplicates`);
     }
 
     // Validate sub-grants
-    for (const option of this.options) {
-      for (const grantConfig of option.grants) {
+    for (const option of options) {
+      const grants = option.grants ?? [];
+      for (const grantConfig of grants) {
         const GrantClass = this.constructor.GRANT_TYPES[grantConfig.type];
         if (!GrantClass) {
           errors.push(`Unknown grant type "${grantConfig.type}" in option "${option.label}"`);
