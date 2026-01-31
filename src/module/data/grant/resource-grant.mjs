@@ -277,6 +277,12 @@ export default class ResourceGrantData extends BaseGrantData {
       return flat;
     }
 
+    // Handle lookup table format: "(1-4|=2),(5-7|=3),(8-10|=4)"
+    // This is a d10 roll table - roll and lookup the result
+    if (formula.includes("|=")) {
+      return this._evaluateLookupTable(formula);
+    }
+
     // Replace characteristic references
     let processedFormula = formula;
     
@@ -310,5 +316,48 @@ export default class ResourceGrantData extends BaseGrantData {
       console.error(`ResourceGrantData: Failed to evaluate formula "${formula}":`, err);
       return 0;
     }
+  }
+
+  /**
+   * Evaluate a lookup table formula like "(1-4|=2),(5-7|=3),(8-10|=4)".
+   * Rolls 1d10 and returns the value for the matching range.
+   * @param {string} formula - Lookup table formula
+   * @returns {Promise<number>}
+   * @private
+   */
+  async _evaluateLookupTable(formula) {
+    // Parse entries: "(1-4|=2),(5-7|=3),(8-10|=4)"
+    const entries = [];
+    const entryPattern = /\((\d+)-(\d+)\|=(\d+)\)/g;
+    let match;
+    
+    while ((match = entryPattern.exec(formula)) !== null) {
+      entries.push({
+        min: parseInt(match[1]),
+        max: parseInt(match[2]),
+        value: parseInt(match[3])
+      });
+    }
+
+    if (entries.length === 0) {
+      console.warn(`ResourceGrantData: Could not parse lookup table: ${formula}`);
+      return 0;
+    }
+
+    // Roll 1d10
+    const roll = await new Roll("1d10").evaluate();
+    const rolled = roll.total;
+
+    // Find matching entry
+    for (const entry of entries) {
+      if (rolled >= entry.min && rolled <= entry.max) {
+        game.rt?.log(`ResourceGrantData: Rolled ${rolled} on lookup table, result: ${entry.value}`);
+        return entry.value;
+      }
+    }
+
+    // No match - return first entry as fallback
+    console.warn(`ResourceGrantData: Roll ${rolled} didn't match any range in: ${formula}`);
+    return entries[0]?.value ?? 0;
   }
 }

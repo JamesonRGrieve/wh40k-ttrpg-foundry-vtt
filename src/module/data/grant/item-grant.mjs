@@ -82,11 +82,27 @@ export default class ItemGrantData extends BaseGrantData {
       return result;
     }
 
-    const itemsToCreate = [];
-    const selectedUuids = data.selected ?? this.items.map(i => i.uuid);
+    // Handle missing items gracefully
+    const items = this.items ?? [];
+    if (items.length === 0) {
+      result.notifications.push("Item grant has no items to apply");
+      return result;
+    }
 
-    for (const itemConfig of this.items) {
+    const itemsToCreate = [];
+    const selectedUuids = data.selected ?? items.map(i => i.uuid);
+
+    for (const itemConfig of items) {
       const { uuid, optional, overrides } = itemConfig;
+      
+      // Skip items with empty UUID (legacy data without proper mapping)
+      if (!uuid) {
+        const legacyName = itemConfig._legacyName;
+        if (legacyName) {
+          result.notifications.push(`Skipped "${legacyName}" - no UUID mapping available`);
+        }
+        continue;
+      }
       
       // Skip if not selected
       if (!selectedUuids.includes(uuid)) {
@@ -237,11 +253,14 @@ export default class ItemGrantData extends BaseGrantData {
   validate() {
     const errors = super.validate();
     
-    if (this.items.length === 0) {
+    // items may be undefined if grant was created with invalid data
+    const items = this.items ?? [];
+    
+    if (items.length === 0) {
       errors.push("Item grant has no items configured");
     }
 
-    for (const itemConfig of this.items) {
+    for (const itemConfig of items) {
       if (!itemConfig.uuid) {
         errors.push("Item grant entry missing UUID");
       }
