@@ -10,7 +10,7 @@
  */
 
 import { OriginChartLayout } from "../../utils/origin-chart-layout.mjs";
-import { OriginGrantsProcessor } from "../../utils/origin-grants-processor.mjs";
+import { GrantsManager } from "../../managers/grants-manager.mjs";
 import OriginPathChoiceDialog from "./origin-path-choice-dialog.mjs";
 import OriginRollDialog from "./origin-roll-dialog.mjs";
 import OriginDetailDialog from "./origin-detail-dialog.mjs";
@@ -1717,94 +1717,61 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (!confirmed) return;
         
         try {
-            // Process all grants
-            const allGrants = {
-                characteristics: {},
-                itemsToCreate: [],
-                woundsBonus: 0,
-                fateBonus: 0,
-                corruptionBonus: 0,
-                insanityBonus: 0
-            };
-            
-            for (const [step, selection] of this.selections) {
-                // Create a wrapper object for OriginGrantsProcessor that behaves like an Item
-                const itemLike = {
-                    name: selection.name,
-                    img: selection.img,
-                    system: this._getSelectionSystem(selection),
-                    uuid: selection.uuid || selection._sourceUuid,
-                    toObject: () => foundry.utils.deepClone(selection)
-                };
-                const result = await OriginGrantsProcessor.processOriginGrants(itemLike, this.actor);
-                
-                // Merge characteristics
-                for (const [key, value] of Object.entries(result.characteristics)) {
-                    allGrants.characteristics[key] = (allGrants.characteristics[key] || 0) + value;
-                }
-                
-                // Merge items
-                allGrants.itemsToCreate.push(...result.itemsToCreate);
-                
-                // Merge bonuses
-                allGrants.woundsBonus += result.woundsBonus;
-                allGrants.fateBonus += result.fateBonus;
-                allGrants.corruptionBonus += result.corruptionBonus;
-                allGrants.insanityBonus += result.insanityBonus;
-            }
-            
-            // Apply to actor
-            const updates = {};
-            
-            // Apply characteristic advances
-            for (const [key, value] of Object.entries(allGrants.characteristics)) {
-                const current = this.actor.system.characteristics[key]?.advance || 0;
-                updates[`system.characteristics.${key}.advance`] = current + value;
-            }
-            
-            // Apply wounds/fate
-            if (allGrants.woundsBonus > 0) {
-                const currentMax = this.actor.system.wounds?.max || 0;
-                updates["system.wounds.max"] = currentMax + allGrants.woundsBonus;
-                updates["system.wounds.value"] = currentMax + allGrants.woundsBonus;
-            }
-            
-            if (allGrants.fateBonus > 0) {
-                const currentMax = this.actor.system.fate?.max || 0;
-                updates["system.fate.max"] = currentMax + allGrants.fateBonus;
-                updates["system.fate.value"] = currentMax + allGrants.fateBonus;
-            }
-            
-            // Apply corruption/insanity
-            if (allGrants.corruptionBonus > 0) {
-                const current = this.actor.system.corruption?.value || 0;
-                updates["system.corruption.value"] = current + allGrants.corruptionBonus;
-            }
-            
-            if (allGrants.insanityBonus > 0) {
-                const current = this.actor.system.insanity?.value || 0;
-                updates["system.insanity.value"] = current + allGrants.insanityBonus;
-            }
-            
-            // Update actor
-            await this.actor.update(updates);
-            
-            // Create items (talents, skills, traits, etc.)
-            if (allGrants.itemsToCreate.length > 0) {
-                await this.actor.createEmbeddedDocuments("Item", allGrants.itemsToCreate);
-            }
-            
-            // Create origin path items on actor (for reference)
+            // Build array of origin items from selections
             const originItems = [];
             for (const [step, selection] of this.selections) {
-                // For plain data objects, use them directly (they are already in the right format)
+                // Create an item-like object with proper system data
+                const itemData = selection.toObject ? selection.toObject() : foundry.utils.deepClone(selection);
+                // Ensure system data is present
+                if (!itemData.system && selection.system) {
+                    itemData.system = selection.system;
+                }
+                // Add selected choices to the item data
+                if (this.choiceSelections.has(step)) {
+                    itemData.system = itemData.system || {};
+                    itemData.system.selectedChoices = Object.fromEntries(this.choiceSelections.get(step) || new Map());
+                }
+                // Add rolled values
+                if (this.rollResults.has(step)) {
+                    itemData.system = itemData.system || {};
+                    itemData.system.rollResults = this.rollResults.get(step);
+                }
+                originItems.push(itemData);
+            }
+
+            // Use GrantsManager to apply all grants in batch
+            // This handles characteristics, skills, talents, traits, wounds, fate, etc.
+            const result = await GrantsManager.applyBatchGrants(
+                originItems.map(data => ({
+                    name: data.name,
+                    type: "originPath",
+                    system: data.system || this._getSelectionSystem(data),
+                    toObject: () => data
+                })),
+                this.actor,
+                {
+                    selections: this._buildGrantSelections(),
+                    rolledValues: this._buildRolledValues(),
+                    showNotification: false
+                }
+            );
+
+            if (!result.success && result.errors.length > 0) {
+                console.warn("Grant application had errors:", result.errors);
+            }
+
+            // Create origin path items on actor (for reference/display)
+            const cleanOriginItems = [];
+            for (const [step, selection] of this.selections) {
                 const itemData = selection.toObject ? selection.toObject() : foundry.utils.deepClone(selection);
                 // Remove internal tracking properties
                 delete itemData._sourceUuid;
                 delete itemData._actorItemId;
-                originItems.push(itemData);
+                // Ensure it's marked as an origin path item
+                itemData.type = "originPath";
+                cleanOriginItems.push(itemData);
             }
-            await this.actor.createEmbeddedDocuments("Item", originItems);
+            await this.actor.createEmbeddedDocuments("Item", cleanOriginItems);
             
             // Success
             ui.notifications.info(game.i18n.localize("RT.OriginPath.CommitSuccess"));
@@ -1814,5 +1781,38 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             console.error("Failed to commit origin path:", err);
             ui.notifications.error(game.i18n.localize("RT.OriginPath.CommitFailed"));
         }
+    }
+
+    /**
+     * Build grant selections from choice selections.
+     * @returns {object}
+     * @private
+     */
+    _buildGrantSelections() {
+        const selections = {};
+        for (const [step, choices] of this.choiceSelections) {
+            for (const [choiceLabel, selected] of choices) {
+                selections[`${step}:${choiceLabel}`] = { selected };
+            }
+        }
+        return selections;
+    }
+
+    /**
+     * Build rolled values from roll results.
+     * @returns {object}
+     * @private
+     */
+    _buildRolledValues() {
+        const values = {};
+        for (const [step, results] of this.rollResults) {
+            if (results.wounds?.rolled != null) {
+                values.wounds = (values.wounds || 0) + results.wounds.rolled;
+            }
+            if (results.fate?.rolled != null) {
+                values.fate = (values.fate || 0) + results.fate.rolled;
+            }
+        }
+        return values;
     }
 }

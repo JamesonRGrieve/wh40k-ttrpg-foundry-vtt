@@ -5,23 +5,25 @@
  * Following DND5E's Advancement pattern with apply/reverse/restore.
  */
 
-export { default as BaseGrantData } from "./base-grant.mjs";
-export { default as ItemGrantData } from "./item-grant.mjs";
-export { default as SkillGrantData } from "./skill-grant.mjs";
-export { default as CharacteristicGrantData } from "./characteristic-grant.mjs";
-export { default as ResourceGrantData } from "./resource-grant.mjs";
-export { default as ChoiceGrantData } from "./choice-grant.mjs";
+import BaseGrantData from "./base-grant.mjs";
+import ItemGrantData from "./item-grant.mjs";
+import SkillGrantData from "./skill-grant.mjs";
+import CharacteristicGrantData from "./characteristic-grant.mjs";
+import ResourceGrantData from "./resource-grant.mjs";
+import ChoiceGrantData from "./choice-grant.mjs";
+
+export { BaseGrantData, ItemGrantData, SkillGrantData, CharacteristicGrantData, ResourceGrantData, ChoiceGrantData };
 
 /**
  * Registry of all grant types.
  * @type {Object<string, typeof BaseGrantData>}
  */
 export const GRANT_TYPES = {
-  item: (await import("./item-grant.mjs")).default,
-  skill: (await import("./skill-grant.mjs")).default,
-  characteristic: (await import("./characteristic-grant.mjs")).default,
-  resource: (await import("./resource-grant.mjs")).default,
-  choice: (await import("./choice-grant.mjs")).default
+  item: ItemGrantData,
+  skill: SkillGrantData,
+  characteristic: CharacteristicGrantData,
+  resource: ResourceGrantData,
+  choice: ChoiceGrantData
 };
 
 /**
