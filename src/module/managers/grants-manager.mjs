@@ -18,6 +18,40 @@ import { GRANT_TYPES, createGrant } from "../data/grant/_module.mjs";
  * @property {string[]} errors - Error messages
  */
 
+/**
+ * Generate a deterministic 16-character alphanumeric ID from a seed string.
+ * Uses a simple hash to ensure the same input always produces the same output.
+ * @param {string} seed - Input string to hash
+ * @returns {string} 16-character alphanumeric ID
+ */
+function generateDeterministicId(seed) {
+  // Simple string hash
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    const char = seed.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  
+  // Convert to positive number and base36
+  const positive = Math.abs(hash);
+  const base36 = positive.toString(36);
+  
+  // Pad or truncate to exactly 16 characters
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let result = base36;
+  
+  // Add more entropy from the seed if needed
+  let seedIndex = 0;
+  while (result.length < 16) {
+    const charCode = seed.charCodeAt(seedIndex % seed.length);
+    result += chars[charCode % chars.length];
+    seedIndex++;
+  }
+  
+  return result.substring(0, 16);
+}
+
 export class GrantsManager {
 
   /* -------------------------------------------- */
@@ -687,9 +721,9 @@ export class GrantsManager {
     // explicitly in the grants object (non-origin-path items).
     const charMods = oldGrants?.characteristics;
     if (charMods && Object.keys(charMods).length > 0) {
+      const charKeys = Object.keys(charMods).sort().join("-");
       const charGrant = {
-        // Use deterministic ID based on content for idempotency
-        _id: `char-${Object.keys(charMods).sort().join("-")}`,
+        _id: generateDeterministicId(`char-${charKeys}`),
         type: "characteristic",
         characteristics: Object.entries(charMods)
           .filter(([_, value]) => value !== 0)
@@ -706,7 +740,7 @@ export class GrantsManager {
     // Migrate wounds
     if (oldGrants.woundsFormula || oldGrants.wounds) {
       newGrants.push({
-        _id: "resource-wounds",
+        _id: generateDeterministicId("resource-wounds"),
         type: "resource",
         resources: [{
           type: "wounds",
@@ -718,7 +752,7 @@ export class GrantsManager {
     // Migrate fate
     if (oldGrants.fateFormula || oldGrants.fateThreshold) {
       newGrants.push({
-        _id: "resource-fate",
+        _id: generateDeterministicId("resource-fate"),
         type: "resource",
         resources: [{
           type: "fate",
@@ -729,10 +763,9 @@ export class GrantsManager {
 
     // Migrate skills
     if (oldGrants.skills?.length > 0) {
-      // Create deterministic ID from skill keys
       const skillKeys = oldGrants.skills.map(s => s.key || s.name).sort().join("-");
       newGrants.push({
-        _id: `skills-${skillKeys}`.substring(0, 50),
+        _id: generateDeterministicId(`skills-${skillKeys}`),
         type: "skill",
         skills: oldGrants.skills.map(s => ({
           key: s.key || s.name,  // Support both key and name
@@ -746,7 +779,7 @@ export class GrantsManager {
     if (oldGrants.talents?.length > 0) {
       const talentNames = oldGrants.talents.map(t => t.name || "unknown").sort().join("-");
       newGrants.push({
-        _id: `talents-${talentNames}`.substring(0, 50),
+        _id: generateDeterministicId(`talents-${talentNames}`),
         type: "item",
         items: oldGrants.talents.map(t => ({
           uuid: t.uuid || "",
@@ -761,7 +794,7 @@ export class GrantsManager {
     if (oldGrants.traits?.length > 0) {
       const traitNames = oldGrants.traits.map(t => t.name || "unknown").sort().join("-");
       newGrants.push({
-        _id: `traits-${traitNames}`.substring(0, 50),
+        _id: generateDeterministicId(`traits-${traitNames}`),
         type: "item",
         items: oldGrants.traits.map(t => ({
           uuid: t.uuid || "",
@@ -775,7 +808,7 @@ export class GrantsManager {
     if (oldGrants.equipment?.length > 0) {
       const equipNames = oldGrants.equipment.map(e => e.name || "unknown").sort().join("-");
       newGrants.push({
-        _id: `equipment-${equipNames}`.substring(0, 50),
+        _id: generateDeterministicId(`equipment-${equipNames}`),
         type: "item",
         items: oldGrants.equipment.map(e => ({
           uuid: e.uuid || "",
@@ -790,7 +823,7 @@ export class GrantsManager {
       for (let i = 0; i < oldGrants.choices.length; i++) {
         const choice = oldGrants.choices[i];
         newGrants.push({
-          _id: `choice-${i}-${choice.label || "choice"}`.substring(0, 50),
+          _id: generateDeterministicId(`choice-${i}-${choice.label || "choice"}`),
           type: "choice",
           label: choice.label,
           count: choice.count || 1,
