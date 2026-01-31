@@ -260,7 +260,15 @@ export default class ChoiceGrantData extends BaseGrantData {
       };
     }
 
-    const grant = new GrantClass(grantConfig);
+    // Ensure grant config has required fields with defaults
+    const fullConfig = {
+      _id: grantConfig._id || foundry.utils.randomID(),
+      type: grantConfig.type,
+      optional: grantConfig.optional ?? false,
+      ...grantConfig
+    };
+
+    const grant = new GrantClass(fullConfig);
     
     // Pass through any sub-grant specific data
     const subData = data.subGrants?.[grantConfig._id] ?? {};
