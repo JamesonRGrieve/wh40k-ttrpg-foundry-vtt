@@ -20,13 +20,7 @@
       "fateFormula": "(1-6|=2),(7-9|=3),(10|=4)",
       "fateThreshold": 0,
       "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "Security",
-          "specialization": "",
-          "level": "untrained"
-        }
-      ],
+      "skills": [],
       "talents": [
         {
           "name": "Syndicate (Penal World)",
