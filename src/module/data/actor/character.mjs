@@ -1,14 +1,21 @@
-import CreatureTemplate from "./templates/creature.mjs";
+import CreatureTemplate from './templates/creature.mjs';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField, SetField } = foundry.data.fields;
 
 /**
- * List of characteristic keys used for character generation (excludes Influence).
+ * List of characteristic keys used for character generation.
  * @type {string[]}
  */
 const GENERATION_CHARACTERISTICS = [
-  'weaponSkill', 'ballisticSkill', 'strength', 'toughness',
-  'agility', 'intelligence', 'perception', 'willpower', 'fellowship'
+    'weaponSkill',
+    'ballisticSkill',
+    'strength',
+    'toughness',
+    'agility',
+    'intelligence',
+    'perception',
+    'willpower',
+    'fellowship'
 ];
 
 /**
@@ -25,152 +32,82 @@ export default class CharacterData extends CreatureTemplate {
   /** @inheritDoc */
   static defineSchema() {
     return {
-      ...super.defineSchema(),
-      // ===== ROGUE TRADER SPECIFIC =====
-      rogueTrader: new SchemaField({
-        careerPath: new StringField({ required: false, blank: true }),
-        rank: new StringField({ required: false, blank: true }),
-        homeWorld: new StringField({ required: false, blank: true }),
-        motivation: new StringField({ required: false, blank: true }),
-        profitFactor: new SchemaField({
-          starting: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          current: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          modifier: new NumberField({ required: true, initial: 0, integer: true }),
-          misfortunes: new StringField({ required: false, blank: true })
+        ...super.defineSchema(),
+
+        rank: new NumberField({ required: true, initial: 1, min: 1, integer: true }),
+        mutations: new StringField({ required: false, blank: true }),
+
+        // ===== CHARACTER BIOGRAPHY =====
+        bio: new SchemaField({
+            playerName: new StringField({ required: false, blank: true }),
+            gender: new StringField({ required: false, blank: true }),
+            age: new StringField({ required: false, blank: true }),
+            build: new StringField({ required: false, blank: true }),
+            complexion: new StringField({ required: false, blank: true }),
+            hair: new StringField({ required: false, blank: true }),
+            eyes: new StringField({ required: false, blank: true }),
+            quirks: new StringField({ required: false, blank: true }),
+            superstition: new StringField({ required: false, blank: true }),
+            mementos: new StringField({ required: false, blank: true }),
+            notes: new HTMLField({ required: false, blank: true }),
         }),
-        endeavour: new SchemaField({
-          name: new StringField({ required: false, blank: true }),
-          achievementCurrent: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          achievementRequired: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          reward: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          notes: new StringField({ required: false, blank: true })
+
+        // ===== ORIGIN PATH =====
+        originPath: new SchemaField({
+            homeWorld: new StringField({ required: false, blank: true }),
+            birthright: new StringField({ required: false, blank: true }),
+            lureOfTheVoid: new StringField({ required: false, blank: true }),
+            trialsAndTravails: new StringField({ required: false, blank: true }),
+            motivation: new StringField({ required: false, blank: true }),
+            career: new StringField({ required: false, blank: true }),
         }),
-        shipName: new StringField({ required: false, blank: true }),
-        dynasty: new SchemaField({
-          name: new StringField({ required: false, blank: true }),
-          history: new HTMLField({ required: false, blank: true }),
-          reputation: new NumberField({ required: true, initial: 0, integer: true })
+
+        // ===== EXPERIENCE =====
+        experience: new SchemaField({
+            used: new NumberField({ required: true, initial: 4500, min: 0, integer: true }),
+            total: new NumberField({ required: true, initial: 5000, min: 0, integer: true }),
+            available: new NumberField({ required: true, initial: 0, integer: true }), // Derived
         }),
-        armour: new SchemaField({
-          head: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          rightArm: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          leftArm: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          body: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          rightLeg: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-          leftLeg: new NumberField({ required: true, initial: 0, min: 0, integer: true })
+
+        // ===== MENTAL STATE =====
+        insanity: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+        // insanityBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived
+        corruption: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+        // corruptionBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived
+
+        // ===== OTHER =====
+        // aptitudes: new ObjectField({ required: true, initial: {} }),
+
+        // backgroundEffects: new SchemaField({
+        //     abilities: new ArrayField(
+        //         new SchemaField({
+        //             source: new StringField({ required: false }),
+        //             name: new StringField({ required: false }),
+        //             benefit: new StringField({ required: false }),
+        //         }),
+        //         { required: true, initial: [] },
+        //     ),
+        // }),
+
+        // ===== CHARACTER GENERATION =====
+        characterGeneration: new SchemaField({
+            // Track raw dice rolls (2D20 summed for each characteristic)
+            rolls: new ArrayField(new NumberField({ required: true, initial: 0, integer: true, min: 0, max: 40 }), { initial: [] }),
+            // Maps characteristic key to roll index (0-8), or null if unassigned
+            assignments: new SchemaField(
+                Object.fromEntries(
+                    GENERATION_CHARACTERISTICS.map((key) => [
+                        key,
+                        new NumberField({ required: false, nullable: true, initial: null, integer: true, min: 0, max: 8 }),
+                    ]),
+                ),
+            ),
+            // Custom base values (for non-human races)
+            customBases: new SchemaField({
+                enabled: new BooleanField({ initial: false }),
+                ...Object.fromEntries(GENERATION_CHARACTERISTICS.map((key) => [key, new NumberField({ required: true, initial: 25, integer: true, min: 0 })])),
+            }),
         }),
-        lifting: new SchemaField({
-          lift: new NumberField({ required: true, initial: 0, min: 0 }),
-          carry: new NumberField({ required: true, initial: 0, min: 0 }),
-          push: new NumberField({ required: true, initial: 0, min: 0 })
-        }),
-        armourWeight: new NumberField({ required: true, initial: 0, min: 0 }),
-        weight: new SchemaField({
-          total: new NumberField({ required: true, initial: 0, min: 0 }),
-          current: new NumberField({ required: true, initial: 0, min: 0 })
-        }),
-        acquisitions: new ArrayField(
-          new SchemaField({
-            name: new StringField({ required: false, blank: true }),
-            availability: new StringField({ required: false, blank: true }),
-            modifier: new NumberField({ required: true, initial: 0, integer: true }),
-            notes: new StringField({ required: false, blank: true }),
-            acquired: new BooleanField({ required: true, initial: false })
-          }),
-          { required: true, initial: [] }
-        ),
-        mutations: new StringField({ required: false, blank: true })
-      }),
-
-      // ===== CHARACTER BIOGRAPHY =====
-      bio: new SchemaField({
-        playerName: new StringField({ required: false, blank: true }),
-        gender: new StringField({ required: false, blank: true }),
-        age: new StringField({ required: false, blank: true }),
-        build: new StringField({ required: false, blank: true }),
-        complexion: new StringField({ required: false, blank: true }),
-        hair: new StringField({ required: false, blank: true }),
-        eyes: new StringField({ required: false, blank: true }),
-        quirks: new StringField({ required: false, blank: true }),
-        superstition: new StringField({ required: false, blank: true }),
-        mementos: new StringField({ required: false, blank: true }),
-        notes: new HTMLField({ required: false, blank: true })
-      }),
-
-      // ===== ORIGIN PATH =====
-      originPath: new SchemaField({
-        homeWorld: new StringField({ required: false, blank: true }),
-        birthright: new StringField({ required: false, blank: true }),
-        lureOfTheVoid: new StringField({ required: false, blank: true }),
-        trialsAndTravails: new StringField({ required: false, blank: true }),
-        motivation: new StringField({ required: false, blank: true }),
-        career: new StringField({ required: false, blank: true })
-      }),
-
-      // ===== EXPERIENCE =====
-      experience: new SchemaField({
-        used: new NumberField({ required: true, initial: 4500, min: 0, integer: true }),
-        total: new NumberField({ required: true, initial: 5000, min: 0, integer: true }),
-        // Derived
-        available: new NumberField({ required: true, initial: 500, integer: true }),
-        spentCharacteristics: new NumberField({ required: true, initial: 0, integer: true }),
-        spentSkills: new NumberField({ required: true, initial: 0, integer: true }),
-        spentTalents: new NumberField({ required: true, initial: 0, integer: true }),
-        spentPsychicPowers: new NumberField({ required: true, initial: 0, integer: true }),
-        calculatedTotal: new NumberField({ required: true, initial: 0, integer: true })
-      }),
-
-      // ===== MENTAL STATE =====
-      insanity: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-      corruption: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-      insanityBonus: new NumberField({ required: true, initial: 0, integer: true }),
-      corruptionBonus: new NumberField({ required: true, initial: 0, integer: true }),
-
-      // ===== OTHER =====
-      aptitudes: new ObjectField({ required: true, initial: {} }),
-
-      backgroundEffects: new SchemaField({
-        abilities: new ArrayField(
-          new SchemaField({
-            source: new StringField({ required: false }),
-            name: new StringField({ required: false }),
-            benefit: new StringField({ required: false })
-          }),
-          { required: true, initial: [] }
-        )
-      }),
-
-      // Wounds modifier tracking
-      totalWoundsModifier: new NumberField({ required: true, initial: 0, integer: true }),
-      totalFateModifier: new NumberField({ required: true, initial: 0, integer: true }),
-
-      // ===== CHARACTER GENERATION =====
-      characterGeneration: new SchemaField({
-        // Track raw dice rolls (2D20 summed for each characteristic)
-        rolls: new ArrayField(
-          new NumberField({ required: true, initial: 0, integer: true, min: 0, max: 40 }),
-          { initial: [] }
-        ),
-        // Maps characteristic key to roll index (0-8), or null if unassigned
-        assignments: new SchemaField(
-          Object.fromEntries(
-            GENERATION_CHARACTERISTICS.map(key => [
-              key,
-              new NumberField({ required: false, nullable: true, initial: null, integer: true, min: 0, max: 8 })
-            ])
-          )
-        ),
-        // Custom base values (for non-human races)
-        customBases: new SchemaField({
-          enabled: new BooleanField({ initial: false }),
-          ...Object.fromEntries(
-            GENERATION_CHARACTERISTICS.map(key => [
-              key,
-              new NumberField({ required: true, initial: 25, integer: true, min: 0 })
-            ])
-          )
-        })
-      })
     };
   }
 
@@ -181,22 +118,6 @@ export default class CharacterData extends CreatureTemplate {
   /** @override */
   static migrateData(source) {
     // Handle old characteristic field names
-    if (source.characteristics) {
-      for (const char of Object.values(source.characteristics)) {
-        if (char.starting !== undefined && char.base === undefined) {
-          char.base = char.starting;
-          delete char.starting;
-        }
-        if (char.advances !== undefined && char.advance === undefined) {
-          char.advance = char.advances;
-          delete char.advances;
-        }
-        if (char.abbreviation !== undefined && char.short === undefined) {
-          char.short = char.abbreviation;
-          delete char.abbreviation;
-        }
-      }
-    }
     return super.migrateData(source);
   }
 
@@ -252,7 +173,7 @@ export default class CharacterData extends CreatureTemplate {
   prepareDerivedData() {
     super.prepareDerivedData();
     this._prepareExperience();
-    this._prepareMentalState();
+    // this._prepareMentalState();
   }
 
   /** @inheritDoc */
@@ -271,14 +192,14 @@ export default class CharacterData extends CreatureTemplate {
     this.experience.available = this.experience.total - this.experience.used;
   }
 
-  /**
-   * Prepare insanity and corruption derived values.
-   * @protected
-   */
-  _prepareMentalState() {
-    this.insanityBonus = Math.floor(this.insanity / 10);
-    this.corruptionBonus = Math.floor(this.corruption / 10);
-  }
+  // /**
+  //  * Prepare insanity and corruption derived values.
+  //  * @protected
+  //  */
+  // _prepareMentalState() {
+  //   this.insanityBonus = Math.floor(this.insanity / 10);
+  //   this.corruptionBonus = Math.floor(this.corruption / 10);
+  // }
 
   /**
    * Compute origin path effects from items.
@@ -419,8 +340,6 @@ export default class CharacterData extends CreatureTemplate {
 
   /** @override */
   getRollData() {
-    const data = super.getRollData();
-    data.pf = this.effectiveProfitFactor;
-    return data;
+    return super.getRollData();
   }
 }

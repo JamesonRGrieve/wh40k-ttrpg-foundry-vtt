@@ -56,7 +56,7 @@ export class TooltipsRT {
             console.warn('RT Tooltips | Could not find #tooltip element');
             return;
         }
-        console.log('RT Tooltips | Initialized - observing #tooltip element');
+        // console.log('RT Tooltips | Initialized - observing #tooltip element');
         this.observe();
 
         // Load skill descriptions from compendium
@@ -92,7 +92,7 @@ export class TooltipsRT {
                     });
                 }
             }
-            console.log(`RT Tooltips | Loaded ${this.#skillDescriptions.size} skill descriptions`);
+            // console.log(`RT Tooltips | Loaded ${this.#skillDescriptions.size} skill descriptions`);
         } catch (err) {
             console.warn('RT Tooltips | Failed to load skill descriptions:', err);
         }
@@ -140,7 +140,7 @@ export class TooltipsRT {
             if (type === 'attributes' && attributeName === 'class') {
                 const wasActive = oldValue?.includes('active') ?? false;
                 const nowActive = tooltip.classList.contains('active');
-                console.log('RT Tooltips | Mutation detected', { wasActive, nowActive, oldValue, newClasses: tooltip.className });
+                // console.log('RT Tooltips | Mutation detected', { wasActive, nowActive, oldValue, newClasses: tooltip.className });
                 if (nowActive && !wasActive) isActive = true;
             }
         }
@@ -155,7 +155,7 @@ export class TooltipsRT {
     async _onTooltipActivate() {
         const element = game.tooltip.element;
         if (!element) {
-            console.log('RT Tooltips | Tooltip activated but no element found');
+            // console.log('RT Tooltips | Tooltip activated but no element found');
             return;
         }
 
@@ -163,7 +163,7 @@ export class TooltipsRT {
         const tooltipType = element.dataset.rtTooltip;
         const tooltipDataAttr = element.dataset.rtTooltipData;
 
-        console.log('RT Tooltips | Tooltip activated', { tooltipType, hasData: !!tooltipDataAttr, element });
+        // console.log('RT Tooltips | Tooltip activated', { tooltipType, hasData: !!tooltipDataAttr, element });
 
         if (tooltipType && tooltipDataAttr) {
             try {
@@ -172,7 +172,7 @@ export class TooltipsRT {
                 if (content) {
                     this.#tooltip.innerHTML = content;
                     this.#tooltip.classList.add('rt-tooltip', `rt-tooltip--${tooltipType}`);
-                    console.log('RT Tooltips | Rich tooltip rendered for', tooltipType);
+                    // console.log('RT Tooltips | Rich tooltip rendered for', tooltipType);
                     // Reposition after content change
                     requestAnimationFrame(() => this._repositionTooltip());
                 }

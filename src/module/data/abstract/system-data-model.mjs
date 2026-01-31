@@ -5,119 +5,142 @@
  * V13 Best Practice: Extends TypeDataModel for type-specific document data.
  */
 export default class SystemDataModel extends foundry.abstract.TypeDataModel {
-  
-  /**
-   * System type that this data model represents.
-   * @type {string}
-   */
-  static _systemType = null;
+    /**
+     * System type that this data model represents.
+     * @type {string}
+     */
+    static _systemType;
 
-  /* -------------------------------------------- */
-  /*  Data Model Configuration                    */
-  /* -------------------------------------------- */
+    /* -------------------------------------------- */
 
-  /**
-   * Metadata that describes this DataModel.
-   * @type {object}
-   */
-  static metadata = Object.freeze({
-    systemFlagsModel: null
-  });
+    /**
+     * Base templates used for construction.
+     * @type {*[]}
+     * @private
+     */
+    static _schemaTemplates = [];
 
-  /* -------------------------------------------- */
+    /* -------------------------------------------- */
 
-  /**
-   * @inheritdoc
-   * @returns {SchemaField}
-   */
-  static defineSchema() {
-    return {};
-  }
+    /* -------------------------------------------- */
+    /*  Data Model Configuration                    */
+    /* -------------------------------------------- */
 
-  /* -------------------------------------------- */
-  /*  Mixins                                      */
-  /* -------------------------------------------- */
+    /**
+     * Metadata that describes this DataModel.
+     * @type {SystemDataModelMetadata}
+     */
+    static metadata = Object.freeze({
+        systemFlagsModel: null,
+    });
 
-  /**
-   * Mix multiple templates with this DataModel class, returning a new class.
-   * @param {...function} templates   Template classes to mix.
-   * @returns {typeof SystemDataModel}
-   */
-  static mixin(...templates) {
-    for ( const template of templates ) {
-      if ( !(template.prototype instanceof foundry.abstract.DataModel) ) {
-        throw new Error(`${template.name} is not a DataModel subclass`);
-      }
+    get metadata() {
+        return this.constructor.metadata;
     }
 
-    const Base = class extends this {};
-    Object.defineProperty(Base, "name", { value: this.name });
+    /* -------------------------------------------- */
 
-    for ( const template of templates ) {
-      // Copy static methods
-      for ( const key of Object.getOwnPropertyNames(template) ) {
-        if ( ["length", "name", "prototype"].includes(key) ) continue;
-        if ( key in Base ) continue;
-        Object.defineProperty(Base, key, Object.getOwnPropertyDescriptor(template, key));
-      }
-
-      // Copy instance methods
-      for ( const key of Object.getOwnPropertyNames(template.prototype) ) {
-        if ( ["constructor"].includes(key) ) continue;
-        if ( key in Base.prototype ) continue;
-        Object.defineProperty(Base.prototype, key, Object.getOwnPropertyDescriptor(template.prototype, key));
-      }
-    }
-
-    // Merge schemas
-    const originalDefineSchema = Base.defineSchema;
-    Base.defineSchema = function() {
-      const schema = originalDefineSchema.call(this);
-      for ( const template of templates ) {
-        if ( template.defineSchema ) {
-          Object.assign(schema, template.defineSchema());
+    /** @inheritDoc */
+    static defineSchema() {
+        const schema = {};
+        for (const template of this._schemaTemplates) {
+            if (!template.defineSchema) {
+                throw new Error(`Invalid RT template mixin ${template} defined on class ${this.constructor}`);
+            }
+            this.mergeSchema(schema, template.defineSchema());
         }
-      }
-      return schema;
-    };
+        return schema;
+    }
 
-    return Base;
-  }
+    /**
+     * Merge two schema definitions together as well as possible.
+     * @param {DataSchema} a  First schema that forms the basis for the merge. *Will be mutated.*
+     * @param {DataSchema} b  Second schema that will be merged in, overwriting any non-mergeable properties.
+     * @returns {DataSchema}  Fully merged schema.
+     */
+    static mergeSchema(a, b) {
+        Object.assign(a, b);
+        return a;
+    }
 
-  /* -------------------------------------------- */
-  /*  Data Preparation                            */
-  /* -------------------------------------------- */
+    /* -------------------------------------------- */
+    /*  Mixins                                      */
+    /* -------------------------------------------- */
 
-  /**
-   * Perform preliminary operations before data preparation.
-   * @param {object} source   The initial data object.
-   */
-  prepareBaseData() {}
+    /* -------------------------------------------- */
 
-  /**
-   * Perform preparatory operations after data preparation.
-   */
-  prepareDerivedData() {}
+    /**
+     * A list of properties that should not be mixed-in to the final type.
+     * @type {Set<string>}
+     * @private
+     */
+    static _immiscible = new Set([
+        'length',
+        'mixed',
+        'name',
+        'prototype',
+        'cleanData',
+        '_cleanData',
+        '_initializationOrder',
+        'validateJoint',
+        '_validateJoint',
+        'migrateData',
+        '_migrateData',
+        'shimData',
+        '_shimData',
+        'defineSchema',
+    ]);
 
-  /* -------------------------------------------- */
-  /*  Helpers                                     */
-  /* -------------------------------------------- */
+    /* -------------------------------------------- */
 
-  /**
-   * Get a localized label for a characteristic abbreviation.
-   * @param {string} char   Characteristic key.
-   * @returns {string}
-   */
-  static getCharacteristicLabel(char) {
-    return CONFIG.ROGUE_TRADER.characteristics[char]?.label ?? char;
-  }
+    /**
+     * Mix multiple templates with the base type.
+     * @param {...*} templates            Template classes to mix.
+     * @returns {typeof SystemDataModel}  Final prepared type.
+     */
+    static mixin(...templates) {
+        for (const template of templates) {
+            if (!(template.prototype instanceof SystemDataModel)) {
+                throw new Error(`${template.name} is not a subclass of SystemDataModel`);
+            }
+        }
 
-  /**
-   * Get a localized abbreviation for a characteristic.
-   * @param {string} char   Characteristic key.
-   * @returns {string}
-   */
-  static getCharacteristicAbbr(char) {
-    return CONFIG.ROGUE_TRADER.characteristics[char]?.abbreviation ?? char;
-  }
+        const Base = class extends this {};
+        Object.defineProperty(Base, '_schemaTemplates', {
+            value: Object.seal([...this._schemaTemplates, ...templates]),
+            writable: false,
+            configurable: false,
+        });
+
+        for (const template of templates) {
+            // Take all static methods and fields from template and mix in to base class
+            for (const [key, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(template))) {
+                if (this._immiscible.has(key)) continue;
+                Object.defineProperty(Base, key, descriptor);
+            }
+
+            // Take all instance methods and fields from template and mix in to base class
+            for (const [key, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(template.prototype))) {
+                if (['constructor'].includes(key)) continue;
+                Object.defineProperty(Base.prototype, key, descriptor);
+            }
+        }
+
+        return Base;
+    }
+
+    /* -------------------------------------------- */
+    /*  Data Preparation                            */
+    /* -------------------------------------------- */
+
+    /**
+     * Perform preliminary operations before data preparation.
+     */
+    prepareBaseData() {}
+
+    /**
+     * Perform preparatory operations after data preparation.
+     */
+    prepareDerivedData() {}
+
 }
