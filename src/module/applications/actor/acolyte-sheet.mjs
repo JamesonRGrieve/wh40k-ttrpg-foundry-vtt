@@ -399,7 +399,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
             // Add skillLists for specialist skills panel
             if (!context.skillLists) {
-                this._prepareSkills(context);
+                await this._prepareSkills(context);
             }
         }
 
