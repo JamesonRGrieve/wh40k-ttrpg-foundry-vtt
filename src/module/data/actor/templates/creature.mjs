@@ -385,31 +385,19 @@ export default class CreatureTemplate extends CommonTemplate {
     }
 
     /**
-     * Clean wounds fields - delete empty values to prevent overwriting existing data.
+     * Clean wounds fields - convert to proper integers.
      * @param {object} source - The source data
      */
     static #cleanWounds(source) {
         if (source?.wounds) {
             if (source.wounds.max !== undefined) {
-                if (source.wounds.max === '' || source.wounds.max === null) {
-                    delete source.wounds.max;
-                } else {
-                    source.wounds.max = this._toInt(source.wounds.max);
-                }
+                source.wounds.max = this._toInt(source.wounds.max, 0);
             }
             if (source.wounds.value !== undefined) {
-                if (source.wounds.value === '' || source.wounds.value === null) {
-                    delete source.wounds.value;
-                } else {
-                    source.wounds.value = this._toInt(source.wounds.value);
-                }
+                source.wounds.value = this._toInt(source.wounds.value, 0);
             }
             if (source.wounds.critical !== undefined) {
-                if (source.wounds.critical === '' || source.wounds.critical === null) {
-                    delete source.wounds.critical;
-                } else {
-                    source.wounds.critical = this._toInt(source.wounds.critical);
-                }
+                source.wounds.critical = this._toInt(source.wounds.critical, 0);
             }
         }
     }
@@ -421,18 +409,10 @@ export default class CreatureTemplate extends CommonTemplate {
     static #cleanFatigue(source) {
         if (source?.fatigue) {
             if (source.fatigue.max !== undefined) {
-                if (source.fatigue.max === '' || source.fatigue.max === null) {
-                    delete source.fatigue.max;
-                } else {
-                    source.fatigue.max = this._toInt(source.fatigue.max);
-                }
+                source.fatigue.max = this._toInt(source.fatigue.max, 0);
             }
             if (source.fatigue.value !== undefined) {
-                if (source.fatigue.value === '' || source.fatigue.value === null) {
-                    delete source.fatigue.value;
-                } else {
-                    source.fatigue.value = this._toInt(source.fatigue.value);
-                }
+                source.fatigue.value = this._toInt(source.fatigue.value, 0);
             }
         }
     }
@@ -444,18 +424,10 @@ export default class CreatureTemplate extends CommonTemplate {
     static #cleanFate(source) {
         if (source?.fate) {
             if (source.fate.max !== undefined) {
-                if (source.fate.max === '' || source.fate.max === null) {
-                    delete source.fate.max;
-                } else {
-                    source.fate.max = this._toInt(source.fate.max);
-                }
+                source.fate.max = this._toInt(source.fate.max, 0);
             }
             if (source.fate.value !== undefined) {
-                if (source.fate.value === '' || source.fate.value === null) {
-                    delete source.fate.value;
-                } else {
-                    source.fate.value = this._toInt(source.fate.value);
-                }
+                source.fate.value = this._toInt(source.fate.value, 0);
             }
         }
     }
@@ -467,25 +439,13 @@ export default class CreatureTemplate extends CommonTemplate {
     static #cleanPsy(source) {
         if (source?.psy) {
             if (source.psy.rating !== undefined) {
-                if (source.psy.rating === '' || source.psy.rating === null) {
-                    delete source.psy.rating;
-                } else {
-                    source.psy.rating = this._toInt(source.psy.rating);
-                }
+                source.psy.rating = this._toInt(source.psy.rating, 0);
             }
             if (source.psy.sustained !== undefined) {
-                if (source.psy.sustained === '' || source.psy.sustained === null) {
-                    delete source.psy.sustained;
-                } else {
-                    source.psy.sustained = this._toInt(source.psy.sustained);
-                }
+                source.psy.sustained = this._toInt(source.psy.sustained, 0);
             }
             if (source.psy.defaultPR !== undefined) {
-                if (source.psy.defaultPR === '' || source.psy.defaultPR === null) {
-                    delete source.psy.defaultPR;
-                } else {
-                    source.psy.defaultPR = this._toInt(source.psy.defaultPR);
-                }
+                source.psy.defaultPR = this._toInt(source.psy.defaultPR, 0);
             }
         }
     }
