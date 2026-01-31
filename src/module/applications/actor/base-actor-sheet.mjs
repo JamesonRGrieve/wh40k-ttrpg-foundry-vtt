@@ -131,16 +131,14 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
         const context = {
             ...(await super._prepareContext(options)),
             actor: this.actor,
-            // system: this.actor.system,
-            source: this.isEditable ? this.actor.system._source : this.actor.system,
+            system: this.actor.system,
             fields: this.actor.system.schema?.fields ?? {},
             effects: this.actor.getEmbeddedCollection('ActiveEffect').contents,
             items: Array.from(this.actor.items),
-            // limited: this.actor.limited,
-            // editable: this.isEditable,
-            // owner: this.actor.isOwner, // Required for V13 {{editor}} helper
             rollableClass: this.isEditable ? 'rollable' : '',
         };
+        // source is for form editing - uses _source for editable, computed for read-only
+        context.source = this.isEditable ? this.actor.system._source : this.actor.system;
 
         // Prepare characteristics with HUD data
         this._prepareCharacteristicsHUD(context);
