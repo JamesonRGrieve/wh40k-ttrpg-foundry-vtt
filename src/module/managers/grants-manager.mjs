@@ -234,7 +234,9 @@ export class GrantsManager {
         showNotification: false // Suppress per-item notifications
       });
 
-      result.appliedState[item.id] = itemResult.appliedState;
+      // Use item.id, item._id, or generate a key from name
+      const itemKey = item.id || item._id || `item-${item.name?.replace(/\s+/g, '-')}`;
+      result.appliedState[itemKey] = itemResult.appliedState;
       result.notifications.push(...itemResult.notifications);
       result.errors.push(...itemResult.errors);
 
