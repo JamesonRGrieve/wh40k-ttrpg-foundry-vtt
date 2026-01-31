@@ -4,6 +4,7 @@
         <span class="rt-panel-title"><i class="fas fa-graduation-cap"></i> Specialist Skills</span>
     </div>
     <div class="rt-panel-body">
+        {{#if skillLists.specialist}}
         {{#each skillLists.specialist as |entry|}}
         <div class="rt-specialist-group{{#if entry.[1].advanced}} rt-specialist-group--advanced{{/if}}" data-skill="{{entry.[0]}}">
             <!-- Group Header -->
@@ -94,5 +95,10 @@
             </div>
         </div>
         {{/each}}
+        {{else}}
+        <div class="rt-specialist-empty">
+            <span>No specialist skill data available.</span>
+        </div>
+        {{/if}}
     </div>
 </div>

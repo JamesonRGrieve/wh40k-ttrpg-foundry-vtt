@@ -531,6 +531,12 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
         const standardColumns = [standard.slice(0, splitIndex), standard.slice(splitIndex)];
 
         context.skillLists = { standard, specialist, standardColumns };
+        
+        // Debug logging
+        console.log('RT | _prepareSkills: specialist skills count:', specialist.length);
+        if (specialist.length > 0) {
+            console.log('RT | _prepareSkills: first specialist:', specialist[0][0], specialist[0][1]?.label);
+        }
     }
 
     /**
