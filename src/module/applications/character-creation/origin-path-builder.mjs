@@ -1726,16 +1726,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 if (!itemData.system && selection.system) {
                     itemData.system = selection.system;
                 }
-                // Add selected choices to the item data
-                if (this.choiceSelections.has(step)) {
-                    itemData.system = itemData.system || {};
-                    itemData.system.selectedChoices = Object.fromEntries(this.choiceSelections.get(step) || new Map());
-                }
-                // Add rolled values
-                if (this.rollResults.has(step)) {
-                    itemData.system = itemData.system || {};
-                    itemData.system.rollResults = this.rollResults.get(step);
-                }
+                // selectedChoices and rollResults are already on selection.system
+                // from the choice dialogs and roll dialogs
                 originItems.push(itemData);
             }
 
@@ -1784,14 +1776,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Build grant selections from choice selections.
+     * Build grant selections from choice selections stored on each origin.
      * @returns {object}
      * @private
      */
     _buildGrantSelections() {
         const selections = {};
-        for (const [step, choices] of this.choiceSelections) {
-            for (const [choiceLabel, selected] of choices) {
+        for (const [step, selection] of this.selections) {
+            const selectedChoices = selection.system?.selectedChoices || {};
+            for (const [choiceLabel, selected] of Object.entries(selectedChoices)) {
                 selections[`${step}:${choiceLabel}`] = { selected };
             }
         }
@@ -1799,18 +1792,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Build rolled values from roll results.
+     * Build rolled values from roll results stored on each origin.
      * @returns {object}
      * @private
      */
     _buildRolledValues() {
         const values = {};
-        for (const [step, results] of this.rollResults) {
-            if (results.wounds?.rolled != null) {
-                values.wounds = (values.wounds || 0) + results.wounds.rolled;
+        for (const [step, selection] of this.selections) {
+            const rollResults = selection.system?.rollResults || {};
+            if (rollResults.wounds?.rolled != null) {
+                values.wounds = (values.wounds || 0) + rollResults.wounds.rolled;
             }
-            if (results.fate?.rolled != null) {
-                values.fate = (values.fate || 0) + results.fate.rolled;
+            if (rollResults.fate?.rolled != null) {
+                values.fate = (values.fate || 0) + rollResults.fate.rolled;
             }
         }
         return values;
