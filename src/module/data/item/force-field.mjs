@@ -13,29 +13,21 @@ import IdentifierField from '../fields/identifier-field.mjs';
  */
 export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
     /* -------------------------------------------- */
-    /*  Data Preparation                            */
+    /*  Data Migration                              */
     /* -------------------------------------------- */
 
     /**
-     * Migrate legacy force field data to V13 schema.
+     * Migrate force field data.
      * @param {object} source  The source data
-     * @returns {object}       Migrated data
+     * @protected
      */
-    static migrateData(source) {
-        const updates = {};
-
+    static _migrateData(source) {
+        super._migrateData?.(source);
         // Migrate old overloadThreshold field to overloadMin/overloadMax
         if (source.overloadThreshold !== undefined && source.overloadMin === undefined) {
-            updates.overloadMin = 1;
-            updates.overloadMax = source.overloadThreshold;
+            source.overloadMin = 1;
+            source.overloadMax = source.overloadThreshold;
         }
-
-        // Apply updates
-        if (Object.keys(updates).length > 0) {
-            foundry.utils.mergeObject(source, updates);
-        }
-
-        return source;
     }
 
     /** @inheritdoc */

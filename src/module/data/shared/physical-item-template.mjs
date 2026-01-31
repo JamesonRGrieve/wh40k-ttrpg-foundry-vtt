@@ -45,6 +45,58 @@ export default class PhysicalItemTemplate extends SystemDataModel {
   }
 
   /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate physical item data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    PhysicalItemTemplate.#migrateWeight(source);
+    PhysicalItemTemplate.#migrateCost(source);
+  }
+
+  /**
+   * Migrate legacy weight formats.
+   * @param {object} source  The source data
+   */
+  static #migrateWeight(source) {
+    // Convert string weight to number
+    if (typeof source.weight === 'string') {
+      const num = Number(source.weight);
+      source.weight = Number.isNaN(num) ? 0 : num;
+    }
+  }
+
+  /**
+   * Migrate legacy cost formats.
+   * @param {object} source  The source data
+   */
+  static #migrateCost(source) {
+    // Convert number cost to object
+    if (typeof source.cost === 'number') {
+      source.cost = { value: source.cost, currency: 'throne' };
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean physical item template data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
+  }
+
+  /* -------------------------------------------- */
 
   /**
    * Get the total weight considering quantity.

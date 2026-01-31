@@ -23,9 +23,72 @@ export default class DescriptionTemplate extends SystemDataModel {
     };
   }
 
-  // NOTE: migrateData for description/source is handled in ItemDataModel.migrateData()
-  // to avoid duplication. The mixin pattern copies methods but not migrateData since
-  // it already exists on ItemDataModel.
+  /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate description and source data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    DescriptionTemplate.#migrateDescription(source);
+    DescriptionTemplate.#migrateSource(source);
+  }
+
+  /**
+   * Migrate flat description string to object structure.
+   * @param {object} source  The source data
+   */
+  static #migrateDescription(source) {
+    if (typeof source.description === 'string') {
+      source.description = {
+        value: source.description,
+        chat: '',
+        summary: '',
+      };
+    }
+    // Ensure sub-fields are not null (V13 HTMLField strictness)
+    if (source.description && typeof source.description === 'object') {
+      source.description.chat ??= '';
+      source.description.summary ??= '';
+    }
+  }
+
+  /**
+   * Migrate flat source string to object structure.
+   * @param {object} source  The source data
+   */
+  static #migrateSource(source) {
+    if (typeof source.source === 'string') {
+      source.source = {
+        book: '',
+        page: '',
+        custom: source.source,
+      };
+    }
+    if (source.source && typeof source.source === 'object') {
+      source.source.book ??= '';
+      source.source.page ??= '';
+      source.source.custom ??= '';
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean description template data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
+  }
 
   /* -------------------------------------------- */
 

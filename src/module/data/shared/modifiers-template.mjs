@@ -233,6 +233,56 @@ export default class ModifiersTemplate extends SystemDataModel {
   }
 
   /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate modifiers data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    ModifiersTemplate.#migrateModifiers(source);
+  }
+
+  /**
+   * Migrate legacy modifier formats.
+   * @param {object} source  The source data
+   */
+  static #migrateModifiers(source) {
+    if (!source.modifiers) return;
+    
+    // Ensure nested objects exist
+    source.modifiers.characteristics ??= {};
+    source.modifiers.skills ??= {};
+    source.modifiers.combat ??= {};
+    source.modifiers.resources ??= {};
+    source.modifiers.other ??= [];
+    source.modifiers.situational ??= { characteristics: [], skills: [], combat: [] };
+    
+    // Migrate legacy flat modifiers to nested structure
+    if (source.modifiers.strength !== undefined) {
+      source.modifiers.characteristics.strength = source.modifiers.strength;
+      delete source.modifiers.strength;
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean modifiers template data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
+  }
+
+  /* -------------------------------------------- */
 
   /**
    * Check if this item provides any modifiers.

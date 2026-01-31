@@ -5,28 +5,33 @@ const { NumberField } = foundry.data.fields;
 /**
  * Base data model for all Item types in Rogue Trader.
  * Provides shared functionality and schema patterns for items.
+ * 
+ * Uses template delegation pattern - subclasses should override:
+ * - `_migrateData(source)` for migration (NOT migrateData)
+ * - `_cleanData(source, options)` for cleaning (NOT cleanData)
+ * 
+ * @see SystemDataModel for mixin and template delegation details
  */
 export default class ItemDataModel extends SystemDataModel {
     /* -------------------------------------------- */
     /*  Data Model Configuration                    */
     /* -------------------------------------------- */
 
-    /** @type {ItemDataModelMetadata} */
-    static metadata = Object.freeze(
-        foundry.utils.mergeObject(
-            super.metadata,
-            { inplace: false },
-        ),
-    );
+    /**
+     * Metadata describing this item data model.
+     * @type {ItemDataModelMetadata}
+     */
+    static metadata = Object.freeze(foundry.utils.mergeObject(super.metadata, {
+        enchantable: false,
+        hasEffects: false,
+        singleton: false,
+    }, { inplace: false }));
 
     /**
      * @inheritdoc
      */
     static defineSchema() {
-        const fields = foundry.data.fields;
-        return {
-            ...super.defineSchema(),
-        };
+        return this.mergeSchema(super.defineSchema(), {});
     }
 
     /* -------------------------------------------- */
@@ -34,26 +39,24 @@ export default class ItemDataModel extends SystemDataModel {
     /* -------------------------------------------- */
 
     /**
-     * Clean source data before validation.
-     * Coerces numeric string values to proper numbers for NumberFields.
-     * @param {object} source - The source data object
-     * @param {object} options - Additional options
-     * @returns {object} The cleaned source data
-     * @override
+     * Performs cleaning on item source data.
+     * Template delegation method - called by SystemDataModel.cleanData().
+     * @param {object} [source]       The source data
+     * @param {object} [options={}]   Additional options
+     * @protected
      */
-    static cleanData(source = {}, options = {}) {
-        // Recursively clean numeric fields
-        this._cleanNumericFields(source, this.schema?.fields ?? {});
-        return super.cleanData(source, options);
+    static _cleanData(source, options) {
+        super._cleanData?.(source, options);
+        ItemDataModel.#cleanNumericFields(source, this.schema?.fields ?? {});
     }
 
     /**
      * Recursively clean numeric fields in source data.
+     * Coerces numeric string values to proper numbers for NumberFields.
      * @param {object} source - The source data object
      * @param {object} fields - The schema fields to check
-     * @private
      */
-    static _cleanNumericFields(source, fields) {
+    static #cleanNumericFields(source, fields) {
         if (!source || typeof source !== 'object') return;
 
         for (const [key, field] of Object.entries(fields)) {
@@ -72,7 +75,7 @@ export default class ItemDataModel extends SystemDataModel {
             }
             // Handle SchemaField - recurse into nested fields
             else if (field?.fields && typeof value === 'object' && value !== null) {
-                this._cleanNumericFields(value, field.fields);
+                ItemDataModel.#cleanNumericFields(value, field.fields);
             }
         }
     }
@@ -82,34 +85,48 @@ export default class ItemDataModel extends SystemDataModel {
     /* -------------------------------------------- */
 
     /**
-     * Migrate legacy item data to new structure.
-     * Handles common patterns across all item types.
-     * @inheritdoc
+     * Performs migration on item source data.
+     * Template delegation method - called by SystemDataModel.migrateData().
+     * Subclasses should override this, not migrateData().
+     * @param {object} source  The source data
+     * @protected
      */
-    static migrateData(source) {
-        // Handle common legacy field patterns
+    static _migrateData(source) {
+        super._migrateData?.(source);
+        ItemDataModel.#migrateImg(source);
+        ItemDataModel.#migrateDescription(source);
+        ItemDataModel.#migrateSource(source);
+        ItemDataModel.#migrateCollections(source);
+    }
 
-        // V13: Validate and clean img field - ensure valid file extension
-        if (source.img) {
-            const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'];
-            const hasValidExtension = validExtensions.some((ext) => source.img.toLowerCase().endsWith(ext));
-            if (!hasValidExtension) {
-                // Invalid or missing extension - use default icons
-                const defaultIcons = {
-                    weapon: 'icons/svg/sword.svg',
-                    armour: 'icons/svg/shield.svg',
-                    gear: 'icons/svg/item-bag.svg',
-                    talent: 'icons/svg/book.svg',
-                    trait: 'icons/svg/blood.svg',
-                    psychicPower: 'icons/svg/lightning.svg',
-                    skill: 'icons/svg/target.svg',
-                };
-                // Use type-specific default or generic mystery-man
-                source.img = defaultIcons[source.type] || 'icons/svg/mystery-man.svg';
-            }
+    /**
+     * Validate and fix img field - ensure valid file extension.
+     * @param {object} source  The source data
+     */
+    static #migrateImg(source) {
+        if (!source.img) return;
+        
+        const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'];
+        const hasValidExtension = validExtensions.some((ext) => source.img.toLowerCase().endsWith(ext));
+        if (!hasValidExtension) {
+            const defaultIcons = {
+                weapon: 'icons/svg/sword.svg',
+                armour: 'icons/svg/shield.svg',
+                gear: 'icons/svg/item-bag.svg',
+                talent: 'icons/svg/book.svg',
+                trait: 'icons/svg/blood.svg',
+                psychicPower: 'icons/svg/lightning.svg',
+                skill: 'icons/svg/target.svg',
+            };
+            source.img = defaultIcons[source.type] || 'icons/svg/mystery-man.svg';
         }
+    }
 
-        // Migrate flat description string to object structure
+    /**
+     * Migrate flat description string to object structure.
+     * @param {object} source  The source data
+     */
+    static #migrateDescription(source) {
         if (typeof source.description === 'string') {
             source.description = {
                 value: source.description,
@@ -120,15 +137,16 @@ export default class ItemDataModel extends SystemDataModel {
 
         // Ensure description sub-fields are not null (V13 HTMLField strictness)
         if (source.description && typeof source.description === 'object') {
-            if (source.description.chat === null || source.description.chat === undefined) {
-                source.description.chat = '';
-            }
-            if (source.description.summary === null || source.description.summary === undefined) {
-                source.description.summary = '';
-            }
+            source.description.chat ??= '';
+            source.description.summary ??= '';
         }
+    }
 
-        // Migrate flat source string to object structure
+    /**
+     * Migrate flat source string to object structure.
+     * @param {object} source  The source data
+     */
+    static #migrateSource(source) {
         if (typeof source.source === 'string') {
             source.source = {
                 book: '',
@@ -139,28 +157,23 @@ export default class ItemDataModel extends SystemDataModel {
 
         // Ensure source sub-fields are not null
         if (source.source && typeof source.source === 'object') {
-            if (source.source.book === null || source.source.book === undefined) {
-                source.source.book = '';
-            }
-            if (source.source.page === null || source.source.page === undefined) {
-                source.source.page = '';
-            }
-            if (source.source.custom === null || source.source.custom === undefined) {
-                source.source.custom = '';
-            }
+            source.source.book ??= '';
+            source.source.page ??= '';
+            source.source.custom ??= '';
         }
+    }
 
-        // V13: Migrate coverage Array to Set (for armour items)
+    /**
+     * Migrate Array fields to Set (V13 requirement).
+     * @param {object} source  The source data
+     */
+    static #migrateCollections(source) {
         if (source.coverage && Array.isArray(source.coverage)) {
             source.coverage = new Set(source.coverage);
         }
-
-        // V13: Migrate properties Array to Set
         if (source.properties && Array.isArray(source.properties)) {
             source.properties = new Set(source.properties);
         }
-
-        return super.migrateData(source);
     }
 
     /* -------------------------------------------- */
@@ -199,22 +212,45 @@ export default class ItemDataModel extends SystemDataModel {
         return false;
     }
 
+    /** @override */
+    get embeddedDescriptionKeyPath() {
+        return "description.value";
+    }
+
     /* -------------------------------------------- */
     /*  Data Preparation                            */
     /* -------------------------------------------- */
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     prepareBaseData() {
         super.prepareBaseData();
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     prepareDerivedData() {
         super.prepareDerivedData();
+    }
+
+    /**
+     * Prepare data related to embedded items after actor data is prepared.
+     * Called by the parent Actor after its own data is prepared.
+     */
+    prepareEmbeddedData() {}
+
+    /* -------------------------------------------- */
+    /*  Roll Data                                   */
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare a data object for dice roll formulas.
+     * @param {object} [options]
+     * @param {boolean} [options.deterministic]  Force deterministic values for die terms.
+     * @returns {object}
+     */
+    getRollData({ deterministic = false } = {}) {
+        const actorRollData = this.parent.actor?.getRollData({ deterministic }) ?? {};
+        const data = { ...actorRollData, item: { ...this } };
+        return data;
     }
 
     /* -------------------------------------------- */
@@ -244,7 +280,7 @@ export default class ItemDataModel extends SystemDataModel {
         const data = {
             description: await TextEditor.enrichHTML(descValue, {
                 ...htmlOptions,
-                rollData: this.parent.getRollData(),
+                rollData: this.getRollData(),
             }),
             properties: this.chatProperties ?? [],
         };

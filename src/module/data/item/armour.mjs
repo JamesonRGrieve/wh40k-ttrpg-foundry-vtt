@@ -13,115 +13,136 @@ import IdentifierField from '../fields/identifier-field.mjs';
  */
 export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
     /* -------------------------------------------- */
-    /*  Data Preparation                            */
+    /*  Data Migration                              */
     /* -------------------------------------------- */
 
     /**
-     * Migrate legacy armour data to V13 schema.
+     * Migrate armour data.
      * @param {object} source  The source data
-     * @returns {object}       Migrated data
+     * @protected
      */
-    static migrateData(source) {
-        const updates = {};
+    static _migrateData(source) {
+        super._migrateData?.(source);
+        ArmourData.#migrateArmourPoints(source);
+        ArmourData.#migrateCoverage(source);
+        ArmourData.#migrateMaxAgility(source);
+        ArmourData.#migrateWeight(source);
+        ArmourData.#migrateProperties(source);
+        ArmourData.#migrateCollections(source);
+    }
 
-        // 1. Migrate `ap` → `armourPoints`
-        if (source.ap !== undefined && !this._hasCustomArmourPoints(source)) {
-            const parsed = this._parseLegacyAPStatic(source);
+    /**
+     * Migrate `ap` → `armourPoints`.
+     * @param {object} source  The source data
+     */
+    static #migrateArmourPoints(source) {
+        if (source.ap !== undefined && !ArmourData.#hasCustomArmourPoints(source)) {
+            const parsed = ArmourData.#parseLegacyAP(source);
             if (parsed?.pointsByLocation) {
-                updates.armourPoints = parsed.pointsByLocation;
+                source.armourPoints = parsed.pointsByLocation;
             } else if (parsed?.defaultValue !== undefined) {
                 const ap = parsed.defaultValue;
-                updates.armourPoints = {
-                    head: ap,
-                    body: ap,
-                    leftArm: ap,
-                    rightArm: ap,
-                    leftLeg: ap,
-                    rightLeg: ap,
+                source.armourPoints = {
+                    head: ap, body: ap, leftArm: ap, rightArm: ap, leftLeg: ap, rightLeg: ap,
                 };
             } else if (parsed?.special) {
-                // Special AP values (force fields, etc.) - set to 0 and preserve in notes
-                updates.armourPoints = {
-                    head: 0,
-                    body: 0,
-                    leftArm: 0,
-                    rightArm: 0,
-                    leftLeg: 0,
-                    rightLeg: 0,
+                source.armourPoints = {
+                    head: 0, body: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0,
                 };
                 const specialNote = typeof source.ap === 'string' ? source.ap : 'Special';
-                updates.notes = ((source.notes || '') + ` [AP: ${specialNote}]`).trim();
+                source.notes = ((source.notes || '') + ` [AP: ${specialNote}]`).trim();
             }
         }
+    }
 
-        // 2. Migrate `locations` → `coverage`
+    /**
+     * Migrate `locations` → `coverage`.
+     * @param {object} source  The source data
+     */
+    static #migrateCoverage(source) {
         if (typeof source.locations === 'string' && !source.coverage) {
-            const parsed = this._parseLegacyLocationsStatic(source);
+            const parsed = ArmourData.#parseLegacyLocations(source);
             if (parsed?.size) {
-                updates.coverage = Array.from(parsed);
+                source.coverage = Array.from(parsed);
             }
         }
+    }
 
-        // 3. Migrate `maxAg` string → `maxAgility` number
+    /**
+     * Migrate `maxAg` string → `maxAgility` number.
+     * @param {object} source  The source data
+     */
+    static #migrateMaxAgility(source) {
         if (source.maxAg !== undefined && source.maxAgility === undefined) {
             if (source.maxAg === '-' || source.maxAg === '' || source.maxAg === null) {
-                updates.maxAgility = null;
+                source.maxAgility = null;
             } else {
                 const parsed = parseInt(source.maxAg);
-                if (!isNaN(parsed)) updates.maxAgility = parsed;
+                if (!isNaN(parsed)) source.maxAgility = parsed;
             }
         }
+    }
 
-        // 4. Clean weight (remove "kg" suffix)
+    /**
+     * Clean weight (remove "kg" suffix).
+     * @param {object} source  The source data
+     */
+    static #migrateWeight(source) {
         if (typeof source.weight === 'string') {
             const cleaned = parseFloat(source.weight.replace(/[^\d.]/g, ''));
-            if (!isNaN(cleaned)) updates.weight = cleaned;
+            if (!isNaN(cleaned)) source.weight = cleaned;
         }
+    }
 
-        // 5. Ensure properties exists
+    /**
+     * Ensure properties exists.
+     * @param {object} source  The source data
+     */
+    static #migrateProperties(source) {
         if (!source.properties) {
-            updates.properties = [];
+            source.properties = [];
         }
+    }
 
-        // Apply updates
-        foundry.utils.mergeObject(source, updates);
-
-        // Handle Sets (convert arrays to Sets)
+    /**
+     * Convert arrays to Sets for V13.
+     * @param {object} source  The source data
+     */
+    static #migrateCollections(source) {
         if (Array.isArray(source.coverage)) {
             source.coverage = new Set(source.coverage);
         }
         if (Array.isArray(source.properties)) {
             source.properties = new Set(source.properties);
         }
-
-        return source;
     }
+
+    /* -------------------------------------------- */
+    /*  Data Cleaning                               */
+    /* -------------------------------------------- */
 
     /**
-     * Clean data before saving (convert Sets to arrays).
-     * @param {object} source  The source data
-     * @param {object} options Cleaning options
-     * @returns {object}       Cleaned data
+     * Clean armour data.
+     * @param {object} source     The source data
+     * @param {object} options    Additional options
+     * @protected
      */
-    static cleanData(source, options) {
-        // Convert Sets to arrays for storage
-        if (source.coverage instanceof Set) {
-            source.coverage = Array.from(source.coverage);
-        }
-        if (source.properties instanceof Set) {
-            source.properties = Array.from(source.properties);
-        }
-
-        return super.cleanData(source, options);
+    static _cleanData(source, options) {
+        super._cleanData?.(source, options);
+        // Note: Set to Array conversion is handled by Foundry's SetField
     }
+
+    /* -------------------------------------------- */
+    /*  Data Validation                             */
+    /* -------------------------------------------- */
 
     /**
      * Validate armour data.
-     * @param {object} changes  Proposed changes
-     * @throws {Error}          If validation fails
+     * @param {object} data  The data to validate
+     * @protected
      */
-    static validateJoint(data) {
-        super.validateJoint(data);
+    static _validateJoint(data) {
+        super._validateJoint?.(data);
 
         // Validate AP values (0-20 reasonable range)
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
@@ -343,12 +364,11 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Check if armour has custom armour points.
-     * @param {object} [source] Optional source data to check
+     * @param {object} source Source data to check
      * @returns {boolean}
      */
-    static _hasCustomArmourPoints(source) {
-        const data = source || this;
-        return Object.values(data.armourPoints ?? {}).some((value) => Number(value) > 0);
+    static #hasCustomArmourPoints(source) {
+        return Object.values(source.armourPoints ?? {}).some((value) => Number(value) > 0);
     }
 
     _hasCustomArmourPoints() {
@@ -356,11 +376,11 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
-     * Parse legacy locations field (static version for migration).
+     * Parse legacy locations field.
      * @param {object} source Source data
      * @returns {Set|null}
      */
-    static _parseLegacyLocationsStatic(source) {
+    static #parseLegacyLocations(source) {
         const rawLocations = source.locations;
         if (!rawLocations || typeof rawLocations !== 'string') return null;
 
@@ -429,11 +449,11 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
-     * Parse legacy AP field (static version for migration).
+     * Parse legacy AP field.
      * @param {object} source Source data
      * @returns {object|null}
      */
-    static _parseLegacyAPStatic(source) {
+    static #parseLegacyAP(source) {
         const rawAp = source.ap;
         if (rawAp === null || rawAp === undefined) return null;
 

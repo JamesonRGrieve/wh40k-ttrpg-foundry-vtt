@@ -58,75 +58,95 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(
   /**
    * Migrate legacy pack data to V13 schema.
    * @param {object} source  Candidate source data
-   * @returns {object}       Migrated data
    */
-  static migrateData(source) {
-    const migrated = super.migrateData?.(source) ?? source;
-    
-    // Rename spCost → shipPoints
-    if ('spCost' in migrated && migrated.shipPoints === undefined) {
-      migrated.shipPoints = migrated.spCost;
-      delete migrated.spCost;
-    }
-    
-    // Rename effects → effect
-    if ('effects' in migrated && !migrated.effect) {
-      migrated.effect = migrated.effects;
-      delete migrated.effects;
-    }
-    
-    // Parse shipAvailability → hullType (for future use if needed)
-    if ('shipAvailability' in migrated) {
-      // Preserve in notes for reference, but ship upgrades don't have hullType restriction
-      if (!migrated.notes) {
-        migrated.notes = `Ship Availability: ${migrated.shipAvailability}`;
-      }
-      delete migrated.shipAvailability;
-    }
-    
-    // Add missing modifiers fields
-    if (migrated.modifiers && typeof migrated.modifiers === 'object') {
-      const defaults = {
-        speed: 0,
-        manoeuvrability: 0,
-        detection: 0,
-        armour: 0,
-        hullIntegrity: 0,
-        turretRating: 0,
-        voidShields: 0,
-        morale: 0,
-        crewRating: 0
-      };
-      migrated.modifiers = { ...defaults, ...migrated.modifiers };
-    }
-    
-    // Initialize missing fields with defaults
-    if (migrated.power === undefined) migrated.power = 0;
-    if (migrated.space === undefined) migrated.space = 0;
-    if (migrated.availability === undefined) migrated.availability = 'common';
-    if (migrated.notes === undefined) migrated.notes = '';
-    
-    return migrated;
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    ShipUpgradeData.#migrateSpCost(source);
+    ShipUpgradeData.#migrateEffects(source);
+    ShipUpgradeData.#migrateShipAvailability(source);
+    ShipUpgradeData.#migrateModifiers(source);
+    ShipUpgradeData.#initializeDefaults(source);
   }
 
   /**
-   * Clean data to ensure proper types.
-   * @param {object} source  Candidate source data
-   * @param {object} options Cleaning options
-   * @returns {object}       Cleaned data
+   * Rename spCost → shipPoints.
+   * @param {object} source  The source data
    */
-  static cleanData(source, options) {
-    // Ensure power is a number
+  static #migrateSpCost(source) {
+    if ('spCost' in source && source.shipPoints === undefined) {
+      source.shipPoints = source.spCost;
+      delete source.spCost;
+    }
+  }
+
+  /**
+   * Rename effects → effect.
+   * @param {object} source  The source data
+   */
+  static #migrateEffects(source) {
+    if ('effects' in source && !source.effect) {
+      source.effect = source.effects;
+      delete source.effects;
+    }
+  }
+
+  /**
+   * Parse shipAvailability → notes.
+   * @param {object} source  The source data
+   */
+  static #migrateShipAvailability(source) {
+    if ('shipAvailability' in source) {
+      if (!source.notes) {
+        source.notes = `Ship Availability: ${source.shipAvailability}`;
+      }
+      delete source.shipAvailability;
+    }
+  }
+
+  /**
+   * Add missing modifiers fields.
+   * @param {object} source  The source data
+   */
+  static #migrateModifiers(source) {
+    if (source.modifiers && typeof source.modifiers === 'object') {
+      const defaults = {
+        speed: 0, manoeuvrability: 0, detection: 0, armour: 0,
+        hullIntegrity: 0, turretRating: 0, voidShields: 0, morale: 0, crewRating: 0
+      };
+      source.modifiers = { ...defaults, ...source.modifiers };
+    }
+  }
+
+  /**
+   * Initialize missing fields with defaults.
+   * @param {object} source  The source data
+   */
+  static #initializeDefaults(source) {
+    source.power ??= 0;
+    source.space ??= 0;
+    source.availability ??= 'common';
+    source.notes ??= '';
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean ship upgrade data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
+    // Ensure power and space are numbers
     if (typeof source.power === 'string') {
       source.power = parseInt(source.power) || 0;
     }
-    
-    // Ensure space is a number
     if (typeof source.space === 'string') {
       source.space = parseInt(source.space) || 0;
     }
-    
-    return super.cleanData?.(source, options) ?? source;
   }
 
   /* -------------------------------------------- */

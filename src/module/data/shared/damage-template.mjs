@@ -32,6 +32,44 @@ export default class DamageTemplate extends SystemDataModel {
   }
 
   /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate damage data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    DamageTemplate.#migrateSpecial(source);
+  }
+
+  /**
+   * Migrate special from Array to Set.
+   * @param {object} source  The source data
+   */
+  static #migrateSpecial(source) {
+    if (source.special && Array.isArray(source.special)) {
+      source.special = new Set(source.special);
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean damage template data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
+  }
+
+  /* -------------------------------------------- */
 
   /**
    * Get a formatted damage string.

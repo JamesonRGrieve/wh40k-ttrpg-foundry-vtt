@@ -62,6 +62,51 @@ export default class ActivationTemplate extends SystemDataModel {
   }
 
   /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate activation data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    ActivationTemplate.#migrateUses(source);
+  }
+
+  /**
+   * Migrate legacy uses formats.
+   * @param {object} source  The source data
+   */
+  static #migrateUses(source) {
+    if (!source.uses) return;
+    // Convert string values to numbers
+    if (typeof source.uses.value === 'string') {
+      const num = Number(source.uses.value);
+      source.uses.value = Number.isNaN(num) ? null : num;
+    }
+    if (typeof source.uses.max === 'string') {
+      const num = Number(source.uses.max);
+      source.uses.max = Number.isNaN(num) ? null : num;
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean activation template data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
+  }
+
+  /* -------------------------------------------- */
 
   /**
    * Get a localized activation type label.

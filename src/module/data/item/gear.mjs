@@ -114,90 +114,130 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         'Initiated': 'average',
     };
 
-    /** @override */
-    static migrateData(source) {
-        const migrated = super.migrateData ? super.migrateData(source) : foundry.utils.deepClone(source);
+    /* -------------------------------------------- */
+    /*  Data Migration                              */
+    /* -------------------------------------------- */
 
-        // Migrate old pack format: type → category
+    /**
+     * Migrate gear data.
+     * @param {object} source  The source data
+     * @protected
+     */
+    static _migrateData(source) {
+        super._migrateData?.(source);
+        GearData.#migrateCategory(source);
+        GearData.#migrateAvailability(source);
+        GearData.#migrateCharges(source);
+        GearData.#migrateWeight(source);
+        GearData.#migrateDescription(source);
+        GearData.#migrateCost(source);
+    }
+
+    /**
+     * Migrate old pack format: type → category.
+     * @param {object} source  The source data
+     */
+    static #migrateCategory(source) {
         if (source.type && !source.category) {
-            migrated.category = this.#TYPE_TO_CATEGORY[source.type] || 'general';
-            delete migrated.type;
+            source.category = GearData.#TYPE_TO_CATEGORY[source.type] || 'general';
+            delete source.type;
         }
+    }
 
-        // Migrate old pack format: effects (availability enum) → availability
+    /**
+     * Migrate old pack format: effects (availability enum) → availability.
+     * @param {object} source  The source data
+     */
+    static #migrateAvailability(source) {
         if (source.effects && !source.availability) {
-            migrated.availability = this.#NORMALIZE_AVAILABILITY[source.effects] || 'average';
+            source.availability = GearData.#NORMALIZE_AVAILABILITY[source.effects] || 'average';
         }
+    }
 
-        // Migrate old pack format: charges → uses
+    /**
+     * Migrate old pack format: charges → uses.
+     * @param {object} source  The source data
+     */
+    static #migrateCharges(source) {
         if (source.charges && !source.uses) {
-            migrated.uses = {
+            source.uses = {
                 value: parseInt(source.charges.value) || 0,
                 max: parseInt(source.charges.max) || 0,
             };
-            delete migrated.charges;
+            delete source.charges;
         }
+    }
 
-        // Migrate weight string → number
+    /**
+     * Migrate weight string → number.
+     * @param {object} source  The source data
+     */
+    static #migrateWeight(source) {
         if (typeof source.weight === 'string') {
-            migrated.weight = this.#parseWeight(source.weight);
+            source.weight = GearData.#parseWeight(source.weight);
         }
+    }
 
-        // Migrate old pack format: build description from scattered fields
+    /**
+     * Migrate old pack format: build description from scattered fields.
+     * @param {object} source  The source data
+     */
+    static #migrateDescription(source) {
         if (source.availability && String(source.availability).length > 50) {
             const parts = [];
-
-            // Main effect description (was in availability field)
             parts.push(`<p>${source.availability}</p>`);
-
-            // Requirements (was in cost field)
             if (source.cost && String(source.cost).length > 10) {
                 parts.push(`<h3>Requirements</h3><p>${source.cost}</p>`);
             }
-
-            // Existing description
-            if (migrated.description?.value) {
-                parts.push(migrated.description.value);
+            if (source.description?.value) {
+                parts.push(source.description.value);
             }
-
-            migrated.description = migrated.description || {};
-            migrated.description.value = parts.join('\n');
-            migrated.effect = source.availability;
+            source.description = source.description || {};
+            source.description.value = parts.join('\n');
+            source.effect = source.availability;
         }
+    }
 
-        // Migrate old pack format: parse cost from notes
+    /**
+     * Migrate old pack format: parse cost from notes.
+     * @param {object} source  The source data
+     */
+    static #migrateCost(source) {
         if (source.notes && !source.cost?.value) {
             const costMatch = String(source.notes).match(/(\d+(?:,\d+)?)\s*T(?:hrone)?/i);
             if (costMatch) {
-                migrated.cost = {
+                source.cost = {
                     value: parseInt(costMatch[1].replace(/,/g, ''), 10),
                     currency: 'throne',
                 };
             }
         }
-
-        return migrated;
     }
 
     /**
-     * Parse weight string to number
+     * Parse weight string to number.
      * @param {string} weightStr - Weight string like "1.5kg", "-", "?"
      * @returns {number}
-     * @private
      */
     static #parseWeight(weightStr) {
         if (!weightStr || weightStr === '-' || weightStr === '?') return 0;
-
-        const cleaned = String(weightStr)
-            .replace(/kg|g|\s/gi, '')
-            .trim();
+        const cleaned = String(weightStr).replace(/kg|g|\s/gi, '').trim();
         const num = parseFloat(cleaned);
-
         return isNaN(num) ? 0 : num;
     }
 
-    /** @override */
-    static cleanData(source, options) {
+    /* -------------------------------------------- */
+    /*  Data Cleaning                               */
+    /* -------------------------------------------- */
+
+    /**
+     * Clean gear data.
+     * @param {object} source     The source data
+     * @param {object} options    Additional options
+     * @protected
+     */
+    static _cleanData(source, options) {
+        super._cleanData?.(source, options);
         // Ensure uses values are integers
         if (source.uses) {
             if (source.uses.value !== undefined) {
@@ -207,8 +247,6 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
                 source.uses.max = parseInt(source.uses.max) || 0;
             }
         }
-
-        return super.cleanData ? super.cleanData(source, options) : source;
     }
 
     /* -------------------------------------------- */

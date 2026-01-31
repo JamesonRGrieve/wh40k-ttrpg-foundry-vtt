@@ -71,19 +71,20 @@ export default class AmmunitionData extends ItemDataModel.mixin(
   /*  Data Migration                              */
   /* -------------------------------------------- */
   
-  /** @override */
-  static migrateData(source) {
-    const migrated = super.migrateData(source);
-    
+  /**
+   * Migrate ammunition data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
     // Legacy field cleanup
-    if (migrated.usedWith) delete migrated.usedWith;
-    if (migrated.damageOrEffect) delete migrated.damageOrEffect;
-    if (migrated.qualities) delete migrated.qualities;
-    if (migrated.damageModifier !== undefined) delete migrated.damageModifier;
-    if (migrated.penetrationModifier !== undefined) delete migrated.penetrationModifier;
-    if (migrated.specialRules) delete migrated.specialRules;
-    
-    return migrated;
+    delete source.usedWith;
+    delete source.damageOrEffect;
+    delete source.qualities;
+    delete source.damageModifier;
+    delete source.penetrationModifier;
+    delete source.specialRules;
   }
 
   /* -------------------------------------------- */
