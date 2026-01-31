@@ -75,94 +75,107 @@ export default class ShipWeaponData extends ItemDataModel.mixin(
   /* -------------------------------------------- */
 
   /**
-   * Migrate legacy pack data to V13 schema.
-   * @param {object} source  Candidate source data
-   * @returns {object}       Migrated data
+   * Migrate ship weapon data.
+   * @param {object} source  The source data
+   * @protected
    */
-  static migrateData(source) {
-    const migrated = super.migrateData?.(source) ?? source;
-    
-    // Handle legacy powerUsage field
-    if ('powerUsage' in migrated && migrated.power === undefined) {
-      migrated.power = migrated.powerUsage;
-      delete migrated.powerUsage;
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    ShipWeaponData.#migratePowerUsage(source);
+    ShipWeaponData.#migrateSpaceUsage(source);
+    ShipWeaponData.#migrateSpCost(source);
+    ShipWeaponData.#migrateCritRating(source);
+    ShipWeaponData.#migrateType(source);
+    ShipWeaponData.#migrateNumericFields(source);
+    ShipWeaponData.#migrateHullType(source);
+    ShipWeaponData.#initializeSpecial(source);
+  }
+
+  static #migratePowerUsage(source) {
+    if ('powerUsage' in source && source.power === undefined) {
+      source.power = source.powerUsage;
+      delete source.powerUsage;
     }
-    
-    // Handle legacy spaceUsage field
-    if ('spaceUsage' in migrated && migrated.space === undefined) {
-      migrated.space = migrated.spaceUsage;
-      delete migrated.spaceUsage;
+  }
+
+  static #migrateSpaceUsage(source) {
+    if ('spaceUsage' in source && source.space === undefined) {
+      source.space = source.spaceUsage;
+      delete source.spaceUsage;
     }
-    
-    // Handle legacy spCost field
-    if ('spCost' in migrated && migrated.shipPoints === undefined) {
-      migrated.shipPoints = migrated.spCost;
-      delete migrated.spCost;
+  }
+
+  static #migrateSpCost(source) {
+    if ('spCost' in source && source.shipPoints === undefined) {
+      source.shipPoints = source.spCost;
+      delete source.spCost;
     }
-    
-    // Handle legacy critRating field
-    if ('critRating' in migrated && migrated.crit === undefined) {
-      migrated.crit = migrated.critRating;
-      delete migrated.critRating;
+  }
+
+  static #migrateCritRating(source) {
+    if ('critRating' in source && source.crit === undefined) {
+      source.crit = source.critRating;
+      delete source.critRating;
     }
-    
-    // Handle legacy type field (remove if weaponType exists)
-    if ('type' in migrated) {
-      if (!migrated.weaponType) {
-        // Map common type names to weaponType enum
+  }
+
+  static #migrateType(source) {
+    if ('type' in source) {
+      if (!source.weaponType) {
         const typeMap = {
-          'macrocannon': 'macrobattery',
-          'macrobattery': 'macrobattery',
-          'lance': 'lance',
-          'torpedo': 'torpedo',
-          'topedo warhead': 'torpedo',  // Handle typo in pack data
-          'nova cannon': 'nova-cannon',
-          'bombardment cannon': 'bombardment-cannon',
-          'landing bay': 'landing-bay',
-          'attack craft': 'attack-craft'
+          'macrocannon': 'macrobattery', 'macrobattery': 'macrobattery',
+          'lance': 'lance', 'torpedo': 'torpedo', 'topedo warhead': 'torpedo',
+          'nova cannon': 'nova-cannon', 'bombardment cannon': 'bombardment-cannon',
+          'landing bay': 'landing-bay', 'attack craft': 'attack-craft'
         };
-        const normalized = migrated.type.toLowerCase();
-        migrated.weaponType = typeMap[normalized] || 'macrobattery';
+        const normalized = source.type.toLowerCase();
+        source.weaponType = typeMap[normalized] || 'macrobattery';
       }
-      delete migrated.type;
+      delete source.type;
     }
-    
-    // Handle "-" string values in numeric fields (convert to 0)
+  }
+
+  static #migrateNumericFields(source) {
     const numericFields = ['power', 'space', 'shipPoints', 'crit', 'strength'];
     for (const field of numericFields) {
-      if (migrated[field] === '-' || migrated[field] === null || migrated[field] === undefined) {
-        migrated[field] = 0;
-      } else if (typeof migrated[field] === 'string') {
-        const parsed = parseInt(migrated[field]);
-        migrated[field] = isNaN(parsed) ? 0 : parsed;
+      if (source[field] === '-' || source[field] === null || source[field] === undefined) {
+        source[field] = 0;
+      } else if (typeof source[field] === 'string') {
+        const parsed = parseInt(source[field]);
+        source[field] = isNaN(parsed) ? 0 : parsed;
       }
     }
-    
-    // Parse hullType string to array
-    if (typeof migrated.hullType === 'string') {
-      const types = migrated.hullType.toLowerCase()
+  }
+
+  static #migrateHullType(source) {
+    if (typeof source.hullType === 'string') {
+      const types = source.hullType.toLowerCase()
         .replace(/all ships?/i, 'all')
         .split(/[,\s]+/)
         .map(s => s.trim().replace(/\s+/g, '-'))
         .filter(Boolean);
-      migrated.hullType = types.length ? types : ['all'];
+      source.hullType = types.length ? types : ['all'];
     }
-    
-    // Initialize special if missing
-    if (!migrated.special) {
-      migrated.special = [];
-    }
-    
-    return migrated;
   }
 
+  static #initializeSpecial(source) {
+    if (!source.special) {
+      source.special = [];
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
   /**
-   * Clean data to ensure proper types.
-   * @param {object} source  Candidate source data
-   * @param {object} options Cleaning options
-   * @returns {object}       Cleaned data
+   * Clean ship weapon data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
    */
-  static cleanData(source, options) {
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
     // Ensure hullType is array
     if (source.hullType && !Array.isArray(source.hullType)) {
       if (typeof source.hullType === 'string') {
@@ -171,7 +184,6 @@ export default class ShipWeaponData extends ItemDataModel.mixin(
         source.hullType = Array.from(source.hullType);
       }
     }
-    
     // Ensure special is array
     if (source.special && !Array.isArray(source.special)) {
       if (typeof source.special === 'string') {
@@ -180,8 +192,6 @@ export default class ShipWeaponData extends ItemDataModel.mixin(
         source.special = Array.from(source.special);
       }
     }
-    
-    return super.cleanData?.(source, options) ?? source;
   }
 
   /* -------------------------------------------- */

@@ -97,68 +97,105 @@ export default class ShipComponentData extends ItemDataModel.mixin(
   /*  Data Migration                              */
   /* -------------------------------------------- */
 
+  /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
   /**
-   * Migrate legacy pack data to V13 schema.
-   * @param {object} source  Candidate source data
-   * @returns {object}       Migrated data
+   * Migrate ship component data.
+   * @param {object} source  The source data
+   * @protected
    */
-  static migrateData(source) {
-    const migrated = super.migrateData?.(source) ?? source;
-    
-    // Handle legacy powerUsage field
-    if ('powerUsage' in migrated && !migrated.power) {
-      const usage = migrated.powerUsage;
-      migrated.power = {
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    ShipComponentData.#migratePowerUsage(source);
+    ShipComponentData.#migrateSpaceUsage(source);
+    ShipComponentData.#migrateSpCost(source);
+    ShipComponentData.#migrateType(source);
+    ShipComponentData.#migrateHullType(source);
+  }
+
+  /**
+   * Handle legacy powerUsage field.
+   * @param {object} source  The source data
+   */
+  static #migratePowerUsage(source) {
+    if ('powerUsage' in source && !source.power) {
+      const usage = source.powerUsage;
+      source.power = {
         used: usage >= 0 ? usage : 0,
         generated: usage < 0 ? Math.abs(usage) : 0
       };
-      delete migrated.powerUsage;
+      delete source.powerUsage;
     }
-    
-    // Handle legacy spaceUsage field
-    if ('spaceUsage' in migrated && migrated.space === undefined) {
-      migrated.space = migrated.spaceUsage;
-      delete migrated.spaceUsage;
+  }
+
+  /**
+   * Handle legacy spaceUsage field.
+   * @param {object} source  The source data
+   */
+  static #migrateSpaceUsage(source) {
+    if ('spaceUsage' in source && source.space === undefined) {
+      source.space = source.spaceUsage;
+      delete source.spaceUsage;
     }
-    
-    // Handle legacy spCost field
-    if ('spCost' in migrated && migrated.shipPoints === undefined) {
-      migrated.shipPoints = migrated.spCost;
-      delete migrated.spCost;
+  }
+
+  /**
+   * Handle legacy spCost field.
+   * @param {object} source  The source data
+   */
+  static #migrateSpCost(source) {
+    if ('spCost' in source && source.shipPoints === undefined) {
+      source.shipPoints = source.spCost;
+      delete source.spCost;
     }
-    
-    // Handle legacy type field
-    if ('type' in migrated && !migrated.componentType) {
-      let type = migrated.type.replace(/^\(es\.\)\s*/, '').toLowerCase();
+  }
+
+  /**
+   * Handle legacy type field.
+   * @param {object} source  The source data
+   */
+  static #migrateType(source) {
+    if ('type' in source && !source.componentType) {
+      let type = source.type.replace(/^\(es\.\)\s*/, '').toLowerCase();
       type = type.replace(/\s+/g, '-');
-      migrated.componentType = type;
+      source.componentType = type;
       
-      if (migrated.type.startsWith('(es.)')) {
-        migrated.essential = true;
+      if (source.type.startsWith('(es.)')) {
+        source.essential = true;
       }
-      delete migrated.type;
+      delete source.type;
     }
-    
-    // Parse hullType string to array
-    if (typeof migrated.hullType === 'string') {
-      const types = migrated.hullType.toLowerCase()
+  }
+
+  /**
+   * Parse hullType string to array.
+   * @param {object} source  The source data
+   */
+  static #migrateHullType(source) {
+    if (typeof source.hullType === 'string') {
+      const types = source.hullType.toLowerCase()
         .replace(/all ships?/i, 'all')
         .split(/[,\s]+/)
         .map(s => s.trim().replace(/\s+/g, '-'))
         .filter(Boolean);
-      migrated.hullType = types.length ? types : ['all'];
+      source.hullType = types.length ? types : ['all'];
     }
-    
-    return migrated;
   }
 
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
   /**
-   * Clean data to ensure proper types.
-   * @param {object} source  Candidate source data
-   * @param {object} options Cleaning options
-   * @returns {object}       Cleaned data
+   * Clean ship component data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
    */
-  static cleanData(source, options) {
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
     // Ensure hullType is array for Set field
     if (source.hullType && !Array.isArray(source.hullType)) {
       if (typeof source.hullType === 'string') {
@@ -167,8 +204,6 @@ export default class ShipComponentData extends ItemDataModel.mixin(
         source.hullType = Array.from(source.hullType);
       }
     }
-    
-    return super.cleanData?.(source, options) ?? source;
   }
 
   /* -------------------------------------------- */

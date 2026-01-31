@@ -18,6 +18,43 @@ export default class EquippableTemplate extends SystemDataModel {
   }
 
   /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate equippable item data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    // Ensure boolean fields are proper booleans
+    if (source.equipped !== undefined && typeof source.equipped !== 'boolean') {
+      source.equipped = Boolean(source.equipped);
+    }
+    if (source.inBackpack !== undefined && typeof source.inBackpack !== 'boolean') {
+      source.inBackpack = Boolean(source.inBackpack);
+    }
+    if (source.inShipStorage !== undefined && typeof source.inShipStorage !== 'boolean') {
+      source.inShipStorage = Boolean(source.inShipStorage);
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean equippable template data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
+  }
+
+  /* -------------------------------------------- */
 
   /**
    * Is this item currently carried (not in storage)?

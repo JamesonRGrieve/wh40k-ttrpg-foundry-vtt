@@ -34,21 +34,26 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
 
     /**
      * Migrate legacy weapon quality data to new structure.
-     * @inheritdoc
+     * @param {object} source  The source data
+     * @protected
      */
-    static migrateData(source) {
-        // Migrate old schema fields to new schema
-        // Old: { rating, modifiers, specialEffect }
-        // New: { identifier, hasLevel, level, effect, notes }
+    static _migrateData(source) {
+        super._migrateData?.(source);
+        WeaponQualityData.#migrateRating(source);
+        WeaponQualityData.#migrateModifiersAndEffect(source);
+        WeaponQualityData.#migrateEffect(source);
+        WeaponQualityData.#migrateIdentifier(source);
+    }
 
-        // Migrate rating -> hasLevel + level
+    static #migrateRating(source) {
         if ('rating' in source) {
             source.hasLevel = source.rating > 0;
             source.level = source.rating > 0 ? source.rating : null;
             delete source.rating;
         }
+    }
 
-        // Migrate modifiers/specialEffect -> notes
+    static #migrateModifiersAndEffect(source) {
         if ('modifiers' in source || 'specialEffect' in source) {
             const notesParts = [];
             if (source.modifiers) {
@@ -68,22 +73,21 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
                 source.notes = notesParts.join('. ');
             }
         }
+    }
 
-        // Migrate corrupt effect field (sometimes stored as number instead of HTML)
+    static #migrateEffect(source) {
         if (typeof source.effect === 'number') {
-            // Convert number to placeholder text
             source.effect = `<p>Effect ${source.effect}</p>`;
         }
+    }
 
-        // Ensure identifier exists (generate from name if missing)
+    static #migrateIdentifier(source) {
         if (!source.identifier && source.name) {
             source.identifier = source.name
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/^-+|-+$/g, '');
         }
-
-        return super.migrateData(source);
     }
 
     /* -------------------------------------------- */

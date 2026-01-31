@@ -451,74 +451,84 @@ export default class OriginPathData extends ItemDataModel.mixin(
   /* -------------------------------------------- */
   /*  Data Migration & Cleanup                    */
   /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
 
-  /** @override */
-  static migrateData(source) {
-    // Let parent handle its migration first
-    super.migrateData?.(source);
-    
-    // Migration: Convert old position + positions to single positions array
+  /**
+   * Migrate origin path data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    OriginPathData.#migratePositions(source);
+    OriginPathData.#migrateNavigation(source);
+    OriginPathData.#migrateWoundsAndFate(source);
+    OriginPathData.#migrateEffectText(source);
+  }
+
+  /**
+   * Convert old position + positions to single positions array.
+   * @param {object} source  The source data
+   */
+  static #migratePositions(source) {
     if (source.position !== undefined && source.positions !== undefined) {
       const oldPosition = source.position;
       const oldPositions = source.positions || [];
-      
-      // Combine into single positions array
       const newPositions = [oldPosition, ...oldPositions];
       source.positions = [...new Set(newPositions)].sort((a, b) => a - b);
-      
-      // Remove old position field
       delete source.position;
     } else if (source.position !== undefined) {
-      // Only position exists, convert to positions array
       source.positions = [source.position];
       delete source.position;
     }
-    
-    // Remove old navigation field
-    if (source.navigation !== undefined) {
-      delete source.navigation;
-    }
-    
+  }
+
+  /**
+   * Remove old navigation field.
+   * @param {object} source  The source data
+   */
+  static #migrateNavigation(source) {
+    delete source.navigation;
+  }
+
+  /**
+   * Warn about legacy wounds/fate fields if formulas are missing.
+   * @param {object} source  The source data
+   */
+  static #migrateWoundsAndFate(source) {
     const grants = source.grants || {};
-    
-    // Migration: Warn about legacy wounds/fate fields if formulas are missing
     if (grants.wounds && !grants.woundsFormula) {
-      console.warn(
-        `Origin Path "${source.name}" uses legacy grants.wounds field (${grants.wounds}). ` +
-        `Consider adding a woundsFormula instead.`
-      );
+      console.warn(`Origin Path "${source.name}" uses legacy grants.wounds field. Consider adding a woundsFormula instead.`);
     }
-    
     if (grants.fateThreshold && !grants.fateFormula) {
-      console.warn(
-        `Origin Path "${source.name}" uses legacy grants.fateThreshold field (${grants.fateThreshold}). ` +
-        `Consider adding a fateFormula instead.`
-      );
+      console.warn(`Origin Path "${source.name}" uses legacy grants.fateThreshold field. Consider adding a fateFormula instead.`);
     }
-    
-    // Migration 2: Deprecate effectText field
+  }
+
+  /**
+   * Migrate effectText to description.
+   * @param {object} source  The source data
+   */
+  static #migrateEffectText(source) {
     if (source.effectText && !source.description?.value) {
-      console.warn(
-        `Origin Path "${source.name}" has effectText but no description. ` +
-        `Migrating effectText to description.`
-      );
-      // Convert plain text to HTML paragraph
       source.description = source.description || {};
       source.description.value = `<p>${source.effectText.replace(/\n/g, '<br>')}</p>`;
     }
-    
-    if (source.effectText && source.description?.value) {
-      console.info(
-        `Origin Path "${source.name}" has both effectText and description. ` +
-        `effectText is deprecated and should be removed from JSON.`
-      );
-    }
-    
-    return source;
   }
 
-  /** @override */
-  static cleanData(source, options) {
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean origin path data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
     // Ensure numeric fields are properly typed
     if (source.grants) {
       if (typeof source.grants.wounds === 'string') {
@@ -528,8 +538,6 @@ export default class OriginPathData extends ItemDataModel.mixin(
         source.grants.fateThreshold = parseInt(source.grants.fateThreshold) || 0;
       }
     }
-    
-    return super.cleanData?.(source, options) || source;
   }
 
   /* -------------------------------------------- */

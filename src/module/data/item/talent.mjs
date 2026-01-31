@@ -137,12 +137,23 @@ export default class TalentData extends ItemDataModel.mixin(
   /* -------------------------------------------- */
 
   /**
-   * Migrate legacy talent data to new structure.
-   * @inheritdoc
+   * Migrate talent data.
+   * @param {object} source  The source data
+   * @protected
    */
-  static migrateData(source) {
-    // Migrate flat prerequisites string to structured object
-    if ( typeof source.prerequisites === "string" ) {
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    TalentData.#migratePrerequisites(source);
+    TalentData.#migrateAptitudes(source);
+    TalentData.#migrateSpecialization(source);
+  }
+
+  /**
+   * Migrate flat prerequisites string to structured object.
+   * @param {object} source  The source data
+   */
+  static #migratePrerequisites(source) {
+    if (typeof source.prerequisites === "string") {
       source.prerequisites = {
         text: source.prerequisites,
         characteristics: {},
@@ -150,18 +161,26 @@ export default class TalentData extends ItemDataModel.mixin(
         talents: []
       };
     }
-    
-    // Migrate flat aptitudes string to array
-    if ( typeof source.aptitudes === "string" && source.aptitudes ) {
+  }
+
+  /**
+   * Migrate flat aptitudes string to array.
+   * @param {object} source  The source data
+   */
+  static #migrateAptitudes(source) {
+    if (typeof source.aptitudes === "string" && source.aptitudes) {
       source.aptitudes = source.aptitudes.split(",").map(a => a.trim()).filter(Boolean);
     }
-    
-    // Infer hasSpecialization from existing specialization value
-    if ( source.hasSpecialization === undefined && source.specialization ) {
+  }
+
+  /**
+   * Infer hasSpecialization from existing specialization value.
+   * @param {object} source  The source data
+   */
+  static #migrateSpecialization(source) {
+    if (source.hasSpecialization === undefined && source.specialization) {
       source.hasSpecialization = !!source.specialization.trim();
     }
-    
-    return super.migrateData(source);
   }
 
   /* -------------------------------------------- */

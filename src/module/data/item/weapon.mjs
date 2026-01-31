@@ -122,36 +122,57 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /* -------------------------------------------- */
-    /*  Data Preparation                            */
+    /*  Data Migration                              */
     /* -------------------------------------------- */
 
-    /** @inheritdoc */
-    static migrateData(source) {
-        super.migrateData(source);
+    /**
+     * Migrate weapon data.
+     * @param {object} source  The source data
+     * @protected
+     */
+    static _migrateData(source) {
+        super._migrateData?.(source);
+        WeaponData.#migrateSpecial(source);
+        WeaponData.#migrateClass(source);
+        WeaponData.#migrateProficiency(source);
+    }
 
-        // Ensure special is an array for SetField compatibility
+    /**
+     * Ensure special is an array for SetField compatibility.
+     * @param {object} source  The source data
+     */
+    static #migrateSpecial(source) {
         if (!Array.isArray(source.special)) {
             source.special = source.special ? Array.from(source.special) : [];
         }
+    }
 
-        // Migrate old class values (chain, power, shock, force) to type field
-        // These were incorrectly stored in class field before the schema cleanup
+    /**
+     * Migrate old class values (chain, power, shock, force) to type field.
+     * @param {object} source  The source data
+     */
+    static #migrateClass(source) {
         const techTypeValues = ['chain', 'power', 'shock', 'force'];
         if (source.class && techTypeValues.includes(source.class)) {
-            // Move the tech type to type field
             source.type = source.class;
-            // Set class to melee (default for these tech types)
             source.class = 'melee';
         }
+    }
 
-        // Migrate proficiency -> requiredTraining
+    /**
+     * Migrate proficiency -> requiredTraining.
+     * @param {object} source  The source data
+     */
+    static #migrateProficiency(source) {
         if (source.proficiency !== undefined) {
             source.requiredTraining = source.proficiency;
             delete source.proficiency;
         }
-
-        return source;
     }
+
+    /* -------------------------------------------- */
+    /*  Data Preparation                            */
+    /* -------------------------------------------- */
 
     /** @inheritdoc */
     prepareDerivedData() {

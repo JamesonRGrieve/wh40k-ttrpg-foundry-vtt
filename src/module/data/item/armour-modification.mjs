@@ -62,110 +62,123 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
   /* -------------------------------------------- */
 
   /**
-   * Migrate legacy pack data to modern schema.
-   * @override
+   * Migrate armour modification data.
+   * @param {object} source  The source data
+   * @protected
    */
-  static migrateData(source) {
-    const migrated = super.migrateData?.(source) || { ...source };
-    
-    // Migrate armourTypes string → restrictions.armourTypes Set
-    if (typeof source.armourTypes === 'string') {
-      migrated.restrictions = migrated.restrictions || {};
-      migrated.restrictions.armourTypes = this._parseArmourTypes(source.armourTypes);
-      delete migrated.armourTypes;
-    }
-    
-    // Migrate armourModifier → modifiers.armourPoints
-    if (typeof source.armourModifier === 'number') {
-      migrated.modifiers = migrated.modifiers || {};
-      migrated.modifiers.armourPoints = source.armourModifier;
-      delete migrated.armourModifier;
-    }
-    
-    // Try to extract AP from effect if armourPoints is 0
-    if ((!migrated.modifiers?.armourPoints || migrated.modifiers.armourPoints === 0) && source.effect) {
-      const extracted = this._extractAPModifier(source.effect);
-      if (extracted > 0) {
-        migrated.modifiers = migrated.modifiers || {};
-        migrated.modifiers.armourPoints = extracted;
-      }
-    }
-    
-    // Migrate maxDexBonus → modifiers.maxAgility
-    if (typeof source.maxDexBonus === 'number') {
-      migrated.modifiers = migrated.modifiers || {};
-      migrated.modifiers.maxAgility = source.maxDexBonus;
-      delete migrated.maxDexBonus;
-    }
-    
-    // Try to extract Agility from effect if maxAgility is 0
-    if ((!migrated.modifiers?.maxAgility || migrated.modifiers.maxAgility === 0) && source.effect) {
-      const extracted = this._extractAgilityModifier(source.effect);
-      if (extracted !== 0) {
-        migrated.modifiers = migrated.modifiers || {};
-        migrated.modifiers.maxAgility = extracted;
-      }
-    }
-    
-    // Migrate weight string → modifiers.weight number
-    if (typeof source.weight === 'string') {
-      migrated.modifiers = migrated.modifiers || {};
-      migrated.modifiers.weight = this._parseWeight(source.weight);
-      delete migrated.weight;
-    }
-    
-    // Clean up unused modifiers object
-    if (migrated.modifiers?.characteristics) {
-      delete migrated.modifiers.characteristics;
-    }
-    if (migrated.modifiers?.skills) {
-      delete migrated.modifiers.skills;
-    }
-    
-    // Initialize empty Sets for properties if not present
-    if (!migrated.addedProperties) {
-      migrated.addedProperties = [];
-    }
-    if (!migrated.removedProperties) {
-      migrated.removedProperties = [];
-    }
-    
-    // Ensure restrictions exists
-    if (!migrated.restrictions) {
-      migrated.restrictions = { armourTypes: ['any'] };
-    }
-    
-    return migrated;
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    ArmourModificationData.#migrateArmourTypes(source);
+    ArmourModificationData.#migrateArmourModifier(source);
+    ArmourModificationData.#extractAPFromEffect(source);
+    ArmourModificationData.#migrateMaxDexBonus(source);
+    ArmourModificationData.#extractAgilityFromEffect(source);
+    ArmourModificationData.#migrateWeight(source);
+    ArmourModificationData.#cleanupModifiers(source);
+    ArmourModificationData.#initializeDefaults(source);
   }
 
-  /**
-   * Clean data for storage (convert Sets → Arrays).
-   * @override
-   */
-  static cleanData(source = {}, options = {}) {
-    const cleaned = super.cleanData?.(source, options) || { ...source };
-    
-    // Convert SetFields to Arrays for storage
-    if (cleaned.restrictions?.armourTypes instanceof Set) {
-      cleaned.restrictions.armourTypes = Array.from(cleaned.restrictions.armourTypes);
+  static #migrateArmourTypes(source) {
+    if (typeof source.armourTypes === 'string') {
+      source.restrictions ??= {};
+      source.restrictions.armourTypes = ArmourModificationData.#parseArmourTypes(source.armourTypes);
+      delete source.armourTypes;
     }
-    if (cleaned.addedProperties instanceof Set) {
-      cleaned.addedProperties = Array.from(cleaned.addedProperties);
-    }
-    if (cleaned.removedProperties instanceof Set) {
-      cleaned.removedProperties = Array.from(cleaned.removedProperties);
-    }
-    
-    return cleaned;
   }
+
+  static #migrateArmourModifier(source) {
+    if (typeof source.armourModifier === 'number') {
+      source.modifiers ??= {};
+      source.modifiers.armourPoints = source.armourModifier;
+      delete source.armourModifier;
+    }
+  }
+
+  static #extractAPFromEffect(source) {
+    if ((!source.modifiers?.armourPoints || source.modifiers.armourPoints === 0) && source.effect) {
+      const extracted = ArmourModificationData.#extractAPModifier(source.effect);
+      if (extracted > 0) {
+        source.modifiers ??= {};
+        source.modifiers.armourPoints = extracted;
+      }
+    }
+  }
+
+  static #migrateMaxDexBonus(source) {
+    if (typeof source.maxDexBonus === 'number') {
+      source.modifiers ??= {};
+      source.modifiers.maxAgility = source.maxDexBonus;
+      delete source.maxDexBonus;
+    }
+  }
+
+  static #extractAgilityFromEffect(source) {
+    if ((!source.modifiers?.maxAgility || source.modifiers.maxAgility === 0) && source.effect) {
+      const extracted = ArmourModificationData.#extractAgilityModifier(source.effect);
+      if (extracted !== 0) {
+        source.modifiers ??= {};
+        source.modifiers.maxAgility = extracted;
+      }
+    }
+  }
+
+  static #migrateWeight(source) {
+    if (typeof source.weight === 'string') {
+      source.modifiers ??= {};
+      source.modifiers.weight = ArmourModificationData.#parseWeight(source.weight);
+      delete source.weight;
+    }
+  }
+
+  static #cleanupModifiers(source) {
+    if (source.modifiers?.characteristics) {
+      delete source.modifiers.characteristics;
+    }
+    if (source.modifiers?.skills) {
+      delete source.modifiers.skills;
+    }
+  }
+
+  static #initializeDefaults(source) {
+    source.addedProperties ??= [];
+    source.removedProperties ??= [];
+    source.restrictions ??= { armourTypes: ['any'] };
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean armour modification data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
+    // Convert SetFields to Arrays for storage
+    if (source.restrictions?.armourTypes instanceof Set) {
+      source.restrictions.armourTypes = Array.from(source.restrictions.armourTypes);
+    }
+    if (source.addedProperties instanceof Set) {
+      source.addedProperties = Array.from(source.addedProperties);
+    }
+    if (source.removedProperties instanceof Set) {
+      source.removedProperties = Array.from(source.removedProperties);
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  Private Helpers                             */
+  /* -------------------------------------------- */
 
   /**
    * Parse armour types string into Set of standardized keys.
    * @param {string} str - Raw armour types string from pack data
    * @returns {string[]} Array of standardized armour type keys
-   * @private
    */
-  static _parseArmourTypes(str) {
+  static #parseArmourTypes(str) {
     if (!str) return ['any'];
     
     const normalized = str.toLowerCase();
@@ -178,53 +191,33 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
     
     // Map common type names to standardized keys
     const typeMap = {
-      'flak': 'flak',
-      'mesh': 'mesh',
-      'carapace': 'carapace',
-      'power armour': 'power',
-      'power': 'power',
-      'light-power': 'light-power',
-      'light power': 'light-power',
-      'storm trooper': 'storm-trooper',
-      'storm-trooper': 'storm-trooper',
-      'feudal': 'feudal-world',
-      'primitive': 'primitive',
-      'xenos': 'xenos',
-      'void': 'void',
-      'enforcer': 'enforcer'
+      'flak': 'flak', 'mesh': 'mesh', 'carapace': 'carapace',
+      'power armour': 'power', 'power': 'power',
+      'light-power': 'light-power', 'light power': 'light-power',
+      'storm trooper': 'storm-trooper', 'storm-trooper': 'storm-trooper',
+      'feudal': 'feudal-world', 'primitive': 'primitive',
+      'xenos': 'xenos', 'void': 'void', 'enforcer': 'enforcer'
     };
     
     for (const [key, value] of Object.entries(typeMap)) {
-      if (normalized.includes(key)) {
-        if (!types.includes(value)) types.push(value);
-      }
+      if (normalized.includes(key) && !types.includes(value)) types.push(value);
     }
     
-    // Handle special cases
-    if (normalized.includes('helmet')) {
-      types.push('helmet');
-    }
-    if (normalized.includes('non-primitive')) {
-      types.push('non-primitive');
-    }
+    if (normalized.includes('helmet')) types.push('helmet');
+    if (normalized.includes('non-primitive')) types.push('non-primitive');
     
     return types.length > 0 ? types : ['any'];
   }
 
   /**
    * Parse weight string into numeric value.
-   * @param {string|number} str - Weight string like "+1.5kg" or "0kg"
-   * @returns {number} Numeric weight value
-   * @private
+   * @param {string|number} str - Weight string
+   * @returns {number}
    */
-  static _parseWeight(str) {
+  static #parseWeight(str) {
     if (typeof str === 'number') return str;
     if (!str) return 0;
-    
-    // Handle special cases
-    if (str.includes('wep')) return 0; // Variable weight (weapon weight)
-    
-    // Extract numeric value from strings like "+1.5kg", "0kg", "+15kg"
+    if (str.includes('wep')) return 0;
     const match = str.match(/[+-]?\d+\.?\d*/);
     return match ? parseFloat(match[0]) : 0;
   }
@@ -232,48 +225,30 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
   /**
    * Extract AP modifier from effect text.
    * @param {string} effect - Effect description text
-   * @returns {number} AP modifier value
-   * @private
+   * @returns {number}
    */
-  static _extractAPModifier(effect) {
+  static #extractAPModifier(effect) {
     if (!effect) return 0;
-    
-    // Look for patterns like "+5 AP", "Gain +3 AP", "add +2 AP"
-    const patterns = [
-      /\+(\d+)\s*AP/i,
-      /gain\s*\+(\d+)\s*AP/i,
-      /adds?\s*\+(\d+)\s*AP/i
-    ];
-    
+    const patterns = [/\+(\d+)\s*AP/i, /gain\s*\+(\d+)\s*AP/i, /adds?\s*\+(\d+)\s*AP/i];
     for (const pattern of patterns) {
       const match = effect.match(pattern);
       if (match) return parseInt(match[1]);
     }
-    
     return 0;
   }
 
   /**
    * Extract Agility modifier from effect text.
    * @param {string} effect - Effect description text
-   * @returns {number} Agility modifier value
-   * @private
+   * @returns {number}
    */
-  static _extractAgilityModifier(effect) {
+  static #extractAgilityModifier(effect) {
     if (!effect) return 0;
-    
-    // Look for "-5 max agility", "-10 to Agility", etc.
-    const patterns = [
-      /([+-]\d+)\s*max\s*ag/i,
-      /([+-]\d+)\s*max\s*agility/i,
-      /([+-]\d+)\s*to.*agility/i
-    ];
-    
+    const patterns = [/([+-]\d+)\s*max\s*ag/i, /([+-]\d+)\s*max\s*agility/i, /([+-]\d+)\s*to.*agility/i];
     for (const pattern of patterns) {
       const match = effect.match(pattern);
       if (match) return parseInt(match[1]);
     }
-    
     return 0;
   }
 

@@ -38,6 +38,46 @@ export default class AttackTemplate extends SystemDataModel {
   }
 
   /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate attack data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    AttackTemplate.#migrateRateOfFire(source);
+  }
+
+  /**
+   * Migrate legacy rate of fire formats.
+   * @param {object} source  The source data
+   */
+  static #migrateRateOfFire(source) {
+    if (!source.attack?.rateOfFire) return;
+    const rof = source.attack.rateOfFire;
+    // Convert string values to numbers
+    if (typeof rof.semi === 'string') rof.semi = Number(rof.semi) || 0;
+    if (typeof rof.full === 'string') rof.full = Number(rof.full) || 0;
+  }
+
+  /* -------------------------------------------- */
+  /*  Data Cleaning                               */
+  /* -------------------------------------------- */
+
+  /**
+   * Clean attack template data.
+   * @param {object} source     The source data
+   * @param {object} options    Additional options
+   * @protected
+   */
+  static _cleanData(source, options) {
+    super._cleanData?.(source, options);
+  }
+
+  /* -------------------------------------------- */
 
   /**
    * Is this a melee attack?

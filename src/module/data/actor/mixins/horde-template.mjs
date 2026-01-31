@@ -52,6 +52,33 @@ export default function HordeTemplate(Base) {
     }
 
     /* -------------------------------------------- */
+    /*  Data Migration                              */
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    static _migrateData(source) {
+      super._migrateData?.(source);
+      // Ensure horde object exists
+      source.horde ??= {
+        enabled: false,
+        magnitude: { max: 30, current: 30 },
+        magnitudeLog: [],
+        traits: [],
+        damageMultiplier: 1.0,
+        sizeModifier: 0
+      };
+      // Migrate magnitude values to integers
+      if (source.horde.magnitude) {
+        if (source.horde.magnitude.max !== undefined) {
+          source.horde.magnitude.max = parseInt(source.horde.magnitude.max) || 30;
+        }
+        if (source.horde.magnitude.current !== undefined) {
+          source.horde.magnitude.current = parseInt(source.horde.magnitude.current) || 30;
+        }
+      }
+    }
+
+    /* -------------------------------------------- */
     /*  Data Preparation                            */
     /* -------------------------------------------- */
 

@@ -51,16 +51,21 @@ export default class CombatActionData extends ItemDataModel.mixin(DescriptionTem
   /*  Data Preparation                            */
   /* -------------------------------------------- */
 
-  /** @inheritdoc */
-  static migrateData(source) {
-    super.migrateData(source);
-    
+  /* -------------------------------------------- */
+  /*  Data Migration                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Migrate combat action data.
+   * @param {object} source  The source data
+   * @protected
+   */
+  static _migrateData(source) {
+    super._migrateData?.(source);
     // Ensure subtypes is an array for SetField compatibility
     if (!Array.isArray(source.subtypes)) {
       source.subtypes = source.subtypes ? Array.from(source.subtypes) : [];
     }
-    
-    return source;
   }
 
   /** @inheritdoc */
