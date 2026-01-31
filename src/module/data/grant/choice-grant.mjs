@@ -208,8 +208,8 @@ export default class ChoiceGrantData extends BaseGrantData {
   }
 
   /** @inheritDoc */
-  validate() {
-    const errors = super.validate();
+  validateGrant() {
+    const errors = super.validateGrant();
 
     // Handle missing/undefined options gracefully
     const options = this.options ?? [];

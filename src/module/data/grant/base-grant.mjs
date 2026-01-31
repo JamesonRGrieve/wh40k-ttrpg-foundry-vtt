@@ -159,9 +159,10 @@ export default class BaseGrantData extends foundry.abstract.DataModel {
 
   /**
    * Validate the grant configuration.
+   * Note: Named validateGrant to avoid collision with Foundry's DataModel.validate()
    * @returns {string[]} Array of validation error messages
    */
-  validate() {
+  validateGrant() {
     return [];
   }
 

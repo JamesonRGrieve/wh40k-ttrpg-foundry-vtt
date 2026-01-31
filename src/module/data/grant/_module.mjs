@@ -54,5 +54,5 @@ export function createGrant(config) {
 export function validateGrantConfig(config) {
   const grant = createGrant(config);
   if (!grant) return [`Invalid grant type: ${config?.type}`];
-  return grant.validate();
+  return grant.validateGrant();
 }
