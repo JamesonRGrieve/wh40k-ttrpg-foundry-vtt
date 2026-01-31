@@ -78,16 +78,18 @@ export default class CharacterData extends CreatureTemplate {
         // ===== OTHER =====
         // aptitudes: new ObjectField({ required: true, initial: {} }),
 
-        // backgroundEffects: new SchemaField({
-        //     abilities: new ArrayField(
-        //         new SchemaField({
-        //             source: new StringField({ required: false }),
-        //             name: new StringField({ required: false }),
-        //             benefit: new StringField({ required: false }),
-        //         }),
-        //         { required: true, initial: [] },
-        //     ),
-        // }),
+        // Effects computed from origin path items - populated during prepareEmbeddedData
+        backgroundEffects: new SchemaField({
+            abilities: new ArrayField(
+                new SchemaField({
+                    source: new StringField({ required: false }),
+                    name: new StringField({ required: false }),
+                    benefit: new StringField({ required: false }),
+                }),
+                { required: true, initial: [] },
+            ),
+            originPath: new ObjectField({ required: true, initial: {} }),
+        }),
 
         // ===== CHARACTER GENERATION =====
         characterGeneration: new SchemaField({
@@ -115,15 +117,24 @@ export default class CharacterData extends CreatureTemplate {
   /*  Data Migration                              */
   /* -------------------------------------------- */
 
-  /** @override */
-  static migrateData(source) {
-    // Handle old characteristic field names
-    return super.migrateData(source);
+  /** @inheritDoc */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    // Handle old characteristic field names or other character-specific migrations
   }
 
-  /** @override */
-  static cleanData(source, options = {}) {
-    // Only clean properties that actually exist in the update
+  /** @inheritDoc */
+  static _cleanData(source, options = {}) {
+    super._cleanData?.(source, options);
+    CharacterData.#cleanExperience(source);
+    CharacterData.#cleanMentalState(source);
+  }
+
+  /**
+   * Clean experience fields.
+   * @param {object} source - The source data
+   */
+  static #cleanExperience(source) {
     if (source?.experience) {
       if (source.experience.used !== undefined) {
         source.experience.used = this._toInt(source.experience.used);
@@ -150,6 +161,13 @@ export default class CharacterData extends CreatureTemplate {
         source.experience.calculatedTotal = this._toInt(source.experience.calculatedTotal);
       }
     }
+  }
+
+  /**
+   * Clean mental state fields.
+   * @param {object} source - The source data
+   */
+  static #cleanMentalState(source) {
     if (source?.insanity !== undefined) {
       source.insanity = this._toInt(source.insanity);
     }
@@ -162,7 +180,6 @@ export default class CharacterData extends CreatureTemplate {
     if (source?.corruptionBonus !== undefined) {
       source.corruptionBonus = this._toInt(source.corruptionBonus);
     }
-    return super.cleanData(source, options);
   }
 
   /* -------------------------------------------- */
@@ -305,14 +322,6 @@ export default class CharacterData extends CreatureTemplate {
   /* -------------------------------------------- */
   /*  Properties                                  */
   /* -------------------------------------------- */
-
-  /**
-   * Get the effective profit factor.
-   * @type {number}
-   */
-  get effectiveProfitFactor() {
-    return this.rogueTrader.profitFactor.current + this.rogueTrader.profitFactor.modifier;
-  }
 
   /**
    * Get corruption level.
