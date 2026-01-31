@@ -43,6 +43,8 @@ export class GrantsManager {
    * @param {object} [options.selections={}] - Player selections for choices
    * @param {object} [options.rolledValues={}] - Pre-rolled values for resources
    * @param {boolean} [options.dryRun=false] - Preview mode
+   * @param {boolean} [options.force=false] - Bypass idempotency check
+   * @param {boolean} [options.saveState=true] - Save applied state to actor flags
    * @param {number} [options.depth=0] - Current recursion depth
    * @returns {Promise<GrantsApplicationResult>}
    */
@@ -51,12 +53,26 @@ export class GrantsManager {
       success: true,
       appliedState: {},
       notifications: [],
-      errors: []
+      errors: [],
+      skipped: false
     };
 
     if (!item || !actor) {
       result.success = false;
       result.errors.push("Missing item or actor");
+      return result;
+    }
+
+    // Generate source key for tracking
+    const sourceKey = item.uuid || item._id || item.id || `item-${item.name?.replace(/\s+/g, '-')}`;
+
+    // Idempotency check - skip if already applied (unless forced)
+    if (!options.force && !options.dryRun && this.hasAppliedGrants(actor, sourceKey)) {
+      game.rt?.log(`GrantsManager: Grants from ${item.name} already applied, skipping`);
+      const existingState = this.loadAppliedState(actor, sourceKey);
+      result.appliedState = existingState?.grants || {};
+      result.skipped = true;
+      result.notifications.push(`Grants from ${item.name} already applied`);
       return result;
     }
 
@@ -115,6 +131,15 @@ export class GrantsManager {
           depth: depth + 1
         });
       }
+    }
+
+    // Save applied state to actor flags (unless dry run or explicitly disabled)
+    const shouldSaveState = !options.dryRun && options.saveState !== false && depth === 0;
+    if (shouldSaveState && Object.keys(result.appliedState).length > 0) {
+      await this.saveAppliedState(actor, sourceKey, result.appliedState, {
+        sourceName: item.name,
+        sourceType: item.type
+      });
     }
 
     // Show notification summary
@@ -211,6 +236,7 @@ export class GrantsManager {
    * @param {RogueTraderItem[]} items - Array of items with grants
    * @param {RogueTraderActor} actor - The actor to receive grants
    * @param {object} [options={}] - Application options
+   * @param {boolean} [options.reverseExisting=false] - Reverse all existing grants before applying
    * @returns {Promise<GrantsApplicationResult>}
    */
   static async applyBatchGrants(items, actor, options = {}) {
@@ -218,7 +244,8 @@ export class GrantsManager {
       success: true,
       appliedState: {},
       notifications: [],
-      errors: []
+      errors: [],
+      reversed: {}
     };
 
     if (!Array.isArray(items) || !actor) {
@@ -227,11 +254,25 @@ export class GrantsManager {
       return result;
     }
 
+    // Reverse existing grants if requested
+    if (options.reverseExisting) {
+      game.rt?.log(`GrantsManager: Reversing existing grants before batch apply`);
+      const reverseResult = await this.reverseAllAppliedGrants(actor);
+      result.reversed = reverseResult.reversed;
+      result.notifications.push(...reverseResult.notifications);
+      result.errors.push(...reverseResult.errors);
+      
+      if (!reverseResult.success) {
+        console.warn("GrantsManager: Some grants failed to reverse, continuing anyway");
+      }
+    }
+
     // Apply grants from each item in order
     for (const item of items) {
       const itemResult = await this.applyItemGrants(item, actor, {
         ...options,
-        showNotification: false // Suppress per-item notifications
+        showNotification: false, // Suppress per-item notifications
+        force: options.reverseExisting // Force apply if we reversed
       });
 
       // Use item.id, item._id, or generate a key from name
@@ -251,6 +292,380 @@ export class GrantsManager {
     }
 
     return result;
+  }
+
+  /* -------------------------------------------- */
+  /*  State Persistence (Actor Flags)             */
+  /* -------------------------------------------- */
+
+  /**
+   * Flag path for storing applied grants on actor.
+   * @type {string}
+   */
+  static FLAG_KEY = "appliedGrants";
+
+  /**
+   * Save applied grant state to actor flags.
+   * 
+   * @param {RogueTraderActor} actor - The actor
+   * @param {string} sourceKey - Unique key for the source (UUID or item key)
+   * @param {object} state - The applied state to save
+   * @param {object} [metadata={}] - Additional metadata
+   * @returns {Promise<void>}
+   */
+  static async saveAppliedState(actor, sourceKey, state, metadata = {}) {
+    if (!actor || !sourceKey) return;
+
+    const flagData = {
+      appliedAt: Date.now(),
+      sourceName: metadata.sourceName || sourceKey,
+      sourceType: metadata.sourceType || "unknown",
+      grants: state
+    };
+
+    // Sanitize the key for use in flag path (remove dots, special chars)
+    const safeKey = this._sanitizeKey(sourceKey);
+    
+    await actor.setFlag("rogue-trader", `${this.FLAG_KEY}.${safeKey}`, flagData);
+    game.rt?.log(`GrantsManager: Saved applied state for ${sourceKey}`);
+  }
+
+  /**
+   * Load applied grant state from actor flags.
+   * 
+   * @param {RogueTraderActor} actor - The actor
+   * @param {string} [sourceKey] - Optional source key to load specific grants
+   * @returns {object|null} The applied state, or null if not found
+   */
+  static loadAppliedState(actor, sourceKey = null) {
+    if (!actor) return null;
+
+    const allGrants = actor.getFlag("rogue-trader", this.FLAG_KEY) || {};
+
+    if (sourceKey) {
+      const safeKey = this._sanitizeKey(sourceKey);
+      return allGrants[safeKey] || null;
+    }
+
+    return allGrants;
+  }
+
+  /**
+   * Clear applied grant state from actor flags.
+   * 
+   * @param {RogueTraderActor} actor - The actor
+   * @param {string} [sourceKey] - Optional source key to clear specific grants
+   * @returns {Promise<void>}
+   */
+  static async clearAppliedState(actor, sourceKey = null) {
+    if (!actor) return;
+
+    if (sourceKey) {
+      const safeKey = this._sanitizeKey(sourceKey);
+      await actor.unsetFlag("rogue-trader", `${this.FLAG_KEY}.${safeKey}`);
+      game.rt?.log(`GrantsManager: Cleared applied state for ${sourceKey}`);
+    } else {
+      await actor.unsetFlag("rogue-trader", this.FLAG_KEY);
+      game.rt?.log(`GrantsManager: Cleared all applied grant state`);
+    }
+  }
+
+  /**
+   * Check if grants from a source have already been applied.
+   * 
+   * @param {RogueTraderActor} actor - The actor
+   * @param {string} sourceKey - The source key to check
+   * @returns {boolean}
+   */
+  static hasAppliedGrants(actor, sourceKey) {
+    const state = this.loadAppliedState(actor, sourceKey);
+    return state !== null && Object.keys(state.grants || {}).length > 0;
+  }
+
+  /**
+   * Sanitize a key for use in flag paths.
+   * @param {string} key 
+   * @returns {string}
+   * @private
+   */
+  static _sanitizeKey(key) {
+    // Replace dots and special characters with underscores
+    return key.replace(/[.\/\\]/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+  }
+
+  /* -------------------------------------------- */
+  /*  Reversal & Reset                            */
+  /* -------------------------------------------- */
+
+  /**
+   * Reverse all applied grants from a specific source.
+   * 
+   * @param {RogueTraderActor} actor - The actor
+   * @param {string} sourceKey - The source key to reverse
+   * @returns {Promise<object>} Result of the reversal
+   */
+  static async reverseAppliedGrants(actor, sourceKey) {
+    const result = {
+      success: true,
+      reversed: {},
+      notifications: [],
+      errors: []
+    };
+
+    if (!actor || !sourceKey) {
+      result.success = false;
+      result.errors.push("Missing actor or sourceKey");
+      return result;
+    }
+
+    const appliedData = this.loadAppliedState(actor, sourceKey);
+    if (!appliedData) {
+      result.notifications.push(`No applied grants found for ${sourceKey}`);
+      return result;
+    }
+
+    game.rt?.log(`GrantsManager: Reversing grants from ${appliedData.sourceName || sourceKey}`);
+
+    // Reverse each grant in reverse order
+    const grantIds = Object.keys(appliedData.grants || {}).reverse();
+    
+    for (const grantId of grantIds) {
+      const grantState = appliedData.grants[grantId];
+      if (!grantState) continue;
+
+      try {
+        const reversed = await this._reverseGrant(actor, grantId, grantState);
+        result.reversed[grantId] = reversed;
+        result.notifications.push(...(reversed.notifications || []));
+      } catch (err) {
+        console.error(`GrantsManager: Failed to reverse grant ${grantId}:`, err);
+        result.errors.push(`Failed to reverse grant: ${err.message}`);
+      }
+    }
+
+    // Clear the applied state
+    await this.clearAppliedState(actor, sourceKey);
+
+    result.success = result.errors.length === 0;
+    return result;
+  }
+
+  /**
+   * Reverse all applied grants from all sources (full reset).
+   * 
+   * @param {RogueTraderActor} actor - The actor
+   * @returns {Promise<object>} Result of the reversal
+   */
+  static async reverseAllAppliedGrants(actor) {
+    const result = {
+      success: true,
+      reversed: {},
+      notifications: [],
+      errors: []
+    };
+
+    if (!actor) {
+      result.success = false;
+      result.errors.push("Missing actor");
+      return result;
+    }
+
+    const allApplied = this.loadAppliedState(actor);
+    if (!allApplied || Object.keys(allApplied).length === 0) {
+      result.notifications.push("No applied grants to reverse");
+      return result;
+    }
+
+    game.rt?.log(`GrantsManager: Reversing all applied grants (${Object.keys(allApplied).length} sources)`);
+
+    // Reverse each source in reverse order (most recent first)
+    const sourceKeys = Object.keys(allApplied).reverse();
+    
+    for (const sourceKey of sourceKeys) {
+      const sourceResult = await this.reverseAppliedGrants(actor, sourceKey);
+      result.reversed[sourceKey] = sourceResult.reversed;
+      result.notifications.push(...sourceResult.notifications);
+      result.errors.push(...sourceResult.errors);
+      
+      if (!sourceResult.success) {
+        result.success = false;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Reverse a single grant.
+   * @param {RogueTraderActor} actor 
+   * @param {string} grantId 
+   * @param {object} grantState 
+   * @returns {Promise<object>}
+   * @private
+   */
+  static async _reverseGrant(actor, grantId, grantState) {
+    const { type, applied } = grantState;
+    const result = { notifications: [] };
+
+    switch (type) {
+      case "characteristic":
+        await this._reverseCharacteristicGrant(actor, applied, result);
+        break;
+      
+      case "skill":
+        await this._reverseSkillGrant(actor, applied, result);
+        break;
+      
+      case "item":
+        await this._reverseItemGrant(actor, applied, result);
+        break;
+      
+      case "resource":
+        await this._reverseResourceGrant(actor, applied, result);
+        break;
+      
+      case "choice":
+        // Choice grants contain nested grants, reverse them
+        if (applied.grantResults) {
+          for (const [key, nestedState] of Object.entries(applied.grantResults)) {
+            await this._reverseGrant(actor, key, { type: nestedState.type || "unknown", applied: nestedState });
+          }
+        }
+        break;
+      
+      default:
+        console.warn(`GrantsManager: Unknown grant type to reverse: ${type}`);
+    }
+
+    return result;
+  }
+
+  /**
+   * Reverse characteristic grant.
+   * @private
+   */
+  static async _reverseCharacteristicGrant(actor, applied, result) {
+    const updates = {};
+    
+    for (const [key, state] of Object.entries(applied || {})) {
+      if (state.previousValue !== undefined) {
+        updates[`system.characteristics.${key}.advance`] = state.previousValue;
+        result.notifications.push(`Reversed ${key}: ${state.newValue} → ${state.previousValue}`);
+      }
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await actor.update(updates);
+    }
+  }
+
+  /**
+   * Reverse skill grant.
+   * @private
+   */
+  static async _reverseSkillGrant(actor, applied, result) {
+    const idsToDelete = [];
+    const itemsToUpdate = [];
+
+    for (const [key, state] of Object.entries(applied || {})) {
+      if (state.created && state.itemId) {
+        // Delete created skill
+        idsToDelete.push(state.itemId);
+        result.notifications.push(`Removed skill: ${key}`);
+      } else if (state.upgraded && state.itemId && state.previousLevel) {
+        // Revert upgrade
+        const updates = this._getSkillLevelUpdates(state.previousLevel);
+        itemsToUpdate.push({ _id: state.itemId, ...updates });
+        result.notifications.push(`Reverted skill ${key} to ${state.previousLevel}`);
+      }
+    }
+
+    if (idsToDelete.length > 0) {
+      await actor.deleteEmbeddedDocuments("Item", idsToDelete);
+    }
+
+    if (itemsToUpdate.length > 0) {
+      await actor.updateEmbeddedDocuments("Item", itemsToUpdate);
+    }
+  }
+
+  /**
+   * Reverse item grant.
+   * @private
+   */
+  static async _reverseItemGrant(actor, applied, result) {
+    const idsToDelete = [];
+
+    for (const [uuid, itemId] of Object.entries(applied || {})) {
+      if (itemId && actor.items.has(itemId)) {
+        const item = actor.items.get(itemId);
+        idsToDelete.push(itemId);
+        result.notifications.push(`Removed: ${item.name}`);
+      }
+    }
+
+    if (idsToDelete.length > 0) {
+      await actor.deleteEmbeddedDocuments("Item", idsToDelete);
+    }
+  }
+
+  /**
+   * Reverse resource grant.
+   * @private
+   */
+  static async _reverseResourceGrant(actor, applied, result) {
+    const updates = {};
+    
+    const resourcePaths = {
+      wounds: { value: "system.wounds.value", max: "system.wounds.max" },
+      fate: { value: "system.fatePoints.value", max: "system.fatePoints.max" },
+      corruption: { value: "system.corruption.value" },
+      insanity: { value: "system.insanity.value" }
+    };
+
+    for (const [resourceType, state] of Object.entries(applied || {})) {
+      const paths = resourcePaths[resourceType];
+      if (!paths) continue;
+
+      if (state.previousValue !== undefined && paths.value) {
+        updates[paths.value] = state.previousValue;
+      }
+      if (state.previousMax !== undefined && paths.max) {
+        updates[paths.max] = state.previousMax;
+      }
+      
+      result.notifications.push(`Reversed ${resourceType}`);
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await actor.update(updates);
+    }
+  }
+
+  /**
+   * Get skill level update data.
+   * @private
+   */
+  static _getSkillLevelUpdates(level) {
+    const updates = {
+      "system.trained": false,
+      "system.plus10": false,
+      "system.plus20": false
+    };
+
+    switch (level) {
+      case "plus20":
+        updates["system.plus20"] = true;
+        // Fall through
+      case "plus10":
+        updates["system.plus10"] = true;
+        // Fall through
+      case "trained":
+        updates["system.trained"] = true;
+        break;
+    }
+
+    return updates;
   }
 
   /* -------------------------------------------- */

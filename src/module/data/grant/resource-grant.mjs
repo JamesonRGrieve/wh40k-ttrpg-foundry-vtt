@@ -131,20 +131,24 @@ export default class ResourceGrantData extends BaseGrantData {
 
       // Get current values
       const currentValue = foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0;
+      let currentMax = null;
 
       // Apply to value path
       updates[resourceDef.valuePath] = currentValue + value;
 
       // Also apply to max if applicable
       if (resourceDef.affectsMax && resourceDef.maxPath) {
-        const currentMax = foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0;
+        currentMax = foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0;
         updates[resourceDef.maxPath] = currentMax + value;
       }
 
       result.applied[type] = {
         formula,
         rolledValue: value,
-        previousValue: currentValue
+        previousValue: currentValue,
+        previousMax: currentMax,
+        newValue: currentValue + value,
+        newMax: currentMax !== null ? currentMax + value : null
       };
 
       const label = game.i18n.localize(resourceDef.label);
@@ -271,20 +275,25 @@ export default class ResourceGrantData extends BaseGrantData {
   async _evaluateFormula(formula, actor) {
     if (!formula) return 0;
 
+    // Trim and normalize
+    const normalizedFormula = String(formula).trim();
+    if (!normalizedFormula) return 0;
+
     // Handle flat numbers
-    const flat = parseInt(formula);
-    if (!isNaN(flat) && String(flat) === formula.trim()) {
+    const flat = parseInt(normalizedFormula);
+    if (!isNaN(flat) && String(flat) === normalizedFormula) {
       return flat;
     }
 
     // Handle lookup table format: "(1-4|=2),(5-7|=3),(8-10|=4)"
     // This is a d10 roll table - roll and lookup the result
-    if (formula.includes("|=")) {
-      return this._evaluateLookupTable(formula);
+    // Match more robustly - look for pattern like (N-M|=X)
+    if (/\(\d+-\d+\|=\d+\)/.test(normalizedFormula)) {
+      return this._evaluateLookupTable(normalizedFormula);
     }
 
     // Replace characteristic references
-    let processedFormula = formula;
+    let processedFormula = normalizedFormula;
     
     // Replace TB, WPB, etc. with actual bonus values
     const charAbbreviations = {
@@ -302,7 +311,7 @@ export default class ResourceGrantData extends BaseGrantData {
     for (const [abbr, charKey] of Object.entries(charAbbreviations)) {
       const regex = new RegExp(`(\\d*)x?${abbr}`, "gi");
       processedFormula = processedFormula.replace(regex, (match, multiplier) => {
-        const bonus = actor.system?.characteristics?.[charKey]?.bonus ?? 0;
+        const bonus = actor?.system?.characteristics?.[charKey]?.bonus ?? 0;
         const mult = parseInt(multiplier) || 1;
         return String(bonus * mult);
       });
@@ -313,7 +322,7 @@ export default class ResourceGrantData extends BaseGrantData {
       const roll = await new Roll(processedFormula).evaluate();
       return roll.total;
     } catch (err) {
-      console.error(`ResourceGrantData: Failed to evaluate formula "${formula}":`, err);
+      console.error(`ResourceGrantData: Failed to evaluate formula "${normalizedFormula}" (processed: "${processedFormula}"):`, err);
       return 0;
     }
   }
