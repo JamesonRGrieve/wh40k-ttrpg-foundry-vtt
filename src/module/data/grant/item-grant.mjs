@@ -250,8 +250,8 @@ export default class ItemGrantData extends BaseGrantData {
   }
 
   /** @inheritDoc */
-  validate() {
-    const errors = super.validate();
+  validateGrant() {
+    const errors = super.validateGrant();
     
     // items may be undefined if grant was created with invalid data
     const items = this.items ?? [];

@@ -196,10 +196,11 @@ export default class CharacteristicGrantData extends BaseGrantData {
   }
 
   /** @inheritDoc */
-  validate() {
-    const errors = super.validate();
+  validateGrant() {
+    const errors = super.validateGrant();
 
-    for (const charConfig of this.characteristics) {
+    const characteristics = this.characteristics ?? [];
+    for (const charConfig of characteristics) {
       if (!this.constructor.VALID_CHARACTERISTICS.has(charConfig.key)) {
         errors.push(`Invalid characteristic key: ${charConfig.key}`);
       }
