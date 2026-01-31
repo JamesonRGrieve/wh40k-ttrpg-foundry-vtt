@@ -261,19 +261,20 @@ export class GrantsManager {
    * Convert old grant format to new Grant DataModels.
    * 
    * @param {object} oldGrants - Old grants object from item.system.grants
+   * @param {object} [modifiers] - Optional modifiers object from item.system.modifiers
    * @returns {object[]} Array of grant configurations
    */
-  static migrateOldGrants(oldGrants) {
-    if (!oldGrants) return [];
-    
+  static migrateOldGrants(oldGrants, modifiers = null) {
     const newGrants = [];
 
-    // Migrate characteristic modifiers
-    if (oldGrants.characteristics && Object.keys(oldGrants.characteristics).length > 0) {
+    // Migrate characteristic modifiers from modifiers.characteristics (origin paths)
+    // This is separate from grants in the old format
+    const charMods = modifiers?.characteristics || oldGrants?.characteristics;
+    if (charMods && Object.keys(charMods).length > 0) {
       const charGrant = {
         _id: foundry.utils.randomID(),
         type: "characteristic",
-        characteristics: Object.entries(oldGrants.characteristics)
+        characteristics: Object.entries(charMods)
           .filter(([_, value]) => value !== 0)
           .map(([key, value]) => ({ key, value }))
       };
@@ -281,6 +282,9 @@ export class GrantsManager {
         newGrants.push(charGrant);
       }
     }
+
+    // If no grants object, return just characteristics
+    if (!oldGrants) return newGrants;
 
     // Migrate wounds
     if (oldGrants.woundsFormula || oldGrants.wounds) {
@@ -312,7 +316,7 @@ export class GrantsManager {
         _id: foundry.utils.randomID(),
         type: "skill",
         skills: oldGrants.skills.map(s => ({
-          key: s.name,
+          key: s.key || s.name,  // Support both key and name
           specialization: s.specialization || "",
           level: s.level || "trained"
         }))
@@ -395,8 +399,9 @@ export class GrantsManager {
     }
 
     // Check for old-style grants object and migrate
-    if (item.system?.grants) {
-      return this.migrateOldGrants(item.system.grants);
+    // Also include modifiers.characteristics which is separate from grants in origin paths
+    if (item.system?.grants || item.system?.modifiers?.characteristics) {
+      return this.migrateOldGrants(item.system.grants, item.system.modifiers);
     }
 
     return [];
@@ -432,7 +437,13 @@ export class GrantsManager {
   static _migrateChoiceOption(option) {
     const grants = [];
 
-    // Characteristic bonus
+    // If option has a nested grants object, migrate it recursively
+    if (option.grants) {
+      const nestedGrants = this.migrateOldGrants(option.grants);
+      grants.push(...nestedGrants);
+    }
+
+    // Characteristic bonus (flat structure)
     if (option.characteristic && option.value) {
       grants.push({
         type: "characteristic",
@@ -440,7 +451,7 @@ export class GrantsManager {
       });
     }
 
-    // Skill
+    // Skill (flat structure)
     if (option.skill) {
       grants.push({
         type: "skill",
@@ -452,8 +463,8 @@ export class GrantsManager {
       });
     }
 
-    // Talent
-    if (option.talent || option.uuid) {
+    // Talent (flat structure)
+    if (option.talent || (option.uuid && !option.grants)) {
       grants.push({
         type: "item",
         items: [{
