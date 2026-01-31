@@ -742,25 +742,30 @@ export default class CreatureTemplate extends CommonTemplate {
             const itemMod = this._getTotalCharacteristicModifier(name);
             const totalMod = originPathMod + itemMod;
 
-            if (totalMod !== 0) {
-                char.originPathModifier = originPathMod;
-                char.itemModifier = itemMod;
-                char.totalModifier = totalMod;
-                char.total += totalMod;
+            // Always store modifier values (even if 0)
+            char.originPathModifier = originPathMod;
+            char.itemModifier = itemMod;
+            char.totalModifier = totalMod;
 
-                // Recalculate bonus with new total
-                const baseModifier = Math.floor(char.total / 10);
-                const unnaturalLevel = char.unnatural || 0;
-                char.bonus = unnaturalLevel >= 2 ? baseModifier * unnaturalLevel : baseModifier;
-            }
+            // Recalculate total from BASE values to avoid accumulation
+            // Base total is: base + (advance * 5) + modifier (from schema)
+            const baseTotal = char.base + (char.advance * 5) + char.modifier;
+            char.total = baseTotal + totalMod;
+
+            // Recalculate bonus with new total
+            const baseModifier = Math.floor(char.total / 10);
+            const unnaturalLevel = char.unnatural || 0;
+            char.bonus = unnaturalLevel >= 2 ? baseModifier * unnaturalLevel : baseModifier;
         }
 
+        // Update initiative bonus from characteristic (recalculate from base)
+        const initChar = this.characteristics[this.initiative.characteristic];
+        const baseInitBonus = initChar?.bonus ?? 0;
+        
         // Apply combat modifiers from items
         const initMod = this._getTotalCombatModifier('initiative');
-        if (initMod !== 0) {
-            this.initiative.bonus += initMod;
-            this.initiative.itemModifier = initMod;
-        }
+        this.initiative.bonus = baseInitBonus + initMod;
+        this.initiative.itemModifier = initMod;
 
         // Store combat modifiers for display
         this.combatModifiers = {
