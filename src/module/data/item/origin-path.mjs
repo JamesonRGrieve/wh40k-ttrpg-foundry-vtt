@@ -28,7 +28,8 @@ export default class OriginPathData extends ItemDataModel.mixin(
         initial: "homeWorld",
         choices: [
           "homeWorld", "birthright", "lureOfTheVoid",
-          "trialsAndTravails", "motivation", "career"
+          "trialsAndTravails", "motivation", "career",
+          "lineage"  // Optional step for dynasty lineage
         ]
       }),
       
