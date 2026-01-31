@@ -43,7 +43,12 @@ export function createGrant(config) {
     return null;
   }
   
-  return new GrantClass(config);
+  try {
+    return new GrantClass(config);
+  } catch (error) {
+    console.warn(`createGrant: Failed to create ${config.type} grant:`, error.message, config);
+    return null;
+  }
 }
 
 /**
