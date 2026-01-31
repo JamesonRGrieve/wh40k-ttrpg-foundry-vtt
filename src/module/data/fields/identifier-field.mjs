@@ -1,6 +1,9 @@
 /**
  * A special string field for unique identifiers.
  * Used for referencing items in compendiums and linking data.
+ * 
+ * Follows DND5E pattern: permissive validation (accepts legacy formats)
+ * but provides helper for generating kebab-case from names.
  */
 export default class IdentifierField extends foundry.data.fields.StringField {
   
@@ -19,9 +22,10 @@ export default class IdentifierField extends foundry.data.fields.StringField {
   _validateType(value) {
     if ( value === "" ) return;
     
-    // Identifiers should be kebab-case
-    if ( !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value) ) {
-      throw new Error(`Identifier "${value}" must be kebab-case (lowercase letters, numbers, and hyphens)`);
+    // Permissive validation - allows letters (any case), numbers, underscores, and hyphens
+    // This matches DND5E pattern and accepts legacy camelCase identifiers
+    if ( !/^[a-z0-9_-]+$/i.test(value) ) {
+      throw new Error(`Identifier "${value}" must contain only letters, numbers, underscores, and hyphens`);
     }
   }
 
@@ -29,6 +33,7 @@ export default class IdentifierField extends foundry.data.fields.StringField {
 
   /**
    * Generate an identifier from a name string.
+   * Produces kebab-case for new identifiers.
    * @param {string} name   The name to convert.
    * @returns {string}
    */
