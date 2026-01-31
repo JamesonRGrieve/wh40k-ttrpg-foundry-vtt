@@ -639,6 +639,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
     /**
      * Compute modifiers from ALL item types - talents, traits, conditions, equipment.
+     * NOTE: Origin paths are excluded - they use _getOriginPathCharacteristicModifier() instead.
      * @protected
      */
     _computeItemModifiers() {
@@ -647,12 +648,14 @@ export default class CreatureTemplate extends CommonTemplate {
 
         const modifierItems = actor.items.filter(
             (item) =>
-                item.isTalent ||
+                // Exclude origin paths - they're handled separately via _getOriginPathCharacteristicModifier
+                !item.isOriginPath &&
+                (item.isTalent ||
                 item.isTrait ||
                 item.isCondition ||
                 (item.type === 'armour' && item.system.equipped) ||
                 (item.type === 'cybernetic' && item.system.equipped) ||
-                (item.type === 'gear' && item.system.equipped),
+                (item.type === 'gear' && item.system.equipped)),
         );
 
         for (const item of modifierItems) {
