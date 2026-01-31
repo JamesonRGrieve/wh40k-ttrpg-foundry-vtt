@@ -93,29 +93,40 @@ export default class ItemGrantData extends BaseGrantData {
     const selectedUuids = data.selected ?? items.map(i => i.uuid);
 
     for (const itemConfig of items) {
-      const { uuid, optional, overrides } = itemConfig;
+      const { uuid, optional, overrides, _legacyName, _legacySpecialization } = itemConfig;
       
-      // Skip items with empty UUID (legacy data without proper mapping)
-      if (!uuid) {
-        const legacyName = itemConfig._legacyName;
-        if (legacyName) {
-          result.notifications.push(`Skipped "${legacyName}" - no UUID mapping available`);
+      // Try to find the item - first by UUID, then by name
+      let sourceItem = null;
+      let resolvedUuid = uuid;
+      
+      if (uuid) {
+        sourceItem = await this._fetchItem(uuid);
+      }
+      
+      // Fallback: lookup by name if no UUID or UUID not found
+      if (!sourceItem && _legacyName) {
+        sourceItem = await this._findItemByName(_legacyName, _legacySpecialization);
+        if (sourceItem) {
+          resolvedUuid = sourceItem.uuid;
+          game.rt?.log(`ItemGrantData: Resolved "${_legacyName}" to UUID ${resolvedUuid}`);
+        }
+      }
+      
+      // Still no item found
+      if (!sourceItem) {
+        if (_legacyName) {
+          result.notifications.push(`Could not find "${_legacyName}" in compendiums`);
+        } else if (uuid) {
+          result.errors.push(`Could not find item: ${uuid}`);
         }
         continue;
       }
       
-      // Skip if not selected
-      if (!selectedUuids.includes(uuid)) {
+      // Skip if not selected (only check when we have a UUID in selection list)
+      if (uuid && !selectedUuids.includes(uuid)) {
         if (!optional && !this.optional) {
           result.errors.push(`Required item ${uuid} not selected`);
         }
-        continue;
-      }
-
-      // Fetch the source item
-      const sourceItem = await this._fetchItem(uuid);
-      if (!sourceItem) {
-        result.errors.push(`Could not find item: ${uuid}`);
         continue;
       }
 
@@ -132,8 +143,8 @@ export default class ItemGrantData extends BaseGrantData {
       }
 
       // Create item data
-      const itemData = await this._createItemData(sourceItem, uuid, overrides);
-      itemsToCreate.push({ uuid, data: itemData });
+      const itemData = await this._createItemData(sourceItem, resolvedUuid, overrides);
+      itemsToCreate.push({ uuid: resolvedUuid, data: itemData });
     }
 
     // Apply if not dry run
@@ -315,5 +326,53 @@ export default class ItemGrantData extends BaseGrantData {
     itemData._id = foundry.utils.randomID();
 
     return itemData;
+  }
+
+  /**
+   * Find an item by name in compendiums.
+   * Used as fallback when UUID is not available.
+   * @param {string} name - Item name to search for
+   * @param {string} [specialization] - Optional specialization for talents
+   * @returns {Promise<Item|null>}
+   * @private
+   */
+  async _findItemByName(name, specialization = "") {
+    if (!name) return null;
+
+    // Determine which pack to search based on expected item type
+    const packIds = [
+      "rogue-trader.rt-items-talents",
+      "rogue-trader.rt-items-traits",
+      "rogue-trader.rt-items-weapons",
+      "rogue-trader.rt-items-armour",
+      "rogue-trader.rt-items-gear"
+    ];
+
+    for (const packId of packIds) {
+      const pack = game.packs.get(packId);
+      if (!pack) continue;
+
+      // Get the index
+      const index = await pack.getIndex();
+      
+      // Search for matching name
+      const match = index.find(entry => {
+        // Exact name match
+        if (entry.name === name) return true;
+        // Case-insensitive match
+        if (entry.name.toLowerCase() === name.toLowerCase()) return true;
+        // Handle specialization in name like "Melee Weapon Training (Universal)"
+        if (specialization && entry.name.toLowerCase() === `${name} (${specialization})`.toLowerCase()) {
+          return true;
+        }
+        return false;
+      });
+
+      if (match) {
+        return pack.getDocument(match._id);
+      }
+    }
+
+    return null;
   }
 }
