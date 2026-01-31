@@ -81,8 +81,7 @@ export default class SkillGrantData extends BaseGrantData {
     }
 
     const selectedSkills = data.selected ?? this.skills.map(s => this._getSkillKey(s));
-    const itemsToCreate = [];
-    const itemsToUpdate = [];
+    const updates = {};
 
     for (const skillConfig of this.skills) {
       const skillKey = this._getSkillKey(skillConfig);
@@ -95,104 +94,282 @@ export default class SkillGrantData extends BaseGrantData {
         continue;
       }
 
-      // Find existing skill on actor
-      const existing = this._findExistingSkill(actor, skillConfig);
+      // Get the schema skill key and current state
+      const schemaKey = this._getSchemaSkillKey(skillConfig.key);
+      const specialization = skillConfig.specialization;
+      
+      if (!schemaKey) {
+        result.errors.push(`Unknown skill: ${skillConfig.key}`);
+        continue;
+      }
 
-      if (existing) {
-        // Upgrade existing skill
-        const upgrade = this._calculateUpgrade(existing, skillConfig.level);
-        if (upgrade) {
-          itemsToUpdate.push({
-            _id: existing.id,
-            ...upgrade.updates
-          });
-          result.applied[skillKey] = {
-            itemId: existing.id,
-            previousLevel: upgrade.previousLevel,
-            newLevel: skillConfig.level,
-            upgraded: true
-          };
-          result.notifications.push(
-            `Upgraded ${existing.name} to ${game.i18n.localize(this.constructor.TRAINING_LEVELS[skillConfig.level].label)}`
-          );
-        } else {
-          result.notifications.push(`${existing.name} already at or above ${skillConfig.level}`);
+      // Check current skill level and calculate upgrade
+      const currentSkill = actor.system.skills[schemaKey];
+      if (!currentSkill) {
+        result.errors.push(`Skill not found on actor: ${schemaKey}`);
+        continue;
+      }
+
+      // Handle specialist skills (ones with entries array)
+      if (specialization && Array.isArray(currentSkill.entries)) {
+        const upgradeResult = this._applySpecialistSkillUpgrade(
+          actor, schemaKey, specialization, skillConfig.level, updates, result
+        );
+        if (upgradeResult) {
+          result.applied[skillKey] = upgradeResult;
         }
       } else {
-        // Create new skill item
-        const skillData = this._createSkillData(skillConfig);
-        itemsToCreate.push({ key: skillKey, data: skillData });
+        // Standard skill - upgrade the training level
+        const upgradeResult = this._applyStandardSkillUpgrade(
+          actor, schemaKey, skillConfig.level, updates, result
+        );
+        if (upgradeResult) {
+          result.applied[skillKey] = upgradeResult;
+        }
       }
     }
 
-    // Apply if not dry run
-    if (!options.dryRun) {
-      // Update existing skills
-      if (itemsToUpdate.length > 0) {
-        await actor.updateEmbeddedDocuments("Item", itemsToUpdate);
-      }
-
-      // Create new skills
-      if (itemsToCreate.length > 0) {
-        const created = await actor.createEmbeddedDocuments(
-          "Item",
-          itemsToCreate.map(i => i.data)
-        );
-
-        created.forEach((item, index) => {
-          const key = itemsToCreate[index].key;
-          result.applied[key] = {
-            itemId: item.id,
-            previousLevel: null,
-            newLevel: this.skills.find(s => this._getSkillKey(s) === key)?.level,
-            created: true
-          };
-          result.notifications.push(`Granted: ${item.name}`);
-        });
-      }
+    // Apply updates if not dry run
+    if (!options.dryRun && Object.keys(updates).length > 0) {
+      await actor.update(updates);
     }
 
     result.success = result.errors.length === 0;
     return result;
   }
 
+  /**
+   * Apply upgrade to a standard (non-specialist) skill.
+   * @private
+   */
+  _applyStandardSkillUpgrade(actor, schemaKey, targetLevel, updates, result) {
+    const currentSkill = actor.system.skills[schemaKey];
+    const currentLevel = this._getSchemaSkillLevel(currentSkill);
+    const currentOrder = this.constructor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
+    const targetOrder = this.constructor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
+
+    if (targetOrder <= currentOrder) {
+      result.notifications.push(`${currentSkill.label || schemaKey} already at or above ${targetLevel}`);
+      return null;
+    }
+
+    // Apply the upgrade
+    const levelUpdates = this._getLevelUpdates(targetLevel);
+    for (const [field, value] of Object.entries(levelUpdates)) {
+      updates[`system.skills.${schemaKey}.${field.replace('system.', '')}`] = value;
+    }
+
+    const levelLabel = game.i18n.localize(this.constructor.TRAINING_LEVELS[targetLevel].label);
+    result.notifications.push(`${currentSkill.label || schemaKey}: ${levelLabel}`);
+
+    return {
+      schemaKey,
+      previousLevel: currentLevel,
+      newLevel: targetLevel,
+      upgraded: true
+    };
+  }
+
+  /**
+   * Apply upgrade to a specialist skill entry.
+   * @private
+   */
+  _applySpecialistSkillUpgrade(actor, schemaKey, specialization, targetLevel, updates, result) {
+    const currentSkill = actor.system.skills[schemaKey];
+    const entries = currentSkill.entries || [];
+    
+    // Find existing entry with this specialization
+    const entryIndex = entries.findIndex(e => 
+      (e.name || "").toLowerCase() === specialization.toLowerCase() ||
+      (e.specialization || "").toLowerCase() === specialization.toLowerCase()
+    );
+
+    if (entryIndex >= 0) {
+      // Upgrade existing entry
+      const entry = entries[entryIndex];
+      const currentLevel = this._getSchemaSkillLevel(entry);
+      const currentOrder = this.constructor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
+      const targetOrder = this.constructor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
+
+      if (targetOrder <= currentOrder) {
+        result.notifications.push(`${currentSkill.label || schemaKey} (${specialization}) already at or above ${targetLevel}`);
+        return null;
+      }
+
+      // Update the entry
+      const levelUpdates = this._getLevelUpdates(targetLevel);
+      for (const [field, value] of Object.entries(levelUpdates)) {
+        const cleanField = field.replace('system.', '');
+        updates[`system.skills.${schemaKey}.entries.${entryIndex}.${cleanField}`] = value;
+      }
+
+      const levelLabel = game.i18n.localize(this.constructor.TRAINING_LEVELS[targetLevel].label);
+      result.notifications.push(`${currentSkill.label || schemaKey} (${specialization}): ${levelLabel}`);
+
+      return {
+        schemaKey,
+        specialization,
+        entryIndex,
+        previousLevel: currentLevel,
+        newLevel: targetLevel,
+        upgraded: true
+      };
+    } else {
+      // Create new entry
+      const newEntry = {
+        name: specialization,
+        specialization: specialization,
+        trained: targetLevel !== "known",
+        plus10: targetLevel === "plus10" || targetLevel === "plus20",
+        plus20: targetLevel === "plus20",
+        bonus: 0
+      };
+
+      // Add to entries array
+      const newEntries = [...entries, newEntry];
+      updates[`system.skills.${schemaKey}.entries`] = newEntries;
+
+      const levelLabel = game.i18n.localize(this.constructor.TRAINING_LEVELS[targetLevel].label);
+      result.notifications.push(`${currentSkill.label || schemaKey} (${specialization}): ${levelLabel} (new)`);
+
+      return {
+        schemaKey,
+        specialization,
+        entryIndex: newEntries.length - 1,
+        previousLevel: null,
+        newLevel: targetLevel,
+        created: true
+      };
+    }
+  }
+
+  /**
+   * Get the schema skill key from various input formats.
+   * @private
+   */
+  _getSchemaSkillKey(key) {
+    if (!key) return null;
+    
+    // Normalize the key
+    const normalized = key.toLowerCase().replace(/[\s-]/g, "");
+    
+    // Map of common variants to schema keys
+    const keyMap = {
+      // Standard skills
+      "acrobatics": "acrobatics",
+      "awareness": "awareness",
+      "barter": "barter",
+      "blather": "blather",
+      "carouse": "carouse",
+      "charm": "charm",
+      "chemuse": "chemUse",
+      "chem-use": "chemUse",
+      "climb": "climb",
+      "command": "command",
+      "commerce": "commerce",
+      "concealment": "concealment",
+      "contortionist": "contortionist",
+      "deceive": "deceive",
+      "demolition": "demolition",
+      "disguise": "disguise",
+      "dodge": "dodge",
+      "evaluate": "evaluate",
+      "gamble": "gamble",
+      "inquiry": "inquiry",
+      "interrogation": "interrogation",
+      "intimidate": "intimidate",
+      "invocation": "invocation",
+      "literacy": "literacy",
+      "logic": "logic",
+      "medicae": "medicae",
+      "psyniscience": "psyniscience",
+      "scrutiny": "scrutiny",
+      "search": "search",
+      "security": "security",
+      "shadowing": "shadowing",
+      "silentmove": "silentMove",
+      "silent move": "silentMove",
+      "sleightofhand": "sleightOfHand",
+      "sleight of hand": "sleightOfHand",
+      "survival": "survival",
+      "swim": "swim",
+      "tracking": "tracking",
+      "wrangling": "wrangling",
+      // Specialist skills
+      "ciphers": "ciphers",
+      "cipher": "ciphers",
+      "commonlore": "commonLore",
+      "common lore": "commonLore",
+      "drive": "drive",
+      "forbiddenlore": "forbiddenLore",
+      "forbidden lore": "forbiddenLore",
+      "navigation": "navigation",
+      "performer": "performer",
+      "pilot": "pilot",
+      "scholasticlore": "scholasticLore",
+      "scholastic lore": "scholasticLore",
+      "secrettongue": "secretTongue",
+      "secret tongue": "secretTongue",
+      "speaklanguage": "speakLanguage",
+      "speak language": "speakLanguage",
+      "techuse": "techUse",
+      "tech-use": "techUse",
+      "trade": "trade"
+    };
+
+    return keyMap[normalized] || keyMap[key.toLowerCase()] || null;
+  }
+
+  /**
+   * Get current training level from a schema skill object.
+   * @private
+   */
+  _getSchemaSkillLevel(skill) {
+    if (skill?.plus20) return "plus20";
+    if (skill?.plus10) return "plus10";
+    if (skill?.trained) return "trained";
+    return "known";
+  }
+
   /** @inheritDoc */
   async reverse(actor, appliedState) {
     const restoreData = { skills: [] };
-    const idsToDelete = [];
-    const itemsToUpdate = [];
+    const updates = {};
 
     for (const [key, state] of Object.entries(appliedState)) {
-      const item = actor.items.get(state.itemId);
-      if (!item) continue;
+      if (!state.schemaKey) continue;
 
-      if (state.created) {
-        // Delete created skill
-        restoreData.skills.push({
-          key,
-          data: item.toObject(),
-          created: true
-        });
-        idsToDelete.push(state.itemId);
+      if (state.created && state.specialization !== undefined) {
+        // Remove created specialist entry
+        const currentSkill = actor.system.skills[state.schemaKey];
+        if (currentSkill?.entries && state.entryIndex !== undefined) {
+          const newEntries = [...currentSkill.entries];
+          newEntries.splice(state.entryIndex, 1);
+          updates[`system.skills.${state.schemaKey}.entries`] = newEntries;
+          restoreData.skills.push({ key, removed: true, specialization: state.specialization });
+        }
       } else if (state.upgraded && state.previousLevel) {
-        // Revert upgrade
-        const revertUpdates = this._getLevelUpdates(state.previousLevel);
-        itemsToUpdate.push({ _id: state.itemId, ...revertUpdates });
-        restoreData.skills.push({
-          key,
-          previousLevel: state.previousLevel,
-          newLevel: state.newLevel,
-          upgraded: true
-        });
+        // Revert to previous level
+        const levelUpdates = this._getLevelUpdates(state.previousLevel || "known");
+        
+        if (state.specialization !== undefined && state.entryIndex !== undefined) {
+          // Specialist skill entry
+          for (const [field, value] of Object.entries(levelUpdates)) {
+            const cleanField = field.replace('system.', '');
+            updates[`system.skills.${state.schemaKey}.entries.${state.entryIndex}.${cleanField}`] = value;
+          }
+        } else {
+          // Standard skill
+          for (const [field, value] of Object.entries(levelUpdates)) {
+            updates[`system.skills.${state.schemaKey}.${field.replace('system.', '')}`] = value;
+          }
+        }
+        restoreData.skills.push({ key, reverted: true, previousLevel: state.previousLevel });
       }
     }
 
-    if (idsToDelete.length > 0) {
-      await actor.deleteEmbeddedDocuments("Item", idsToDelete);
-    }
-
-    if (itemsToUpdate.length > 0) {
-      await actor.updateEmbeddedDocuments("Item", itemsToUpdate);
+    if (Object.keys(updates).length > 0) {
+      await actor.update(updates);
     }
 
     return restoreData;
@@ -248,91 +425,6 @@ export default class SkillGrantData extends BaseGrantData {
   }
 
   /**
-   * Find an existing skill on the actor.
-   * @param {RogueTraderActor} actor 
-   * @param {object} skillConfig 
-   * @returns {RogueTraderItem|null}
-   * @private
-   */
-  _findExistingSkill(actor, skillConfig) {
-    const configKey = (skillConfig.key || "").toLowerCase().trim();
-    const configSpec = (skillConfig.specialization || "").toLowerCase().trim();
-    
-    return actor.items.find(i => {
-      if (i.type !== "skill") return false;
-      
-      const itemName = (i.name || "").toLowerCase().trim();
-      const itemKey = (i.system?.key || "").toLowerCase().trim();
-      const itemSpec = (i.system?.specialization || "").toLowerCase().trim();
-      
-      // Try to match by key first
-      if (itemKey && itemKey === configKey) {
-        // Key matches, now check specialization
-        if (configSpec) {
-          return itemSpec === configSpec;
-        }
-        return !itemSpec; // Non-specialized match
-      }
-      
-      // Try to match by name
-      // Name might be "Common Lore" or "Common Lore (War)"
-      const nameWithSpec = configSpec ? `${configKey} (${configSpec})` : configKey;
-      if (itemName === nameWithSpec || itemName === configKey) {
-        // If checking a specialized skill, also verify specialization
-        if (configSpec) {
-          return itemSpec === configSpec || itemName.includes(`(${configSpec})`);
-        }
-        return true;
-      }
-      
-      // Try removing spaces and comparing
-      const normalizedItemName = itemName.replace(/\s+/g, "").replace(/[()]/g, "");
-      const normalizedConfigKey = configKey.replace(/\s+/g, "");
-      if (normalizedItemName.startsWith(normalizedConfigKey)) {
-        if (configSpec) {
-          return itemSpec === configSpec || itemName.toLowerCase().includes(configSpec);
-        }
-        return true;
-      }
-
-      return false;
-    });
-  }
-
-  /**
-   * Calculate upgrade needed for existing skill.
-   * @param {RogueTraderItem} existing 
-   * @param {string} targetLevel 
-   * @returns {object|null}
-   * @private
-   */
-  _calculateUpgrade(existing, targetLevel) {
-    const currentLevel = this._getCurrentLevel(existing);
-    const currentOrder = this.constructor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
-    const targetOrder = this.constructor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
-
-    if (targetOrder <= currentOrder) return null;
-
-    return {
-      previousLevel: currentLevel,
-      updates: this._getLevelUpdates(targetLevel)
-    };
-  }
-
-  /**
-   * Get the current training level of a skill.
-   * @param {RogueTraderItem} skill 
-   * @returns {string}
-   * @private
-   */
-  _getCurrentLevel(skill) {
-    if (skill.system?.plus20) return "plus20";
-    if (skill.system?.plus10) return "plus10";
-    if (skill.system?.trained) return "trained";
-    return "known";
-  }
-
-  /**
    * Get update data for a training level.
    * @param {string} level 
    * @returns {object}
@@ -340,52 +432,46 @@ export default class SkillGrantData extends BaseGrantData {
    */
   _getLevelUpdates(level) {
     const updates = {
-      "system.trained": false,
-      "system.plus10": false,
-      "system.plus20": false
+      "trained": false,
+      "plus10": false,
+      "plus20": false
     };
 
     switch (level) {
       case "plus20":
-        updates["system.plus20"] = true;
-        // Fall through
+        updates["plus20"] = true;
+        updates["plus10"] = true;
+        updates["trained"] = true;
+        break;
       case "plus10":
-        updates["system.plus10"] = true;
-        // Fall through
+        updates["plus10"] = true;
+        updates["trained"] = true;
+        break;
       case "trained":
-        updates["system.trained"] = true;
+        updates["trained"] = true;
         break;
     }
 
     return updates;
   }
 
-  /**
-   * Create skill item data.
-   * @param {object} skillConfig 
-   * @returns {object}
-   * @private
-   */
-  _createSkillData(skillConfig) {
-    const levelUpdates = this._getLevelUpdates(skillConfig.level);
+  /** @inheritDoc */
+  validateGrant() {
+    const errors = super.validateGrant();
     
-    // Build proper skill name
-    let skillName = skillConfig.key;
-    if (skillConfig.specialization) {
-      skillName = `${skillConfig.key} (${skillConfig.specialization})`;
+    if (!this.skills || this.skills.length === 0) {
+      errors.push("Skill grant has no skills configured");
     }
-    
-    return {
-      type: "skill",
-      name: skillName,
-      system: {
-        key: skillConfig.key,
-        specialization: skillConfig.specialization || "",
-        trained: levelUpdates["system.trained"],
-        plus10: levelUpdates["system.plus10"],
-        plus20: levelUpdates["system.plus20"]
-      },
-      flags: this._createGrantFlags(null)
-    };
+
+    for (const skill of (this.skills || [])) {
+      if (!skill.key) {
+        errors.push("Skill grant entry missing key");
+      }
+      if (!this.constructor.TRAINING_LEVELS[skill.level]) {
+        errors.push(`Invalid training level: ${skill.level}`);
+      }
+    }
+
+    return errors;
   }
 }
