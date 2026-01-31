@@ -13,10 +13,10 @@ import ContextMenuMixin from '../api/context-menu-mixin.mjs';
 import EnhancedDragDropMixin from '../api/drag-drop-visual-mixin.mjs';
 import WhatIfMixin from '../api/what-if-mixin.mjs';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.mjs';
-import { ItemPreviewMixin, ActiveModifiersMixin } from '../components/_module.mjs';
+import { ActiveModifiersMixin, ItemPreviewMixin } from '../components/_module.mjs';
 import { EquipmentLoadoutMixin } from '../components/equipment-loadout.mjs';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.mjs';
-import EffectCreationDialog from '../prompts/effect-creation-dialog.mjs';
+// import EffectCreationDialog from '../prompts/effect-creation-dialog.mjs';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.mjs';
 
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -58,7 +58,7 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
             itemDelete: BaseActorSheet.#itemDelete,
             itemVocalize: BaseActorSheet.#itemVocalize,
             itemCreate: BaseActorSheet.#itemCreate,
-            effectCreate: BaseActorSheet.#effectCreate,
+            // effectCreate: BaseActorSheet.#effectCreate,
             effectEdit: BaseActorSheet.#effectEdit,
             effectDelete: BaseActorSheet.#effectDelete,
             effectToggle: BaseActorSheet.#effectToggle,
@@ -69,9 +69,6 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
             viewSkillInfo: BaseActorSheet.#viewSkillInfo,
             togglePanel: BaseActorSheet._onTogglePanel,
             applyPreset: BaseActorSheet._onApplyPreset,
-            enterWhatIf: BaseActorSheet.#enterWhatIf,
-            commitWhatIf: BaseActorSheet.#commitWhatIf,
-            cancelWhatIf: BaseActorSheet.#cancelWhatIf,
             spendXPAdvance: BaseActorSheet.#spendXPAdvance,
             editCharacteristic: BaseActorSheet.#editCharacteristic,
         },
@@ -126,18 +123,6 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
     _stateRestored = false;
 
     /* -------------------------------------------- */
-    /*  Properties                                  */
-    /* -------------------------------------------- */
-
-    /**
-     * Convenience access to the actor.
-     * @type {Actor}
-     */
-    get actor() {
-        return this.document;
-    }
-
-    /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
@@ -146,15 +131,14 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
         const context = {
             ...(await super._prepareContext(options)),
             actor: this.actor,
-            document: this.actor, // Required for V13 {{editor}} helper
-            system: this.actor.system,
+            // system: this.actor.system,
             source: this.isEditable ? this.actor.system._source : this.actor.system,
             fields: this.actor.system.schema?.fields ?? {},
             effects: this.actor.getEmbeddedCollection('ActiveEffect').contents,
             items: Array.from(this.actor.items),
-            limited: this.actor.limited,
-            editable: this.isEditable,
-            owner: this.actor.isOwner, // Required for V13 {{editor}} helper
+            // limited: this.actor.limited,
+            // editable: this.isEditable,
+            // owner: this.actor.isOwner, // Required for V13 {{editor}} helper
             rollableClass: this.isEditable ? 'rollable' : '',
         };
 
@@ -175,18 +159,6 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
     /** @inheritDoc */
     async _preparePartContext(partId, context, options) {
         context = await super._preparePartContext(partId, context, options);
-
-        // Ensure required properties for editor helpers are available
-        if (context.document === undefined) {
-            context.document = this.actor;
-        }
-        if (context.editable === undefined) {
-            context.editable = this.isEditable;
-        }
-        if (context.owner === undefined) {
-            context.owner = this.actor.isOwner;
-        }
-
         return context;
     }
 
@@ -242,7 +214,7 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
 
     /* -------------------------------------------- */
 
-    /** @inheritDoc */
+    /** @override */
     _onClose(options) {
         // Save state before closing
         this._saveSheetState();
@@ -283,8 +255,6 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
 
         const state = {
             scrollPositions: Object.fromEntries(this._scrollPositions),
-            equipmentFilter: this._equipmentFilter,
-            skillsFilter: this._skillsFilter,
             windowSize: {
                 width: this.position?.width,
                 height: this.position?.height,
@@ -307,14 +277,6 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
 
         const state = this.actor.getFlag('rogue-trader', 'sheetState');
         if (!state) return;
-
-        // Restore filter states
-        if (state.equipmentFilter) {
-            this._equipmentFilter = { ...this._equipmentFilter, ...state.equipmentFilter };
-        }
-        if (state.skillsFilter) {
-            this._skillsFilter = { ...this._skillsFilter, ...state.skillsFilter };
-        }
 
         // Restore scroll positions
         if (state.scrollPositions) {
@@ -463,20 +425,11 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
     /* -------------------------------------------- */
 
     /**
-     * Prepare skills for display.
-     * @param {object} context  Context being prepared.
-     * @protected
-     */
-    async _prepareSkills(context) {
-        this._prepareSkillsContext(context);
-    }
-
-    /**
      * Prepare skills context for rendering.
      * @param {object} context  Context being prepared.
      * @protected
      */
-    _prepareSkillsContext(context) {
+    async _prepareSkills(context) {
         const skills = this.actor.system.skills ?? {};
         const characteristics = this.actor.system.characteristics ?? {};
 
@@ -564,8 +517,8 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
                     this._augmentSkillData(key, entry, characteristics, data);
                 });
 
-                // Get suggested specializations from compendium for autocomplete
-                data.suggestedSpecializations = this._getSkillSuggestions(key);
+                // // Get suggested specializations from compendium for autocomplete
+                // data.suggestedSpecializations = this._getSkillSuggestions(key);
 
                 // Create plain object with converted entries
                 specialist.push([key, { ...data, entries: plainEntries }]);
@@ -677,24 +630,24 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
         return parts.join(', ');
     }
 
-    /**
-     * Get suggested specializations for a skill from the compendium.
-     * @param {string} skillKey  Skill key (e.g., "commonLore", "trade")
-     * @returns {string[]}  Array of suggested specialization names
-     * @protected
-     */
-    _getSkillSuggestions(skillKey) {
-        // Access the tooltip system's cached skill descriptions
-        const tooltips = game.rt?.tooltips;
-        if (!tooltips) return [];
-
-        // Get skill description from compendium cache
-        const skillDesc = tooltips.getSkillDescription(skillKey);
-        if (!skillDesc) return [];
-
-        // Return specializations array if it exists
-        return skillDesc.specializations || [];
-    }
+    // /**
+    //  * Get suggested specializations for a skill from the compendium.
+    //  * @param {string} skillKey  Skill key (e.g., "commonLore", "trade")
+    //  * @returns {string[]}  Array of suggested specialization names
+    //  * @protected
+    //  */
+    // _getSkillSuggestions(skillKey) {
+    //     // Access the tooltip system's cached skill descriptions
+    //     const tooltips = game.rt?.tooltips;
+    //     if (!tooltips) return [];
+    //
+    //     // Get skill description from compendium cache
+    //     const skillDesc = tooltips.getSkillDescription(skillKey);
+    //     if (!skillDesc) return [];
+    //
+    //     // Return specializations array if it exists
+    //     return skillDesc.specializations || [];
+    // }
 
     /**
      * Check if skill is granted by talents, traits, or origin paths.
@@ -785,7 +738,7 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
 
     /**
      * Augment talent with display properties.
-     * @param {Item} talent  Talent item
+     * @param {TalentData} talent  Talent item
      * @returns {Object} Augmented talent data
      * @protected
      */
@@ -1075,18 +1028,18 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
     /*  Event Listeners and Handlers                */
     /* -------------------------------------------- */
 
-    /**
-     * Handle form submission - override from ApplicationV2.
-     * @param {FormDataExtended} formData   The parsed form data
-     * @param {SubmitEvent} event           The form submission event
-     * @returns {Promise<void>}
-     * @override
-     * @protected
-     */
-    async _onSubmitForm(formData, event) {
-        // Update the actor with the form data
-        await this.document.update(formData.object);
-    }
+    // /**
+    //  * Handle form submission - override from ApplicationV2.
+    //  * @param {FormDataExtended} formData   The parsed form data
+    //  * @param {SubmitEvent} event           The form submission event
+    //  * @returns {Promise<void>}
+    //  * @override
+    //  * @protected
+    //  */
+    // async #onSubmitForm(formData, event) {
+    //     // Update the actor with the form data
+    //     await this.document.update(formData.object);
+    // }
 
     /* -------------------------------------------- */
 
@@ -1107,7 +1060,7 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
 
         // Setup document update listener for visual feedback
         if (!this._updateListener) {
-            this._updateListener = (document, changes, options, userId) => {
+            this._updateListener = (document, changes, _, userId) => {
                 // Only animate changes from other users or from form submission
                 if (document.id === this.actor.id && userId !== game.userId) {
                     this.visualizeChanges(changes);
@@ -1543,19 +1496,19 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
 
     /* -------------------------------------------- */
 
-    /**
-     * Handle creating an effect.
-     * Opens a streamlined, thematic effect creation dialog.
-     * @this {BaseActorSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #effectCreate(event, target) {
-        const effect = await EffectCreationDialog.show(this.actor);
-        if (effect) {
-            ui.notifications.info(`Created effect: ${effect.name}`);
-        }
-    }
+    // /**
+    //  * Handle creating an effect.
+    //  * Opens a streamlined, thematic effect creation dialog.
+    //  * @this {BaseActorSheet}
+    //  * @param {Event} event         Triggering click event.
+    //  * @param {HTMLElement} target  Button that was clicked.
+    //  */
+    // static async #effectCreate(event, target) {
+    //     const effect = await EffectCreationDialog.show(this.actor);
+    //     if (effect) {
+    //         ui.notifications.info(`Created effect: ${effect.name}`);
+    //     }
+    // }
 
     /* -------------------------------------------- */
 
@@ -1622,8 +1575,8 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
             if (el !== dropdown) {
                 el.classList.remove('expanded');
                 // Also remove active class from the toggle icon
-                const toggleIcon = el.closest('.rt-char-hud-item')?.querySelector('.rt-char-hud-toggle-icon');
-                if (toggleIcon) toggleIcon.classList.remove('active');
+                const toggleSelectionIcon = el.closest('.rt-char-hud-item')?.querySelector('.rt-char-hud-toggle-icon');
+                if (toggleSelectionIcon) toggleSelectionIcon.classList.remove('active');
             }
         });
 
@@ -1794,7 +1747,7 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
         event.stopPropagation();
 
         const skillKey = target.dataset.skill || target.dataset.rollTarget;
-        const specialty = target.dataset.specialty;
+        // const specialty = target.dataset.specialty;
 
         if (!skillKey) {
             console.warn('RT | viewSkillInfo: No skill key found');
@@ -1899,40 +1852,6 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
         });
 
         return this.actor.updateEmbeddedDocuments('Item', updateData);
-    }
-
-    /* -------------------------------------------- */
-    /*  What-If Mode Actions                        */
-    /* -------------------------------------------- */
-
-    /**
-     * Enter What-If preview mode
-     * @this {BaseActorSheet}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #enterWhatIf(event, target) {
-        await this.enterWhatIfMode();
-    }
-
-    /**
-     * Commit What-If changes
-     * @this {BaseActorSheet}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #commitWhatIf(event, target) {
-        await this.commitWhatIfChanges();
-    }
-
-    /**
-     * Cancel What-If mode
-     * @this {BaseActorSheet}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #cancelWhatIf(event, target) {
-        await this.cancelWhatIfChanges();
     }
 
     /* -------------------------------------------- */
@@ -2092,9 +2011,8 @@ export default class BaseActorSheet extends EquipmentLoadoutMixin(
                     label: 'Save',
                     icon: 'fas fa-save',
                     default: true,
-                    callback: (event, button, dialog) => {
-                        const formData = new FormDataExtended(button.form).object;
-                        return formData;
+                    callback: (event, button, _dialog) => {
+                        return new FormDataExtended(button.form).object;
                     },
                 },
                 {

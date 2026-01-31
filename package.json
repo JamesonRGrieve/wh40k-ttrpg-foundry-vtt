@@ -45,5 +45,23 @@
     "through2": "4.0.2",
     "underscore": "1.13.6",
     "word-wrap": "1.2.5"
-  }
+  },
+  "devDependencies": {
+    "@sumup-oss/foundry": "^9.0.6",
+    "fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
+    "typescript": "^5.9.3"
+  },
+  "main": "gulpfile.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndruQuiroga/RogueTraderVTT.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/AndruQuiroga/RogueTraderVTT/issues"
+  },
+  "homepage": "https://github.com/AndruQuiroga/RogueTraderVTT#readme"
 }
