@@ -19,3 +19,6 @@ export * from "./item/_module.mjs";
 
 // Actor data models
 export * from "./actor/_module.mjs";
+
+// Grant data models
+export * from "./grant/_module.mjs";
