@@ -868,16 +868,31 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
     return Math.floor(num);
   }
 
-  /** @override */
-  static migrateData(source) {
-    // Ensure size is an integer
+  /** @inheritDoc */
+  static _migrateData(source) {
+    super._migrateData?.(source);
+    NPCDataV2.#migrateSize(source);
+    NPCDataV2.#migrateWounds(source);
+    NPCDataV2.#migrateThreatLevel(source);
+  }
+
+  /**
+   * Migrate size to integer.
+   * @param {object} source - The source data
+   */
+  static #migrateSize(source) {
     if (source.size !== undefined) {
       source.size = this._toInt(source.size, 4);
       if (source.size < 1) source.size = 1;
       if (source.size > 10) source.size = 10;
     }
+  }
 
-    // Ensure wounds values are integers
+  /**
+   * Migrate wounds values to integers.
+   * @param {object} source - The source data
+   */
+  static #migrateWounds(source) {
     if (source.wounds) {
       if (source.wounds.max !== undefined) {
         source.wounds.max = this._toInt(source.wounds.max, 10);
@@ -889,12 +904,15 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
         source.wounds.critical = this._toInt(source.wounds.critical, 0);
       }
     }
+  }
 
-    // Ensure threatLevel is an integer
+  /**
+   * Migrate threat level to integer.
+   * @param {object} source - The source data
+   */
+  static #migrateThreatLevel(source) {
     if (source.threatLevel !== undefined) {
       source.threatLevel = this._toInt(source.threatLevel, 5);
     }
-
-    return super.migrateData(source);
   }
 }

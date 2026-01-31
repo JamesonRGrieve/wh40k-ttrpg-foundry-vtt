@@ -244,183 +244,250 @@ export default class CreatureTemplate extends CommonTemplate {
     /*  Data Migration                              */
     /* -------------------------------------------- */
 
-    /** @override */
-    static migrateData(source) {
-        // Define canonical skill types from SKILL_TABLE.md
-
-        // // Migrate size from string to integer if needed
-        // if (source.size !== undefined && typeof source.size === 'string') {
-        //     const sizeMap = {
-        //         miniscule: 1,
-        //         puny: 2,
-        //         scrawny: 3,
-        //         average: 4,
-        //         hulking: 5,
-        //         enormous: 6,
-        //         massive: 7,
-        //         immense: 8,
-        //     };
-        //     source.size = sizeMap[source.size.toLowerCase()] || 4; // Default to average
-        // }
-        // // Ensure size is an integer
-        // if (source.size !== undefined) {
-        //     source.size = this._toInt(source.size);
-        //     // Clamp to valid range (1-10, though only 1-8 are used)
-        //     if (source.size < 1) source.size = 1;
-        //     if (source.size > 10) source.size = 10;
-        // }
-        //
-        // // Ensure wounds values are integers - only modify if the property exists
-        // if (source.wounds) {
-        //     if (source.wounds.max !== undefined) {
-        //         source.wounds.max = this._toInt(source.wounds.max);
-        //     }
-        //     if (source.wounds.value !== undefined) {
-        //         source.wounds.value = this._toInt(source.wounds.value);
-        //     }
-        //     if (source.wounds.critical !== undefined) {
-        //         source.wounds.critical = this._toInt(source.wounds.critical);
-        //     }
-        // }
-        //
-        // // Ensure fatigue values are integers (defined in creature template but migrate here for safety)
-        // if (source.fatigue) {
-        //     if (source.fatigue.max !== undefined) {
-        //         source.fatigue.max = this._toInt(source.fatigue.max);
-        //     }
-        //     if (source.fatigue.value !== undefined) {
-        //         source.fatigue.value = this._toInt(source.fatigue.value);
-        //     }
-        // }
-        //
-        // // Ensure characteristic values are integers - only modify if properties exist
-        // if (source.characteristics) {
-        //     for (const char of Object.values(source.characteristics)) {
-        //         if (char.base !== undefined) char.base = this._toInt(char.base);
-        //         if (char.advance !== undefined) char.advance = this._toInt(char.advance);
-        //         if (char.modifier !== undefined) char.modifier = this._toInt(char.modifier);
-        //         if (char.unnatural !== undefined) char.unnatural = this._toInt(char.unnatural);
-        //         if (char.cost !== undefined) char.cost = this._toInt(char.cost);
-        //     }
-        // }
-
-        // // Ensure fate values are integers - only modify if property exists
-        // if (source.fate) {
-        //   if (source.fate.max !== undefined) {
-        //     source.fate.max = this._toInt(source.fate.max);
-        //   }
-        //   if (source.fate.value !== undefined) {
-        //     source.fate.value = this._toInt(source.fate.value);
-        //   }
-        // }
-        //
-        // // Ensure psy values are integers - only modify if property exists
-        // if (source.psy) {
-        //   if (source.psy.rating !== undefined) {
-        //     source.psy.rating = this._toInt(source.psy.rating);
-        //   }
-        //   if (source.psy.sustained !== undefined) {
-        //     source.psy.sustained = this._toInt(source.psy.sustained);
-        //   }
-        //   if (source.psy.defaultPR !== undefined) {
-        //     source.psy.defaultPR = this._toInt(source.psy.defaultPR);
-        //   }
-        // }
-
-        return super.migrateData(source);
+    /** @inheritDoc */
+    static _migrateData(source) {
+        super._migrateData?.(source);
+        CreatureTemplate.#migrateSize(source);
+        CreatureTemplate.#migrateWounds(source);
+        CreatureTemplate.#migrateFatigue(source);
+        CreatureTemplate.#migrateCharacteristics(source);
+        CreatureTemplate.#migrateFate(source);
+        CreatureTemplate.#migratePsy(source);
     }
 
-    /** @override */
-    static cleanData(source, options = {}) {
-        // // Clean size field - ensure it's an integer
-        // if (source?.size !== undefined) {
-        //     if (source.size === '' || source.size === null) {
-        //         delete source.size; // Use schema default
-        //     } else if (typeof source.size === 'string') {
-        //         // Handle legacy string values during form submission
-        //         const sizeMap = {
-        //             miniscule: 1,
-        //             puny: 2,
-        //             scrawny: 3,
-        //             average: 4,
-        //             hulking: 5,
-        //             enormous: 6,
-        //             massive: 7,
-        //             immense: 8,
-        //         };
-        //         source.size = sizeMap[source.size.toLowerCase()] || 4;
-        //     } else {
-        //         source.size = this._toInt(source.size);
-        //         // Clamp to valid range
-        //         if (source.size < 1) source.size = 1;
-        //         if (source.size > 10) source.size = 10;
-        //     }
-        // }
-        //
-        // // Clean integer fields before validation
-        // // IMPORTANT: Delete empty/null values to prevent overwriting existing data
-        // if (source?.wounds) {
-        //     if (source.wounds.max !== undefined) {
-        //         if (source.wounds.max === '' || source.wounds.max === null) {
-        //             delete source.wounds.max; // Don't overwrite with 0
-        //         } else {
-        //             source.wounds.max = this._toInt(source.wounds.max);
-        //         }
-        //     }
-        //     if (source.wounds.value !== undefined) {
-        //         if (source.wounds.value === '' || source.wounds.value === null) {
-        //             delete source.wounds.value; // Don't overwrite with 0
-        //         } else {
-        //             source.wounds.value = this._toInt(source.wounds.value);
-        //         }
-        //     }
-        //     if (source.wounds.critical !== undefined) {
-        //         if (source.wounds.critical === '' || source.wounds.critical === null) {
-        //             delete source.wounds.critical; // Don't overwrite with 0
-        //         } else {
-        //             source.wounds.critical = this._toInt(source.wounds.critical);
-        //         }
-        //     }
-        // }
-        // if (source?.fatigue) {
-        //     if (source.fatigue.max !== undefined) {
-        //         if (source.fatigue.max === '' || source.fatigue.max === null) {
-        //             delete source.fatigue.max; // Don't overwrite with 0
-        //         } else {
-        //             source.fatigue.max = this._toInt(source.fatigue.max);
-        //         }
-        //     }
-        //     if (source.fatigue.value !== undefined) {
-        //         if (source.fatigue.value === '' || source.fatigue.value === null) {
-        //             delete source.fatigue.value; // Don't overwrite with 0
-        //         } else {
-        //             source.fatigue.value = this._toInt(source.fatigue.value);
-        //         }
-        //     }
-        // }
+    /**
+     * Migrate size from string to integer.
+     * @param {object} source - The source data
+     */
+    static #migrateSize(source) {
+        if (source.size !== undefined && typeof source.size === 'string') {
+            const sizeMap = {
+                miniscule: 1,
+                puny: 2,
+                scrawny: 3,
+                average: 4,
+                hulking: 5,
+                enormous: 6,
+                massive: 7,
+                immense: 8,
+            };
+            source.size = sizeMap[source.size.toLowerCase()] || 4;
+        }
+        if (source.size !== undefined) {
+            source.size = this._toInt(source.size);
+            if (source.size < 1) source.size = 1;
+            if (source.size > 10) source.size = 10;
+        }
+    }
 
-        // Clean integer fields before validation
-        // if (source?.fate) {
-        //   if (source.fate.max !== undefined) {
-        //     source.fate.max = this._toInt(source.fate.max);
-        //   }
-        //   if (source.fate.value !== undefined) {
-        //     source.fate.value = this._toInt(source.fate.value);
-        //   }
-        // }
-        // if (source?.psy) {
-        //   if (source.psy.rating !== undefined) {
-        //     source.psy.rating = this._toInt(source.psy.rating);
-        //   }
-        //   if (source.psy.sustained !== undefined) {
-        //     source.psy.sustained = this._toInt(source.psy.sustained);
-        //   }
-        //   if (source.psy.defaultPR !== undefined) {
-        //     source.psy.defaultPR = this._toInt(source.psy.defaultPR);
-        //   }
-        // }
+    /**
+     * Migrate wounds values to integers.
+     * @param {object} source - The source data
+     */
+    static #migrateWounds(source) {
+        if (source.wounds) {
+            if (source.wounds.max !== undefined) source.wounds.max = this._toInt(source.wounds.max);
+            if (source.wounds.value !== undefined) source.wounds.value = this._toInt(source.wounds.value);
+            if (source.wounds.critical !== undefined) source.wounds.critical = this._toInt(source.wounds.critical);
+        }
+    }
 
-        return super.cleanData(source, options);
+    /**
+     * Migrate fatigue values to integers.
+     * @param {object} source - The source data
+     */
+    static #migrateFatigue(source) {
+        if (source.fatigue) {
+            if (source.fatigue.max !== undefined) source.fatigue.max = this._toInt(source.fatigue.max);
+            if (source.fatigue.value !== undefined) source.fatigue.value = this._toInt(source.fatigue.value);
+        }
+    }
+
+    /**
+     * Migrate characteristic values to integers.
+     * @param {object} source - The source data
+     */
+    static #migrateCharacteristics(source) {
+        if (source.characteristics) {
+            for (const char of Object.values(source.characteristics)) {
+                if (char.base !== undefined) char.base = this._toInt(char.base);
+                if (char.advance !== undefined) char.advance = this._toInt(char.advance);
+                if (char.modifier !== undefined) char.modifier = this._toInt(char.modifier);
+                if (char.unnatural !== undefined) char.unnatural = this._toInt(char.unnatural);
+                if (char.cost !== undefined) char.cost = this._toInt(char.cost);
+            }
+        }
+    }
+
+    /**
+     * Migrate fate values to integers.
+     * @param {object} source - The source data
+     */
+    static #migrateFate(source) {
+        if (source.fate) {
+            if (source.fate.max !== undefined) source.fate.max = this._toInt(source.fate.max);
+            if (source.fate.value !== undefined) source.fate.value = this._toInt(source.fate.value);
+        }
+    }
+
+    /**
+     * Migrate psy values to integers.
+     * @param {object} source - The source data
+     */
+    static #migratePsy(source) {
+        if (source.psy) {
+            if (source.psy.rating !== undefined) source.psy.rating = this._toInt(source.psy.rating);
+            if (source.psy.sustained !== undefined) source.psy.sustained = this._toInt(source.psy.sustained);
+            if (source.psy.defaultPR !== undefined) source.psy.defaultPR = this._toInt(source.psy.defaultPR);
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Data Cleaning                               */
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    static _cleanData(source, options = {}) {
+        super._cleanData?.(source, options);
+        CreatureTemplate.#cleanSize(source);
+        CreatureTemplate.#cleanWounds(source);
+        CreatureTemplate.#cleanFatigue(source);
+        CreatureTemplate.#cleanFate(source);
+        CreatureTemplate.#cleanPsy(source);
+    }
+
+    /**
+     * Clean size field - ensure it's an integer.
+     * @param {object} source - The source data
+     */
+    static #cleanSize(source) {
+        if (source?.size !== undefined) {
+            if (source.size === '' || source.size === null) {
+                delete source.size; // Use schema default
+            } else if (typeof source.size === 'string') {
+                const sizeMap = {
+                    miniscule: 1,
+                    puny: 2,
+                    scrawny: 3,
+                    average: 4,
+                    hulking: 5,
+                    enormous: 6,
+                    massive: 7,
+                    immense: 8,
+                };
+                source.size = sizeMap[source.size.toLowerCase()] || 4;
+            } else {
+                source.size = this._toInt(source.size);
+                if (source.size < 1) source.size = 1;
+                if (source.size > 10) source.size = 10;
+            }
+        }
+    }
+
+    /**
+     * Clean wounds fields - delete empty values to prevent overwriting existing data.
+     * @param {object} source - The source data
+     */
+    static #cleanWounds(source) {
+        if (source?.wounds) {
+            if (source.wounds.max !== undefined) {
+                if (source.wounds.max === '' || source.wounds.max === null) {
+                    delete source.wounds.max;
+                } else {
+                    source.wounds.max = this._toInt(source.wounds.max);
+                }
+            }
+            if (source.wounds.value !== undefined) {
+                if (source.wounds.value === '' || source.wounds.value === null) {
+                    delete source.wounds.value;
+                } else {
+                    source.wounds.value = this._toInt(source.wounds.value);
+                }
+            }
+            if (source.wounds.critical !== undefined) {
+                if (source.wounds.critical === '' || source.wounds.critical === null) {
+                    delete source.wounds.critical;
+                } else {
+                    source.wounds.critical = this._toInt(source.wounds.critical);
+                }
+            }
+        }
+    }
+
+    /**
+     * Clean fatigue fields.
+     * @param {object} source - The source data
+     */
+    static #cleanFatigue(source) {
+        if (source?.fatigue) {
+            if (source.fatigue.max !== undefined) {
+                if (source.fatigue.max === '' || source.fatigue.max === null) {
+                    delete source.fatigue.max;
+                } else {
+                    source.fatigue.max = this._toInt(source.fatigue.max);
+                }
+            }
+            if (source.fatigue.value !== undefined) {
+                if (source.fatigue.value === '' || source.fatigue.value === null) {
+                    delete source.fatigue.value;
+                } else {
+                    source.fatigue.value = this._toInt(source.fatigue.value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Clean fate fields.
+     * @param {object} source - The source data
+     */
+    static #cleanFate(source) {
+        if (source?.fate) {
+            if (source.fate.max !== undefined) {
+                if (source.fate.max === '' || source.fate.max === null) {
+                    delete source.fate.max;
+                } else {
+                    source.fate.max = this._toInt(source.fate.max);
+                }
+            }
+            if (source.fate.value !== undefined) {
+                if (source.fate.value === '' || source.fate.value === null) {
+                    delete source.fate.value;
+                } else {
+                    source.fate.value = this._toInt(source.fate.value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Clean psy fields.
+     * @param {object} source - The source data
+     */
+    static #cleanPsy(source) {
+        if (source?.psy) {
+            if (source.psy.rating !== undefined) {
+                if (source.psy.rating === '' || source.psy.rating === null) {
+                    delete source.psy.rating;
+                } else {
+                    source.psy.rating = this._toInt(source.psy.rating);
+                }
+            }
+            if (source.psy.sustained !== undefined) {
+                if (source.psy.sustained === '' || source.psy.sustained === null) {
+                    delete source.psy.sustained;
+                } else {
+                    source.psy.sustained = this._toInt(source.psy.sustained);
+                }
+            }
+            if (source.psy.defaultPR !== undefined) {
+                if (source.psy.defaultPR === '' || source.psy.defaultPR === null) {
+                    delete source.psy.defaultPR;
+                } else {
+                    source.psy.defaultPR = this._toInt(source.psy.defaultPR);
+                }
+            }
+        }
     }
 
     /**
@@ -448,7 +515,7 @@ export default class CreatureTemplate extends CommonTemplate {
         if (this.characteristics[key]) {
             return this.characteristics[key];
         }
-        const fullKey = CommonTemplate.CHARACTERISTIC_MAP[key];
+        const fullKey = CreatureTemplate.CHARACTERISTIC_MAP[key];
         if (fullKey && this.characteristics[fullKey]) {
             return this.characteristics[fullKey];
         }
@@ -523,31 +590,32 @@ export default class CreatureTemplate extends CommonTemplate {
         return Math.floor(num);
     }
 
-    // /**
-    //  * Prepare characteristic totals and bonuses.
-    //  * Fatigue does NOT affect characteristics - it only applies -10 to all Tests.
-    //  * @protected
-    //  * @override
-    //  */
-    // _prepareCharacteristics() {
-    //   for (const [key, char] of Object.entries(this.characteristics)) {
-    //     // Calculate total: base + (advance * 5) + modifier
-    //     char.total = char.base + (char.advance * 5) + char.modifier;
-    //
-    //     // Base modifier is tens digit
-    //     const baseModifier = Math.floor(char.total / 10);
-    //
-    //     // Unnatural multiplies the modifier (0 = no unnatural, 2+ = multiplier)
-    //     const unnaturalLevel = char.unnatural || 0;
-    //     char.bonus = unnaturalLevel >= 2 ? baseModifier * unnaturalLevel : baseModifier;
-    //   }
-    //
-    //   // Update initiative bonus
-    //   const initChar = this.characteristics[this.initiative.characteristic];
-    //   if (initChar) {
-    //     this.initiative.bonus = initChar.bonus;
-    //   }
-    // }
+    /**
+     * Prepare characteristic totals and bonuses.
+     * Fatigue does NOT affect characteristics - it only applies -10 to all Tests.
+     * Formula: total = base + (advance * 5) + modifier
+     * Bonus = floor(total / 10), modified by unnatural multiplier
+     * @protected
+     */
+    _prepareCharacteristics() {
+        for (const [key, char] of Object.entries(this.characteristics)) {
+            // Calculate total: base + (advance * 5) + modifier
+            char.total = char.base + (char.advance * 5) + char.modifier;
+
+            // Base modifier is tens digit
+            const baseModifier = Math.floor(char.total / 10);
+
+            // Unnatural multiplies the modifier (0 = no unnatural, 2+ = multiplier)
+            const unnaturalLevel = char.unnatural || 0;
+            char.bonus = unnaturalLevel >= 2 ? baseModifier * unnaturalLevel : baseModifier;
+        }
+
+        // Update initiative bonus from characteristic
+        const initChar = this.characteristics[this.initiative.characteristic];
+        if (initChar) {
+            this.initiative.bonus = initChar.bonus;
+        }
+    }
 
     /**
      * Prepare skill totals.
