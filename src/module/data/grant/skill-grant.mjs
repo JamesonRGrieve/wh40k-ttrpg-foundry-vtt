@@ -255,23 +255,47 @@ export default class SkillGrantData extends BaseGrantData {
    * @private
    */
   _findExistingSkill(actor, skillConfig) {
+    const configKey = (skillConfig.key || "").toLowerCase().trim();
+    const configSpec = (skillConfig.specialization || "").toLowerCase().trim();
+    
     return actor.items.find(i => {
       if (i.type !== "skill") return false;
       
-      // Match by key or name (normalize both)
-      const itemKey = i.system?.key || i.name.toLowerCase().replace(/\s+/g, "");
-      const configKey = skillConfig.key.toLowerCase();
+      const itemName = (i.name || "").toLowerCase().trim();
+      const itemKey = (i.system?.key || "").toLowerCase().trim();
+      const itemSpec = (i.system?.specialization || "").toLowerCase().trim();
       
-      if (itemKey !== configKey && i.name.toLowerCase() !== skillConfig.key.toLowerCase()) {
-        return false;
+      // Try to match by key first
+      if (itemKey && itemKey === configKey) {
+        // Key matches, now check specialization
+        if (configSpec) {
+          return itemSpec === configSpec;
+        }
+        return !itemSpec; // Non-specialized match
+      }
+      
+      // Try to match by name
+      // Name might be "Common Lore" or "Common Lore (War)"
+      const nameWithSpec = configSpec ? `${configKey} (${configSpec})` : configKey;
+      if (itemName === nameWithSpec || itemName === configKey) {
+        // If checking a specialized skill, also verify specialization
+        if (configSpec) {
+          return itemSpec === configSpec || itemName.includes(`(${configSpec})`);
+        }
+        return true;
+      }
+      
+      // Try removing spaces and comparing
+      const normalizedItemName = itemName.replace(/\s+/g, "").replace(/[()]/g, "");
+      const normalizedConfigKey = configKey.replace(/\s+/g, "");
+      if (normalizedItemName.startsWith(normalizedConfigKey)) {
+        if (configSpec) {
+          return itemSpec === configSpec || itemName.toLowerCase().includes(configSpec);
+        }
+        return true;
       }
 
-      // Match specialization if present
-      if (skillConfig.specialization) {
-        return i.system?.specialization?.toLowerCase() === skillConfig.specialization.toLowerCase();
-      }
-
-      return true;
+      return false;
     });
   }
 
@@ -345,9 +369,15 @@ export default class SkillGrantData extends BaseGrantData {
   _createSkillData(skillConfig) {
     const levelUpdates = this._getLevelUpdates(skillConfig.level);
     
+    // Build proper skill name
+    let skillName = skillConfig.key;
+    if (skillConfig.specialization) {
+      skillName = `${skillConfig.key} (${skillConfig.specialization})`;
+    }
+    
     return {
       type: "skill",
-      name: skillConfig.key,
+      name: skillName,
       system: {
         key: skillConfig.key,
         specialization: skillConfig.specialization || "",

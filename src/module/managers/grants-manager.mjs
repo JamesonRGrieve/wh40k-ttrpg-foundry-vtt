@@ -682,12 +682,14 @@ export class GrantsManager {
   static migrateOldGrants(oldGrants, modifiers = null) {
     const newGrants = [];
 
-    // Migrate characteristic modifiers from modifiers.characteristics (origin paths)
-    // This is separate from grants in the old format
-    const charMods = modifiers?.characteristics || oldGrants?.characteristics;
+    // NOTE: Characteristic modifiers from origin paths are applied via ModifiersTemplate
+    // during prepareEmbeddedData, not as grants. We only migrate characteristics if
+    // explicitly in the grants object (non-origin-path items).
+    const charMods = oldGrants?.characteristics;
     if (charMods && Object.keys(charMods).length > 0) {
       const charGrant = {
-        _id: foundry.utils.randomID(),
+        // Use deterministic ID based on content for idempotency
+        _id: `char-${Object.keys(charMods).sort().join("-")}`,
         type: "characteristic",
         characteristics: Object.entries(charMods)
           .filter(([_, value]) => value !== 0)
@@ -704,7 +706,7 @@ export class GrantsManager {
     // Migrate wounds
     if (oldGrants.woundsFormula || oldGrants.wounds) {
       newGrants.push({
-        _id: foundry.utils.randomID(),
+        _id: "resource-wounds",
         type: "resource",
         resources: [{
           type: "wounds",
@@ -716,7 +718,7 @@ export class GrantsManager {
     // Migrate fate
     if (oldGrants.fateFormula || oldGrants.fateThreshold) {
       newGrants.push({
-        _id: foundry.utils.randomID(),
+        _id: "resource-fate",
         type: "resource",
         resources: [{
           type: "fate",
@@ -727,8 +729,10 @@ export class GrantsManager {
 
     // Migrate skills
     if (oldGrants.skills?.length > 0) {
+      // Create deterministic ID from skill keys
+      const skillKeys = oldGrants.skills.map(s => s.key || s.name).sort().join("-");
       newGrants.push({
-        _id: foundry.utils.randomID(),
+        _id: `skills-${skillKeys}`.substring(0, 50),
         type: "skill",
         skills: oldGrants.skills.map(s => ({
           key: s.key || s.name,  // Support both key and name
@@ -740,8 +744,9 @@ export class GrantsManager {
 
     // Migrate talents
     if (oldGrants.talents?.length > 0) {
+      const talentNames = oldGrants.talents.map(t => t.name || "unknown").sort().join("-");
       newGrants.push({
-        _id: foundry.utils.randomID(),
+        _id: `talents-${talentNames}`.substring(0, 50),
         type: "item",
         items: oldGrants.talents.map(t => ({
           uuid: t.uuid || "",
@@ -754,8 +759,9 @@ export class GrantsManager {
 
     // Migrate traits
     if (oldGrants.traits?.length > 0) {
+      const traitNames = oldGrants.traits.map(t => t.name || "unknown").sort().join("-");
       newGrants.push({
-        _id: foundry.utils.randomID(),
+        _id: `traits-${traitNames}`.substring(0, 50),
         type: "item",
         items: oldGrants.traits.map(t => ({
           uuid: t.uuid || "",
@@ -767,8 +773,9 @@ export class GrantsManager {
 
     // Migrate equipment
     if (oldGrants.equipment?.length > 0) {
+      const equipNames = oldGrants.equipment.map(e => e.name || "unknown").sort().join("-");
       newGrants.push({
-        _id: foundry.utils.randomID(),
+        _id: `equipment-${equipNames}`.substring(0, 50),
         type: "item",
         items: oldGrants.equipment.map(e => ({
           uuid: e.uuid || "",
@@ -780,9 +787,10 @@ export class GrantsManager {
 
     // Migrate choices
     if (oldGrants.choices?.length > 0) {
-      for (const choice of oldGrants.choices) {
+      for (let i = 0; i < oldGrants.choices.length; i++) {
+        const choice = oldGrants.choices[i];
         newGrants.push({
-          _id: foundry.utils.randomID(),
+          _id: `choice-${i}-${choice.label || "choice"}`.substring(0, 50),
           type: "choice",
           label: choice.label,
           count: choice.count || 1,
@@ -814,9 +822,10 @@ export class GrantsManager {
     }
 
     // Check for old-style grants object and migrate
-    // Also include modifiers.characteristics which is separate from grants in origin paths
-    if (item.system?.grants || item.system?.modifiers?.characteristics) {
-      return this.migrateOldGrants(item.system.grants, item.system.modifiers);
+    // NOTE: For origin path items, characteristic modifiers are applied via ModifiersTemplate
+    // during prepareEmbeddedData, NOT as grants. Don't pass modifiers here.
+    if (item.system?.grants) {
+      return this.migrateOldGrants(item.system.grants, null);
     }
 
     return [];
