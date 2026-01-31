@@ -228,26 +228,31 @@ export default class CharacterData extends CreatureTemplate {
 
     const originItems = actor.items.filter((item) => item.isOriginPath);
 
+    // Map step keys (camelCase from schema) to items
     const stepMap = {
-      'Home World': null,
-      'Birthright': null,
-      'Lure of the Void': null,
-      'Trials and Travails': null,
-      'Motivation': null,
-      'Career': null
+      homeWorld: null,
+      birthright: null,
+      lureOfTheVoid: null,
+      trialsAndTravails: null,
+      motivation: null,
+      career: null,
+      lineage: null
     };
 
     // Reset background abilities
     this.backgroundEffects.abilities = [];
 
     for (const item of originItems) {
-      const step = item.flags?.rt?.step || item.system?.step || '';
+      // Get step from system data (camelCase like "homeWorld", "career")
+      const step = item.system?.step || item.flags?.rt?.step || '';
       if (Object.prototype.hasOwnProperty.call(stepMap, step)) {
         stepMap[step] = item;
       }
 
+      // Get human-readable step name for display
+      const stepLabel = this._getStepLabel(step);
       this.backgroundEffects.abilities.push({
-        source: step || 'Origin Path',
+        source: stepLabel || 'Origin Path',
         name: item.name,
         benefit: item.system?.effects || item.system?.descriptionText || item.system?.description?.value || '',
       });
@@ -258,13 +263,32 @@ export default class CharacterData extends CreatureTemplate {
 
     // Update the originPath system data with the names
     if (this.originPath) {
-      this.originPath.homeWorld = stepMap['Home World']?.name || '';
-      this.originPath.birthright = stepMap['Birthright']?.name || '';
-      this.originPath.lureOfTheVoid = stepMap['Lure of the Void']?.name || '';
-      this.originPath.trialsAndTravails = stepMap['Trials and Travails']?.name || '';
-      this.originPath.motivation = stepMap['Motivation']?.name || '';
-      this.originPath.career = stepMap['Career']?.name || '';
+      this.originPath.homeWorld = stepMap.homeWorld?.name || '';
+      this.originPath.birthright = stepMap.birthright?.name || '';
+      this.originPath.lureOfTheVoid = stepMap.lureOfTheVoid?.name || '';
+      this.originPath.trialsAndTravails = stepMap.trialsAndTravails?.name || '';
+      this.originPath.motivation = stepMap.motivation?.name || '';
+      this.originPath.career = stepMap.career?.name || '';
     }
+  }
+
+  /**
+   * Get human-readable label for an origin path step.
+   * @param {string} step - The step key (camelCase)
+   * @returns {string} Human-readable label
+   * @private
+   */
+  _getStepLabel(step) {
+    const labels = {
+      homeWorld: "Home World",
+      birthright: "Birthright",
+      lureOfTheVoid: "Lure of the Void",
+      trialsAndTravails: "Trials and Travails",
+      motivation: "Motivation",
+      career: "Career",
+      lineage: "Lineage"
+    };
+    return labels[step] || step;
   }
 
   /**
