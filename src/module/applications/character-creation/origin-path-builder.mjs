@@ -1147,6 +1147,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         
         if (!confirmed) return;
         
+        // Reverse any previously applied grants from this character's origin path
+        const reverseResult = await GrantsManager.reverseAllAppliedGrants(this.actor);
+        if (reverseResult.errors.length > 0) {
+            console.warn("Some grants failed to reverse during reset:", reverseResult.errors);
+        }
+        
+        // Delete origin path items from actor
+        const originPathItems = this.actor.items.filter(i => i.type === "originPath");
+        if (originPathItems.length > 0) {
+            const ids = originPathItems.map(i => i.id);
+            await this.actor.deleteEmbeddedDocuments("Item", ids);
+        }
+        
+        // Clear UI state
         this.selections.clear();
         this.currentStepIndex = 0;
         this.render();
@@ -1733,6 +1747,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Use GrantsManager to apply all grants in batch
             // This handles characteristics, skills, talents, traits, wounds, fate, etc.
+            // reverseExisting ensures old grants are reversed before applying new ones
             const result = await GrantsManager.applyBatchGrants(
                 originItems.map(data => ({
                     name: data.name,
@@ -1744,7 +1759,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 {
                     selections: this._buildGrantSelections(),
                     rolledValues: this._buildRolledValues(),
-                    showNotification: false
+                    showNotification: false,
+                    reverseExisting: true // Reverse any previously applied grants first
                 }
             );
 
