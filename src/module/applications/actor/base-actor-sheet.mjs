@@ -473,7 +473,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             if (data.entries !== undefined) {
                 // Specialist skill - process entries
                 const entryList = Array.isArray(data.entries) ? data.entries : data.entries ? Object.values(data.entries) : [];
-                const plainEntries = entryList.map((entry) => {
+                const plainEntries = entryList.map((entry, entryIndex) => {
                     if (typeof entry === 'string') {
                         return {
                             name: entry,
@@ -488,6 +488,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                             notes: '',
                             cost: 0,
                             current: 0,
+                            skillKey: key,  // Store skill key for template access
+                            entryIndex: entryIndex,  // Store index for template access
                         };
                     }
 
@@ -506,10 +508,20 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                     if (normalized.basic === undefined) {
                         normalized.basic = !data.advanced;
                     }
+                    // Store skill key and index for template access
+                    normalized.skillKey = key;
+                    normalized.entryIndex = entryIndex;
                     return normalized;
                 });
+                
+                // Check favorite status for specialist skills
+                const specialistFavorites = this.actor.getFlag('rogue-trader', 'favoriteSpecialistSkills') || [];
+                
                 plainEntries.forEach((entry) => {
                     this._augmentSkillData(key, entry, characteristics, data);
+                    // Check if this specialist entry is a favorite
+                    const favoriteKey = `${entry.skillKey}:${entry.entryIndex}`;
+                    entry.isFavorite = specialistFavorites.includes(favoriteKey);
                 });
 
                 // // Get suggested specializations from compendium for autocomplete
@@ -526,14 +538,11 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Split standard into columns
         const splitIndex = Math.ceil(standard.length / 2);
         const standardColumns = [standard.slice(0, splitIndex), standard.slice(splitIndex)];
-
-        context.skillLists = { standard, specialist, standardColumns };
         
-        // Debug logging
-        console.log('RT | _prepareSkills: specialist skills count:', specialist.length);
-        if (specialist.length > 0) {
-            console.log('RT | _prepareSkills: first specialist:', specialist[0][0], specialist[0][1]?.label);
-        }
+        // Check if any specialist skill has entries (for empty state display)
+        const hasSpecialistEntries = specialist.some(([_, skillData]) => skillData.entries?.length > 0);
+
+        context.skillLists = { standard, specialist, standardColumns, hasSpecialistEntries };
     }
 
     /**
@@ -691,32 +700,15 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
     /**
      * Prepare talents context for rendering.
-     * @returns {Object} Talents data with filtering and grouping
+     * @returns {Object} Talents data with grouping
      * @protected
      */
     _prepareTalentsContext() {
         const talents = this.actor.items.filter((i) => i.type === 'talent');
         const traits = this.actor.items.filter((i) => i.type === 'trait');
 
-        // Get filter state (if exists)
-        const filter = this._talentsFilter || {};
-
-        // Apply filters
-        let filteredTalents = talents;
-        if (filter.search) {
-            const search = filter.search.toLowerCase();
-            filteredTalents = filteredTalents.filter((t) => t.name.toLowerCase().includes(search));
-        }
-        if (filter.category && filter.category !== '') {
-            filteredTalents = filteredTalents.filter((t) => t.system.category === filter.category);
-        }
-        if (filter.tier && filter.tier !== '') {
-            const tierNum = parseInt(filter.tier);
-            filteredTalents = filteredTalents.filter((t) => t.system.tier === tierNum);
-        }
-
         // Augment with display properties
-        const augmentedTalents = filteredTalents.map((t) => this._augmentTalentData(t));
+        const augmentedTalents = talents.map((t) => this._augmentTalentData(t));
         const augmentedTraits = traits.map((t) => this._augmentTraitData(t));
 
         // Group by tier
@@ -733,7 +725,6 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             tiers: [1, 2, 3],
             talentsCount: talents.length,
             traitsCount: traits.length,
-            filter,
         };
     }
 
@@ -747,6 +738,25 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Check if this talent is favorited
         const favorites = this.actor.getFlag('rogue-trader', 'favoriteTalents') || [];
         const isFavorite = favorites.includes(talent.id);
+
+        // Build tooltip text from description/benefit
+        // Handle cases where these might be objects (ProseMirror) or undefined
+        const rawBenefit = talent.system.benefit;
+        const rawDescription = talent.system.description;
+        const benefit = typeof rawBenefit === 'string' ? rawBenefit : '';
+        const description = typeof rawDescription === 'string' ? rawDescription : '';
+        
+        let tooltipText = talent.name;
+        if (benefit) {
+            // Strip HTML tags for tooltip
+            tooltipText = benefit.replace(/<[^>]*>/g, '').trim();
+        } else if (description) {
+            tooltipText = description.replace(/<[^>]*>/g, '').trim();
+        }
+        // Truncate if too long
+        if (tooltipText.length > 200) {
+            tooltipText = tooltipText.substring(0, 197) + '...';
+        }
 
         return {
             id: talent.id,
@@ -764,6 +774,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             costLabel: talent.system.cost > 0 ? `${talent.system.cost} XP` : '—',
             isFavorite: isFavorite,
             flags: talent.flags,
+            tooltipText: tooltipText,
         };
     }
 
@@ -1088,8 +1099,12 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         });
 
         // Set up drag handlers for items
+        // Note: Talent panel rows (rt-tp_row) are excluded by EnhancedDragDropMixin
         this.element.querySelectorAll('[data-item-id]').forEach((el) => {
             if (el.dataset.itemId) {
+                // Skip if this element or any ancestor is a talent row
+                if (el.closest('.rt-tp_row') || el.closest('.rt-talent-row')) return;
+                
                 el.setAttribute('draggable', true);
                 el.addEventListener('dragstart', this._onDragItem.bind(this), false);
             }

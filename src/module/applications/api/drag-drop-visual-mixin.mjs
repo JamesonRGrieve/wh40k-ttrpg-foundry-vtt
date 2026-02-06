@@ -75,8 +75,11 @@ export default function EnhancedDragDropMixin(Base) {
          * @private
          */
         _setupEnhancedDragDrop() {
-            // Item rows
+            // Item rows - exclude talent panel rows (rt-tp_row) which should not be draggable
             this.element.querySelectorAll("[data-item-id]").forEach(el => {
+                // Skip if element is inside a talent panel row
+                if (el.closest('.rt-tp_row') || el.closest('.rt-talent-row')) return;
+                
                 if (!el.hasAttribute("draggable")) {
                     el.setAttribute("draggable", true);
                 }

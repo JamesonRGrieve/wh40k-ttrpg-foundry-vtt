@@ -495,10 +495,12 @@ export default class CreatureTemplate extends CommonTemplate {
     /** @inheritDoc */
     prepareDerivedData() {
         super.prepareDerivedData();
+        // IMPORTANT: Characteristics must be prepared BEFORE skills
+        // because skills need char.total for their calculations
+        this._prepareCharacteristics();
         this._prepareSkills();
         this._preparePsy();
         this._prepareFatigue();
-        this._prepareCharacteristics();
         this._prepareMovement();
     }
 

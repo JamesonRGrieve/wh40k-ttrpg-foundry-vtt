@@ -64,14 +64,14 @@ export default class AcolyteSheet extends BaseActorSheet {
             'filterSkills': AcolyteSheet.#filterSkills,
             'clearSkillsSearch': AcolyteSheet.#clearSkillsSearch,
             'toggleFavoriteSkill': AcolyteSheet.#toggleFavoriteSkill,
+            'toggleFavoriteSpecialistSkill': AcolyteSheet.#toggleFavoriteSpecialistSkill,
 
             // Talents actions
-            'filterTalents': AcolyteSheet.#filterTalents,
-            'clearTalentsFilter': AcolyteSheet.#clearTalentsFilter,
             'toggleFavoriteTalent': AcolyteSheet.#toggleFavoriteTalent,
             'filterTraits': AcolyteSheet.#filterTraits,
             'clearTraitsFilter': AcolyteSheet.#clearTraitsFilter,
             'adjustTraitLevel': AcolyteSheet.#adjustTraitLevel,
+            'openAddSpecialistDialog': AcolyteSheet.#openAddSpecialistDialog,
 
             // Powers actions
             'rollPower': AcolyteSheet.#rollPower,
@@ -388,9 +388,6 @@ export default class AcolyteSheet extends BaseActorSheet {
         if (partId === 'talents') {
             const talentsData = this._prepareTalentsContext();
             Object.assign(context, talentsData);
-            // Map property names for template compatibility
-            context.talentsFilter = talentsData.filter || {};
-            context.talentCategories = talentsData.categories || [];
 
             const traitsData = this._prepareTraitsContext(context);
             Object.assign(context, traitsData);
@@ -2525,37 +2522,106 @@ export default class AcolyteSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
-    /*  Talents Actions                             */
+
+    /**
+     * Toggle favorite status for a specialist skill entry.
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     * @this {AcolyteSheet}
+     */
+    static async #toggleFavoriteSpecialistSkill(event, target) {
+        const skillKey = target.dataset.skill;
+        const entryIndex = parseInt(target.dataset.index);
+        if (!skillKey || isNaN(entryIndex)) return;
+
+        // Create a unique key for this specialist skill entry
+        const favoriteKey = `${skillKey}:${entryIndex}`;
+
+        // Get current favorite specialist skills
+        const favorites = this.actor.getFlag('rogue-trader', 'favoriteSpecialistSkills') || [];
+        const index = favorites.indexOf(favoriteKey);
+
+        // Toggle
+        if (index > -1) {
+            favorites.splice(index, 1);
+        } else {
+            favorites.push(favoriteKey);
+        }
+
+        // Save
+        await this.actor.setFlag('rogue-trader', 'favoriteSpecialistSkills', favorites);
+
+        // Re-render talents tab
+        await this.render({ parts: ['talents'] });
+    }
+
     /* -------------------------------------------- */
 
     /**
-     * Filter talents by search, category, and tier.
-     * @param {Event} event     Triggering event.
-     * @param {HTMLElement} target  The input/select element.
+     * Open dialog to add a new specialist skill.
+     * First shows skill selector, then opens the existing specialist skill dialog.
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
      * @this {AcolyteSheet}
      */
-    static async #filterTalents(event, target) {
-        const form = target.closest('.rt-talents-filters');
-        if (!form) return;
+    static async #openAddSpecialistDialog(event, target) {
+        // Get list of specialist skills for the dropdown
+        const skills = this.actor.system.skills ?? {};
+        const specialistSkills = Object.entries(skills)
+            .filter(([_, data]) => data.entries !== undefined)
+            .map(([key, data]) => ({
+                key,
+                label: data.label || key,
+                characteristic: data.charShort || data.characteristic,
+            }))
+            .sort((a, b) => a.label.localeCompare(b.label));
 
-        const search = form.querySelector('[name=talents-search]')?.value || '';
-        const category = form.querySelector('[name=talents-category]')?.value || '';
-        const tier = form.querySelector('[name=talents-tier]')?.value || '';
+        // Build the skill selector content
+        const content = `
+            <form class="rt-add-specialist-form">
+                <div class="form-group">
+                    <label for="skill-select">Select Skill Type</label>
+                    <select id="skill-select" name="skillKey" required style="width: 100%; padding: 8px; font-size: 1rem;">
+                        <option value="">-- Choose a skill --</option>
+                        ${specialistSkills.map(s => `<option value="${s.key}">${s.label} (${s.characteristic})</option>`).join('')}
+                    </select>
+                </div>
+            </form>
+        `;
 
-        this._talentsFilter = { search, category, tier };
-        await this.render({ parts: ['talents'] });
+        // Show skill selection dialog
+        const result = await foundry.applications.api.DialogV2.prompt({
+            window: { title: 'Add Specialist Skill' },
+            content,
+            ok: {
+                label: 'Next',
+                icon: 'fas fa-arrow-right',
+                callback: (event, button, dialog) => {
+                    return button.form.querySelector('[name="skillKey"]').value;
+                },
+            },
+            rejectClose: false,
+        });
+
+        if (!result) return;
+
+        // Get the selected skill data
+        const skillKey = result;
+        const skill = skills[skillKey];
+        if (!skill) return;
+
+        // Open the existing specialist skill dialog for this skill
+        const { prepareCreateSpecialistSkillPrompt } = await import('../prompts/specialist-skill-dialog.mjs');
+        await prepareCreateSpecialistSkillPrompt({
+            actor: this.actor,
+            skill: skill,
+            skillName: skillKey,
+        });
     }
 
-    /**
-     * Clear talents filter.
-     * @param {Event} event     Triggering event.
-     * @param {HTMLElement} target  The button clicked.
-     * @this {AcolyteSheet}
-     */
-    static async #clearTalentsFilter(event, target) {
-        this._talentsFilter = { search: '', category: '', tier: '' };
-        await this.render({ parts: ['talents'] });
-    }
+    /* -------------------------------------------- */
+    /*  Talents Actions                             */
+    /* -------------------------------------------- */
 
     /**
      * Toggle favorite status for a talent.
