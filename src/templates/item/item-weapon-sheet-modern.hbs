@@ -3,7 +3,6 @@
   Features: Sticky header+stats, action cards in mosaic, collapsible sections, color-coded stats
 --}}
 <div class="rt-item-sheet rt-weapon-sheet-v3">
-  <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
          STICKY HEADER AREA (Header + Stats)
@@ -12,7 +11,7 @@
       
       {{!-- HEADER WITH EDIT TOGGLE --}}
       <header class="rt-weapon-header">
-        <div class="rt-item-image rt-item-image--sm" data-edit="img" data-action="editImage">
+        <div class="rt-item-image rt-item-image--sm" data-action="editImage">
           <img src="{{item.img}}" alt="{{item.name}}" />
         </div>
 
@@ -637,5 +636,5 @@
       
     </div>
 
-  </form>
+
 </div>

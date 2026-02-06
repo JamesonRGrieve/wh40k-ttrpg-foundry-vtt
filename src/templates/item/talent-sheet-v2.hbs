@@ -4,14 +4,13 @@
   Font Awesome 6 Pro icons throughout
 --}}
 <div class="rt-talent-sheet-v2">
-  <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Portrait, name, key badges, and quick actions
     ═══════════════════════════════════════════════════════════════════ --}}
     <header class="rt-talent-header">
       {{!-- Portrait --}}
-      <div class="rt-talent-portrait" data-action="editImage" data-edit="img">
+      <div class="rt-talent-portrait" data-action="editImage">
         <img src="{{item.img}}" alt="{{item.name}}" />
         {{#if inEditMode}}
         <div class="rt-talent-portrait-overlay">
@@ -1030,5 +1029,5 @@
       </div>
       {{/if}}
     </footer>
-  </form>
+
 </div>{{!-- .rt-talent-sheet-v2 --}}

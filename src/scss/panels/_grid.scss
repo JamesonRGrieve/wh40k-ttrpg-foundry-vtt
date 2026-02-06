@@ -19,7 +19,6 @@
 .rt-overview-grid,
 .rt-status-grid,
 .rt-combat-grid,
-.rt-equipment-grid,
 .rt-talents-grid {
   display: grid;
   // Use CSS variable with fallback to 2 columns
@@ -29,6 +28,13 @@
 }
 
 // These grids should always be 2 columns
+.rt-equipment-grid {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: $rt-space-md;
+  width: 100%;
+}
+
 .rt-powers-grid,
 .rt-dynasty-grid,
 .rt-bio-grid {
@@ -110,8 +116,7 @@
 @media (min-width: 701px) and (max-width: 900px) {
   .rt-overview-grid,
   .rt-status-grid,
-  .rt-combat-grid,
-  .rt-equipment-grid {
+  .rt-combat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   

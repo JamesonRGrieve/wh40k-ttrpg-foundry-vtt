@@ -117,9 +117,52 @@
     margin-top: 4px;
   }
   
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  
   &__equipped {
     display: flex;
     align-items: center;
+  }
+}
+
+// ============================================
+// ACTION BUTTONS
+// ============================================
+
+.rt-armour-sheet .rt-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(201, 162, 39, 0.2);
+    border-color: rgba(201, 162, 39, 0.4);
+    color: #c9a227;
+  }
+  
+  &.active,
+  &--edit.active {
+    background: rgba(46, 204, 113, 0.2);
+    border-color: rgba(46, 204, 113, 0.4);
+    color: #2ecc71;
+  }
+  
+  i {
+    font-size: 0.9rem;
   }
 }
 
@@ -517,7 +560,71 @@
   
   select {
     cursor: pointer;
+    
+    &.rt-input--readonly {
+      cursor: default;
+      opacity: 0.8;
+      pointer-events: none;
+    }
   }
+  
+  input.rt-input--readonly {
+    cursor: default;
+    opacity: 0.8;
+  }
+}
+
+// ============================================
+// VIEW MODE PROPERTIES DISPLAY
+// ============================================
+
+.rt-props-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rt-prop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  
+  &:nth-child(even) {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.rt-prop-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  
+  i {
+    color: #c9a227;
+    opacity: 0.7;
+    width: 16px;
+    text-align: center;
+  }
+}
+
+.rt-prop-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e0d5c7;
+  text-transform: capitalize;
+}
+
+// Property descriptions section (consolidated)
+.rt-property-descriptions {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 // ============================================

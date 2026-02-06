@@ -14,6 +14,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
         actions: {
+            ...BaseItemSheet.DEFAULT_OPTIONS?.actions,
             nestedItemCreate: ContainerItemSheet.#nestedItemCreate,
             nestedItemEdit: ContainerItemSheet.#nestedItemEdit,
             nestedItemDelete: ContainerItemSheet.#nestedItemDelete,

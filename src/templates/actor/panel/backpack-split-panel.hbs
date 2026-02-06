@@ -37,6 +37,7 @@
                                 <th class="rt-col-name">Item</th>
                                 <th class="rt-col-type">Type</th>
                                 <th class="rt-col-weight">Weight</th>
+                                <th class="rt-col-actions"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,6 +63,11 @@
                                     {{else}}
                                     <span class="rt-item-weight rt-weight-none">—</span>
                                     {{/if}}
+                                </td>
+                                <td class="rt-col-actions">
+                                    <button type="button" class="rt-inv-btn rt-inv-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                             {{/each}}
@@ -104,6 +110,7 @@
                                 <th class="rt-col-name">Item</th>
                                 <th class="rt-col-type">Type</th>
                                 <th class="rt-col-weight">Weight</th>
+                                <th class="rt-col-actions"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -129,6 +136,11 @@
                                     {{else}}
                                     <span class="rt-item-weight rt-weight-none">—</span>
                                     {{/if}}
+                                </td>
+                                <td class="rt-col-actions">
+                                    <button type="button" class="rt-inv-btn rt-inv-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                             {{/each}}
