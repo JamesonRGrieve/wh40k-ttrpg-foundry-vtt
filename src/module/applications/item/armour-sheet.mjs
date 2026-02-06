@@ -16,6 +16,7 @@ export default class ArmourSheet extends ContainerItemSheet {
             height: 580,
         },
         actions: {
+            ...ContainerItemSheet.DEFAULT_OPTIONS?.actions,
             toggleCoverage: ArmourSheet.#toggleCoverage,
             addProperty: ArmourSheet.#addProperty,
             removeProperty: ArmourSheet.#removeProperty,
@@ -40,7 +41,6 @@ export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
     static TABS = [
         { tab: 'protection', group: 'primary', label: 'Protection' },
-        { tab: 'properties', group: 'primary', label: 'Properties' },
         { tab: 'mods', group: 'primary', label: 'Modifications' },
         { tab: 'description', group: 'primary', label: 'Description' },
         { tab: 'effects', group: 'primary', label: 'Effects' },

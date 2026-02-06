@@ -3,13 +3,12 @@
   Matches weapon sheet pattern with modern ApplicationV2 structure
 --}}
 <div class="rt-armour-sheet">
-  <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact armour identity with inline stats
     ═══════════════════════════════════════════════════════════════════ --}}
     <header class="rt-armour-header">
-      <div class="rt-armour-header__image" data-action="editImage" data-edit="img">
+      <div class="rt-armour-header__image" data-action="editImage">
         <img src="{{item.img}}" alt="{{item.name}}" />
         <div class="rt-armour-header__image-overlay">
           <i class="fas fa-edit"></i>
@@ -42,7 +41,18 @@
         </div>
       </div>
       
-      <div class="rt-armour-header__equipped">
+      <div class="rt-armour-header__actions">
+        {{!-- Edit Mode Toggle (only for actor-owned items) --}}
+        {{#if isOwnedByActor}}
+        {{#if canEdit}}
+        <button type="button" class="rt-action-btn rt-action-btn--edit {{#if inEditMode}}active{{/if}}" 
+                data-action="toggleEditMode" title="{{#if inEditMode}}Exit Edit Mode{{else}}Enter Edit Mode{{/if}}">
+          <i class="fas {{#if inEditMode}}fa-lock-open{{else}}fa-pen-to-square{{/if}}"></i>
+        </button>
+        {{/if}}
+        {{/if}}
+        
+        {{!-- Equipped Toggle --}}
         <label class="rt-toggle-equipped" title="Toggle Equipped">
           <input type="checkbox" name="system.equipped" {{checked item.system.equipped}} />
           <span class="rt-toggle-equipped__indicator">
@@ -54,20 +64,9 @@
     </header>
 
     {{!-- ═══════════════════════════════════════════════════════════════════
-         STATS BAR: Primary armour stats at a glance
+         STATS BAR: Primary armour stats at a glance (simplified)
     ═══════════════════════════════════════════════════════════════════ --}}
     <div class="rt-armour-stats">
-      {{!-- Max AP --}}
-      <div class="rt-armour-stat rt-armour-stat--ap">
-        <div class="rt-armour-stat__icon">
-          <i class="fas fa-shield-halved"></i>
-        </div>
-        <div class="rt-armour-stat__content">
-          <span class="rt-armour-stat__label">Max AP</span>
-          <span class="rt-armour-stat__value">{{system.maxAP}}</span>
-        </div>
-      </div>
-      
       {{!-- Weight --}}
       <div class="rt-armour-stat rt-armour-stat--weight">
         <div class="rt-armour-stat__icon">
@@ -76,17 +75,6 @@
         <div class="rt-armour-stat__content">
           <span class="rt-armour-stat__label">Weight</span>
           <span class="rt-armour-stat__value">{{system.weight}}kg</span>
-        </div>
-      </div>
-      
-      {{!-- Coverage --}}
-      <div class="rt-armour-stat rt-armour-stat--coverage">
-        <div class="rt-armour-stat__icon">
-          <i class="fas fa-person"></i>
-        </div>
-        <div class="rt-armour-stat__content">
-          <span class="rt-armour-stat__label">Coverage</span>
-          <span class="rt-armour-stat__value">{{system.locationCount}}/6</span>
         </div>
       </div>
       
@@ -156,10 +144,6 @@
         <i class="fas fa-shield-halved"></i>
         <span>Protection</span>
       </button>
-      <button type="button" class="rt-tab rt-armour-tab" data-tab="properties" data-group="primary">
-        <i class="fas fa-star"></i>
-        <span>Properties</span>
-      </button>
       <button type="button" class="rt-tab rt-armour-tab" data-tab="mods" data-group="primary">
         <i class="fas fa-wrench"></i>
         <span>Mods</span>
@@ -182,7 +166,8 @@
       {{!-- PROTECTION TAB --}}
       <div class="rt-armour-panel tab active" data-tab="protection" data-group="primary">
         
-        {{!-- Armour Points Grid --}}
+        {{!-- Armour Points Grid (only in edit mode) --}}
+        {{#if inEditMode}}
         <div class="rt-armour-section">
           <div class="rt-armour-section__header">
             <i class="fas fa-shield-halved"></i>
@@ -223,6 +208,7 @@
             </div>
           </div>
         </div>
+        {{/if}}
 
         {{!-- Base Properties --}}
         <div class="rt-armour-section">
@@ -234,7 +220,7 @@
             <div class="rt-field-grid rt-field-grid--2col">
               <div class="rt-field">
                 <label>Armour Type</label>
-                <select name="system.type">
+                <select name="system.type" class="{{#unless inEditMode}}rt-input--readonly{{/unless}}" {{#unless inEditMode}}disabled{{/unless}}>
                   <option value="flak" {{#if (eq item.system.type "flak")}}selected{{/if}}>Flak</option>
                   <option value="mesh" {{#if (eq item.system.type "mesh")}}selected{{/if}}>Mesh</option>
                   <option value="carapace" {{#if (eq item.system.type "carapace")}}selected{{/if}}>Carapace</option>
@@ -250,13 +236,15 @@
                 </select>
               </div>
               <div class="rt-field">
-                <label>Max Agility Bonus <small>(leave blank if no limit)</small></label>
+                <label>Max Agility Bonus</label>
                 <input type="number" name="system.maxAgility" value="{{item.system.maxAgility}}" 
-                       data-dtype="Number" min="0" placeholder="No limit" />
+                       data-dtype="Number" min="0" placeholder="No limit"
+                       class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                       {{#unless inEditMode}}readonly{{/unless}} />
               </div>
               <div class="rt-field">
                 <label>Availability</label>
-                <select name="system.availability">
+                <select name="system.availability" class="{{#unless inEditMode}}rt-input--readonly{{/unless}}" {{#unless inEditMode}}disabled{{/unless}}>
                   <option value="ubiquitous" {{#if (eq item.system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
                   <option value="abundant" {{#if (eq item.system.availability "abundant")}}selected{{/if}}>Abundant</option>
                   <option value="plentiful" {{#if (eq item.system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
@@ -272,7 +260,7 @@
               </div>
               <div class="rt-field">
                 <label>Craftsmanship</label>
-                <select name="system.craftsmanship">
+                <select name="system.craftsmanship" class="{{#unless inEditMode}}rt-input--readonly{{/unless}}" {{#unless inEditMode}}disabled{{/unless}}>
                   <option value="poor" {{#if (eq item.system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
                   <option value="common" {{#if (eq item.system.craftsmanship "common")}}selected{{/if}}>Common</option>
                   <option value="good" {{#if (eq item.system.craftsmanship "good")}}selected{{/if}}>Good</option>
@@ -282,27 +270,27 @@
               <div class="rt-field">
                 <label>Weight (kg)</label>
                 <input type="number" name="system.weight" value="{{item.system.weight}}" 
-                       data-dtype="Number" min="0" step="0.1" />
+                       data-dtype="Number" min="0" step="0.1"
+                       class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                       {{#unless inEditMode}}readonly{{/unless}} />
               </div>
               <div class="rt-field">
                 <label>Cost (Thrones)</label>
-                <input type="number" name="system.cost" value="{{item.system.cost}}" 
-                       data-dtype="Number" min="0" />
+                <input type="number" name="system.cost.value" value="{{item.system.cost.value}}" 
+                       data-dtype="Number" min="0"
+                       class="{{#unless inEditMode}}rt-input--readonly{{/unless}}"
+                       {{#unless inEditMode}}readonly{{/unless}} />
               </div>
             </div>
           </div>
         </div>
 
-      </div>
-
-      {{!-- PROPERTIES TAB --}}
-      <div class="rt-armour-panel tab" data-tab="properties" data-group="primary">
-        
+        {{!-- Special Properties (consolidated from Properties tab) --}}
         <div class="rt-armour-section">
           <div class="rt-armour-section__header">
             <i class="fas fa-star"></i>
             <h3>Special Properties</h3>
-            {{#if propertiesArray}}
+            {{#if propertiesArray.length}}
             <span class="rt-armour-section__count">{{propertiesArray.length}}</span>
             {{/if}}
           </div>
@@ -312,18 +300,33 @@
               {{#each propertiesArray as |prop|}}
               <div class="rt-property-tag">
                 <span class="rt-property-tag__label">{{prop.label}}</span>
+                {{#if ../inEditMode}}
                 <button type="button" class="rt-property-tag__remove" 
                         data-action="removeProperty" data-property="{{prop.id}}"
                         title="Remove property">
                   <i class="fas fa-times"></i>
                 </button>
+                {{/if}}
               </div>
+              {{/each}}
+            </div>
+            {{!-- Property descriptions (inline) --}}
+            <div class="rt-property-descriptions">
+              {{#each propertiesArray as |prop|}}
+              {{#if prop.description}}
+              <div class="rt-property-detail">
+                <div class="rt-property-detail__name">{{prop.label}}</div>
+                <div class="rt-property-detail__desc">{{prop.description}}</div>
+              </div>
+              {{/if}}
               {{/each}}
             </div>
             {{else}}
             <p class="rt-empty-text">No special properties</p>
             {{/if}}
             
+            {{!-- Add property control (only in edit mode) --}}
+            {{#if inEditMode}}
             {{#if availableProperties}}
             <div class="rt-property-add">
               <select class="rt-property-add__select" name="new-property">
@@ -338,31 +341,9 @@
               </button>
             </div>
             {{/if}}
+            {{/if}}
           </div>
         </div>
-
-        {{!-- Property Descriptions --}}
-        {{#if propertiesArray.length}}
-        <div class="rt-armour-section">
-          <div class="rt-armour-section__header">
-            <i class="fas fa-info-circle"></i>
-            <h3>Property Descriptions</h3>
-          </div>
-          <div class="rt-armour-section__body">
-            {{#each propertiesArray as |prop|}}
-            <div class="rt-property-detail">
-              <div class="rt-property-detail__name">
-                <i class="fas fa-star"></i>
-                {{prop.label}}
-              </div>
-              {{#if prop.description}}
-              <div class="rt-property-detail__desc">{{prop.description}}</div>
-              {{/if}}
-            </div>
-            {{/each}}
-          </div>
-        </div>
-        {{/if}}
 
       </div>
 
@@ -492,5 +473,5 @@
 
     </div>
 
-  </form>
+
 </div>

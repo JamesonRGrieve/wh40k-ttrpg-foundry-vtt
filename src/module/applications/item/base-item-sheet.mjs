@@ -31,6 +31,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /** @override */
     static DEFAULT_OPTIONS = {
+        tag: 'form',
         actions: {
             editImage: BaseItemSheet.#onEditImage,
             toggleEditMode: BaseItemSheet.#toggleEditMode,
@@ -392,6 +393,10 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         this.render();
     }
 
+    /* -------------------------------------------- */
+
+    /**
+     * Handle form submission for item sheets.
     /* -------------------------------------------- */
 
     /**

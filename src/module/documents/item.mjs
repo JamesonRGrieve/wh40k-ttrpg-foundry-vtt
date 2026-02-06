@@ -40,11 +40,9 @@ export class RogueTraderItem extends RogueTraderItemContainer {
                     }
                 }
             }
-        } else {
-            // img field not present at all - add it
-            source.img = this._getDefaultIcon(source.type || 'unknown');
-            console.warn(`RogueTrader | cleanData: Missing img field for type "${source.type}", using default: ${source.img}`);
         }
+        // Note: If img is not in source, that's fine - it just won't be updated
+        // No need to add a default since the existing document img will remain
         
         return super.cleanData(source, options);
     }
