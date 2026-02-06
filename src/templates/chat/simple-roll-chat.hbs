@@ -7,6 +7,9 @@
             <div class="rt-roll-card__actor">{{sheetName}}</div>
             <h2 class="rt-roll-card__title">{{name}}</h2>
             {{#if type}}<div class="rt-roll-card__subtitle">{{type}} • {{lookup difficulties difficulty}}</div>{{/if}}
+            {{#if isManualRoll}}
+                <div class="rt-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
+            {{/if}}
         </div>
         
         {{!-- Body --}}
@@ -32,6 +35,12 @@
                 <span class="rt-roll-card__value">{{modifiedTarget}}</span>
             </div>
             
+            {{!-- Target-only display (no roll entered) --}}
+            {{#if isTargetOnly}}
+                <div class="rt-roll-card__target-only">
+                    Target posted - awaiting physical dice roll
+                </div>
+            {{else}}
             {{!-- Result Display --}}
             {{#if success}}
                 <div class="rt-roll-card__result rt-roll-card__result--success">
@@ -54,10 +63,14 @@
             {{/if}}
         </div>
         
+            {{/if}}{{!-- end isTargetOnly else --}}
+
         {{!-- Hidden dice data for Foundry --}}
+        {{#unless isManualRoll}}
         <div class="rt-roll-card__dice">
             <div class="dice-roll-render">{{{render}}}</div>
         </div>
+        {{/unless}}
     </div>
 </div>
 {{/with}}

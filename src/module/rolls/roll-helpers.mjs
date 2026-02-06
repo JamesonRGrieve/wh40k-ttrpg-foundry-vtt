@@ -52,7 +52,7 @@ export async function sendActionDataToChat(actionData) {
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,
     };
-    if (actionData.rollData.roll) {
+    if (actionData.rollData.roll && !actionData.rollData.isManualRoll) {
         chatData.rolls = [actionData.rollData.roll];
     }
     if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {

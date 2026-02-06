@@ -678,9 +678,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
      */
     async applyOriginToActor(actor) {
         if (!this.isOriginPath) {
-            foundry.applications.api.Toast.warning('This item is not an origin path and cannot be auto-applied.', {
-                duration: 3000
-            });
+            ui.notifications.warn('This item is not an origin path and cannot be auto-applied.');
             return;
         }
 
@@ -755,9 +753,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
         // Add the origin path itself
         await actor.createEmbeddedDocuments('Item', [this.toObject()]);
 
-        foundry.applications.api.Toast.info(`Applied ${this.name} to ${actor.name}`, {
-            duration: 3000
-        });
+        ui.notifications.info(`Applied ${this.name} to ${actor.name}`);
     }
 
     /**

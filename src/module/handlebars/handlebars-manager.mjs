@@ -147,6 +147,11 @@ export class HandlebarManager {
             'systems/rogue-trader/templates/chat/psychic-action-chat.hbs',
             'systems/rogue-trader/templates/chat/force-field-roll-chat.hbs',
 
+            // Unified roll dialog panels
+            'systems/rogue-trader/templates/prompt/unified/panels/weapon-panel.hbs',
+            'systems/rogue-trader/templates/prompt/unified/panels/psychic-panel.hbs',
+            'systems/rogue-trader/templates/prompt/unified/panels/force-field-panel.hbs',
+
             // Roll prompt templates
             'systems/rogue-trader/templates/prompt/enhanced-skill-roll.hbs',
             'systems/rogue-trader/templates/prompt/simple-roll-prompt.hbs',

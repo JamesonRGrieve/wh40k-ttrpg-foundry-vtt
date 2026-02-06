@@ -8,6 +8,9 @@
                 <h2 class="rt-roll-card__title">{{name}}</h2>
                 {{#if action}}<div class="rt-roll-card__subtitle">{{action}}</div>{{/if}}
                 {{#if effectString}}<div class="rt-roll-card__subtitle">{{effectString}}</div>{{/if}}
+                {{#if isManualRoll}}
+                    <div class="rt-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
+                {{/if}}
             {{/with}}
         </div>
         
@@ -81,6 +84,7 @@
                 
                 {{!-- Degrees --}}
                 {{#unless ignoreDegrees}}
+                  {{#unless isTargetOnly}}
                     {{#if success}}
                         <div class="rt-roll-card__degrees rt-roll-card__degrees--success">
                             <span class="rt-roll-card__degrees-count">{{dos}}</span>
@@ -92,10 +96,19 @@
                             <span class="rt-roll-card__degrees-label">Degrees of Failure</span>
                         </div>
                     {{/if}}
+                  {{/unless}}
                 {{/unless}}
                 
+                {{!-- Target-only display (no roll entered) --}}
+                {{#if isTargetOnly}}
+                    <div class="rt-roll-card__target-only">
+                        Target posted - awaiting physical dice roll
+                    </div>
+                {{/if}}
+
                 {{!-- Result Display --}}
                 {{#unless ignoreSuccess}}
+                  {{#unless isTargetOnly}}
                     {{#if success}}
                         <div class="rt-roll-card__result rt-roll-card__result--success">
                             <div class="rt-roll-card__result-label">Success</div>
@@ -107,6 +120,7 @@
                             <div class="rt-roll-card__result-roll">{{roll.total}}</div>
                         </div>
                     {{/if}}
+                  {{/unless}}
                 {{/unless}}
                 
                 {{!-- Action Controls --}}

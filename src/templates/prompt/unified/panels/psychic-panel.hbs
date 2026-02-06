@@ -1,0 +1,48 @@
+{{!-- Unified Roll Dialog: Psychic Power Panel --}}
+
+{{!-- Power Selection (if multiple) --}}
+{{#if powerSelect}}
+    <div class="urd-panel__section">
+        <h4 class="urd-panel__section-title">Select Power</h4>
+        <div class="rt-prompt__weapon-list">
+            {{#each psychicPowers as |power|}}
+                <label class="rt-prompt__weapon-item {{#if power.isSelected}}rt-prompt__weapon-item--selected{{/if}}"
+                       data-action="selectPower" data-power-id="{{power.id}}">
+                    <input class="rt-prompt__weapon-check" type="checkbox" {{checked power.isSelected}} name="{{power.id}}" tabindex="-1" />
+                    <img class="rt-prompt__weapon-img" alt="{{power.name}}" src="{{power.img}}" />
+                    <div class="rt-prompt__weapon-info">
+                        <div class="rt-prompt__weapon-name">{{power.name}}</div>
+                    </div>
+                </label>
+            {{/each}}
+        </div>
+    </div>
+{{/if}}
+
+{{!-- Power Config --}}
+{{#if power}}
+    <div class="urd-panel__field">
+        <span class="urd-panel__label">Psychic Rating</span>
+        <input class="rt-prompt__input" type="number" data-dtype="Number" name="pr" value="{{pr}}" />
+    </div>
+    {{#if rollData.modifiers.bonus}}
+        <div class="urd-panel__field">
+            <span class="urd-panel__label">Rating Bonus</span>
+            <span class="urd-panel__value">+{{rollData.modifiers.bonus}}</span>
+        </div>
+    {{/if}}
+    <div class="urd-panel__checkbox">
+        <span class="urd-panel__label">Has Psy Focus</span>
+        <input class="rt-prompt__input" type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="hasFocus" />
+    </div>
+
+    <div class="urd-panel__divider"></div>
+    <div class="urd-panel__field">
+        <span class="urd-panel__label">Distance (m)</span>
+        <input class="rt-prompt__input" type="number" data-dtype="Number" name="distance" value="{{distance}}" />
+    </div>
+    <div class="rt-prompt__range-info">
+        <span class="rt-prompt__range-label">{{rangeName}}</span>
+        <span class="rt-prompt__range-value">Max: {{maxRange}}m</span>
+    </div>
+{{/if}}

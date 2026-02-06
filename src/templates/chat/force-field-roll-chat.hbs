@@ -6,10 +6,22 @@
             <div class="rt-roll-card__actor">{{actor.name}}</div>
             <h2 class="rt-roll-card__title">{{forceField.name}}</h2>
             <div class="rt-roll-card__subtitle">Force Field Activation</div>
+            {{#if isManualRoll}}
+                <div class="rt-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
+            {{/if}}
         </div>
         
         {{!-- Body --}}
         <div class="rt-roll-card__body">
+            {{#if isTargetOnly}}
+                <div class="rt-roll-card__row">
+                    <span class="rt-roll-card__label">Protection Rating</span>
+                    <span class="rt-roll-card__value">{{protectionRating}}</span>
+                </div>
+                <div class="rt-roll-card__target-only">
+                    Target posted - awaiting physical dice roll
+                </div>
+            {{else}}
             {{#if overload}}
                 <div class="rt-roll-card__fury">
                     <div class="rt-roll-card__fury-title">⚠ Field Overload! ⚠</div>
@@ -39,6 +51,7 @@
                 <div class="rt-roll-card__divider"></div>
                 <div class="rt-roll-card__text">{{forceField.system.description}}</div>
             {{/if}}
+            {{/if}}{{!-- end isTargetOnly else --}}
         </div>
     </div>
 </div>

@@ -1,0 +1,14 @@
+{{!-- Unified Roll Dialog: Footer Buttons --}}
+<div class="urd-footer">
+    <button type="button" class="urd-footer__btn urd-footer__btn--primary" data-action="submitToChat">
+        <i class="fas fa-comment-dots"></i>
+        {{#if hasManualRoll}}Submit Roll{{else}}Post Target{{/if}}
+    </button>
+    <button type="button" class="urd-footer__btn urd-footer__btn--secondary" data-action="systemRoll">
+        <i class="fas fa-dice"></i>
+        Auto Roll
+    </button>
+    <button type="button" class="urd-footer__btn urd-footer__btn--cancel" data-action="cancel">
+        Cancel
+    </button>
+</div>

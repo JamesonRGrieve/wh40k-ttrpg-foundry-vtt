@@ -44,11 +44,12 @@ export function updateAvailableCombatActions(rollData) {
     }
 
     if (rollData.weapon.isRanged) {
-        if (rollData.weapon.system.rateOfFire.burst <= 0) {
+        const rof = rollData.weapon.system.attack?.rateOfFire;
+        if (!rof || rof.semi <= 0) {
             actions.findSplice((action) => action.name === 'Semi-Auto Burst');
             actions.findSplice((action) => action.name === 'Suppressing Fire - Semi');
         }
-        if (rollData.weapon.system.rateOfFire.full <= 0) {
+        if (!rof || rof.full <= 0) {
             actions.findSplice((action) => action.name === 'Full Auto Burst');
             actions.findSplice((action) => action.name === 'Suppressing Fire - Full');
         }

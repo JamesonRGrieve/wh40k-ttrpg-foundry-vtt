@@ -92,7 +92,10 @@ export class ActionData {
     }
 
     async _calculateHit() {
-        this.rollData.roll = await roll1d100();
+        if (!this.rollData.isManualRoll) {
+            this.rollData.roll = await roll1d100();
+        }
+        // else: roll was already set by the unified dialog with manual total
         let rollTotal = this.rollData.roll.total;
         const target = this.rollData.modifiedTarget;
         this.rollData.success = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
