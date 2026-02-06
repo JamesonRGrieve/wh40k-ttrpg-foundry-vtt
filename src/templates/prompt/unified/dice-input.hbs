@@ -1,0 +1,68 @@
+{{!-- Unified Roll Dialog: Dice Input Zone --}}
+<div class="urd-dice">
+    <div class="urd-dice__header">
+        <span class="urd-dice__header-title">Manual Roll</span>
+        <button type="button" class="urd-dice__mode-toggle" data-action="toggleDiceMode">
+            {{#if isTwoDice}}Single Input{{else}}Two Dice{{/if}}
+        </button>
+    </div>
+
+    {{#if isTwoDice}}
+        {{!-- Two-dice d10 input --}}
+        <div class="urd-dice__two-dice">
+            <div class="urd-dice__die">
+                <label class="urd-dice__die-label">Tens</label>
+                <input type="number" id="manual-tens" class="urd-dice__die-input"
+                       min="0" max="9" step="1"
+                       value="{{#if (ne manualRollTens null)}}{{manualRollTens}}{{/if}}"
+                       placeholder="-" autocomplete="off" />
+            </div>
+            <span class="urd-dice__separator">+</span>
+            <div class="urd-dice__die">
+                <label class="urd-dice__die-label">Units</label>
+                <input type="number" id="manual-units" class="urd-dice__die-input"
+                       min="0" max="9" step="1"
+                       value="{{#if (ne manualRollUnits null)}}{{manualRollUnits}}{{/if}}"
+                       placeholder="-" autocomplete="off" />
+            </div>
+            <span class="urd-dice__separator">=</span>
+            <div class="urd-dice__total">
+                {{#if hasManualRoll}}
+                    <span class="urd-dice__total-value">{{manualRollTotal}}</span>
+                {{else}}
+                    <span class="urd-dice__total-placeholder">--</span>
+                {{/if}}
+            </div>
+        </div>
+    {{else}}
+        {{!-- Single number input --}}
+        <div class="urd-dice__single">
+            <input type="number" id="manual-single" class="urd-dice__single-input"
+                   min="1" max="100" step="1"
+                   value="{{#if singleRollValue}}{{singleRollValue}}{{/if}}"
+                   placeholder="1-100" autocomplete="off" />
+        </div>
+    {{/if}}
+
+    {{!-- Instant feedback --}}
+    {{#if rollResult}}
+        <div class="urd-dice__result urd-dice__result--{{#if rollResult.success}}success{{else}}failure{{/if}}">
+            <div class="urd-dice__result-label">
+                {{#if rollResult.success}}SUCCESS{{else}}FAILURE{{/if}}
+            </div>
+            <div class="urd-dice__result-degrees">
+                {{#if rollResult.success}}
+                    {{rollResult.dos}} DoS
+                {{else}}
+                    {{rollResult.dof}} DoF
+                {{/if}}
+            </div>
+        </div>
+    {{/if}}
+
+    {{#if hasManualRoll}}
+        <button type="button" class="urd-dice__clear" data-action="clearManualRoll">
+            <i class="fas fa-times"></i> Clear
+        </button>
+    {{/if}}
+</div>

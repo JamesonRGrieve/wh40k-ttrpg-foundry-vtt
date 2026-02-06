@@ -1,0 +1,27 @@
+{{!-- Unified Roll Dialog: Context Panel - delegates to sub-panels --}}
+<div class="urd-context" {{#unless hasContextPanel}}hidden{{/unless}}>
+{{#if hasContextPanel}}
+    <button type="button" class="urd-context__header" data-action="toggleContextSection">
+        <span class="urd-context__header-title">
+            {{#if isWeapon}}<i class="fas fa-crosshairs"></i> Attack Options{{/if}}
+            {{#if isPsychic}}<i class="fas fa-brain"></i> Psychic Power{{/if}}
+            {{#if isForceField}}<i class="fas fa-shield-alt"></i> Force Field{{/if}}
+        </span>
+        <i class="fas {{#if contextExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} urd-context__chevron"></i>
+    </button>
+
+    {{#if contextExpanded}}
+        <div class="urd-context__body">
+            {{#if isWeapon}}
+                {{> "systems/rogue-trader/templates/prompt/unified/panels/weapon-panel.hbs"}}
+            {{/if}}
+            {{#if isPsychic}}
+                {{> "systems/rogue-trader/templates/prompt/unified/panels/psychic-panel.hbs"}}
+            {{/if}}
+            {{#if isForceField}}
+                {{> "systems/rogue-trader/templates/prompt/unified/panels/force-field-panel.hbs"}}
+            {{/if}}
+        </div>
+    {{/if}}
+{{/if}}
+</div>

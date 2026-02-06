@@ -1,0 +1,45 @@
+{{!-- Unified Roll Dialog: Modifiers Section --}}
+<div class="urd-modifiers" {{#if isForceField}}hidden{{/if}}>
+{{#unless isForceField}}
+    {{!-- Situational modifier pills from character talents/traits/conditions --}}
+    {{#if hasSituationalModifiers}}
+    <div class="urd-modifiers__pills">
+        {{#each situationalModifiers}}
+        <button type="button"
+                class="urd-modifiers__pill {{#if active}}urd-modifiers__pill--active{{/if}}"
+                data-action="toggleSituational" data-toggle-key="{{toggleKey}}"
+                data-tooltip="{{condition}}">
+            {{#if icon}}<i class="{{icon}}"></i>{{/if}}
+            <span class="urd-modifiers__pill-name">{{source}}</span>
+            <span class="urd-modifiers__pill-value {{#if (gt value 0)}}urd-modifiers__pill-value--positive{{else}}urd-modifiers__pill-value--negative{{/if}}">
+                {{valueLabel}}
+            </span>
+        </button>
+        {{/each}}
+    </div>
+    {{/if}}
+
+    {{!-- Inline custom modifier: hidden until toggled --}}
+    {{#if showCustomModifier}}
+    <div class="urd-modifiers__custom-inline">
+        <div class="urd-modifiers__custom-stepper">
+            <button type="button" class="urd-modifiers__custom-btn" data-action="customModDown">
+                <i class="fas fa-minus"></i>
+            </button>
+            <input type="number" id="unified-custom-modifier" class="urd-modifiers__custom-input"
+                   value="{{customMod}}" placeholder="0" />
+            <button type="button" class="urd-modifiers__custom-btn" data-action="customModUp">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+        <button type="button" class="urd-modifiers__custom-close" data-action="toggleCustomModifier">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    {{else}}
+    <button type="button" class="urd-modifiers__add-custom" data-action="toggleCustomModifier">
+        <i class="fas fa-plus-circle"></i> Custom Modifier
+    </button>
+    {{/if}}
+{{/unless}}
+</div>

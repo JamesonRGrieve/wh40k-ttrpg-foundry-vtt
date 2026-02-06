@@ -1,0 +1,943 @@
+// ============================================
+// Unified Roll Dialog - Modern Roll Interface
+// ============================================
+// Three-zone layout: Hero Target, Config, Dice Input
+// Uses existing design tokens from _dialogs.scss
+
+// ============================================
+// Dialog Container Override
+// ============================================
+
+.unified-roll-dialog {
+    .window-content {
+        background: transparent;
+        padding: 0;
+        overflow: visible;
+    }
+}
+
+// ============================================
+// Header Zone
+// ============================================
+
+.urd-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.08) 0%, rgba(0, 0, 0, 0.15) 100%);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+
+    &__portrait {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 2px solid #c9a227;
+        object-fit: cover;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        flex-shrink: 0;
+    }
+
+    &__info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__actor {
+        font-size: 0.75rem;
+        color: #9a9a8a;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    &__title {
+        font-family: 'Cinzel', serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #c9a227;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__subtitle {
+        font-size: 0.85rem;
+        color: #b8b8a8;
+        margin-top: 2px;
+    }
+}
+
+// ============================================
+// Hero Target Display
+// ============================================
+
+.urd-target {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 100%);
+
+    &__row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    &__hero {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+    }
+
+    &__number {
+        font-family: 'Cinzel', serif;
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+        transition: color 0.5s ease, text-shadow 0.5s ease;
+
+        // Dynamic colors based on success chance
+        &--dire {
+            color: #dc2626;
+            text-shadow: 0 0 20px rgba(220, 38, 38, 0.5), 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+        &--poor {
+            color: #f87171;
+            text-shadow: 0 0 20px rgba(248, 113, 113, 0.4), 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+        &--fair {
+            color: #fbbf24;
+            text-shadow: 0 0 25px rgba(251, 191, 36, 0.4), 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+        &--good {
+            color: #c9a227;
+            text-shadow: 0 0 30px rgba(201, 162, 39, 0.4), 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+        &--great {
+            color: #4ade80;
+            text-shadow: 0 0 30px rgba(74, 222, 128, 0.5), 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+        &--legendary {
+            color: #22d3ee;
+            text-shadow: 0 0 35px rgba(34, 211, 238, 0.5), 0 0 60px rgba(34, 211, 238, 0.2), 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+    }
+
+    &__percent {
+        font-size: 1.2rem;
+        color: rgba(201, 162, 39, 0.5);
+        font-weight: 400;
+    }
+
+    &__difficulty-label {
+        font-family: 'Cinzel', serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: rgba(232, 228, 217, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+    }
+
+    &__breakdown {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        font-size: 0.75rem;
+        color: #6a6a6a;
+    }
+
+    &__breakdown-sep {
+        color: rgba(201, 162, 39, 0.3);
+    }
+
+    &__breakdown-item {
+        &--positive { color: #4ade80; }
+        &--negative { color: #f87171; }
+    }
+}
+
+// Target pulse animation
+.urd-target__number.urd-target-increase {
+    animation: urd-target-pulse-green 0.4s ease;
+}
+
+.urd-target__number.urd-target-decrease {
+    animation: urd-target-pulse-red 0.4s ease;
+}
+
+@keyframes urd-target-pulse-green {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.4); }
+}
+
+@keyframes urd-target-pulse-red {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.4); }
+}
+
+// ============================================
+// Difficulty Picker Dropdown
+// ============================================
+
+.urd-difficulty-picker {
+    position: relative;
+    margin-top: 8px;
+
+    &__trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 14px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(201, 162, 39, 0.25);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: rgba(201, 162, 39, 0.1);
+            border-color: rgba(201, 162, 39, 0.5);
+        }
+    }
+
+    &__label {
+        font-family: 'Cinzel', serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: rgba(232, 228, 217, 0.85);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+
+    &__mod {
+        font-size: 0.75rem;
+        color: rgba(201, 162, 39, 0.7);
+        font-weight: 600;
+    }
+
+    &__caret {
+        font-size: 0.7rem;
+        color: rgba(201, 162, 39, 0.6);
+        transition: transform 0.25s ease;
+
+        &--open {
+            transform: rotate(180deg);
+        }
+    }
+
+    &__list {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 6px);
+        min-width: 220px;
+        list-style: none;
+        margin: 0;
+        padding: 6px 0;
+        background: rgba(18, 18, 24, 0.97);
+        border: 1px solid rgba(201, 162, 39, 0.3);
+        border-radius: 8px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(201, 162, 39, 0.1);
+        z-index: 100;
+        backdrop-filter: blur(12px);
+        animation: urd-picker-appear 0.2s ease;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 16px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background: rgba(201, 162, 39, 0.12);
+        }
+
+        &--current {
+            background: rgba(201, 162, 39, 0.15);
+            border-left: 3px solid #c9a227;
+
+            .urd-difficulty-picker__item-label {
+                color: #c9a227;
+                font-weight: 700;
+            }
+        }
+    }
+
+    &__item-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #b8b8a8;
+    }
+
+    &__item-mod {
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+
+        &--positive {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        &--negative {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+        }
+    }
+}
+
+@keyframes urd-picker-appear {
+    0% { opacity: 0; transform: translateY(-6px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// ============================================
+// Modifiers Section
+// ============================================
+
+.urd-modifiers {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 10px 20px;
+
+    &__pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+    &__pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        cursor: pointer;
+        font-size: 0.78rem;
+        color: #9a9a8a;
+        transition: all 0.2s ease;
+
+        i {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        &:hover {
+            background: rgba(201, 162, 39, 0.08);
+            border-color: rgba(201, 162, 39, 0.3);
+            color: #b8b8a8;
+        }
+
+        &--active {
+            background: rgba(201, 162, 39, 0.15);
+            border-color: rgba(201, 162, 39, 0.5);
+            color: #e8e4d9;
+            box-shadow: 0 0 8px rgba(201, 162, 39, 0.15);
+
+            i { opacity: 1; color: #c9a227; }
+        }
+    }
+
+    &__pill-name {
+        font-weight: 500;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__pill-value {
+        font-weight: 700;
+        font-size: 0.8rem;
+
+        &--positive { color: #4ade80; }
+        &--negative { color: #f87171; }
+    }
+
+    &__add-custom {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 6px;
+        background: none;
+        border: 1px dashed rgba(201, 162, 39, 0.15);
+        border-radius: 6px;
+        color: rgba(201, 162, 39, 0.5);
+        font-size: 0.78rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            border-color: rgba(201, 162, 39, 0.4);
+            color: #c9a227;
+            background: rgba(201, 162, 39, 0.05);
+        }
+    }
+
+    &__custom-inline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    &__custom-stepper {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        border: 1px solid rgba(201, 162, 39, 0.2);
+        border-radius: 6px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    &__custom-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background: rgba(0, 0, 0, 0.15);
+        border: none;
+        color: #c9a227;
+        cursor: pointer;
+        font-size: 0.7rem;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background: rgba(201, 162, 39, 0.15);
+            color: #e8e4d9;
+        }
+
+        &:active {
+            background: rgba(201, 162, 39, 0.25);
+        }
+    }
+
+    &__custom-input {
+        width: 48px;
+        padding: 4px 2px;
+        background: transparent;
+        border: none;
+        border-left: 1px solid rgba(201, 162, 39, 0.15);
+        border-right: 1px solid rgba(201, 162, 39, 0.15);
+        color: #e8e4d9;
+        font-size: 0.85rem;
+        text-align: center;
+        font-weight: 700;
+        -moz-appearance: textfield;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        &:focus {
+            outline: none;
+            background: rgba(201, 162, 39, 0.08);
+        }
+    }
+
+    &__custom-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: none;
+        border: none;
+        color: #6a6a6a;
+        cursor: pointer;
+        font-size: 0.7rem;
+        border-radius: 50%;
+        transition: all 0.15s ease;
+
+        &:hover {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+        }
+    }
+}
+
+// ============================================
+// Context Panel (Weapon/Psychic/ForceField)
+// ============================================
+
+.urd-context {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    &__header {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 12px 20px;
+        background: rgba(0, 0, 0, 0.15);
+        border: none;
+        color: #e8e4d9;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.25);
+        }
+    }
+
+    &__header-title {
+        flex: 1;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        i { color: #c9a227; font-size: 0.9rem; }
+    }
+
+    &__chevron {
+        color: #6a6a6a;
+        font-size: 0.75rem;
+    }
+
+    &__body {
+        padding: 12px 20px 16px;
+        background: rgba(0, 0, 0, 0.08);
+    }
+}
+
+// Panel field layout (shared across weapon/psychic/force-field)
+.urd-panel {
+    &__section {
+        margin-bottom: 12px;
+    }
+
+    &__section-title {
+        font-family: 'Cinzel', serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #c9a227;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin: 0 0 8px 0;
+    }
+
+    &__field {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 0;
+        min-height: 36px;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    &__label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #b8b8a8;
+
+        small {
+            font-size: 0.75rem;
+            color: #6a6a6a;
+        }
+    }
+
+    &__value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #c9a227;
+    }
+
+    &__checkbox {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 0;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    &__divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, rgba(201, 162, 39, 0.2) 50%, transparent 100%);
+        margin: 10px 0;
+    }
+
+    &__status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 8px;
+
+        &--active {
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        &--inactive {
+            background: rgba(248, 113, 113, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        &--warning {
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+    }
+}
+
+// ============================================
+// Dice Input Zone
+// ============================================
+
+.urd-dice {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.1);
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+
+    &__header-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #9a9a8a;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    &__mode-toggle {
+        font-size: 0.75rem;
+        color: rgba(201, 162, 39, 0.7);
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-decoration: underline;
+        padding: 0;
+
+        &:hover {
+            color: #c9a227;
+        }
+    }
+
+    // Two-dice layout
+    &__two-dice {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    &__die {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    &__die-label {
+        font-size: 0.65rem;
+        color: #6a6a6a;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    &__die-input {
+        width: 56px;
+        height: 56px;
+        padding: 0;
+        background: rgba(0, 0, 0, 0.4);
+        border: 2px solid rgba(201, 162, 39, 0.3);
+        border-radius: 8px;
+        color: #e8e4d9;
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        -moz-appearance: textfield;
+        transition: all 0.2s ease;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: #c9a227;
+            box-shadow: 0 0 16px rgba(201, 162, 39, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        &::placeholder {
+            color: #3a3a3a;
+            font-size: 1.5rem;
+        }
+    }
+
+    &__separator {
+        font-size: 1.2rem;
+        color: #6a6a6a;
+        font-weight: 300;
+    }
+
+    &__total {
+        min-width: 56px;
+        text-align: center;
+    }
+
+    &__total-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #c9a227;
+        text-shadow: 0 0 10px rgba(201, 162, 39, 0.3);
+    }
+
+    &__total-placeholder {
+        font-size: 1.8rem;
+        font-weight: 300;
+        color: #3a3a3a;
+    }
+
+    // Single number input
+    &__single {
+        display: flex;
+        justify-content: center;
+    }
+
+    &__single-input {
+        width: 120px;
+        height: 56px;
+        padding: 0 12px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 2px solid rgba(201, 162, 39, 0.3);
+        border-radius: 8px;
+        color: #e8e4d9;
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        -moz-appearance: textfield;
+        transition: all 0.2s ease;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: #c9a227;
+            box-shadow: 0 0 16px rgba(201, 162, 39, 0.4);
+        }
+
+        &::placeholder {
+            font-size: 1rem;
+            color: #4a4a4a;
+        }
+    }
+
+    // Instant result feedback
+    &__result {
+        margin-top: 12px;
+        padding: 10px 16px;
+        border-radius: 6px;
+        text-align: center;
+        animation: urd-result-reveal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+        &--success {
+            background: rgba(45, 138, 78, 0.15);
+            border: 1px solid rgba(74, 222, 128, 0.4);
+        }
+
+        &--failure {
+            background: rgba(168, 50, 50, 0.15);
+            border: 1px solid rgba(248, 113, 113, 0.4);
+        }
+    }
+
+    &__result-label {
+        font-family: 'Cinzel', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+
+        .urd-dice__result--success & { color: #4ade80; }
+        .urd-dice__result--failure & { color: #f87171; }
+    }
+
+    &__result-degrees {
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 2px;
+
+        .urd-dice__result--success & { color: rgba(74, 222, 128, 0.8); }
+        .urd-dice__result--failure & { color: rgba(248, 113, 113, 0.8); }
+    }
+
+    &__clear {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 10px;
+        width: 100%;
+        padding: 6px;
+        background: none;
+        border: none;
+        color: #6a6a6a;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: color 0.15s ease;
+
+        &:hover {
+            color: #f87171;
+        }
+    }
+}
+
+// Result reveal animation
+@keyframes urd-result-reveal {
+    0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+// Die land animation
+@keyframes urd-die-land {
+    0% { transform: rotate(-3deg) scale(1.05); }
+    50% { transform: rotate(2deg) scale(0.98); }
+    100% { transform: rotate(0) scale(1); }
+}
+
+.urd-dice__die-input:not(:placeholder-shown) {
+    animation: urd-die-land 0.25s ease;
+}
+
+// ============================================
+// Footer Buttons
+// ============================================
+
+.urd-footer {
+    display: flex;
+    gap: 8px;
+    padding: 14px 20px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.35) 100%);
+    border-top: 1px solid rgba(201, 162, 39, 0.15);
+
+    &__btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        i {
+            font-size: 14px;
+        }
+
+        &--primary {
+            background: linear-gradient(135deg, #c9a227 0%, #8b6914 100%);
+            color: #0a0a0f;
+            box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
+
+            &:hover {
+                background: linear-gradient(135deg, #d4ad32 0%, #9a7818 100%);
+                box-shadow: 0 6px 20px rgba(201, 162, 39, 0.4);
+                transform: translateY(-1px);
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
+        }
+
+        &--secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #c9a227;
+            border: 1px solid rgba(201, 162, 39, 0.3);
+
+            &:hover {
+                background: rgba(201, 162, 39, 0.12);
+                border-color: rgba(201, 162, 39, 0.5);
+            }
+        }
+
+        &--cancel {
+            flex: 0 0 auto;
+            background: none;
+            color: #6a6a6a;
+            font-size: 0.8rem;
+            padding: 10px 12px;
+
+            &:hover {
+                color: #b8b8a8;
+            }
+        }
+    }
+}
+
+// ============================================
+// Accessibility: Reduced Motion
+// ============================================
+
+@media (prefers-reduced-motion: reduce) {
+    .urd-target__number,
+    .urd-dice__die-input,
+    .urd-dice__result,
+    .urd-step-pulse,
+    .urd-difficulty-picker__list,
+    .urd-difficulty-picker__caret {
+        animation: none !important;
+        transition: none !important;
+    }
+}

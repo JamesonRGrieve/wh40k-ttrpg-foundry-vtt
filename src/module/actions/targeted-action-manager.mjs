@@ -1,5 +1,4 @@
-import { prepareWeaponRoll } from '../applications/prompts/weapon-attack-dialog.mjs';
-import { preparePsychicPowerRoll } from '../applications/prompts/psychic-power-dialog.mjs';
+import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.mjs';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 import { SYSTEM_ID } from '../constants.mjs';
@@ -124,7 +123,7 @@ export class TargetedActionManager {
         weaponRollData.sourceActor = rollData.actor;
         weaponRollData.targetActor = rollData.target;
         weaponRollData.distance = rollData.distance;
-        await prepareWeaponRoll(weaponAttack);
+        await prepareUnifiedRoll(weaponAttack);
     }
 
     async performPsychicAttack(source = null, target = null, psychicPower = null) {
@@ -145,7 +144,7 @@ export class TargetedActionManager {
         psychicRollData.sourceActor = rollData.actor;
         psychicRollData.targetActor = rollData.target;
         psychicRollData.distance = rollData.distance;
-        await preparePsychicPowerRoll(psychicAttack);
+        await prepareUnifiedRoll(psychicAttack);
     }
 }
 

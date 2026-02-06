@@ -2,7 +2,8 @@ import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs'
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.mjs';
 import { RogueTraderBaseActor } from './base-actor.mjs';
 import { ForceFieldData } from '../rolls/force-field-data.mjs';
-import { prepareForceFieldRoll } from '../applications/prompts/force-field-dialog.mjs';
+import { SimpleSkillData } from '../rolls/action-data.mjs';
+import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 import { SYSTEM_ID } from '../constants.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
@@ -236,7 +237,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     /* -------------------------------------------- */
 
     /**
-     * Roll a characteristic test using the new D100Roll system
+     * Roll a characteristic test using the unified roll dialog
      * @param {string} charKey - The characteristic key (e.g., "weaponSkill")
      * @param {string} [flavorOverride] - Optional flavor text override
      * @param {Object} [options] - Additional roll options
@@ -245,33 +246,32 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
     async rollCharacteristic(charKey, flavorOverride, options = {}) {
         const char = this.system.characteristics?.[charKey];
         if (!char) {
-            foundry.applications.api.Toast.warning(`Characteristic "${charKey}" not found`, {
-                duration: 3000,
-            });
+            ui.notifications.warn(`Characteristic "${charKey}" not found`);
             return null;
         }
 
         const flavor = flavorOverride || `${char.label} Test`;
-
-        // Collect situational modifiers for this characteristic
         const situationalModifiers = this.getCharacteristicSituationalModifiers(charKey);
 
-        return D100Roll.build({
-            actor: this,
-            target: char.total,
-            baseTarget: char.total,
-            flavor: flavor,
-            name: flavor,
-            speaker: ChatMessage.getSpeaker({ actor: this }),
-            type: 'characteristic',
-            characteristic: charKey,
-            situationalModifiers,
-            ...options,
-        });
+        const simpleSkillData = new SimpleSkillData();
+        const rollData = simpleSkillData.rollData;
+        rollData.actor = this;
+        rollData.sourceActor = this;
+        rollData.nameOverride = flavor;
+        rollData.type = 'Characteristic';
+        rollData.rollKey = charKey;
+        rollData.baseTarget = char.total;
+        rollData.modifiers.modifier = 0;
+        if (situationalModifiers?.length) {
+            let sitMod = 0;
+            for (const mod of situationalModifiers) sitMod += mod.value || 0;
+            if (sitMod !== 0) rollData.modifiers.situational = sitMod;
+        }
+        await prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
-     * Roll a skill test using the new D100Roll system
+     * Roll a skill test using the unified roll dialog
      * @param {string} skillName - The skill key or name
      * @param {string} [specialityName] - Optional speciality name for specialist skills
      * @param {Object} [options] - Additional roll options
@@ -281,9 +281,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         const resolvedSkillName = this._resolveSkillName(skillName);
         let skill = this.skills[resolvedSkillName];
         if (!skill) {
-            foundry.applications.api.Toast.warning(`Unable to find skill ${skillName}`, {
-                duration: 3000,
-            });
+            ui.notifications.warn(`Unable to find skill ${skillName}`);
             return null;
         }
         let label = skill.label;
@@ -299,21 +297,23 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
             }
         }
 
-        // Collect situational modifiers for this skill
         const situationalModifiers = this.getSkillSituationalModifiers(resolvedSkillName);
 
-        return D100Roll.build({
-            actor: this,
-            target: targetValue,
-            baseTarget: targetValue,
-            flavor: `${label} Test`,
-            name: label,
-            speaker: ChatMessage.getSpeaker({ actor: this }),
-            type: 'skill',
-            skill: resolvedSkillName,
-            situationalModifiers,
-            ...options,
-        });
+        const simpleSkillData = new SimpleSkillData();
+        const rollData = simpleSkillData.rollData;
+        rollData.actor = this;
+        rollData.sourceActor = this;
+        rollData.nameOverride = `${label} Test`;
+        rollData.type = 'Skill';
+        rollData.rollKey = resolvedSkillName;
+        rollData.baseTarget = targetValue;
+        rollData.modifiers.modifier = 0;
+        if (situationalModifiers?.length) {
+            let sitMod = 0;
+            for (const mod of situationalModifiers) sitMod += mod.value || 0;
+            if (sitMod !== 0) rollData.modifiers.situational = sitMod;
+        }
+        await prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
@@ -322,9 +322,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
      */
     async rollWeaponDamage(weapon) {
         if (!weapon.system.equipped) {
-            foundry.applications.api.Toast.warning('Actor must have weapon equipped!', {
-                duration: 3000,
-            });
+            ui.notifications.warn('Actor must have weapon equipped!');
             return;
         }
 
@@ -383,9 +381,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
         switch (item.type) {
             case 'weapon':
                 if (!item.system.equipped) {
-                    foundry.applications.api.Toast.warning('Actor must have weapon equipped!', {
-                        duration: 3000,
-                    });
+                    ui.notifications.warn('Actor must have weapon equipped!');
                     return;
                 }
                 if (game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
@@ -407,12 +403,10 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                 return;
             case 'forceField':
                 if (!item.system.equipped || !item.system.activated) {
-                    foundry.applications.api.Toast.warning('Actor must have force field equipped and activated!', {
-                        duration: 3000,
-                    });
+                    ui.notifications.warn('Actor must have force field equipped and activated!');
                     return;
                 }
-                await prepareForceFieldRoll(new ForceFieldData(this, item));
+                await prepareUnifiedRoll(new ForceFieldData(this, item));
                 return;
             default:
                 await DHBasicActionManager.sendItemVocalizeChat({
@@ -444,9 +438,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                 await this.rollPsychicPowerDamage(item);
                 return;
             default:
-                return foundry.applications.api.Toast.warning(`No actions implemented for item type: ${item.type}`, {
-                    duration: 3000,
-                });
+                return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
         }
     }
 

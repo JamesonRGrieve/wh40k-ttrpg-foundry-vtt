@@ -18,5 +18,8 @@ export { default as SpecialistSkillDialog, prepareCreateSpecialistSkillPrompt } 
 // Utility dialogs
 export { default as AddXPDialog, openAddXPDialog } from "./add-xp-dialog.mjs";
 
+// Unified Roll Dialog
+export { default as UnifiedRollDialog, prepareUnifiedRoll } from "./unified-roll-dialog.mjs";
+
 // Effect creation
 export { default as EffectCreationDialog } from "./effect-creation-dialog.mjs";

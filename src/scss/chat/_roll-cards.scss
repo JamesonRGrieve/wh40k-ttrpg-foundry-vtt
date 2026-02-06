@@ -847,6 +847,43 @@
 }
 
 // ============================================
+// Manual Roll Badge
+// ============================================
+
+.rt-roll-card__manual-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    margin-top: 6px;
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #c084fc;
+
+    i {
+        font-size: 0.65rem;
+    }
+}
+
+// Target-only card (no roll result)
+.rt-roll-card__target-only {
+    text-align: center;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: rgba(201, 162, 39, 0.08);
+    border: 1px dashed rgba(201, 162, 39, 0.3);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--rt-card-muted);
+}
+
+// ============================================
 // Weapon Qualities Display
 // ============================================
 

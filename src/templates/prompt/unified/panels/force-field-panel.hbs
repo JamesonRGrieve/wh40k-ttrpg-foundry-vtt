@@ -1,0 +1,27 @@
+{{!-- Unified Roll Dialog: Force Field Panel --}}
+{{#if forceField}}
+    <div class="urd-panel__field">
+        <span class="urd-panel__label">Force Field</span>
+        <span class="urd-panel__value">{{forceField.name}}</span>
+    </div>
+    {{#if protectionRating}}
+        <div class="urd-panel__field">
+            <span class="urd-panel__label">Protection Rating</span>
+            <span class="urd-panel__value">{{protectionRating}}</span>
+        </div>
+    {{/if}}
+    {{#if forceField.system.activated}}
+        <div class="urd-panel__status urd-panel__status--active">
+            <i class="fas fa-check-circle"></i> Activated
+        </div>
+    {{else}}
+        <div class="urd-panel__status urd-panel__status--inactive">
+            <i class="fas fa-times-circle"></i> Not Activated
+        </div>
+    {{/if}}
+    {{#if forceField.system.overloaded}}
+        <div class="urd-panel__status urd-panel__status--warning">
+            <i class="fas fa-exclamation-triangle"></i> Overloaded
+        </div>
+    {{/if}}
+{{/if}}

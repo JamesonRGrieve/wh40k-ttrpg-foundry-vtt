@@ -1,0 +1,11 @@
+{{!-- Unified Roll Dialog: Header --}}
+<div class="urd-header">
+    {{#if actorImg}}
+        <img class="urd-header__portrait" src="{{actorImg}}" alt="{{actorName}}" />
+    {{/if}}
+    <div class="urd-header__info">
+        {{#if actorName}}<div class="urd-header__actor">{{actorName}}</div>{{/if}}
+        <h2 class="urd-header__title">{{rollName}}</h2>
+        {{#if rollSubtitle}}<div class="urd-header__subtitle">{{rollSubtitle}}</div>{{/if}}
+    </div>
+</div>

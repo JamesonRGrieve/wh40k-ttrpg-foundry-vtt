@@ -1,0 +1,116 @@
+{{!-- Unified Roll Dialog: Weapon Panel --}}
+
+{{!-- Weapon Selection (if multiple) --}}
+{{#if weaponSelect}}
+    <div class="urd-panel__section">
+        <h4 class="urd-panel__section-title">Select Weapon</h4>
+        <div class="rt-prompt__weapon-list">
+            {{#each weapons as |weapon|}}
+                <label class="rt-prompt__weapon-item {{#if weapon.isSelected}}rt-prompt__weapon-item--selected{{/if}}"
+                       data-action="selectWeapon" data-weapon-id="{{weapon.id}}">
+                    <input class="rt-prompt__weapon-check" type="checkbox" {{checked weapon.isSelected}} name="{{weapon.id}}" tabindex="-1" />
+                    <img class="rt-prompt__weapon-img" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                    <div class="rt-prompt__weapon-info">
+                        <div class="rt-prompt__weapon-name">{{weapon.name}}</div>
+                        {{#if weapon.items}}
+                            <div class="rt-prompt__weapon-details">
+                                {{#each weapon.items as |item|}}{{item.name}}{{#unless @last}}, {{/unless}}{{/each}}
+                            </div>
+                        {{/if}}
+                    </div>
+                </label>
+            {{/each}}
+        </div>
+    </div>
+{{/if}}
+
+{{!-- Weapon Info --}}
+{{#if weapon}}
+    {{#if usesAmmo}}
+        <div class="urd-panel__field">
+            <span class="urd-panel__label">Ammunition</span>
+            <span class="urd-panel__value">{{ammoText}}</span>
+        </div>
+    {{/if}}
+
+    {{!-- Attack Type --}}
+    <div class="urd-panel__field">
+        <span class="urd-panel__label">Attack Type{{#if usesAmmo}} <small>(max {{fireRate}} hits)</small>{{/if}}</span>
+        <select class="rt-prompt__select" name="action" id="action">
+            {{selectOptions actions selected=currentAction}}
+        </select>
+    </div>
+
+    {{!-- Called Shot --}}
+    {{#if isCalledShot}}
+        <div class="urd-panel__field">
+            <span class="urd-panel__label">Called Shot Location</span>
+            <select class="rt-prompt__select" name="calledShotLocation">
+                {{selectOptions locations selected=calledShotLocation}}
+            </select>
+        </div>
+    {{/if}}
+
+    {{!-- Las Firing Mode --}}
+    {{#if isLasWeapon}}
+        <div class="urd-panel__field">
+            <span class="urd-panel__label">Las Firing Mode</span>
+            <select class="rt-prompt__select" name="lasMode">
+                {{selectOptions (arrayToObject lasModes) selected=lasMode}}
+            </select>
+        </div>
+    {{/if}}
+
+    {{!-- Eye of Vengeance --}}
+    {{#if hasEyeOfVengeanceAvailable}}
+        <div class="urd-panel__checkbox">
+            <span class="urd-panel__label">Use Eye of Vengeance</span>
+            <input class="rt-prompt__input" type="checkbox" data-dtype="Boolean" name="eyeOfVengeance" {{checked eyeOfVengeance}} />
+        </div>
+    {{/if}}
+
+    {{!-- Aim (if not weapon modifier list) --}}
+    {{#if canAim}}
+        <div class="urd-panel__field">
+            <span class="urd-panel__label">Aim</span>
+            <select class="rt-prompt__select" data-dtype="Number" name="modifiers.aim">
+                {{selectOptions aims selected=rollData.modifiers.aim}}
+            </select>
+        </div>
+    {{/if}}
+
+    {{!-- Ranged weapon options --}}
+    {{#if weapon.isRanged}}
+        <div class="urd-panel__divider"></div>
+        <div class="urd-panel__field">
+            <span class="urd-panel__label">Distance (m)</span>
+            <input class="rt-prompt__input" type="number" data-dtype="Number" name="distance" value="{{distance}}" />
+        </div>
+        <div class="rt-prompt__range-info">
+            <span class="rt-prompt__range-label">{{rangeName}}</span>
+            <span class="rt-prompt__range-value {{#if (gt rangeBonus 0)}}rt-prompt__range-value--positive{{else if (lt rangeBonus 0)}}rt-prompt__range-value--negative{{else}}rt-prompt__range-value--neutral{{/if}}">
+                {{#if (gt rangeBonus 0)}}+{{/if}}{{rangeBonus}}
+            </span>
+        </div>
+        {{#if rangeModifiedBy}}
+            <div class="rt-prompt__hint">
+                <i class="fas fa-info-circle"></i>
+                Range modifier affected by {{rangeModifiedBy}}
+            </div>
+        {{/if}}
+        {{#if isMeltaRange}}
+            <div class="rt-prompt__hint rt-prompt__hint--melta">
+                <i class="fas fa-fire"></i>
+                Melta: Double penetration at this range
+            </div>
+        {{/if}}
+    {{/if}}
+
+    {{!-- Weapon attack mod --}}
+    {{#if rollData.modifiers.attack}}
+        <div class="urd-panel__field">
+            <span class="urd-panel__label">Weapon Attack Mod</span>
+            <span class="urd-panel__value">{{rollData.modifiers.attack}}</span>
+        </div>
+    {{/if}}
+{{/if}}

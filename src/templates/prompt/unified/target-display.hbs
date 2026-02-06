@@ -1,0 +1,60 @@
+{{!-- Unified Roll Dialog: Hero Target Number with Difficulty Picker --}}
+<div class="urd-target">
+    <div class="urd-target__row">
+        <div class="urd-target__hero">
+            <div class="urd-target__number {{targetColorClass}}" data-value="{{finalTarget}}">{{finalTarget}}</div>
+            <div class="urd-target__percent">%</div>
+        </div>
+
+        {{!-- Difficulty picker beside the target --}}
+        {{#if isForceField}}
+            <div class="urd-target__difficulty-label">Protection Rating</div>
+        {{else}}
+            <div class="urd-difficulty-picker">
+                <button type="button" class="urd-difficulty-picker__trigger" data-action="toggleDifficultyPicker">
+                    <span class="urd-difficulty-picker__label">{{difficulty.label}}</span>
+                    <span class="urd-difficulty-picker__mod">({{#if (gt difficulty.modifier 0)}}+{{/if}}{{difficulty.modifier}})</span>
+                    <i class="fas fa-caret-down urd-difficulty-picker__caret {{#if difficultyPickerOpen}}urd-difficulty-picker__caret--open{{/if}}"></i>
+                </button>
+                {{#if difficultyPickerOpen}}
+                <ul class="urd-difficulty-picker__list">
+                    {{#each difficultyPicker}}
+                    <li class="urd-difficulty-picker__item {{#if isCurrent}}urd-difficulty-picker__item--current{{/if}}"
+                        data-action="selectDifficulty" data-difficulty-index="{{index}}">
+                        <span class="urd-difficulty-picker__item-label">{{label}}</span>
+                        <span class="urd-difficulty-picker__item-mod {{#if (gt modifier 0)}}urd-difficulty-picker__item-mod--positive{{else if (lt modifier 0)}}urd-difficulty-picker__item-mod--negative{{/if}}">
+                            {{#if (gt modifier 0)}}+{{/if}}{{modifier}}
+                        </span>
+                    </li>
+                    {{/each}}
+                </ul>
+                {{/if}}
+            </div>
+        {{/if}}
+    </div>
+
+    {{!-- Breakdown line --}}
+    {{#unless isForceField}}
+    <div class="urd-target__breakdown">
+        <span class="urd-target__breakdown-item">Base {{baseTarget}}</span>
+        {{#if (ne difficultyMod 0)}}
+            <span class="urd-target__breakdown-sep">|</span>
+            <span class="urd-target__breakdown-item {{#if (gt difficultyMod 0)}}urd-target__breakdown-item--positive{{else}}urd-target__breakdown-item--negative{{/if}}">
+                {{difficulty.label}} {{#if (gt difficultyMod 0)}}+{{/if}}{{difficultyMod}}
+            </span>
+        {{/if}}
+        {{#if (ne situationalMod 0)}}
+            <span class="urd-target__breakdown-sep">|</span>
+            <span class="urd-target__breakdown-item {{#if (gt situationalMod 0)}}urd-target__breakdown-item--positive{{else}}urd-target__breakdown-item--negative{{/if}}">
+                Mods {{#if (gt situationalMod 0)}}+{{/if}}{{situationalMod}}
+            </span>
+        {{/if}}
+        {{#if (ne customMod 0)}}
+            <span class="urd-target__breakdown-sep">|</span>
+            <span class="urd-target__breakdown-item {{#if (gt customMod 0)}}urd-target__breakdown-item--positive{{else}}urd-target__breakdown-item--negative{{/if}}">
+                Custom {{#if (gt customMod 0)}}+{{/if}}{{customMod}}
+            </span>
+        {{/if}}
+    </div>
+    {{/unless}}
+</div>
