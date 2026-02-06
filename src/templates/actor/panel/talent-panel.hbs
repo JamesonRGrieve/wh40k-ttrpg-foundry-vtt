@@ -1,88 +1,45 @@
-{{!-- Talents Panel - Compact Table View with Filtering --}}
+{{!-- Talents Panel - Compact Table View --}}
 <div class="rt-panel rt-panel-talents-table">
     <div class="rt-panel-header">
         <span class="rt-panel-title">
             <i class="fas fa-star"></i> Talents
+            {{#if talentsCount}}<span class="rt-count-badge">{{talentsCount}}</span>{{/if}}
         </span>
-    </div>
-    
-    {{!-- Filter Controls --}}
-    <div class="rt-talents-filters">
-        <input type="text" 
-               class="rt-filter-search" 
-               name="talents-search" 
-               placeholder="Search talents..." 
-               data-action="filterTalents"
-               value="{{talentsFilter.search}}" />
-        
-        <select class="rt-filter-select" name="talents-category" data-action="filterTalents">
-            <option value="">All Categories</option>
-            {{#each talentCategories as |cat|}}
-            <option value="{{cat}}" {{#if (eq ../talentsFilter.category cat)}}selected{{/if}}>{{cat}}</option>
-            {{/each}}
-        </select>
-
-        {{#if (or talentsFilter.search talentsFilter.category talentsFilter.tier)}}
-        <button type="button" class="rt-filter-clear" data-action="clearTalentsFilter" title="Clear Filters">
-            <i class="fas fa-times"></i>
-        </button>
-        {{/if}}
     </div>
     
     <div class="rt-panel-body">
         <div class="rt-talents-table" data-drop-zone="talents" data-accepts="talent">
             {{#each talents as |talent|}}
-            <div class="rt-talent-row item-drag" data-item-id="{{talent.id}}" draggable="true">
-                <img class="rt-row-icon" src="{{talent.img}}" alt="{{talent.name}}" />
+            <div class="rt-tp_row" data-tooltip="{{talent.tooltipText}}">
+                <img class="rt-tp_icon" src="{{talent.img}}" alt="{{talent.name}}" />
                 
-                <div class="rt-row-main">
-                    <button type="button" class="rt-row-name" data-action="itemEdit" data-item-id="{{talent.id}}" title="Click to open item sheet">
-                        {{talent.fullName}}
-                        {{#if talent.flags.rogue-trader.autoGranted}}
-                        <span class="rt-granted-badge" title="Granted by {{talent.flags.rogue-trader.grantedBy}}">
-                            <i class="fas fa-gift"></i>
-                        </span>
-                        {{/if}}
-                    </button>
-                    
-                    <div class="rt-row-meta">
-                        <span class="rt-meta-item">
-                            <i class="fas {{talentIcon talent.system.category}}"></i> {{talent.categoryLabel}}
-                        </span>
-                        {{#if talent.system.tier}}
-                        <span class="rt-meta-item">
-                            Tier {{talent.system.tier}}
-                        </span>
-                        {{/if}}
-                        {{#if talent.system.stackable}}
-                        <span class="rt-meta-item rt-meta-rank">
-                            Rank {{talent.system.rank}}
-                        </span>
-                        {{/if}}
-                        {{#if talent.system.hasGrants}}
-                        <span class="rt-meta-item rt-meta-grants" title="This talent grants other abilities">
-                            <i class="fas fa-gift"></i> Grants
-                        </span>
-                        {{/if}}
-                    </div>
+                <button type="button" class="rt-tp_name" data-action="itemEdit" data-item-id="{{talent.id}}">
+                    {{talent.fullName}}
+                    {{#if talent.flags.rogue-trader.autoGranted}}
+                    <i class="fas fa-gift rt-tp_granted" title="Granted by {{talent.flags.rogue-trader.grantedBy}}"></i>
+                    {{/if}}
+                </button>
+                
+                <div class="rt-tp_meta">
+                    {{#if talent.system.tier}}<span class="rt-tp_tier">T{{talent.system.tier}}</span>{{/if}}
+                    <span class="rt-tp_category"><i class="fas {{talentIcon talent.system.category}}"></i></span>
+                    {{#if talent.system.stackable}}<span class="rt-tp_rank">×{{talent.system.rank}}</span>{{/if}}
                 </div>
                 
-                <div class="rt-row-actions">
-                    <button type="button" class="rt-talent-action-btn {{#if talent.isFavorite}}active{{/if}}"
+                <div class="rt-tp_actions">
+                    <button type="button" class="rt-tp_btn {{#if talent.isFavorite}}rt-tp_btn--active{{/if}}"
                             data-action="toggleFavoriteTalent" data-item-id="{{talent.id}}"
-                            title="{{#if talent.isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                            title="{{#if talent.isFavorite}}Unfavorite{{else}}Favorite{{/if}}">
                         <i class="{{#if talent.isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
                     </button>
-                    <button type="button" class="rt-talent-action-btn" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Send to Chat">
+                    <button type="button" class="rt-tp_btn" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Chat">
                         <i class="fas fa-comment"></i>
                     </button>
-<!--                    <button type="button" class="rt-talent-action-btn" data-action="toggleItemPreview" data-item-id="{{talent.id}}" title="Quick Preview">-->
-<!--                        <i class="fas fa-chevron-up"></i>-->
-<!--                    </button>-->
+                    <button type="button" class="rt-tp_btn rt-tp_btn--danger" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
             </div>
-            <!-- Item preview card container (populated by ItemPreviewMixin) -->
-            <div id="item-preview-{{talent.id}}" class="rt-item-preview-container" style="display: none;"></div>
             {{/each}}
         </div>
         

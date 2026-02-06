@@ -11,67 +11,6 @@
   }
 }
 
-// Filter Controls
-.rt-talents-filters {
-  display: flex;
-  align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm;
-  background: var(--rt-panel-bg-solid);
-  border-bottom: 1px solid var(--rt-border-color-light);
-  
-  .rt-filter-search {
-    flex: 1;
-    padding: 4px 8px;
-    background: var(--color-bg-option);
-    border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
-    color: var(--color-text-primary);
-    font-size: 0.85rem;
-    
-    &:focus {
-      outline: none;
-      border-color: $rt-accent-talents;
-      box-shadow: 0 0 0 2px rgba($rt-accent-talents, 0.1);
-    }
-    
-    &::placeholder {
-      color: $rt-text-muted;
-      opacity: 0.7;
-    }
-  }
-  
-  .rt-filter-select {
-    padding: 4px 8px;
-    background: var(--color-bg-option);
-    border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
-    color: var(--color-text-primary);
-    font-size: 0.85rem;
-    cursor: pointer;
-    
-    &:focus {
-      outline: none;
-      border-color: $rt-accent-talents;
-    }
-  }
-  
-  .rt-filter-clear {
-    padding: 4px 8px;
-    background: rgba($rt-color-crimson, 0.1);
-    border: 1px solid rgba($rt-color-crimson, 0.3);
-    border-radius: 4px;
-    color: $rt-color-crimson;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      background: rgba($rt-color-crimson, 0.2);
-      border-color: $rt-color-crimson;
-    }
-  }
-}
-
 // Table Containers
 .rt-talents-table,
 .rt-traits-table {
@@ -114,8 +53,153 @@
   }
 }
 
-// Table Rows
-.rt-talent-row,
+// ============================================
+// Talent Panel (rt-tp_) - Compact with Overlay Actions
+// ============================================
+// Modern design: Actions overlay the row on hover, giving
+// maximum space to talent names when not interacting
+
+.rt-tp_row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  background: var(--rt-panel-bg-solid);
+  border: 1px solid var(--rt-border-color-light);
+  border-left: 3px solid $rt-accent-talents;
+  border-radius: 4px;
+  min-height: 28px;
+  transition: border-color 0.15s ease;
+  // Explicitly prevent dragging
+  -webkit-user-drag: none;
+  user-select: none;
+  
+  &:hover {
+    border-color: var(--rt-border-color);
+    
+    .rt-tp_actions {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .rt-tp_meta {
+      opacity: 0;
+    }
+  }
+}
+
+.rt-tp_icon {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--rt-border-color-light);
+  border-radius: 3px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.rt-tp_name {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--rt-text-dark);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  &:hover {
+    color: $rt-accent-talents;
+  }
+}
+
+.rt-tp_granted {
+  margin-left: 4px;
+  font-size: 0.6rem;
+  color: $rt-color-gold;
+  cursor: help;
+}
+
+.rt-tp_meta {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  color: var(--rt-text-muted);
+  transition: opacity 0.1s ease;
+}
+
+.rt-tp_tier {
+  padding: 1px 4px;
+  background: rgba($rt-accent-talents, 0.15);
+  border: 1px solid rgba($rt-accent-talents, 0.3);
+  border-radius: 3px;
+  font-weight: 700;
+  color: $rt-accent-talents;
+  font-size: 0.55rem;
+}
+
+.rt-tp_category {
+  i {
+    font-size: 0.6rem;
+  }
+}
+
+.rt-tp_rank {
+  color: $rt-accent-talents;
+  font-weight: 700;
+}
+
+// Overlay actions - positioned absolute over the meta area
+.rt-tp_actions {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 1px;
+  align-items: center;
+  padding: 2px 4px;
+  background: linear-gradient(90deg, transparent 0%, var(--rt-panel-bg-solid) 20%);
+  border-radius: 3px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
+.rt-tp_btn {
+  background: none;
+  border: none;
+  color: var(--rt-text-muted);
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 3px;
+  transition: all 0.1s ease;
+  font-size: 0.7rem;
+  
+  &:hover {
+    background: rgba($rt-color-gold, 0.2);
+    color: $rt-color-gold;
+  }
+  
+  &.rt-tp_btn--active {
+    color: $rt-color-gold;
+  }
+  
+  &.rt-tp_btn--danger:hover {
+    color: $rt-color-crimson;
+    background: rgba($rt-color-crimson, 0.15);
+  }
+}
+
+// Trait rows - keep existing styling with drag support
 .rt-trait-row {
   display: flex;
   align-items: center;
@@ -123,12 +207,12 @@
   padding: 6px $rt-space-sm;
   background: var(--rt-panel-bg-solid);
   border: 1px solid var(--rt-border-color-light);
-  border-left: 3px solid $rt-accent-talents;
+  border-left: 3px solid $rt-accent-equipment;
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.2s ease;
+  min-height: 40px;
   cursor: grab;
-  min-height: 40px; // Ensure consistent row height
   
   &:hover {
     background: var(--rt-panel-bg);
@@ -144,13 +228,13 @@
     opacity: 0.4;
     cursor: grabbing;
   }
+  
+  .rt-row-name:hover {
+    color: $rt-accent-equipment;
+  }
 }
 
-.rt-trait-row {
-  border-left-color: $rt-accent-equipment;
-}
-
-// Row Icon
+// Shared row components (used by traits)
 .rt-row-icon {
   width: 28px;
   height: 28px;
@@ -168,17 +252,17 @@
   text-align: center;
 }
 
-// Row Main Content
-.rt-row-main {
+// Trait row main content
+.rt-trait-row .rt-row-main {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 0; // Critical for text-overflow to work in flex
-  overflow: hidden; // Prevent content overflow
+  min-width: 0;
+  overflow: hidden;
 }
 
-.rt-row-name {
+.rt-trait-row .rt-row-name {
   background: transparent;
   border: none;
   padding: 0;
@@ -190,81 +274,45 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 100%; // Ensure button takes full width for ellipsis
+  width: 100%;
   
   &:hover {
-    color: $rt-accent-talents;
+    color: $rt-accent-equipment;
   }
 }
 
-.rt-trait-row .rt-row-name:hover {
-  color: $rt-accent-equipment;
-}
-
-.rt-row-meta {
+.rt-trait-row .rt-row-meta {
   display: flex;
   gap: $rt-space-sm;
   flex-wrap: wrap;
   font-size: 0.7rem;
   color: var(--rt-text-muted);
-  align-items: center; // Ensure vertical alignment
-  line-height: 1.2; // Prevent extra height
+  align-items: center;
+  line-height: 1.2;
 }
 
 .rt-meta-item {
   display: flex;
   align-items: center;
   gap: 3px;
-  white-space: nowrap; // Prevent mid-word wrapping
+  white-space: nowrap;
   
   i {
     font-size: 0.7rem;
-    flex-shrink: 0; // Icons don't shrink
+    flex-shrink: 0;
   }
 }
 
-.rt-meta-rank {
-  color: $rt-accent-talents;
-  font-weight: 600;
-}
-
-.rt-meta-grants {
-  color: $rt-color-gold;
-  font-weight: 600;
-}
-
-// Granted badge (inline with talent name)
-.rt-granted-badge {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 6px;
-  padding: 2px 6px;
-  background: linear-gradient(135deg, 
-    rgba($rt-color-gold, 0.15) 0%, 
-    rgba($rt-color-gold, 0.08) 100%);
-  border: 1px solid rgba($rt-color-gold, 0.3);
-  border-radius: 3px;
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: $rt-color-gold;
-  cursor: help;
-  
-  i {
-    font-size: 0.7rem;
-  }
-}
-
-// Row Actions
-.rt-row-actions {
+// Trait row actions (keep visible, not hover-reveal)
+.rt-trait-row .rt-row-actions {
   display: flex;
   gap: 2px;
   align-items: center;
   margin-left: auto;
   flex-shrink: 0;
-  width: 100px;
 }
 
-.rt-talent-action-btn {
+.rt-action-btn {
   background: none;
   border: none;
   color: var(--rt-text-muted);
@@ -272,35 +320,20 @@
   padding: 4px 6px;
   border-radius: 3px;
   transition: all 0.2s ease;
-  font-size: 1rem;
+  font-size: 0.85rem;
   
   &:hover {
     background: rgba($rt-color-gold, 0.1);
     color: $rt-color-gold;
-    transform: scale(1.1);
   }
 
   &.active {
     color: $rt-color-gold;
-    i {
-      filter: drop-shadow(0 0 2px rgba($rt-color-gold, 0.5));
-    }
-  }
-
-  &.rt-btn-expand {
-    i {
-      transition: transform 0.2s ease;
-    }
-    
-    &.expanded i {
-      transform: rotate(180deg);
-    }
   }
   
   &.rt-btn-danger:hover {
-    color: var(--rt-wounds-secondary);
-    background: var(--rt-wounds-bg);
-    border-color: var(--rt-wounds-border);
+    color: $rt-color-crimson;
+    background: rgba($rt-color-crimson, 0.1);
   }
 }
 

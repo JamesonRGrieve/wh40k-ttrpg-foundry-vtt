@@ -1,104 +1,70 @@
-{{!-- Specialist Skills Panel (unwrapped - parent provides rt-panel wrapper if needed) --}}
+{{!-- Specialist Skills Panel - Only shows skills that have entries --}}
 <div class="rt-panel rt-specialist-panel">
     <div class="rt-panel-header">
         <span class="rt-panel-title"><i class="fas fa-graduation-cap"></i> Specialist Skills</span>
+        <button type="button" class="rt-specialist-add-btn" data-action="openAddSpecialistDialog" title="Add Specialist Skill">
+            <i class="fas fa-plus"></i>
+        </button>
     </div>
     <div class="rt-panel-body">
-        {{#if skillLists.specialist}}
-        {{#each skillLists.specialist as |entry|}}
-        <div class="rt-specialist-group{{#if entry.[1].advanced}} rt-specialist-group--advanced{{/if}}" data-skill="{{entry.[0]}}">
-            <!-- Group Header -->
-            <div class="rt-specialist-header">
-                <span class="rt-specialist-name">{{entry.[1].label}}</span>
-                <span class="rt-specialist-char">({{entry.[1].charShort}})</span>
-                
-                {{#if entry.[1].suggestedSpecializations.length}}
-                <!-- Dropdown for predefined specializations -->
-                <select class="rt-specialist-select" data-action="addSpecialistSkill" data-skill="{{entry.[0]}}" title="Add a specialization">
-                    <option value="">-- Add Specialization --</option>
-                    {{#each entry.[1].suggestedSpecializations as |spec|}}
-                    <option value="{{spec}}">{{spec}}</option>
-                    {{/each}}
-                </select>
-                {{else}}
-                <!-- Freeform button if no suggestions -->
-                <button type="button" class="rt-specialist-add" data-action="addSpecialistSkill" data-skill="{{entry.[0]}}" title="Add {{entry.[1].label}} specialization">
-                    <i class="fas fa-plus"></i>
-                </button>
-                {{/if}}
-            </div>
-            
-            <!-- Entries -->
-            <div class="rt-specialist-entries">
+        {{#if skillLists.hasSpecialistEntries}}
+            {{#each skillLists.specialist as |entry|}}
                 {{#if entry.[1].entries.length}}
-                    {{#each entry.[1].entries as |spec idx|}}
-                    {{#with (lookup ../entry 0) as |skillKey|}}
-                    <div class="rt-specialist-entry" data-skill="{{skillKey}}" data-index="{{idx}}">
-                        <div class="rt-spec-name">
-                            <input type="text" 
-                                   name="system.skills.{{skillKey}}.entries.{{idx}}.name" 
-                                   value="{{spec.name}}" 
-                                   placeholder="Specialization..." />
-                        </div>
-                        <div class="rt-spec-training">
-                            <button type="button" class="rt-train-btn {{#if spec.trained}}active{{/if}}" 
-                                    data-action="toggleTraining"
-                                    data-skill="{{skillKey}}"
-                                    data-index="{{idx}}"
-                                    data-level="1"
-                                    title="Trained (+0)">T</button>
-                            <button type="button" class="rt-train-btn {{#if spec.plus10}}active{{/if}}"
-                                    data-action="toggleTraining"
-                                    data-skill="{{skillKey}}"
-                                    data-index="{{idx}}"
-                                    data-level="2"
-                                    title="+10 (+10)">+10</button>
-                            <button type="button" class="rt-train-btn {{#if spec.plus20}}active{{/if}}"
-                                    data-action="toggleTraining"
-                                    data-skill="{{skillKey}}"
-                                    data-index="{{idx}}"
-                                    data-level="3"
-                                    title="+20 (+20)">+20</button>
-                        </div>
-                        <div class="rt-spec-bonus">
-                            <input type="number" 
-                                   name="system.skills.{{skillKey}}.entries.{{idx}}.bonus" 
-                                   value="{{spec.bonus}}" 
-                                   data-dtype="Number"
-                                   title="Bonus modifier" />
-                        </div>
-                        <div class="rt-spec-total" title="{{spec.breakdown}}">{{spec.current}}</div>
-                        <div class="rt-spec-actions">
-                            <button type="button" class="rt-spec-roll roll-skill" 
-                                    data-action="roll" data-roll-type="skill"
-                                    data-roll-target="{{skillKey}}" 
-                                    data-specialty="{{idx}}" 
-                                    title="Roll {{spec.name}}">
-                                <i class="fas fa-dice-d20"></i>
-                            </button>
-                            <button type="button" class="rt-spec-delete delete-specialization" 
-                                    data-action="deleteSpecialization"
-                                    data-skill="{{skillKey}}" 
-                                    data-index="{{idx}}" 
-                                    title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
+                <div class="rt-specialist-group{{#if entry.[1].advanced}} rt-specialist-group--advanced{{/if}}" data-skill="{{entry.[0]}}">
+                    <!-- Group Header -->
+                    <div class="rt-specialist-header">
+                        <span class="rt-specialist-name">{{entry.[1].label}}</span>
+                        <span class="rt-specialist-char">({{entry.[1].charShort}})</span>
                     </div>
-                    {{/with}}
-                    {{/each}}
-                {{else}}
-                    <div class="rt-specialist-empty">
-                        <span>No specializations yet. {{#if entry.[1].suggestedSpecializations.length}}Select from the dropdown above to add one.{{else}}Click the + button to add one.{{/if}}</span>
+                    
+                    <!-- Entries -->
+                    <div class="rt-specialist-entries">
+                        {{#each entry.[1].entries as |spec|}}
+                        <div class="rt-specialist-entry" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">
+                            <div class="rt-spec-info">
+                                <span class="rt-spec-name">{{spec.name}}</span>
+                                <button type="button" class="rt-spec-roll" 
+                                        data-action="roll" data-roll-type="skill"
+                                        data-roll-target="{{spec.skillKey}}" 
+                                        data-specialty="{{spec.entryIndex}}" 
+                                        title="Roll {{spec.name}}">
+                                    <i class="fas fa-dice-d20"></i>
+                                </button>
+                                <button type="button" class="rt-spec-favorite {{#if spec.isFavorite}}active{{/if}}" 
+                                        data-action="toggleFavoriteSpecialistSkill" 
+                                        data-skill="{{spec.skillKey}}"
+                                        data-index="{{spec.entryIndex}}"
+                                        title="{{#if spec.isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                                    <i class="{{#if spec.isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                                </button>
+                                <button type="button" class="rt-spec-delete" 
+                                        data-action="deleteSpecialization"
+                                        data-skill="{{spec.skillKey}}" 
+                                        data-index="{{spec.entryIndex}}" 
+                                        title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <div class="rt-spec-training rt-training-display">
+                                <span class="rt-train-indicator {{#if (gte spec.trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
+                                <span class="rt-train-indicator {{#if (gte spec.trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
+                                <span class="rt-train-indicator {{#if (gte spec.trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
+                            </div>
+                            <div class="rt-spec-total" title="{{spec.breakdown}}">
+                                <span>{{spec.current}}</span>
+                            </div>
+                        </div>
+                        {{/each}}
                     </div>
+                </div>
                 {{/if}}
-            </div>
-        </div>
-        {{/each}}
+            {{/each}}
         {{else}}
-        <div class="rt-specialist-empty">
-            <span>No specialist skill data available.</span>
-        </div>
+            <div class="rt-specialist-empty">
+                <i class="fas fa-graduation-cap"></i>
+                <p>No specialist skills yet</p>
+                <span>Click the <i class="fas fa-plus"></i> button above to add your first specialization</span>
+            </div>
         {{/if}}
     </div>
 </div>
