@@ -14,7 +14,6 @@ import EnhancedDragDropMixin from '../api/drag-drop-visual-mixin.mjs';
 import WhatIfMixin from '../api/what-if-mixin.mjs';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.mjs';
 import { ActiveModifiersMixin, ItemPreviewMixin } from '../components/_module.mjs';
-import { EquipmentLoadoutMixin } from '../components/equipment-loadout.mjs';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.mjs';
 // import EffectCreationDialog from '../prompts/effect-creation-dialog.mjs';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.mjs';
@@ -25,16 +24,14 @@ const { ActorSheetV2 } = foundry.applications.sheets;
  * Base actor sheet built on ApplicationV2.
  * All actor sheets should extend this class.
  */
-export default class BaseActorSheet extends EquipmentLoadoutMixin(
-    ActiveModifiersMixin(
-        ItemPreviewMixin(
-            StatBreakdownMixin(
-                WhatIfMixin(
-                    EnhancedDragDropMixin(
-                        ContextMenuMixin(
-                            CollapsiblePanelMixin(
-                                EnhancedAnimationsMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ActorSheetV2))))),
-                            ),
+export default class BaseActorSheet extends ActiveModifiersMixin(
+    ItemPreviewMixin(
+        StatBreakdownMixin(
+            WhatIfMixin(
+                EnhancedDragDropMixin(
+                    ContextMenuMixin(
+                        CollapsiblePanelMixin(
+                            EnhancedAnimationsMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ActorSheetV2))))),
                         ),
                     ),
                 ),

@@ -159,7 +159,6 @@
             "Ship": "Ship & Role"
         },
         "Equipment": {
-            "LoadoutManager": "Loadout Manager",
             "ProtectionMatrix": "Protection Matrix",
             "Containers": "Containers",
             "OnPerson": "Carried on Person",

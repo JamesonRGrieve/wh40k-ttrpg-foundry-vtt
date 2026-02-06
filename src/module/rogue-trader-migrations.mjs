@@ -2,7 +2,7 @@ import { RogueTraderSettings } from './rogue-trader-settings.mjs';
 import { SYSTEM_ID } from './constants.mjs';
 
 export async function checkAndMigrateWorld() {
-    const worldVersion = 184;
+    const worldVersion = 185;
 
     const currentVersion = game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.worldVersion);
     if (worldVersion !== currentVersion && game.user.isGM) {
@@ -251,6 +251,17 @@ export async function checkAndMigrateWorld() {
                 }
             }
         }
+
+        // Remove deprecated loadout system flags (v185)
+        if (currentVersion < 185) {
+            const flags = actor.flags?.['rogue-trader'];
+            if (flags?.equipmentViewMode !== undefined || flags?.equipmentPresets !== undefined) {
+                await actor.update({
+                    'flags.rogue-trader.-=equipmentViewMode': null,
+                    'flags.rogue-trader.-=equipmentPresets': null,
+                });
+            }
+        }
     }
 
     async function displayReleaseNotes(version) {
@@ -323,6 +334,15 @@ export async function checkAndMigrateWorld() {
                         'Fixed armour coverage field migration (Array to Set).',
                         'Fixed null HTMLField values in item descriptions and sources.',
                         'Consolidated duplicate migration logic in data models.',
+                    ],
+                });
+                break;
+            case 185:
+                await releaseNotes({
+                    version: '1.8.5',
+                    notes: [
+                        'Removed the equipment loadout/slots system to simplify character sheets.',
+                        'Cleaned up deprecated actor flags (equipmentViewMode, equipmentPresets).',
                     ],
                 });
                 break;
