@@ -184,10 +184,10 @@ export default class AcolyteSheet extends BaseActorSheet {
     static TABS = [
         { tab: 'overview', label: 'RT.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
         { tab: 'skills', label: 'RT.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
+        { tab: 'talents', label: 'RT.Tabs.Talents', group: 'primary', cssClass: 'tab-talents' },
         { tab: 'combat', label: 'RT.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
         { tab: 'equipment', label: 'RT.Tabs.Equipment', group: 'primary', cssClass: 'tab-equipment' },
-        { tab: 'talents', label: 'RT.Tabs.Talents', group: 'primary', cssClass: 'tab-talents' },
-        { tab: 'powers', label: 'RT.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
+        // { tab: 'powers', label: 'RT.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
         { tab: 'biography', label: 'RT.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
     ];
 
@@ -2611,7 +2611,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                     <label for="skill-select">Select Skill Type</label>
                     <select id="skill-select" name="skillKey" required style="width: 100%; padding: 8px; font-size: 1rem;">
                         <option value="">-- Choose a skill --</option>
-                        ${specialistSkills.map(s => `<option value="${s.key}">${s.label} (${s.characteristic})</option>`).join('')}
+                        ${specialistSkills.map((s) => `<option value="${s.key}">${s.label} (${s.characteristic})</option>`).join('')}
                     </select>
                 </div>
             </form>
