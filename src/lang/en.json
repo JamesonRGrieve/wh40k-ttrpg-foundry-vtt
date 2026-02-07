@@ -124,6 +124,24 @@
         "Change": "Change",
         "Armour": "Armour",
         "Movement": "Movement",
+        "MOVEMENT": {
+            "Label": "Movement",
+            "Type": {
+                "Half": "Half Move",
+                "Full": "Full Move",
+                "Charge": "Charge",
+                "Run": "Run"
+            }
+        },
+        "SETTINGS": {
+            "MovementAutomation": {
+                "Name": "Movement Automation",
+                "Hint": "Controls whether token movement enforces character movement speeds via the ruler.",
+                "Full": "Full Automation",
+                "Display": "Display Only (no cost enforcement)",
+                "None": "No Automation"
+            }
+        },
         "ActiveEffect": {
             "CreateEffect": "Create Active Effect",
             "UnknownSource": "Unknown Source",

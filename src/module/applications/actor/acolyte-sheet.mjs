@@ -36,6 +36,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             'combatAction': AcolyteSheet.#combatAction,
             'vocalizeCombatAction': AcolyteSheet.#vocalizeCombatAction,
             'vocalizeMovement': AcolyteSheet.#vocalizeMovement,
+            'setMovementMode': AcolyteSheet.#setMovementMode,
 
             // Stat adjustment actions
             'adjustStat': AcolyteSheet.#adjustStat,
@@ -1584,6 +1585,33 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         // Create chat message
         await ChatMessage.create(chatData);
+    }
+
+    /**
+     * Set the active movement mode on the actor's token.
+     * Updates the token's movement action flag for ruler integration.
+     * @this {AcolyteSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #setMovementMode(event, target) {
+        const movementType = target.dataset.movementType;
+        if (!movementType) return;
+
+        // Find the actor's active token on the canvas
+        const token = this.actor.getActiveTokens()?.[0]?.document;
+        if (!token) {
+            ui.notifications.info(game.i18n.localize('RT.MOVEMENT.Label') + ': No active token on canvas.');
+            return;
+        }
+
+        // Store movement action on token flags
+        await token.update({ 'flags.rogue-trader.movementAction': movementType });
+
+        const config = CONFIG.rt.movementTypes[movementType];
+        const label = config ? game.i18n.localize(config.label) : movementType;
+        const speed = this.actor.system.movement[movementType];
+        ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
     }
 
     /* -------------------------------------------- */

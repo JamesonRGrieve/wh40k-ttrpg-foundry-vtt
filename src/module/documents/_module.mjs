@@ -6,3 +6,4 @@ export { RogueTraderVehicle } from "./vehicle.mjs";
 export { RogueTraderStarship } from "./starship.mjs";
 export { RogueTraderActiveEffect } from "./active-effect.mjs";
 export { ChatMessageRT } from "./chat-message.mjs";
+export { TokenDocumentRT } from "./token.mjs";

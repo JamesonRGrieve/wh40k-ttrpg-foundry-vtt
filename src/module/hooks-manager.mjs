@@ -68,6 +68,7 @@ import * as characterCreation from './applications/character-creation/_module.mj
 import * as npcApplications from './applications/npc/_module.mjs';
 
 import * as documents from './documents/_module.mjs';
+import TokenRulerRT from './canvas/ruler.mjs';
 import { SYSTEM_ID } from './constants.mjs';
 
 export { SYSTEM_ID };
@@ -163,6 +164,10 @@ Enable Debug with: game.rt.debug = true
         CONFIG.Item.documentClass = RogueTraderItem;
         CONFIG.ActiveEffect.documentClass = documents.RogueTraderActiveEffect;
         CONFIG.ChatMessage.documentClass = documents.ChatMessageRT;
+
+        // Token document and movement
+        CONFIG.Token.documentClass = documents.TokenDocumentRT;
+        CONFIG.Token.rulerClass = TokenRulerRT;
 
         // Register custom Roll classes for serialization/deserialization
         CONFIG.Dice.rolls.push(dice.BasicRollRT, dice.D100Roll);
@@ -463,6 +468,13 @@ Enable Debug with: game.rt.debug = true
 
         RogueTraderSettings.registerSettings();
         HandlebarManager.loadTemplates();
+
+        // Register movement actions and Token HUD hooks (after settings are available)
+        documents.TokenDocumentRT.registerMovementActions();
+        documents.TokenDocumentRT.registerHUDListeners();
+        CONFIG.Token.movement.costAggregator = (results, distance, segment) => {
+            return Math.max(...results.map(i => i.cost));
+        };
     }
 
     static async ready() {

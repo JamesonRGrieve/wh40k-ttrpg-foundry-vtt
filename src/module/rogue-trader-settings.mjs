@@ -7,7 +7,8 @@ export class RogueTraderSettings {
         simpleAttackRolls: 'simple-attack-rolls',
         simplePsychicRolls: 'simple-psychic-rolls',
         processActiveEffectsDuringCombat: 'active-effects-during-combat',
-        combatPresets: 'combat-presets'
+        combatPresets: 'combat-presets',
+        movementAutomation: 'movement-automation',
     }
 
     static registerSettings() {
@@ -54,6 +55,19 @@ export class RogueTraderSettings {
             config: false,
             default: [],
             type: Array,
+        });
+        game.settings.register(SYSTEM_ID, RogueTraderSettings.SETTINGS.movementAutomation, {
+            name: 'RT.SETTINGS.MovementAutomation.Name',
+            hint: 'RT.SETTINGS.MovementAutomation.Hint',
+            scope: 'world',
+            config: true,
+            default: 'full',
+            type: String,
+            choices: {
+                full: 'RT.SETTINGS.MovementAutomation.Full',
+                display: 'RT.SETTINGS.MovementAutomation.Display',
+                none: 'RT.SETTINGS.MovementAutomation.None',
+            },
         });
     }
 }
