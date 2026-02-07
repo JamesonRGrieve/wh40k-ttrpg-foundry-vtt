@@ -13,19 +13,23 @@
         <div class="rt-movement-section">
             <div class="rt-movement-header">Standard Movement</div>
             <div class="rt-movement-rates">
-                <div class="rt-movement-item">
+                <div class="rt-movement-item" data-action="setMovementMode" data-movement-type="half"
+                     title="Click to set Half Move as active movement mode">
                     <span class="rt-movement-label">Half</span>
                     <span class="rt-movement-value">{{actor.movement.half}}m</span>
                 </div>
-                <div class="rt-movement-item">
+                <div class="rt-movement-item" data-action="setMovementMode" data-movement-type="full"
+                     title="Click to set Full Move as active movement mode">
                     <span class="rt-movement-label">Full</span>
                     <span class="rt-movement-value">{{actor.movement.full}}m</span>
                 </div>
-                <div class="rt-movement-item">
+                <div class="rt-movement-item" data-action="setMovementMode" data-movement-type="charge"
+                     title="Click to set Charge as active movement mode">
                     <span class="rt-movement-label">Charge</span>
                     <span class="rt-movement-value">{{actor.movement.charge}}m</span>
                 </div>
-                <div class="rt-movement-item">
+                <div class="rt-movement-item" data-action="setMovementMode" data-movement-type="run"
+                     title="Click to set Run as active movement mode">
                     <span class="rt-movement-label">Run</span>
                     <span class="rt-movement-value">{{actor.movement.run}}m</span>
                 </div>

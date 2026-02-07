@@ -110,12 +110,20 @@
   border: 1px solid $rt-border-light;
   border-radius: 6px;
   transition: all 0.2s ease;
+  cursor: pointer;
   
   &:hover {
     background: rgba(255, 255, 255, 0.8);
     border-color: $rt-border-medium;
     transform: translateY(-2px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  &.active,
+  &[data-action="setMovementMode"]:active {
+    border-color: $rt-accent-gold;
+    box-shadow: 0 0 6px rgba($rt-accent-gold, 0.4);
+    background: rgba($rt-accent-gold, 0.08);
   }
   
   i {
@@ -332,9 +340,14 @@
   background: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   transition: background 0.15s ease;
+  cursor: pointer;
   
   &:hover {
     background: rgba(255, 255, 255, 0.8);
+  }
+
+  &[data-action="setMovementMode"]:active {
+    background: rgba($rt-accent-gold, 0.15);
   }
 }
 
@@ -590,5 +603,55 @@
     color: #e74c3c;
     font-weight: 700;
   }
+}
+
+// ============================================
+// Token HUD Movement Buttons
+// ============================================
+.rt-token-movement {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  padding: 4px;
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.rt-token-movement__btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: #ddd;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #fff;
+  }
+
+  &.active {
+    background: rgba(52, 152, 219, 0.6);
+    border-color: rgba(52, 152, 219, 0.8);
+    color: #fff;
+  }
+
+  i {
+    font-size: 0.8rem;
+  }
+}
+
+.rt-token-movement__value {
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
 }
 

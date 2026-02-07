@@ -49,6 +49,48 @@ ROGUE_TRADER.availabilities = {
 };
 
 /* -------------------------------------------- */
+/*  Movement Types                              */
+/* -------------------------------------------- */
+
+/**
+ * Movement types for token movement actions.
+ * Maps to the movement values calculated in creature.mjs _prepareMovement().
+ * @type {Object<string, {label: string, icon: string, order: number}>}
+ */
+ROGUE_TRADER.movementTypes = {
+    half: {
+        label: 'RT.MOVEMENT.Type.Half',
+        icon: 'fa-solid fa-person-walking',
+        order: 1,
+    },
+    full: {
+        label: 'RT.MOVEMENT.Type.Full',
+        icon: 'fa-solid fa-person-walking-arrow-right',
+        order: 2,
+    },
+    charge: {
+        label: 'RT.MOVEMENT.Type.Charge',
+        icon: 'fa-solid fa-person-running',
+        order: 3,
+    },
+    run: {
+        label: 'RT.MOVEMENT.Type.Run',
+        icon: 'fa-solid fa-person-running-fast',
+        order: 4,
+    },
+};
+
+/**
+ * Colors used to denote movement speed on ruler segments & grid highlighting.
+ * @enum {number}
+ */
+ROGUE_TRADER.tokenRulerColors = {
+    normal: 0x33BC4E,
+    double: 0xF1D836,
+    triple: 0xE72124,
+};
+
+/* -------------------------------------------- */
 /*  Craftsmanship                               */
 /* -------------------------------------------- */
 

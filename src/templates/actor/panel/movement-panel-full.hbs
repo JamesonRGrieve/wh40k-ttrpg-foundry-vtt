@@ -14,7 +14,8 @@
         
         {{!-- Movement Speeds - Always Visible --}}
         <div class="rt-mobility-speeds">
-            <div class="rt-speed-box rt-speed-half">
+            <div class="rt-speed-box rt-speed-half" data-action="setMovementMode" data-movement-type="half"
+                 title="Click to set Half Move as active movement mode">
                 <i class="fas fa-walking"></i>
                 <div class="rt-speed-data">
                     <span class="rt-speed-value">{{system.movement.half}}</span>
@@ -23,7 +24,8 @@
                 <span class="rt-speed-label">Half</span>
             </div>
             
-            <div class="rt-speed-box rt-speed-full">
+            <div class="rt-speed-box rt-speed-full" data-action="setMovementMode" data-movement-type="full"
+                 title="Click to set Full Move as active movement mode">
                 <i class="fas fa-shoe-prints"></i>
                 <div class="rt-speed-data">
                     <span class="rt-speed-value">{{system.movement.full}}</span>
@@ -32,7 +34,8 @@
                 <span class="rt-speed-label">Full</span>
             </div>
             
-            <div class="rt-speed-box rt-speed-charge">
+            <div class="rt-speed-box rt-speed-charge" data-action="setMovementMode" data-movement-type="charge"
+                 title="Click to set Charge as active movement mode">
                 <i class="fas fa-running"></i>
                 <div class="rt-speed-data">
                     <span class="rt-speed-value">{{system.movement.charge}}</span>
@@ -41,7 +44,8 @@
                 <span class="rt-speed-label">Charge</span>
             </div>
             
-            <div class="rt-speed-box rt-speed-run">
+            <div class="rt-speed-box rt-speed-run" data-action="setMovementMode" data-movement-type="run"
+                 title="Click to set Run as active movement mode">
                 <i class="fas fa-wind"></i>
                 <div class="rt-speed-data">
                     <span class="rt-speed-value">{{system.movement.run}}</span>
