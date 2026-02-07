@@ -785,6 +785,9 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _applyModifiersToSkills() {
+        // Recalculate skills from updated characteristic totals (which now include item modifiers)
+        this._prepareSkills();
+
         for (const [skillKey, skill] of Object.entries(this.skills)) {
             const itemMod = this._getTotalSkillModifier(skillKey);
             if (itemMod !== 0) {
