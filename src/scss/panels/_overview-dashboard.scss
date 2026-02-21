@@ -26,13 +26,12 @@
   }
   
   &.rt-dashboard-row--middle {
-    // Middle row: 1:2 ratio at 3+ cols, 1:1 at 2 cols, stacked at 1 col
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: repeat(var(--rt-columns, 3), 1fr);
     min-height: 140px;
   }
   
   &.rt-dashboard-row--bottom {
-    grid-template-columns: repeat(var(--rt-columns, 3), 1fr);
+    grid-template-columns: 1fr 2fr;
     min-height: 100px;
   }
 }
@@ -326,6 +325,12 @@
   align-items: center;
   gap: 6px;
   padding: 2px 0;
+
+  .rt-vital-controls {
+    margin-left: 0;
+    min-width: 70px;
+    justify-content: center;
+  }
 }
 
 .rt-mental-icon {
@@ -1109,11 +1114,239 @@
 }
 
 // ============================================
+// Zone 5: Equipped Weapons
+// ============================================
+
+.rt-zone-weapons {
+  border-left: 3px solid $rt-accent-combat;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba($rt-accent-combat, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: $rt-accent-combat;
+    }
+  }
+}
+
+.rt-ew-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rt-ew-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: var(--color-bg-option);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border-highlight);
+  }
+}
+
+.rt-ew-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.rt-ew-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.rt-ew-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rt-ew-meta {
+  display: flex;
+  gap: 6px;
+  font-size: 0.6rem;
+  color: var(--color-text-tertiary);
+}
+
+.rt-ew-class {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.rt-ew-damage {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  font-family: 'Modesto Condensed', serif;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.rt-ew-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 100%;
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+// ============================================
+// Zone 6: Progression (XP actions)
+// ============================================
+
+.rt-xp-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.rt-xp-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: rgba($rt-color-gold, 0.15);
+    border-color: $rt-color-gold;
+    color: $rt-color-gold;
+  }
+}
+
+// ============================================
+// Zone 6: Armour (overview inline silhouette)
+// ============================================
+
+.rt-zone-armour {
+  border-left: 3px solid #7f8c8d;
+  
+  .rt-zone-header {
+    background: linear-gradient(90deg, rgba(127, 140, 141, 0.12) 0%, var(--color-bg-tertiary) 100%);
+    
+    i {
+      color: #7f8c8d;
+    }
+  }
+}
+
+.rt-ov-armour-silhouette {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    ".       head      ."
+    "rarm    body      larm"
+    "rleg    .         lleg";
+  gap: 3px;
+  max-width: 180px;
+  margin: 0 auto;
+}
+
+.rt-ov-armour-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 2px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border-highlight);
+  }
+}
+
+.rt-ov-box-label {
+  font-size: 0.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  line-height: 1;
+  margin-bottom: 1px;
+}
+
+.rt-ov-box-ap {
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'Modesto Condensed', serif;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.rt-ov-box-head {
+  grid-area: head;
+  justify-self: center;
+  min-width: 44px;
+}
+
+.rt-ov-box-body {
+  grid-area: body;
+  min-height: 50px;
+  
+  .rt-ov-box-ap {
+    font-size: 1.1rem;
+  }
+}
+
+.rt-ov-box-right-arm {
+  grid-area: rarm;
+  align-self: center;
+}
+
+.rt-ov-box-left-arm {
+  grid-area: larm;
+  align-self: center;
+}
+
+.rt-ov-box-right-leg {
+  grid-area: rleg;
+  justify-self: end;
+}
+
+.rt-ov-box-left-leg {
+  grid-area: lleg;
+  justify-self: start;
+}
+
+// ============================================
 // Zone 8: Active Effects Preview
 // ============================================
 
 .rt-zone-effects {
   border-left: 3px solid #9b59b6;
+  
+  &.rt-zone-effects--wide {
+    grid-column: span 2;
+  }
   
   .rt-zone-header {
     background: linear-gradient(90deg, rgba(155, 89, 182, 0.12) 0%, var(--color-bg-tertiary) 100%);
@@ -1141,6 +1374,60 @@
   
   &.rt-effect-chip--disabled {
     opacity: 0.5;
+  }
+}
+
+.rt-effect-chip-controls {
+  display: flex;
+  gap: 2px;
+  margin-left: 2px;
+}
+
+.rt-effect-chip-btn {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  font-size: 0.6rem;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+  }
+  
+  &.rt-effect-chip-btn--danger:hover {
+    color: #e74c3c;
+  }
+}
+
+.rt-effect-create-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px dashed var(--color-border-secondary);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: rgba(155, 89, 182, 0.1);
+    border-color: #9b59b6;
+    color: #9b59b6;
   }
 }
 

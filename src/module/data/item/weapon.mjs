@@ -178,6 +178,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     prepareDerivedData() {
         super.prepareDerivedData();
 
+        // Weapons are always equipped unless stowed in ship storage
+        this.equipped = !this.inShipStorage;
+
         // Auto-derive twoHanded for heavy weapons (if not explicitly set)
         // This provides a sensible default while allowing manual override
         if (this.class === 'heavy' && !this.twoHanded) {

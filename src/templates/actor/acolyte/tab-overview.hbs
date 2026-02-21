@@ -94,13 +94,29 @@
                     <div class="rt-mental-row">
                         <span class="rt-mental-icon"><i class="fas fa-skull"></i></span>
                         <span class="rt-mental-label">Corruption</span>
-                        <span class="rt-mental-value">{{system.corruption}}</span>
+                        <div class="rt-vital-controls">
+                            <button type="button" class="rt-vital-btn" data-action="decrement" data-field="system.corruption" data-min="0" title="−1">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="rt-mental-value">{{system.corruption}}</span>
+                            <button type="button" class="rt-vital-btn" data-action="increment" data-field="system.corruption" data-max="100" title="+1">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                         <span class="rt-mental-degree {{corruptionDegreeClass system.corruption}}">{{corruptionDegree system.corruption}}</span>
                     </div>
                     <div class="rt-mental-row">
                         <span class="rt-mental-icon"><i class="fas fa-brain"></i></span>
                         <span class="rt-mental-label">Insanity</span>
-                        <span class="rt-mental-value">{{system.insanity}}</span>
+                        <div class="rt-vital-controls">
+                            <button type="button" class="rt-vital-btn" data-action="decrement" data-field="system.insanity" data-min="0" title="−1">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="rt-mental-value">{{system.insanity}}</span>
+                            <button type="button" class="rt-vital-btn" data-action="increment" data-field="system.insanity" data-max="100" title="+1">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                         <span class="rt-mental-degree {{insanityDegreeClass system.insanity}}">{{insanityDegree system.insanity}}</span>
                     </div>
                 </div>
@@ -182,10 +198,42 @@
             </div>
         </div>
         
-        {{!-- Row 2: Movement & Load | Quick Combat Stats --}}
+        {{!-- Row 2: Equipped Weapons | Movement & Load | Armour --}}
         <div class="rt-dashboard-row rt-dashboard-row--middle">
             
-            {{!-- Zone 4: Movement & Load --}}
+            {{!-- Zone 4: Equipped Weapons --}}
+            <div class="rt-dashboard-zone rt-zone-weapons">
+                <div class="rt-zone-header">
+                    <i class="fas fa-crosshairs"></i>
+                    <span>Equipped Weapons</span>
+                </div>
+                <div class="rt-zone-content">
+                    {{#if equippedWeapons.length}}
+                    <div class="rt-ew-list">
+                        {{#each equippedWeapons as |weapon|}}
+                        <div class="rt-ew-row" data-action="itemEdit" data-item-id="{{weapon.id}}" title="Open {{weapon.name}}">
+                            <img class="rt-ew-icon" src="{{weapon.img}}" alt="{{weapon.name}}" />
+                            <div class="rt-ew-info">
+                                <span class="rt-ew-name">{{weapon.name}}</span>
+                                <span class="rt-ew-meta">
+                                    <span class="rt-ew-class">{{weapon.system.class}}</span>
+                                    {{#if weapon.system.rangeLabel}}<span class="rt-ew-range">{{weapon.system.rangeLabel}}</span>{{/if}}
+                                </span>
+                            </div>
+                            <span class="rt-ew-damage">{{weapon.system.damageLabel}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{else}}
+                    <div class="rt-ew-empty">
+                        <i class="fas fa-crosshairs"></i>
+                        <span>No weapons equipped</span>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            
+            {{!-- Zone 5: Movement & Load --}}
             <div class="rt-dashboard-zone rt-zone-movement">
                 <div class="rt-zone-header">
                     <i class="fas fa-running"></i>
@@ -223,83 +271,47 @@
                 </div>
             </div>
             
-            {{!-- Zone 5: Quick Combat Stats --}}
-            <div class="rt-dashboard-zone rt-zone-combat">
+            {{!-- Zone 6: Armour --}}
+            <div class="rt-dashboard-zone rt-zone-armour">
                 <div class="rt-zone-header">
-                    <i class="fas fa-crosshairs"></i>
-                    <span>Quick Combat</span>
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Armour</span>
                 </div>
                 <div class="rt-zone-content">
-                    {{!-- Primary Weapon --}}
-                    {{#if primaryWeapon}}
-                    <div class="rt-combat-weapon">
-                        <span class="rt-weapon-icon"><i class="fas fa-crosshairs"></i></span>
-                        <span class="rt-weapon-name">{{primaryWeapon.name}}</span>
-                        <span class="rt-weapon-damage">{{primaryWeapon.system.damage.formula}} {{primaryWeapon.system.damage.type}}</span>
-                        <button type="button" 
-                                class="rt-weapon-attack-btn"
-                                data-action="itemRoll"
-                                data-item-id="{{primaryWeapon.id}}"
-                                title="Attack with {{primaryWeapon.name}}">
-                            <i class="fas fa-dice"></i>
-                        </button>
-                    </div>
-                    {{else}}
-                    <div class="rt-combat-weapon rt-empty">
-                        <span class="rt-weapon-empty">No weapon equipped</span>
-                    </div>
-                    {{/if}}
-                    
-                    {{!-- Combat Stats --}}
-                    <div class="rt-combat-stats-row">
-                        <div class="rt-combat-stat">
-                            <span class="rt-stat-label">SB Dmg</span>
-                            <span class="rt-stat-value">+{{actor.characteristics.strength.bonus}}</span>
+                    <div class="rt-ov-armour-silhouette">
+                        <div class="rt-ov-armour-box rt-ov-box-head" title="Head: 01-10">
+                            <span class="rt-ov-box-label">Head</span>
+                            <span class="rt-ov-box-ap">{{system.armour.head.total}}</span>
                         </div>
-                        <div class="rt-combat-stat">
-                            <span class="rt-stat-label">Dodge</span>
-                            <span class="rt-stat-value">{{dodgeTarget}}</span>
+                        <div class="rt-ov-armour-box rt-ov-box-right-arm" title="R.Arm: 11-20">
+                            <span class="rt-ov-box-label">R.Arm</span>
+                            <span class="rt-ov-box-ap">{{system.armour.rightArm.total}}</span>
                         </div>
-                        <div class="rt-combat-stat">
-                            <span class="rt-stat-label">Parry</span>
-                            <span class="rt-stat-value">{{parryTarget}}</span>
+                        <div class="rt-ov-armour-box rt-ov-box-body" title="Body: 31-70">
+                            <span class="rt-ov-box-label">Body</span>
+                            <span class="rt-ov-box-ap">{{system.armour.body.total}}</span>
+                        </div>
+                        <div class="rt-ov-armour-box rt-ov-box-left-arm" title="L.Arm: 21-30">
+                            <span class="rt-ov-box-label">L.Arm</span>
+                            <span class="rt-ov-box-ap">{{system.armour.leftArm.total}}</span>
+                        </div>
+                        <div class="rt-ov-armour-box rt-ov-box-right-leg" title="R.Leg: 71-85">
+                            <span class="rt-ov-box-label">R.Leg</span>
+                            <span class="rt-ov-box-ap">{{system.armour.rightLeg.total}}</span>
+                        </div>
+                        <div class="rt-ov-armour-box rt-ov-box-left-leg" title="L.Leg: 86-00">
+                            <span class="rt-ov-box-label">L.Leg</span>
+                            <span class="rt-ov-box-ap">{{system.armour.leftLeg.total}}</span>
                         </div>
                     </div>
-                    
-                    {{!-- Armour Summary --}}
-                    <div class="rt-armour-summary">
-                        <span class="rt-armour-label">Armour:</span>
-                        <span class="rt-armour-loc">H({{actor.armour.head.total}})</span>
-                        <span class="rt-armour-loc">B({{actor.armour.body.total}})</span>
-                        <span class="rt-armour-loc">RA({{actor.armour.rightArm.total}})</span>
-                        <span class="rt-armour-loc">LA({{actor.armour.leftArm.total}})</span>
-                        <span class="rt-armour-loc">RL({{actor.armour.rightLeg.total}})</span>
-                        <span class="rt-armour-loc">LL({{actor.armour.leftLeg.total}})</span>
-                    </div>
-                    
-                    {{!-- Force Field (if any) --}}
-                    {{#if hasForceField}}
-                    <div class="rt-forcefield-row">
-                        <span class="rt-ff-icon"><i class="fas fa-shield-alt"></i></span>
-                        <span class="rt-ff-name">{{forceField.name}}</span>
-                        <span class="rt-ff-rating">{{forceField.system.rating}}</span>
-                        <button type="button" 
-                                class="rt-ff-toggle {{#if forceField.system.activated}}rt-ff-active{{/if}}"
-                                data-action="toggleActivate"
-                                data-item-id="{{forceField.id}}"
-                                title="Toggle Force Field">
-                            {{#if forceField.system.activated}}<i class="fas fa-power-off"></i>{{else}}<i class="far fa-circle"></i>{{/if}}
-                        </button>
-                    </div>
-                    {{/if}}
                 </div>
             </div>
         </div>
         
-        {{!-- Row 3: Progression | Wealth & Dynasty --}}
+        {{!-- Row 3: Progression | Active Effects (2-wide) --}}
         <div class="rt-dashboard-row rt-dashboard-row--bottom">
             
-            {{!-- Zone 6: Progression --}}
+            {{!-- Zone 7: Progression --}}
             <div class="rt-dashboard-zone rt-zone-progression">
                 <div class="rt-zone-header">
                     <i class="fas fa-graduation-cap"></i>
@@ -322,40 +334,18 @@
                         <span class="rt-xp-label">Rank</span>
                         <span class="rt-xp-value rt-rank-value">{{system.rogueTrader.rank}}</span>
                     </div>
+                    <div class="rt-xp-actions">
+                        <button type="button" class="rt-xp-action-btn" data-action="customXP" title="Add XP">
+                            <i class="fas fa-plus"></i> Add XP
+                        </button>
+                        <button type="button" class="rt-xp-action-btn" data-action="openAdvancement" title="Buy Advancements">
+                            <i class="fa-solid fa-arrow-up-big-small"></i> Advance
+                        </button>
+                    </div>
                 </div>
             </div>
             
-            {{!-- Zone 7: Wealth & Dynasty --}}
-            <div class="rt-dashboard-zone rt-zone-dynasty">
-                <div class="rt-zone-header">
-                    <i class="fas fa-coins"></i>
-                    <span>Wealth & Dynasty</span>
-                </div>
-                <div class="rt-zone-content">
-                    <div class="rt-dynasty-row rt-pf-row">
-                        <span class="rt-dynasty-label">Profit Factor</span>
-                        <span class="rt-dynasty-value rt-pf-value">{{system.rogueTrader.profitFactor.current}}</span>
-                    </div>
-                    {{#if system.rogueTrader.acquisitions.length}}
-                    <div class="rt-dynasty-row">
-                        <span class="rt-dynasty-label">Acquisitions</span>
-                        <span class="rt-dynasty-value">{{system.rogueTrader.acquisitions.length}} items</span>
-                    </div>
-                    {{/if}}
-                    {{#if system.rogueTrader.endeavour.name}}
-                    <div class="rt-dynasty-row rt-endeavour-row">
-                        <span class="rt-dynasty-label">Endeavour</span>
-                        <span class="rt-dynasty-value rt-endeavour-name">{{system.rogueTrader.endeavour.name}}</span>
-                    </div>
-                    <div class="rt-dynasty-row">
-                        <span class="rt-dynasty-label">Progress</span>
-                        <span class="rt-dynasty-value">{{system.rogueTrader.endeavour.achievementPointsCurrent}}/{{system.rogueTrader.endeavour.achievementPointsRequired}} AP</span>
-                    </div>
-                    {{/if}}
-                </div>
-            </div>
-            
-            {{!-- Zone 8: Active Effects Preview --}}
+            {{!-- Zone 8: Active Effects (takes 2fr column) --}}
             <div class="rt-dashboard-zone rt-zone-effects">
                 <div class="rt-zone-header">
                     <i class="fas fa-magic"></i>
@@ -368,6 +358,20 @@
                         <div class="rt-effect-chip {{#if effect.disabled}}rt-effect-chip--disabled{{/if}}" title="{{effect.name}}">
                             <img src="{{effect.icon}}" alt="" class="rt-effect-icon-mini" />
                             <span class="rt-effect-name-mini">{{effect.name}}</span>
+                            <div class="rt-effect-chip-controls">
+                                <button type="button" class="rt-effect-chip-btn"
+                                        data-action="toggleEffect"
+                                        data-effect-id="{{effect.id}}"
+                                        title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}}">
+                                    <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
+                                </button>
+                                <button type="button" class="rt-effect-chip-btn rt-effect-chip-btn--danger"
+                                        data-action="deleteEffect"
+                                        data-effect-id="{{effect.id}}"
+                                        title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
                         {{/each}}
                     </div>
@@ -376,11 +380,11 @@
                         <span>No active effects</span>
                     </div>
                     {{/if}}
+                    <button type="button" class="rt-effect-create-btn" data-action="createEffect" title="Create Effect">
+                        <i class="fas fa-plus"></i> New Effect
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-    
-    {{!-- Active Modifiers Panel (NEW - Phase 5 Integration) --}}
-    {{> systems/rogue-trader/templates/components/active-modifiers-panel.hbs modifiers=activeModifiers}}
 </section>
