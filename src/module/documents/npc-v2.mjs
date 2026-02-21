@@ -1,6 +1,9 @@
 import { RogueTraderBaseActor } from './base-actor.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.mjs';
+import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
+import { SYSTEM_ID } from '../constants.mjs';
+import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
 
 /**
  * Document class for npcV2 type actors.
@@ -151,6 +154,48 @@ export class RogueTraderNPCV2 extends RogueTraderBaseActor {
         rollData.baseTarget = char.total;
         rollData.modifiers.modifier = 0;
         await prepareUnifiedRoll(simpleSkillData);
+    }
+
+    /**
+     * Roll an embedded item (weapon, psychic power, etc.).
+     * NPCs skip equipped checks since they're GM-controlled.
+     * @param {string} itemId - The embedded item ID.
+     * @returns {Promise}
+     */
+    async rollItem(itemId) {
+        const item = this.items.get(itemId);
+        if (!item) return;
+
+        switch (item.type) {
+            case 'weapon': {
+                if (game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
+                    const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
+                    await this.rollCharacteristic(charKey, item.name);
+                } else {
+                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
+                }
+                return;
+            }
+            case 'psychicPower': {
+                if (game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simplePsychicRolls)) {
+                    await this.rollCharacteristic('willpower', item.name);
+                } else {
+                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                }
+                return;
+            }
+            default: {
+                const { DHBasicActionManager } = await import('../actions/basic-action-manager.mjs');
+                await DHBasicActionManager.sendItemVocalizeChat({
+                    actor: this.name,
+                    name: item.name,
+                    type: item.type?.toUpperCase(),
+                    description: await TextEditor.enrichHTML(item.system.benefit ?? item.system.description ?? '', {
+                        rollData: { actor: this, item },
+                    }),
+                });
+            }
+        }
     }
 
     /**

@@ -67,7 +67,6 @@
         <div class="rt-panel-header">
           <i class="fa-solid fa-shield-halved"></i>
           <span>Armour & Hit Locations</span>
-          <span class="rt-tb-badge" title="Toughness Bonus">TB {{toughnessBonus}}</span>
           {{#if editable}}
           <button class="rt-header-btn" type="button" data-action="toggleArmourMode" title="Toggle Simple/Locations">
             <i class="fa-solid fa-arrows-rotate"></i>
@@ -89,7 +88,11 @@
               {{else}}
               <span class="rt-loc-ap">{{value}}</span>
               {{/if}}
+              {{#if ../editable}}
+              <span class="rt-loc-dr" title="TB {{../toughnessBonus}} + AP {{value}} = DR {{dr}}">DR {{dr}} <small class="rt-loc-dr-breakdown">({{../toughnessBonus}}+{{value}})</small></span>
+              {{else}}
               <span class="rt-loc-dr" title="Damage Reduction (TB+AP)">DR {{dr}}</span>
+              {{/if}}
             </div>
             {{/each}}
           </div>
