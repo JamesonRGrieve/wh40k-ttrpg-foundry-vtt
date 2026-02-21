@@ -65,27 +65,34 @@
     <span class="rt-edit-toggle-label">{{#if editable}}Editing{{else}}Locked{{/if}}</span>
   </button>
 
-  {{!-- GM Toolbar (compact vertical) --}}
+  {{!-- GM Toolbar — collapsible --}}
   {{#if isGM}}
-  <div class="rt-gm-tools">
-    <button class="rt-tool-btn" data-action="setupToken" type="button" data-tooltip="Configure Token">
-      <i class="fa-solid fa-chess-pawn"></i>
+  <div class="rt-gm-tools-wrapper">
+    <button class="rt-gm-tools-toggle" type="button" data-action="toggleGMTools" data-tooltip="GM Tools">
+      <i class="fa-solid fa-toolbox"></i>
+      <span>GM Tools</span>
+      <i class="fa-solid fa-chevron-down rt-gm-chevron"></i>
     </button>
-    <button class="rt-tool-btn" data-action="duplicateNPC" type="button" data-tooltip="Clone NPC">
-      <i class="fa-solid fa-clone"></i>
-    </button>
-    <button class="rt-tool-btn" data-action="scaleToThreat" type="button" data-tooltip="Scale to Threat">
-      <i class="fa-solid fa-scale-balanced"></i>
-    </button>
-    <button class="rt-tool-btn" data-action="exportStatBlock" type="button" data-tooltip="Export Stat Block">
-      <i class="fa-solid fa-file-export"></i>
-    </button>
-    <button class="rt-tool-btn" data-action="calculateDifficulty" type="button" data-tooltip="Calculate Difficulty">
-      <i class="fa-solid fa-calculator"></i>
-    </button>
-    <button class="rt-tool-btn rt-tool-btn--danger" data-action="deleteNPC" type="button" data-tooltip="Delete NPC">
-      <i class="fa-solid fa-trash-can"></i>
-    </button>
+    <div class="rt-gm-tools" hidden>
+      <button class="rt-tool-btn" data-action="setupToken" type="button" data-tooltip="Configure Token">
+        <i class="fa-solid fa-chess-pawn"></i>
+      </button>
+      <button class="rt-tool-btn" data-action="duplicateNPC" type="button" data-tooltip="Clone NPC">
+        <i class="fa-solid fa-clone"></i>
+      </button>
+      <button class="rt-tool-btn" data-action="scaleToThreat" type="button" data-tooltip="Scale to Threat">
+        <i class="fa-solid fa-scale-balanced"></i>
+      </button>
+      <button class="rt-tool-btn" data-action="exportStatBlock" type="button" data-tooltip="Export Stat Block">
+        <i class="fa-solid fa-file-export"></i>
+      </button>
+      <button class="rt-tool-btn" data-action="calculateDifficulty" type="button" data-tooltip="Calculate Difficulty">
+        <i class="fa-solid fa-calculator"></i>
+      </button>
+      <button class="rt-tool-btn rt-tool-btn--danger" data-action="deleteNPC" type="button" data-tooltip="Delete NPC">
+        <i class="fa-solid fa-trash-can"></i>
+      </button>
+    </div>
   </div>
   {{/if}}
 

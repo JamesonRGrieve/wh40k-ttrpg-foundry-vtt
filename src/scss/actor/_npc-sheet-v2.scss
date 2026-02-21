@@ -341,14 +341,49 @@ $bp-wide: 1200px;
         i { font-size: 0.85rem; }
     }
 
-    // GM Tools
+    // GM Tools (collapsible)
+    .rt-gm-tools-wrapper {
+        margin-top: auto; // Push to bottom of sidebar
+    }
+
+    .rt-gm-tools-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        width: 100%;
+        padding: 0.35rem 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--color-border-secondary, #444);
+        border-radius: 6px;
+        color: var(--color-text-light-secondary, #aaa);
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: all 0.15s;
+
+        &:hover {
+            border-color: $npc-accent-primary;
+            color: $npc-accent-primary;
+        }
+
+        span { flex: 1; text-align: left; }
+
+        .rt-gm-chevron {
+            font-size: 0.6rem;
+            transition: transform 0.2s;
+        }
+    }
+
+    .rt-gm-tools-wrapper.open .rt-gm-chevron {
+        transform: rotate(180deg);
+    }
+
     .rt-gm-tools {
         display: flex;
         flex-wrap: wrap;
         gap: 0.35rem;
         justify-content: center;
         padding: 0.5rem 0;
-        border-bottom: 1px solid var(--color-border-secondary, #444);
     }
 
     .rt-tool-btn {
