@@ -435,6 +435,12 @@ export default class NPCSheetV2 extends BaseActorSheet {
             { key: 'rightLeg', label: 'Right Leg', short: 'R.Leg', range: '71–85', value: getAP('rightLeg'), dr: getAP('rightLeg') + tb },
         ];
 
+        // Keyed map for body silhouette template access
+        context.hitLocMap = {};
+        for (const loc of context.hitLocations) {
+            context.hitLocMap[loc.key] = loc;
+        }
+
         // Movement
         context.movement = context.system.movement;
 

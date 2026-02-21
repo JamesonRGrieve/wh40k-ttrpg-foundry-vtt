@@ -58,12 +58,16 @@
     {{/each}}
   </nav>
 
+  {{!-- Edit Mode Toggle (always visible) --}}
+  <button class="rt-edit-toggle {{#if editable}}active{{/if}}" data-action="toggleEditMode" type="button"
+          data-tooltip="{{#if editable}}Lock Sheet{{else}}Edit Sheet{{/if}}">
+    <i class="fa-solid {{#if editable}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
+    <span class="rt-edit-toggle-label">{{#if editable}}Editing{{else}}Locked{{/if}}</span>
+  </button>
+
   {{!-- GM Toolbar (compact vertical) --}}
   {{#if isGM}}
   <div class="rt-gm-tools">
-    <button class="rt-tool-btn rt-tool-btn--edit {{#if editable}}active{{/if}}" data-action="toggleEditMode" type="button" data-tooltip="{{#if editable}}Lock Sheet{{else}}Edit Sheet{{/if}}">
-      <i class="fa-solid {{#if editable}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
-    </button>
     <button class="rt-tool-btn" data-action="setupToken" type="button" data-tooltip="Configure Token">
       <i class="fa-solid fa-chess-pawn"></i>
     </button>
