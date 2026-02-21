@@ -48,12 +48,12 @@
     {{#each tabs}}
     <button type="button"
             class="rt-nav-item {{#if active}}active{{/if}}"
-            data-action="changeTab"
+            data-action="tab"
             data-group="{{group}}"
-            data-tab="{{tab}}"
-            data-tooltip="{{label}}">
+            data-tab="{{id}}"
+            data-tooltip="{{localize label}}">
       <i class="{{icon}}"></i>
-      <span class="rt-nav-label">{{label}}</span>
+      <span class="rt-nav-label">{{localize label}}</span>
     </button>
     {{/each}}
   </nav>

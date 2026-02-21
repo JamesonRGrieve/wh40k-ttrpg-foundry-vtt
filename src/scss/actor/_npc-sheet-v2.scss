@@ -1249,6 +1249,49 @@ $bp-wide: 1200px;
         }
     }
 
+    // Proficiency Cycle Button (DnD5e-inspired)
+    .rt-skill-cycle {
+        width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        border-radius: 50%;
+        transition: all 0.15s;
+
+        &:hover {
+            background: rgba($npc-accent-skills, 0.15);
+        }
+
+        .rt-cycle-pip {
+            font-size: 0.6rem;
+            line-height: 1;
+        }
+
+        &.rt-skill-cycle--untrained .rt-cycle-pip {
+            color: var(--color-text-light-secondary, #666);
+        }
+
+        &.rt-skill-cycle--trained .rt-cycle-pip {
+            color: $npc-accent-skills;
+        }
+
+        &.rt-skill-cycle--plus10 .rt-cycle-pip {
+            color: $npc-accent-skills;
+            font-weight: 700;
+        }
+
+        &.rt-skill-cycle--plus20 .rt-cycle-pip {
+            color: $npc-accent-primary;
+            font-weight: 700;
+        }
+    }
+
     // Talent/Trait Chips
     .rt-talent-chips,
     .rt-trait-chips {
@@ -1530,13 +1573,145 @@ $bp-wide: 1200px;
         gap: 0.75rem;
     }
 
+    // ── Combat Header: Wounds + Quick Stats ──
+    .rt-combat-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.5rem 0.75rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .rt-combat-wounds {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+
+        .rt-wounds-icon {
+            font-size: 1.25rem;
+            color: $npc-accent-combat;
+        }
+
+        .rt-wounds-info {
+            flex: 0 0 auto;
+            min-width: 90px;
+        }
+    }
+
+    .rt-combat-quickstats {
+        display: flex;
+        gap: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    .rt-quickstat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.2);
+        min-width: 42px;
+
+        &.rollable {
+            cursor: pointer;
+            &:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        i {
+            font-size: 0.75rem;
+            color: var(--color-text-light-secondary, #aaa);
+            margin-bottom: 2px;
+        }
+
+        .rt-quickstat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-text-light-primary, #f0f0f0);
+        }
+
+        .rt-quickstat-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-light-secondary, #aaa);
+        }
+
+        &.rt-quickstat--critical {
+            border: 1px solid $npc-accent-combat;
+            .rt-quickstat-value { color: $npc-accent-combat; }
+        }
+    }
+
+    // ── Combat Grid: 3-column ──
+    .rt-combat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    // ── Defense Buttons ──
+    .rt-defense-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .rt-defense-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        padding: 0.5rem;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        cursor: pointer;
+        color: var(--color-text-light-primary, #f0f0f0);
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: $npc-accent-gold;
+        }
+
+        i {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: $npc-accent-gold;
+        }
+
+        .rt-defense-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .rt-defense-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-light-secondary, #aaa);
+        }
+    }
+
+    // ── Panel: Defenses ──
+    .rt-panel--defenses {
+        .rt-panel-header > i:first-child {
+            color: $npc-accent-gold;
+        }
+    }
+
+    // Legacy vitals grid (for backwards compat if needed)
     .rt-combat-vitals {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 0.75rem;
     }
 
-    // Wounds Panel
+    // Wounds Panel (legacy selector)
     .rt-panel--wounds {
         .rt-panel-header > i:first-child {
             color: $npc-accent-combat;
@@ -1591,6 +1766,13 @@ $bp-wide: 1200px;
         background: linear-gradient(90deg, $npc-accent-combat, darken($npc-accent-combat, 15%));
         border-radius: 4px;
         transition: width 0.3s;
+    }
+
+    .rt-wounds-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        flex-shrink: 0;
     }
 
     .rt-damage-controls {

@@ -29,12 +29,11 @@ export default class NPCSheetV2 extends BaseActorSheet {
             height: 700,
         },
         actions: {
-            changeTab: NPCSheetV2.#onChangeTab,
             // Horde actions
             toggleHordeMode: NPCSheetV2.#toggleHordeMode,
             applyMagnitudeDamage: NPCSheetV2.#applyMagnitudeDamage,
             restoreMagnitude: NPCSheetV2.#restoreMagnitude,
-            // Roll actions
+            // Roll actions (rollCharacteristic & rollSkill kept for NPC-specific roll paths)
             rollCharacteristic: NPCSheetV2.#rollCharacteristic,
             rollSkill: NPCSheetV2.#rollSkill,
             rollWeapon: NPCSheetV2.#rollWeapon,
@@ -51,6 +50,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
             removeTrainedSkill: NPCSheetV2.#removeTrainedSkill,
             toggleFavoriteSkill: NPCSheetV2.#toggleFavoriteSkill,
             setSkillLevel: NPCSheetV2.#setSkillLevel,
+            cycleSkillLevel: NPCSheetV2.#cycleSkillLevel,
             // Ability actions
             pinAbility: NPCSheetV2.#pinAbility,
             unpinAbility: NPCSheetV2.#unpinAbility,
@@ -177,9 +177,6 @@ export default class NPCSheetV2 extends BaseActorSheet {
         // Prepare items (talents, traits)
         await this._prepareItems(context);
 
-        // Prepare tabs
-        context.tabs = this._prepareTabs();
-
         return context;
     }
 
@@ -272,51 +269,21 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
-    /**
-     * Prepare tabs configuration.
-     * @returns {Array} Tabs configuration array.
-     * @protected
-     */
-    _prepareTabs() {
-        return this.constructor.TABS.map((tab) => ({
-            id: tab.tab,
-            tab: tab.tab,
-            group: tab.group,
-            label: game.i18n.localize(tab.label),
-            icon: tab.icon,
-            active: this.tabGroups[tab.group] === tab.tab,
-            cssClass: tab.cssClass,
-        }));
-    }
-
     /* -------------------------------------------- */
 
     /** @inheritDoc */
     async _preparePartContext(partId, context, options) {
         context = await super._preparePartContext(partId, context, options);
 
-        // Add tab metadata for all tab parts
-        const tabParts = ['overview', 'combat', 'abilities'];
-        if (tabParts.includes(partId)) {
-            const tabConfig = this.constructor.TABS.find((t) => t.tab === partId);
-            context.tab = {
-                id: partId,
-                group: tabConfig?.group || 'primary',
-                active: this.tabGroups.primary === partId,
-                cssClass: tabConfig?.cssClass || '',
-            };
-        }
-
         // Prepare tab-specific context
         switch (partId) {
             case 'navigation':
-                // Navigation part gets all context, no special prep needed
                 break;
             case 'overview':
                 this._prepareOverviewContext(context);
-                this._prepareSkillsContext(context); // Skills now part of overview
-                this._prepareAbilitiesContext(context); // Talents/traits on overview
-                this._prepareNotesContext(context); // Notes now part of overview
+                this._prepareSkillsContext(context);
+                this._prepareAbilitiesContext(context);
+                this._prepareNotesContext(context);
                 break;
             case 'combat':
                 this._prepareCombatContext(context);
@@ -539,16 +506,30 @@ export default class NPCSheetV2 extends BaseActorSheet {
                 target -= 20; // Untrained penalty
             }
 
+            // Proficiency cycle display data
+            const plus10 = trainedData?.plus10 || false;
+            const plus20 = trainedData?.plus20 || false;
+            let levelClass = 'untrained';
+            let levelTooltip = 'Untrained (click to train)';
+            if (plus20) { levelClass = 'plus20'; levelTooltip = '+20 Expert (click to remove)'; }
+            else if (plus10) { levelClass = 'plus10'; levelTooltip = '+10 Experienced (click for +20)'; }
+            else if (isTrained) { levelClass = 'trained'; levelTooltip = 'Trained (click for +10)'; }
+
             return {
                 ...skill,
                 isTrained,
                 trained: isTrained,
-                plus10: trainedData?.plus10 || false,
-                plus20: trainedData?.plus20 || false,
+                plus10,
+                plus20,
                 target,
+                levelClass,
+                levelTooltip,
                 isFavorite: favoriteSkillKeys.includes(skill.key),
             };
         });
+
+        // Trained skill count for display
+        context.trainedSkillCount = context.basicSkillsList.filter(s => s.isTrained).length;
 
         // Mark favorite status on trained skills list
         context.trainedSkillsList = context.trainedSkillsList.map((skill) => ({
@@ -1065,6 +1046,57 @@ export default class NPCSheetV2 extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
+     * Handle cycling skill training level (proficiency cycle).
+     * Click cycles: Untrained → Trained → +10 → +20 → Untrained
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #cycleSkillLevel(event, target) {
+        event.preventDefault();
+        const skillKey = target.dataset.skill;
+        if (!skillKey) return;
+
+        const currentSkills = foundry.utils.deepClone(this.actor.system.trainedSkills) || {};
+        const current = currentSkills[skillKey];
+
+        // Skill characteristic mapping
+        const skillCharMap = {
+            acrobatics: 'agility', athletics: 'strength', awareness: 'perception',
+            charm: 'fellowship', command: 'fellowship', commerce: 'fellowship',
+            deceive: 'fellowship', dodge: 'agility', inquiry: 'fellowship',
+            interrogation: 'willpower', intimidate: 'strength', logic: 'intelligence',
+            medicae: 'intelligence', parry: 'weaponSkill', psyniscience: 'perception',
+            scrutiny: 'perception', security: 'intelligence', sleightOfHand: 'agility',
+            stealth: 'agility', survival: 'perception', techUse: 'intelligence',
+        };
+
+        // Determine current level and cycle to next
+        // Untrained → Trained → +10 → +20 → Untrained
+        if (!current) {
+            // Untrained → Trained
+            currentSkills[skillKey] = {
+                name: skillKey,
+                characteristic: skillCharMap[skillKey] || 'perception',
+                trained: true, plus10: false, plus20: false, bonus: 0,
+            };
+            await this.actor.update({ 'system.trainedSkills': currentSkills });
+        } else if (current.trained && !current.plus10 && !current.plus20) {
+            // Trained → +10
+            currentSkills[skillKey] = { ...current, plus10: true, plus20: false };
+            await this.actor.update({ 'system.trainedSkills': currentSkills });
+        } else if (current.plus10 && !current.plus20) {
+            // +10 → +20
+            currentSkills[skillKey] = { ...current, plus10: true, plus20: true };
+            await this.actor.update({ 'system.trainedSkills': currentSkills });
+        } else {
+            // +20 → Untrained (remove)
+            await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Handle pinning an ability.
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
@@ -1517,24 +1549,6 @@ export default class NPCSheetV2 extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
-
-    /**
-     * Handle tab change.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static #onChangeTab(event, target) {
-        event.preventDefault();
-        const tab = target.dataset.tab;
-        const group = target.dataset.group || 'primary';
-        if (!tab) return;
-
-        // Update tab groups
-        this.tabGroups[group] = tab;
-
-        // Re-render the sheet with the new tab active
-        this.render({ parts: ['overview', 'combat', 'abilities'] });
-    }
 
     /* -------------------------------------------- */
     /*  Overrides                                   */
