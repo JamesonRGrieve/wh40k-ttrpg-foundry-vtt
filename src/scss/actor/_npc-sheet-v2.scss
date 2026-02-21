@@ -1675,13 +1675,13 @@ $bp-wide: 1200px;
 
         &:hover {
             background: rgba(255, 255, 255, 0.1);
-            border-color: $npc-accent-gold;
+            border-color: $npc-accent-primary;
         }
 
         i {
             font-size: 1rem;
             margin-bottom: 0.25rem;
-            color: $npc-accent-gold;
+            color: $npc-accent-primary;
         }
 
         .rt-defense-value {
@@ -1700,7 +1700,7 @@ $bp-wide: 1200px;
     // ── Panel: Defenses ──
     .rt-panel--defenses {
         .rt-panel-header > i:first-child {
-            color: $npc-accent-gold;
+            color: $npc-accent-primary;
         }
     }
 
