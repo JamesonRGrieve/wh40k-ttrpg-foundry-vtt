@@ -24,6 +24,8 @@ export class BasicActionManager {
                 el.addEventListener('click', async (ev) => await this._fateReroll(ev)));
             html.querySelectorAll('.roll-control__assign-damage').forEach(el => 
                 el.addEventListener('click', async (ev) => await this._assignDamage(ev)));
+            html.querySelectorAll('.roll-control__roll-damage').forEach(el => 
+                el.addEventListener('click', async (ev) => await this._rollDamage(ev)));
             html.querySelectorAll('.roll-control__apply-damage').forEach(el => 
                 el.addEventListener('click', async (ev) => await this._applyDamage(ev)));
         });
@@ -58,6 +60,50 @@ export class BasicActionManager {
         if (targetEl) {
             targetEl.style.display = targetEl.style.display === 'none' ? '' : 'none';
         }
+    }
+
+    async _rollDamage(event) {
+        event.preventDefault();
+        const btn = event.currentTarget;
+        const rollId = btn.dataset.rollId;
+        const actionData = this.getActionData(rollId);
+        if (!actionData) {
+            ui.notifications.warn('Roll data no longer available. Cannot roll damage.');
+            return;
+        }
+
+        // Disable button to prevent double-rolling
+        btn.disabled = true;
+        btn.querySelector('span:last-child').textContent = 'Rolled';
+
+        // Calculate hits (deferred from attack roll)
+        await actionData.calculateHits();
+
+        // Build template data
+        const damageRolls = actionData.damageData.hits
+            .map(h => h.damageRoll)
+            .filter(r => r);
+        const templateData = {
+            weaponName: actionData.rollData.name,
+            hits: actionData.damageData.hits,
+            targetActor: actionData.rollData.targetActor,
+            psychicEffect: actionData.psychicEffect || null,
+        };
+
+        const template = 'systems/rogue-trader/templates/chat/damage-roll-chat.hbs';
+        const html = await renderTemplate(template, templateData);
+        const chatData = {
+            user: game.user.id,
+            rollMode: game.settings.get('core', 'rollMode'),
+            content: html,
+            rolls: damageRolls,
+        };
+        if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
+            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+        } else if (chatData.rollMode === 'selfroll') {
+            chatData.whisper = [game.user];
+        }
+        await ChatMessage.create(chatData);
     }
 
     async _refundResources(event) {
