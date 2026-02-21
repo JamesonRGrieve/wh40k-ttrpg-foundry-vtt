@@ -1870,6 +1870,11 @@ $bp-wide: 1200px;
             min-width: 32px;
             text-align: right;
         }
+
+        .rt-loc-dr-breakdown {
+            font-size: 0.55rem;
+            color: var(--color-text-light-secondary, #666);
+        }
     }
 
     .rt-armour-simple-edit {
