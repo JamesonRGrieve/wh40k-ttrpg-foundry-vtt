@@ -12,7 +12,9 @@
     .window-content {
         background: transparent;
         padding: 0;
-        overflow: visible;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-height: 85vh;
     }
 }
 

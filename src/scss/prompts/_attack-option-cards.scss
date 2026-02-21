@@ -58,6 +58,30 @@
     transition: transform $rt-transition-fast;
 }
 
+// Inline summary shown when section is collapsed
+.urd-card-group__summary {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    font-size: $rt-font-size-2xs;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+
+    &-label {
+        color: $rt-text-primary;
+    }
+
+    &-mod {
+        font-weight: 600;
+
+        &--positive { color: #4ade80; }
+        &--negative { color: #f87171; }
+        &--neutral { color: $rt-text-muted; }
+    }
+}
+
 .urd-card-group__action {
     margin-left: auto;
     padding: 2px $rt-space-sm;
@@ -81,19 +105,15 @@
     }
 }
 
-// ── Cards Container ──────────────────────────
+// ── Cards Grid Container ─────────────────────
 
 .urd-card-group__cards {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: $rt-space-xs;
 
     &--sub {
         padding-left: $rt-space-sm;
-    }
-
-    &--multi {
-        // Multi-select cards get a slightly different background hint
     }
 }
 
@@ -145,9 +165,11 @@
 
 .urd-card {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 4px $rt-space-sm;
+    justify-content: center;
+    gap: 2px;
+    padding: $rt-space-xs $rt-space-xs;
     background: $rt-bg-paper;
     border: 1px solid $rt-border-light;
     border-radius: $rt-radius-md;
@@ -157,8 +179,8 @@
     font-size: $rt-font-size-2xs;
     color: $rt-text-secondary;
     position: relative;
-    min-height: 28px;
-    white-space: nowrap;
+    min-height: 44px;
+    text-align: center;
 
     &:hover:not(:disabled) {
         border-color: $rt-border-medium;
@@ -221,41 +243,34 @@
 .urd-card__icon {
     font-size: $rt-font-size-xs;
     color: $rt-text-muted;
-    width: 14px;
-    text-align: center;
-    flex-shrink: 0;
     transition: color $rt-transition-fast;
 }
 
 .urd-card__name {
     font-weight: 500;
-    flex-shrink: 0;
+    font-size: $rt-font-size-2xs;
+    line-height: 1.1;
 }
 
 .urd-card__badge {
-    padding: 0 4px;
-    font-size: 0.55rem;
+    padding: 0 3px;
+    font-size: 0.5rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     color: $rt-text-muted;
     background: $rt-bg-overlay-light;
     border-radius: $rt-radius-sm;
-    flex-shrink: 0;
 }
 
 .urd-card__range {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
     color: $rt-text-muted;
-    flex-shrink: 0;
 }
 
 .urd-card__mod {
     font-weight: 600;
     font-size: $rt-font-size-2xs;
-    flex-shrink: 0;
-    margin-left: auto;
-    padding-left: 4px;
 
     &--positive {
         color: #4ade80;

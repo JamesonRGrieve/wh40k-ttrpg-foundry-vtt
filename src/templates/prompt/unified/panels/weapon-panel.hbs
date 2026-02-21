@@ -87,77 +87,22 @@
         </div>
     {{/if}}
 
-    {{!-- ═══════ AIM ═══════ --}}
-    <div class="urd-card-group">
-        <div class="urd-card-group__title">
-            <i class="fas fa-eye"></i> Aim
-        </div>
-        <div class="urd-card-group__cards">
-            {{#each aimOptions}}
-                <button type="button"
-                        class="urd-card {{#if isSelected}}urd-card--selected{{/if}} {{#if disabled}}urd-card--disabled{{/if}}"
-                        data-action="selectAimMode" data-aim-key="{{key}}"
-                        data-tooltip="{{tooltip}}"
-                        {{#if disabled}}disabled{{/if}}>
-                    <i class="urd-card__icon {{icon}}"></i>
-                    <span class="urd-card__name">{{label}}</span>
-                    {{#if actionCost}}<span class="urd-card__badge">{{actionCost}}</span>{{/if}}
-                    <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
-                </button>
-            {{/each}}
-        </div>
-    </div>
-
-    {{!-- ═══════ RANGE (ranged only) ═══════ --}}
+    {{!-- ═══════ AIM (ranged only) ═══════ --}}
     {{#if isRanged}}
         <div class="urd-card-group">
             <div class="urd-card-group__title">
-                <i class="fas fa-ruler"></i> Range
-                <button type="button" class="urd-card-group__action" data-action="selectTarget">
-                    <i class="fas fa-crosshairs"></i> Select Target
-                </button>
+                <i class="fas fa-eye"></i> Aim
             </div>
             <div class="urd-card-group__cards">
-                {{#each rangeBrackets}}
+                {{#each aimOptions}}
                     <button type="button"
-                            class="urd-card {{#if isSelected}}urd-card--selected{{/if}}"
-                            data-action="selectRangeBracket" data-bracket="{{key}}"
-                            data-tooltip="{{label}}: {{rangeText}}">
-                        <span class="urd-card__name">{{label}}</span>
-                        {{#if rangeText}}<span class="urd-card__range">{{rangeText}}</span>{{/if}}
-                        <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
-                    </button>
-                {{/each}}
-            </div>
-            {{#if rangeModifiedBy}}
-                <div class="urd-card-group__hint">
-                    <i class="fas fa-info-circle"></i>
-                    Range modifier affected by {{rangeModifiedBy}}
-                </div>
-            {{/if}}
-            {{#if isMeltaRange}}
-                <div class="urd-card-group__hint urd-card-group__hint--melta">
-                    <i class="fas fa-fire"></i>
-                    Melta: Double penetration at this range
-                </div>
-            {{/if}}
-        </div>
-    {{/if}}
-
-    {{!-- ═══════ SITUATIONAL MODIFIERS ═══════ --}}
-    {{#if hasCombatSituationals}}
-        <div class="urd-card-group">
-            <div class="urd-card-group__title">
-                <i class="fas fa-sliders-h"></i> Situational
-            </div>
-            <div class="urd-card-group__cards urd-card-group__cards--multi">
-                {{#each combatSituationals}}
-                    <button type="button"
-                            class="urd-card urd-card--toggle {{#if isActive}}urd-card--active{{/if}}"
-                            data-action="toggleCombatSituational" data-situational-key="{{key}}"
-                            data-tooltip="{{tooltip}}">
+                            class="urd-card {{#if isSelected}}urd-card--selected{{/if}} {{#if disabled}}urd-card--disabled{{/if}}"
+                            data-action="selectAimMode" data-aim-key="{{key}}"
+                            data-tooltip="{{tooltip}}"
+                            {{#if disabled}}disabled{{/if}}>
                         <i class="urd-card__icon {{icon}}"></i>
                         <span class="urd-card__name">{{label}}</span>
+                        {{#if actionCost}}<span class="urd-card__badge">{{actionCost}}</span>{{/if}}
                         <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
                     </button>
                 {{/each}}
@@ -165,24 +110,113 @@
         </div>
     {{/if}}
 
-    {{!-- ═══════ SIZE MODIFIERS (collapsed) ═══════ --}}
-    <div class="urd-card-group urd-card-group--collapsible">
-        <button type="button" class="urd-card-group__title urd-card-group__title--toggle" data-action="toggleSizeSection">
-            <i class="fas fa-expand-arrows-alt"></i> Target Size
-            <i class="fas {{#if sizeExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} urd-card-group__chevron"></i>
-        </button>
-        {{#if sizeExpanded}}
-            <div class="urd-card-group__cards">
-                {{#each sizeOptions}}
-                    <button type="button"
-                            class="urd-card {{#if isSelected}}urd-card--selected{{/if}}"
-                            data-action="selectSizeModifier" data-size-key="{{key}}"
-                            data-tooltip="{{label}} target size modifier">
-                        <span class="urd-card__name">{{label}}</span>
-                        <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+    {{!-- ═══════ RANGE (ranged only, collapsible) ═══════ --}}
+    {{#if isRanged}}
+        <div class="urd-card-group urd-card-group--collapsible">
+            <button type="button" class="urd-card-group__title urd-card-group__title--toggle" data-action="toggleRangeSection">
+                <i class="fas fa-ruler"></i> Range
+                {{#unless rangeExpanded}}
+                    <span class="urd-card-group__summary">
+                        <span class="urd-card-group__summary-label">{{selectedRangeSummary.label}}</span>
+                        <span class="urd-card-group__summary-mod {{#if (gt selectedRangeSummary.modifier 0)}}urd-card-group__summary-mod--positive{{else if (lt selectedRangeSummary.modifier 0)}}urd-card-group__summary-mod--negative{{else}}urd-card-group__summary-mod--neutral{{/if}}">{{selectedRangeSummary.modifierLabel}}</span>
+                    </span>
+                {{/unless}}
+                <i class="fas {{#if rangeExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} urd-card-group__chevron"></i>
+            </button>
+            {{#if rangeExpanded}}
+                <div class="urd-card-group__cards">
+                    {{#each rangeBrackets}}
+                        <button type="button"
+                                class="urd-card {{#if isSelected}}urd-card--selected{{/if}}"
+                                data-action="selectRangeBracket" data-bracket="{{key}}"
+                                data-tooltip="{{label}}: {{rangeText}}">
+                            <span class="urd-card__name">{{label}}</span>
+                            {{#if rangeText}}<span class="urd-card__range">{{rangeText}}</span>{{/if}}
+                            <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+                        </button>
+                    {{/each}}
+                </div>
+                <div style="display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                    <button type="button" class="urd-card-group__action" data-action="selectTarget">
+                        <i class="fas fa-crosshairs"></i> Select Target
                     </button>
-                {{/each}}
-            </div>
-        {{/if}}
-    </div>
+                </div>
+                {{#if rangeModifiedBy}}
+                    <div class="urd-card-group__hint">
+                        <i class="fas fa-info-circle"></i>
+                        Range modifier affected by {{rangeModifiedBy}}
+                    </div>
+                {{/if}}
+                {{#if isMeltaRange}}
+                    <div class="urd-card-group__hint urd-card-group__hint--melta">
+                        <i class="fas fa-fire"></i>
+                        Melta: Double penetration at this range
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
+    {{/if}}
+
+    {{!-- ═══════ SITUATIONAL MODIFIERS (collapsible) ═══════ --}}
+    {{#if hasCombatSituationals}}
+        <div class="urd-card-group urd-card-group--collapsible">
+            <button type="button" class="urd-card-group__title urd-card-group__title--toggle" data-action="toggleSituationalSection">
+                <i class="fas fa-sliders-h"></i> Situational
+                {{#unless situationalExpanded}}
+                    <span class="urd-card-group__summary">
+                        {{#if selectedSituationalSummary.hasActive}}
+                            <span class="urd-card-group__summary-label">{{selectedSituationalSummary.label}}</span>
+                            <span class="urd-card-group__summary-mod {{#if (gt selectedSituationalSummary.total 0)}}urd-card-group__summary-mod--positive{{else if (lt selectedSituationalSummary.total 0)}}urd-card-group__summary-mod--negative{{else}}urd-card-group__summary-mod--neutral{{/if}}">{{selectedSituationalSummary.totalLabel}}</span>
+                        {{else}}
+                            <span class="urd-card-group__summary-label">None</span>
+                        {{/if}}
+                    </span>
+                {{/unless}}
+                <i class="fas {{#if situationalExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} urd-card-group__chevron"></i>
+            </button>
+            {{#if situationalExpanded}}
+                <div class="urd-card-group__cards">
+                    {{#each combatSituationals}}
+                        <button type="button"
+                                class="urd-card urd-card--toggle {{#if isActive}}urd-card--active{{/if}}"
+                                data-action="toggleCombatSituational" data-situational-key="{{key}}"
+                                data-tooltip="{{tooltip}}">
+                            <i class="urd-card__icon {{icon}}"></i>
+                            <span class="urd-card__name">{{label}}</span>
+                            <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+                        </button>
+                    {{/each}}
+                </div>
+            {{/if}}
+        </div>
+    {{/if}}
+
+    {{!-- ═══════ SIZE MODIFIERS (ranged only, collapsed) ═══════ --}}
+    {{#if isRanged}}
+        <div class="urd-card-group urd-card-group--collapsible">
+            <button type="button" class="urd-card-group__title urd-card-group__title--toggle" data-action="toggleSizeSection">
+                <i class="fas fa-expand-arrows-alt"></i> Target Size
+                {{#unless sizeExpanded}}
+                    <span class="urd-card-group__summary">
+                        <span class="urd-card-group__summary-label">{{selectedSizeSummary.label}}</span>
+                        <span class="urd-card-group__summary-mod {{#if (gt selectedSizeSummary.modifier 0)}}urd-card-group__summary-mod--positive{{else if (lt selectedSizeSummary.modifier 0)}}urd-card-group__summary-mod--negative{{else}}urd-card-group__summary-mod--neutral{{/if}}">{{selectedSizeSummary.modifierLabel}}</span>
+                    </span>
+                {{/unless}}
+                <i class="fas {{#if sizeExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} urd-card-group__chevron"></i>
+            </button>
+            {{#if sizeExpanded}}
+                <div class="urd-card-group__cards">
+                    {{#each sizeOptions}}
+                        <button type="button"
+                                class="urd-card {{#if isSelected}}urd-card--selected{{/if}}"
+                                data-action="selectSizeModifier" data-size-key="{{key}}"
+                                data-tooltip="{{label}} target size modifier">
+                            <span class="urd-card__name">{{label}}</span>
+                            <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+                        </button>
+                    {{/each}}
+                </div>
+            {{/if}}
+        </div>
+    {{/if}}
 {{/if}}
