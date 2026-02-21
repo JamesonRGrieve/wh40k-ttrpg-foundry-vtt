@@ -98,6 +98,25 @@ export class RogueTraderNPCV2 extends RogueTraderBaseActor {
     }
 
     /* -------------------------------------------- */
+    /*  Talent Helpers                              */
+    /* -------------------------------------------- */
+
+    hasTalent(talent) {
+        return !!this.items.filter((i) => i.type === 'talent').find((t) => t.name === talent);
+    }
+
+    hasTalentFuzzyWords(words) {
+        return !!this.items
+            .filter((i) => i.type === 'talent')
+            .find((t) => {
+                for (const word of words) {
+                    if (!t.name.includes(word)) return false;
+                }
+                return true;
+            });
+    }
+
+    /* -------------------------------------------- */
     /*  Roll Methods                                */
     /* -------------------------------------------- */
 
