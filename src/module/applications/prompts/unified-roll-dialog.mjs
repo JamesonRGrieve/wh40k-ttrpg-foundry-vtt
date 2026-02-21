@@ -207,7 +207,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const baseTarget = isForceField
             ? (rollData.protectionRating || 0)
             : (rollData.baseTarget || 0);
-        const finalTarget = Math.max(0, baseTarget + difficultyMod + situationalMod + customMod);
+
+        // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys)
+        const dialogManagedKeys = new Set(["difficulty", "situational", "modifier"]);
+        const weaponModSum = !isForceField
+            ? Object.entries(rollData.modifiers || {})
+                .filter(([k]) => !dialogManagedKeys.has(k))
+                .reduce((sum, [, v]) => sum + (parseInt(v) || 0), 0)
+            : 0;
+
+        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod);
 
         // Dynamic color class based on success chance
         let targetColorClass;
@@ -440,15 +449,26 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             }
         }
 
-        // Build range bracket list for UI
-        const rangeBrackets = rd.weapon?.isRanged ? Object.entries(RANGE_BRACKETS).map(([key, b]) => ({
-            key,
-            label: b.label,
-            modifier: b.modifier,
-            modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
-            description: b.description,
-            isSelected: (this._selectedRangeBracket ?? rd.rangeBracket) === key
-        })) : [];
+        // Build range bracket list for UI with meter values
+        const maxRange = rd.maxRange || 0;
+        const rangeBrackets = rd.weapon?.isRanged ? Object.entries(RANGE_BRACKETS).map(([key, b]) => {
+            let rangeText = "";
+            if (maxRange > 0) {
+                if (key === "pointBlank") rangeText = "≤2m";
+                else if (key === "short") rangeText = `≤${Math.floor(maxRange * 0.5)}m`;
+                else if (key === "standard") rangeText = `≤${maxRange * 2}m`;
+                else if (key === "long") rangeText = `≤${maxRange * 3}m`;
+                else if (key === "extreme") rangeText = `>${maxRange * 3}m`;
+            }
+            return {
+                key,
+                label: b.label,
+                modifier: b.modifier,
+                modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
+                rangeText,
+                isSelected: (this._selectedRangeBracket ?? rd.rangeBracket) === key
+            };
+        }) : [];
 
         return {
             weapons: rd.weapons || [],

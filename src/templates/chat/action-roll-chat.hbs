@@ -114,6 +114,12 @@
                             <div class="rt-roll-card__result-label">Success</div>
                             <div class="rt-roll-card__result-roll">{{roll.total}}</div>
                         </div>
+                        {{#if hitLocation}}
+                            <div class="rt-roll-card__hit-loc">
+                                <i class="fas fa-crosshairs"></i>
+                                <span>{{hitLocation}}</span>
+                            </div>
+                        {{/if}}
                     {{else}}
                         <div class="rt-roll-card__result rt-roll-card__result--failure">
                             <div class="rt-roll-card__result-label">Failure</div>
@@ -125,26 +131,28 @@
                 
                 {{!-- Action Controls --}}
                 {{#unless ignoreControls}}
-                    <div class="rt-roll-card__controls">
+                    <div class="rt-roll-card__controls rt-roll-card__controls--stacked">
                         {{#if showDamage}}
-                            <button class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__hide-control" data-toggle="{{@root.id}}">
+                            <button class="rt-roll-card__btn rt-roll-card__btn--damage rt-roll-card__btn--full roll-control__hide-control" data-toggle="{{@root.id}}">
                                 <span class="material-icons">bolt</span>
                                 <span>Damage</span>
                             </button>
                         {{else}}
-                            <button class="rt-roll-card__btn rt-roll-card__btn--disabled">
+                            <button class="rt-roll-card__btn rt-roll-card__btn--disabled rt-roll-card__btn--full">
                                 <span class="material-icons">bolt</span>
                                 <span>Damage</span>
                             </button>
                         {{/if}}
-                        <button class="rt-roll-card__btn roll-control__refund" data-roll-id="{{@root.id}}">
-                            <span class="material-icons">deblur</span>
-                            <span>Refund</span>
-                        </button>
-                        <button class="rt-roll-card__btn rt-roll-card__btn--fate roll-control__fate-reroll" data-roll-id="{{@root.id}}">
-                            <span class="material-icons">casino</span>
-                            <span>Re-roll</span>
-                        </button>
+                        <div class="rt-roll-card__controls-row">
+                            <button class="rt-roll-card__btn rt-roll-card__btn--sm roll-control__refund" data-roll-id="{{@root.id}}">
+                                <span class="material-icons">deblur</span>
+                                <span>Refund</span>
+                            </button>
+                            <button class="rt-roll-card__btn rt-roll-card__btn--sm rt-roll-card__btn--fate roll-control__fate-reroll" data-roll-id="{{@root.id}}">
+                                <span class="material-icons">casino</span>
+                                <span>Re-roll</span>
+                            </button>
+                        </div>
                     </div>
                 {{/unless}}
             {{/with}}
@@ -152,7 +160,7 @@
             {{!-- Collapsible Damage Section --}}
             {{#unless rollData.ignoreDamage}}
                 {{#with damageData}}
-                    <div id="{{@root.id}}" class="rt-roll-card__collapse" hidden>
+                    <div id="{{@root.id}}" class="rt-roll-card__collapse" style="display: none">>
                         {{#if @root.psychicEffect}}
                             <div class="rt-roll-card__divider rt-roll-card__divider--ornate"></div>
                             <div class="rt-roll-card__text">{{{@root.psychicEffect}}}</div>

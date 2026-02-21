@@ -1021,6 +1021,12 @@
         max-width: 100%;
     }
 
+    &__pill-range {
+        font-size: 0.6rem;
+        color: #7a7a6a;
+        font-variant-numeric: tabular-nums;
+    }
+
     &__pill-mod {
         font-size: 0.78rem;
         font-weight: 700;
