@@ -83,6 +83,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
             // UI actions
             toggleEditSection: NPCSheetV2.#toggleEditSection,
             toggleEditMode: NPCSheetV2.#toggleEditMode,
+            toggleGMTools: NPCSheetV2.#toggleGMTools,
             toggleAbilityDesc: NPCSheetV2.#toggleAbilityDesc,
         },
     };
@@ -1408,6 +1409,23 @@ export default class NPCSheetV2 extends BaseActorSheet {
         if (headerToggle) headerToggle.checked = this._mode === MODES.EDIT;
         await this.submit();
         this.render();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle GM tools panel visibility in the sidebar.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static #toggleGMTools(event, target) {
+        event.preventDefault();
+        const wrapper = target.closest('.rt-gm-tools-wrapper');
+        if (!wrapper) return;
+        const tools = wrapper.querySelector('.rt-gm-tools');
+        if (!tools) return;
+        tools.hidden = !tools.hidden;
+        wrapper.classList.toggle('open', !tools.hidden);
     }
 
     /* -------------------------------------------- */
