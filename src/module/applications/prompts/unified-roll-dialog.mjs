@@ -59,6 +59,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._sizeModifierKey = null;  // null = use target actor size, string = user override
         this._specialOptionsExpanded = false;
         this._sizeExpanded = false;
+        this._rangeExpanded = false;
+        this._situationalExpanded = false;
     }
 
     /* -------------------------------------------- */
@@ -89,6 +91,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             selectSizeModifier: UnifiedRollDialog.#onSelectSizeModifier,
             toggleSpecialOptions: UnifiedRollDialog.#onToggleSpecialOptions,
             toggleSizeSection: UnifiedRollDialog.#onToggleSizeSection,
+            toggleRangeSection: UnifiedRollDialog.#onToggleRangeSection,
+            toggleSituationalSection: UnifiedRollDialog.#onToggleSituationalSection,
             cancel: UnifiedRollDialog.#onCancel
         },
         form: {
@@ -253,6 +257,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod);
 
+        // Build target breakdown tooltip
+        const tooltipParts = [`Base: ${baseTarget}`];
+        if (weaponModSum !== 0) tooltipParts.push(`Weapon/Combat: ${weaponModSum >= 0 ? '+' : ''}${weaponModSum}`);
+        if (difficultyMod !== 0) tooltipParts.push(`Difficulty: ${difficultyMod >= 0 ? '+' : ''}${difficultyMod}`);
+        if (situationalMod !== 0) tooltipParts.push(`Situational: ${situationalMod >= 0 ? '+' : ''}${situationalMod}`);
+        if (customMod !== 0) tooltipParts.push(`Custom: ${customMod >= 0 ? '+' : ''}${customMod}`);
+        if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${combatSitMod >= 0 ? '+' : ''}${combatSitMod}`);
+        tooltipParts.push(`= ${finalTarget}`);
+        const targetBreakdownTooltip = tooltipParts.join('\n');
+
         // Dynamic color class based on success chance
         let targetColorClass;
         if (finalTarget <= 15) targetColorClass = "urd-target__number--dire";
@@ -333,6 +347,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             baseTarget,
             finalTarget,
             targetColorClass,
+            targetBreakdownTooltip,
             previousTarget: this._previousTarget,
             difficulty,
             difficultyMod,
@@ -550,6 +565,31 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             };
         });
 
+        // Selected range summary for collapsed header
+        const currentRangeKey = this._selectedRangeBracket ?? rd.rangeBracket;
+        const currentRangeBracket = rangeBrackets.find(b => b.key === currentRangeKey) || rangeBrackets.find(b => b.key === 'standard') || rangeBrackets[0];
+        const selectedRangeSummary = currentRangeBracket
+            ? { label: currentRangeBracket.label, modifier: currentRangeBracket.modifier, modifierLabel: currentRangeBracket.modifierLabel }
+            : { label: 'Standard', modifier: 0, modifierLabel: '+0' };
+
+        // Selected situational summary for collapsed header
+        const activeSituationals = combatSituationals.filter(s => s.isActive);
+        const sitTotal = activeSituationals.reduce((sum, s) => sum + s.modifier, 0);
+        const selectedSituationalSummary = {
+            hasActive: activeSituationals.length > 0,
+            label: activeSituationals.length > 0
+                ? activeSituationals.map(s => s.label).join(', ')
+                : 'None',
+            total: sitTotal,
+            totalLabel: sitTotal >= 0 ? `+${sitTotal}` : `${sitTotal}`
+        };
+
+        // Selected size summary for collapsed header
+        const currentSizeOption = sizeOptions.find(s => s.isSelected) || sizeOptions.find(s => s.key === '4');
+        const selectedSizeSummary = currentSizeOption
+            ? { label: currentSizeOption.label, modifier: currentSizeOption.modifier, modifierLabel: currentSizeOption.modifierLabel }
+            : { label: 'Average (4)', modifier: 0, modifierLabel: '+0' };
+
         return {
             weapons: rd.weapons || [],
             weapon: rd.weapon,
@@ -565,6 +605,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             hasCombatSituationals: combatSituationals.length > 0,
             sizeOptions,
             sizeExpanded: this._sizeExpanded,
+            rangeExpanded: this._rangeExpanded,
+            situationalExpanded: this._situationalExpanded,
+            // Collapsed section summaries
+            selectedRangeSummary,
+            selectedSituationalSummary,
+            selectedSizeSummary,
             // Range data
             rangeBrackets,
             selectedRangeBracket: this._selectedRangeBracket ?? rd.rangeBracket,
@@ -871,6 +917,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onToggleSizeSection(event, target) {
         this._sizeExpanded = !this._sizeExpanded;
+        await this.render(false, { parts: ["contextPanel"] });
+    }
+
+    static async #onToggleRangeSection(event, target) {
+        this._rangeExpanded = !this._rangeExpanded;
+        await this.render(false, { parts: ["contextPanel"] });
+    }
+
+    static async #onToggleSituationalSection(event, target) {
+        this._situationalExpanded = !this._situationalExpanded;
         await this.render(false, { parts: ["contextPanel"] });
     }
 
