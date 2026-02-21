@@ -489,8 +489,8 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
       if (skill.plus20) target += 10; // +20 is cumulative with +10
       target += (skill.bonus || 0);
     } else {
-      // Untrained skill: -20 penalty for most skills
-      target -= 20;
+      // Untrained skill: use half the characteristic value
+      target = Math.floor(char.total / 2);
     }
 
     // Apply custom override if enabled
