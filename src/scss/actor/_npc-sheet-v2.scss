@@ -341,6 +341,14 @@ $bp-wide: 1200px;
             border-color: $npc-accent-combat;
             color: $npc-accent-combat;
         }
+
+        &.rt-tool-btn--edit {
+            &.active {
+                background: rgba($npc-accent-primary, 0.2);
+                border-color: $npc-accent-primary;
+                color: $npc-accent-primary;
+            }
+        }
     }
 
     // Magnitude Compact (for hordes)
