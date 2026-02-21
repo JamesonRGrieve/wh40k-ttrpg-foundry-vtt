@@ -17,6 +17,9 @@ import CombatPresetDialog from '../npc/combat-preset-dialog.mjs';
  * @extends {BaseActorSheet}
  */
 export default class NPCSheetV2 extends BaseActorSheet {
+    /** NPC sheets default to EDIT mode for GM convenience. */
+    _mode = 2;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -79,6 +82,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
             removeTag: NPCSheetV2.#removeTag,
             // UI actions
             toggleEditSection: NPCSheetV2.#toggleEditSection,
+            toggleEditMode: NPCSheetV2.#toggleEditMode,
             toggleAbilityDesc: NPCSheetV2.#toggleAbilityDesc,
         },
     };
@@ -424,11 +428,11 @@ export default class NPCSheetV2 extends BaseActorSheet {
         const getAP = (key) => armourMode === 'simple' ? armourTotal : (locs[key] ?? 0);
         context.hitLocations = [
             { key: 'head', label: 'Head', short: 'Head', range: '01–10', value: getAP('head'), dr: getAP('head') + tb },
-            { key: 'rightArm', label: 'Right Arm', short: 'R.Arm', range: '11–20', value: getAP('rightArm'), dr: getAP('rightArm') + tb },
-            { key: 'leftArm', label: 'Left Arm', short: 'L.Arm', range: '21–30', value: getAP('leftArm'), dr: getAP('leftArm') + tb },
             { key: 'body', label: 'Body', short: 'Body', range: '31–70', value: getAP('body'), dr: getAP('body') + tb },
-            { key: 'rightLeg', label: 'Right Leg', short: 'R.Leg', range: '71–85', value: getAP('rightLeg'), dr: getAP('rightLeg') + tb },
+            { key: 'leftArm', label: 'Left Arm', short: 'L.Arm', range: '21–30', value: getAP('leftArm'), dr: getAP('leftArm') + tb },
+            { key: 'rightArm', label: 'Right Arm', short: 'R.Arm', range: '11–20', value: getAP('rightArm'), dr: getAP('rightArm') + tb },
             { key: 'leftLeg', label: 'Left Leg', short: 'L.Leg', range: '86–00', value: getAP('leftLeg'), dr: getAP('leftLeg') + tb },
+            { key: 'rightLeg', label: 'Right Leg', short: 'R.Leg', range: '71–85', value: getAP('rightLeg'), dr: getAP('rightLeg') + tb },
         ];
 
         // Movement
@@ -1380,6 +1384,24 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
         // Toggle button state
         target.classList.toggle('active');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle between PLAY and EDIT mode from the sidebar button.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #toggleEditMode(event, target) {
+        event.preventDefault();
+        const { MODES } = this.constructor;
+        this._mode = this._mode === MODES.EDIT ? MODES.PLAY : MODES.EDIT;
+        // Keep header slide-toggle in sync if present
+        const headerToggle = this.element.querySelector('.window-header .mode-slider');
+        if (headerToggle) headerToggle.checked = this._mode === MODES.EDIT;
+        await this.submit();
+        this.render();
     }
 
     /* -------------------------------------------- */
