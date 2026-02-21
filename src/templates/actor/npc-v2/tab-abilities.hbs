@@ -18,14 +18,21 @@
             <div class="rt-ability-header">
               <img src="{{img}}" class="rt-ability-img" alt="{{name}}" />
               <span class="rt-ability-name">{{name}}</span>
-              {{#if ../editable}}
               <div class="rt-ability-actions">
                 <button type="button" 
-                        class="rt-btn-icon {{#if isFavorite}}active{{/if}}"
-                        data-action="toggleFavoriteTalent"
+                        class="rt-btn-icon rt-btn-toggle-desc"
+                        data-action="toggleAbilityDesc"
                         data-item-id="{{id}}"
-                        title="{{#if isFavorite}}Remove from Favorites{{else}}Add to Favorites{{/if}}">
-                  <i class="{{#if isFavorite}}fa-solid{{else}}fa-regular{{/if}} fa-star"></i>
+                        title="Toggle Description">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                {{#if ../editable}}
+                <button type="button" 
+                        class="rt-btn-icon {{#if isPinned}}active{{/if}}"
+                        data-action="pinAbility"
+                        data-item-id="{{id}}"
+                        title="{{#if isPinned}}Unpin{{else}}Pin to Overview{{/if}}">
+                  <i class="fa-solid fa-thumbtack"></i>
                 </button>
                 <button type="button" 
                         class="rt-btn-icon"
@@ -41,11 +48,11 @@
                         title="Delete">
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
+                {{/if}}
               </div>
-              {{/if}}
             </div>
             {{#if system.description.value}}
-            <div class="rt-ability-desc">
+            <div class="rt-ability-desc" hidden>
               {{{system.description.value}}}
             </div>
             {{/if}}
@@ -78,8 +85,15 @@
             <div class="rt-ability-header">
               <img src="{{img}}" class="rt-ability-img" alt="{{name}}" />
               <span class="rt-ability-name">{{name}}</span>
-              {{#if ../editable}}
               <div class="rt-ability-actions">
+                <button type="button" 
+                        class="rt-btn-icon rt-btn-toggle-desc"
+                        data-action="toggleAbilityDesc"
+                        data-item-id="{{id}}"
+                        title="Toggle Description">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                {{#if ../editable}}
                 <button type="button" 
                         class="rt-btn-icon"
                         data-action="itemEdit"
@@ -94,11 +108,11 @@
                         title="Delete">
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
+                {{/if}}
               </div>
-              {{/if}}
             </div>
             {{#if system.description.value}}
-            <div class="rt-ability-desc">
+            <div class="rt-ability-desc" hidden>
               {{{system.description.value}}}
             </div>
             {{/if}}
@@ -134,8 +148,15 @@
               {{#if system.psy.rating}}
               <span class="rt-psy-badge">PR {{system.psy.rating}}</span>
               {{/if}}
-              {{#if ../editable}}
               <div class="rt-ability-actions">
+                <button type="button" 
+                        class="rt-btn-icon rt-btn-toggle-desc"
+                        data-action="toggleAbilityDesc"
+                        data-item-id="{{id}}"
+                        title="Toggle Description">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                {{#if ../editable}}
                 <button type="button" 
                         class="rt-btn-icon"
                         data-action="itemEdit"
@@ -150,11 +171,11 @@
                         title="Delete">
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
+                {{/if}}
               </div>
-              {{/if}}
             </div>
             {{#if system.description.value}}
-            <div class="rt-ability-desc">
+            <div class="rt-ability-desc" hidden>
               {{{system.description.value}}}
             </div>
             {{/if}}
@@ -198,7 +219,7 @@
       </div>
     </div>
 
-    {{!-- Description (moved from notes tab) --}}
+    {{!-- Description --}}
     <div class="rt-panel rt-panel--description rt-panel--editable">
       <div class="rt-panel-header">
         <i class="fa-solid fa-scroll"></i>
