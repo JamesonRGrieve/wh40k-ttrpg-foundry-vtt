@@ -5,6 +5,7 @@ import { refundAmmo, useAmmo } from '../rules/ammo.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 import { SYSTEM_ID } from '../constants.mjs';
 import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
+import { getHitLocationForRoll } from '../rules/hit-locations.mjs';
 
 export class ActionData {
     id = uuid();
@@ -352,12 +353,10 @@ export class ActionData {
             await this.checkForOpposed();
             await this.checkForPerils();
 
-            // Calculate Hits
-            await this.calculateHits();
-
-            // Store primary hit location on rollData for chat display
-            if (this.damageData.hits.length > 0) {
-                this.rollData.hitLocation = this.damageData.hits[0].location;
+            // Damage is deferred — calculated when user clicks Damage button
+            // Compute hit location directly from roll for attack card display
+            if (this.rollData.success) {
+                this.rollData.hitLocation = getHitLocationForRoll(this.rollData.roll.total);
             }
 
             // Create Specials

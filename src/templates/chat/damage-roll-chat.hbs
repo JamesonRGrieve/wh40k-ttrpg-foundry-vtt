@@ -1,50 +1,103 @@
-{{!-- Rogue Trader Damage Roll Card - Modern Design --}}
+{{!-- Rogue Trader Damage Roll Card - Rich Hit-by-Hit Display --}}
 <div class="rt-chat">
-    {{#with rollData}}
     <div class="rt-roll-card">
         {{!-- Header --}}
         <div class="rt-roll-card__header">
             <div class="rt-roll-card__actor">Damage Roll</div>
-            <h2 class="rt-roll-card__title">{{name}}</h2>
+            <h2 class="rt-roll-card__title">{{weaponName}}</h2>
         </div>
-        
+
         {{!-- Body --}}
         <div class="rt-roll-card__body">
-            <div class="rt-roll-card__row">
-                <span class="rt-roll-card__label">Formula</span>
-                <span class="rt-roll-card__value">{{roll.formula}}</span>
-            </div>
-            
-            {{!-- Damage Display --}}
-            <div class="rt-roll-card__damage">
-                <div class="rt-roll-card__damage-header">
-                    <span class="rt-roll-card__damage-title">Damage</span>
-                </div>
-                <div class="rt-roll-card__damage-value">{{roll.total}}</div>
-                <div class="rt-roll-card__damage-type">{{damageType}}</div>
-            </div>
-            
-            {{!-- Penetration --}}
-            <div class="rt-roll-card__notice">
-                <span class="rt-roll-card__notice-label">Penetration</span>
-                <span class="rt-roll-card__notice-value">{{penetration}}</span>
-            </div>
-            
-            {{!-- Assign Damage Button --}}
-            {{#if targetActor}}
-                <div class="rt-roll-card__controls">
-                    <button class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__assign-damage"
-                            data-location="Body"
-                            data-total-damage="{{roll.total}}"
-                            data-total-penetration="{{penetration}}"
-                            data-target-uuid="{{targetActor.uuid}}"
-                            data-damage-type="{{damageType}}">
-                        <span class="material-icons">api</span>
-                        <span>Assign Damage</span>
-                    </button>
-                </div>
+            {{#if psychicEffect}}
+                <div class="rt-roll-card__divider rt-roll-card__divider--ornate"></div>
+                <div class="rt-roll-card__text">{{{psychicEffect}}}</div>
             {{/if}}
+
+            {{#each hits as |hit|}}
+                <div class="rt-roll-card__hit">
+                    <div class="rt-roll-card__hit-header">
+                        <span class="rt-roll-card__hit-number">{{inc @index}}</span>
+                        <span class="rt-roll-card__hit-location">{{hit.location}}</span>
+                    </div>
+
+                    <div class="rt-roll-card__row">
+                        <span class="rt-roll-card__label">Formula</span>
+                        <span class="rt-roll-card__value">{{hit.damageRoll.formula}}</span>
+                    </div>
+                    <div class="rt-roll-card__row">
+                        <span class="rt-roll-card__label">Base Damage</span>
+                        <span class="rt-roll-card__value">{{hit.damageRoll.result}}</span>
+                    </div>
+                    {{#each modifiers}}
+                        <div class="rt-roll-card__row rt-roll-card__row--modifier">
+                            <span class="rt-roll-card__label">{{@key}}</span>
+                            <span class="rt-roll-card__value">{{this}}</span>
+                        </div>
+                    {{/each}}
+
+                    {{!-- Damage Display --}}
+                    <div class="rt-roll-card__damage">
+                        <div class="rt-roll-card__damage-header">
+                            <span class="rt-roll-card__damage-title">Damage</span>
+                            <span class="rt-roll-card__damage-location">{{hit.location}}</span>
+                        </div>
+                        <div class="rt-roll-card__damage-value">{{hit.totalDamage}}</div>
+                        <div class="rt-roll-card__damage-type">{{hit.damageType}}</div>
+                    </div>
+
+                    {{!-- Penetration --}}
+                    <div class="rt-roll-card__notice">
+                        <span class="rt-roll-card__notice-label">Penetration</span>
+                        <span class="rt-roll-card__notice-value">{{hit.totalPenetration}}</span>
+                    </div>
+
+                    {{!-- Effects --}}
+                    {{#each hit.effects as |effect|}}
+                        <div class="rt-roll-card__effect">
+                            <span class="rt-roll-card__effect-name">{{effect.name}}</span>
+                            <span class="rt-roll-card__effect-desc">{{effect.effect}}</span>
+                        </div>
+                    {{/each}}
+
+                    {{!-- Righteous Fury --}}
+                    {{#each hit.righteousFury as |fury|}}
+                        {{#if fury.confirmed}}
+                            <div class="rt-roll-card__fury rt-roll-card__fury--confirmed">
+                                <div class="rt-roll-card__fury-title">⚡ Righteous Fury Confirmed! ⚡</div>
+                                <div class="rt-roll-card__fury-bonus">
+                                    <span class="rt-roll-card__fury-label">Bonus Damage:</span>
+                                    <span class="rt-roll-card__fury-value">+{{fury.bonusDamage}}</span>
+                                </div>
+                                <div class="rt-roll-card__fury-effect">Critical Level {{fury.critRoll.total}}: {{fury.effect}}</div>
+                            </div>
+                        {{else}}
+                            <div class="rt-roll-card__fury rt-roll-card__fury--not-confirmed">
+                                <div class="rt-roll-card__fury-title">⚡ Righteous Fury (Not Confirmed)</div>
+                                <div class="rt-roll-card__fury-text">
+                                    Rolled {{fury.dieResult}} (threshold: {{fury.threshold}}), but failed confirmation roll.
+                                </div>
+                            </div>
+                        {{/if}}
+                    {{/each}}
+
+                    {{!-- Assign Damage Button --}}
+                    {{#if @root.targetActor}}
+                        <div class="rt-roll-card__controls">
+                            <button class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__assign-damage"
+                                 data-location="{{hit.location}}"
+                                 data-total-damage="{{hit.totalDamage}}"
+                                 data-total-penetration="{{hit.totalPenetration}}"
+                                 data-total-fatigue="{{hit.totalFatigue}}"
+                                 data-target-uuid="{{@root.targetActor.uuid}}"
+                                 data-damage-type="{{hit.damageType}}">
+                                <span class="material-icons">api</span>
+                                <span>Assign Damage</span>
+                            </button>
+                        </div>
+                    {{/if}}
+                </div>
+            {{/each}}
         </div>
     </div>
-    {{/with}}
 </div>
