@@ -514,7 +514,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
                 else if (trainedData.plus10) target += 10;
                 target += trainedData.bonus || 0;
             } else {
-                target -= 20; // Untrained penalty
+                target = Math.floor(target / 2); // Untrained: half characteristic
             }
 
             // Proficiency cycle display data
