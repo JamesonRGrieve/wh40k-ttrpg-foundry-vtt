@@ -48,7 +48,7 @@
     {{!-- ═══ 2-COLUMN: Armour/Hit Locations | Action Cards ═══ --}}
     <div class="rt-combat-main">
 
-      {{!-- LEFT: Armour & Hit Locations (Body Silhouette) --}}
+      {{!-- LEFT: Armour & Hit Locations --}}
       <div class="rt-panel rt-panel--armour-locs">
         <div class="rt-panel-header">
           <i class="fa-solid fa-shield-halved"></i>
@@ -60,61 +60,23 @@
           {{/if}}
         </div>
         <div class="rt-panel-body">
-          <div class="rt-armour-silhouette rt-npc-silhouette">
-            {{!-- Head --}}
-            <div class="rt-armour-box rt-box-head" data-location="head" title="Head — Roll: 01-10">
-              <span class="rt-box-label">Head</span>
-              {{#if editable}}{{#if armour.isLocations}}
-              <input type="number" name="system.armour.locations.head" value="{{hitLocMap.head.value}}" min="0" class="rt-box-ap-input" />
-              {{else}}<span class="rt-box-ap">{{hitLocMap.head.value}}</span>{{/if}}
-              {{else}}<span class="rt-box-ap">{{hitLocMap.head.value}}</span>{{/if}}
-              <span class="rt-box-range">01-10</span>
+          <div class="rt-hit-locations-grid">
+            {{#each hitLocations}}
+            <div class="rt-hit-loc" data-location="{{key}}">
+              <span class="rt-loc-range">{{range}}</span>
+              <span class="rt-loc-label">{{short}}</span>
+              {{#if ../editable}}
+              {{#if ../armour.isLocations}}
+              <input type="number" name="system.armour.locations.{{key}}" value="{{value}}" min="0" class="rt-loc-ap-input" title="AP" />
+              {{else}}
+              <span class="rt-loc-ap">{{value}}</span>
+              {{/if}}
+              {{else}}
+              <span class="rt-loc-ap">{{value}}</span>
+              {{/if}}
+              <span class="rt-loc-dr" title="Damage Reduction (TB+AP)">DR {{dr}}</span>
             </div>
-            {{!-- Right Arm --}}
-            <div class="rt-armour-box rt-box-right-arm" data-location="rightArm" title="Right Arm — Roll: 11-20">
-              <span class="rt-box-label">R.Arm</span>
-              {{#if editable}}{{#if armour.isLocations}}
-              <input type="number" name="system.armour.locations.rightArm" value="{{hitLocMap.rightArm.value}}" min="0" class="rt-box-ap-input" />
-              {{else}}<span class="rt-box-ap">{{hitLocMap.rightArm.value}}</span>{{/if}}
-              {{else}}<span class="rt-box-ap">{{hitLocMap.rightArm.value}}</span>{{/if}}
-              <span class="rt-box-range">11-20</span>
-            </div>
-            {{!-- Left Arm --}}
-            <div class="rt-armour-box rt-box-left-arm" data-location="leftArm" title="Left Arm — Roll: 21-30">
-              <span class="rt-box-label">L.Arm</span>
-              {{#if editable}}{{#if armour.isLocations}}
-              <input type="number" name="system.armour.locations.leftArm" value="{{hitLocMap.leftArm.value}}" min="0" class="rt-box-ap-input" />
-              {{else}}<span class="rt-box-ap">{{hitLocMap.leftArm.value}}</span>{{/if}}
-              {{else}}<span class="rt-box-ap">{{hitLocMap.leftArm.value}}</span>{{/if}}
-              <span class="rt-box-range">21-30</span>
-            </div>
-            {{!-- Body --}}
-            <div class="rt-armour-box rt-box-body" data-location="body" title="Body — Roll: 31-70">
-              <span class="rt-box-label">Body</span>
-              {{#if editable}}{{#if armour.isLocations}}
-              <input type="number" name="system.armour.locations.body" value="{{hitLocMap.body.value}}" min="0" class="rt-box-ap-input" />
-              {{else}}<span class="rt-box-ap">{{hitLocMap.body.value}}</span>{{/if}}
-              {{else}}<span class="rt-box-ap">{{hitLocMap.body.value}}</span>{{/if}}
-              <span class="rt-box-range">31-70</span>
-            </div>
-            {{!-- Right Leg --}}
-            <div class="rt-armour-box rt-box-right-leg" data-location="rightLeg" title="Right Leg — Roll: 71-85">
-              <span class="rt-box-label">R.Leg</span>
-              {{#if editable}}{{#if armour.isLocations}}
-              <input type="number" name="system.armour.locations.rightLeg" value="{{hitLocMap.rightLeg.value}}" min="0" class="rt-box-ap-input" />
-              {{else}}<span class="rt-box-ap">{{hitLocMap.rightLeg.value}}</span>{{/if}}
-              {{else}}<span class="rt-box-ap">{{hitLocMap.rightLeg.value}}</span>{{/if}}
-              <span class="rt-box-range">71-85</span>
-            </div>
-            {{!-- Left Leg --}}
-            <div class="rt-armour-box rt-box-left-leg" data-location="leftLeg" title="Left Leg — Roll: 86-00">
-              <span class="rt-box-label">L.Leg</span>
-              {{#if editable}}{{#if armour.isLocations}}
-              <input type="number" name="system.armour.locations.leftLeg" value="{{hitLocMap.leftLeg.value}}" min="0" class="rt-box-ap-input" />
-              {{else}}<span class="rt-box-ap">{{hitLocMap.leftLeg.value}}</span>{{/if}}
-              {{else}}<span class="rt-box-ap">{{hitLocMap.leftLeg.value}}</span>{{/if}}
-              <span class="rt-box-range">86-00</span>
-            </div>
+            {{/each}}
           </div>
           {{#if armour.isSimple}}
           <div class="rt-armour-simple-edit">
