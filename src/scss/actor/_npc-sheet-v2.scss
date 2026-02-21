@@ -1649,11 +1649,11 @@ $bp-wide: 1200px;
         gap: 0.75rem;
     }
 
-    // ── Combat Header: Wounds + Quick Stats ──
-    .rt-combat-header {
+    // ── Combat Topbar: Wounds + Movement Cards ──
+    .rt-combat-topbar {
         display: flex;
-        align-items: center;
-        gap: 1rem;
+        align-items: stretch;
+        gap: 0.75rem;
         padding: 0.5rem 0.75rem;
         background: rgba(0, 0, 0, 0.2);
         border-radius: 6px;
@@ -1677,6 +1677,38 @@ $bp-wide: 1200px;
         }
     }
 
+    .rt-wounds-arrows {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .rt-arrow-btn {
+        width: 28px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.15s;
+        padding: 0;
+
+        &.rt-arrow-up {
+            background: rgba($npc-accent-movement, 0.15);
+            color: $npc-accent-movement;
+            &:hover { background: rgba($npc-accent-movement, 0.3); }
+        }
+
+        &.rt-arrow-down {
+            background: rgba($npc-accent-combat, 0.15);
+            color: $npc-accent-combat;
+            &:hover { background: rgba($npc-accent-combat, 0.3); }
+        }
+    }
+
     .rt-combat-quickstats {
         display: flex;
         gap: 0.5rem;
@@ -1694,9 +1726,7 @@ $bp-wide: 1200px;
 
         &.rollable {
             cursor: pointer;
-            &:hover {
-                background: rgba(255, 255, 255, 0.1);
-            }
+            &:hover { background: rgba(255, 255, 255, 0.1); }
         }
 
         i {
@@ -1722,6 +1752,59 @@ $bp-wide: 1200px;
             border: 1px solid $npc-accent-combat;
             .rt-quickstat-value { color: $npc-accent-combat; }
         }
+    }
+
+    // ── Movement Cards ──
+    .rt-movement-cards {
+        display: flex;
+        gap: 0.4rem;
+        flex-shrink: 0;
+    }
+
+    .rt-move-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        padding: 0.35rem 0.25rem;
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        gap: 2px;
+
+        i { font-size: 0.85rem; }
+
+        .rt-move-card-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-text-light-primary, #f0f0f0);
+        }
+
+        .rt-move-card-input {
+            width: 32px;
+            padding: 0;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 700;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            color: var(--color-text-light-primary, #f0f0f0);
+            &:focus { border-color: $npc-accent-primary; outline: none; }
+        }
+
+        .rt-move-card-label {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-light-secondary, #aaa);
+        }
+
+        &--half i { color: $npc-accent-movement; }
+        &--full i { color: #66bb6a; }
+        &--charge i { color: $npc-accent-primary; }
+        &--run i { color: $npc-accent-combat; }
     }
 
     // ── 2-Column Combat Main Layout ──
@@ -1828,103 +1911,224 @@ $bp-wide: 1200px;
         }
     }
 
-    // ── Action Cards ──
-    .rt-combat-actions-col {
+    // ── Actions Grid (Dodge/Parry/Init + Weapon Rows) ──
+    .rt-actions-grid {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .rt-action-cards {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
         gap: 0.5rem;
     }
 
-    .rt-action-card {
+    .rt-action-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+    }
+
+    .rt-action-row-label {
+        grid-column: 1 / -1;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-text-light-secondary, #888);
+        padding: 0.15rem 0.25rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .rt-action-btn {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 0.75rem 0.5rem;
+        padding: 0.5rem 0.35rem;
         border-radius: 6px;
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.08);
         cursor: pointer;
         color: var(--color-text-light-primary, #f0f0f0);
         transition: all 0.15s;
+        min-height: 62px;
+        gap: 2px;
 
         &:hover {
-            background: rgba($npc-accent-primary, 0.15);
-            border-color: $npc-accent-primary;
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
-        i {
-            font-size: 1.25rem;
-            color: $npc-accent-primary;
-            margin-bottom: 0.25rem;
-        }
-
-        .rt-action-value {
-            font-size: 1.5rem;
+        .rt-action-btn-value {
+            font-size: 1.3rem;
             font-weight: 700;
             line-height: 1.2;
         }
 
-        .rt-action-label {
-            font-size: 0.65rem;
+        .rt-action-btn-label {
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
             color: var(--color-text-light-secondary, #aaa);
         }
+
+        .rt-action-btn-cost {
+            font-size: 0.5rem;
+            color: var(--color-text-light-secondary, #666);
+            font-style: italic;
+        }
+
+        // Color variants
+        &--dodge {
+            border-color: rgba($npc-accent-defense, 0.3);
+            .rt-action-btn-value { color: $npc-accent-defense; }
+            &:hover { background: rgba($npc-accent-defense, 0.15); border-color: $npc-accent-defense; }
+        }
+
+        &--parry {
+            border-color: rgba($npc-accent-skills, 0.3);
+            .rt-action-btn-value { color: $npc-accent-skills; }
+            &:hover { background: rgba($npc-accent-skills, 0.15); border-color: $npc-accent-skills; }
+        }
+
+        &--init {
+            border-color: rgba($npc-accent-primary, 0.3);
+            .rt-action-btn-value { color: $npc-accent-primary; }
+            &:hover { background: rgba($npc-accent-primary, 0.15); border-color: $npc-accent-primary; }
+        }
+
+        &--attack {
+            border-color: rgba($npc-accent-combat, 0.3);
+            .rt-action-btn-value { color: $npc-accent-combat; }
+            &:hover { background: rgba($npc-accent-combat, 0.15); border-color: $npc-accent-combat; }
+        }
+
+        &--reload {
+            border-color: rgba($npc-accent-abilities, 0.3);
+            .rt-action-btn-value { color: $npc-accent-abilities; }
+            &:hover { background: rgba($npc-accent-abilities, 0.15); border-color: $npc-accent-abilities; }
+        }
+
+        &--ammo {
+            border-color: rgba($npc-accent-movement, 0.3);
+            .rt-action-btn-value { color: $npc-accent-movement; }
+            &:hover { background: rgba($npc-accent-movement, 0.15); border-color: $npc-accent-movement; }
+        }
+    }
+
+    // ── Inventory Table ──
+    .rt-inventory-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.78rem;
+
+        thead {
+            th {
+                padding: 0.3rem 0.4rem;
+                text-align: left;
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--color-text-light-secondary, #888);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                font-weight: 600;
+            }
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.1s;
+            &:hover { background: rgba(255, 255, 255, 0.03); }
+        }
+
+        td {
+            padding: 0.3rem 0.4rem;
+            vertical-align: middle;
+        }
+    }
+
+    .rt-inv-icon {
+        width: 22px;
+        height: 22px;
+        object-fit: cover;
+        border-radius: 3px;
+    }
+
+    .rt-inv-name {
+        font-weight: 500;
+        color: var(--color-text-light-primary, #f0f0f0);
+        cursor: pointer;
+        &:hover { color: $npc-accent-primary; text-decoration: underline; }
+    }
+
+    .rt-inv-type-badge {
+        display: inline-block;
+        padding: 0.1rem 0.35rem;
+        border-radius: 3px;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--color-text-light-secondary, #aaa);
+    }
+
+    .rt-inv-remove {
+        width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: rgba($npc-accent-combat, 0.1);
+        color: $npc-accent-combat;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.7rem;
+        transition: all 0.15s;
+        padding: 0;
+        &:hover { background: rgba($npc-accent-combat, 0.3); }
+    }
+
+    // ── Combat Tracker in Nav ──
+    .rt-combat-tracker-nav {
+        padding: 0.5rem;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin-top: 0.5rem;
+    }
+
+    .rt-tracker-status {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        color: var(--color-text-light-secondary, #aaa);
+
+        i { color: $npc-accent-combat; }
+
+        strong {
+            color: var(--color-text-light-primary, #f0f0f0);
+        }
+    }
+
+    .rt-combat-add-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        padding: 0.35rem;
+        border: 1px solid rgba($npc-accent-combat, 0.3);
+        border-radius: 4px;
+        background: rgba($npc-accent-combat, 0.1);
+        color: $npc-accent-combat;
+        cursor: pointer;
+        font-size: 0.7rem;
+        transition: all 0.15s;
+        &:hover { background: rgba($npc-accent-combat, 0.2); border-color: $npc-accent-combat; }
     }
 
     // ── Inventory Panel ──
     .rt-panel--inventory {
         .rt-panel-header > i:first-child {
             color: $npc-accent-abilities;
-        }
-    }
-
-    .rt-gear-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.35rem;
-    }
-
-    .rt-gear-chip {
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        padding: 0.2rem 0.5rem 0.2rem 0.2rem;
-        background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
-        border: 1px solid var(--color-border-secondary, #444);
-        border-radius: 4px;
-        font-size: 0.75rem;
-        cursor: pointer;
-        transition: all 0.15s;
-
-        &:hover {
-            border-color: $npc-accent-primary;
-            background: rgba($npc-accent-primary, 0.1);
-        }
-
-        .rt-gear-img {
-            width: 20px;
-            height: 20px;
-            object-fit: cover;
-            border-radius: 3px;
-        }
-
-        .rt-gear-name {
-            font-weight: 500;
-        }
-
-        .rt-gear-qty {
-            color: var(--color-text-light-secondary, #888);
-            font-weight: 600;
         }
     }
 

@@ -77,6 +77,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
             rerollInitiative: NPCSheetV2.#rerollInitiative,
             addToCombat: NPCSheetV2.#addToCombat,
             removeFromCombat: NPCSheetV2.#removeFromCombat,
+            removeItem: NPCSheetV2.#removeItem,
+            reloadWeapon: NPCSheetV2.#reloadWeapon,
             // Tag actions
             addTag: NPCSheetV2.#addTag,
             removeTag: NPCSheetV2.#removeTag,
@@ -236,6 +238,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
             index: idx,
             isMelee: w.class === 'melee',
             isRanged: ['pistol', 'basic', 'heavy', 'thrown', 'launcher'].includes(w.class),
+            clip: w.clip ?? '—',
+            clipMax: w.clipMax ?? '—',
         }));
 
         // Embedded mode weapons (from items)
@@ -456,6 +460,13 @@ export default class NPCSheetV2 extends BaseActorSheet {
             context.items = Array.from(this.actor.items);
         }
         context.gearItems = context.items.filter((i) => !['weapon', 'talent', 'trait', 'psychicPower', 'specialAbility'].includes(i.type));
+
+        // All items for inventory table (weapons, armour, gear, ammo, cybernetics, etc.)
+        context.allItems = context.items.filter((i) => !['talent', 'trait', 'psychicPower', 'specialAbility', 'condition', 'criticalInjury', 'mutation'].includes(i.type));
+
+        // Flag for weapon rows in actions grid (used for empty state)
+        const weaponCount = context.isSimpleMode ? (context.simpleWeapons?.length ?? 0) : (context.embeddedWeapons?.length ?? 0);
+        context.combatWeaponRows = weaponCount > 0;
     }
 
     /* -------------------------------------------- */
@@ -709,6 +720,24 @@ export default class NPCSheetV2 extends BaseActorSheet {
         const weapons = foundry.utils.deepClone(this.actor.system.weapons?.simple || []);
         weapons.splice(weaponIndex, 1);
         await this.actor.update({ 'system.weapons.simple': weapons });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Reload a simple weapon (reset clip to max).
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #reloadWeapon(event, target) {
+        event.preventDefault();
+        const weaponIndex = parseInt(target.dataset.weaponIndex, 10);
+        const weapons = foundry.utils.deepClone(this.actor.system.weapons?.simple || []);
+        if (weapons[weaponIndex]) {
+            weapons[weaponIndex].clip = weapons[weaponIndex].clipMax || 0;
+            await this.actor.update({ 'system.weapons.simple': weapons });
+            ui.notifications.info(`Reloaded ${weapons[weaponIndex].name || 'weapon'}.`);
+        }
     }
 
     /* -------------------------------------------- */
@@ -1590,7 +1619,18 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
-    /* -------------------------------------------- */
+    /**
+     * Remove an embedded item from the actor.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #removeItem(event, target) {
+        event.preventDefault();
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
+        if (!itemId) return;
+        const item = this.actor.items.get(itemId);
+        if (item) await item.delete();
+    }
     /*  Overrides                                   */
     /* -------------------------------------------- */
 

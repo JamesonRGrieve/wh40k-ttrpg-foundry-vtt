@@ -113,4 +113,25 @@
     </div>
   </div>
   {{/if}}
+
+  {{!-- Combat Tracker (sidebar) --}}
+  {{#if isGM}}
+  <div class="rt-combat-tracker-nav">
+    {{#if actor.inCombat}}
+    <div class="rt-tracker-status rt-tracker-status--active">
+      <i class="fa-solid fa-swords"></i>
+      <span>Init: {{actor.combatant.initiative}}</span>
+    </div>
+    <div class="rt-tracker-nav-actions">
+      <button type="button" class="rt-tool-btn" data-action="rerollInitiative" data-tooltip="Reroll Initiative"><i class="fa-solid fa-dice"></i></button>
+      <button type="button" class="rt-tool-btn rt-tool-btn--danger" data-action="removeFromCombat" data-tooltip="Remove from Combat"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    {{else}}
+    <button type="button" class="rt-combat-add-btn" data-action="addToCombat" data-tooltip="Add to Combat">
+      <i class="fa-solid fa-swords"></i>
+      <span>Add to Combat</span>
+    </button>
+    {{/if}}
+  </div>
+  {{/if}}
 </div>
