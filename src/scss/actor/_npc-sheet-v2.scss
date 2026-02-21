@@ -1648,48 +1648,156 @@ $bp-wide: 1200px;
         }
     }
 
-    // ── Combat Grid: 3-column ──
-    .rt-combat-grid {
+    // ── 2-Column Combat Main Layout ──
+    .rt-combat-main {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: 0.75rem;
     }
 
-    // ── Defense Buttons ──
-    .rt-defense-buttons {
+    // ── Hit Locations Grid ──
+    .rt-hit-locations-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.35rem;
+    }
+
+    .rt-hit-loc {
+        display: grid;
+        grid-template-columns: auto 1fr auto auto;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.5rem;
+        background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
+        border-radius: 4px;
+        border-left: 3px solid $npc-accent-defense;
+        font-size: 0.8rem;
+
+        .rt-loc-range {
+            font-size: 0.65rem;
+            color: var(--color-text-light-secondary, #888);
+            font-family: monospace;
+            min-width: 32px;
+        }
+
+        .rt-loc-label {
+            font-weight: 600;
+            color: var(--color-text-light-primary, #f0f0f0);
+        }
+
+        .rt-loc-ap {
+            font-weight: 700;
+            color: $npc-accent-defense;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .rt-loc-ap-input {
+            width: 36px;
+            padding: 0.15rem;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--color-border-secondary, #444);
+            border-radius: 3px;
+            color: $npc-accent-defense;
+            &:focus { border-color: $npc-accent-defense; outline: none; }
+        }
+
+        .rt-loc-dr {
+            font-size: 0.65rem;
+            color: var(--color-text-light-secondary, #888);
+            min-width: 32px;
+            text-align: right;
+        }
+    }
+
+    .rt-armour-simple-edit {
         display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        padding: 0.35rem 0.5rem;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        font-size: 0.8rem;
+
+        .rt-armour-mode-label {
+            color: var(--color-text-light-secondary, #888);
+            flex: 1;
+        }
+
+        .rt-armour-total-input {
+            width: 48px;
+            padding: 0.2rem;
+            text-align: center;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--color-border-secondary, #444);
+            border-radius: 3px;
+            color: $npc-accent-defense;
+            &:focus { border-color: $npc-accent-defense; outline: none; }
+        }
+
+        .rt-armour-total-value {
+            font-weight: 700;
+            color: $npc-accent-defense;
+        }
+    }
+
+    .rt-panel--armour-locs {
+        .rt-panel-header > i:first-child {
+            color: $npc-accent-defense;
+        }
+    }
+
+    // ── Action Cards ──
+    .rt-combat-actions-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .rt-action-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: 0.5rem;
     }
 
-    .rt-defense-btn {
+    .rt-action-card {
         display: flex;
         flex-direction: column;
         align-items: center;
-        flex: 1;
-        padding: 0.5rem;
-        border-radius: 4px;
-        background: rgba(0, 0, 0, 0.15);
+        justify-content: center;
+        padding: 0.75rem 0.5rem;
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.08);
         cursor: pointer;
         color: var(--color-text-light-primary, #f0f0f0);
+        transition: all 0.15s;
 
         &:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba($npc-accent-primary, 0.15);
             border-color: $npc-accent-primary;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         i {
-            font-size: 1rem;
-            margin-bottom: 0.25rem;
-            color: $npc-accent-primary;
-        }
-
-        .rt-defense-value {
             font-size: 1.25rem;
-            font-weight: 700;
+            color: $npc-accent-primary;
+            margin-bottom: 0.25rem;
         }
 
-        .rt-defense-label {
+        .rt-action-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .rt-action-label {
             font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -1697,21 +1805,66 @@ $bp-wide: 1200px;
         }
     }
 
-    // ── Panel: Defenses ──
-    .rt-panel--defenses {
+    // ── Inventory Panel ──
+    .rt-panel--inventory {
         .rt-panel-header > i:first-child {
-            color: $npc-accent-primary;
+            color: $npc-accent-abilities;
         }
     }
 
-    // Legacy vitals grid (for backwards compat if needed)
+    .rt-gear-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .rt-gear-chip {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.2rem 0.5rem 0.2rem 0.2rem;
+        background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
+        border: 1px solid var(--color-border-secondary, #444);
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.15s;
+
+        &:hover {
+            border-color: $npc-accent-primary;
+            background: rgba($npc-accent-primary, 0.1);
+        }
+
+        .rt-gear-img {
+            width: 20px;
+            height: 20px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+
+        .rt-gear-name {
+            font-weight: 500;
+        }
+
+        .rt-gear-qty {
+            color: var(--color-text-light-secondary, #888);
+            font-weight: 600;
+        }
+    }
+
+    // Legacy selectors preserved
+    .rt-combat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.75rem;
+    }
+
     .rt-combat-vitals {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 0.75rem;
     }
 
-    // Wounds Panel (legacy selector)
     .rt-panel--wounds {
         .rt-panel-header > i:first-child {
             color: $npc-accent-combat;

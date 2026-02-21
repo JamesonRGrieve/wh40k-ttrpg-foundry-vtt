@@ -874,6 +874,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         // Weapon slots - categorize by class and equipped status
         const equippedWeapons = weapons.filter((w) => w.system?.equipped);
+        context.equippedWeapons = equippedWeapons;
         const rangedWeapons = equippedWeapons.filter((w) => w.system?.class !== 'Melee');
         const meleeWeapons = equippedWeapons.filter((w) => w.system?.class === 'Melee');
 

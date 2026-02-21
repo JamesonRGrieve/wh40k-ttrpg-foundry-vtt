@@ -39,12 +39,6 @@
 
         <div class="rt-weapon-header-actions">
           {{#if isOwnedByActor}}
-          <label class="rt-toggle-equipped" title="Toggle Equipped">
-            <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
-            <span class="rt-toggle-equipped__indicator">
-              <i class="fa-solid {{#if system.equipped}}fa-circle-check{{else}}fa-circle{{/if}}"></i>
-            </span>
-          </label>
           {{/if}}
           
           {{#if canEdit}}

@@ -137,7 +137,7 @@ export function getCareerKeyFromName(careerName) {
     'archmilitant': 'archMilitant',
     'arch militant': 'archMilitant',
     'astropath': 'astropath',
-    'astropath transcendent': 'astropath',
+    'astropath transcendant': 'astropath',
     'explorator': 'explorator',
     'missionary': 'missionary',
     'navigator': 'navigator',

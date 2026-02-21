@@ -1,0 +1,68 @@
+lets look into the attack dialog for weapons I want to rework the design of the attack options:
+For weapons options/modifiers I want to have cards much like in the combat tab of the character sheet.
+where users 'select' and highlight the options that apply to their attack. this will be much more intuitive and user friendly than the current drop down system.
+lets make it sleek and clean and modern with nice animations and styles to make it fun and engaging to select the attack options.
+
+these should all have tooltips much like the how the character sheet combat tab cards do to explain what each option does and when it applies.
+
+range weapons should have these Attack options:
+- standard attack [half action] (selected by default)
+- semi-Auto (if weapon supports it) [Full Action]
+- Full-Auto (if supported) [Full Action]
+- Suppressing Fire [Full Action]
+- Overwatch [Full Action]
+they can only select one of these.
+
+Aim options:
+I also want a Aim section where a user can choose either
+- No Aim (selected by default)
+- Half Aim +10 [half action]
+- Full Aim +20 [full action]
+they can only select one of these.
+
+Range options:
+then a Range selection where it shows a meters where a user select a range:
+- point blank [3m] +30
+- half range +10
+- standard range +0 (selected by default)
+- long range (double) -10
+- (extreme range (triple) -30).
+make sure to put the meters in based on the weapon.
+also have a utility to have the user 'auto select' by clicking on the token being attacked.
+
+we need to also have a 'select all the apply situationally bonus/penity cards such as:
+- prone -10 (for ranged attacks)
+- unaware +30
+- engaged in melee -20 (for ranged attacks)
+- Darkness -30 (for ranged attacks)
+- High Ground +10 (for ranged attacks)
+- Stunned Target +20
+
+then lets have a section for Size modifiers: (lets have this by default be collapsed not to clutter the UI but have a button to expand it if needed)
+puny -20
+Scrawny -10
+Average +0 (selected by default)
+Hulking +10
+Enormous +20
+Massive +30
+
+Melee Weapons:
+
+Melee weapons should have these Attack options:
+- standard attack [half action] (selected by default)
+- Charge [Full Action]
+- All-Out Attack [Full Action]
+- Guarded Attack [Full Action]
+[Special options]
+- Feint [Half Action]
+- Knockdown [Half Action]
+- Stun [Full Action]
+- Maneuver [Half Action]
+they can only select one of these, for special options should be collapsable and not to clutter the UI.
+
+we need to also have a 'select all the apply situationally bonus/penity cards such as:
+- prone +10 (for melee attacks)
+- unaware +30
+- Darkness -20 (for melee attacks)
+- Ganging up +10 (for melee attacks)
+- Stunned Target +20

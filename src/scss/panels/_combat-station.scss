@@ -7,6 +7,7 @@
   flex-direction: column;
   gap: $rt-space-md;
   padding: $rt-space-md;
+  container-type: inline-size;
 }
 
 // ============================================
@@ -15,23 +16,39 @@
 
 .rt-combat-grid {
   display: grid;
-  grid-template-columns: 1fr minmax(320px, 400px);  // Left side (vitals+armour+weapons) + Actions column
+  grid-template-columns: 1fr minmax(280px, 380px);
   gap: $rt-space-md;
   min-height: 0;
   width: 100%;
   align-items: start;
 }
 
+@container (max-width: 700px) {
+  .rt-combat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 // Left side contains vitals, armour, and weapons in a nested grid
 .rt-combat-left-side {
   display: grid;
-  grid-template-columns: minmax(220px, 250px) 1fr;  // Vitals/armour + weapons
+  grid-template-columns: minmax(200px, 240px) 1fr;
   gap: $rt-space-md;
   grid-auto-rows: min-content;
   
   // Weapons panel spans both columns
   .rt-panel-arsenal {
-    grid-column: 1 / -1;  // Span from first to last column
+    grid-column: 1 / -1;
+  }
+}
+
+@container (max-width: 550px) {
+  .rt-combat-left-side {
+    grid-template-columns: 1fr;
+    
+    .rt-panel-arsenal {
+      grid-column: auto;
+    }
   }
 }
 
@@ -43,7 +60,6 @@
 
 // Actions column on the right
 .rt-combat-actions {
-  width: 300px;
   min-height: 100%;
 }
 
@@ -795,8 +811,8 @@
 // Action button grid
 .rt-combat-actions-grid {
   display: grid;
-  grid-template-columns: repeat(3, 80px);   // <- fixed tracks, no "fr"
-  grid-auto-rows: 80px;                    // <- fixed row height
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  grid-auto-rows: 80px;
   gap: 6px;
 }
 
@@ -814,8 +830,6 @@
   cursor: pointer;
   transition: all 0.2s ease;
   min-height: 80px;
-  min-width: 80px;
-  max-width: 80px;
   position: relative;
   overflow: hidden;
   
@@ -1081,6 +1095,19 @@
     gap: $rt-space-xs;
     padding: $rt-space-xs $rt-space-sm;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  @container (max-width: 450px) {
+    .table-row--head,
+    .table-row {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+    
+    // Hide range column at narrow widths
+    .table-row--head .table-cell:nth-child(4),
+    .table-row .table-cell:nth-child(4) {
+      display: none;
+    }
   }
   
   .table-row--head {

@@ -405,36 +405,46 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @protected
      */
     _prepareCombatContext(context) {
+        const tb = context.system.characteristics?.toughness?.bonus ?? 0;
+        context.toughnessBonus = tb;
+
         // Armour data
+        const armourMode = context.system.armour?.mode || 'simple';
+        const armourTotal = context.system.armour?.total ?? 0;
+        const locs = context.system.armour?.locations || {};
         context.armour = {
-            mode: context.system.armour.mode,
-            isSimple: context.system.armour.mode === 'simple',
-            isLocations: context.system.armour.mode === 'locations',
-            total: context.system.armour.total,
-            locations: context.system.armour.locations,
+            mode: armourMode,
+            isSimple: armourMode === 'simple',
+            isLocations: armourMode === 'locations',
+            total: armourTotal,
+            locations: locs,
         };
 
-        // Hit locations for location-based armour
+        // Hit locations with roll ranges (always show, use total AP for simple mode)
+        const getAP = (key) => armourMode === 'simple' ? armourTotal : (locs[key] ?? 0);
         context.hitLocations = [
-            { key: 'head', label: 'Head', value: context.system.armour.locations?.head ?? 0 },
-            { key: 'body', label: 'Body', value: context.system.armour.locations?.body ?? 0 },
-            { key: 'leftArm', label: 'Left Arm', value: context.system.armour.locations?.leftArm ?? 0 },
-            { key: 'rightArm', label: 'Right Arm', value: context.system.armour.locations?.rightArm ?? 0 },
-            { key: 'leftLeg', label: 'Left Leg', value: context.system.armour.locations?.leftLeg ?? 0 },
-            { key: 'rightLeg', label: 'Right Leg', value: context.system.armour.locations?.rightLeg ?? 0 },
+            { key: 'head', label: 'Head', short: 'Head', range: '01–10', value: getAP('head'), dr: getAP('head') + tb },
+            { key: 'rightArm', label: 'Right Arm', short: 'R.Arm', range: '11–20', value: getAP('rightArm'), dr: getAP('rightArm') + tb },
+            { key: 'leftArm', label: 'Left Arm', short: 'L.Arm', range: '21–30', value: getAP('leftArm'), dr: getAP('leftArm') + tb },
+            { key: 'body', label: 'Body', short: 'Body', range: '31–70', value: getAP('body'), dr: getAP('body') + tb },
+            { key: 'rightLeg', label: 'Right Leg', short: 'R.Leg', range: '71–85', value: getAP('rightLeg'), dr: getAP('rightLeg') + tb },
+            { key: 'leftLeg', label: 'Left Leg', short: 'L.Leg', range: '86–00', value: getAP('leftLeg'), dr: getAP('leftLeg') + tb },
         ];
 
         // Movement
         context.movement = context.system.movement;
 
-        // Toughness bonus for armor display
-        context.toughnessBonus = context.system.characteristics?.toughness?.bonus ?? 0;
-
-        // Combat summary
+        // Combat summary (skill targets for action cards)
         context.combatSummary = {
             dodge: context.system.getSkillTarget ? context.system.getSkillTarget('dodge') : '—',
             parry: context.system.getSkillTarget ? context.system.getSkillTarget('parry') : '—',
         };
+
+        // Gear items (non-weapon embedded items for inventory section)
+        if (!context.items) {
+            context.items = Array.from(this.actor.items);
+        }
+        context.gearItems = context.items.filter((i) => !['weapon', 'talent', 'trait', 'psychicPower', 'specialAbility'].includes(i.type));
     }
 
     /* -------------------------------------------- */
@@ -634,26 +644,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const charKey = target.dataset.characteristic;
         if (!charKey) return;
-
-        const char = this.actor.system.characteristics[charKey];
-        if (!char) return;
-
-        // Use the system's D100Roll for characteristic tests
-        const { D100Roll } = game.rt.dice;
-        const roll = new D100Roll(
-            `1d100`,
-            {},
-            {
-                target: char.total,
-                type: 'characteristic',
-                label: char.label,
-            },
-        );
-
-        await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: `${char.label} Test`,
-        });
+        await this.actor.rollCharacteristic(charKey);
     }
 
     /* -------------------------------------------- */
@@ -666,31 +657,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
     static async #rollWeapon(event, target) {
         event.preventDefault();
         const weaponIndex = parseInt(target.dataset.weaponIndex, 10);
-        const weapons = this.actor.system.weapons?.simple || [];
-        const weapon = weapons[weaponIndex];
-        if (!weapon) return;
-
-        // Determine attack characteristic
-        const attackChar = weapon.class === 'melee' ? 'weaponSkill' : 'ballisticSkill';
-        const char = this.actor.system.characteristics[attackChar];
-        if (!char) return;
-
-        // Roll attack
-        const { D100Roll } = game.rt.dice;
-        const roll = new D100Roll(
-            `1d100`,
-            {},
-            {
-                target: char.total,
-                type: 'attack',
-                label: weapon.name,
-            },
-        );
-
-        await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: `${weapon.name} Attack (${weapon.damage}, Pen ${weapon.pen})`,
-        });
+        if (isNaN(weaponIndex)) return;
+        await this.actor.rollSimpleWeapon(weaponIndex);
     }
 
     /* -------------------------------------------- */
@@ -1543,6 +1511,12 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         if (!game.combat) {
             ui.notifications.warn('No active combat encounter.');
+            return;
+        }
+        // Prevent duplicate combatants
+        const existing = game.combat.getCombatantByActor(this.actor.id);
+        if (existing) {
+            ui.notifications.info(`${this.actor.name} is already in combat.`);
             return;
         }
         await game.combat.createEmbeddedDocuments('Combatant', [
