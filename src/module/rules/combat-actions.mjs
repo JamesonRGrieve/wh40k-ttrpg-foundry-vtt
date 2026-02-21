@@ -73,9 +73,9 @@ function allCombatActions() {
             name: 'Standard Attack',
             type: ['Half'],
             subtype: ['Attack', 'Melee', 'Ranged'],
-            description: 'Grants +10 to WS or BS, make one melee or ranged attack; jam on 96+ result.',
+            description: 'Make one melee or ranged attack; jam on 96+ result.',
             attack: {
-                modifier: 10,
+                modifier: 0,
             },
         },
         {
@@ -152,9 +152,9 @@ function allCombatActions() {
             name: 'Full Auto Burst',
             type: ['Half'],
             subtype: ['Attack', 'Ranged'],
-            description: 'Grants -10 BS, one hit for every DoS; Jam on 94+ result; 2m spread.',
+            description: 'Grants +20 BS, one hit for every DoS; Jam on 94+ result; 2m spread.',
             attack: {
-                modifier: -10,
+                modifier: 20,
             },
         },
         {
@@ -228,9 +228,9 @@ function allCombatActions() {
             name: 'Semi-Auto Burst',
             type: ['Half'],
             subtype: ['Attack', 'Ranged'],
-            description: 'Grants +0 BS, additional hit for every two additional DoS; jam on 94+; 2m spread.',
+            description: 'Grants +10 BS, additional hit for every two additional DoS; jam on 94+; 2m spread.',
             attack: {
-                modifier: 0,
+                modifier: 10,
             },
         },
         {
