@@ -1,0 +1,301 @@
+// ============================================
+// Attack Option Cards - Weapon Panel
+// Card-based selectable options for attack dialog
+// ============================================
+
+// ── Card Group Container ─────────────────────
+
+.urd-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: $rt-space-xs;
+    padding: $rt-space-sm 0;
+
+    & + .urd-card-group {
+        border-top: 1px solid $rt-border-light;
+    }
+
+    &--collapsible {
+        padding-bottom: $rt-space-xs;
+    }
+}
+
+.urd-card-group__title {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-sm;
+    font-family: $rt-font-ui;
+    font-size: $rt-font-size-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $rt-text-secondary;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+    cursor: default;
+
+    i:first-child {
+        color: $rt-color-gold;
+        font-size: $rt-font-size-xs;
+    }
+
+    &--toggle {
+        cursor: pointer;
+        width: 100%;
+        justify-content: flex-start;
+
+        &:hover {
+            color: $rt-text-primary;
+        }
+    }
+}
+
+.urd-card-group__chevron {
+    margin-left: auto;
+    font-size: $rt-font-size-2xs;
+    transition: transform $rt-transition-fast;
+}
+
+.urd-card-group__action {
+    margin-left: auto;
+    padding: 2px $rt-space-sm;
+    font-size: $rt-font-size-2xs;
+    font-family: $rt-font-ui;
+    color: $rt-text-secondary;
+    background: $rt-bg-subtle;
+    border: 1px solid $rt-border-light;
+    border-radius: $rt-radius-sm;
+    cursor: pointer;
+    transition: all $rt-transition-fast;
+
+    &:hover {
+        color: $rt-text-primary;
+        border-color: $rt-color-gold;
+        background: $rt-bg-input-focus;
+    }
+
+    i {
+        margin-right: 2px;
+    }
+}
+
+// ── Cards Container ──────────────────────────
+
+.urd-card-group__cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $rt-space-xs;
+
+    &--sub {
+        padding-left: $rt-space-sm;
+    }
+
+    &--multi {
+        // Multi-select cards get a slightly different background hint
+    }
+}
+
+.urd-card-group__expand {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: 2px $rt-space-sm;
+    font-size: $rt-font-size-2xs;
+    font-family: $rt-font-ui;
+    color: $rt-text-muted;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color $rt-transition-fast;
+
+    &:hover {
+        color: $rt-text-secondary;
+    }
+
+    i {
+        font-size: 0.55rem;
+    }
+}
+
+.urd-card-group__hint {
+    display: flex;
+    align-items: center;
+    gap: $rt-space-xs;
+    padding: 2px $rt-space-sm;
+    font-size: $rt-font-size-2xs;
+    color: $rt-text-muted;
+    font-style: italic;
+
+    i {
+        color: $rt-color-gold;
+    }
+
+    &--melta {
+        color: #e67e22;
+
+        i {
+            color: #e67e22;
+        }
+    }
+}
+
+// ── Individual Card ──────────────────────────
+
+.urd-card {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px $rt-space-sm;
+    background: $rt-bg-paper;
+    border: 1px solid $rt-border-light;
+    border-radius: $rt-radius-md;
+    cursor: pointer;
+    transition: all $rt-transition-fast;
+    font-family: $rt-font-ui;
+    font-size: $rt-font-size-2xs;
+    color: $rt-text-secondary;
+    position: relative;
+    min-height: 28px;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+        border-color: $rt-border-medium;
+        background: $rt-bg-paper-light;
+        transform: translateY(-1px);
+        box-shadow: $rt-shadow-sm;
+        color: $rt-text-primary;
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    // ── Selected state ──
+    &--selected {
+        border-color: $rt-color-gold;
+        background: rgba($rt-color-gold, 0.1);
+        color: $rt-text-primary;
+        box-shadow: 0 0 6px rgba($rt-color-gold, 0.15);
+
+        &:hover:not(:disabled) {
+            border-color: $rt-color-gold-light;
+            background: rgba($rt-color-gold, 0.15);
+            box-shadow: 0 0 8px rgba($rt-color-gold, 0.25);
+        }
+
+        .urd-card__icon {
+            color: $rt-color-gold;
+        }
+    }
+
+    // ── Active toggle state (multi-select) ──
+    &--active {
+        border-color: $rt-color-gold;
+        background: rgba($rt-color-gold, 0.1);
+        color: $rt-text-primary;
+        box-shadow: 0 0 6px rgba($rt-color-gold, 0.15);
+
+        &:hover:not(:disabled) {
+            border-color: $rt-color-gold-light;
+            background: rgba($rt-color-gold, 0.15);
+        }
+
+        .urd-card__icon {
+            color: $rt-color-gold;
+        }
+    }
+
+    // ── Disabled state ──
+    &--disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+}
+
+// ── Card Sub-elements ────────────────────────
+
+.urd-card__icon {
+    font-size: $rt-font-size-xs;
+    color: $rt-text-muted;
+    width: 14px;
+    text-align: center;
+    flex-shrink: 0;
+    transition: color $rt-transition-fast;
+}
+
+.urd-card__name {
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.urd-card__badge {
+    padding: 0 4px;
+    font-size: 0.55rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: $rt-text-muted;
+    background: $rt-bg-overlay-light;
+    border-radius: $rt-radius-sm;
+    flex-shrink: 0;
+}
+
+.urd-card__range {
+    font-size: 0.55rem;
+    color: $rt-text-muted;
+    flex-shrink: 0;
+}
+
+.urd-card__mod {
+    font-weight: 600;
+    font-size: $rt-font-size-2xs;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding-left: 4px;
+
+    &--positive {
+        color: #4ade80;
+    }
+
+    &--negative {
+        color: #f87171;
+    }
+
+    &--neutral {
+        color: $rt-text-muted;
+    }
+}
+
+// ── Animations ───────────────────────────────
+
+@keyframes urd-card-select {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+}
+
+.urd-card--selected,
+.urd-card--active {
+    animation: urd-card-select 200ms ease;
+}
+
+// ── Reduced motion ───────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+    .urd-card {
+        transition: none;
+
+        &:hover:not(:disabled) {
+            transform: none;
+        }
+    }
+
+    .urd-card--selected,
+    .urd-card--active {
+        animation: none;
+    }
+}

@@ -166,8 +166,11 @@ function allCombatActions() {
         {
             name: 'Guarded Action',
             type: ['Half'],
-            subtype: ['Concentration'],
+            subtype: ['Attack', 'Concentration', 'Melee'],
             description: 'Grants -10 to WS or BS, +10 to all Evasion tests until start of next turn.',
+            attack: {
+                modifier: -10,
+            },
         },
         {
             name: 'Jump or Leap',
@@ -193,9 +196,12 @@ function allCombatActions() {
         {
             name: 'Manoeuvre',
             type: ['Half'],
-            subtype: ['Movement', 'Melee'],
+            subtype: ['Attack', 'Movement', 'Melee'],
             description:
                 'Make an opposed WS test against character in melee range; if successful, move them up to 1 metre in direction of choice (character may advance 1 metre as well). Cannot push into obstacles or characters, but can push off of cliffs or edges.',
+            attack: {
+                modifier: 0,
+            },
         },
         {
             name: 'Overwatch',
