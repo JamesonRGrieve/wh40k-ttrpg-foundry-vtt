@@ -2432,8 +2432,19 @@ $bp-wide: 1200px;
             border-top: 1px solid var(--color-border-secondary, #444);
             font-size: 0.8rem;
             color: var(--color-text-light-secondary, #888);
-            max-height: 80px;
+            max-height: 120px;
             overflow-y: auto;
+
+            &[hidden] {
+                display: none;
+            }
+        }
+
+        .rt-btn-toggle-desc {
+            i {
+                transition: transform 0.2s;
+                font-size: 0.65rem;
+            }
         }
 
         .rt-psy-badge {

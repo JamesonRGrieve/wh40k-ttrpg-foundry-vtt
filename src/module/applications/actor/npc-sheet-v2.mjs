@@ -79,6 +79,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
             removeTag: NPCSheetV2.#removeTag,
             // UI actions
             toggleEditSection: NPCSheetV2.#toggleEditSection,
+            toggleAbilityDesc: NPCSheetV2.#toggleAbilityDesc,
         },
     };
 
@@ -1411,6 +1412,25 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
         // Toggle button state
         target.classList.toggle('active');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle ability description visibility (collapsible cards).
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static #toggleAbilityDesc(event, target) {
+        event.preventDefault();
+        const card = target.closest('.rt-ability-card');
+        if (!card) return;
+        const desc = card.querySelector('.rt-ability-desc');
+        if (!desc) return;
+        desc.hidden = !desc.hidden;
+        // Rotate chevron
+        const icon = target.querySelector('i');
+        if (icon) icon.classList.toggle('fa-rotate-180');
     }
 
     /* -------------------------------------------- */
