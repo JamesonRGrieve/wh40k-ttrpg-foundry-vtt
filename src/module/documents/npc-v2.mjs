@@ -1,4 +1,6 @@
 import { RogueTraderBaseActor } from './base-actor.mjs';
+import { SimpleSkillData } from '../rolls/action-data.mjs';
+import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.mjs';
 
 /**
  * Document class for npcV2 type actors.
@@ -109,23 +111,16 @@ export class RogueTraderNPCV2 extends RogueTraderBaseActor {
             return null;
         }
 
-        const { D100Roll } = game.rt.dice;
-        const roll = new D100Roll(
-            `1d100`,
-            {},
-            {
-                target: char.total,
-                type: 'characteristic',
-                label: char.label,
-            },
-        );
-
-        await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this }),
-            flavor: flavor || `${char.label} Test`,
-        });
-
-        return roll;
+        const simpleSkillData = new SimpleSkillData();
+        const rollData = simpleSkillData.rollData;
+        rollData.actor = this;
+        rollData.sourceActor = this;
+        rollData.nameOverride = flavor || `${char.label} Test`;
+        rollData.type = 'Characteristic';
+        rollData.rollKey = characteristicKey;
+        rollData.baseTarget = char.total;
+        rollData.modifiers.modifier = 0;
+        await prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
@@ -146,23 +141,16 @@ export class RogueTraderNPCV2 extends RogueTraderBaseActor {
         const char = this.system.characteristics[attackCharKey];
         if (!char) return null;
 
-        const { D100Roll } = game.rt.dice;
-        const roll = new D100Roll(
-            `1d100`,
-            {},
-            {
-                target: char.total,
-                type: 'attack',
-                label: weapon.name,
-            },
-        );
-
-        await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this }),
-            flavor: `${weapon.name} Attack (${weapon.damage}, Pen ${weapon.pen})`,
-        });
-
-        return roll;
+        const simpleSkillData = new SimpleSkillData();
+        const rollData = simpleSkillData.rollData;
+        rollData.actor = this;
+        rollData.sourceActor = this;
+        rollData.nameOverride = `${weapon.name} Attack`;
+        rollData.type = 'Attack';
+        rollData.rollKey = attackCharKey;
+        rollData.baseTarget = char.total;
+        rollData.modifiers.modifier = 0;
+        await prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
@@ -176,23 +164,16 @@ export class RogueTraderNPCV2 extends RogueTraderBaseActor {
         const skill = this.system.trainedSkills[skillName];
         const skillLabel = skill?.name || skillName;
 
-        const { D100Roll } = game.rt.dice;
-        const roll = new D100Roll(
-            `1d100`,
-            {},
-            {
-                target,
-                type: 'skill',
-                label: skillLabel,
-            },
-        );
-
-        await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this }),
-            flavor: flavor || `${skillLabel} Test`,
-        });
-
-        return roll;
+        const simpleSkillData = new SimpleSkillData();
+        const rollData = simpleSkillData.rollData;
+        rollData.actor = this;
+        rollData.sourceActor = this;
+        rollData.nameOverride = flavor || `${skillLabel} Test`;
+        rollData.type = 'Skill';
+        rollData.rollKey = skillName;
+        rollData.baseTarget = target;
+        rollData.modifiers.modifier = 0;
+        await prepareUnifiedRoll(simpleSkillData);
     }
 
     /* -------------------------------------------- */

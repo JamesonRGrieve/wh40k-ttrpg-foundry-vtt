@@ -1,17 +1,13 @@
-{{!-- NPC V2 Combat Tab - All Combat Info in One Place --}}
+{{!-- NPC V2 Combat Tab - Combat Station for GM Use --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
   <div class="rt-combat-tab">
 
-    {{!-- TOP ROW: Wounds + Combat Stats + Movement --}}
-    <div class="rt-combat-vitals">
-      
-      {{!-- Wounds Panel --}}
-      <div class="rt-panel rt-panel--wounds">
-        <div class="rt-panel-header">
-          <i class="fa-solid fa-heart"></i>
-          <span>Wounds</span>
-        </div>
-        <div class="rt-panel-body">
+    {{!-- COMBAT HEADER: Wounds Bar + Quick Stats --}}
+    <div class="rt-combat-header">
+      {{!-- Wounds Display --}}
+      <div class="rt-combat-wounds">
+        <div class="rt-wounds-icon"><i class="fa-solid fa-heart"></i></div>
+        <div class="rt-wounds-info">
           <div class="rt-wounds-display">
             <input type="number"
                    name="system.wounds.value"
@@ -30,100 +26,69 @@
           <div class="rt-wounds-bar">
             <div class="rt-wounds-fill" style="width: {{percent system.wounds.value system.wounds.max}}%"></div>
           </div>
-          <div class="rt-damage-controls">
-            <div class="rt-damage-row">
-              <button type="button" class="rt-btn-damage" data-action="applyDamage" data-amount="1">−1</button>
-              <button type="button" class="rt-btn-damage" data-action="applyDamage" data-amount="5">−5</button>
-              <button type="button" class="rt-btn-damage" data-action="applyDamage" data-amount="10">−10</button>
-            </div>
-            <div class="rt-heal-row">
-              <button type="button" class="rt-btn-heal" data-action="healWounds" data-amount="1">+1</button>
-              <button type="button" class="rt-btn-heal" data-action="healWounds" data-amount="5">+5</button>
-              <button type="button" class="rt-btn-heal" data-action="healWounds" data-amount="10">+10</button>
-            </div>
-            {{#if editable}}
-            <div class="rt-custom-damage">
-              <input type="number" class="rt-custom-input" data-custom-damage value="1" min="1" />
-              <button type="button" class="rt-btn-damage" data-action="applyCustomDamage"><i class="fa-solid fa-minus"></i></button>
-              <button type="button" class="rt-btn-heal" data-action="healCustomWounds"><i class="fa-solid fa-plus"></i></button>
-            </div>
-            {{/if}}
+        </div>
+        {{!-- Quick Damage/Heal Buttons --}}
+        <div class="rt-wounds-actions">
+          <button type="button" class="rt-btn-damage" data-action="applyDamage" data-amount="1" title="−1 Wound">−1</button>
+          <button type="button" class="rt-btn-damage" data-action="applyDamage" data-amount="5" title="−5 Wounds">−5</button>
+          <div class="rt-custom-damage">
+            <input type="number" class="rt-custom-input" data-custom-damage value="1" min="1" />
+            <button type="button" class="rt-btn-damage" data-action="applyCustomDamage" title="Apply Custom Damage"><i class="fa-solid fa-minus"></i></button>
+            <button type="button" class="rt-btn-heal" data-action="healCustomWounds" title="Heal Custom Amount"><i class="fa-solid fa-plus"></i></button>
           </div>
+          <button type="button" class="rt-btn-heal" data-action="healWounds" data-amount="5" title="+5 Wounds">+5</button>
+          <button type="button" class="rt-btn-heal" data-action="healWounds" data-amount="1" title="+1 Wound">+1</button>
         </div>
       </div>
 
-      {{!-- Combat Stats --}}
-      <div class="rt-panel rt-panel--combat">
-        <div class="rt-panel-header">
-          <i class="fa-solid fa-swords"></i>
-          <span>Combat</span>
+      {{!-- Quick Combat Stats --}}
+      <div class="rt-combat-quickstats">
+        <div class="rt-quickstat rollable" data-action="rollInitiative" title="Roll Initiative">
+          <i class="fa-solid fa-bolt"></i>
+          <span class="rt-quickstat-value">{{system.initiative.bonus}}</span>
+          <span class="rt-quickstat-label">Init</span>
         </div>
-        <div class="rt-panel-body">
-          <div class="rt-combat-stats">
-            <div class="rt-stat-tile rollable" data-action="rollInitiative" title="Roll Initiative">
-              <i class="fa-solid fa-bolt"></i>
-              <span class="rt-stat-value">{{system.initiative.bonus}}</span>
-              <span class="rt-stat-label">Init</span>
-            </div>
-            <div class="rt-stat-tile rollable" data-action="rollSkill" data-skill="dodge" title="Roll Dodge">
-              <i class="fa-solid fa-person-running-fast"></i>
-              <span class="rt-stat-value">{{combatSummary.dodge}}</span>
-              <span class="rt-stat-label">Dodge</span>
-            </div>
-            <div class="rt-stat-tile rollable" data-action="rollSkill" data-skill="parry" title="Roll Parry">
-              <i class="fa-solid fa-shield"></i>
-              <span class="rt-stat-value">{{combatSummary.parry}}</span>
-              <span class="rt-stat-label">Parry</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {{!-- Defense / Armour --}}
-      <div class="rt-panel rt-panel--armour">
-        <div class="rt-panel-header">
+        <div class="rt-quickstat">
           <i class="fa-solid fa-shield-halved"></i>
-          <span>Armour</span>
-          {{#if editable}}
-          <button class="rt-header-btn" type="button" data-action="toggleArmourMode" title="Toggle Simple/Locations">
-            <i class="fa-solid fa-arrows-rotate"></i>
-          </button>
-          {{/if}}
+          <span class="rt-quickstat-value">{{toughnessBonus}}</span>
+          <span class="rt-quickstat-label">TB</span>
+        </div>
+        {{#if system.wounds.critical}}
+        <div class="rt-quickstat rt-quickstat--critical">
+          <i class="fa-solid fa-skull-crossbones"></i>
+          <span class="rt-quickstat-value">{{system.wounds.critical}}</span>
+          <span class="rt-quickstat-label">Crit</span>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+
+    {{!-- MAIN COMBAT GRID: Defenses / Movement / Armour --}}
+    <div class="rt-combat-grid">
+
+      {{!-- Defenses Panel --}}
+      <div class="rt-panel rt-panel--defenses">
+        <div class="rt-panel-header">
+          <i class="fa-solid fa-shield"></i>
+          <span>Defenses</span>
         </div>
         <div class="rt-panel-body">
-          {{#if armour.isSimple}}
-          <div class="rt-armour-simple">
-            <div class="rt-armour-big">
-              {{#if editable}}
-              <input type="number" name="system.armour.total" value="{{armour.total}}" min="0" class="rt-armour-input" />
-              {{else}}
-              <span class="rt-armour-value">{{armour.total}}</span>
-              {{/if}}
-              <span class="rt-armour-label">AP</span>
-            </div>
-            <div class="rt-dr-calc">
-              <span>TB {{toughnessBonus}} + AP {{armour.total}} = <strong>{{add toughnessBonus armour.total}} DR</strong></span>
-            </div>
+          <div class="rt-defense-buttons">
+            <button type="button" class="rt-defense-btn rollable" data-action="rollSkill" data-skill="dodge" title="Roll Dodge">
+              <i class="fa-solid fa-person-running-fast"></i>
+              <span class="rt-defense-value">{{combatSummary.dodge}}</span>
+              <span class="rt-defense-label">Dodge</span>
+            </button>
+            <button type="button" class="rt-defense-btn rollable" data-action="rollSkill" data-skill="parry" title="Roll Parry">
+              <i class="fa-solid fa-shield"></i>
+              <span class="rt-defense-value">{{combatSummary.parry}}</span>
+              <span class="rt-defense-label">Parry</span>
+            </button>
           </div>
-          {{else}}
-          <div class="rt-armour-locations">
-            {{#each hitLocations}}
-            <div class="rt-location">
-              <span class="rt-loc-name">{{label}}</span>
-              {{#if ../editable}}
-              <input type="number" name="system.armour.locations.{{key}}" value="{{value}}" min="0" class="rt-loc-input" />
-              {{else}}
-              <span class="rt-loc-value">{{value}}</span>
-              {{/if}}
-              <span class="rt-loc-dr">=={{add value ../toughnessBonus}}</span>
-            </div>
-            {{/each}}
-          </div>
-          {{/if}}
         </div>
       </div>
 
-      {{!-- Movement --}}
+      {{!-- Movement Panel --}}
       <div class="rt-panel rt-panel--movement">
         <div class="rt-panel-header">
           <i class="fa-solid fa-person-running"></i>
@@ -166,6 +131,50 @@
           </div>
         </div>
       </div>
+
+      {{!-- Armour Panel --}}
+      <div class="rt-panel rt-panel--armour">
+        <div class="rt-panel-header">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Armour</span>
+          {{#if editable}}
+          <button class="rt-header-btn" type="button" data-action="toggleArmourMode" title="Toggle Simple/Locations">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+          {{/if}}
+        </div>
+        <div class="rt-panel-body">
+          {{#if armour.isSimple}}
+          <div class="rt-armour-simple">
+            <div class="rt-armour-big">
+              {{#if editable}}
+              <input type="number" name="system.armour.total" value="{{armour.total}}" min="0" class="rt-armour-input" />
+              {{else}}
+              <span class="rt-armour-value">{{armour.total}}</span>
+              {{/if}}
+              <span class="rt-armour-label">AP</span>
+            </div>
+            <div class="rt-dr-calc">
+              <span>TB {{toughnessBonus}} + AP {{armour.total}} = <strong>{{add toughnessBonus armour.total}} DR</strong></span>
+            </div>
+          </div>
+          {{else}}
+          <div class="rt-armour-locations">
+            {{#each hitLocations}}
+            <div class="rt-location">
+              <span class="rt-loc-name">{{label}}</span>
+              {{#if ../editable}}
+              <input type="number" name="system.armour.locations.{{key}}" value="{{value}}" min="0" class="rt-loc-input" />
+              {{else}}
+              <span class="rt-loc-value">{{value}}</span>
+              {{/if}}
+              <span class="rt-loc-dr">=={{add value ../toughnessBonus}}</span>
+            </div>
+            {{/each}}
+          </div>
+          {{/if}}
+        </div>
+      </div>
     </div>
 
     {{!-- WEAPONS SECTION --}}
@@ -196,7 +205,7 @@
               {{else}}
               <span class="rt-weapon-name">{{name}}</span>
               {{/if}}
-              <button type="button" class="rt-btn-attack rollable" data-action="rollWeapon" data-weapon-index="{{index}}" title="Attack">
+              <button type="button" class="rt-btn-attack rollable" data-action="rollWeapon" data-weapon-index="{{index}}" title="Attack Roll">
                 <i class="fa-solid fa-dice-d20"></i>
               </button>
               {{#if ../editable}}
@@ -211,7 +220,7 @@
                 {{selectOptions ../weaponClassOptions selected=this.class}}
               </select>
               {{/if}}
-              <span class="rt-weapon-stat">
+              <span class="rt-weapon-stat" title="Damage">
                 <i class="fa-solid fa-burst"></i>
                 {{#if ../editable}}
                 <input type="text" name="system.weapons.simple.{{index}}.damage" value="{{damage}}" class="rt-stat-input" placeholder="1d10+3" />
@@ -219,16 +228,16 @@
                 {{damage}}
                 {{/if}}
               </span>
-              <span class="rt-weapon-stat">
+              <span class="rt-weapon-stat" title="Penetration">
                 <i class="fa-solid fa-bullseye-arrow"></i>
                 {{#if ../editable}}
                 <input type="number" name="system.weapons.simple.{{index}}.pen" value="{{pen}}" min="0" class="rt-stat-input-sm" />
                 {{else}}
-                {{pen}}
+                Pen {{pen}}
                 {{/if}}
               </span>
               {{#if isRanged}}
-              <span class="rt-weapon-stat">
+              <span class="rt-weapon-stat" title="Range">
                 <i class="fa-solid fa-ruler"></i>
                 {{#if ../editable}}
                 <input type="text" name="system.weapons.simple.{{index}}.range" value="{{range}}" class="rt-stat-input" placeholder="30m" />
@@ -236,7 +245,7 @@
                 {{range}}
                 {{/if}}
               </span>
-              <span class="rt-weapon-stat">
+              <span class="rt-weapon-stat" title="Rate of Fire">
                 <i class="fa-solid fa-arrows-repeat"></i>
                 {{#if ../editable}}
                 <input type="text" name="system.weapons.simple.{{index}}.rof" value="{{rof}}" class="rt-stat-input" placeholder="S/2/–" />
@@ -297,7 +306,7 @@
       </div>
     </div>
 
-    {{!-- Combat Tracker (GM only) --}}
+    {{!-- COMBAT TRACKER (GM only) --}}
     {{#if isGM}}
     <div class="rt-panel rt-panel--tracker">
       <div class="rt-panel-header">
