@@ -12,6 +12,7 @@
 
 import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 import { getDegree, roll1d100, sendActionDataToChat } from "../../rolls/roll-helpers.mjs";
+import { RANGE_BRACKETS, calculateTokenDistance } from "../../utils/range-calculator.mjs";
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -38,6 +39,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._showCustomModifier = false;
         this._contextExpanded = true;
         this._previousTarget = null;
+        this._selectedRangeBracket = null;
     }
 
     /* -------------------------------------------- */
@@ -60,6 +62,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             toggleContextSection: UnifiedRollDialog.#onToggleContextSection,
             selectWeapon: UnifiedRollDialog.#onSelectWeapon,
             selectPower: UnifiedRollDialog.#onSelectPower,
+            selectRangeBracket: UnifiedRollDialog.#onSelectRangeBracket,
+            selectTarget: UnifiedRollDialog.#onSelectTarget,
             cancel: UnifiedRollDialog.#onCancel
         },
         form: {
@@ -425,6 +429,27 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     _getWeaponContext() {
         const rd = this.rollData;
+
+        // Apply range bracket override if user selected one
+        if (this._selectedRangeBracket && rd.weapon?.isRanged) {
+            const bracket = RANGE_BRACKETS[this._selectedRangeBracket];
+            if (bracket) {
+                rd.rangeName = bracket.label;
+                rd.rangeBonus = bracket.modifier;
+                rd.rangeBracket = this._selectedRangeBracket;
+            }
+        }
+
+        // Build range bracket list for UI
+        const rangeBrackets = rd.weapon?.isRanged ? Object.entries(RANGE_BRACKETS).map(([key, b]) => ({
+            key,
+            label: b.label,
+            modifier: b.modifier,
+            modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
+            description: b.description,
+            isSelected: (this._selectedRangeBracket ?? rd.rangeBracket) === key
+        })) : [];
+
         return {
             weapons: rd.weapons || [],
             weapon: rd.weapon,
@@ -444,10 +469,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             aims: rd.aims,
             usesAmmo: rd.usesAmmo,
             ammoText: rd.ammoText,
-            distance: rd.distance,
             rangeName: rd.rangeName,
             rangeBonus: rd.rangeBonus,
             maxRange: rd.maxRange,
+            rangeBrackets,
+            selectedRangeBracket: this._selectedRangeBracket ?? rd.rangeBracket,
             rangeModifiedBy: rd.rangeModifiedBy,
             isMeltaRange: rd.isMeltaRange,
             difficulties: rd.difficulties
@@ -551,6 +577,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             if (this.rollData.update) {
                 await this.rollData.update();
             }
+            // Re-render dependent parts (e.g., Called Shot location dropdown, range info)
+            await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
         }
     }
 
@@ -645,6 +673,51 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onCancel(event, target) {
         await this.close();
+    }
+
+    static async #onSelectRangeBracket(event, target) {
+        const bracket = target.dataset.bracket;
+        if (!bracket) return;
+        this._selectedRangeBracket = bracket;
+        const bracketData = RANGE_BRACKETS[bracket];
+        if (bracketData) {
+            this.rollData.rangeName = bracketData.label;
+            this.rollData.rangeBonus = bracketData.modifier;
+            this.rollData.rangeBracket = bracket;
+        }
+        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+    }
+
+    static async #onSelectTarget(event, target) {
+        // Get source token
+        const actor = this.rollData.sourceActor;
+        if (!actor) return;
+        const sourceToken = actor.token ?? actor.getActiveTokens()[0];
+        if (!sourceToken) {
+            ui.notifications.warn("No token found for the attacking actor.");
+            return;
+        }
+
+        // Check for existing target
+        const targets = game.user.targets;
+        if (targets.size === 0) {
+            ui.notifications.info("Target a token first, then click Select Target.");
+            return;
+        }
+        const targetToken = [...targets.values()][0];
+        if (!targetToken) return;
+
+        // Calculate distance
+        const distance = calculateTokenDistance(sourceToken, targetToken);
+        this.rollData.distance = distance;
+        this.rollData.targetActor = targetToken.actor;
+
+        // Recalculate range with new distance
+        if (this.rollData.update) await this.rollData.update();
+
+        // Clear manual bracket override so calculated bracket takes effect
+        this._selectedRangeBracket = null;
+        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
     }
 
     /* -------------------------------------------- */

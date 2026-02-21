@@ -22,6 +22,10 @@ export class ActionData {
         this.rollData.reset();
     }
 
+    async descriptionText() {
+        // No-op default — subclasses (e.g. PsychicActionData) can override
+    }
+
     async checkForPerils() {
         if (this.rollData.power) {
             if (this.rollData.sourceActor.psy.rating < this.rollData.pr) {

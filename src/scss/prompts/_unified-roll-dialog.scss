@@ -927,6 +927,112 @@
 }
 
 // ============================================
+// Range Bracket Selection
+// ============================================
+
+.urd-range {
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    &__title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #9a9a8a;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    &__target-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(201, 162, 39, 0.2);
+        border-radius: 14px;
+        color: rgba(201, 162, 39, 0.7);
+        font-size: 0.72rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        i {
+            font-size: 0.7rem;
+        }
+
+        &:hover {
+            background: rgba(201, 162, 39, 0.1);
+            border-color: rgba(201, 162, 39, 0.5);
+            color: #c9a227;
+        }
+    }
+
+    &__brackets {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    &__pill {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 8px 4px;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: rgba(201, 162, 39, 0.08);
+            border-color: rgba(201, 162, 39, 0.3);
+        }
+
+        &--selected {
+            background: rgba(201, 162, 39, 0.15);
+            border-color: rgba(201, 162, 39, 0.5);
+            box-shadow: 0 0 10px rgba(201, 162, 39, 0.15), inset 0 0 10px rgba(201, 162, 39, 0.05);
+
+            .urd-range__pill-name {
+                color: #e8e4d9;
+            }
+        }
+    }
+
+    &__pill-name {
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: #9a9a8a;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    &__pill-mod {
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+
+        &--positive { color: #4ade80; }
+        &--negative { color: #f87171; }
+        &--neutral { color: #6a6a6a; }
+    }
+}
+
+// ============================================
 // Accessibility: Reduced Motion
 // ============================================
 

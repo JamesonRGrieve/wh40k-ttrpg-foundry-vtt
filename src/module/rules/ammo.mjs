@@ -189,9 +189,9 @@ export function calculateAmmoInformation(rollData) {
 
     if (rollData.action === 'Full Auto Burst' || rollData.action === 'Semi-Auto Burst') {
         if (rollData.action === 'Full Auto Burst') {
-            fireRate = rollData.weapon.system.rateOfFire.full;
+            fireRate = rollData.weapon.system.attack.rateOfFire.full;
         } else if (rollData.action === 'Semi-Auto Burst') {
-            fireRate = rollData.weapon.system.rateOfFire.burst;
+            fireRate = rollData.weapon.system.attack.rateOfFire.semi;
         }
         if (rollData.hasAttackSpecial('Storm')) {
             fireRate *= 2;
