@@ -208,12 +208,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             ? (rollData.protectionRating || 0)
             : (rollData.baseTarget || 0);
 
-        // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys)
-        const dialogManagedKeys = new Set(["difficulty", "situational", "modifier"]);
+        // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
+        const dialogManagedKeys = new Set(["difficulty", "situational", "modifier", "range"]);
         const weaponModSum = !isForceField
             ? Object.entries(rollData.modifiers || {})
                 .filter(([k]) => !dialogManagedKeys.has(k))
                 .reduce((sum, [, v]) => sum + (parseInt(v) || 0), 0)
+                + (rollData.rangeBonus || 0)
             : 0;
 
         const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod);

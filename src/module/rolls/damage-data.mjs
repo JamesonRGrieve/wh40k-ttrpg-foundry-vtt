@@ -99,9 +99,9 @@ export class Hit {
             game.rt.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }
 
-        let rollFormula = actionItem.system.damage;
-        if (!rollFormula || rollFormula === '') {
-            rollFormula = 0;
+        let rollFormula = actionItem.system.effectiveDamageFormula ?? actionItem.system.damage?.formula ?? actionItem.system.damage;
+        if (!rollFormula || typeof rollFormula !== 'string' || rollFormula === '') {
+            rollFormula = '0';
         }
         this.damageRoll = new Roll(rollFormula, attackData.rollData);
 
@@ -264,7 +264,7 @@ export class Hit {
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
-        const rollFormula = actionItem.system.penetration;
+        const rollFormula = actionItem.system.effectivePenetration ?? actionItem.system.damage?.penetration ?? actionItem.system.penetration;
         if (Number.isInteger(rollFormula)) {
             this.penetration = rollFormula;
         } else if (rollFormula === '') {
@@ -342,7 +342,7 @@ export class Hit {
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
-        this.damageType = actionItem.system.damageType;
+        this.damageType = actionItem.system.damage?.type ?? actionItem.system.damageType ?? 'Impact';
 
         if (attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
             if (!attackData.rollData.attackSpecials.find((s) => s.name === 'Concussive')) {
