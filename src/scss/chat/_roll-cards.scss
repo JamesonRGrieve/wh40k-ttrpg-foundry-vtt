@@ -622,6 +622,33 @@
     margin-top: 8px;
     background: var(--rt-panel-bg-translucent);
     border-top: 1px solid var(--rt-border-color);
+
+    &--stacked {
+        flex-direction: column;
+    }
+}
+
+.rt-roll-card__controls-row {
+    display: flex;
+    gap: 6px;
+}
+
+.rt-roll-card__hit-loc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 16px;
+    color: var(--rt-card-gold);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+
+    i {
+        font-size: 0.75rem;
+        opacity: 0.7;
+    }
 }
 
 .rt-roll-card__btn {
@@ -641,6 +668,7 @@
     letter-spacing: 0.05em;
     cursor: pointer;
     transition: all 0.2s ease;
+    white-space: nowrap;
 
     .material-icons {
         font-size: 16px;
@@ -655,6 +683,20 @@
 
     &:active {
         transform: translateY(0);
+    }
+
+    &--full {
+        flex: none;
+        width: 100%;
+    }
+
+    &--sm {
+        font-size: 0.7rem;
+        padding: 5px 8px;
+
+        .material-icons {
+            font-size: 14px;
+        }
     }
 
     &--damage {

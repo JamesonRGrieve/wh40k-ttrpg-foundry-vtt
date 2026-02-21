@@ -95,6 +95,7 @@
                             class="urd-range__pill {{#if isSelected}}urd-range__pill--selected{{/if}}"
                             data-action="selectRangeBracket" data-bracket="{{key}}">
                         <span class="urd-range__pill-name">{{label}}</span>
+                        {{#if rangeText}}<span class="urd-range__pill-range">{{rangeText}}</span>{{/if}}
                         <span class="urd-range__pill-mod {{#if (gt modifier 0)}}urd-range__pill-mod--positive{{else if (lt modifier 0)}}urd-range__pill-mod--negative{{else}}urd-range__pill-mod--neutral{{/if}}">{{modifierLabel}}</span>
                     </button>
                 {{/each}}
@@ -111,14 +112,6 @@
                     Melta: Double penetration at this range
                 </div>
             {{/if}}
-        </div>
-    {{/if}}
-
-    {{!-- Weapon attack mod --}}
-    {{#if rollData.modifiers.attack}}
-        <div class="urd-panel__field">
-            <span class="urd-panel__label">Weapon Attack Mod</span>
-            <span class="urd-panel__value">{{rollData.modifiers.attack}}</span>
         </div>
     {{/if}}
 {{/if}}

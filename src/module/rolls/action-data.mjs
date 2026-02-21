@@ -355,6 +355,11 @@ export class ActionData {
             // Calculate Hits
             await this.calculateHits();
 
+            // Store primary hit location on rollData for chat display
+            if (this.damageData.hits.length > 0) {
+                this.rollData.hitLocation = this.damageData.hits[0].location;
+            }
+
             // Create Specials
             await this.createEffectData();
 
