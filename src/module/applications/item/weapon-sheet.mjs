@@ -33,8 +33,8 @@ export default class WeaponSheet extends ContainerItemSheet {
             toggleBody: WeaponSheet.#toggleBody,
         },
         position: {
-            width: 450,
-            height: 400,
+            width: 500,
+            height: 300,
         },
         window: {
             resizable: true,
@@ -396,14 +396,42 @@ export default class WeaponSheet extends ContainerItemSheet {
             return;
         }
 
-        // Roll damage directly (bypassing attack roll)
-        const formula = this.item.system.effectiveDamageFormula;
-        const roll = await new Roll(formula).evaluate();
+        const weapon = this.item;
+        const formula = weapon.system.effectiveDamageFormula;
+        const damageRoll = await new Roll(formula).evaluate();
 
-        await roll.toMessage({
+        const hit = {
+            location: 'Body',
+            damageRoll: { formula: damageRoll.formula, result: damageRoll.result },
+            totalDamage: damageRoll.total,
+            damageType: weapon.system.damage.type,
+            totalPenetration: weapon.system.effectivePenetration,
+            modifiers: {},
+            effects: [],
+            righteousFury: [],
+        };
+
+        const templateData = {
+            weaponName: weapon.name,
+            hits: [hit],
+            targetActor: null,
+        };
+
+        const template = 'systems/rogue-trader/templates/chat/damage-roll-chat.hbs';
+        const html = await renderTemplate(template, templateData);
+        const chatData = {
+            user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor }),
-            flavor: `${this.item.name} - Damage`,
-        });
+            rollMode: game.settings.get('core', 'rollMode'),
+            content: html,
+            rolls: [damageRoll],
+        };
+        if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
+            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+        } else if (chatData.rollMode === 'selfroll') {
+            chatData.whisper = [game.user];
+        }
+        await ChatMessage.create(chatData);
     }
 
     /* -------------------------------------------- */
