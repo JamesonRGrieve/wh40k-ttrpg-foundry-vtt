@@ -457,9 +457,9 @@ export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('rateOfFireDisplay', function (rateOfFire) {
         if (!rateOfFire) return '';
         const single = rateOfFire.single ?? '-';
-        const burst = rateOfFire.burst ?? '-';
+        const semi = rateOfFire.semi ?? '-';
         const full = rateOfFire.full ?? '-';
-        return `${single}/${burst}/${full}`;
+        return `${single}/${semi}/${full}`;
     });
 
     Handlebars.registerHelper('specialDisplay', function (special) {

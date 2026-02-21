@@ -82,28 +82,36 @@
     {{!-- Ranged weapon options --}}
     {{#if weapon.isRanged}}
         <div class="urd-panel__divider"></div>
-        <div class="urd-panel__field">
-            <span class="urd-panel__label">Distance (m)</span>
-            <input class="rt-prompt__input" type="number" data-dtype="Number" name="distance" value="{{distance}}" />
-        </div>
-        <div class="rt-prompt__range-info">
-            <span class="rt-prompt__range-label">{{rangeName}}</span>
-            <span class="rt-prompt__range-value {{#if (gt rangeBonus 0)}}rt-prompt__range-value--positive{{else if (lt rangeBonus 0)}}rt-prompt__range-value--negative{{else}}rt-prompt__range-value--neutral{{/if}}">
-                {{#if (gt rangeBonus 0)}}+{{/if}}{{rangeBonus}}
-            </span>
-        </div>
-        {{#if rangeModifiedBy}}
-            <div class="rt-prompt__hint">
-                <i class="fas fa-info-circle"></i>
-                Range modifier affected by {{rangeModifiedBy}}
+        <div class="urd-range">
+            <div class="urd-range__header">
+                <span class="urd-range__title">Range</span>
+                <button type="button" class="urd-range__target-btn" data-action="selectTarget">
+                    <i class="fas fa-crosshairs"></i> Select Target
+                </button>
             </div>
-        {{/if}}
-        {{#if isMeltaRange}}
-            <div class="rt-prompt__hint rt-prompt__hint--melta">
-                <i class="fas fa-fire"></i>
-                Melta: Double penetration at this range
+            <div class="urd-range__brackets">
+                {{#each rangeBrackets}}
+                    <button type="button"
+                            class="urd-range__pill {{#if isSelected}}urd-range__pill--selected{{/if}}"
+                            data-action="selectRangeBracket" data-bracket="{{key}}">
+                        <span class="urd-range__pill-name">{{label}}</span>
+                        <span class="urd-range__pill-mod {{#if (gt modifier 0)}}urd-range__pill-mod--positive{{else if (lt modifier 0)}}urd-range__pill-mod--negative{{else}}urd-range__pill-mod--neutral{{/if}}">{{modifierLabel}}</span>
+                    </button>
+                {{/each}}
             </div>
-        {{/if}}
+            {{#if rangeModifiedBy}}
+                <div class="rt-prompt__hint">
+                    <i class="fas fa-info-circle"></i>
+                    Range modifier affected by {{rangeModifiedBy}}
+                </div>
+            {{/if}}
+            {{#if isMeltaRange}}
+                <div class="rt-prompt__hint rt-prompt__hint--melta">
+                    <i class="fas fa-fire"></i>
+                    Melta: Double penetration at this range
+                </div>
+            {{/if}}
+        </div>
     {{/if}}
 
     {{!-- Weapon attack mod --}}
