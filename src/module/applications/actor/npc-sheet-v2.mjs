@@ -39,13 +39,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
             // Roll actions (rollCharacteristic & rollSkill kept for NPC-specific roll paths)
             rollCharacteristic: NPCSheetV2.#rollCharacteristic,
             rollSkill: NPCSheetV2.#rollSkill,
-            rollWeapon: NPCSheetV2.#rollWeapon,
             rollInitiative: NPCSheetV2.#rollInitiative,
             // Weapon actions
-            addSimpleWeapon: NPCSheetV2.#addSimpleWeapon,
-            removeSimpleWeapon: NPCSheetV2.#removeSimpleWeapon,
-            toggleWeaponMode: NPCSheetV2.#toggleWeaponMode,
-            promoteWeapon: NPCSheetV2.#promoteWeapon,
+            reloadWeapon: NPCSheetV2.#reloadWeapon,
             // Armour actions
             toggleArmourMode: NPCSheetV2.#toggleArmourMode,
             // Skill actions
@@ -78,7 +74,6 @@ export default class NPCSheetV2 extends BaseActorSheet {
             addToCombat: NPCSheetV2.#addToCombat,
             removeFromCombat: NPCSheetV2.#removeFromCombat,
             removeItem: NPCSheetV2.#removeItem,
-            reloadWeapon: NPCSheetV2.#reloadWeapon,
             // Tag actions
             addTag: NPCSheetV2.#addTag,
             removeTag: NPCSheetV2.#removeTag,
@@ -230,24 +225,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @protected
      */
     _prepareWeaponsContext(context) {
-        const weapons = context.system.weapons || {};
-
-        // Simple mode weapons
-        context.simpleWeapons = (weapons.simple || []).map((w, idx) => ({
-            ...w,
-            index: idx,
-            isMelee: w.class === 'melee',
-            isRanged: ['pistol', 'basic', 'heavy', 'thrown', 'launcher'].includes(w.class),
-            clip: w.clip ?? '—',
-            clipMax: w.clipMax ?? '—',
-        }));
-
-        // Embedded mode weapons (from items)
+        // Embedded weapons (from items dragged onto the NPC)
         context.embeddedWeapons = context.items.filter((i) => i.type === 'weapon');
-
-        context.weaponMode = weapons.mode || 'simple';
-        context.isSimpleMode = context.weaponMode === 'simple';
-        context.isEmbeddedMode = context.weaponMode === 'embedded';
     }
 
     /* -------------------------------------------- */
@@ -465,8 +444,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         context.allItems = context.items.filter((i) => !['talent', 'trait', 'psychicPower', 'specialAbility', 'condition', 'criticalInjury', 'mutation'].includes(i.type));
 
         // Flag for weapon rows in actions grid (used for empty state)
-        const weaponCount = context.isSimpleMode ? (context.simpleWeapons?.length ?? 0) : (context.embeddedWeapons?.length ?? 0);
-        context.combatWeaponRows = weaponCount > 0;
+        context.combatWeaponRows = (context.embeddedWeapons?.length ?? 0) > 0;
     }
 
     /* -------------------------------------------- */
@@ -673,70 +651,24 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
     /**
      * Handle weapon attack roll.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #rollWeapon(event, target) {
-        event.preventDefault();
-        const weaponIndex = parseInt(target.dataset.weaponIndex, 10);
-        if (isNaN(weaponIndex)) return;
-        await this.actor.rollSimpleWeapon(weaponIndex);
-    }
-
-    /* -------------------------------------------- */
-
     /**
-     * Handle adding a simple weapon.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #addSimpleWeapon(event, target) {
-        event.preventDefault();
-        const weapons = foundry.utils.deepClone(this.actor.system.weapons?.simple || []);
-        weapons.push({
-            name: 'New Weapon',
-            damage: '1d10',
-            pen: 0,
-            range: 'Melee',
-            rof: 'S/-/-',
-            clip: 0,
-            reload: '-',
-            special: '',
-            class: 'melee',
-        });
-        await this.actor.update({ 'system.weapons.simple': weapons });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle removing a simple weapon.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #removeSimpleWeapon(event, target) {
-        event.preventDefault();
-        const weaponIndex = parseInt(target.dataset.weaponIndex, 10);
-        const weapons = foundry.utils.deepClone(this.actor.system.weapons?.simple || []);
-        weapons.splice(weaponIndex, 1);
-        await this.actor.update({ 'system.weapons.simple': weapons });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Reload a simple weapon (reset clip to max).
+     * Reload an embedded weapon using the ReloadActionManager.
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
     static async #reloadWeapon(event, target) {
         event.preventDefault();
-        const weaponIndex = parseInt(target.dataset.weaponIndex, 10);
-        const weapons = foundry.utils.deepClone(this.actor.system.weapons?.simple || []);
-        if (weapons[weaponIndex]) {
-            weapons[weaponIndex].clip = weapons[weaponIndex].clipMax || 0;
-            await this.actor.update({ 'system.weapons.simple': weapons });
-            ui.notifications.info(`Reloaded ${weapons[weaponIndex].name || 'weapon'}.`);
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId ?? target.dataset.itemId;
+        if (!itemId) return;
+        const weapon = this.actor.items.get(itemId);
+        if (!weapon) return;
+        const { ReloadActionManager } = await import('../../actions/reload-action-manager.mjs');
+        const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: event.shiftKey });
+        if (result.success) {
+            ui.notifications.info(result.message);
+            await ReloadActionManager.sendReloadToChat(this.actor, weapon, result);
+        } else {
+            ui.notifications.warn(result.message);
         }
     }
 
@@ -802,33 +734,6 @@ export default class NPCSheetV2 extends BaseActorSheet {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flavor: 'Initiative Roll',
         });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle toggling weapon mode.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #toggleWeaponMode(event, target) {
-        event.preventDefault();
-        const currentMode = this.actor.system.weapons?.mode || 'simple';
-        const newMode = currentMode === 'simple' ? 'embedded' : 'simple';
-        await this.actor.system.switchWeaponMode(newMode);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle promoting a simple weapon to embedded.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #promoteWeapon(event, target) {
-        event.preventDefault();
-        const weaponIndex = parseInt(target.dataset.weaponIndex, 10);
-        await this.actor.system.promoteSimpleWeapon(weaponIndex);
     }
 
     /* -------------------------------------------- */
@@ -1666,4 +1571,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         context.talents = context.items.filter((i) => i.type === 'talent');
         context.traits = context.items.filter((i) => i.type === 'trait');
     }
+
+    /* -------------------------------------------- */
+
 }

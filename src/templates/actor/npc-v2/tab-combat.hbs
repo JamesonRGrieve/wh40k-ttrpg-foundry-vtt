@@ -21,21 +21,13 @@
           <button type="button" class="rt-arrow-btn rt-arrow-up" data-action="healWounds" data-amount="1" title="+1 Wound"><i class="fa-solid fa-caret-up"></i></button>
           <button type="button" class="rt-arrow-btn rt-arrow-down" data-action="applyDamage" data-amount="1" title="−1 Wound"><i class="fa-solid fa-caret-down"></i></button>
         </div>
-        {{!-- Quick Stats --}}
-        <div class="rt-combat-quickstats">
-          <div class="rt-quickstat">
-            <i class="fa-solid fa-shield-halved"></i>
-            <span class="rt-quickstat-value">{{toughnessBonus}}</span>
-            <span class="rt-quickstat-label">TB</span>
-          </div>
-          {{#if system.wounds.critical}}
-          <div class="rt-quickstat rt-quickstat--critical">
-            <i class="fa-solid fa-skull-crossbones"></i>
-            <span class="rt-quickstat-value">{{system.wounds.critical}}</span>
-            <span class="rt-quickstat-label">Crit</span>
-          </div>
-          {{/if}}
+        {{#if system.wounds.critical}}
+        <div class="rt-quickstat rt-quickstat--critical">
+          <i class="fa-solid fa-skull-crossbones"></i>
+          <span class="rt-quickstat-value">{{system.wounds.critical}}</span>
+          <span class="rt-quickstat-label">Crit</span>
         </div>
+        {{/if}}
       </div>
 
       {{!-- Movement Cards --}}
@@ -75,6 +67,7 @@
         <div class="rt-panel-header">
           <i class="fa-solid fa-shield-halved"></i>
           <span>Armour & Hit Locations</span>
+          <span class="rt-tb-badge" title="Toughness Bonus">TB {{toughnessBonus}}</span>
           {{#if editable}}
           <button class="rt-header-btn" type="button" data-action="toggleArmourMode" title="Toggle Simple/Locations">
             <i class="fa-solid fa-arrows-rotate"></i>
@@ -146,59 +139,33 @@
               </button>
             </div>
 
-            {{!-- Weapon Rows --}}
-            {{#if isSimpleMode}}
-            {{#each simpleWeapons}}
-            <div class="rt-action-row rt-action-row--weapon" data-weapon-index="{{index}}">
-              <button type="button" class="rt-action-btn rt-action-btn--attack rollable" data-action="rollWeapon" data-weapon-index="{{index}}"
-                      title="Attack with {{name}}&#10;{{#if isMelee}}Half Action{{else}}Half Action{{/if}} — Dmg: {{damage}} | Pen: {{pen}}">
-                <i class="fa-solid {{#if isMelee}}fa-sword{{else}}fa-crosshairs{{/if}}"></i>
-                <span class="rt-action-btn-value">{{name}}</span>
-                <span class="rt-action-btn-label">Attack</span>
-                <span class="rt-action-btn-cost">Half</span>
-              </button>
-              <button type="button" class="rt-action-btn rt-action-btn--reload {{#if isMelee}}disabled{{/if}}"
-                      {{#unless isMelee}}data-action="reloadWeapon" data-weapon-index="{{index}}"{{/unless}}
-                      title="{{#if isMelee}}N/A — Melee{{else}}Reload — Half Action{{/if}}">
-                <i class="fa-solid fa-arrows-rotate"></i>
-                <span class="rt-action-btn-value">{{#if isMelee}}—{{else}}Reload{{/if}}</span>
-                <span class="rt-action-btn-label">Reload</span>
-                <span class="rt-action-btn-cost">{{#if isMelee}}—{{else}}Half+{{/if}}</span>
-              </button>
-              <button type="button" class="rt-action-btn rt-action-btn--ammo {{#if isMelee}}disabled{{/if}}"
-                      title="{{#if isMelee}}N/A — Melee{{else}}Ammo: {{clip}}/{{clipMax}}{{/if}}">
-                <i class="fa-solid fa-box-open"></i>
-                <span class="rt-action-btn-value">{{#if isMelee}}—{{else}}{{clip}}/{{clipMax}}{{/if}}</span>
-                <span class="rt-action-btn-label">Ammo</span>
-                <span class="rt-action-btn-cost">—</span>
-              </button>
-            </div>
-            {{/each}}
-            {{else}}
+            {{!-- Weapon Rows (embedded items) --}}
             {{#each embeddedWeapons}}
             <div class="rt-action-row rt-action-row--weapon" data-item-id="{{id}}">
               <button type="button" class="rt-action-btn rt-action-btn--attack rollable" data-action="itemRoll" data-item-id="{{id}}"
-                      title="Attack with {{name}}">
-                <i class="fa-solid fa-crosshairs"></i>
+                      title="Attack with {{name}}&#10;Dmg: {{system.effectiveDamageFormula}} | Pen: {{system.effectivePenetration}}">
+                <i class="fa-solid {{system.classIcon}}"></i>
                 <span class="rt-action-btn-value">{{name}}</span>
                 <span class="rt-action-btn-label">Attack</span>
                 <span class="rt-action-btn-cost">Half</span>
               </button>
-              <button type="button" class="rt-action-btn rt-action-btn--reload" title="Reload — Half Action">
+              <button type="button" class="rt-action-btn rt-action-btn--reload {{#if system.isMeleeWeapon}}disabled{{/if}}"
+                      {{#if system.isRangedWeapon}}data-action="reloadWeapon" data-item-id="{{id}}"{{/if}}
+                      title="{{#if system.isMeleeWeapon}}N/A — Melee{{else}}Reload — Half Action{{/if}}">
                 <i class="fa-solid fa-arrows-rotate"></i>
-                <span class="rt-action-btn-value">Reload</span>
+                <span class="rt-action-btn-value">{{#if system.isMeleeWeapon}}—{{else}}Reload{{/if}}</span>
                 <span class="rt-action-btn-label">Reload</span>
-                <span class="rt-action-btn-cost">Half+</span>
+                <span class="rt-action-btn-cost">{{#if system.isMeleeWeapon}}—{{else}}Half+{{/if}}</span>
               </button>
-              <button type="button" class="rt-action-btn rt-action-btn--ammo" title="Ammo Management">
+              <button type="button" class="rt-action-btn rt-action-btn--ammo {{#if system.isMeleeWeapon}}disabled{{/if}}"
+                      title="{{#if system.isMeleeWeapon}}N/A — Melee{{else}}Ammo: {{system.clip.value}}/{{system.clip.max}}{{/if}}">
                 <i class="fa-solid fa-box-open"></i>
-                <span class="rt-action-btn-value">—</span>
+                <span class="rt-action-btn-value">{{#if system.isMeleeWeapon}}—{{else}}{{system.clip.value}}/{{system.clip.max}}{{/if}}</span>
                 <span class="rt-action-btn-label">Ammo</span>
                 <span class="rt-action-btn-cost">—</span>
               </button>
             </div>
             {{/each}}
-            {{/if}}
 
             {{!-- Empty state --}}
             {{#unless combatWeaponRows}}
@@ -217,14 +184,6 @@
         <i class="fa-solid fa-boxes-stacked"></i>
         <span>Inventory</span>
         <span class="rt-count-badge">{{allItems.length}}</span>
-        {{#if editable}}
-        <div class="rt-header-actions">
-          {{#if isSimpleMode}}
-          <button class="rt-header-btn" type="button" data-action="addSimpleWeapon" title="Add Simple Weapon"><i class="fa-solid fa-plus"></i></button>
-          {{/if}}
-          <button class="rt-header-btn" type="button" data-action="toggleWeaponMode" title="Toggle Simple/Embedded Weapons"><i class="fa-solid fa-arrows-rotate"></i></button>
-        </div>
-        {{/if}}
       </div>
       <div class="rt-panel-body">
         <table class="rt-inventory-table">
@@ -238,28 +197,10 @@
             </tr>
           </thead>
           <tbody>
-            {{!-- Simple Weapons --}}
-            {{#if isSimpleMode}}
-            {{#each simpleWeapons}}
-            <tr class="rt-inv-row rt-inv-row--weapon">
-              <td class="rt-inv-col-icon"><i class="fa-solid {{#if isMelee}}fa-sword{{else}}fa-crosshairs{{/if}}"></i></td>
-              <td class="rt-inv-col-name">
-                {{#if ../editable}}<input type="text" name="system.weapons.simple.{{index}}.name" value="{{name}}" class="rt-inv-name-input" placeholder="Weapon" />
-                {{else}}{{name}}{{/if}}
-              </td>
-              <td class="rt-inv-col-type"><span class="rt-inv-type-badge weapon">{{class}}</span></td>
-              <td class="rt-inv-col-qty">—</td>
-              {{#if ../editable}}<td class="rt-inv-col-actions">
-                <button type="button" class="rt-inv-remove" data-action="removeSimpleWeapon" data-weapon-index="{{index}}" title="Remove"><i class="fa-solid fa-trash-can"></i></button>
-              </td>{{/if}}
-            </tr>
-            {{/each}}
-            {{/if}}
-            {{!-- Embedded Items --}}
             {{#each allItems}}
             <tr class="rt-inv-row rt-inv-row--{{type}}" data-item-id="{{id}}">
               <td class="rt-inv-col-icon"><img src="{{img}}" class="rt-inv-img" alt="" /></td>
-              <td class="rt-inv-col-name">{{name}}</td>
+              <td class="rt-inv-col-name"><a class="rt-inv-name" data-action="itemEdit" data-item-id="{{id}}">{{name}}</a></td>
               <td class="rt-inv-col-type"><span class="rt-inv-type-badge {{type}}">{{type}}</span></td>
               <td class="rt-inv-col-qty">{{#if system.quantity}}{{system.quantity}}{{else}}—{{/if}}</td>
               {{#if ../editable}}<td class="rt-inv-col-actions">
@@ -270,9 +211,7 @@
           </tbody>
         </table>
         {{#unless allItems.length}}
-        {{#unless simpleWeapons.length}}
         <div class="rt-empty-state"><i class="fa-solid fa-box-open"></i><p>Drag items here to add</p></div>
-        {{/unless}}
         {{/unless}}
       </div>
     </div>

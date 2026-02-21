@@ -1911,6 +1911,18 @@ $bp-wide: 1200px;
         }
     }
 
+    .rt-tb-badge {
+        margin-left: auto;
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        background: rgba($npc-accent-defense, 0.15);
+        color: $npc-accent-defense;
+        border: 1px solid rgba($npc-accent-defense, 0.3);
+        letter-spacing: 0.03em;
+    }
+
     // ── Actions Grid (Dodge/Parry/Init + Weapon Rows) ──
     .rt-actions-grid {
         display: flex;
@@ -1939,15 +1951,16 @@ $bp-wide: 1200px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 0.5rem 0.35rem;
+        padding: 0.6rem 0.35rem;
         border-radius: 6px;
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.08);
         cursor: pointer;
         color: var(--color-text-light-primary, #f0f0f0);
         transition: all 0.15s;
-        min-height: 62px;
-        gap: 2px;
+        min-height: 76px;
+        width: 100%;
+        gap: 3px;
 
         &:hover {
             transform: translateY(-1px);
@@ -2042,7 +2055,8 @@ $bp-wide: 1200px;
         }
     }
 
-    .rt-inv-icon {
+    .rt-inv-icon,
+    .rt-inv-img {
         width: 22px;
         height: 22px;
         object-fit: cover;
@@ -2054,6 +2068,17 @@ $bp-wide: 1200px;
         color: var(--color-text-light-primary, #f0f0f0);
         cursor: pointer;
         &:hover { color: $npc-accent-primary; text-decoration: underline; }
+    }
+
+    .rt-inv-name-input {
+        width: 100%;
+        padding: 0.15rem 0.3rem;
+        font-size: 0.78rem;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        color: var(--color-text-light-primary, #f0f0f0);
+        &:focus { border-color: $npc-accent-primary; outline: none; }
     }
 
     .rt-inv-type-badge {
