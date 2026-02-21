@@ -13,6 +13,17 @@
 import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
 import { getDegree, roll1d100, sendActionDataToChat } from "../../rolls/roll-helpers.mjs";
 import { RANGE_BRACKETS, calculateTokenDistance } from "../../utils/range-calculator.mjs";
+import {
+    getAvailableAttackModes,
+    getMeleeSpecialOptions,
+    getSituationalModifiers,
+    getActionNameForMode,
+    getAimModifier,
+    getAttackModeKeyForAction,
+    getAimKeyForModifier,
+    isMeleeSpecialOption,
+    AIM_OPTIONS
+} from "../../rules/attack-options.mjs";
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -40,6 +51,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._contextExpanded = true;
         this._previousTarget = null;
         this._selectedRangeBracket = null;
+
+        // Card-based weapon panel state
+        this._attackModeKey = 'standard';
+        this._aimModeKey = 'none';
+        this._activeCombatSituationals = new Set();
+        this._sizeModifierKey = null;  // null = use target actor size, string = user override
+        this._specialOptionsExpanded = false;
+        this._sizeExpanded = false;
     }
 
     /* -------------------------------------------- */
@@ -64,6 +83,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             selectPower: UnifiedRollDialog.#onSelectPower,
             selectRangeBracket: UnifiedRollDialog.#onSelectRangeBracket,
             selectTarget: UnifiedRollDialog.#onSelectTarget,
+            selectAttackMode: UnifiedRollDialog.#onSelectAttackMode,
+            selectAimMode: UnifiedRollDialog.#onSelectAimMode,
+            toggleCombatSituational: UnifiedRollDialog.#onToggleCombatSituational,
+            selectSizeModifier: UnifiedRollDialog.#onSelectSizeModifier,
+            toggleSpecialOptions: UnifiedRollDialog.#onToggleSpecialOptions,
+            toggleSizeSection: UnifiedRollDialog.#onToggleSizeSection,
             cancel: UnifiedRollDialog.#onCancel
         },
         form: {
@@ -184,6 +209,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (!this._initialized && this.rollData.initialize) {
             this.rollData.initialize();
             this._initialized = true;
+
+            // Sync card state with initial rollData
+            if (this.rollType === "weapon") {
+                const isRanged = !!this.rollData.weapon?.isRanged;
+                this._attackModeKey = getAttackModeKeyForAction(this.rollData.action, isRanged);
+                this._aimModeKey = getAimKeyForModifier(this.rollData.modifiers?.aim ?? 0);
+            }
         }
 
         if (this.rollData.update) {
@@ -203,13 +235,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const difficultyMod = isForceField ? 0 : this._currentDifficulty.modifier;
         const situationalMod = isForceField ? 0 : this._calculateSituationalModifiers();
         const customMod = isForceField ? 0 : this._customModifier;
+        const combatSitMod = (!isForceField && this.rollType === "weapon")
+            ? this._calculateCombatSituationalModifiers() : 0;
 
         const baseTarget = isForceField
             ? (rollData.protectionRating || 0)
             : (rollData.baseTarget || 0);
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
-        const dialogManagedKeys = new Set(["difficulty", "situational", "modifier", "range"]);
+        const dialogManagedKeys = new Set(["difficulty", "situational", "modifier", "range", "combat-situational"]);
         const weaponModSum = !isForceField
             ? Object.entries(rollData.modifiers || {})
                 .filter(([k]) => !dialogManagedKeys.has(k))
@@ -217,7 +251,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 + (rollData.rangeBonus || 0)
             : 0;
 
-        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod);
+        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod);
 
         // Dynamic color class based on success chance
         let targetColorClass;
@@ -269,7 +303,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
         // Modifier aggregate
-        const modifierAggregate = difficultyMod + situationalMod + customMod;
+        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod;
 
         // Roll type specific data
         const isWeapon = this.rollType === "weapon";
@@ -471,34 +505,94 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             };
         }) : [];
 
+        // Card-based attack modes
+        const isRanged = !!rd.weapon?.isRanged;
+        const attackModes = rd.weapon ? getAvailableAttackModes(rd.weapon).map(m => ({
+            ...m,
+            isSelected: this._attackModeKey === m.key,
+            modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`
+        })) : [];
+
+        // Melee special options
+        const meleeSpecialOptions = (!isRanged && rd.weapon) ? getMeleeSpecialOptions().map(m => ({
+            ...m,
+            isSelected: this._attackModeKey === m.key,
+            modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`
+        })) : [];
+
+        // Aim options
+        const canAim = rd.canAim !== false;
+        const aimOptions = AIM_OPTIONS.map(a => ({
+            ...a,
+            isSelected: this._aimModeKey === a.key,
+            modifierLabel: a.modifier >= 0 ? `+${a.modifier}` : `${a.modifier}`,
+            disabled: !canAim && a.key !== 'none'
+        }));
+
+        // Combat situational modifiers
+        const combatSituationals = rd.weapon ? getSituationalModifiers(isRanged).map(s => ({
+            ...s,
+            isActive: this._activeCombatSituationals.has(s.key),
+            modifierLabel: s.modifier >= 0 ? `+${s.modifier}` : `${s.modifier}`
+        })) : [];
+
+        // Size modifiers from config (values are plain strings like "Average (4)")
+        const sizes = CONFIG.rt?.sizes || {};
+        const currentSizeMod = this._sizeModifierKey ?? this._getDefaultSizeKey(rd);
+        const sizeOptions = Object.entries(sizes).map(([key, label]) => {
+            const modifier = (parseInt(key) - 4) * 10;
+            return {
+                key,
+                label,
+                modifier,
+                modifierLabel: modifier >= 0 ? `+${modifier}` : `${modifier}`,
+                isSelected: key === currentSizeMod
+            };
+        });
+
         return {
             weapons: rd.weapons || [],
             weapon: rd.weapon,
             weaponSelect: rd.weaponSelect,
-            actions: rd.actions || {},
-            currentAction: rd.action,
-            fireRate: rd.fireRate,
-            isCalledShot: rd.isCalledShot,
-            calledShotLocation: rd.calledShotLocation,
-            locations: rd.locations,
-            isLasWeapon: rd.isLasWeapon,
-            lasMode: rd.lasMode,
-            lasModes: rd.lasModes,
-            hasEyeOfVengeanceAvailable: rd.hasEyeOfVengeanceAvailable,
-            eyeOfVengeance: rd.eyeOfVengeance,
-            canAim: rd.canAim,
-            aims: rd.aims,
-            usesAmmo: rd.usesAmmo,
-            ammoText: rd.ammoText,
-            rangeName: rd.rangeName,
-            rangeBonus: rd.rangeBonus,
-            maxRange: rd.maxRange,
+            isRanged,
+            isMelee: !isRanged,
+            // Card data
+            attackModes,
+            meleeSpecialOptions,
+            specialOptionsExpanded: this._specialOptionsExpanded,
+            aimOptions,
+            combatSituationals,
+            hasCombatSituationals: combatSituationals.length > 0,
+            sizeOptions,
+            sizeExpanded: this._sizeExpanded,
+            // Range data
             rangeBrackets,
             selectedRangeBracket: this._selectedRangeBracket ?? rd.rangeBracket,
             rangeModifiedBy: rd.rangeModifiedBy,
             isMeltaRange: rd.isMeltaRange,
-            difficulties: rd.difficulties
+            maxRange,
+            // Existing data we still need
+            fireRate: rd.fireRate,
+            usesAmmo: rd.usesAmmo,
+            ammoText: rd.ammoText,
+            isCalledShot: rd.isCalledShot,
+            calledShotLocation: rd.calledShotLocation,
+            locations: rd.locations,
+            actions: rd.actions || {},
+            currentAction: rd.action
         };
+    }
+
+    /**
+     * Determine the default size key based on target actor.
+     * @param {WeaponRollData} rd
+     * @returns {string} Size key (e.g. "4" for Average)
+     */
+    _getDefaultSizeKey(rd) {
+        if (rd.targetActor?.system?.size) {
+            return String(rd.targetActor.system.size);
+        }
+        return "4"; // Average
     }
 
     _getPsychicContext() {
@@ -544,6 +638,23 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         for (const mod of (this._cachedSituationalModifiers || [])) {
             const toggleKey = mod.key + "_" + mod.source;
             if (this._situationalModifiers[toggleKey]) total += mod.value;
+        }
+        return total;
+    }
+
+    /**
+     * Calculate sum of active combat situational card modifiers.
+     * @returns {number}
+     */
+    _calculateCombatSituationalModifiers() {
+        if (this._activeCombatSituationals.size === 0) return 0;
+        const isRanged = !!this.rollData.weapon?.isRanged;
+        const situationals = getSituationalModifiers(isRanged);
+        let total = 0;
+        for (const s of situationals) {
+            if (this._activeCombatSituationals.has(s.key)) {
+                total += s.modifier;
+            }
         }
         return total;
     }
@@ -696,6 +807,73 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.close();
     }
 
+    /* ---- Card-based Weapon Panel Handlers ---- */
+
+    static async #onSelectAttackMode(event, target) {
+        const key = target.dataset.modeKey;
+        if (!key) return;
+        this._attackModeKey = key;
+
+        // Map card key to combat action name and set on rollData
+        const isRanged = !!this.rollData.weapon?.isRanged;
+        const actionName = getActionNameForMode(key, isRanged);
+        if (actionName) {
+            this.rollData.action = actionName;
+        }
+
+        // If selecting a special option, auto-expand that section
+        if (isMeleeSpecialOption(key)) {
+            this._specialOptionsExpanded = true;
+        }
+
+        // If aim is disabled by this mode (e.g., All Out Attack), reset aim
+        if (this.rollData.update) await this.rollData.update();
+        if (!this.rollData.canAim && this._aimModeKey !== 'none') {
+            this._aimModeKey = 'none';
+            this.rollData.modifiers['aim'] = 0;
+        }
+
+        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+    }
+
+    static async #onSelectAimMode(event, target) {
+        const key = target.dataset.aimKey;
+        if (!key) return;
+        this._aimModeKey = key;
+        this.rollData.modifiers['aim'] = getAimModifier(key);
+        if (this.rollData.update) await this.rollData.update();
+        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+    }
+
+    static async #onToggleCombatSituational(event, target) {
+        const key = target.dataset.situationalKey;
+        if (!key) return;
+        if (this._activeCombatSituationals.has(key)) {
+            this._activeCombatSituationals.delete(key);
+        } else {
+            this._activeCombatSituationals.add(key);
+        }
+        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+    }
+
+    static async #onSelectSizeModifier(event, target) {
+        const key = target.dataset.sizeKey;
+        if (!key) return;
+        this._sizeModifierKey = key;
+        this.rollData.modifiers['target-size'] = (parseInt(key) - 4) * 10;
+        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+    }
+
+    static async #onToggleSpecialOptions(event, target) {
+        this._specialOptionsExpanded = !this._specialOptionsExpanded;
+        await this.render(false, { parts: ["contextPanel"] });
+    }
+
+    static async #onToggleSizeSection(event, target) {
+        this._sizeExpanded = !this._sizeExpanded;
+        await this.render(false, { parts: ["contextPanel"] });
+    }
+
     static async #onSelectRangeBracket(event, target) {
         const bracket = target.dataset.bracket;
         if (!bracket) return;
@@ -810,6 +988,19 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         rd.modifiers["difficulty"] = this._currentDifficulty.modifier;
         rd.modifiers["situational"] = this._calculateSituationalModifiers();
         rd.modifiers["modifier"] = this._customModifier;
+
+        // Apply combat situational card modifiers (weapon panel)
+        if (this.rollType === "weapon" && this._activeCombatSituationals.size > 0) {
+            const isRanged = !!rd.weapon?.isRanged;
+            const situationals = getSituationalModifiers(isRanged);
+            let combatSitTotal = 0;
+            for (const s of situationals) {
+                if (this._activeCombatSituationals.has(s.key)) {
+                    combatSitTotal += s.modifier;
+                }
+            }
+            rd.modifiers["combat-situational"] = combatSitTotal;
+        }
     }
 
     async _submitSimpleRoll(manualTotal) {
