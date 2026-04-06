@@ -360,7 +360,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
             const parts = [];
             if (addedCount) parts.push(`+${addedCount}`);
             if (removedCount) parts.push(`-${removedCount}`);
-            propertiesSummary = parts.join(' ') + ' props';
+            propertiesSummary = `${parts.join(' ')} props`;
         }
 
         return {
@@ -421,7 +421,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         // Truncate description for list view
         const maxLength = 120;
         if (description.length > maxLength) {
-            description = description.substring(0, maxLength) + '...';
+            description = `${description.substring(0, maxLength)}...`;
         }
 
         // Check if quality has level parameter

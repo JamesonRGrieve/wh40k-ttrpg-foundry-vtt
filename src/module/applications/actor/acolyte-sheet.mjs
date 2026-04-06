@@ -1602,7 +1602,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Find the actor's active token on the canvas
         const token = this.actor.getActiveTokens()?.[0]?.document;
         if (!token) {
-            ui.notifications.info(game.i18n.localize('WH40K.MOVEMENT.Label') + ': No active token on canvas.');
+            ui.notifications.info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
             return;
         }
 
@@ -1660,7 +1660,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const currentValue = foundry.utils.getProperty(this.actor, field) || 0;
 
         // Smart min/max derivation: if field ends with .value, check for .max/.min siblings
-        let min = target.dataset.min !== undefined ? parseInt(target.dataset.min) : null;
+        const min = target.dataset.min !== undefined ? parseInt(target.dataset.min) : null;
         let max = target.dataset.max !== undefined ? parseInt(target.dataset.max) : null;
 
         // Auto-derive max from field structure (e.g., system.wounds.value -> system.wounds.max)

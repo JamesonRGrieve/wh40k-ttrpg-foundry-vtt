@@ -29,17 +29,15 @@ export function getOpposedDegrees(dos, dof, opposedDos, opposedDof) {
         } else {
             return dos + opposedDof;
         }
+    } else if (opposedDos > 0) {
+        return -1 * (dof + opposedDos);
     } else {
-        if (opposedDos > 0) {
-            return -1 * (dof + opposedDos);
-        } else {
-            return -1 * (dof - opposedDof);
-        }
+        return -1 * (dof - opposedDof);
     }
 }
 
 export async function roll1d100() {
-    let formula = '1d100';
+    const formula = '1d100';
     const roll = new Roll(formula, {});
     await roll.evaluate();
     return roll;
@@ -47,7 +45,7 @@ export async function roll1d100() {
 
 export async function sendActionDataToChat(actionData) {
     const html = await renderTemplate(actionData.template, actionData);
-    let chatData = {
+    const chatData = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,

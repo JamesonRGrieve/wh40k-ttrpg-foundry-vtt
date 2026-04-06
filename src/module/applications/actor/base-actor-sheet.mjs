@@ -428,7 +428,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Apply filters
         const filters = this._skillsFilter;
-        let visibleSkills = Object.entries(skills).filter(([key, data]) => {
+        const visibleSkills = Object.entries(skills).filter(([key, data]) => {
             if (data.hidden) return false;
 
             // Search filter
@@ -753,7 +753,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
         // Truncate if too long
         if (tooltipText.length > 200) {
-            tooltipText = tooltipText.substring(0, 197) + '...';
+            tooltipText = `${tooltipText.substring(0, 197)}...`;
         }
 
         return {

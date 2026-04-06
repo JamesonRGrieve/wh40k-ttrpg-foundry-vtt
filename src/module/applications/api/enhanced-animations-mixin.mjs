@@ -311,7 +311,7 @@ export default function EnhancedAnimationsMixin(Base) {
             // Show notification
             const delta = newBonus - oldBonus;
             if (delta !== 0) {
-                const message = `Bonus ${delta > 0 ? '+' + delta : delta}`;
+                const message = `Bonus ${delta > 0 ? `+${delta}` : delta}`;
                 this._showBriefNotification(bonusElement, message, 'info');
             }
         }

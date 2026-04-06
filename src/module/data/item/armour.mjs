@@ -60,7 +60,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
                     rightLeg: 0,
                 };
                 const specialNote = typeof source.ap === 'string' ? source.ap : 'Special';
-                source.notes = ((source.notes || '') + ` [AP: ${specialNote}]`).trim();
+                source.notes = `${source.notes || ''} [AP: ${specialNote}]`.trim();
             }
         }
     }

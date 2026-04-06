@@ -464,19 +464,19 @@ export class WH40KNPCV2 extends WH40KBaseActor {
 
         if (talents.length > 0) {
             block += `--- Talents ---\n`;
-            block += talents.map((t) => t.name).join(', ') + `\n\n`;
+            block += `${talents.map((t) => t.name).join(', ')}\n\n`;
         }
 
         if (traits.length > 0) {
             block += `--- Traits ---\n`;
-            block += traits.map((t) => t.name).join(', ') + `\n\n`;
+            block += `${traits.map((t) => t.name).join(', ')}\n\n`;
         }
 
         // Special Abilities
         if (s.specialAbilities) {
             block += `--- Special Abilities ---\n`;
             // Strip HTML tags for plain text export
-            block += s.specialAbilities.replace(/<[^>]*>/g, '') + `\n`;
+            block += `${s.specialAbilities.replace(/<[^>]*>/g, '')}\n`;
         }
 
         return block;

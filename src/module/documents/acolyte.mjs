@@ -279,7 +279,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     async rollSkill(skillName, specialityName, options = {}) {
         const resolvedSkillName = this._resolveSkillName(skillName);
-        let skill = this.skills[resolvedSkillName];
+        const skill = this.skills[resolvedSkillName];
         if (!skill) {
             ui.notifications.warn(`Unable to find skill ${skillName}`);
             return null;

@@ -415,7 +415,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
                 ui.notifications.info(`Imported preset "${preset.name}"`);
                 this.render();
             } catch (error) {
-                ui.notifications.error('Failed to import preset: ' + error.message);
+                ui.notifications.error(`Failed to import preset: ${error.message}`);
             }
         });
 

@@ -11,7 +11,7 @@ export function ammoText(item) {
 }
 
 export async function useAmmo(actionData) {
-    let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
+    const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (!actionItem) return;
     if (actionItem.usesAmmo) {
         let newValue = (actionItem.system.clip.value -= actionData.rollData.ammoUsed);
@@ -31,7 +31,7 @@ export async function useAmmo(actionData) {
 }
 
 export async function refundAmmo(actionData) {
-    let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
+    const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (actionItem.usesAmmo) {
         await actionItem.update({
             'system.clip.value': actionItem.system.clip.value + actionData.rollData.ammoUsed,

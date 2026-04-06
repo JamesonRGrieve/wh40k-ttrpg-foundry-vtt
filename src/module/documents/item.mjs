@@ -321,10 +321,10 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Check for specials
         if (this.system.special) {
-            game.rt.log('Performing first time nested item configuration for item: ' + this.name + ' with specials: ', this.system.special);
+            game.rt.log(`Performing first time nested item configuration for item: ${this.name} with specials: `, this.system.special);
             if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', this.system.special);
             if (this.isAmmunition) await this._updateSpecialsFromPack('wh40k-rpg.ammo', this.system.special);
-            game.rt.log('Special migrated for item: ' + this.name, this.system.special);
+            game.rt.log(`Special migrated for item: ${this.name}`, this.system.special);
             this.system.special = undefined;
 
             await this.convertNestedToItems();

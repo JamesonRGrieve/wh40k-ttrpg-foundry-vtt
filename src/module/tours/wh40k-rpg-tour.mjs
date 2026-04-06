@@ -10,7 +10,7 @@ export class WH40KTour extends Tour {
      */
     async waitForElement(selector) {
         return new Promise((resolve, reject) => {
-            let element = document.querySelector(selector);
+            const element = document.querySelector(selector);
             if (element) {
                 resolve();
                 return;
@@ -45,7 +45,7 @@ export class WH40KTour extends Tour {
             this.triggerReset = false;
             return;
         }
-        let target = this.currentStep.target ? this.currentStep.target : this.currentStep.selector;
+        const target = this.currentStep.target ? this.currentStep.target : this.currentStep.selector;
         switch (this.currentStep.action) {
             case 'click':
                 document.querySelector(target).click();
