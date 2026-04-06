@@ -1,0 +1,30 @@
+{
+  "name": "Aetheric Cube",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "?",
+    "availability": "A Strange cube the size of a person's head. When activated, the cube expands outwards to form a 3m tall and wide scaffold one can enter, suspending them in an energy field that appears as an artificial reality to the user. This reality allows them to enact any desired fantasy as well as Remove fatigue and heal from injury at a rate of 24 hours per one hour of real time. Attempting to leave requires -10 Willpower test with additional -10 per further real world hour spent inside. If failed gain 1d5 Insanity per Degree of Failiure, if failed by 4+ DoF cube collapses with user still inside, trapping them. Someone else can reactivate the cube to try to find the user, but must also test to escape the same way.",
+    "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Fw6JWU5yCL4raUrA"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Quadruped",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Has at least 4 legs, when calculating movement, double Agility Bonus. If the creature has more than 4 legs, Double Agility Bonus and add +2 for each additional pair of legs beyond 4 (6 legs = (ABx2)+2, 8 legs = (ABx2)+4, and so on). \nUse common sense, millipedes shouldn't be moving at the speed of sound.</p>"
+    },
+    "benefit": "<p>Has at least 4 legs, when calculating movement, double Agility Bonus. If the creature has more than 4 legs, Double Agility Bonus and add +2 for each additional pair of legs beyond 4 (6 legs = (ABx2)+2, 8 legs = (ABx2)+4, and so on). \nUse common sense, millipedes shouldn't be moving at the speed of sound.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fbxErwVmQ6tcCKr6"
+}

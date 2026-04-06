@@ -1,0 +1,30 @@
+{
+  "name": "Dark Oracle",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": " Capable of predicting or forseeing the future to a limited degree. Information provided is often vague or open to interpretation, more Degrees of Success on Requisition increases specificity and usefulness of predictions. Receive one answer per Degree of Success. Failed tests may lead to false information. If used for an Inquest, each Degree of Success also grants +25 Investigation Points.",
+    "cost": "A Feral World Shaman, Daemon-speaking Seers, or ancient and forgotten cogitators forbidden by the Machine Cult.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KO8369yaWWoDDGRb"
+}

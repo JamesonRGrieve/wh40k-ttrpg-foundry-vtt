@@ -1,0 +1,30 @@
+{
+  "name": "Mech-Implants: Electoo Inductors",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Skin Grafts that allow the emitting and siphoning of power, typically on the hands or mechadendrites.",
+    "cost": "Gained only through \"Mechanicus Implants\" Trait, cannot be removed.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fz3XuJXNPWhk8WQ1"
+}

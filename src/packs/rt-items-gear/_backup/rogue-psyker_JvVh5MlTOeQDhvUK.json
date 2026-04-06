@@ -1,0 +1,30 @@
+{
+  "name": "Rogue Psyker",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "The Hiring of a Rogue Psyker to perform some some psychic power at the behest of the character. Degrees of success on Requisition Test determine quality \nDoS 1-2: Psy 2, WP 35, Per 35, Psyniscience | DoS 3-4: Psy 3, WP 45, Per 45, Psyniscience +10 | DoS 5+: Psy 4, WP 55, Per 55, Psyniscience +20.",
+    "cost": "Considered one of the greatest dangers to mankind, Such Psykers often oppose the Imperium, lack control over their abilities, or even court Daemons.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JvVh5MlTOeQDhvUK"
+}

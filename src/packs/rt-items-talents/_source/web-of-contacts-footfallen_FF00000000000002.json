@@ -1,0 +1,62 @@
+{
+  "name": "Web of Contacts (Footfallen)",
+  "type": "talent",
+  "img": "icons/svg/network.svg",
+  "system": {
+    "identifier": "web-of-contacts-footfallen",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "11"
+    },
+    "description": {
+      "value": "<p><strong>Web of Contacts:</strong> As they learn to survive, Footfallen generate a web of contacts that can extend throughout the Koronus Expanse. All Footfallen characters gain a Peer Talent chosen from the following list: Astropaths, the Insane, Underworld, Void Born, Workers.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain one Peer Talent from the following list: Astropaths, the Insane, Underworld, Void Born, Workers.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Footfallen Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants choice of Peer Talent (see description)",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Web of Contacts",
+          "description": "Choose one Peer Talent from: Astropaths, the Insane, Underworld, Void Born, Workers"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FF00000000000002"
+}

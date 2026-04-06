@@ -1,0 +1,30 @@
+{
+  "name": "Auto-Sense Goggles",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Acts as Photo-Visors (no penalty from Darkness) and Preysense (+20 to Vision-based Perception Tests in darkness). Can detect various EM Frequencies, has 5x optical enhancement and magnification and various filters. Can also act as a rangefinder for artillery or aeronautica, providing +20 to allied Ballistic Test for these indirect weapons.",
+    "cost": "Often worn by Space Marine Scout Snipers",
+    "effects": "Initiated",
+    "notes": "10 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iIwn9hddaGHC83UH"
+}

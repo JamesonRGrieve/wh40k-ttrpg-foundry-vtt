@@ -1,0 +1,30 @@
+{
+  "name": "Slip Suit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "7.5kg",
+    "availability": "Greasy and nearly frictionless texture, fabric can be stitched into capes or vests. +10 when attempting to break free of grapples, and -10 to anyone attempting to grapple wearer.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vWyOccCJ0zyxqLx9"
+}

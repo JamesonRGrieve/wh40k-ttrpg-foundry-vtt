@@ -1,0 +1,30 @@
+{
+  "name": "Demolitions Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "8kg",
+    "availability": "Includes 5 Demolition Charges (Krak Grenade or Demo Charge Statline), 5 Binary Charges, 100 metres of Det-Cord that burns at one metre per 10 seconds, 5 simple pressure-release detonators.\nGood Kits include variable burn det-cord and advanced detonators that trigger from motion or thermal imaging.",
+    "cost": "Kit can be refilled without Requisiton Test as long as having access to appropriate restocking.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "u1ycD55Pl6pJNJmd"
+}

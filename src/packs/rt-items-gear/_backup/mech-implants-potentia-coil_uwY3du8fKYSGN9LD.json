@@ -1,0 +1,30 @@
+{
+  "name": "Mech-Implants: Potentia Coil",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "A Power Unit that Stores energy, used to power other special implants that build upon Mechanicus Implants.",
+    "cost": "Gained only through \"Mechanicus Implants\" Trait, cannot be removed.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uwY3du8fKYSGN9LD"
+}

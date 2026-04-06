@@ -1,0 +1,30 @@
+{
+  "name": "Unskilled Labour",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "As it says, basic labour for construction, transport, etc.",
+    "cost": null,
+    "effects": "Plentiful",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ctxDaJiDa1C78VVc"
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Inspired",
+  "type": "condition",
+  "img": "icons/svg/angel.svg",
+  "system": {
+    "identifier": "inspired",
+    "nature": "beneficial",
+    "effect": "<p>An inspired character gains a +10 bonus to all Willpower Tests. The character may reroll failed Fear Tests once and must accept the second result.</p>",
+    "removal": "<p>Removed at the end of the scene, or when the inspiring circumstance no longer applies.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>An inspired character gains a +10 bonus to all Willpower Tests. The character may reroll failed Fear Tests once and must accept the second result.</p>",
+      "source": {
+        "book": "",
+        "page": "",
+        "custom": "Leadership & Morale"
+      }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "2.0"
+    }
+  },
+  "_id": "V9RTStM0sWfxVRia"
+}

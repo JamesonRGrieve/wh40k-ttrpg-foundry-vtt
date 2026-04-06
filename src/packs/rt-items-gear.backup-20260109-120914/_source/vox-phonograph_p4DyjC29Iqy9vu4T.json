@@ -1,0 +1,30 @@
+{
+  "name": "Vox-Phonograph",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "20kg",
+    "availability": "Bulky devices often owned by nobles that can play music and display images, effectively a Space CRT Television that takes metal cylinder inputs to display their contents. For twice the listed price (aka Good or higher Craftsmanship), they can also record data of their own, and play media from other sources such as Data-Slates.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "200 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 200 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p4DyjC29Iqy9vu4T"
+}

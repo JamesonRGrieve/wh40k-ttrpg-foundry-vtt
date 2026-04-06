@@ -1,0 +1,30 @@
+{
+  "name": "Tempest Amulet",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Small Leather Pouches of \"Tempest Stones\", rocks fused into glass in fierce lightning storms wrapped in prayer scripts. Can be: Amulet of Might (+2 to Strength after all other modifiers), Victory Scripture (+2 WS when fightning an enemy in single melee combat), or Guardian Amulet (Counts as a Charm).",
+    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Storm Wardens (alternative is a Sacris Claymore in Weapons Section)",
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mHgB61y0cW6TxDHb"
+}

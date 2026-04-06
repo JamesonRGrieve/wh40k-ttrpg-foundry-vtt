@@ -1,0 +1,41 @@
+{
+  "name": "Halo",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "drugs",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Creates a compliant state within a person, or calms them down. Imposes -20 to Willpower Tests for 1d10 hours. Commonly given to Penal Legionnaires, with the right dosage individuals can be made almost unawarely enthuastic for their likely brutal deaths.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 100 T</p>",
+      "chat": "",
+      "summary": "Creates a compliant state within a person, or calms them down. Imposes -20 to Willpower Tests for 1d10 hours. Commonly given to Penal Legionnaires, with the right dosage individuals can be made almost"
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Creates a compliant state within a person, or calms them down. Imposes -20 to Willpower Tests for 1d10 hours. Commonly given to Penal Legionnaires, with the right dosage individuals can be made almost unawarely enthuastic for their likely brutal deaths.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vUiIuP8LqAzZcbBz"
+}

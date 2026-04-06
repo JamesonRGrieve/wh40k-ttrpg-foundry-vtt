@@ -1,0 +1,63 @@
+{
+  "name": "Far-Reaching Contacts (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/connected.svg",
+  "system": {
+    "identifier": "far-reaching-contacts-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"You know people who know people, and the people you know are well-placed indeed. For generations, your family has had friends, relatives and acquaintances in every sector of Imperial society. This extensive network of contacts and allies has allowed your family to become more powerful and influential than they might otherwise have been, and now that network is yours to use.\"</em></p></blockquote><p>A casual name-drop here, an 'I'm a friend of the Lord-Admiral' there, and sooner or later nothing is beyond your reach. Your family tree reads like a directory of the Imperium's elite: cousins in the Administratum, uncles in the Navy, aunts in the Ecclesiarchy, distant relatives in Noble Courts, and family friends among Rogue Traders, Inquisitors, and even Navigator Houses.</p><p>You were raised in a constant whirl of social gatherings, state functions, and private audiences with the powerful. You learned early that who you know is often more important than what you know, and that a well-placed word from the right person can move mountains—or topple them.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain any three Peer Talents, representing your extensive network of contacts throughout Imperial society. These may include: Peer (Administratum), Peer (Nobility), Peer (Ecclesiarchy), Peer (Military), Peer (Underworld), Peer (Astropaths), Peer (Navigators), Peer (Tech), or any other appropriate group (subject to GM approval).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Of Extensive Means lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants three Peer talents (player choice).",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Network of Influence",
+          "description": "<p>Choose three Peer talents from the following list (or others with GM approval): Peer (Administratum), Peer (Nobility), Peer (Ecclesiarchy), Peer (Military), Peer (Underworld), Peer (Astropaths), Peer (Navigators), Peer (Tech). These represent your family's extensive network of contacts throughout Imperial society.</p><p><strong>Implementation Note:</strong> The character should be granted three Peer talents as separate items, with the player choosing which specific Peer groups during character creation.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000015"
+}

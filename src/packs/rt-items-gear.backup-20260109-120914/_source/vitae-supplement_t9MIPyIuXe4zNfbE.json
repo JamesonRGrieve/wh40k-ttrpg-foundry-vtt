@@ -1,0 +1,30 @@
+{
+  "name": "Vitae Supplement",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Tries to keep catastrophically injured users alive for a time. Gives Autosanguine Trait, and may provide a 50% chance to not die from blood loos or other normally fatal wounds (GM Discretion, likely can't help with decapitation). Common Craftsmanship lasts 4 hours, Good and Best last 2x and 3x as long.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "t9MIPyIuXe4zNfbE"
+}

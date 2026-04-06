@@ -1,0 +1,31 @@
+{
+  "name": "Servo Skull - Guardian Skull",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "35",
+      "bs": "35",
+      "s": "10",
+      "t": "20",
+      "ag": "40",
+      "int": "15",
+      "per": "35",
+      "wp": "20",
+      "fel": "-"
+    },
+    "wounds": "5",
+    "armourPoints": "2 + 3 all",
+    "move": "Flyer 6",
+    "size": "puny -20",
+    "skills": "Ag: Concealment +10, Dodge +10, Silent Move +20\nPer: Awareness +20",
+    "training": "Basic(), Pistol(), Melee(), Heavy(), Flame(), Thrown(), Exotic()",
+    "description": {
+      "value": "<p><b>Skills:</b> Ag: Concealment +10, Dodge +10, Silent Move +20\nPer: Awareness +20</p><p><b>Training:</b> Basic(), Pistol(), Melee(), Heavy(), Flame(), Thrown(), Exotic()</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "PdNGJMMKSuwAdan7"
+}

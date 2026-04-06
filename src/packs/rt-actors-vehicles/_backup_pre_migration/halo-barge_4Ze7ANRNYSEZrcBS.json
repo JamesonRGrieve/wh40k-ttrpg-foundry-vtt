@@ -1,0 +1,54 @@
+{
+  "name": "Halo Barge",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "space",
+    "size": 4,
+    "sizeDescriptor": "20m/ 9AUs",
+    "faction": "",
+    "subfaction": "",
+    "type": "skimmer",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 28,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 24,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 24,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -20,
+      "tactical": 1400,
+      "notes": ""
+    },
+    "crew": {
+      "required": 2,
+      "notes": "Pilot, Co-Pilot"
+    },
+    "passengers": 0,
+    "manoeuverability": 40,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 40,
+      "value": 40,
+      "critical": 0
+    },
+    "weapons": "<p>None</p>",
+    "specialRules": "<p>Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere.</p>",
+    "traitsText": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere.",
+    "availability": "scarce",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "4Ze7ANRNYSEZrcBS"
+}

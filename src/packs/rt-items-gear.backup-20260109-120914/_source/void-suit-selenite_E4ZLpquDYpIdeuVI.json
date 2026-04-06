@@ -1,0 +1,30 @@
+{
+  "name": "Void Suit (Selenite)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "2kg",
+    "availability": "10 hours of air, can replace air tankwithout removing suit. Counts as AP 4 Head AP 3 Else. Has Vox, Seal patcher, grapnel + 10m of line,and photo-visor.  -10 Agility when wearing. Breached if taking more than 2xAP damage, can be repaired as Full Action with tape, patches, etc)",
+    "cost": "Some suits allow for movement 6 in zero or low gravity. Effected by armour craftmanship rules.",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E4ZLpquDYpIdeuVI"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Subsystem (SM): Enhanced Ceramite Plating",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Legion/Astartes Power Armour",
+    "effect": "Armour has AP 10 on the Body as opposed to 8\nLoyalist Astartes Suits have this by default",
+    "weight": "0kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Armour has AP 10 on the Body as opposed to 8\nLoyalist Astartes Suits have this by default</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fLP7rbh3csSxUrEL"
+}

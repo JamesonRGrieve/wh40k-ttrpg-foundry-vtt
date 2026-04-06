@@ -1,0 +1,30 @@
+{
+  "name": "Kick",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Immediately removes all Fatigue, and provides immunity to Fatigue for 2d10 rounds, once it wears off gain 1d5 Fatigue.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "75 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 75 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "87BHNXUzukLW2d9A"
+}

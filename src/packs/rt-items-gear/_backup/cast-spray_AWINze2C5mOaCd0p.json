@@ -1,0 +1,30 @@
+{
+  "name": "Cast Spray",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "A spray that forms a tough and rigid coating over broken limbs to make the injured easier to transport. Provides +10 to Medicae Tests to Staunch Blood Loss",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "55 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 55 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AWINze2C5mOaCd0p"
+}

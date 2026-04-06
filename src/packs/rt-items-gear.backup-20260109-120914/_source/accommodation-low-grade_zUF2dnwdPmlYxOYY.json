@@ -1,0 +1,30 @@
+{
+  "name": "Accommodation: Low Grade",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Single Night's Accomodation in a Hab Sleeper Capsule, Grox Pen, Bilge Berth, or somewhere else uncomfortable, dank, and likely dangerous.",
+    "cost": "Cost of service may vary with location and the honesty/charitability of those that offer it.",
+    "effects": "Plentiful",
+    "notes": "5 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 5 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zUF2dnwdPmlYxOYY"
+}

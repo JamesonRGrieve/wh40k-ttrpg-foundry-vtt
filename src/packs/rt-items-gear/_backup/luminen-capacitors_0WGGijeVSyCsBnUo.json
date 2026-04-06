@@ -1,0 +1,30 @@
+{
+  "name": "Luminen Capacitors",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Allows the recharging of various devices, requires one minute. Difficulty varies: +10, Power Cell, Illuminator. +0: Weapon Charge Pack, Data-Slate, Bridge Terminal. -10: Shuttle Electronics, Servo-Skull. -20: Lascannon Charge Pack, Bridge Hololith. -30: Cogitator Core, Reactor Machine Spirit, Xenos Technology.",
+    "cost": "Requires Mechanicus Implants to use. Poor gives -10 to all Toughness Tests made to use this, Best give +10.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0WGGijeVSyCsBnUo"
+}

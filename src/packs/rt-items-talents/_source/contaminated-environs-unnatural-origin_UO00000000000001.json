@@ -1,0 +1,79 @@
+{
+  "name": "Contaminated Environs (Unnatural Origin)",
+  "type": "talent",
+  "img": "icons/svg/radiation.svg",
+  "system": {
+    "identifier": "contaminated-environs-unnatural-origin",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "18-19"
+    },
+    "description": {
+      "value": "<p><strong>Contaminated Environs:</strong> You grew up in toxic wastelands or mutant-infested zones where survival required adaptation. Your body has been hardened by exposure to poisons and disease, and you understand the ways of the outcasts.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Choose +3 Toughness or +3 Willpower, suffer -3 Fellowship. Gain Peer (Mutants) and Resistance (Poisons) talents. Optional: Pay +100 XP to roll for 1 mutation (reroll 75+).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Unnatural Origin (100 XP)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 100,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {
+        "fellowship": -3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Costs 100 XP. Choose +3 T or WP. Optional +100 XP for mutation.",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Peer (Mutants)",
+          "specialization": "Mutants",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+        },
+        {
+          "name": "Resistance (Poisons)",
+          "specialization": "Poisons",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.FWzsS62FRJhejE0b"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Characteristic Choice",
+          "description": "<p>Choose +3 Toughness or +3 Willpower.</p>"
+        },
+        {
+          "name": "Optional Mutation",
+          "description": "<p>Pay an additional 100 XP to roll once on the mutation table, rerolling results of 75 or higher.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UO00000000000001"
+}

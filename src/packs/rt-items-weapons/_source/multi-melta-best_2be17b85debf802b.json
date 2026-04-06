@@ -1,0 +1,63 @@
+{
+  "name": "Multi-Melta [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-multimelta.svg",
+  "system": {
+    "identifier": "multi-melta-best",
+    "class": "heavy",
+    "type": "melta",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 60,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "4d10",
+      "type": "energy",
+      "bonus": 12,
+      "penetration": 12
+    },
+    "special": [
+      "blast-1"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 55,
+    "availability": "extremely-rare",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 17000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Blast (1)</p><p><b>Note:</b> Users are advised to insulate tehmselves to prevent acciental self incineration whilst firing</p>"
+    },
+    "modifications": [],
+    "notes": "Users are advised to insulate tehmselves to prevent acciental self incineration whilst firing",
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2be17b85debf802b"
+}

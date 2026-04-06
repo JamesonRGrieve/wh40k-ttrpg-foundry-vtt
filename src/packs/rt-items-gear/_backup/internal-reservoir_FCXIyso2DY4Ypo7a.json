@@ -1,0 +1,30 @@
+{
+  "name": "Internal Reservoir",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Used to improve Luminen Capacitors by acting as a battery. Do not gain fatigue when Luminen Capacitors are used, instead drain half of the internal reservoir. Takes on day to recharge.",
+    "cost": "Requires Luminen Capacitors Cybernetic",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FCXIyso2DY4Ypo7a"
+}

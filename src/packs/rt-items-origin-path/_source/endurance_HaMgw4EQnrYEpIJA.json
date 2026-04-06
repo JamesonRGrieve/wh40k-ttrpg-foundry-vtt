@@ -1,0 +1,59 @@
+{
+  "name": "Endurance",
+  "type": "originPath",
+  "img": "modules/game-icons-net/whitetransparent/strongbox.svg",
+  "system": {
+    "identifier": "endurance",
+    "step": "motivation",
+    "stepIndex": 5,
+    "description": {
+      "value": "<h2>Endurance</h2><blockquote><p><em>\"You seek to endure and, in enduring, grow stronger. You welcome opposition, risk, setbacks, injury, and pain as old friends—for these trials are but a stairway by which you will climb to greater heights. Endure, and you shall be made mighty in the God-Emperor's eyes, and a power of the Imperium.\"</em></p></blockquote><p>The virtuous welcome the storm, the Imperial Creed teaches, for its fury guides humanity upon the path to strength in body and soul. Just as a mighty tree sheds its weakest limbs before the tearing winds, and stands the greater for it, so too is humanity made sturdy by struggle and want. Others would put it more simply: the weak die and only the strong remain, and you choose to be the latter.</p><p>Through hardship and adversity, you will forge yourself into an instrument of the Emperor's will—unbreakable, unyielding, eternal.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Motivation",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "wounds": 1,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 1,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "33",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": [
+      1
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HaMgw4EQnrYEpIJA"
+}

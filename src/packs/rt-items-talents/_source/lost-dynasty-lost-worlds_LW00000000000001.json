@@ -1,0 +1,64 @@
+{
+  "name": "Lost Dynasty (Lost Worlds)",
+  "type": "talent",
+  "img": "icons/svg/tower.svg",
+  "system": {
+    "identifier": "lost-dynasty-lost-worlds",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "26"
+    },
+    "description": {
+      "value": "<p><strong>Lost Dynasty:</strong> Many worlds are claimed in the name of Rogue Traders, and thus the Imperium. Sometimes, however, these worlds go uncatalogued. Perhaps the Rogue Trader was lost before he or she could record the discovery, or maybe something happened within the family that prevented them from returning. Whatever the case may be, you have come across one of these 'lost dynasties' and seized it in the name of your family, or re-discovered a lost ancestral claim.</p><p>The player and the GM should work out the details of this lost resource so it can be worked into the campaign story, as needed.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Add +1 Profit to the group's total Profit Factor, and gain +1 Fate Point.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Lost Worlds Origin (400 XP)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 400,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 1,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "profitFactor",
+          "label": "Profit Factor",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Costs 400 XP from starting experience. Work with GM to determine details of the lost dynasty.",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LW00000000000001"
+}

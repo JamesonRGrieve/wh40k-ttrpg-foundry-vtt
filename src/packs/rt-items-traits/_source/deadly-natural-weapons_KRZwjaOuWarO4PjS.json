@@ -1,0 +1,28 @@
+{
+  "name": "Deadly Natural Weapons",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Creature's natural attacks do not have the Primitive Special Quality</p>"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "benefit": "<p>Creature's natural attacks do not have the Primitive Special Quality</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KRZwjaOuWarO4PjS"
+}

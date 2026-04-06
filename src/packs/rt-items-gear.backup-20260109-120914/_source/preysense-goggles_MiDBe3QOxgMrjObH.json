@@ -1,0 +1,30 @@
+{
+  "name": "Preysense Goggles",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.5kg",
+    "availability": "+20 to Perception tests made at night, no penalties from darkness. Poor Models are bulky with glowing lenses, Good and Best can be disguised as normal eyeglasses.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MiDBe3QOxgMrjObH"
+}

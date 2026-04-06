@@ -1,0 +1,54 @@
+{
+  "name": "Lathe-Pattern Shark Assault Boat",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "space",
+    "size": 4,
+    "sizeDescriptor": "28m/ 18AU's",
+    "faction": "",
+    "subfaction": "",
+    "type": "skimmer",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 45,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 45,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 30,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -10,
+      "tactical": 2,
+      "notes": ""
+    },
+    "crew": {
+      "required": 5,
+      "notes": "Pilot, Co-Pilot, Gunner, Crew Chief, Enginseer"
+    },
+    "passengers": 0,
+    "manoeuverability": 50,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 50,
+      "value": 50,
+      "critical": 0
+    },
+    "weapons": "<p>Co-Pilot: Twin-Linked Las-Breacher (Front, Range 220m (2 AU's), S/-/-, 3d10+10 E, Pen 15, Clip 10, Reload -, Inaccurate, Twin-Linked</p>\n<p>Gunner: AP Autocannon (All, Range 300m (3 AU's), S/2/5, 4d10+5 I, Pen 8, Clip 200, Reload 2 Full</p>",
+    "specialRules": "<p>Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Can affix to Spacecraft ship hull as +0 Pilot(Space Craft) Test and spend 4 Full Rounds to burn throough using Las-Breacher and Boarding Clamp Melta Charges. Has Craft Rating of +5 for Attack Craft Purposes, squadron size 8.</p>",
+    "traitsText": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up. Can affix to Spacecraft ship hull as +0 Pilot(Space Craft) Test and spend 4 Full Rounds to burn throough using Las-Breacher and Boarding Clamp Melta Charges. Has Craft Rating of +5 for Attack Craft Purposes, squadron size 8. ",
+    "availability": "veryrare",
+    "source": "RT: Battlefleet Koronus"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "fL9JILznnRgdAsWV"
+}

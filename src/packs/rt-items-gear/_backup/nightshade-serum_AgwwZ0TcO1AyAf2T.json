@@ -1,0 +1,30 @@
+{
+  "name": "Nightshade Serum",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] For 1 Hour, User becomes sensitive to light, suffer -10 to Vision-based Tests whilst in Bright Light, but +10 to Awareness Tests everywhere else. Afterwards make Toughness Test or gain 1 Fatigue.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "ChatGPT",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AgwwZ0TcO1AyAf2T"
+}

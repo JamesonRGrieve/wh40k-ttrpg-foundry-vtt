@@ -1,0 +1,30 @@
+{
+  "name": "Infantry Gear: Uniform",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "3kg",
+    "availability": "The Standard Uniform of whichever Guard Regiment the kit belongs to. Exact Unifroms vary wildly from Penal dregs to impeccable dress uniforms. Usually contains heavy and durable clothing, tough boots, thick socks, rain gear, and gloves as deemed neccisary.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Common",
+    "notes": "10 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 10 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LG9h8GaK2PTqb9SO"
+}

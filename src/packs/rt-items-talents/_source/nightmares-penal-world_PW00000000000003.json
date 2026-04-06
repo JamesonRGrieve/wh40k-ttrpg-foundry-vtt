@@ -1,0 +1,68 @@
+{
+  "name": "Nightmares (Penal World)",
+  "type": "talent",
+  "img": "icons/svg/sleep.svg",
+  "system": {
+    "identifier": "nightmares-penal-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "14"
+    },
+    "description": {
+      "value": "<p><strong>Nightmares:</strong> Being brutalised by the prison world enforcers leaves its mark on the psyche of those who survive their time on a penal world. They tend to suffer from severe nightmares that never go away, and as a result they gain 1d5 Insanity Points and the Light Sleeper Talent—never again gaining a decent night's sleep without resorting to drugs or other such aids.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain 1d5 Insanity Points and the Light Sleeper talent.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Penal World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants 1d5 Insanity Points and Light Sleeper talent",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Light Sleeper",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.l5M9d7c3f6xMSAHa"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Trauma",
+          "description": "Character gains 1d5 Insanity Points from brutal treatment on penal world"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PW00000000000003"
+}

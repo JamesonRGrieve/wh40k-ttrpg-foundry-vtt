@@ -21,7 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Paths
-const PACK_SOURCE_DIR = path.join(__dirname, '..', 'packs', 'wh40k-items-origin-path', '_source');
+const PACK_SOURCE_DIR = path.join(__dirname, '..', 'packs', 'rt-items-origin-path', '_source');
 const REPORT_PATH = path.join(__dirname, '..', '..', 'PHASE4_MIGRATION_REPORT.md');
 
 // Statistics

@@ -1,0 +1,28 @@
+{
+  "name": "Mindlinked",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "unique",
+    "requirements": "Psylakis Warder Alternative Advance (Innate)",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>Character and Psyker Charge Undero the Ritual of Psylakis, their minds linked Psychically. They cannot communicate telepathically, however both sense the other's strong emotions and presence. The Character knows the exact location of their Charge within 1km x Perception Bonus, and their Rough Location within 1000km. The Character and Psychic Charge adds the other's Willpower and Perception Bonuses to any Opposed Willpower Tests they make to resist Psychic Powers. If the link between them is temporaraily broken unexpectedly such as from an Untouchable both must pass a +0 Willpower Test or suffer 1d5 fatigue. If either dies the link is permenantly broken and the survivor suffers 1d10 Insanity, or 2d10 if the death was particularly violent.</p>"
+    },
+    "benefit": "<p>Character and Psyker Charge Undero the Ritual of Psylakis, their minds linked Psychically. They cannot communicate telepathically, however both sense the other's strong emotions and presence. The Character knows the exact location of their Charge within 1km x Perception Bonus, and their Rough Location within 1000km. The Character and Psychic Charge adds the other's Willpower and Perception Bonuses to any Opposed Willpower Tests they make to resist Psychic Powers. If the link between them is temporaraily broken unexpectedly such as from an Untouchable both must pass a +0 Willpower Test or suffer 1d5 fatigue. If either dies the link is permenantly broken and the survivor suffers 1d10 Insanity, or 2d10 if the death was particularly violent.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dtTCTfNjHh0R9jmq"
+}

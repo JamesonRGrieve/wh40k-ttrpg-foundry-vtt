@@ -1,0 +1,30 @@
+{
+  "name": "Thermal Gloves",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "1kg",
+    "availability": "Sturdy Gauntlets that allow for delicate manipulation, kept warm through powered mini-radiators within them, power cells set within thin forearm shields, can be recharged or used to charge other devices, if used to power up devices provides +10 to the Tech-Use Test. Can also provide 1d5 lasgun/laspistol shots in an emergency.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "220 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 220 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dn1om0UJEVvID9ww"
+}

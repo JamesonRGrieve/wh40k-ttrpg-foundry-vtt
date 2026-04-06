@@ -1,0 +1,30 @@
+{
+  "name": "Wideawake",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Wards feelings of drowsiness. User can ignore one level of fatigue for 1d5 hours, additional doses prolong effect, but can't counteract more than one fatigue level. After wearing off, user suffers another level of fatigue.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Plentiful",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CIQmn8qVuQJTQtlH"
+}

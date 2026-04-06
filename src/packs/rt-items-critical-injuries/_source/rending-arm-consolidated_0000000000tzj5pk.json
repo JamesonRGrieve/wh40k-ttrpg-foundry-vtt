@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000tzj5pk",
+  "name": "Rending Critical - Arm",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_arm_consolidated",
+    "damageType": "rending",
+    "bodyPart": "arm",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>The slashing attack tears free whatever the target was carrying. He drops anything he was holding in that hand.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>Deep cuts cause the target to drop his arm. He suffers 1 level of Fatigue and releases anything he was holding in that hand.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The attack shreds the target's arm into ribbons, causing the target to scream in pain. He drops anything he was holding in that hand, and must make a successful Challenging (+0) Toughness test or suffer Blood Loss.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The attack flays the skin from the limb, filling the air with blood and the sounds of his screaming. The target suffers 2 levels of Fatigue and falls Prone. The arm is Useless for [[1d10]] rounds.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>A bloody and very painful-looking furrow is opened up in the target's arm. He suffers Blood Loss and drops anything he was holding in that hand. The arm is Useless until the target receives medical attention.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The blow mangles flesh and muscle as it hacks into the target's hand, liberating [[1d5]] fingers in the process (a roll of a 5 means that the thumb has been sheared off as well). The target is Stunned for 1 round and must immediately make a Challenging (+0) Toughness test or suffers the Lost Hand condition (see page 242).</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>The attack rips apart skin, muscle, bone, and sinew with ease, turning the target's arm into a dangling ruin of severed veins and spurting blood. He suffers Blood Loss and [[1d10]] Strength damage. The arm is Useless until the target receives medical attention.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>With an assortment of unnatural, wet, ripping sounds, the arm flies free of the body trailing blood behind it in a crimson arc. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he is Stunned for [[1d10]] rounds and suffers Blood Loss. He suffers from the Lost Arm condition (see page 242).</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The attack slices clean through the arm and into the torso, drenching the ground in blood and gore. The target is killed instantly, leaving a ruined corpse on the ground.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The attack slices clean through the arm and into the torso, drenching the ground in blood and gore. The target is killed instantly, leaving a ruined corpse on the ground. As the arm falls to the ground its fingers spasm uncontrollably, pulling the trigger of any held weapon. If the target was carrying a ranged weapon, roll 1d100. On a result of 96 or higher, a single randomly determined target within [[2d10]] metres is hit struck by a single hit from that weapon on a randomly determined Hit Location.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Arm (Severity 10)</strong></p><p>The attack slices clean through the arm and into the torso, drenching the ground in blood and gore. The target is killed instantly, leaving a ruined corpse on the ground. As the arm falls to the ground its fingers spasm uncontrollably, pulling the trigger of any held weapon. If the target was carrying a ranged weapon, roll 1d100. On a result of 96 or higher, a single randomly determined target within [[2d10]] metres is hit struck by a single hit from that weapon on a randomly determined Hit Location.</p>",
+      "chat": "",
+      "summary": "Rending Arm injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

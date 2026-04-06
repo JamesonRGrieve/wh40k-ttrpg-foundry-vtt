@@ -1,0 +1,30 @@
+{
+  "name": "Jump Pack (Lathe)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "25kg",
+    "availability": "Requres Pilot (Personal) Skill, can guide fall, short jumps. Can also count as Flyer (12) for up to a minute, but after one hour of strenuous use needs replacing or repair.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "2000 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 2000 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZUQzdXM6CfNESzrN"
+}

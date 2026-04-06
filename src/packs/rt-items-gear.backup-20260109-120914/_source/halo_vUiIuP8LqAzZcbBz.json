@@ -1,0 +1,30 @@
+{
+  "name": "Halo",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Creates a compliant state within a person, or calms them down. Imposes -20 to Willpower Tests for 1d10 hours. Commonly given to Penal Legionnaires, with the right dosage individuals can be made almost unawarely enthuastic for their likely brutal deaths.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "100 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 100 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vUiIuP8LqAzZcbBz"
+}

@@ -1,0 +1,54 @@
+{
+  "name": "The Face of the Enemy",
+  "type": "trait",
+  "img": "modules/game-icons-net/whitetransparent/hatred.svg",
+  "system": {
+    "identifier": "the-face-of-the-enemy",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "32"
+    },
+    "description": {
+      "value": "<h2>The Face of the Enemy</h2><p>You will never willingly have dealings with your sworn enemy except under the direst circumstances, and if you must do so, you suffer −10 to all Fellowship Tests in those dealings.</p><p>Also, if given the slightest provocation, you will react violently towards them. (You may take a Willpower Test to avert this, modified by the provocation and the consequences of succumbing to your hatred.)</p>"
+    },
+    "isPassive": false,
+    "isRollable": true,
+    "benefit": "<p>−10 Fellowship with sworn enemy; violent reaction to provocation (Willpower Test to resist)</p>",
+    "level": 1,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "description": "−10 to Fellowship Tests with sworn enemy"
+          }
+        ],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "HWD0000000000001"
+}

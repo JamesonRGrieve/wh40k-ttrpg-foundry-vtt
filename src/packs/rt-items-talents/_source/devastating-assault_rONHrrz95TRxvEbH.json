@@ -1,0 +1,65 @@
+{
+  "name": "Devastating Assault",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "devastatingAssault",
+    "category": "combat",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Once per turn, after successfully resolving an All Out Attack action against a target, the character can make a second All Out Attack as a Free Action with the same bonuses and penalties as the first.</p>"
+    },
+    "tier": 2,
+    "benefit": "<p>Once per turn, after successfully resolving an All Out Attack action against a target, the character can make a second All Out Attack as a Free Action with the same bonuses and penalties as the first.</p>",
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence"
+    ],
+    "prerequisites": {
+      "text": "Weapon Skill 35",
+      "characteristics": {
+        "weaponSkill": 35
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Second All Out Attack",
+          "description": "<p>Once per turn, after successfully resolving an All Out Attack action, make a second All Out Attack as a Free Action with the same bonuses and penalties.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rONHrrz95TRxvEbH"
+}

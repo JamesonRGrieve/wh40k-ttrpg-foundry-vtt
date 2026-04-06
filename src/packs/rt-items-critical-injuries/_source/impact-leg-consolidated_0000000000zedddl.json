@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000zedddl",
+  "name": "Impact Critical - Leg",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_leg_consolidated",
+    "damageType": "impact",
+    "bodyPart": "leg",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>A blow to the leg results in deep bruises and teeth-clenching pain. The target suffers 1 level of Fatigue.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>A grazing strike against the leg slows the target. The target's Movement is reduced by half (rounding up) for 1 round. He must make a Challenging (+0) Toughness test or be Stunned for 1 round and fall Prone.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>A solid blow to the leg sends lightning agony coursing through the target. He is knocked Prone and suffers [[1d10]] Agility damage.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>A powerful impact causes micro-fractures in the target's bones, inflicting considerable agony. The target is knocked Prone and suffers [[2d10]] Agility damage.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>The blow breaks the target's leg with an agonising snap. He is Stunned for 1 round and knocked Prone. Reduce his Movement to 1 metre until he receives medical attention.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>With a sharp cracking noise, several of the tiny bones in the target's foot snap like twigs. The target suffers 2 levels of Fatigue, and his Movement is halved (rounded up) until he receives medical attention. He must make a Challenging (+0) Toughness test or suffer the Lost Foot condition (see page 243).</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>With a nasty crunch, the leg is broken and the target is left mewling in pain. He is Stunned for 2 round and falls Prone. The leg is Useless until the target receives medical attention.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The force of the attack rips the lower half of the leg away in a stream of blood. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he suffers Blood Loss and suffers the Lost Leg condition (see page 243). Permanently reduce his Agility Characteristic by 1d5.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The hit rips apart the flesh of the leg, causing blood to spray out in all directions. Even as the target tries futilely to stop the sudden flood of vital fluid, he falls to the ground and dies in a spreading pool of gore.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The hit rips apart the flesh of the leg, causing blood to spray out in all directions. Even as the target tries futilely to stop the sudden flood of vital fluid, he falls to the ground and dies in a spreading pool of gore. Such is the agony of the target's death that his terrible screams drown out all conversation within [[2d10]] metres for the rest of the round.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Leg (Severity 10)</strong></p><p>The hit rips apart the flesh of the leg, causing blood to spray out in all directions. Even as the target tries futilely to stop the sudden flood of vital fluid, he falls to the ground and dies in a spreading pool of gore. Such is the agony of the target's death that his terrible screams drown out all conversation within [[2d10]] metres for the rest of the round.</p>",
+      "chat": "",
+      "summary": "Impact Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

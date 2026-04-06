@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000671ryu",
+  "name": "Rending Critical - Body",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_body_consolidated",
+    "damageType": "rending",
+    "bodyPart": "body",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>If the target is not wearing armour on this location, he suffers 1 level of Fatigue from a painful laceration. If he is wearing armour, there is no effect, and he thanks the Emperor for his foresight.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>A powerful slash opens a painful rent in the target's body. He suffers 1 level of Fatigue and must make a Challenging (+0) Toughness test or be Stunned for 1 round.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The attack rips a large patch of skin from the target's torso, leaving him gasping in pain. The target is Stunned for 1 round and must make a Challenging (+0) Toughness test or suffer Blood Loss.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The blow opens up a long wound in the target's torso, causing him to double over in terrible pain. The target is Stunned for 1 round and suffers Blood Loss.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>A torrent of blood spills from the deep cuts, making the ground slick with gore. The target suffers Blood Loss and suffers [[1d10]] Toughness damage. Any character attempting to move through this pool of blood must make a Challenging (+0) Agility test or fall Prone.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The mighty attack takes a sizeable chunk out of the target and knocks him to the ground as he clutches the oozing wound, shrieking in pain. The target is knocked Prone, suffers Blood Loss, and suffers [[1d10]] Toughness damage.</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>The attack cuts open the target's abdomen, threatening to expose his entrails. The target suffers Blood Loss. Permanently reduce his Toughness characteristic by 1d5. Until he receives medical attention, at the end of each round, if he took any actions (besides holding his guts in and waiting for a medic), roll 1d10. On a result of 1 or 2, he suffers an additional [[2d10]] Rending damage.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>With a vile tearing noise, the skin on the target's chest comes away revealing a red ruin of muscle. He must succeed on a Challenging (+0) Toughness test or perish. If he survives, he is Stunned for 1 round and suffers Blood Loss. Permanently reduce his Toughness characteristic by 1d10.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The powerful blow cleaves the target from gullet to groin, revealing his internal organs and spilling them on to the ground before him. The target is now quite dead.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The powerful blow cleaves the target from gullet to groin, revealing his internal organs and spilling them on to the ground before him. The target is now quite dead. The area and the target are awash with slippery gore. For the rest of the fight, any character who moves within four metres of the target's corpse must make a Challenging (+0) Agility test or fall Prone.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Rending Damage to Body (Severity 10)</strong></p><p>The powerful blow cleaves the target from gullet to groin, revealing his internal organs and spilling them on to the ground before him. The target is now quite dead. The area and the target are awash with slippery gore. For the rest of the fight, any character who moves within four metres of the target's corpse must make a Challenging (+0) Agility test or fall Prone.</p>",
+      "chat": "",
+      "summary": "Rending Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

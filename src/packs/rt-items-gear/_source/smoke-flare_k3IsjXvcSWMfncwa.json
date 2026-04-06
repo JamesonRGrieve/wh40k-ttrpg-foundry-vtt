@@ -1,0 +1,41 @@
+{
+  "name": "Smoke Flare",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 1,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 12,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Gradually gives off a thick black smoke up to a 40m area. Lasts anywhere from 1d5 rounds in strong wind to 2d10 minutes indoors.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 12 T</p>",
+      "chat": "",
+      "summary": "Gradually gives off a thick black smoke up to a 40m area. Lasts anywhere from 1d5 rounds in strong wind to 2d10 minutes indoors."
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Gradually gives off a thick black smoke up to a 40m area. Lasts anywhere from 1d5 rounds in strong wind to 2d10 minutes indoors.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k3IsjXvcSWMfncwa"
+}

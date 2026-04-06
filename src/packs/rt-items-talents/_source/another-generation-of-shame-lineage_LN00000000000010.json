@@ -1,0 +1,75 @@
+{
+  "name": "Another Generation of Shame (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/tankard.svg",
+  "system": {
+    "identifier": "another-generation-of-shame-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Your life has been ill-favoured. With nothing to look up to, no prestige to bear the burden of, your life lacked aspiration, and you have spent years whittling away what little wealth remains.\"</em></p></blockquote><p>You allowed the family reputation to sink even lower as the glorious past grows ever more distant. Even now, you do little but bring it further shame and disrepute.</p><p>Without a proud legacy to uphold, you found solace among the dregs of society, learning their ways and making connections in the underworld.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain Carouse as a trained Basic Skill, and the Peer (Underworld) talent. However, your wastrel lifestyle has depleted your family's resources, reducing your starting Profit Factor by 2.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Disgraced lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 100,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": -2
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Carouse and Peer (Underworld), but -2 Profit Factor.",
+    "grants": {
+      "skills": [
+        {
+          "name": "Carouse",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Peer",
+          "specialization": "Underworld",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.Icpx3A1ddmbsNRuL"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Underworld Connections",
+          "description": "<p>Your years spent among the lower strata of society have given you connections with criminals, smugglers, and other unsavory types. While your family's wealth has been squandered, you have friends in low places.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000010"
+}

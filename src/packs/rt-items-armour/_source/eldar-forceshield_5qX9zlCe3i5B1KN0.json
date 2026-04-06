@@ -1,0 +1,33 @@
+{
+  "name": "Eldar Forceshield",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "void",
+    "weight": 0.2,
+    "availability": "unique",
+    "notes": "Resembles ornate jewels often worn on belt or arm. [AP: 75%]",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Resembles ornate jewels often worn on belt or arm.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5qX9zlCe3i5B1KN0"
+}

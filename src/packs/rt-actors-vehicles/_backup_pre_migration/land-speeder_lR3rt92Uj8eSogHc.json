@@ -1,0 +1,54 @@
+{
+  "name": "Land Speeder",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 7,
+    "sizeDescriptor": "30m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 15,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 15,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 15,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 10,
+      "tactical": 275,
+      "notes": ""
+    },
+    "crew": {
+      "required": 2,
+      "notes": "Pilot, Co-Pilot"
+    },
+    "passengers": 0,
+    "manoeuverability": 18,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>None, but can be modified to mount any Heavy weapon of less than 40kg (Manned by Co-Pilot).</p>",
+    "specialRules": "<p>The Vehicle Hovers above the ground, ignoring hampering terrain. If it would be immobilised due to damage, it is instead destroyed as it crashes into the ground.</p>\n<p>This Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action.</p>",
+    "traitsText": "The Vehicle Hovers above the ground, ignoring hampering terrain. If it would be immobilised due to damage, it is instead destroyed as it crashes into the ground.\nThis Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action.",
+    "availability": "rare",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "lR3rt92Uj8eSogHc"
+}

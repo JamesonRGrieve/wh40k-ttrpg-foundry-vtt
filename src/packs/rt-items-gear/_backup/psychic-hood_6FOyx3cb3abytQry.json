@@ -1,0 +1,30 @@
+{
+  "name": "Psychic Hood",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "2kg",
+    "availability": "Can use Reaction to Nullify Opposing Psyker within Willpower Characteristic Metres. Before Opposing Psyker's Focus Power test, Character makes Focus Power Test (can choose strength), each Degree of Success imposes -10 to opposing psyker's test. Can cause Psychic Phenomena. Gives +5 to all Focus Power Tests.",
+    "cost": "Does nothing if wearer is not a psyker",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6FOyx3cb3abytQry"
+}

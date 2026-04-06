@@ -1,0 +1,50 @@
+{
+  "name": "Jealous Freedom",
+  "type": "trait",
+  "img": "modules/game-icons-net/whitetransparent/broken-chains.svg",
+  "system": {
+    "identifier": "jealous-freedom",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "32"
+    },
+    "description": {
+      "value": "<h2>Jealous Freedom</h2><p>Having endured captivity once, you have no intention of doing so again. You react violently towards the prospect of imprisonment or loss of your freedom.</p><p>You may take a Willpower Test to avert this, modified by the provocation and the consequences (set by the GM) of succumbing to your dread.</p>"
+    },
+    "isPassive": false,
+    "isRollable": true,
+    "benefit": "<p>Violent reaction to threats of captivity (Willpower Test to resist)</p>",
+    "level": 1,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "PGD0000000000001"
+}

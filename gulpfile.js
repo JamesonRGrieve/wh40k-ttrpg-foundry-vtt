@@ -84,7 +84,7 @@ async function compilePacks() {
     try {
       // Special handling for origin-path pack - create folders for each step
       const originPathFolders = {};
-      if (folder === 'wh40k-items-origin-path') {
+      if (folder === 'rt-items-origin-path') {
         // Foundry V13 requires exactly 16 alphanumeric characters for IDs
         const steps = [
           { id: 'ORGNfolder000001', name: '1. Home World', sort: 100000 },
@@ -120,7 +120,7 @@ async function compilePacks() {
           const doc = JSON.parse(content);
           
           // For origin-path items, assign to appropriate folder based on stepIndex
-          if (folder === 'wh40k-items-origin-path' && doc.flags?.wh40k?.stepIndex) {
+          if (folder === 'rt-items-origin-path' && doc.flags?.wh40k?.stepIndex) {
             const stepIndex = doc.flags.wh40k.stepIndex;
             if (originPathFolders[stepIndex]) {
               doc.folder = originPathFolders[stepIndex];
@@ -137,7 +137,7 @@ async function compilePacks() {
         }
       }
       
-      const folderCount = folder === 'wh40k-items-origin-path' ? ' + 6 folders' : '';
+      const folderCount = folder === 'rt-items-origin-path' ? ' + 6 folders' : '';
       console.log(`Compiled pack: ${folder} (${files.length} documents${folderCount})`);
     } finally {
       await db.close();

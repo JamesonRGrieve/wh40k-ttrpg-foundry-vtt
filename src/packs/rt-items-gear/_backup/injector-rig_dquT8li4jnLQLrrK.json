@@ -1,0 +1,30 @@
+{
+  "name": "Injector Rig",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "A Cruder Version of the Chem Gland, consists of ten doses of four separate substances chosen at implantation. As a Half Action one is injected and applied instantly. These can be triggered manually or remotely by someone else. If the user suffers a Critical Hit, the character must make a Toughness Test or suffer 2d10 damage ignoring armour as the injector malfunctions.",
+    "cost": "Commonly chosen drugs are Frenzon, Slaught, Stimm, and De-Tox\nCost does not include Drug Doses which must be acquired seperately.",
+    "effects": "Scarce",
+    "notes": "750 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 750 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dquT8li4jnLQLrrK"
+}

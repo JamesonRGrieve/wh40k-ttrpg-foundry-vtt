@@ -1,0 +1,54 @@
+{
+  "name": "Banewolf Chem Tank",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": "18m",
+    "faction": "",
+    "subfaction": "",
+    "type": "tank",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 30,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 28,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 18,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 10,
+      "tactical": 70,
+      "notes": ""
+    },
+    "crew": {
+      "required": 3,
+      "notes": "Commander, Driver, Gunner"
+    },
+    "passengers": 0,
+    "manoeuverability": 30,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Turret: Chem Cannon  (40m; S/–/–; 2d10+5 E; Pen 9; Clip 100; Reload Full; Crippling [2], Felling [2], Spray, Toxic [4]). Creates 1d5 Metre Radius Toxic Cloud after firing, those who end turn inside are hit again and suffocate. Lasts 1d5 Turns.</p>\n<p>Hull, one of: Front Facing Heavy Bolter, Heavy Flamer</p>\n<p>Pintle (Optional), one of: Heavy Stubber, Storm Bolter</p>\n<p>---</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>\n<p>Heavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)</p>\n<p>Storm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)</p>",
+    "specialRules": "<p>Traits: Enclosed, Extremely Volatile, Enhanced Motive Systems, Reinforced Armour, Tracked Vehicle</p>\n<p>Special Rules: If this vehicle explodes, replace flames with Toxic(3) Special Quality, Toxic Cloud lasts 1d5 Rounds, those who end their turn within suffer another hit and suffocate.</p>",
+    "traitsText": "Traits: Enclosed, Extremely Volatile, Enhanced Motive Systems, Reinforced Armour, Tracked Vehicle\nSpecial Rules: If this vehicle explodes, replace flames with Toxic(3) Special Quality, Toxic Cloud lasts 1d5 Rounds, those who end their turn within suffer another hit and suffocate.",
+    "availability": "veryrare",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "kk7eQvSycQMCVf2S"
+}

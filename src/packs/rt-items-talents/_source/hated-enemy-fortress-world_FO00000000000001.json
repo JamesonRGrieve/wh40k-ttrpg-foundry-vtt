@@ -1,0 +1,62 @@
+{
+  "name": "Hated Enemy (Fortress World)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "hated-enemy-fortress-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "12"
+    },
+    "description": {
+      "value": "<p><strong>Hated Enemy:</strong> Growing up in the shadow of the enemy affects those who live on a fortress world. They are taught to hate and kill their enemy on sight without hesitation. Fortress world characters begin with the Hatred Talent (the group chosen is the enemy that the fortress world has been established against).</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Hatred talent for a specific enemy group (chosen by GM based on fortress world's purpose).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Fortress World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Hatred talent (choose enemy group)",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Hated Enemy",
+          "description": "Choose one Hatred talent appropriate to the fortress world's enemy (e.g., Orks, Chaos, Xenos, etc.)"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FO00000000000001"
+}

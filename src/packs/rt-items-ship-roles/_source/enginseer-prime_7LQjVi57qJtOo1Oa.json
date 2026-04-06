@@ -1,0 +1,65 @@
+{
+  "name": "Enginseer Prime",
+  "type": "shipRole",
+  "img": "icons/svg/crew.svg",
+  "system": {
+    "rank": 2,
+    "purpose": "Leads Mechanicus Contingent, directs vessel maintenance.",
+    "careerPreferences": [
+      "Rogue Trader",
+      "Arch-Militant",
+      "Astropath Transcendent",
+      "Explorator",
+      "Navigator",
+      "Seneschal"
+    ],
+    "subordinates": [
+      "Ship Tech-Priests",
+      "Arch-Magi",
+      "and Lesser Enginseers"
+    ],
+    "importantSkills": [
+      {
+        "name": "Tech-Use",
+        "specialization": ""
+      },
+      {
+        "name": "Chem-Use",
+        "specialization": ""
+      },
+      {
+        "name": "Common Lore",
+        "specialization": "Mechine Cult"
+      },
+      {
+        "name": "Forbidden Lore",
+        "specialization": "Mechanicus"
+      }
+    ],
+    "effect": "+10 to Emergency Repairs Extended Actions",
+    "description": {
+      "value": "<p><b>Purpose:</b> Leads Mechanicus Contingent, directs vessel maintenance.</p><p><b>Effect:</b> +10 to Emergency Repairs Extended Actions</p>"
+    },
+    "skillBonuses": {},
+    "shipBonuses": {
+      "manoeuvrability": 0,
+      "detection": 0,
+      "ballisticSkill": 0,
+      "crewRating": 0
+    },
+    "specialAbility": "",
+    "careerNote": "Typically Explorator",
+    "abilities": [
+      {
+        "name": "Emergency Repairs Expertise",
+        "description": "<p>+10 to Emergency Repairs Extended Actions</p>",
+        "bonus": 10,
+        "action": "Emergency Repairs",
+        "actionType": "extended"
+      }
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7LQjVi57qJtOo1Oa"
+}

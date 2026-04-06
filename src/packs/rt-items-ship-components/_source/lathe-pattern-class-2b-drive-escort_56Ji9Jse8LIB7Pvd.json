@@ -1,0 +1,42 @@
+{
+  "name": "Lathe Pattern Class 2b Drive \"Escort\"",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "hullType": [
+      "raider",
+      "frigate"
+    ],
+    "effect": "Generates power rather than using it. +3 Manoeuvrability, +1 Speed",
+    "availability": "very-rare",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Generates power rather than using it. +3 Manoeuvrability, +1 Speed</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "plasmaDrive",
+    "essential": true,
+    "power": {
+      "used": 0,
+      "generated": 47
+    },
+    "space": 14,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "lathe-pattern-class-2b-drive-escort-"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "56Ji9Jse8LIB7Pvd"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Pain Ward",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Allows character to ignore Stun Effects and other involuntary pain-related actions or penalties such as from critical damage, being on fire, drowning, etc.  Involuntary actions, restrictions, and damage due to mechanics of an injury, such as falling down due to losing legs, still occur as normal.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "z2zjyGkiLSTaPoX9"
+}

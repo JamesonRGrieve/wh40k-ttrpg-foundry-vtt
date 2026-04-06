@@ -1,0 +1,30 @@
+{
+  "name": "Festering Shroud",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Disease",
+    "weight": "-",
+    "availability": "Infected Character emits 7m diameter Green fog cloud, any entering cloud are exposed. Every 24 hours make +0 Toughness Test, if fail roll on Impact Critical Effect Table, with +1 per DoF beyond first. Cured with 1 week of constant rest and +0 Medicae Test. ",
+    "cost": "Acquired in batch of 5. Any exposed to disease must make +20 Toughness Test or catch it.\nNurgle Dedicated do not suffer Crit Effects that lead to Death or Blood Loss from disease.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "b7ijQRVF8dJSpW6y"
+}

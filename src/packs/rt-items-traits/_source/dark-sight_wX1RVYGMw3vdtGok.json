@@ -1,0 +1,28 @@
+{
+  "name": "Dark Sight",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can see normally in the dark, and takes no penalty from dim or no light.</p>"
+    },
+    "benefit": "<p>Can see normally in the dark, and takes no penalty from dim or no light.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wX1RVYGMw3vdtGok"
+}

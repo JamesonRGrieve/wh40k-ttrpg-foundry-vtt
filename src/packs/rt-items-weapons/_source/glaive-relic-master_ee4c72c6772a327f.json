@@ -1,0 +1,63 @@
+{
+  "name": "Glaive (Relic) [Master Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "system": {
+    "identifier": "glaive-relic-master",
+    "class": "melee",
+    "type": "primitive",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 2
+    },
+    "special": [
+      "balanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 12,
+    "availability": "average",
+    "craftsmanship": "master",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Balanced</p><p><b>Note:</b> Found as Treasure via book's Treasure Generator.</p>"
+    },
+    "modifications": [],
+    "notes": "Found as Treasure via book's Treasure Generator.",
+    "source": "RT: Stars of Inequity",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ee4c72c6772a327f"
+}

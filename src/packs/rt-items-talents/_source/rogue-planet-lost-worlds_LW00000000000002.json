@@ -1,0 +1,68 @@
+{
+  "name": "Rogue Planet (Lost Worlds)",
+  "type": "talent",
+  "img": "icons/svg/planet.svg",
+  "system": {
+    "identifier": "rogue-planet-lost-worlds",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "26"
+    },
+    "description": {
+      "value": "<p><strong>Rogue Planet:</strong> The universe is a mysterious place full of darkness and danger. There are forces at work that are beyond human comprehension and occasionally whole worlds are ripped away from their parent systems—cast into the void. You have discovered such a rogue planet (or were part of an expedition that discovered one) and travelled to it.</p><p>You brought back the treasures and secrets of this world, which you claimed in the name of your family or patron. There are mysteries still to be unearthed upon this world, and it could be that the planet harbours something dark. It's up to the player and the GM to work out the details of this lost world and determine what it contains.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Gain +3 Willpower and a single Exploration skill of your choice (Awareness, Survival, Navigate Surface, or Tracking) as a Trained Skill. However, travelling to this lost world is an unnerving experience. Gain +1d5 Insanity Points.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Lost Worlds Origin (200 XP)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 200,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {
+        "willpower": 3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Costs 200 XP from starting experience. Gain 1d5 Insanity Points. Choose one exploration skill as Trained.",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Exploration Skill Choice",
+          "description": "<p>Choose one Exploration skill as Trained: Awareness, Survival, Navigate (Surface), or Tracking.</p>"
+        },
+        {
+          "name": "Unnerving Experience",
+          "description": "<p>Gain 1d5 Insanity Points from your harrowing journey to this rogue world.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LW00000000000002"
+}

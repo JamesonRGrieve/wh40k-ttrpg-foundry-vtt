@@ -1,0 +1,18 @@
+{
+  "name": "Gyro-Stabilised",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "gyro-stabilised",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 9</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>9</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JyIeeQe4KVv9s4Z8"
+}

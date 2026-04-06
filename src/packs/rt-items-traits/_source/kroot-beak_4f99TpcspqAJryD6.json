@@ -1,0 +1,28 @@
+{
+  "name": "Kroot Beak",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Kroot (Innate)",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>A Kroot's beak counts as a Natural Weapon. It deals 1d5+Strength Bonus Rending Damage, with Primitive Quality.</p>"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "benefit": "<p>A Kroot's beak counts as a Natural Weapon. It deals 1d5+Strength Bonus Rending Damage, with Primitive Quality.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4f99TpcspqAJryD6"
+}

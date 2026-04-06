@@ -1,0 +1,30 @@
+{
+  "name": "Upgrade: Cortex - Talent",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Adds one Talent to the cyber Familiar of choice. Must be appropriate to the familiar (Cyber Eagels are unlikely to have \"Air of Authority\")",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 500 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1eEnQR8Hl3BWhDkn"
+}

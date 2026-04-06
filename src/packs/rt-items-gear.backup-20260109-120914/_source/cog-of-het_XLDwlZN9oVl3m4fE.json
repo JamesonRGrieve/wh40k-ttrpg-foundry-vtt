@@ -1,0 +1,30 @@
+{
+  "name": "Cog of Het",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+10 to all Tech-Use Tests made in Battle\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Mechanicus Cog with three circles worked above the skull",
+    "cost": "Distinguished Service Medal: Awarded for successful Tech-Use Test to repair a vehicle or equipment which was vital to the unit later in the conflict.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "XLDwlZN9oVl3m4fE"
+}

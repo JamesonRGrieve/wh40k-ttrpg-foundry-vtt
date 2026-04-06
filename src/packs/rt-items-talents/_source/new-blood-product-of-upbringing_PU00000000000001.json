@@ -1,0 +1,70 @@
+{
+  "name": "New Blood (Product of Upbringing)",
+  "type": "talent",
+  "img": "icons/svg/coins.svg",
+  "system": {
+    "identifier": "new-blood-product-of-upbringing",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "25"
+    },
+    "description": {
+      "value": "<p><strong>New Blood:</strong> You or a member of your family were recently rewarded for something done in service to the Emperor or a lesser noble. Whatever it was, you now find yourself thrust into the ranks of Imperial nobility—but it's not the life of easy luxury and power you envisioned.</p><p>The more established members of the aristocracy scorn and look down upon you. Many dynasties see you as an upstart family—a rival at best and an enemy at worst. Given time, you know that your family will prove themselves worthy of the honour they have been given.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Your family's newfound wealth adds +1 Profit Factor to the group's starting Profit Factor. However, you gain the Rival (Nobility) Talent as the established aristocracy scorns your upstart family.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "A Product of Upbringing Origin (200 XP)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 200,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "profitFactor",
+          "label": "Profit Factor",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Costs 200 XP from starting experience.",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Rival (Nobility)",
+          "specialization": "Nobility",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.EodW9mOa1n3FFDWQ"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PU00000000000001"
+}

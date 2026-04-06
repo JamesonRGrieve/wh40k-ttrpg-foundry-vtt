@@ -1,0 +1,84 @@
+{
+  "name": "Perilous Choice (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/fire.svg",
+  "system": {
+    "identifier": "perilous-choice-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"There are fewer sins greater than concealing a psychic gift from the authorities, and fewer still that are more dangerous. Yet, for reasons you keep to yourself, you have made the decision to do just that.\"</em></p></blockquote><p>Through careful and illegal study, possibly at the feet of a like-minded family member, you have obtained a degree of mastery over your natural powers that allows you to keep them secret, yet ready to be called upon in direst need.</p><h3>The Weight of Damnation</h3><p>Every day you wake knowing that you are damned by Imperial law. You are an unsanctioned psyker, one of the most dangerous threats to humanity. If discovered, you would face interrogation, torture, and execution—and your family would be investigated for generations of hidden heresy. The Black Ships patrol the void, their sensors hungry for minds like yours.</p><p>Yet you have chosen this path, whether from desperation, ambition, or the belief that your powers can serve a greater purpose. You have studied in secret, learned to mask your psychic signature, and practiced the most basic disciplines. You are not a sanctioned servant of the Emperor—you are a rogue psyker, walking the razor's edge between damnation and power.</p><h3>Forbidden Knowledge</h3><p>Someone in your family line taught you these arts. Perhaps a grandmother who escaped the Black Ships, an uncle who studied forbidden texts, or a distant relative who traded secrets with rogue psykers. They showed you how to meditate, how to sense the Warp, how to draw upon its terrible power. They taught you caution, secrecy, and fear.</p><p>Now you possess Psy Rating 1 and rudimentary command of one psychic discipline. But you use the Renegade Psykers table when manifesting powers—the Astronomican does not protect you, and the warp hungers for unsanctioned souls.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p><strong>You gain:</strong></p><ul><li>Psy Rating 1</li><li>Access to any one Psychic Discipline</li><li>One Psychic Technique worth no more than 100xp</li><li>Psyniscience as a Trained Basic Skill</li></ul><p><strong>WARNING:</strong> You are an unsanctioned psyker, which is highly illegal within the Imperium. You use the <strong>Renegade Psykers and Sorcerers</strong> row of Table 6-1: Psychic Strength (ROGUE TRADER Core Rulebook, page 157) when manifesting powers. This means you suffer greater risks of Psychic Phenomena and Perils of the Warp.</p><p><strong>Further Development:</strong> Purchasing additional psychic techniques requires Elite Advances, the availability of which should be discussed with the GM. The GM is the final arbitrator as to what may or may not be purchased.</p><p><strong>Restrictions:</strong> Astropath and Navigator characters can never take this Lineage choice. This grants only the most basic psychic abilities.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Witch-Born lineage. Cannot be taken by Astropaths or Navigators.",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 500,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": 0
+      },
+      "other": [
+        {
+          "type": "psyRating",
+          "value": 1,
+          "description": "Base Psy Rating"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "UNSANCTIONED PSYKER - Uses Renegade Psyker psychic strength table. Grants Psy Rating 1, one discipline, one technique up to 100xp, and Psyniscience.",
+    "grants": {
+      "skills": [
+        {
+          "name": "Psyniscience",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Unsanctioned Psyker",
+          "description": "<p><strong>You are an illegal rogue psyker.</strong> You have not been sanctioned by the Adeptus Astra Telepathica and do not have the protection of the Astronomican. When manifesting psychic powers, you use the <strong>Renegade Psykers and Sorcerers</strong> row on the Psychic Strength table (see ROGUE TRADER Core Rulebook, page 157).</p><p>This means you are significantly more likely to suffer Psychic Phenomena and Perils of the Warp. Discovery of your nature would result in immediate execution or worse.</p>"
+        },
+        {
+          "name": "Nascent Psychic Power",
+          "description": "<p><strong>Choose one Psychic Discipline</strong> (such as Telekinesis, Telepathy, Divination, etc.). You gain access to this discipline and may learn powers from it.</p><p><strong>Choose one Psychic Technique</strong> worth no more than 100xp from your chosen discipline. You begin play with this technique.</p><p><strong>Implementation Note:</strong> During character creation, the player should select one psychic discipline and one minor technique. The GM should provide the character with the appropriate psychic power item(s).</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "isUnsanctionedPsyker": true,
+      "usesRenegadePsykerTable": true
+    }
+  },
+  "_id": "LN00000000000016"
+}

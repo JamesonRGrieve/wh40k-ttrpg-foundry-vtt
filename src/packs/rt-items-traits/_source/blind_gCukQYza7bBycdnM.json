@@ -1,0 +1,28 @@
+{
+  "name": "Blind",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Automatically fails all tests based on vision and any Ballistic Skill Tests, also has -30 to Weapon Skill Tests and most other tests that involve or benefit from vision.\nBlind Fighting Talent reduces penalty on Weapon Skill Tests from -30 to -15.</p>"
+    },
+    "benefit": "<p>Automatically fails all tests based on vision and any Ballistic Skill Tests, also has -30 to Weapon Skill Tests and most other tests that involve or benefit from vision.\nBlind Fighting Talent reduces penalty on Weapon Skill Tests from -30 to -15.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gCukQYza7bBycdnM"
+}

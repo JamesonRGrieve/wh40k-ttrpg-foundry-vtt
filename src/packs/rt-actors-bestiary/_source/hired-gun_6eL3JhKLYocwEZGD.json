@@ -1,0 +1,84 @@
+{
+  "name": "Hired Gun",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": 25,
+      "bs": 35,
+      "s": 30,
+      "t": 30,
+      "ag": 30,
+      "int": 25,
+      "per": 25,
+      "wp": 25,
+      "fel": 30
+    },
+    "wounds": 12,
+    "armourPoints": "3/5/5/5",
+    "move": "3/6/\n9/18",
+    "size": "Av +0",
+    "weapons": [
+      {
+        "name": "Lasgun",
+        "range": "30m",
+        "rof": "S/3/-",
+        "damage": "1d10+3 E",
+        "pen": 0,
+        "clip": 60,
+        "reload": " Full",
+        "qualities": "Reliable"
+      },
+      {
+        "name": "Stub Auto",
+        "range": "30m",
+        "rof": "S/3/-",
+        "damage": "1d10+E I",
+        "pen": 0,
+        "clip": 9,
+        "reload": "Full",
+        "qualities": null
+      },
+      {
+        "name": "Knife",
+        "range": "5m",
+        "rof": "-",
+        "damage": "1d5+3 R",
+        "pen": "0",
+        "clip": "-",
+        "reload": "-",
+        "qualities": "Primitive"
+      },
+      {
+        "name": "Truncheon",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d10+3 I",
+        "pen": "0",
+        "clip": "-",
+        "reload": "-",
+        "qualities": "Primitive"
+      },
+      {
+        "name": "Gear/\nOther",
+        "range": "Armour: Light Flak Coat (0/2/2/2)\n2 Spare Clips per Weapon\nHand Vox\n",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: Intimidate, Climb | T: | Ag: Drive (Ground Vehicle) | WP:\nInt: Common Lore (Imperium), Speak Language (Low Gothic), Trade (Armourer)\nPer: Awareness\nFel:",
+    "training": "Basic(Universal), Pistol(Universal), Melee(Primitive)",
+    "talents_traits": "Descriptions",
+    "description": {
+      "value": "<p><b>Skills:</b> S: Intimidate, Climb | T: | Ag: Drive (Ground Vehicle) | WP:\nInt: Common Lore (Imperium), Speak Language (Low Gothic), Trade (Armourer)\nPer: Awareness\nFel:</p><p><b>Training:</b> Basic(Universal), Pistol(Universal), Melee(Primitive)</p><p><b>Talents/Traits:</b> Descriptions</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "6eL3JhKLYocwEZGD"
+}

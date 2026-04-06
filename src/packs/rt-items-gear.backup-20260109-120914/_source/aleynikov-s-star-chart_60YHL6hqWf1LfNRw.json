@@ -1,0 +1,30 @@
+{
+  "name": "Aleynikov's Star Chart",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "1kg",
+    "availability": "A Map that details several planets visited by the mysterious \"St. Cognatius\", this map gives +30 to Navigation (Warp) Tests to these places, as well as are provided leads, an explorer could follow in seeking the fabled \"Tomb of Cognatius\".",
+    "cost": "A Star chart with clues to a potential treasure trove known as the \"Tomb of Cognatius\" Relics are unique, one of a kind items, they must be earned as opposed to acquired.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "60YHL6hqWf1LfNRw"
+}

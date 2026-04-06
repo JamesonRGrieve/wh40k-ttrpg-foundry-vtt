@@ -1,0 +1,30 @@
+{
+  "name": "Blast Goggles",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.5kg",
+    "availability": "Can withstand armour-punching fragments to keep eyes safe. Diminishes high intensity bursts of light.",
+    "cost": "No official rules. HB: +1 AP to head (doesn't stack with head armour) and +10 to save against bright flashes.",
+    "effects": "Common",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "s0ROkRlNFc10gpST"
+}

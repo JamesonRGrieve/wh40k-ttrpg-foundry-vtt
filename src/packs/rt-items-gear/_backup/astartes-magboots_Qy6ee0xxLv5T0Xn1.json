@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Magboots",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "5kg",
+    "availability": "Upgraded to integrate into Astartes Power Armour. Allows adhering to exterior hull plating or other metallic surfaces. Can be activated or de-activated at the start of the wearer's turn. Halves Agility Bonus for the purposes of movement whilst enabled.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "3 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 3 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qy6ee0xxLv5T0Xn1"
+}

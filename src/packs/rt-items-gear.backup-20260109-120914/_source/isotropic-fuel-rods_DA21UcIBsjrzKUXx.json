@@ -1,0 +1,30 @@
+{
+  "name": "Isotropic Fuel Rods",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "10kg",
+    "availability": "A Rougly Metre-Long Liquid Metal Energy storage medium, can power a small settlement of hab-block for several weeks. Highly Valulable.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "5000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 5000 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DA21UcIBsjrzKUXx"
+}

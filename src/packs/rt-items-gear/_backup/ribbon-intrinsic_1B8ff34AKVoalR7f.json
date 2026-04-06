@@ -1,0 +1,30 @@
+{
+  "name": "Ribbon Intrinsic",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+10 to any Battlefield Awareness and Battlefield Manoeuvring Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like an etched brass strip with a tripartite ribbon",
+    "cost": "Distinguished Service Medal: Awarded for being a part of a Massive Battle that would have been lost without the actions of the squad.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1B8ff34AKVoalR7f"
+}

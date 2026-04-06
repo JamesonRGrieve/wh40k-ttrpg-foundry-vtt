@@ -1,0 +1,63 @@
+{
+  "name": "Syndicate (Penal World)",
+  "type": "talent",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "syndicate-penal-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "14"
+    },
+    "description": {
+      "value": "<p><strong>Syndicate:</strong> Due to their time spent among criminals the Explorer knows who to look for on worlds that have a thriving criminal underclass. As such, they gain the Peer (Underworld) Talent.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Peer (Underworld) talent.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Penal World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Peer (Underworld) talent",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Peer",
+          "specialization": "Underworld",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.1c2JnmE4RCp4XrEO"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PW00000000000001"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Thief's Light",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Luminescent panel implanted into the skin of the palm of the hand. Near-invisible until activated through squeezing the hand. Acts as a soft light that illuminates objects in a few centimetres, allowing for delicate tasks to be done  in the dark without giving away the user's presence.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gP0LDPnCIVSJNBCm"
+}

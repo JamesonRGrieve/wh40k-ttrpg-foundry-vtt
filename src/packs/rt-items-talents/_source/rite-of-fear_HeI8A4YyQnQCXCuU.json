@@ -1,0 +1,66 @@
+{
+  "name": "Rite of Fear",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>When Activating emit infrasonic noises for the next two minutes that cause all Humans in 50 Metres to consider you as having Fear (1). May not communicate or talk to others while active. Affects even those who can't hear, although they will not know it is you who is speaking.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>When Activating emit infrasonic noises for the next two minutes that cause all Humans in 50 Metres to consider you as having Fear (1). May not communicate or talk to others while active. Affects even those who can't hear, although they will not know it is you who is speaking.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "riteOfFear",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Instill Fear",
+          "description": "<p>Once per encounter, you may cause all enemies within 20m to make a Fear Test at -10.</p>"
+        }
+      ]
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HeI8A4YyQnQCXCuU"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Hab Base",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "A Lot",
+    "availability": "Common includes: 40-person barracks, commissary, medicae facility, comms hub (with vox + auspex arrays), two storage sheds, small generator, and landing pad. Good also: surrounding bulwark and two defence platforms with twin-linked Heavy Stubbers. Best also: Laboratory Facility.",
+    "cost": "Pre-Fabricated Hab blocks can be set up by landing craft or drop pods.  Can connect to each other to form a base of operations that protects against the outside environment.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eWQE70JkOgOcgngC"
+}

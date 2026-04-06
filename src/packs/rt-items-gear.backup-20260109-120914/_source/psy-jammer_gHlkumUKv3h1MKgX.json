@@ -1,0 +1,30 @@
+{
+  "name": "Psy-Jammer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "0.5kg",
+    "availability": "Devices capable of partially disrupting psychic energy, can take the form of a Protective Amulet or an Implant. The Protective Amulet can be physically removed, but the implant can have long-term side effects to a user. Both provide +20 to any test ro resist the effects of a Psychic Power and +10 to tests to resist possession. Has no effect on powers that inflict direct physical damage.",
+    "cost": "Psykers cannot use this item, as they will overload it.\nAmulet:  0.5kg, 7000 Thrones, Implant: 12000 Thrones. Both Very Rare.",
+    "effects": "Very Rare",
+    "notes": "7000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 7000 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gHlkumUKv3h1MKgX"
+}

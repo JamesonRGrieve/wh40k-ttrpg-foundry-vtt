@@ -1,0 +1,28 @@
+{
+  "name": "Might Makes Right",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Ork (Innate)",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Orks may use the Intimidate Skill to perform all functions of the Command Skill when targeting Greenskins (Gretchin, Snotlings, Orks), affecting a number of targets up to their Strength Bonus. Doesn't work with Non-Greenskins.</p>"
+    },
+    "benefit": "<p>Orks may use the Intimidate Skill to perform all functions of the Command Skill when targeting Greenskins (Gretchin, Snotlings, Orks), affecting a number of targets up to their Strength Bonus. Doesn't work with Non-Greenskins.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aCuLHmwW5xR0yyP6"
+}

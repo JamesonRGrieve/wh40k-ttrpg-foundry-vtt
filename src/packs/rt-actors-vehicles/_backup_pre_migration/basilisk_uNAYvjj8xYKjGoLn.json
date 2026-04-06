@@ -1,0 +1,54 @@
+{
+  "name": "Basilisk",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 5,
+    "sizeDescriptor": "12m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 30,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 18,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -5,
+      "tactical": 35,
+      "notes": ""
+    },
+    "crew": {
+      "required": 4,
+      "notes": "Commander, Driver, Gunner, Loader"
+    },
+    "passengers": 0,
+    "manoeuverability": 40,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Fixed: Front Facing Earthshaker Cannon (3,500m, S/-/-, 4d10+10 X, Pen 8, Clip 1, Rld Full, Blast(20), Concussive(3), Indirect(5)).</p>\n<p>Hull: one of: Front Facing Heavy Bolter or Heavy Flamer</p>\n<p>Pintle (Optional), one of: Heavy Stubber or Storm Bolter</p>\n<p>---</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>\n<p>Heavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)</p>\n<p>Storm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)</p>",
+    "specialRules": "<p>Vehicle Traits: Open-Topped, Tracked Vehicle</p>\n<p>Summary: Crew are exposed and can be targed by a Called Shot Action.  +10 to Difficult Terrain Tests, halve Critical roll that determines if Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.</p>\n<p>Special Rules: Can come in Enclosed Variant. Can spend a Full Action to remove or add Indirect Quality to Earthshaker Cannon, when removed it can act as a standard vehicle weapon requiring line of sight.</p>",
+    "traitsText": "Vehicle Traits: Open-Topped, Tracked Vehicle\nSummary: Crew are exposed and can be targed by a Called Shot Action.  +10 to Difficult Terrain Tests, halve Critical roll that determines if Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.\nSpecial Rules: Can come in Enclosed Variant. Can spend a Full Action to remove or add Indirect Quality to Earthshaker Cannon, when removed it can act as a standard vehicle weapon requiring line of sight.",
+    "availability": "rare",
+    "source": "Only War Core"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "uNAYvjj8xYKjGoLn"
+}

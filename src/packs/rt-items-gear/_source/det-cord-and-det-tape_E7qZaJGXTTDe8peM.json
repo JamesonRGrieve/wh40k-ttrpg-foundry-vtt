@@ -1,0 +1,41 @@
+{
+  "name": "Det-Cord and Det-Tape",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 1,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 20,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Low grade explosive often used along side high explosive tube charges. Peel Tape or Cut cord to desired length for desired delay. Does 1d5 X damage per kilo, with blast radius of 5 metres per kilo.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20 T</p>",
+      "chat": "",
+      "summary": "Low grade explosive often used along side high explosive tube charges. Peel Tape or Cut cord to desired length for desired delay. Does 1d5 X damage per kilo, with blast radius of 5 metres per kilo."
+    },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Low grade explosive often used along side high explosive tube charges. Peel Tape or Cut cord to desired length for desired delay. Does 1d5 X damage per kilo, with blast radius of 5 metres per kilo.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E7qZaJGXTTDe8peM"
+}

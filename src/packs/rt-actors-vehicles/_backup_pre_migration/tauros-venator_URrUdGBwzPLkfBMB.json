@@ -1,0 +1,54 @@
+{
+  "name": "Tauros Venator",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": "20m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 18,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 15,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 15,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 10,
+      "tactical": 110,
+      "notes": ""
+    },
+    "crew": {
+      "required": 2,
+      "notes": "Driver, Gunner"
+    },
+    "passengers": 0,
+    "manoeuverability": 25,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Turret (Gunner), one of: Twin-Linked Multilasers or Twin-Linked Lascannon</p>\n<p>Fixed (Driver): Front 2x Hunter-Killer Missiles: (350m; S/–/–; 3d10+6 X; Pen 6; Clip 1)</p>\n<p>---</p>\n<p>Twin-Linked Multilasers (150m; –/–/5; 2d10+10 E; Pen 2; Clip 400; Reload 2 Full; Reliable, Twin-Linked)</p>\n<p>Twin-Linked Lascannon (300m; S/–/–; 5d10+10 E; Pen 10; Clip 30; Reload 2 Full; Proven [3], Twin-Linked)</p>",
+    "specialRules": "<p>Traits: Enhanced Motive Systems, Open-Topped, Rugged, Wheeled Vehicle</p>\n<p>Special Rules: Treat as Tracked Vehicle for purposes of Tests involving Difficult Terrain and how much slower the vehicle gets when suffering critical damage. Ignore Penalties to Operate/Drive Tests that Wheeled Vehicles suffer when taking Motive System Damaged Condition.</p>",
+    "traitsText": "Traits: Enhanced Motive Systems, Open-Topped, Rugged, Wheeled Vehicle\nSpecial Rules: Treat as Tracked Vehicle for purposes of Tests involving Difficult Terrain and how much slower the vehicle gets when suffering critical damage. Ignore Penalties to Operate/Drive Tests that Wheeled Vehicles suffer when taking Motive System Damaged Condition.",
+    "availability": "rare",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "URrUdGBwzPLkfBMB"
+}

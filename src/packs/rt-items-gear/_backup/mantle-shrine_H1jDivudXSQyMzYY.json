@@ -1,0 +1,30 @@
+{
+  "name": "Mantle Shrine",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "1kg",
+    "availability": "Small portable Shrines to one saint or another. Unfolds ot hold candles, an incense burner, and tack for papers. For the ruthless it is known as often being the place the poor store their few valuables.",
+    "cost": null,
+    "effects": "Abundant",
+    "notes": "30 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 30 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H1jDivudXSQyMzYY"
+}

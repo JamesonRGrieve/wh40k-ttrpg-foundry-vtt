@@ -1,0 +1,30 @@
+{
+  "name": "Inbuilt Pistol",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Pre-existing Bionic Limb. Doesn't count as a seperate cybernetic system from the cybernetic limb it is a part of. If Inbuilt Blade is Best Quality, it is hidden when not active, requiring -20 Scrutiny Test to notice. If limb is depowered, so is this. Has Profile of any Pistol, but Halve Clip and cannot fire if seperated from limb. Availability of Pistol is Base Availability of this Cybernetic.",
+    "cost": "Character with Cybernetic Limb that doesn't already have an installed weapon can have this installed, Requires +0 Tech-Use Test and several Hours",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Eq2HoUlQBinUQj6U"
+}

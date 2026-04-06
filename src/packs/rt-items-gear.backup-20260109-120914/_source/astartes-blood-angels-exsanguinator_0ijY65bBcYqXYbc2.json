@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Blood Angels Exsanguinator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "-",
+    "availability": "Count as Narthecium. ( +20 to Medicae Tests on Astartes, patient considered Lightly Wounded at 3x Toughness Bonus wounds, doubles damage healed by First Aid. Holds up to 10 doses of one drug  acquired seperately). Additionally when used to harvest the Gene-Seed of a fallen Blood Angel, character receives +5 Renown. Can be used as an Astartes Combat Knife.",
+    "cost": "Blood Angels Sanguinary Priests Only.",
+    "effects": "Initiated",
+    "notes": "15 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0ijY65bBcYqXYbc2"
+}

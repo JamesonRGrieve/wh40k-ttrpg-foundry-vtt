@@ -1,0 +1,30 @@
+{
+  "name": "Arms Coffer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "6kg",
+    "availability": "Stores and Protects wargear from the environment and theives., has sockets for power packs. Has Space for 2 Basic Weapons/4 Pistols, and 4 Basic Clips/8 Pistol Clips, or any combination of these.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1S3nChfkp7nygFZI"
+}

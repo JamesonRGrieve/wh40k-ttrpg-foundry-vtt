@@ -1,0 +1,74 @@
+{
+  "name": "Ork Freebooter",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": 45,
+      "bs": 20,
+      "s": 50,
+      "t": 45,
+      "ag": 30,
+      "int": 26,
+      "per": 30,
+      "wp": 28,
+      "fel": 22
+    },
+    "wounds": 16,
+    "armourPoints": "12/13/\n10/10",
+    "move": "3/6/\n9/18",
+    "size": "Av +0",
+    "weapons": [
+      {
+        "name": "Chain Axe",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d10+11R",
+        "pen": "2",
+        "clip": "-",
+        "reload": "-",
+        "qualities": "Tearing"
+      },
+      {
+        "name": "Shoota",
+        "range": "60m",
+        "rof": "S/3/10",
+        "damage": "1d10+4 I",
+        "pen": "0",
+        "clip": "30",
+        "reload": "Full",
+        "qualities": "Inaccurate, Unreliable"
+      },
+      {
+        "name": "(5) Frag Grenades",
+        "range": "3xSB",
+        "rof": "S/-/-",
+        "damage": "2d10 E",
+        "pen": "0",
+        "clip": "5",
+        "reload": "-",
+        "qualities": "Blast (4)"
+      },
+      {
+        "name": "Gear/\nOther",
+        "range": "Armour: Looted, 4/5/2/2, TB 8\n2d10 Teef, Shiny Bitz, Components and Trophies\n3 Spare Clips\n5 Frag Grenades",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: Intimidate | T: | Ag: | WP:\nInt: Common Lore (Ork)\nPer: Awareness\nFel: Barter",
+    "training": "Basic(Primitive, SP), Pistol(Primitive, SP), Melee(Chain, Primitive, Power), Heavy(SP)",
+    "talents_traits": "Descriptions",
+    "description": {
+      "value": "<p><b>Skills:</b> S: Intimidate | T: | Ag: | WP:\nInt: Common Lore (Ork)\nPer: Awareness\nFel: Barter</p><p><b>Training:</b> Basic(Primitive, SP), Pistol(Primitive, SP), Melee(Chain, Primitive, Power), Heavy(SP)</p><p><b>Talents/Traits:</b> Descriptions</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "MJDqoDCcjPaYjC2A"
+}

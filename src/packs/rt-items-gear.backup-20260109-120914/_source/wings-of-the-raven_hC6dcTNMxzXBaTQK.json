@@ -1,0 +1,30 @@
+{
+  "name": "Wings of the Raven",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "-",
+    "availability": "Master Crafted Relic Ravenguard Jump Pack. Can fall from any height with a guided fall. Triples base movement speed whilst ignoring obstacles (must land at the end of the movement).  Can engage full power and gain Flyer (18) for 10 minutes before requiring 10 minutes to cool down). ",
+    "cost": "Raven Guard Chapter Only.",
+    "effects": "Famed",
+    "notes": "35 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 35 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hC6dcTNMxzXBaTQK"
+}

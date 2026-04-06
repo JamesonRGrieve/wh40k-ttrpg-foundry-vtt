@@ -1,0 +1,28 @@
+{
+  "name": "Natural Weapons",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Naturally has 1d10+SB Weapons with Primitive (7) (be they claws, fangs, spines, etc), cannot Parry nor be disarmed, except by chopping the dangerous bit off.\nNatural weapons are generally immune to the Power Field Quality, as it is assumed to have enough teeth, claws, or spines to ignore some being removed, although this may not always be the case such as if the animal relies on one large spike or claw to attack.</p>"
+    },
+    "benefit": "<p>Naturally has 1d10+SB Weapons with Primitive (7) (be they claws, fangs, spines, etc), cannot Parry nor be disarmed, except by chopping the dangerous bit off.\nNatural weapons are generally immune to the Power Field Quality, as it is assumed to have enough teeth, claws, or spines to ignore some being removed, although this may not always be the case such as if the animal relies on one large spike or claw to attack.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GfSTCTx1pQKpR3f0"
+}

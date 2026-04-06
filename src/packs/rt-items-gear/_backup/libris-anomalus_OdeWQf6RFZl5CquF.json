@@ -1,0 +1,30 @@
+{
+  "name": "Libris Anomalus",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "2kg",
+    "availability": "Master Crafted Relic Tome of the Novamarines Chapter. Adds 1d5 Degrees of Success to successful Forbidden Lore (Xenos) Tests. No such tests concerning a species prviously encountered by the Imperium can suffer worse than a -10 penalty due to obscurity.",
+    "cost": null,
+    "effects": "Distinguished",
+    "notes": "20 R",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 20 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OdeWQf6RFZl5CquF"
+}

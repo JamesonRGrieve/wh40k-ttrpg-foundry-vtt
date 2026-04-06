@@ -1,0 +1,68 @@
+{
+  "name": "Prominent Ancestry (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "identifier": "prominent-ancestry-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "30"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Your formative years were spent in the presence of many tutors, learning the history of the Imperium and the part your ancestors played in that history.\"</em></p></blockquote><p>Long hours of study, and longer ones of rote-learning and recitation, have given you a significant insight into matters historical, and the habits of your youth stay with you even to this day—you retain a deep curiosity about the events of ancient times.</p><p>You were taught the lore of your ancestors from an early age, and your family's role in Imperial history is something you know intimately.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain Scholastic Lore (Archaic) as a trained Skill, and Scholastic Lore (Legend) as an untrained Basic Skill.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "A Long and Glorious History lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 200,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Scholastic Lore (Archaic) trained and Scholastic Lore (Legend) as Basic.",
+    "grants": {
+      "skills": [
+        {
+          "name": "Scholastic Lore",
+          "specialization": "Archaic",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Historical Knowledge",
+          "description": "<p>Scholastic Lore (Legend) becomes a Basic Skill for you, even though it is normally Advanced. You can attempt tests with this skill untrained at half your Intelligence value.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000003"
+}

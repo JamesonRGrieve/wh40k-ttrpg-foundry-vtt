@@ -1,0 +1,193 @@
+{
+  "name": "Battle Servitor - Praetorian",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "40",
+      "bs": "40",
+      "s": "50 (+5)",
+      "t": "50 (+5)",
+      "ag": "30",
+      "int": "20",
+      "per": "30",
+      "wp": "40",
+      "fel": "5"
+    },
+    "wounds": "20",
+    "armourPoints": "10+7 all",
+    "move": "4/8/12/24",
+    "size": "H, +10",
+    "weapons": [
+      {
+        "name": "Servo Fist",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d5+10",
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": "Primitive"
+      },
+      {
+        "name": "Wep 1",
+        "range": null,
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Wep 2",
+        "range": null,
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Gear/\nOther",
+        "range": "Gear: Internal Vox-Bead, Ammo Hopper or Power Cells equivilent to Three Clips per weapon. Red Dot Laser Sight.\n\nHas Two weapons chosen from list at creation.\n",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Talents/\nTraits",
+        "range": "Descriptions",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Two-Wep Wielder",
+        "range": "Can dual wield Ranged weapons and attack with both at once",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Wep Training",
+        "range": "Has relevent weapons training with the weapons it is equipped with",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Armour Plated",
+        "range": "Not stated, presume +2 AP all",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Auto-Stabilised",
+        "range": "Always counts as Braced for Heavy Weapons",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Dark Sight",
+        "range": "No penalty to vision-based tests in darkness",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Fear(1)",
+        "range": "Requires enemies to make +0 Fear (Willpower) Test",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Machine(5)",
+        "range": "5 AP all",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Natural Weapon",
+        "range": "Servo Fist natural weapon (Strength Bonus accounted in statline)",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Size (Hulking)",
+        "range": "+10 to hit this target, -10 to Conealment, +1 to move rate (accounted)",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Sturdy",
+        "range": "+20 to Tests to Resist Grapples/Takedowns",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Unnatural Charas",
+        "range": "x2 Strength and Toughness",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: | T: | Ag: | WP:\nInt:\nPer: Awareness +10\nFel:",
+    "training": "Basic(), Pistol(), Melee(), Heavy(), Flame(), Thrown(), Exotic()",
+    "description": {
+      "value": "<p><b>Skills:</b> S: | T: | Ag: | WP:\nInt:\nPer: Awareness +10\nFel:</p><p><b>Training:</b> Basic(), Pistol(), Melee(), Heavy(), Flame(), Thrown(), Exotic()</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Ez6beNG2pXke7JqA"
+}

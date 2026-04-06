@@ -1,0 +1,30 @@
+{
+  "name": "Servo-Arm",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Can extend up to 1.5m from shoulder or back mounting. Has Fixed Strength Characteristic of 75 and Unnatural Strength(7) Trait, uses this value regardless of Character's strength or talents. No Fine Manipulation, but can lift or tether objects as a Free Action. Has Melee Profile (2d10+14 I, Pen 10, Unwieldy)",
+    "cost": "Best Craftmanship:  85 Strength, +1 Damage.\nRequires Mechadendrite Use (Utility) to use and Mechadendrite Use(Weapon) to attack",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Kc43ipRCGtZzWBv3"
+}

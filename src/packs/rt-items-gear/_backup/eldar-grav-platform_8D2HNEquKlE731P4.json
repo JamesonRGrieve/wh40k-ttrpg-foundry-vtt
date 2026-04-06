@@ -1,0 +1,30 @@
+{
+  "name": "Eldar Grav-Platform",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "20kg",
+    "availability": "Heavy weapons mounted on these platforms always count as braced even if moved. Controlled by a control box, Can move 6 metres as a half action, requiring little effort from the user. Can't operate the weapon on the platform via control box unless it is an eldar one.",
+    "cost": "Xenotech. Counts as separate entity, with 15 AP. Any damage disables and immobilises it. No difference between Craftsmanship besides wear and tear.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8D2HNEquKlE731P4"
+}

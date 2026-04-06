@@ -1,0 +1,30 @@
+{
+  "name": "Dendrite Blade",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Mechadendrite equipped with Dendrite Blade Weapon (Melee;1d10+4;Pen 3;Flexible, Razor Sharp). Requires Mechadendrite Use (Weapon) Talent to use. For each Dendrite Blade inflict -10 to WS of anyone attacking you in melee, up to -30. If attacker fails their melee attack by 3+ DoF they are hit by 1 Dendrite blade, +1 per additional DoF up to number of Dendrite Blades character has.",
+    "cost": "Can have up to Toughness Bonus Mechadendrites. Requires Mechanicus Implants.\nHeretical. See Dendrite Blade in Weapons Tab",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "BC: Tome of Decay",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yj7E1uJGVX7h8PgA"
+}

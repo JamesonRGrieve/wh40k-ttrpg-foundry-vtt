@@ -1,0 +1,24 @@
+{
+  "name": "Power Assisted",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any non-primitive Armour that covers all locations, except power armour,",
+    "effect": "Adds +10 to Wearer's Strength Characteristic, weight of armour doesn't count towards carrying capacity. Armour requires power supply that lasts 1d5 hours.",
+    "weight": "+15kg",
+    "availability": "very-rare",
+    "source": "RT: Hostile Acq.",
+    "description": {
+      "value": "<p>Adds +10 to Wearer's Strength Characteristic, weight of armour doesn't count towards carrying capacity. Armour requires power supply that lasts 1d5 hours.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CfOnfQW4JXr9vNM7"
+}

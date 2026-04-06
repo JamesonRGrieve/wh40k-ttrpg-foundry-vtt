@@ -1,0 +1,30 @@
+{
+  "name": "Bomb Spray",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "0.02kg",
+    "availability": "Aerosol can of liquids that are safe when wet, but on drying explode on any sudden contact (such as a bullet or thrown rock). Does 1d5+3 X Damage per kilo used. Blast Radius is 2 metres per kilo used.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TalRCBrgWWHzXvRa"
+}

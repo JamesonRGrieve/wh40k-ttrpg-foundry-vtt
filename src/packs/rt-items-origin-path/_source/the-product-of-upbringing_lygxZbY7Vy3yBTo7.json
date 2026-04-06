@@ -1,0 +1,124 @@
+{
+  "name": "A Product of Upbringing",
+  "type": "originPath",
+  "img": "modules/game-icons-net/whitetransparent/graduate-cap.svg",
+  "system": {
+    "identifier": "the-product-of-upbringing",
+    "step": "trialsAndTravails",
+    "stepIndex": 4,
+    "xpCost": 0,
+    "isAdvancedOrigin": true,
+    "replacesOrigins": [
+      "press-ganged",
+      "ship-lorn"
+    ],
+    "description": {
+      "value": "<h2>A Product of Upbringing</h2><blockquote><p><em>\"There are many different types of nobility within the Imperium. Some might be part of the Commercia Houses, others are Imperial Officers, and still others are members of the Rogue Trader Dynasties and clans. It's a confusing and often tangled web of intrigue and fealty.\"</em></p></blockquote><p>Only the High Lords of Terra can declare a family line to be nobility, but planetary lords, Imperial Commanders, and sector Governors can all declare lesser vassals to be raised in status under them. Some families are given titles as a reward for service to the Golden Throne; these family members are often looked down upon as upstarts until they have proven themselves over the course of many generations.</p><p>Of course, noble families are always trying to gain the advantage over one another, and thus earn the favour of their lords. They scheme and plot in the hopes that one day their plans will come to fruition and they will be elevated in status and gain even more power and wealth. Aside from the direct bloodlines and heirs, there are those family members who are associated by marriage, and those who have been brought into the family for some potent ability they possess. These scions typically form the backbone of the nobility and help keep the lines viable for future generations.</p><h3>Advanced Origin Rules</h3><p>This origin path contains three powerful options, each with an associated Experience Point cost. Choose ONE option from those presented below and pay the listed XP cost from your starting experience. This choice must be made during character creation and cannot be changed later.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Trials and Travails (Advanced)",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose one Product of Upbringing path",
+          "options": [
+            {
+              "label": "New Blood (200 XP)",
+              "value": "new_blood",
+              "xpCost": 200,
+              "description": "Your family's newfound wealth adds +1 Profit Factor, but you gain Rival (Nobility) as the aristocracy scorns your upstart family.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "New Blood (Product of Upbringing)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.PU00000000000001"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Rivals (100 XP)",
+              "value": "rivals",
+              "xpCost": 100,
+              "description": "Gain +3 Fellowship, a Rival Talent for your vendetta target, and a Peer Talent for your allied supporters.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Rivals (Product of Upbringing)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.PU00000000000002"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Decadent (150 XP)",
+              "value": "decadent",
+              "xpCost": 150,
+              "description": "Gain +3 Willpower, the Decadence Talent, +5 to Charm Tests, and 1d5 Corruption Points.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Decadent (Product of Upbringing)",
+                    "specialization": "",
+                    "uuid": "Compendium.rogue-trader.rt-items-talents.PU00000000000003"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Advanced Trials and Travails option from Into The Storm, page 25.",
+    "source": {
+      "book": "Into The Storm",
+      "page": "25",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": [
+      2,
+      5
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "lygxZbY7Vy3yBTo7"
+}

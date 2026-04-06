@@ -1,0 +1,63 @@
+{
+  "name": "Auto-Carbine (Zayth) [Good Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "system": {
+    "identifier": "auto-carbine-zayth-good",
+    "class": "basic",
+    "type": "solid-projectile",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 35,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 3,
+      "penetration": 0
+    },
+    "special": [
+      "inaccurate"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3,
+    "availability": "scarce",
+    "craftsmanship": "good",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Inaccurate</p><p><b>Note:</b> Can be fired one-handed without penalty. -10 to notice weapon if it is concealed under bulky clothing or cloaks.</p>"
+    },
+    "modifications": [],
+    "notes": "Can be fired one-handed without penalty. -10 to notice weapon if it is concealed under bulky clothing or cloaks.",
+    "source": "RT: Hostile Acquisitions",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fa773c930e105fe9"
+}

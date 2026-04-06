@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Harness",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "8kg",
+    "availability": "Fits over power armour, has a hooked magnetic clip that can be anchored to a variety of surfaces and then unspooled to aid in climbing or absailing.\nGrants +30 to Climb Tests, and character doesn't fall if they fail such tests.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "4 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 4 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nA3jWWU6yMxFAw4L"
+}

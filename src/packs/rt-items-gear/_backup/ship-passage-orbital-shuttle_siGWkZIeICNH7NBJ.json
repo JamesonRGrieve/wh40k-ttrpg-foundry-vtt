@@ -1,0 +1,30 @@
+{
+  "name": "Ship Passage: Orbital Shuttle",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Passage aboard a Void Craft, to another planet or star system. A Quick up to or down from orbit along with a reasonable selection of cargo. No need for Berthing.",
+    "cost": "Most well developed planets have easily locatable docks with indicated destinations and rates. For a specific location or more questionable cargo, more negotiation might be needed",
+    "effects": "Average",
+    "notes": "350 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 350 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "siGWkZIeICNH7NBJ"
+}

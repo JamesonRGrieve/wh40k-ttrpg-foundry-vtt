@@ -1,0 +1,30 @@
+{
+  "name": "Thosophist's Philtre",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Space Fine Wine",
+    "cost": "Allegedly gives \"depth and clarity of thought\"",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8SAcP02jDAxohXla"
+}

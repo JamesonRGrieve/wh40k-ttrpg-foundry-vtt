@@ -1,0 +1,55 @@
+{
+  "name": "Solid Slugs",
+  "type": "ammunition",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "identifier": "solid-slugs",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": 1,
+      "penetration": 2,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [
+      "scatter",
+      "but-+1-damage",
+      "+2-pen"
+    ],
+    "clipModifier": 0,
+    "effect": "<p>Loses Scatter Quality, but +1 damage and +2 PEN</p>",
+    "notes": "",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Loses Scatter Quality, but +1 damage and +2 PEN</p><p><b>Qualities:</b> Scatter (lose)</p>"
+    },
+    "source": "RT: Hostile Acquisitions",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oChU2xIHhWQw941h"
+}

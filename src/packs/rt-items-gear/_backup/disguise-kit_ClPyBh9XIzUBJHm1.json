@@ -1,0 +1,30 @@
+{
+  "name": "Disguise Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "5kg",
+    "availability": "Gives +20 to use of Disguise Skill or Disguise Special Use, Best Craftsmanship gives +30. Contains Basic Makeup (+10 to Disguise visually), Prosthetic appliances, Skin Dyes, Vocal Augmenter (+10 to Deceive tests to impersonate voice), and Retina Lenses.  Advanced kits may range from makeup and flesh/skin dyes to voice augmenters and gene scanner fooling dermal layering. ",
+    "cost": "Kit can be refilled without Requisiton Test as long as having access to appropriate restocking.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ClPyBh9XIzUBJHm1"
+}

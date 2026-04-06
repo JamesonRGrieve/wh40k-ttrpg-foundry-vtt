@@ -1,0 +1,30 @@
+{
+  "name": "Zehnn Obelisk",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "?",
+    "availability": "A 6 metre tall stone block that seemed to appear out of nowhere at some point. Hovering 3 metres above the ground and kept in place by chains, It has a glossy, translucent texture, and an inner light that glowed whenever someone approached. Its surface is etched in a variety of alien and ancient human dialects, it is known to dissappear just as randomly as it appears, staying from anywhere between weeks to minutes at a location and always drawing a crowd, leaving some of those crowd missing when it dissapears. It has no known function, but those with Linguistics (Xenos Markings), Scholastic Lore (Cryptology or Numerology) or Trade (Cryptographer or Linguist) may use the stone to research alien languages by making -20 Tests. When the stone dissapears everyone within 1d10 metres are hit by a shockwave, and must make a +0 Agility Test or dissapear along with the stone, leaving their clothing and gear behind. Where they end up or if they ever reappear is up to the GM.",
+    "cost": "A Xenos Artifact of Legend. It cannot be acquired, it must be earned or found.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nloptY7WsJoGqf1n"
+}

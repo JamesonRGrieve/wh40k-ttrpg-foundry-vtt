@@ -1,0 +1,30 @@
+{
+  "name": "Wings of Saronath",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "45kg",
+    "availability": "Master-Crafted Relic Jump Pack of the Blood Angels. Triples normal movement instead of doubling it. Grants +20 to Command Tests and +20 to Fellowship when dealing with Blood Angels.",
+    "cost": "Originally belonged to a Sanguinary Guard Saronath. Their body found a dry husk and armour shattered. If the character finds others in a similar state, they must investigate it.",
+    "effects": "Hero",
+    "notes": "45 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 45 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ByT2jpmp8mcHffYC"
+}

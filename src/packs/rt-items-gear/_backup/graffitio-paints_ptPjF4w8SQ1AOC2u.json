@@ -1,0 +1,30 @@
+{
+  "name": "Graffitio Paints",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "1kg",
+    "availability": "Space Paint Spray Cans. Useful for priming miniatures or leaving tags.",
+    "cost": null,
+    "effects": "Plentiful",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ptPjF4w8SQ1AOC2u"
+}

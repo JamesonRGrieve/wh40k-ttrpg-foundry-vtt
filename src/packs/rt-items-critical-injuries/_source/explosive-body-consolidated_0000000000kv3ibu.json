@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000kv3ibu",
+  "name": "Explosive Critical - Body",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_body_consolidated",
+    "damageType": "explosive",
+    "bodyPart": "body",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>The explosion flings the target backwards [[1d5]] metres. The target is knocked Prone.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The target is blown backwards [[1d5]] metres by a terrific explosion, suffering 1 level of Fatigue per metre travelled. The target is knocked Prone.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The force of the blast sends the target sprawling to the ground. The target is knocked backwards [[1d5]] metres, Stunned for 1 round, and is knocked Prone.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The power of the explosion rends flesh and bone with horrific results. The target must make a Challenging (+0) Toughness test or suffer from Blood Loss and be Stunned for 1 round.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>Concussion from the explosion knocks the target to the ground and turns his innards into so much ground meat. The target suffers [[1d5]] levels of Fatigue and is knocked Prone. He must immediately make a Challenging (+0) Toughness test; if he fails, he suffers Blood Loss and his Toughness characteristic is permanently reduced by 1.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>Chunks of the target's flesh are ripped free by the force of the attack leaving large, weeping wounds. The target is Stunned for 1 round and suffers Blood Loss.</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>The explosive force of the attack ruptures the target's flesh and scrambles his nervous system, knocking him to the ground. The target is Stunned for [[1d10]] rounds and is knocked Prone He also suffers Blood Loss, and must make a Challenging (+0) Toughness test or fall Unconscious.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The target's chest explodes outward, disgorging a river of partially cooked organs onto the ground, killing him instantly.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>Pieces of the target's body fly in all directions as he is torn into bloody gobbets. If the target is carrying any ammunition, it explodes, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target within [[1d10]] metres. If the target is carrying any grenades or missiles, these detonate immediately.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>Pieces of the target's body fly in all directions as he is torn into bloody gobbets. If the target is carrying any ammunition, it explodes, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target within [[1d10]] metres. If the target is carrying any grenades or missiles, these detonate immediately. Anyone within [[1d10]] metres of the target is drenched in gore. Each affected character must make a Challenging (+0) Agility test or suffer a -10 penalty to Weapon Skill and Ballistic Skill tests for 1 round, as blood fouls his sight.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Body (Severity 10)</strong></p><p>Pieces of the target's body fly in all directions as he is torn into bloody gobbets. If the target is carrying any ammunition, it explodes, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target within [[1d10]] metres. If the target is carrying any grenades or missiles, these detonate immediately. Anyone within [[1d10]] metres of the target is drenched in gore. Each affected character must make a Challenging (+0) Agility test or suffer a -10 penalty to Weapon Skill and Ballistic Skill tests for 1 round, as blood fouls his sight.</p>",
+      "chat": "",
+      "summary": "Explosive Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

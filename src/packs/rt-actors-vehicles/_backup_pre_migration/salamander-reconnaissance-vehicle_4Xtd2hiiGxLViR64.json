@@ -1,0 +1,54 @@
+{
+  "name": "Salamander Reconnaissance Vehicle",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": "20m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 30,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 18,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 16,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 10,
+      "tactical": 100,
+      "notes": ""
+    },
+    "crew": {
+      "required": 4,
+      "notes": "Commander, Driver, Comms Op, Gunner"
+    },
+    "passengers": 0,
+    "manoeuverability": 35,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Fixed: Front Facing Autocannon (Front Facing; 300m; S/3/–; 3d10+8 I; Pen 6; Clip 200; Reload 2 Full; Ogryn-Proof, Reliable)</p>\n<p>Hull, one of: Front Facing Heavy Bolter, Heavy Flamer</p>\n<p>---</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>",
+    "specialRules": "<p>Traits: Amphibious, Enhanced Motive Systems, Open-Topped, Tracked Vehicle</p>\n<p>Not strictly designed for full on combat. Good for scouting and covering terrain quickly.</p>",
+    "traitsText": "Traits: Amphibious, Enhanced Motive Systems, Open-Topped, Tracked Vehicle\nNot strictly designed for full on combat. Good for scouting and covering terrain quickly.",
+    "availability": "scarce",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "4Xtd2hiiGxLViR64"
+}

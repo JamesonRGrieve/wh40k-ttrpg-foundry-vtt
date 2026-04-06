@@ -1,0 +1,30 @@
+{
+  "name": "Clandestine Order of St.Meleum",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "Whenever wearer makes a Fear Test, they can spend a Fate Point to automatically pass with 1d5 Degrees of Success\nMedals can't be acquired, only earned. Medal will look like another service medal, but have a silver skull etched somewhere on it. It is awarded in secret.",
+    "cost": "Distinguished Service Medal: Kill a Chaos Space Marine",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3Zn8Ma1yYDXkAczP"
+}

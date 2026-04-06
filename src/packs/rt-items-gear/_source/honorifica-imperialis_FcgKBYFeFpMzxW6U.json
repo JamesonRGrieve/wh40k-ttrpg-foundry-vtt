@@ -1,0 +1,41 @@
+{
+  "name": "Honorifica Imperialis",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>+10 to all Fear Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull Flanked by Laurel Leaves</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Awarded for Outstanding Heroism in battle.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "+10 to all Fear Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull Flanked by Laurel Leaves"
+    },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "+10 to all Fear Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull Flanked by Laurel Leaves",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FcgKBYFeFpMzxW6U"
+}

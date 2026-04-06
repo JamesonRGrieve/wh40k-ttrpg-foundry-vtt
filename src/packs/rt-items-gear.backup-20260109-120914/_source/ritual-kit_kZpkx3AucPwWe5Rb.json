@@ -1,0 +1,30 @@
+{
+  "name": "Ritual Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "2kg",
+    "availability": "A Kit containing various carving knives, dried blood, skin parchments, and various other blasphemous components. Grants +20 to Focus Power Tests requiring Profane Symbols or the like, and +10 to any Tests required as part of a Ritual.",
+    "cost": "Heretical",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kZpkx3AucPwWe5Rb"
+}

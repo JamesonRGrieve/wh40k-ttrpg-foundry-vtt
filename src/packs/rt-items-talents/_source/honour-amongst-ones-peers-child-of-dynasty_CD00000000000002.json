@@ -1,0 +1,63 @@
+{
+  "name": "Honour Amongst One's Peers (Child of Dynasty)",
+  "type": "talent",
+  "img": "icons/svg/crown.svg",
+  "system": {
+    "identifier": "honour-amongst-ones-peers-child-of-dynasty",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "16"
+    },
+    "description": {
+      "value": "<p><strong>Honour Amongst One's Peers:</strong> Even the most unimportant offspring of a Rogue Trader dynasty are likely to have grown up amongst the rarefied heights of Imperial aristocracy, and can handle themselves amongst them without embarrassment. A Child of Dynasty gains a +5 bonus to all Fellowship Tests to interact with high-ranking officials of the Imperium and members of the Imperial nobility in a formal setting (exactly when this bonus applies is up to the GM).</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain +5 to Fellowship Tests when interacting with high-ranking officials and Imperial nobility in formal settings.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Child of Dynasty Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "condition": "Fellowship Tests with high-ranking officials/nobility (formal settings)",
+            "modifier": 5,
+            "type": "Fellowship Test"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "+5 to Fellowship Tests with officials/nobility in formal settings",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CD00000000000002"
+}

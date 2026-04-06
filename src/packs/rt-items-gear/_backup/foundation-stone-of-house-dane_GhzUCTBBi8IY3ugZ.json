@@ -1,0 +1,30 @@
+{
+  "name": "Foundation Stone of House Dane",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "?",
+    "availability": "The first stone placed of what would become an ancient bloodline that denied compliance to the Imperium of Man. This first stone has since become the last physical evidence of their existence outside of ancient datastacks and half-remembered legends. The ancient stone, whose size varies in tales from a tank to a penny, is held in a stasis chamber. The Stone could be used by psykers as a tool to see the Planet Askellon's Founding (where the House were located), and to draw or empower the heretic cults that desire it. Those fighting to claim, or in defence of the stone gain Adamantium Faith talent and Hatred Talent for those that oppse them in taking the stone or keeping it from them.",
+    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GhzUCTBBi8IY3ugZ"
+}

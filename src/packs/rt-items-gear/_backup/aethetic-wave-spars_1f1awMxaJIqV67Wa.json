@@ -1,0 +1,30 @@
+{
+  "name": "Aethetic Wave-spars",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "A 3 Metre long pole ,grafted to the spine and affixed by bracing that helps channel psychic power. When  psyker pushes a psychic power, can add additional +1 to psy rating. Poor versions also add +10 to Psychic Phenomena Rolls, wheras Good versions reduce them by -10.",
+    "cost": "Xenotech",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1f1awMxaJIqV67Wa"
+}

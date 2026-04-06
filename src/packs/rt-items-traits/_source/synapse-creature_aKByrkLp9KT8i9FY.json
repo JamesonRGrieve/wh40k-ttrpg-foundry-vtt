@@ -1,0 +1,28 @@
+{
+  "name": "Synapse Creature",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Tyranid",
+    "source": "BC: Binding Contracts",
+    "description": {
+      "value": "<p>Tyranid Creatures within 20m of this one have their Instinctive Behaviour Trait Suppressed, and gain the Fearless Talent. They may perform complex behaviours due to being guided by the Hive Mind.</p>"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "benefit": "<p>Tyranid Creatures within 20m of this one have their Instinctive Behaviour Trait Suppressed, and gain the Fearless Talent. They may perform complex behaviours due to being guided by the Hive Mind.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aKByrkLp9KT8i9FY"
+}

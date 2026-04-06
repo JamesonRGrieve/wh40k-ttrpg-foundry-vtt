@@ -1,0 +1,30 @@
+{
+  "name": "Glimmerstone",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "-",
+    "availability": "Comes in bag of 10. Can throw one at their feet as a Half Action creating a 2m wide Dust Cloud with Smoke Quality. Anyone within the cloud has +20 to resist Psychic Powers and Psykers have -20 to all Focus Power and Psyniscience Tests. Can also be thrown up to Strength Bonus Metres. Cloud Dissipates after 1d5 Rounds.",
+    "cost": "Rare Availability in the City of Velkir, where they are found.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aRJn9EU3asiMntRs"
+}

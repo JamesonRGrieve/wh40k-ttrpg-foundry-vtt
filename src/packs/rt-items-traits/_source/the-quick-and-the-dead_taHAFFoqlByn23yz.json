@@ -1,0 +1,28 @@
+{
+  "name": "The Quick and the Dead",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Heretic Human (Innate)",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Gain +2 to Initiative Rolls.</p>"
+    },
+    "benefit": "<p>Gain +2 to Initiative Rolls.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "taHAFFoqlByn23yz"
+}

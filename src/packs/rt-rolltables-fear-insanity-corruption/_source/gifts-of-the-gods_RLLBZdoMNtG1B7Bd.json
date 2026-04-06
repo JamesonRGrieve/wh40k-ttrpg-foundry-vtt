@@ -1,0 +1,655 @@
+{
+  "name": "Gifts of the Gods",
+  "img": "icons/svg/d20.svg",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "TsVjefGsSKkxB0bg",
+      "type": 0,
+      "text": "<p><b>Addiction</b></p><p>The Character develops an all-consuming addiction to some substance, which can be almost anything. GM Decides! During any encounter the character doesn't feed this addiction, they have -10 to all Skill Tests until doing so. May be possible to satisfy prior to an encounter beginning, GM dependant.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        2
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "WzGHDQnQdu81guoS",
+      "type": 0,
+      "text": "<p><b>Animal Hybrid</b></p><p>A Mostly Cosmetic change, parts of the character take on an animal form, however they are mentally unaffected. If Unaligned, roll on addendum Animal Table to determine animal mutation. Acting in character with this mutation may award additional Experience Points, GM dependant.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Character takes on the characteristics of a Feral Bull, with Horns and a leathery skin.</li><li><b>Nurgle:</b> Character becomes snakelike, their tongue long and skin smooth and hard</li><li><b>Slaanesh:</b> Character's features become sluglike, skin oozing foul slime</li><li><b>Tzeentch:</b> Character's body becomes bird-like, legs backjointed, nose and jaw fusiung into a sharp beak.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        3,
+        6
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "XY586r6ECePcbyZO",
+      "type": 0,
+      "text": "<p><b>Bestial</b></p><p>Character's Physical appearance and mannerisms devolve bestially. Permenantly Reduce Intelligence and Willpower by 1d10+5 (separate rolls). Increase Strength by 1d5+1. Roll on Addendum Animal Table to determine animal mutation. </p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        7,
+        9
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "7sy8hBF1GlRRAV0Y",
+      "type": 0,
+      "text": "<p><b>Blood Substition</b></p><p>Character's Blood is altered strangely. Whenever they suffer damage that leads to Blood Loss, one random character within 1 metre makes -10 Agility Test or suffers 1d10 Impact Damage. </p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Character's Blood is boiling Lava, the damage gains the Flame Quality.</li><li><b>Nurgle:</b> Character's Blood is corrosive, the damage gains the Tearing Quality.</li><li><b>Slaanesh:</b> Character's Blood consists of writhing maggots, the damage gains the Toxic Quality.</li><li><b>Tzeentch:</b> Character's blood emits waves of warp energy, test to avoid is -20.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        10,
+        11
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "YHLv5O8BrJQkZWt9",
+      "type": 0,
+      "text": "<p><b>Blasted Senses</b></p><p>Character loses one randomly determined sense (sight, hearing, smell, or touch), however they gain Heightened Senses Trait for a different, randomly determine sense. At GM discretion, a Cybernetic Augmentation restores lost sense, but character still suffers -10 to all Awarness Tests with it.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        12,
+        13
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "e7eXbKIwA0DnIX3D",
+      "type": 0,
+      "text": "<p><b>Winged</b></p><p>Mighty Wings sprout from the character's back. They gain the Flyer Trait with a movement speed equal to twice their Agility Bonus.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The Character's Wings are Black and Bat-like</li><li><b>Nurgle:</b> The characters wings are Gossamer-thin Pinions.</li><li><b>Slaanesh:</b> The character's wings are like that of an overgrown fly.</li><li><b>Tzeentch:</b> The character's wings are of multicoloured feathers.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        14,
+        16
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "gtT22Xe8aYYPPxxz",
+      "type": 0,
+      "text": "<p><b>Blessed Fits</b></p><p>Whenever character spends an Infamy Point to reroll a failed test and then fails on the reroll, they are struck with a seizure that leaves them Stunned for 1d10 Rounds. When they awaken the Infamy Point counts as having not being spent.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "OU3wcyyzWcGeYChi",
+      "type": 0,
+      "text": "<p><b>Steel-Hearted</b></p><p>The Character treats all Fear caused by enemies as one level lower than it is. If enemies have Fear(1), it has no effect on them.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Reduce Fear by one additional level when facing enemy Warriors such as Imperial Guard, Space Marines, etc</li><li><b>Nurgle:</b> Reduce Fear by one additional level when facing enemy faithful of the Corpse-God, such as Sororitas, Priests, etc.</li><li><b>Slaanesh:</b> Reduce Fear by one additional level when facing enemy servants of Chaos</li><li><b>Tzeentch:</b> Reduce Fear by one additional level when facing enemies with Psychic Abilities.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        18,
+        19
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "KQYwSh0cearWR8it",
+      "type": 0,
+      "text": "<p><b>Boneless</b></p><p>Character's Bones dissolve, leaving them weaker but more flexible. They permenantly lose 1d10+10 Strength, but gain 1d5+2 Agility.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        20,
+        21
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "yKCF46UMaM8kQq10",
+      "type": 0,
+      "text": "<p><b>Burning Body</b></p><p>Character is wreathed in flames that do not harm them, this may betray their presence and damage their surroundings. Anyone who lands a barehanded attack or attempts to grapple them must make a +0 Agility Test or immediately take 1d10 E Damage. Character always has a light.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Characters flames possess the heat of Khorne's Forges, dealing 2d10 E Damage but making it impossible for them to hide.</li><li><b>Nurgle:</b> Flames are invisible and produce no light. They do not impede stealth, enemies won't know they're there unless forewarned.</li><li><b>Slaanesh:</b> Character is surrounded by Corpse Gas, instead of normal effect, all living creatures in melee make +10 Toughness Test or suffer 1d5 Toughness Damage.</li><li><b>Tzeentch:</b> Multicoloured warpfire deals 1 Corruption Point of damage in addition to its normal effects</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        22,
+        23
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "2BFAtxTAtMq88cjL",
+      "type": 0,
+      "text": "<p><b>Chaos Organ</b></p><p>One of the character's appendages or visible organs is reshaped into a daemonic equivilent. They Choose one of: Natural Weapons, Heightened Senses (Any One), Unnatural Characteristic (+1)(Any One).</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The Character grows a set of horns that resembles that of a bloodletter, granting Furious Assault Talent.</li><li><b>Nurgle:</b> One of the Character's Hands is replaced with a Daemonette's Claw, gain Natural Weapons(Claw), it has the has Razor-Sharp Quality and Pen 2. Can't hold things.</li><li><b>Slaanesh:</b> The Character's Belly Swells and their entrails push out horribly throw ruptures in their skin. They gain Regeneration(1) Trait</li><li><b>Tzeentch:</b> Character gains an additional arm tipped with a claw. They gain Multiple Limbs Trait. They can spend a Full Action to make this limb melt into their body, or reappear at will.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        24,
+        26
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "lnj9TbZBbPpQuwBe",
+      "type": 0,
+      "text": "<p><b>Cyclops</b></p><p>One of the Character's Eyes is taken in exchange for being able to see something in the future. Unfortunately the only thing they can see is their own death, which they become obssed with avoiding. They Permenantly Lose 1d5 Perception and have the Conspiracy Theorist Disorder.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        27,
+        27
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "ky5oImh6kALLxcM3",
+      "type": 0,
+      "text": "<p><b>Dark Soul</b></p><p>Character gains Fear(1), or increases their Fear Trait by 1 to a maximum of 4. They radiate the power of the warp.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Warriors know they face a Champion of Khorne. Enemy Warriors such as Guardsman, Space Marines, etc treat the character's Fear Rating as one higher.</li><li><b>Nurgle:</b> The Faithful know they face a force of sacrilege. Those most faithful such as the Sororitas, Inquisitors, and Ecclesiarchy count character's Fear Rating as one higher.</li><li><b>Slaanesh:</b> Those lost feel the digusting love of Nurgle embrace them. Renegades and anyone else outside of the Imperium's Bounds count character's fear rating as one higher.</li><li><b>Tzeentch:</b> Psykers are disturbed by one chosen by the Architect of Fate. Enemies with Psychic Powers count character's Fear Rating as one level higher.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        28,
+        30
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "xtWcG1vjRUGjHEV8",
+      "type": 0,
+      "text": "<p><b>Dimensional Instability</b></p><p>Once per session, character can choose to become Incoporeal (as described in Incoropreal Trait) for a number of consective rounds equal to their Corruption Bonus.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Whilst Incorporeal, can make -30 Willpower Test to make a melee attack that hits even those not incoroporeal. </li><li><b>Nurgle:</b> Whilst Incorporeal, can make -30 Willpower Test to gain +30 to all Interaction tests.</li><li><b>Slaanesh:</b> Whilst Incorporeal, can make -30 Willpower Test to gain Fear(1), or add +1 to Fear Rating (max 4).</li><li><b>Tzeentch:</b> Whilst Incorporeal, can make -30 Willpower Test to use Psychic Powers.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        31,
+        31
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "rRGygA9ROjiyFbsp",
+      "type": 0,
+      "text": "<p><b>Emaciated</b></p><p>Character is drained of their life energy, suffering an eternal hunger that can never be satiated as all but the barest minimum of sustiance they consume is stolen by the warp. They suffer a -20 Penalty from Fatigue as opposed to a -10 penalty.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        32,
+        33
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "w59TbUxyY775m91P",
+      "type": 0,
+      "text": "<p><b>Eye of Chaos</b></p><p>The eyes of the character may gaze into the Warp as well as reality. They gain the Psyniscience Skill, or advance it by +10 if they already had it.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The Character gains the Intimidation Skill, or advance it by +10 if they already had it. The Rage of the Blood God emanating from their eyes</li><li><b>Nurgle:</b> The Character gains the Interrogation Skill, or advances it by +10 if they already had it. Their eyes seeing through lies and deceit.</li><li><b>Slaanesh:</b> The Character gains the Charm Skill, or advances it by +10 if they already had it. Those that look into their eyes see a promise of deliverance from pain and suffering.</li><li><b>Tzeentch:</b> The Character gains the Deceive Skill, or advances it by +10 if they already ha it. Their eyes shining a multicoloured hue which dazzles the mind.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        34,
+        35
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "iCHTaN9ZfhTs9wri",
+      "type": 0,
+      "text": "<p><b>Eye-Stalks</b></p><p>The Character's eyes extend out of their head and wave about on elongated stalks, better able to see but also more vulnerable. Gain 1d5 Perception, but whenever suffering Critical Damage to the head, add 1 to the result. Additionally, they may not be able to wear certain helmets, although the stalks can coil up.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        36,
+        37
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "0PHkumAbjckYchO5",
+      "type": 0,
+      "text": "<p><b>Centauroid</b></p><p>Character's entire lower body is replaced by a bestial form. The Character gains Quadruped Trait. Roll on Addendum Animal Table to determine Animal Mutation.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The skin of the body is as hard as brass. Granting +2 AP to the character's legs.</li><li><b>Nurgle:</b> The Body is lithe and agile, granting +10 to Acrobatics Skill Tests.</li><li><b>Slaanesh:</b> The body oozes necrotic slime, increasing movement by +2.</li><li><b>Tzeentch:</b> The Bodie's feat and replaced with splayed suction pads. The character gains the Sturdy Trait.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        38,
+        39
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "O121WDKZcbIoxmH2",
+      "type": 0,
+      "text": "<p><b>Featureless Face</b></p><p>All Features of the character's face fade to nothing, leaving them with no eyes, nose, or mouth. Despite this their senses are intact, and they no longer require food or drink. However, they cannot speak. (handsigns, telepathy, etc, are fine). They suffer -20 to all Interaction Tests except Intimidation.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        40,
+        42
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "HvACL7v5jJUJep2D",
+      "type": 0,
+      "text": "<p><b>Illusion of Normalcy</b></p><p>The Character appears seemingly untouched by the warp. Inside they are a mass of horrifying corruption. They gain the Unremarkable Trait, regardless of any mutations or carried weapons, or even being a space marine. It can be detected by Psyniscience, the test gaining +5 per Gift the character has.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The Characters enemies are always Surprised when they attack</li><li><b>Nurgle:</b> The Character gains +20 to Deceive Skill Tests</li><li><b>Slaanesh:</b> The Character's range of Nurgle's Rot (mutation or psychic power) is 2x their corruption bonus</li><li><b>Tzeentch:</b> The character's number of mutations has no effect on enemy psyniscience tests to detect their presence.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        43,
+        45
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "LFMlHBLEjVxx4x2C",
+      "type": 0,
+      "text": "<p><b>Flaming Skull</b></p><p>The Character's skin on their face is seared away, replaced with eternal, inextinguishable flames. They gain Fear(1), or increase their Fear Rating by 1 (max 4). Their fellowship is reduced by 2d10+10 to a minimuim of 1. This may cause additional disorders dependant on the character's personality.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        46,
+        46
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "zEePYg0JCGwCnFTf",
+      "type": 0,
+      "text": "<p><b>Headless</b></p><p>The Characters head shrinks into their shoulders, as their features merge into their upper chest. They always count as rolling a 1 to Initiative, however any attack that would hit their head counts as hitting their body instead.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        47,
+        48
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "j2B7dYxdcEz9k9Ut",
+      "type": 0,
+      "text": "<p><b>Icon of Blasphemy</b></p><p>The Character is utterly blasphemous to all who worship the Corpse Emperor. Once per session, they can gain Fear(3) for one round.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Character can make a -20 Strength Test to extend the effect for an additional round.</li><li><b>Nurgle:</b> Character can make a -20 Fellowship Test to extend the effect for an additional round</li><li><b>Slaanesh:</b> Character can make a -20 Toughness Test to extend the effect for an additional round</li><li><b>Tzeentch:</b> Character can make a -20 Willpower Test to extend the effect for an additional round</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        49,
+        50
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Vnaj9iqS8VXYwEld",
+      "type": 0,
+      "text": "<p><b>Infernal Will</b></p><p>The Character is entirely immune to Fear, however if they fail a Skill Test by 4+ Degrees of Failiure, they immediately roll on the Shock Table.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> If the skill test was for a skill aligned to Khorne, the result can be adjusted by an amount equal to the character's corruption bonus.</li><li><b>Nurgle:</b> If the skill test was for a skill aligned to Slaanesh, the result can be adjusted by an amount equal to the character's corruption bonus.</li><li><b>Slaanesh:</b> If the skill test was for a skill aligned to Nurgle, the result can be adjusted by an amount equal to the character's corruption bonus.</li><li><b>Tzeentch:</b> If the skill test was for a skill aligned to Tzeentch, the result can be adjusted by an amount equal to the character's corruption bonus.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        51,
+        52
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "PtcktiSyVmjHTICE",
+      "type": 0,
+      "text": "<p><b>Inside Out</b></p><p>The Characters innards burst out through their flesh, becoming clothed in hideous skin and bleeding organs yet they still remain alive. Character suffers -30 to all Interaction tests except Intimidation, and gain +20 to Intimidate Tests.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        53,
+        54
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "jJKerdIr0ZfPmaqa",
+      "type": 0,
+      "text": "<p><b>Pseudo-Daemonhood</b></p><p>The Character is twisted to resemble a lesser daemon, Melded with the warp. They gain Fear(4) and Warp Instability Traits. If ever Banished to the warp, the GM determiens how long they will remain banished and what is required for them to return. If Unaligned, they take the form of a bestial fiend.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The Character takes a similar apperance to a Bloodletter, and gains the Brutal Charge Talent,</li><li><b>Nurgle:</b> The character takes a similar appearance to a Daemonette, and gains Unnatural Agility(+2) Trait.</li><li><b>Slaanesh:</b> The character takes a similar appearance to a Plaguebearer, and gains the Undying Trait.</li><li><b>Tzeentch:</b> The character takes a similar appearance to a Horror, and gains the Blessing of Tzeentch (Force Field, Prot 20, no overload)</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        55,
+        56
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "IAmD6AoQa7rs8454",
+      "type": 0,
+      "text": "<p><b>Intelligent Cyst</b></p><p>A Cyst-like organ grows somewhere on the character which possesses a mind of its own. Whenever the character fails an Interaction Skill Test by 2+ DoF, the Cyst momentarily takes control of them, causing them to say or do something contrary to their own interests (or in the interests of the cyst)</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        57,
+        59
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "PwfZAy9nNwsyhtjV",
+      "type": 0,
+      "text": "<p><b>Warp-Eater</b></p><p>The Character never needs to eat or drink. Once per month however they must make a +0 Toughness Test, if they fail they gain 1d5+1 Corruption.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Hunger make be assuaged by slayering foes of the blood god, Each Month, every foe slain provides +5 to the test.</li><li><b>Nurgle:</b> Hunger can be assuaged by comitting acts of blasphemy and excess. Each Month, every such deed provides +10 to the test.</li><li><b>Slaanesh:</b> Hunger can be assuaged by gifting mortals Nurgle's delights, Each Month, every victim infected with disease or killed with Toxic Attacks provides +5 to the test.</li><li><b>Tzeentch:</b> Hunger can be assuaged plots and deceit. Each Month, every lie of consequence told to further one's goals provides +10 to the test.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        60,
+        61
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "aFvkm4LKzklfxcKM",
+      "type": 0,
+      "text": "<p><b>Limb Loss</b></p><p>The Character loses one random limb (see addendum limb table), which simply dissolves to nothing. They may sense a brief feeling of schadenfreude.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        62,
+        63
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Rc0VkUmAaHtDxaoy",
+      "type": 0,
+      "text": "<p><b>Magnificent Horns</b></p><p>The Character gains a set of horns that act as both weapons and impressive status symbols. The character gains +10 Loyalty with any Minions they have, and their charge Actions cannot be Parried.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Only Khornate Minions gain the Loyalty Bonus</li><li><b>Nurgle:</b> Only Slaaneshi Minions gain the Loyalty Bonus</li><li><b>Slaanesh:</b> Only Nurglite Minions gian the Loyalty Bonus</li><li><b>Tzeentch:</b> Only Tzeentchian Minions gain the Loyalty Bonus</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        64,
+        67
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Yl6aE6DuYjsvBpKe",
+      "type": 0,
+      "text": "<p><b>Warped Appearance</b></p><p>The Character's appearance mutates to something unimstakably of the Immaterium's Touch. The exact details are left up to the Player and GM. Whatever it is, they suffer -20 to any tests to disguise themselves or cover their apperance.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        68,
+        69
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "EtscIcdKyOmqH62c",
+      "type": 0,
+      "text": "<p><b>Mechanoid</b></p><p>The Character's body is fused with metal and machinery, a technological blasphemy that obeys no mechanical laws. They gain Machine(+1) Trait.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Character also gains Natural Armour(3) Trait, their skin a gleaming bronze</li><li><b>Nurgle:</b> Character also gains +1 to Initiative Tests, their muscles replaced with fine meshes of micro actuators.</li><li><b>Slaanesh:</b> Character also gains the Sturdy Trait, their frame fortified by mechanical callipers.</li><li><b>Tzeentch:</b> Character also gains +10 to Awareness Tests, their senses enhanced by complex machine receptors.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        70,
+        70
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "wmMoRM2Vy61bjMWi",
+      "type": 0,
+      "text": "<p><b>Nerveless Ennui</b></p><p>The character cannot feel physical stimuli of any kind, be it painful or pleasurable. Character ignores the -10 Penalty when suffering Fatigue. However Awareness Tests based on sensing by Touch have -10</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> When character suffers Critical Damage, reduce amount by their Corruption Bonus (min 1)</li><li><b>Nurgle:</b> Character rerolls failed attempts to resist torture or seduction through application of physical stimuli</li><li><b>Slaanesh:</b> Character must suffer 2+Toughness Bonus Fatigue before being knocked unconcious.</li><li><b>Tzeentch:</b> Character adds +20 to Psyniscience Tests, their Supernatural senses heightened at the loss of their natural ones.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        71,
+        71
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "eyecRr9ekvSWsxUu",
+      "type": 0,
+      "text": "<p><b>Pervasive Miasma</b></p><p>The character is surrounded by a creeping scent or stench of corruption.  Whenever they fail a Stealth Test, they gain an additional degree of failiure.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        72,
+        73
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Fep7MC4LWiGV4ZL5",
+      "type": 0,
+      "text": "<p><b>Projectile Attack</b></p><p>Character can summon forth a stream of chaotic matter, usually from their mouth. Character can unlease a Half Action Standard Attack with profile (Range 10m; RoF S/-/-; Dmg 1d10+5; Pen 3; Spray, Smoke). Requires them to not be wearing an enclosed helmet.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The Attack takes the form of a raging fire, and gains the Flame Quality.</li><li><b>Nurgle:</b> The Attack twists and writhes as incorporeal limbs, and gains the Shocking Quality.</li><li><b>Slaanesh:</b> The Attack spews toxic innards and gains the Toxic Quality.</li><li><b>Tzeentch:</b> The Attack brings fourth raw Warpstuff, and gains the Warp Weapon Quality.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        74,
+        75
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "W74MR9SBVYJcEWqh",
+      "type": 0,
+      "text": "<p><b>Grossly Fat</b></p><p>The character swells and distorts, becoming two to three times larger in blubbery fat. They permenantly lose 1d10+10 Agility and 1d10+2 Fellowship. Hjowever they permenantly gain 1d10 Toughness and Size(Hulking) if they didn't already have it.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        76,
+        77
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Emdzr8SavPRjui0x",
+      "type": 0,
+      "text": "<p><b>Slayer Limb</b></p><p>The character Chooses one weapon they carry that becomes fused to a limb of their choice, replacing it from the elbow or equivalent joint (including replacing the hand). The weapon no longer requires reloading or maintenance, and is opeated by thought.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The Weapon gains Tearing Quality if it didn't already have it.</li><li><b>Nurgle:</b> The Weapon gains Crippling(1d5) Quality if it didn't already have it.</li><li><b>Slaanesh:</b> The Weapon gains Toxic(1) Quality if it didn't already have it.</li><li><b>Tzeentch:</b> The Weapon gains Warp Weapon Quality if it didn't already have it.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        78,
+        78
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "WSYkE2l51ApS9dwG",
+      "type": 0,
+      "text": "<p><b>Strange Voice</b></p><p>At the beginning of the game session roll 1d10. if 4 or lower, gain +10 to Intimidate Tests but -10 to Stealth Tests. If a 5+, suffer -20 to all interaction Skill Tests. Either effect lasts for the game session. The character's voice varies from dramatic resonance to squeaky incomprehensibility.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        79,
+        80
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "UJwYGYKE5oaYQzUc",
+      "type": 0,
+      "text": "<p><b>Additional Limb</b></p><p>Character grows a limb, and gains the Multiple Arms Trait with a value equal to number of limbs they started out with, +1 per time this gift is applied. If Unaligned, roll for Limb on addendum Limb Table.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> Limb has Bony Spikes, Unarmed Attacks have Tearing Quality</li><li><b>Nurgle:</b> Limb is lithe and dextrous. Unarmed Attacks have +10 to Weapon Skill</li><li><b>Slaanesh:</b> Limb is slimy and drools from an ending orifice. Unarmed Attacks have Toxic(1)</li><li><b>Tzeentch:</b> Limb is a writhing mass. Gain Disarm Talent and can use it as a Free Action as long as making an Unarmed Attack.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        81,
+        84
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "pehewqaGhIYlFROc",
+      "type": 0,
+      "text": "<p><b>Strange Walk</b></p><p>The Character's Movement Rate is Halved, their Gait is disturbed by some strange affliction.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        85,
+        86
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "raI02ROTSExp6Jg5",
+      "type": 0,
+      "text": "<p><b>Tail</b></p><p>The character gains a Tail, which can be used to make an additional attack which counts as a normal unarmed attack.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The Tail is Scorpion-Like, and has the Toxic Quality.</li><li><b>Nurgle:</b> The Tail is a writhing Tentacle, and attacks made with it have +20 to Weapon Skill</li><li><b>Slaanesh:</b> The Tail is a grisly abdomen of a fly, it weeps a vile liquid that reduces intiative of all enemies within 20 metres by 20.</li><li><b>Tzeentch:</b> The Tail is prehensile and as dextrous as a normal arm, being able to carry and operate a weapon.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        87,
+        89
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "iKaIvPjKJf22kVhD",
+      "type": 0,
+      "text": "<p><b>Tentacle</b></p><p>One of the character's Limbs Shrivels up into a tentacle. Randomly Determine which limb is affected using the Limb Table Addendum. The Limb cannot hold weapons, and if a leg reduce movement rate by 1. However they provide +10 to Grapple Tests and can reach into tight spaces.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        90,
+        94
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "NgtA5kMQDtmlcgoQ",
+      "type": 0,
+      "text": "<p><b>Vampiric Addiction</b></p><p>The character requires a certain substance from a living creature to functio, chosen by Player at GM approval. Whenever partaking in the substance they count as having one extra Infamy Point. If they do not partake of the substance by the end of the Game Session, they lose 1 Toughness permenantly.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        95,
+        95
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "akrp7dDUU9n3b3qw",
+      "type": 0,
+      "text": "<p><b>Warp-Touched</b></p><p>The Character must roll on the Disorder Table most appropriate to their alignmnet, if unaligned the GM chooses the table to roll on.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        96,
+        97
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "BDcO719GY5DaLGy7",
+      "type": 0,
+      "text": "<p><b>Warpsight</b></p><p>The Character views the world through the unreality of the warp, visibly seeing the souls of mortals as lanterns. They can +10 to Awareness Tests, but -10 to Scrutiny Tests as they find it harder to see mundane features such as facial expressions.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> -</li><li><b>Nurgle:</b> -</li><li><b>Slaanesh:</b> -</li><li><b>Tzeentch:</b> -</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        98,
+        99
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "W2RRivAiORB8iq5O",
+      "type": 0,
+      "text": "<p><b>Wreathed in Chaos</b></p><p>The Warp pours from the character's eyes, nose, and mouth, utterly infusing them. They gain +10 to all Interaction Skill Tests with Disciples of the Dark Gods, and +10 to Intimidation Tests with everyone else.</p><p><b>Aligned Bonus:</b></p><ul><li><b>Khorne:</b> The Heat of Khorne's forges see the air ripple in the character's presence, enemies suffer -10 to Weapon Skill Tests in melee with them.</li><li><b>Nurgle:</b> The character is enveloped in a mask which confuses and disorients their enemies. All Enemies within 10 metres suffer  -10 Willpower.</li><li><b>Slaanesh:</b> A Cloud of Diseased flies buzzes about the character, all enemies within 10 metres suffers -5 initaitve.</li><li><b>Tzeentch:</b> Arcs of aetheric power crackle from the character to anything they touch. They add +2 to Melee Damage Rolls.</li></ul>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        100,
+        100
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    }
+  ],
+  "flags": {},
+  "_id": "RLLBZdoMNtG1B7Bd"
+}

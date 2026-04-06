@@ -1,0 +1,30 @@
+{
+  "name": "Concealed Holster",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "2kg",
+    "availability": "Holster for hiding and rapid access of weapon. Only works with Compact Pistol weapons. Common or Good Craftsmanship impose -20 to Awareness, Scrutiny, or Search to discover the stored weapon on the user. Best Craftsmanship allow wielder to draw weapon as a Free Action.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wsOiCj1a1Gp26pQK"
+}

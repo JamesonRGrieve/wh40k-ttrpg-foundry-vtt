@@ -1,0 +1,30 @@
+{
+  "name": "Spectorin Coral Paste",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "1kg",
+    "availability": "A Terrestrial Coral mixed with chemical bonding agents found within the Fish of Spectoris. Applying it to an underwater surface draws coral to create a natural layer of sea life. Applied to the ships of Spectoris as so the native fauna of its oceans do not attempt to destroy objects they would see as foreign if it were not for the paste. Is also useful for Makeshift Hull Repairs.",
+    "cost": "Abundant Availability on the Planet of Spectoris and Free to that world's Agri-Workers.",
+    "effects": "Very Rare",
+    "notes": "225 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 225 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vIoDF7RwBW8Ah42Y"
+}

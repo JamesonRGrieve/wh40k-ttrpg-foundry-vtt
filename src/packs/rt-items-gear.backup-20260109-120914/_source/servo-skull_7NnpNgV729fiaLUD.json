@@ -1,0 +1,30 @@
+{
+  "name": "Servo-Skull",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Skull Familiar that can offer aid, can carry a weapon, pict recorders, surgical instruments, lights,loud hailers, etc, etc. (See Rogue Trader Page 375)",
+    "cost": null,
+    "effects": "Scarce / Distinguished",
+    "notes": "15 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce / Distinguished</p><p><b>Notes:</b> 15 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7NnpNgV729fiaLUD"
+}

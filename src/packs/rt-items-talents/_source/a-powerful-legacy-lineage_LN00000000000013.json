@@ -1,0 +1,78 @@
+{
+  "name": "A Powerful Legacy (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/throne.svg",
+  "system": {
+    "identifier": "a-powerful-legacy-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"A place in the politics of entire sectors of Imperial Space is the legacy you have found yourself with, and thanks to your influence amongst men and women whose wills command worlds, you are eminently comfortable in such circles.\"</em></p></blockquote><p>You are respected and feared for what you can do to those who earn your displeasure, and for the discretion with which you use that power. Even when people have not heard of your family, so commanding and powerful is your presence that they will listen anyway.</p><p>Your family's wealth and connections have placed you among the elite of Imperial society, and you have been trained from birth to wield authority with devastating effectiveness.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain three potent talents that reflect your commanding presence and leadership: Talented (Intimidate), Talented (Command), and Air of Authority. Together, these make you a formidable leader and negotiator.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Of Extensive Means lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 350,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Talented (Intimidate), Talented (Command), and Air of Authority.",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Talented",
+          "specialization": "Intimidate",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.QRbdcZXAqmmHdgfn"
+        },
+        {
+          "name": "Talented",
+          "specialization": "Command",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.QRbdcZXAqmmHdgfn"
+        },
+        {
+          "name": "Air of Authority",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.uzlRRMNKLdIYKiCn"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Born to Rule",
+          "description": "<p>Your lifetime of privilege and training in the exercise of power makes you a natural leader. You gain +10 to Intimidate tests (from Talented), +10 to Command tests (from Talented), and your air of confidence and authority causes others to obey your orders instinctively (from Air of Authority).</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000013"
+}

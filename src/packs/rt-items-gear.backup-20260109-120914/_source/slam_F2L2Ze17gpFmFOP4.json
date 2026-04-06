@@ -1,0 +1,30 @@
+{
+  "name": "Slam",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Gain Unnatural Toughness (x2) and Unnatural Strength (x2) for 1d5 Rounds. Afterwards permenantly reduce Strength and Toughness by 1d5.",
+    "cost": "Common Availability in Hive Volg",
+    "effects": "Very Rare",
+    "notes": "100 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 100 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F2L2Ze17gpFmFOP4"
+}

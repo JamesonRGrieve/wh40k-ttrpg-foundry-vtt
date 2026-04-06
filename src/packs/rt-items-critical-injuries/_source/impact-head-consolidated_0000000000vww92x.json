@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000vww92x",
+  "name": "Impact Critical - Head",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_head_consolidated",
+    "damageType": "impact",
+    "bodyPart": "head",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>The impact fills the target's head with a terrible ringing noise. The target must make a Challenging (+0) Toughness test or suffer 1 level of Fatigue.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The hit causes the target's sight to blur and his head to spin. The target suffers a -10 penalty to Perception and Intelligence tests for [[1d5]] rounds.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The target's nose breaks in a torrent of blood, blinding him for 1 round. The target must make a Challenging (+0) Toughness test or be Stunned for 1 round.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The concussive strike staggers the target. The target must make a Challenging (+0) Toughness test or be Stunned for 1 round and knocked Prone.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>The force of the blow sends the target reeling in pain. The target suffers 1 level of Fatigue, is Stunned for 1 round, and staggers backwards [[1d5]] metres. Permanently reduce his Intelligence characteristic by 1.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The target's head is snapped back by the attack, leaving him staggering around trying to control mind-numbing pain. The target is Stunned for [[1d5]] rounds, is knocked backwards [[1d5]] metres, and must make a Challenging (+0) Agility test or be knocked Prone.</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>The attack slams into the target's head, fracturing his skull and opening a long tear in his scalp. The target is Stunned for [[1d10]] rounds. His Movement is halved (rounding up) for [[1d10]] hours.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>With a sickening crunch, the target's head snaps around to face the opposite direction. The twisted vertebrae immediately sever every connection within the target's neck, and his death is instantaneous.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The target's head bursts like an overripe fruit and sprays blood, bone, and brains in all directions. Each target within 4 metres of the deceased must make a Challenging (+0) Agility test or suffer a -10 penalty to his Weapon Skill and Ballistic Skill tests on his next turn, as gore gets in his eyes or obscures his visor.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The target's head bursts like an overripe fruit and sprays blood, bone, and brains in all directions. Each target within 4 metres of the deceased must make a Challenging (+0) Agility test or suffer a -10 penalty to his Weapon Skill and Ballistic Skill tests on his next turn, as gore gets in his eyes or obscures his visor. The attack was so powerful that it passes through the target and strikes another target nearby. If the hit was from a melee weapon, the attacker may immediately make another attack (with the same weapon) against any other target he can reach without moving. If the hit was from a ranged weapon, he may immediately make another attack (with the same weapon) against any target standing directly behind the original target and within range of his weapon.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Head (Severity 10)</strong></p><p>The target's head bursts like an overripe fruit and sprays blood, bone, and brains in all directions. Each target within 4 metres of the deceased must make a Challenging (+0) Agility test or suffer a -10 penalty to his Weapon Skill and Ballistic Skill tests on his next turn, as gore gets in his eyes or obscures his visor. The attack was so powerful that it passes through the target and strikes another target nearby. If the hit was from a melee weapon, the attacker may immediately make another attack (with the same weapon) against any other target he can reach without moving. If the hit was from a ranged weapon, he may immediately make another attack (with the same weapon) against any target standing directly behind the original target and within range of his weapon.</p>",
+      "chat": "",
+      "summary": "Impact Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

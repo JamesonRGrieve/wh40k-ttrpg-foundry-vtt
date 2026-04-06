@@ -1,0 +1,30 @@
+{
+  "name": "Talisman of Tzeentch",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "-",
+    "availability": "When worn, any Psyker trying to use a Psychic Power within 50m of character must first pass a +0 Willpower Test or reduce their Psy Rating by 1 per Degree of Failiure lasting Degree of Failiure Turns. Test is taken each time a power tries to be used. No effect on Psykers Dedicated to Tzeentch.",
+    "cost": "Only functions for those dedicated to Tzeentch. Heretical.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9HUJjM8fLq3g73VJ"
+}

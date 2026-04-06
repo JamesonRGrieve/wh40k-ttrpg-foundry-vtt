@@ -1,0 +1,30 @@
+{
+  "name": "The Order of St. Kark",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+10 to all Intimidate Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Brass Medal in the shape of a Bolter Shell hanging from a crimson ribbon",
+    "cost": "Distinguished Service Medal: Awarded for Unhesitating Dedication to the maintenance of Discipline, such as a Commissar executing 2+ individuals to prevent a rout.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FYdg5cT2uTCToXIJ"
+}

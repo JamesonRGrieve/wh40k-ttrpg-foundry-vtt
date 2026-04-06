@@ -1,0 +1,54 @@
+{
+  "name": "Venator Air Yacht",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 7,
+    "sizeDescriptor": "30m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 15,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 20,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 15,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -10,
+      "tactical": 120,
+      "notes": ""
+    },
+    "crew": {
+      "required": 4,
+      "notes": "Pilot, Co-Piot, Tracker, 2 Gunners"
+    },
+    "passengers": 0,
+    "manoeuverability": 25,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 3,
+      "value": 3,
+      "critical": 0
+    },
+    "weapons": "<p>Gunner Harpoon Gun (Front, Range 120m, Heavy, S/-/-, 1d10+5 R, Pen 8, Clip 1, Reload 2 Full, Snare, Tearing). Tracker Net Launcher (Front or Rear, Range 90m, Heavy, S/-/-, No Damage, Pen 0, Clip 1, Realod 2 Full, Snare, Flexible). Gunner Tranq Launcher (Front or Rear, Range 130m, Heavy, S/-/-, Special, Pen 2, Clip 1, Reload 1 Full, Accurate).</p>",
+    "specialRules": "<p>The Vehicle Hovers above the ground, ignoring hampering terrain. If it would be immobilised due to damage, it is instead destroyed as it crashes into the ground. This Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action. Possess a 500m Range Auspex that provides +20 to Tracking Tests to search for, track, and identify prey targets.  Exposed Sections can be protected by a transparent plate to protect passengers from dangerous environments, doesn't negate open-topped status.</p>",
+    "traitsText": "The Vehicle Hovers above the ground, ignoring hampering terrain. If it would be immobilised due to damage, it is instead destroyed as it crashes into the ground. This Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action. Possess a 500m Range Auspex that provides +20 to Tracking Tests to search for, track, and identify prey targets.  Exposed Sections can be protected by a transparent plate to protect passengers from dangerous environments, doesn't negate open-topped status.",
+    "availability": "rare",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "CB619asQJgaAx599"
+}

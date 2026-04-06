@@ -1,0 +1,30 @@
+{
+  "name": "Ration Pack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Basic Rations, quality varies from corpse starch to grox meat",
+    "cost": null,
+    "effects": "Ubiquitous",
+    "notes": "10 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Ubiquitous</p><p><b>Notes:</b> 10 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EOsTm99bM9WVbXY2"
+}

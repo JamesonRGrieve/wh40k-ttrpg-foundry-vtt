@@ -1,0 +1,64 @@
+{
+  "name": "Deathwatch Relic Blade [Master Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "system": {
+    "identifier": "deathwatch-relic-blade-master",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 7,
+      "penetration": 9
+    },
+    "special": [
+      "sm-wep",
+      "power-field"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 25,
+    "availability": "near-unique",
+    "craftsmanship": "master",
+    "quantity": 1,
+    "cost": {
+      "value": 250,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Power Field</p><p><b>Note:</b> Space Marines Only. Relic Master-Crafted Astartes Power Sword of the Deathwatch. Automatically Destroys non-powerfielded or otherwise immune weapons that it parries or that parry it. Also has a 25% chance to destroy Power Fielded or otherwise Immune weapons that are not Relics or of equivilent significance.</p>"
+    },
+    "modifications": [],
+    "notes": "Space Marines Only. Relic Master-Crafted Astartes Power Sword of the Deathwatch. Automatically Destroys non-powerfielded or otherwise immune weapons that it parries or that parry it. Also has a 25% chance to destroy Power Fielded or otherwise Immune weapons that are not Relics or of equivilent significance.",
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "52da9167a374f9c7"
+}

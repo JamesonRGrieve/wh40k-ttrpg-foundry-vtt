@@ -1,0 +1,30 @@
+{
+  "name": "Voidbait (Augur)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "40kg",
+    "availability": "Produces fake distress communications that can be detected up to 5 VU's away. Setting it up requires one hour and -20 Tech-Use Test. Can be determined as false by making Scrutiny Test with -10 per DoS on the Tech-Use test.",
+    "cost": "Poor or Common Quality Voidbait.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rDw2kKGouP6WmMvq"
+}

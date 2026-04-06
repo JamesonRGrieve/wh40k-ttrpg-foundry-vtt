@@ -1,0 +1,64 @@
+{
+  "name": "Eviscerator [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "system": {
+    "identifier": "eviscerator-best",
+    "class": "melee",
+    "type": "chain",
+    "twoHanded": true,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 3,
+      "penetration": 5
+    },
+    "special": [
+      "tearing",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 12,
+    "availability": "extremely-rare",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unwieldy</p><p><b>Note:</b> Whenever this weapon inflicts Righteous Fury, it does +3 Damage. Requires two hands to wield due to size.</p>"
+    },
+    "modifications": [],
+    "notes": "Whenever this weapon inflicts Righteous Fury, it does +3 Damage. Requires two hands to wield due to size.",
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "f045d936bf2f270e"
+}

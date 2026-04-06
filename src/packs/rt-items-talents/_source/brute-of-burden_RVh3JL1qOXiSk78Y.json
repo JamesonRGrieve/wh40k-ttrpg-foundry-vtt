@@ -1,0 +1,64 @@
+{
+  "name": "Brute of Burden",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "psychic",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character adds a value equal to that of their Size Trait to their Strength and Toughness Bonus for determining the amount they can Lift, Carry, or Push Heavy Objects.\nThey also gain +20 to Toughness Tests to avoid gaining Fatigue from Forced Marching.\nRatlings are Scrawny, Size 3. Humans are Average, Size 4. Ogryns are Hulking, Size 5.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Character adds a value equal to that of their Size Trait to their Strength and Toughness Bonus for determining the amount they can Lift, Carry, or Push Heavy Objects.\nThey also gain +20 to Toughness Tests to avoid gaining Fatigue from Forced Marching.\nRatlings are Scrawny, Size 3. Humans are Average, Size 4. Ogryns are Hulking, Size 5.</p>",
+    "aptitudes": [
+      "Strength",
+      "General"
+    ],
+    "prerequisites": {
+      "text": "Strength 45",
+      "characteristics": {
+        "s": 45
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "bruteOfBurden",
+    "modifiers": {
+      "characteristics": {
+        "toughness": 20
+      },
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RVh3JL1qOXiSk78Y"
+}

@@ -1,0 +1,62 @@
+{
+  "name": "Unseen Enemy (Child of Dynasty)",
+  "type": "talent",
+  "img": "icons/svg/dagger.svg",
+  "system": {
+    "identifier": "unseen-enemy-child-of-dynasty",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "16"
+    },
+    "description": {
+      "value": "<p><strong>Unseen Enemy:</strong> This character has an enemy who covets their position, their wealth, or their ship. The Child of Dynasty has no idea who this person is, or the fact that they're coming for them. The GM determines this foe and is free to reveal this enemy at any given time. The character gains the Enemy Talent; the group is this unseen foe.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Enemy talent for an unseen foe determined by the GM.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Child of Dynasty Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Enemy talent (unseen foe, GM-determined)",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Unseen Foe",
+          "description": "Character has an enemy determined by the GM who covets their position, wealth, or ship. This enemy's identity is unknown to the character."
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CD00000000000003"
+}

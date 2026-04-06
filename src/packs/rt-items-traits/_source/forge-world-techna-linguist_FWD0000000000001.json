@@ -1,0 +1,50 @@
+{
+  "name": "Forge World Techna-Linguist",
+  "type": "trait",
+  "img": "modules/game-icons-net/whitetransparent/cog.svg",
+  "system": {
+    "identifier": "forge-world-techna-linguist",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "23-24"
+    },
+    "description": {
+      "value": "<h2>Forge World Techna-Linguist</h2><p>Common Lore (Tech) (Int) and Common Lore (Machine Cult) (Int) are untrained Basic Skills for you.</p><p>Your upbringing on a forge world has given you an innate understanding of technological matters and the mysteries of the Machine Cult, allowing you to comprehend basic technical and theological concepts without formal training.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "benefit": "<p>Common Lore (Tech) and Common Lore (Machine Cult) are untrained Basic Skills (normally Advanced).</p>",
+    "level": 1,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "FWD0000000000001"
+}

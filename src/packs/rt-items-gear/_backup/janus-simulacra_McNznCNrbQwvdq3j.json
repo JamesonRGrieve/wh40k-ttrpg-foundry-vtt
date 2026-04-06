@@ -1,0 +1,30 @@
+{
+  "name": "Janus Simulacra",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Skirting the edge of Techno-Heresy. These servitors are human-sized and shaped yet are almost entirely lacking in living tissue whilst capable of concerningly human-like responses. Only a fool would try to pass them off as human though, the Mechanicus have burned worlds for less. ",
+    "cost": "See Bestiary/InqHandbook Pg 141.",
+    "effects": "Very Rare",
+    "notes": "20000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 20000 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "McNznCNrbQwvdq3j"
+}

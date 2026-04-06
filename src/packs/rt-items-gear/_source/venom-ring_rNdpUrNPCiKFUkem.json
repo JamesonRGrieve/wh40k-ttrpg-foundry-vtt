@@ -1,0 +1,41 @@
+{
+  "name": "Venom Ring",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>-20 to Tests to notice wearer is introducing substances into food/drink. Stores one dose of poison.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "-20 to Tests to notice wearer is introducing substances into food/drink. Stores one dose of poison."
+    },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "-20 to Tests to notice wearer is introducing substances into food/drink. Stores one dose of poison.",
+    "duration": "",
+    "notes": "-",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rNdpUrNPCiKFUkem"
+}

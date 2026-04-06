@@ -1,0 +1,28 @@
+{
+  "name": "Hoverer (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can hover up to two metres off of the ground, and move at a speed of X while doing so.</p>"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "benefit": "<p>Can hover up to two metres off of the ground, and move at a speed of X while doing so.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Vx0F9Pm8ROLB4ZRu"
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Plasma Pistol [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-plasma.svg",
+  "system": {
+    "identifier": "plasma-pistol-best",
+    "class": "pistol",
+    "type": "plasma",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 6,
+      "penetration": 6
+    },
+    "special": [
+      "maximal",
+      "overheats"
+    ],
+    "clip": {
+      "max": 10,
+      "value": 10,
+      "type": ""
+    },
+    "reload": "3-full",
+    "weight": 4,
+    "availability": "extremely-rare",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 8000,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Maximal, Overheats</p><p><b>Note:</b> Can choose between firing normally or maximally</p>"
+    },
+    "modifications": [],
+    "notes": "Can choose between firing normally or maximally",
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5e86d2a2bff0b9b4"
+}

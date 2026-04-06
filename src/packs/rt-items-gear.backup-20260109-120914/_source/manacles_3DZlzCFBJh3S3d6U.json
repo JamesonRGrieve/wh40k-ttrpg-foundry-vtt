@@ -1,0 +1,30 @@
+{
+  "name": "Manacles",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "1kg",
+    "availability": "Used for restraining people.",
+    "cost": null,
+    "effects": "Plentiful",
+    "notes": "35 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 35 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3DZlzCFBJh3S3d6U"
+}

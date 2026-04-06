@@ -1,0 +1,67 @@
+{
+  "name": "Witch-knowledge (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "identifier": "witch-knowledge-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Your family has long held a fascination with the warp, the witch, and the daemon. The presence of the witch amongst you has only fuelled that fascination, though you work hard to hide it from the Inquisition and others who would not understand your labours.\"</em></p></blockquote><p>Your quest for knowledge has led you to deal with all manner of individuals who may know useful information—sanctioned psykers seeking to understand their gifts, rogue scholars pursuing forbidden lore, and even those touched by the warp itself.</p><h3>A Dangerous Obsession</h3><p>Perhaps it began innocently enough—a grandparent's journal documenting their psychic awakening, a family archive of letters from relatives who joined the Black Ships, or simply growing up around those who wielded warp powers. But over time, this interest deepened into something more profound and more dangerous.</p><p>You have studied texts that most would consider heretical. You have learned the scientific theories behind psychic phenomena that the Adeptus Astra Telepathica guards jealously. You know the names of warp entities that appear in no official records. You understand the mechanics of possession in ways that would horrify most priests. And you have hidden all of this knowledge from those who would destroy you for possessing it.</p><h3>Walking the Line</h3><p>Your knowledge is not necessarily heretical—you have not dabbled in sorcery or made pacts with daemons. But you know more than most citizens of the Imperium are permitted to know about the nature of the warp and those who use its power. This knowledge has led you to associate with unusual individuals: astropaths seeking understanding beyond their training, scholars of the Scholastica Psykana, and even those driven mad by psychic visions.</p><p>You must constantly balance your curiosity with caution, your quest for understanding with the need for secrecy. The Inquisition would be very interested in your library, your contacts, and your theories about the warp. Very interested indeed.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p><strong>You gain:</strong></p><ul><li>One Forbidden Lore skill (either Forbidden Lore [Psykers] or Forbidden Lore [Warp]) as a Trained skill</li><li>One Peer Talent (either Peer [Astropaths] or Peer [the Insane])</li></ul><p>These represent your extensive studies of psychic phenomena and the unusual network of contacts you have developed in pursuit of this knowledge.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Witch-Born lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants one Forbidden Lore (Psykers or Warp) and one Peer (Astropaths or the Insane).",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Student of the Warp",
+          "description": "<p><strong>Choose one:</strong></p><ul><li><strong>Forbidden Lore (Psykers):</strong> You gain this skill as Trained, representing deep knowledge of psychic abilities, psyker culture, and the workings of the Scholastica Psykana.</li><li><strong>Forbidden Lore (Warp):</strong> You gain this skill as Trained, representing understanding of warp phenomena, immaterium theory, and the nature of warp entities.</li></ul>"
+        },
+        {
+          "name": "Unusual Contacts",
+          "description": "<p><strong>Choose one Peer Talent:</strong></p><ul><li><strong>Peer (Astropaths):</strong> Your studies have brought you into contact with sanctioned psykers, and you have earned their respect through your understanding of their craft.</li><li><strong>Peer (the Insane):</strong> Your quest for knowledge has led you to those touched by the warp—the mad, the traumatized, and the psychically scarred. They sense in you someone who understands their plight.</li></ul><p><strong>Implementation Note:</strong> During character creation, the player should select one Forbidden Lore skill and one Peer talent from the options above. The system should grant these as separate skill and talent items.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000018"
+}

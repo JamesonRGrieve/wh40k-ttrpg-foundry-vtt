@@ -1,0 +1,63 @@
+{
+  "name": "Hand Cannon (.54 Tranter) [Poor Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "system": {
+    "identifier": "hand-cannon-54-tranter-poor",
+    "class": "pistol",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 5,
+      "penetration": 2
+    },
+    "special": [
+      "unreliable"
+    ],
+    "clip": {
+      "max": 7,
+      "value": 7,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 3.5,
+    "availability": "common",
+    "craftsmanship": "poor",
+    "quantity": 1,
+    "cost": {
+      "value": 48,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Unreliable</p><p><b>Note:</b> Counts as a Basic Weapon unless wielder has Strength Bonus of 4+\nWeapon Jams on a 94-100</p>"
+    },
+    "modifications": [],
+    "notes": "Counts as a Basic Weapon unless wielder has Strength Bonus of 4+\nWeapon Jams on a 94-100",
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2f0de5fe6eeda9a1"
+}

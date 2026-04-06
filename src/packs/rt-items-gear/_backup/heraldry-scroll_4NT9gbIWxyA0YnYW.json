@@ -1,0 +1,30 @@
+{
+  "name": "Heraldry Scroll",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "A Motto or Title that bears the name of the Space Marine such that their enemies know who kills them. Add +10 Kill Markers to Assault Missions where the Scroll was displayed in at least one battle.",
+    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Ultramarines",
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4NT9gbIWxyA0YnYW"
+}

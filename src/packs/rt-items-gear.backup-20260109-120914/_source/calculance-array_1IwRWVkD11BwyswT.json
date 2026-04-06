@@ -1,0 +1,30 @@
+{
+  "name": "Calculance Array",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "120kg",
+    "availability": "+10 to all commerce tests, effectively a large computer stack that helps calculate things.",
+    "cost": "Doesn't need to be on the character's person, Merely needs to be able to be accessed readily (such as it being housed on the Character's vessel).",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1IwRWVkD11BwyswT"
+}

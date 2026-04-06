@@ -1,0 +1,30 @@
+{
+  "name": "Krytron-plasma Detonator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "0.5kg",
+    "availability": "A Very reliable detonator. Provides +20 to the \"Place Explosives\" Special use of the Demolition Skill. If the user would accidentally trigger an explosion when planting or disarming explosives using this device, they may spend a fate point to avert the detonation, shutting the detonator down instead.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bOpL9WaQBKtGtoTk"
+}

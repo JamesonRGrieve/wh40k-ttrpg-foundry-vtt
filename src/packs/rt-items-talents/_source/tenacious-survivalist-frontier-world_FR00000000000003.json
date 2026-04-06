@@ -1,0 +1,63 @@
+{
+  "name": "Tenacious Survivalist (Frontier World)",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "tenacious-survivalist-frontier-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "10"
+    },
+    "description": {
+      "value": "<p><strong>Tenacious Survivalist:</strong> Life on the frontier can be filled with all manner of horrors. Frontier world characters learn at an early age to be wary of their surroundings, and react quickly in the face of danger. Frontier world characters may re-roll any Initiative Roll they make, though they must accept the results of the second roll.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You may re-roll any Initiative Roll, but must accept the second result.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Frontier World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "condition": "Initiative Rolls",
+            "modifier": 0,
+            "type": "Re-roll (must accept second)"
+          }
+        ]
+      }
+    },
+    "notes": "Re-roll Initiative (must accept second result)",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FR00000000000003"
+}

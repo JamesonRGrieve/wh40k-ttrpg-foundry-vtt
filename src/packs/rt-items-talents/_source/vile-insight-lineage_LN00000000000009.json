@@ -1,0 +1,62 @@
+{
+  "name": "Vile Insight (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/eye-horror.svg",
+  "system": {
+    "identifier": "vile-insight-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "31"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Whether for good or ill, you have seen much that no human ever should. Esoteric and forbidden knowledge was your constant companion through your early life, and your understanding of such subjects is something that would shock most people.\"</em></p></blockquote><p>Whether you choose to turn that insight to greater things, or are tainted by it, is for the future to decide. For now, you possess great knowledge, and it gives you a decisive edge.</p><p>Growing up surrounded by your family's dark lore, you absorbed forbidden knowledge like a sponge. While this has given you terrible insights, it has also scarred your mind and soul.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Select any three Forbidden Lore skills from the following list: Daemonology, Heresy, Mutants, Pirates, Psykers, The Warp, or Xenos. You gain those as trained Skills. However, the malign nature of your knowledge has damaged your character's mind and soul. You gain 2d5 Insanity Points and 2d5 Corruption Points.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Accursed Be Thy Name lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants three Forbidden Lores trained, but 2d5 Insanity and 2d5 Corruption.",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Forbidden Knowledge",
+          "description": "<p>Choose three Forbidden Lore skills from this list: Daemonology, Heresy, Mutants, Pirates, Psykers, The Warp, or Xenos. You gain all three as trained Skills. However, this terrible knowledge has left its mark - you immediately gain 2d5 Insanity Points and 2d5 Corruption Points (rolled once at character creation).</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000009"
+}

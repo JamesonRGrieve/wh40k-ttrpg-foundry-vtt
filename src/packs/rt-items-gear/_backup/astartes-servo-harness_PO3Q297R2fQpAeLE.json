@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Servo-Harness",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Consists of two Astartes Servo-Arms, a Combi-Tool, a Fyceline Torch (Functions as Astartes Flamer), and a Plasma Cutter (Can cut through 20cm of Adamantium per minute, or function as Astartes Plasma Pistol with 10m range and no Maximal Mode). Can benefit from talents allowing for multiple attacks when using Servo-Arms. Exceptional Craftsmanship is +5 to Skill, WS, and BS Tests using the components of the harness, and upgrades the Servo-Arms to Exceptional as well.",
+    "cost": "Space Marine only, used by Techmarines. Requires Servo-Harness Integration Talent to use.",
+    "effects": "Famed",
+    "notes": "50 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 50 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PO3Q297R2fQpAeLE"
+}

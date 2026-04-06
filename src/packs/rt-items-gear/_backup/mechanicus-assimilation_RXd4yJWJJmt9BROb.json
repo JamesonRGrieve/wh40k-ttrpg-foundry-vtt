@@ -1,0 +1,30 @@
+{
+  "name": "Mechanicus Assimilation",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Character gains Machine(+1) Trait, this cybernetic can be implanted multiple times, increasing the value of the Machine Trait by +1 each time. No Poor Craftsmanship version. Good and Best Craftsmanship make the upgrades less noticable.",
+    "cost": "Rare Availability for Hereteks",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RXd4yJWJJmt9BROb"
+}

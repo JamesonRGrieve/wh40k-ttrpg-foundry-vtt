@@ -1,0 +1,68 @@
+{
+  "name": "Constant Combat Training (Fortress World)",
+  "type": "talent",
+  "img": "icons/svg/combat.svg",
+  "system": {
+    "identifier": "constant-combat-training-fortress-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "12"
+    },
+    "description": {
+      "value": "<p><strong>Constant Combat Training:</strong> All fortress world characters begin with Basic Weapon Training (Las or SP). However, they suffer a −5 penalty on Social Interaction Tests regarding non-combat topics (GM's discretion).</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain Basic Weapon Training (Las) or (SP). You suffer −5 on Social Interaction Tests regarding non-combat topics.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Fortress World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "condition": "Social Interaction Tests (non-combat topics)",
+            "modifier": -5,
+            "type": "Fellowship Test"
+          }
+        ]
+      }
+    },
+    "notes": "Grants choice of Basic Weapon Training; −5 to social tests on non-combat topics",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Combat Training",
+          "description": "Choose one: Basic Weapon Training (Las) or Basic Weapon Training (SP)"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FO00000000000002"
+}

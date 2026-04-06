@@ -1,0 +1,30 @@
+{
+  "name": "Servo-Skull (Guardian)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Servo-Skull designed to aid user in combat and defend them. Can either be a Combat Skull (Melee Specialty) or a Gun Skull (Ranged Focus)",
+    "cost": "See Bestiary or Inquisitor's Handbook Page 144\nCombat Skull: 1750, Gun Skull: 2000 (gun bought seperately)",
+    "effects": "Rare",
+    "notes": "Varies T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> Varies T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HirPLpS1iMmDHkAm"
+}

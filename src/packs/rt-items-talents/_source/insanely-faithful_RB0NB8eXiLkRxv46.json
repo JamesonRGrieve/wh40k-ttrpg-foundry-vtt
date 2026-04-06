@@ -1,0 +1,58 @@
+{
+  "name": "Insanely Faithful",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "source": "Dark Heresy: Core",
+    "description": "<p>When rolling to determine the effects of Shock, can roll twice and take the better result</p>",
+    "tier": 1,
+    "benefit": "<p>When rolling to determine the effects of Shock, can roll twice and take the better result</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "insanelyFaithful",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RB0NB8eXiLkRxv46"
+}

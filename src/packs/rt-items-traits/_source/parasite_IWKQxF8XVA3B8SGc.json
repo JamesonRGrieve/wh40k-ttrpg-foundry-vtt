@@ -1,0 +1,28 @@
+{
+  "name": "Parasite",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Minion",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Minion Attaches itself to a host and influences its behaviour, be it a Xenos, Warp Parasite, Strange Machine, etc. It must be Size(2) or Smaller. Theoretically even if its host dies, it can be implanted into a new host.\nIt must come into Physical Contact with its would be host, infecting it after 1d5 Rounds, +1 Round per AP on the location the Parasite is entering through, successful attacks against it cause only half damage. A Successful Opposed Strength Test pulls it out before it has finished infection, causing 1d5 Damage ignoring Toughness. If the Parasite finishes entering its host, the host makes a -20 Toughness Test or succumbs to the Parasite's influence permenantly unless it is medically removed or the host dies.</p>"
+    },
+    "benefit": "<p>Minion Attaches itself to a host and influences its behaviour, be it a Xenos, Warp Parasite, Strange Machine, etc. It must be Size(2) or Smaller. Theoretically even if its host dies, it can be implanted into a new host.\nIt must come into Physical Contact with its would be host, infecting it after 1d5 Rounds, +1 Round per AP on the location the Parasite is entering through, successful attacks against it cause only half damage. A Successful Opposed Strength Test pulls it out before it has finished infection, causing 1d5 Damage ignoring Toughness. If the Parasite finishes entering its host, the host makes a -20 Toughness Test or succumbs to the Parasite's influence permenantly unless it is medically removed or the host dies.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IWKQxF8XVA3B8SGc"
+}

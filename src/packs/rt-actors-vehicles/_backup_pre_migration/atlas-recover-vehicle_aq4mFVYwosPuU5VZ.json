@@ -1,0 +1,54 @@
+{
+  "name": "Atlas Recover Vehicle",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 5,
+    "sizeDescriptor": "14m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 28,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 18,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 16,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -10,
+      "tactical": 40,
+      "notes": ""
+    },
+    "crew": {
+      "required": 3,
+      "notes": "Commander (Hull), Driver, Operator (Winch)"
+    },
+    "passengers": 0,
+    "manoeuverability": 35,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Hull, one of: Front Facing Heavy Bolter, Heavy Flamer</p>\n<p>Pintle (Optional), one of: Heavy Stubber or Storm Bolter</p>",
+    "specialRules": "<p>Traits: Enclosed, Rugged, Tracked Vehicle</p>\n<p>Special Rules: Possesses a Winch that can tow one Vehicle up to Massive Size. With two, tow Immense. With four, tow Monumental or Larger. Regardless reduces Manoeuvrability to -20. Winching takes 2 minutes, must remain stationary.</p>\n<p>Can be used for Field Repairs to lift vehicle, reduces difficulty of test by +10 (EG -20 to -10). Hits to the Vehicle's Rear strike the winch, treated as a weapon for Critical Damage Purposes, can be disabled.</p>",
+    "traitsText": "Traits: Enclosed, Rugged, Tracked Vehicle\nSpecial Rules: Possesses a Winch that can tow one Vehicle up to Massive Size. With two, tow Immense. With four, tow Monumental or Larger. Regardless reduces Manoeuvrability to -20. Winching takes 2 minutes, must remain stationary.\nCan be used for Field Repairs to lift vehicle, reduces difficulty of test by +10 (EG -20 to -10). Hits to the Vehicle's Rear strike the winch, treated as a weapon for Critical Damage Purposes, can be disabled.",
+    "availability": "scarce",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "aq4mFVYwosPuU5VZ"
+}

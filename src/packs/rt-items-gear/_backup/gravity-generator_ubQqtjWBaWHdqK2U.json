@@ -1,0 +1,30 @@
+{
+  "name": "Gravity Generator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "500kg",
+    "availability": "Normalises gravity when upon them to that of Holy Terra (1G). Alternatively can create much higher or lower gravity as required. Uses include securing cargo, creating high-G restraining cells, and so on.",
+    "cost": "Look like huge squares of metal that can be laid out.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ubQqtjWBaWHdqK2U"
+}

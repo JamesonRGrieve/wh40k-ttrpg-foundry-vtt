@@ -396,7 +396,10 @@
             "NPCTemplate": "NPC Template Sheet",
             "ChangeImage": "Change Image",
             "DarkHeresy": "Dark Heresy 2e Sheet",
-            "RogueTrader": "Rogue Trader Sheet"
+            "RogueTrader": "Rogue Trader Sheet",
+            "BlackCrusade": "Black Crusade Sheet",
+            "OnlyWar": "Only War Sheet",
+            "Deathwatch": "Deathwatch Sheet"
         },
         "TalentCategory": {
             "General": "General",

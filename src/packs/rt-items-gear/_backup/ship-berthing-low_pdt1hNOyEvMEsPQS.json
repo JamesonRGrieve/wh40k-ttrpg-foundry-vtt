@@ -1,0 +1,30 @@
+{
+  "name": "Ship Berthing: Low",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "The Living Quarters whilst aboard a Void Craft. Unpowered Decks, Cargo Holds, Bilge Berths. Neither safe nor pleasant, but at least you'll have stories to tell if you survive.",
+    "cost": "Cost is per day",
+    "effects": "Plentiful",
+    "notes": "5 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 5 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pdt1hNOyEvMEsPQS"
+}

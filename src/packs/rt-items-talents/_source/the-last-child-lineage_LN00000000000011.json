@@ -1,0 +1,69 @@
+{
+  "name": "The Last Child (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/ruins.svg",
+  "system": {
+    "identifier": "the-last-child-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Your family is not merely disgraced, it is dead. You alone are the sole survivor of a once-proud lineage that fell into disrepute and paid the ultimate price for it.\"</em></p></blockquote><p>Whether they made the wrong enemies, were on the wrong world at the wrong time as war or rebellion took hold, or faced some other fate, they are gone and you are all that remains. You are the last heir and the only one who can ensure that your family continues or, at the very least, dies with pride.</p><p>You will need all your wits and cunning to ensure the survival of your clan, as your once vast resources are now next to nothing.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain Barter and Trade (any one) as trained Skills. Additionally, you receive a +3 bonus to either Intelligence or Fellowship. However, your family's resources have been decimated, reducing your starting Profit Factor by 3.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Disgraced lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 200,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": -3
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Barter and one Trade skill, +3 Int or Fel, but -3 Profit Factor.",
+    "grants": {
+      "skills": [
+        {
+          "name": "Barter",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Survivor's Skills",
+          "description": "<p>You gain one Trade skill of your choice as trained (such as Armourer, Shipwright, Voidfarer, or any other). Choose either Intelligence or Fellowship - that characteristic receives a permanent +3 bonus. These represent the skills and mental acuity you've developed to rebuild from nothing.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000011"
+}

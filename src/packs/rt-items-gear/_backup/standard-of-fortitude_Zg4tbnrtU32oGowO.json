@@ -1,0 +1,30 @@
+{
+  "name": "Standard of Fortitude",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "-",
+    "availability": "Relic Standard of the Dark Angels. Any Battle Brother that can draw line of sight to the Standard while it is beared becomes immune to Fear and do not suffer Fatigue.",
+    "cost": "Dark Angels only.",
+    "effects": "Famed",
+    "notes": "40 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 40 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Zg4tbnrtU32oGowO"
+}

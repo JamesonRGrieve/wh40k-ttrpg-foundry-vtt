@@ -1,0 +1,28 @@
+{
+  "name": "Size (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>All Creatures have size, which determines Ease of being Hit, Concealment, and Base Movement (Apply Size's Effect to movement prior to any other effects, like being a Quadruped to a minimum of 1):\nMiniscule (1) (-30/+30/AB-3), Puny (2) (-20/+20/AB-2), Scrawny (3) (-10/+10/AB-1), Average (4) (0/0/AB), Hulking (5) (+10/-10/AB+1), Enormous (6) (+20/-20/AB+2), Massive (7) (+30/-30/AB+3). Humans are by default Average Size.</p>"
+    },
+    "benefit": "<p>All Creatures have size, which determines Ease of being Hit, Concealment, and Base Movement (Apply Size's Effect to movement prior to any other effects, like being a Quadruped to a minimum of 1):\nMiniscule (1) (-30/+30/AB-3), Puny (2) (-20/+20/AB-2), Scrawny (3) (-10/+10/AB-1), Average (4) (0/0/AB), Hulking (5) (+10/-10/AB+1), Enormous (6) (+20/-20/AB+2), Massive (7) (+30/-30/AB+3). Humans are by default Average Size.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DtBGJLP5u64Si0RD"
+}

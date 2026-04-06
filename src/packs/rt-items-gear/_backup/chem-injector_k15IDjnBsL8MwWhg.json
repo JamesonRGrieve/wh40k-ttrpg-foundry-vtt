@@ -1,0 +1,30 @@
+{
+  "name": "Chem Injector",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Allows user to load a single dose of a drug into a skin-mounted port. As a Half Action can make a +20 Willpower Test to activate it, automatically administering the drug. If failed, the injector malfunctions and a +0 Tech-Use Test is neccisary to fix it. If implanted multiple times, each implant gives a new port that supplies a single drug dose (doesn't need to be same drug).",
+    "cost": "After use, can be refilled at a later date.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k15IDjnBsL8MwWhg"
+}

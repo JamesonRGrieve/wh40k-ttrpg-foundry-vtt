@@ -1,0 +1,30 @@
+{
+  "name": "MIU Weapon Interface",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Simpler MIU for weapons only. Can remotely operate one linked weapon, can fire an additional ranged weapon as free action using ballistic skill regardless of other actions taken. (Note, as only one attack action can be taken per turn, attacking with this counts towards that even though it's a free action)",
+    "cost": "Linked weapon could be attached to the shoulder. GM is final arbiter as to what weapons are allowed, and if any additional penalties are applied.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QJjBF1cDha4oWA61"
+}

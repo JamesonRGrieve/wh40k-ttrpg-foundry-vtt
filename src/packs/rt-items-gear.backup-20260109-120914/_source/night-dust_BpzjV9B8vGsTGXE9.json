@@ -1,0 +1,30 @@
+{
+  "name": "Night Dust",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Harvest from captured or slain creatures, burned as incense or dissolved in amasec. After a dose suffer -20 to all Tests, and after 2d10 minutes slip into a feverish slumber filled with violent and vivid dreams for 1d10 hours (or 4d10 hours if drunk in amasec). Afterwards wake up to make a +10 Willpower Test (or -10 if Drunk in Amasec) or gain 1d5 Insanity Points from the experience.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "250 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 250 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BpzjV9B8vGsTGXE9"
+}

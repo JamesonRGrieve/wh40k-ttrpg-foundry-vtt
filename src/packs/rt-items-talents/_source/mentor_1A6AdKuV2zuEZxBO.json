@@ -1,0 +1,66 @@
+{
+  "name": "Mentor",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Once per Session, for 10 minutes or until the end of an Encounter, all Squad Members, including Player characters within comms range can take all Skill Tests in one chosen skill as if they had Character's Skill Training.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Once per Session, for 10 minutes or until the end of an Encounter, all Squad Members, including Player characters within comms range can take all Skill Tests in one chosen skill as if they had Character's Skill Training.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Storm Trooper Specialty",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "mentor",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Train Others",
+          "description": "<p>You can train others in skills you possess at +10 or higher. Training takes 1 week per skill level and costs half the normal XP.</p>"
+        }
+      ]
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1A6AdKuV2zuEZxBO"
+}

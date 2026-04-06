@@ -1,0 +1,30 @@
+{
+  "name": "Malefic Scholar",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Can aid in identifying a Profane Artifact, explain the origins and beliefs of a heretical cult, or the true history of some otherwise censored item. Treat as having +30 in relevent Forbidden Lore Skills (The Warp, Daemonology, Heresy, Cults or Psykers, etc,)",
+    "cost": "An individual well versed in forbidden knowledge concerning the warp, daemons, and other profane concepts. Anyone from a Mad Hermit to a cloistered noble scholar.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "e619trYYsHb0ka4i"
+}

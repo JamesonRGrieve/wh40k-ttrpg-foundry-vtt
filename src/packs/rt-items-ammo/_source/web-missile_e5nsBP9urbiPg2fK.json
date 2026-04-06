@@ -1,0 +1,54 @@
+{
+  "name": "Web Missile",
+  "type": "ammunition",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "identifier": "web-missile",
+    "weaponTypes": [
+      "launcher"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "blast-6",
+      "snare"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Blast (6), Snare</p>",
+    "notes": "",
+    "weight": 2,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Blast (6), Snare</p><p><b>Qualities:</b> Blast (6), Snare</p>"
+    },
+    "source": "RT: Hostile Acquisitions",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "e5nsBP9urbiPg2fK"
+}

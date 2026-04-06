@@ -1,0 +1,30 @@
+{
+  "name": "Plas",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Applied to the skin, it softens it to the consistency of soft waxe for ~5 minutes, allowing it to be reshaped. Multiple applications allows for the flesh beneath to be reshaped, although this is painful. Others have -30 to perception tests to determine user's true identity, lasts 1d5 days. Poor only provides -10, Good lasts 1-10 days as desired.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "j7SqNqqdImv9cdd3"
+}

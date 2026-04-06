@@ -1,0 +1,30 @@
+{
+  "name": "Ocular Catechizer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "-",
+    "availability": "Eyepieces designed to magnify objects and help identify patterns and data, as well as record it to a data-slate. Provides +10 to Literacy, Lore, and Search Tests involving the close examination of an object. Requires full concentration whilst using it this way. Failing by 4+ DoF on these tests whilst using the item causes 1 Fatigue as the troublesome machine spirit causes feedback.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "250 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 250 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gytsXTZCOt3kqWcm"
+}

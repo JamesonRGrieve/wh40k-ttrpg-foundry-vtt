@@ -1,0 +1,63 @@
+{
+  "name": "Assault Shotgun (Skitarri Vanaheim) [Good Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "system": {
+    "identifier": "assault-shotgun-skitarri-vanaheim-good",
+    "class": "basic",
+    "type": "solid-projectile",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 40,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 0
+    },
+    "special": [
+      "scatter"
+    ],
+    "clip": {
+      "max": 15,
+      "value": 15,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 8,
+    "availability": "average",
+    "craftsmanship": "good",
+    "quantity": 1,
+    "cost": {
+      "value": 450,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Scatter</p><p><b>Note:</b> Has an Inbuilt Red-Dot Laser Sight and Melee Attachment (Retractable Saw-Bladed Bayonet)</p>"
+    },
+    "modifications": [],
+    "notes": "Has an Inbuilt Red-Dot Laser Sight and Melee Attachment (Retractable Saw-Bladed Bayonet)",
+    "source": "DH: Inquisitor's Handbook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0b07345ab14032ae"
+}

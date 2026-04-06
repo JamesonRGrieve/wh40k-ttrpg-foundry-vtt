@@ -1,0 +1,83 @@
+{
+  "name": "Pride",
+  "type": "originPath",
+  "img": "modules/game-icons-net/whitetransparent/lion.svg",
+  "system": {
+    "identifier": "pride",
+    "step": "motivation",
+    "stepIndex": 5,
+    "description": {
+      "value": "<h2>Pride</h2><blockquote><p><em>\"Above all else, you want respect—the admiration of allies and the grudging esteem of foes, and will countenance no insult to your honour to go unchallenged. You suffer none to be so ignorant as to deride you as unworthy of your name, unfit for your legacy, or lacking in talent.\"</em></p></blockquote><p>When you seek to prove yourself, it is for the sake of your own high standards, or perhaps out of frustration that the mighty do not yet recognize your true worth. Regardless, it is for you to lead and demonstrate your worth by your actions and your bearing, and any that doubt or disparage you had best have the steel to back up their words.</p><p>Your pride is not mere vanity—it is the armor you wear against a galaxy that would grind you to dust. You will be respected, or you will be feared, but you will never be forgotten.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Motivation",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "pride_choice",
+          "label": "Choose Heirloom or Toughness",
+          "options": [
+            {
+              "label": "Heirloom Item (roll 1d100)",
+              "value": "heirloom",
+              "description": "You gain one Heirloom Item. Roll 1d100 to determine which heirloom you receive from Table 1-2.",
+              "grants": {}
+            },
+            {
+              "label": "+3 Toughness",
+              "value": "toughness",
+              "description": "You gain +3 Toughness.",
+              "grants": {
+                "characteristics": {
+                  "toughness": 3
+                }
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "33-34",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": [
+      5
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zSpMWs1ANuSihUGV"
+}

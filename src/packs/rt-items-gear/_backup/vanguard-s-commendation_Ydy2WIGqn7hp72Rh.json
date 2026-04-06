@@ -1,0 +1,30 @@
+{
+  "name": "Vanguard's Commendation",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "Gain +10 to Awareness Tests\nMedals can't be acquired, only earned. Looks like a Square Silver Medal embossed with Bronze.",
+    "cost": "Distinguished Service Medal: Kill a Kroot Shaper.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "OW: Enemies of the Imperium",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ydy2WIGqn7hp72Rh"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Warp Instability",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>If this warp creature takes damage, and does not deal damage or cause insanity to another creature by the end of its turn, it must make a WP Test, taking 1 damage for failiure, plus 1 per degree of failiure. If this would deal damage equal to or in excess of its wounds, it is banished back to the warp.</p>"
+    },
+    "benefit": "<p>If this warp creature takes damage, and does not deal damage or cause insanity to another creature by the end of its turn, it must make a WP Test, taking 1 damage for failiure, plus 1 per degree of failiure. If this would deal damage equal to or in excess of its wounds, it is banished back to the warp.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eIMf18hnAoNWzjmj"
+}

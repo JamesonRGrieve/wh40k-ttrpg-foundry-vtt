@@ -1,0 +1,30 @@
+{
+  "name": "Shock Collar",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "1.5kg",
+    "availability": "Wrangling Tests to influence a creature with a shock collar gain +20, however if the Wrangling Test is failed by 4 or more DoF, the creature enters a Frenzy (As with the Frenzy Talent), and tries to attack the wrangler, who must make a -30 Wrangling Test as a Full Action to bring the beast back under control.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qYBk2MHbcryAGYhd"
+}

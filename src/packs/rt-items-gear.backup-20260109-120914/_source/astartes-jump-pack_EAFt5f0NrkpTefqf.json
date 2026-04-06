@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Jump Pack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "50kg",
+    "availability": "Requires Pilot (Personal) Allows Guided Fall from any height and short jumps that double base movement speed in any direction whilst ignoring obstacles (must land at the end of the movement). Can also set to maximum thrust setting to gain Flyer(12) Trait for up to a minute, before requiring a minute for the turbines to cool off.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "15 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 15 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EAFt5f0NrkpTefqf"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Infantry Gear: Sandbags",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "5kg",
+    "availability": "Can be filled with earth to provide basic protection (Cover AP: 4), or alternatively filled with clothing to make a rough pillow.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Plentiful",
+    "notes": "4 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 4 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MZT56xis3Y12uFsB"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Data-Slate",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "0.5kg",
+    "availability": "Space Data Tablet, stores and reads text, video, recordings. Simple ones contain only one recording, Advanced ones can re-record and transmit/receive data.",
+    "cost": null,
+    "effects": "Common / Initiated",
+    "notes": "25 T\n5 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common / Initiated</p><p><b>Notes:</b> 25 T\n5 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wBBXnCmwWsN1POze"
+}

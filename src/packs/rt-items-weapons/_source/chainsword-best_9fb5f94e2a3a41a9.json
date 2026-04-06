@@ -1,0 +1,64 @@
+{
+  "name": "Chainsword [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "system": {
+    "identifier": "chainsword-best",
+    "class": "melee",
+    "type": "chain",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 2
+    },
+    "special": [
+      "tearing",
+      "balanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 6,
+    "availability": "scarce",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 550,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Balanced</p>"
+    },
+    "modifications": [],
+    "notes": "",
+    "source": "OW: Core Rulebook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9fb5f94e2a3a41a9"
+}

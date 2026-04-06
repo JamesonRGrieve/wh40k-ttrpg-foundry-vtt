@@ -1,0 +1,30 @@
+{
+  "name": "Upgrade: Fear Suppression",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Adds Fearless Trait to a Cyber Familiar, the Bestial Trait may be optionally removed.",
+    "cost": null,
+    "effects": "Special",
+    "notes": "250 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> 250 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bKrf0zzaXUVzJEzs"
+}

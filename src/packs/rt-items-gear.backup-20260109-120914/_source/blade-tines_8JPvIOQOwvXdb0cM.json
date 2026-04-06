@@ -1,0 +1,30 @@
+{
+  "name": "Blade-Tines",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Implants Blades and thin Scalpels into user's hands. Is unpleasent to look at. Grants +5 to Medicae and Interrogation Tests. Can be used as a melee weapon, dealing 1d5+2 Damage with Penetration 2. Good vcersions gain Tearing Quality. Best Versions gain Toxic Quality. Poor Versions have no Penetration and only deal 1d5 Damage.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8JPvIOQOwvXdb0cM"
+}

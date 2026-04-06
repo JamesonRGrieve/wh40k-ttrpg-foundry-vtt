@@ -1,0 +1,30 @@
+{
+  "name": "Eldar Corsairs",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Can be hired to perform void-based attacks on ships or stations with high efficacy, or in the rare case the character has earned their respect, to guide them through the Webway to some location. Caring little for currency, and difficult to contact, making a deal is as much based on mood as it is the task and payment.",
+    "cost": "The Piratical Eldar Corsairs that pilot sleek and dangerous vessels.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "W8co5mid63BSnp8c"
+}

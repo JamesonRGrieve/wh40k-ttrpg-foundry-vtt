@@ -1,0 +1,30 @@
+{
+  "name": "Golden Eye of Tzeentch",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "-",
+    "availability": "Requires free hand to use. As a Free Action, Character grips the eye's container and makes Willpower Test. For every degree of Success gain +10 to next Evasion or Opposed Stealth Test until the start of next turn.",
+    "cost": "The Fossilised eye of a Tzeentchian Daemon. Heretical.\nOnly functions for those dedicated to Tzeentch.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4V0IxKUeb22B8wsR"
+}

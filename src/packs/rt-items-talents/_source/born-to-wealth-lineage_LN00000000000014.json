@@ -1,0 +1,63 @@
+{
+  "name": "Born to Wealth (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/coins.svg",
+  "system": {
+    "identifier": "born-to-wealth-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "31"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Your inheritance was huge. The wealth afforded to the lesser scions of your family was still more than sufficient to eclipse the entire estates of many lesser families. As the one who claimed the ultimate prize, your wealth is greater still, bringing with it the means to do a great many things that those of less grand circumstances might never dream of.\"</em></p></blockquote><p>Any desire you have now is within your grasp, for there are few doors that sufficient money cannot open eventually. Your family's vaults overflow with thrones, rare treasures, and priceless artifacts. The very mention of your name causes merchants to bow low and rivals to tremble.</p><p>Where others must scrape and scheme for every resource, you simply sign requisitions. Where others must beg for appointments, doors open at your approach. Your wealth is not merely material—it is power, influence, and freedom made manifest in cold, hard currency.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You increase your starting Profit Factor by 2, representing the enormous wealth and resources your family has accumulated over generations.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Of Extensive Means lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": 2
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Increases starting Profit Factor by 2.",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Vast Wealth",
+          "description": "<p>Your family's resources are so extensive that acquisition tests rarely fail. When making an Acquisition Test, you may spend a Fate Point to automatically succeed, though you still suffer any consequences of the scale or craftsmanship modifiers.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000014"
+}

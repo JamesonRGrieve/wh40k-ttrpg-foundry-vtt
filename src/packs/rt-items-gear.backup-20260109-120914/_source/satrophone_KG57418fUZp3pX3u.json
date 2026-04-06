@@ -1,0 +1,30 @@
+{
+  "name": "Satrophone",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] For 1 Hour character gains +30 to Agility, Perception, Strength, and Toughness Tests. Those Addicted to the drug do not gain Fatigue from Withdrawal, instead gaining 1d5 Corruption every day until taking their next dose.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KG57418fUZp3pX3u"
+}

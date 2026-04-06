@@ -1,0 +1,30 @@
+{
+  "name": "Bloodskull Pendant",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "-",
+    "availability": "Activate as Full Action, even if in melee. Everyone within 4 metres suffers 2d10 + User's Corruption Bonus Energy Damage with Concussive(2) and Felling(4) Qualities. Ignores Toughness and Armour, instead reduced by Willpower Bonus. Character then must pass -10 Toughness Bonus or be stunned for 1d5 Rounds. Recharges after 1 Round.",
+    "cost": "Must be Dedicated to Khorne to use.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VeZ8Kql91uzJ6PHm"
+}

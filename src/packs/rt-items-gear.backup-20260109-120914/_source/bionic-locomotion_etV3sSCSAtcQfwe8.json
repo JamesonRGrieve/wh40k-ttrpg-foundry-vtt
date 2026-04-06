@@ -1,0 +1,30 @@
+{
+  "name": "Bionic Locomotion",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Replaces Legs, Hips, Pelvis, etc, +2 Toughness Bonus to limb location. Poor halves movement rate (round up) and running requires agility test to not fall over. Good gives Sprint Talent, and +20 to jump/leap tests.",
+    "cost": " Damage works as normal, although inappropriate effects like bleeding just render limb useless",
+    "effects": "Scarce / Initiated",
+    "notes": "1500 T\n15 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 1500 T\n15 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "etV3sSCSAtcQfwe8"
+}

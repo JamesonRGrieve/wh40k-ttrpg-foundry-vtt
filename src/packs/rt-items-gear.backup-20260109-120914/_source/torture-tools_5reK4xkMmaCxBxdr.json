@@ -1,0 +1,30 @@
+{
+  "name": "Torture Tools",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "2kg",
+    "availability": "Gain +20 to Interrogation Tests. Consists of various blades, needles, chemicals, drugs, probes, etc.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5reK4xkMmaCxBxdr"
+}

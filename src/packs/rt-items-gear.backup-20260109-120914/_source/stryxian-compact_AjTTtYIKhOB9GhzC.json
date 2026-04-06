@@ -1,0 +1,30 @@
+{
+  "name": "Stryxian Compact",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "0.1kg",
+    "availability": "A Trade agreement with the Alien Stryxis, giving +20 to all Interaction Tests to the bearer when dealing with Stryxis. The identity of the bearer is irrelevent, merely whomever presents it.",
+    "cost": "A Rare Xeno Item, They are Good Craftsmanship by default, with no Poor or Common Craftsmanship versions. (if there are, they're probably fake)",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AjTTtYIKhOB9GhzC"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Incorporeal",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Can pass through objects such as walls and weapons. Has +30 to Stealth Tests when hiding inside something, makes no sound when moving, and is immune to normal weapons. Daemons, Psychic Powers, Warp Creatures, Force Weapons, and Other Incorporeal Creatures still may be able to inflict damage.  However Incorporeal Creatures can't (usually) affect the mortal world or deal damage to corporeal creatures. Cannot pass through certain barriers, such as wards and gellar fields.</p>"
+    },
+    "benefit": "<p>Can pass through objects such as walls and weapons. Has +30 to Stealth Tests when hiding inside something, makes no sound when moving, and is immune to normal weapons. Daemons, Psychic Powers, Warp Creatures, Force Weapons, and Other Incorporeal Creatures still may be able to inflict damage.  However Incorporeal Creatures can't (usually) affect the mortal world or deal damage to corporeal creatures. Cannot pass through certain barriers, such as wards and gellar fields.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MZcc2creoTNgJH1I"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Advanced Materials",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Primitive Armour",
+    "effect": "Armour is No longer Primitive. Normally Innate to the armour rather than added on.",
+    "weight": "+0 kg",
+    "availability": "very-rare",
+    "source": "RT: Hostile Acq.",
+    "description": {
+      "value": "<p>Armour is No longer Primitive. Normally Innate to the armour rather than added on.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ftMAkFtNPQWSykVo"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Vox-Phonograph Recording Cylinder",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "1kg",
+    "availability": "A Cylinder that may be played in a Vox-Phonograph, may be used to store video and audio, or record new information onto. Effectively a Space VHS.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "20+T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20+T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wnjzvKDuEJJ2J0sx"
+}

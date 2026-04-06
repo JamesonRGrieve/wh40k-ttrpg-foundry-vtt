@@ -1,0 +1,30 @@
+{
+  "name": "Shifting Fabric",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "-",
+    "availability": "Exotic colour changing fabric, Comfortable and Stylish.",
+    "cost": "Clothing alters colours based on various stimuli (emotions, light, etc). ",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "q7ejWHQKuwp64o1T"
+}

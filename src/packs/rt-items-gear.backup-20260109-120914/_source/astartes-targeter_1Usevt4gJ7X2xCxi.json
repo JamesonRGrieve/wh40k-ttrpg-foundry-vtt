@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Targeter",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "4kg",
+    "availability": "Attaches to the Shoulder or Backpack unit, provides all ranged weapons the user wields the benefits of a Red-Dot Laser Sight and Telescopic Sight as well as imposing -10 to Dodging Ranged Attacks made by the user.",
+    "cost": "Red-Dot Laser Sight: +10 to Single Shot Ranged Attacks\nTelescopic Sight: Full Action Aiming ignores penalties for firing at Long or Extreme Ranges.",
+    "effects": "Distinguished",
+    "notes": "25 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1Usevt4gJ7X2xCxi"
+}

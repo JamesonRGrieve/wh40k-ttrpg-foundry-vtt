@@ -1,0 +1,54 @@
+{
+  "name": "Leman Russ Executioner",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 5,
+    "sizeDescriptor": "12m",
+    "faction": "",
+    "subfaction": "",
+    "type": "tank",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 40,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 32,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 20,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -10,
+      "tactical": 35,
+      "notes": ""
+    },
+    "crew": {
+      "required": 5,
+      "notes": "Commander (Turret), Driver, Gunner (Turret), Loader/Gunner, 2 Add. Gunners"
+    },
+    "passengers": 0,
+    "manoeuverability": 55,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Turret: Plasma Destroyer  (180m; S/3/–; 2d10+12 E; Pen 9; Clip 50; Reload 5 Full; Blast [2], Maximal, Overheat)</p>\n<p>Hull, one of: Front Facing Heavy Bolter, Lascannon, or Heavy Flamer</p>\n<p>Sponsons (Optional), one of: 2 Heavy Bolters, 2 Heavy Flamers, 2 Plasma Cannons</p>\n<p>Pintle (Optional), one of: Heavy Stubber or Storm Bolter</p>\n<p>---</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Lascannon (300m, S/-/-, 5d10+10 E, Pen 10, Clip 30, Rld 2 Full, Proven(3))</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>\n<p>Plasma Cannon(120m, S/-/-, 2d10+10 E, Pen 8, Clip 32, Rld 5 Full, Blast (1), Maximal, Overheat)</p>\n<p>Heavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)</p>\n<p>Storm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)</p>",
+    "specialRules": "<p>Traits: Enclosed, Extremely Volatile, Reinforced Armour, Tracked Vehicle.</p>\n<p>Summary: Halve Crit Damage from non-Righteous Fury, Dangerously Explosive.</p>",
+    "traitsText": "Traits: Enclosed, Extremely Volatile, Reinforced Armour, Tracked Vehicle.\nSummary: Halve Crit Damage from non-Righteous Fury, Dangerously Explosive.",
+    "availability": "nearunique",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "RfZoa8kh6ToWW9l7"
+}

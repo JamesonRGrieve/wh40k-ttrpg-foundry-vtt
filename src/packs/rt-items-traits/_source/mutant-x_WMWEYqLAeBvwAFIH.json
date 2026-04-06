@@ -1,0 +1,28 @@
+{
+  "name": "Mutant (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Minion",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>The Minion has X Mutations, roll on Gifts on the Gods X number of times when generating this Minion.</p>"
+    },
+    "benefit": "<p>The Minion has X Mutations, roll on Gifts on the Gods X number of times when generating this Minion.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WMWEYqLAeBvwAFIH"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Psyber Raven",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Can influence creature up to Willpower Bonus Klometres away. See DW: Rites of Battle, Page 147. WS 40, BS -, S 16, T 35, Ag 48, Int 20, Per 45, WP 30, Fel -. Movement 2/4/6/12, Wounds 5.\nSkills: Awareness +20, Concealment +10, Dodge. Talents: Fearless, Swift Attack. Traits: Bestial, Dark Sight, Flier 12, Natural Weapons (Claws), Size (Puny). Weapons: Claws (1d10+1 R, Pen 2).",
+    "cost": "Popular with Space Marine Librarians",
+    "effects": "Famed",
+    "notes": "20 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 20 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RmiI1utBfQXNPAfQ"
+}

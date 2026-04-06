@@ -1,0 +1,30 @@
+{
+  "name": "Liquid Agony",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "xenos",
+    "weight": "0.1kg",
+    "availability": "Scarce Availability if acquired from Dark Eldar Settlement. Failing Toughness Test, target is stunned for a number of rounds equal to their Perception Bonus. Doesn't do anything if target is already stunned.",
+    "cost": "Good Craftsmanship can delay effect by 1 round, Best can delay by up to 24 hours, chosen on acquisition/creation. Temporarily replaces the \"Toxic\" Wep. Quality's effect if applied.",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OgKwl3Lnf7nn8LY8"
+}

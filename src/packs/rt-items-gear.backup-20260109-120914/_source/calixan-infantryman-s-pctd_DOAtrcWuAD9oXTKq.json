@@ -1,0 +1,30 @@
+{
+  "name": "Calixan Infantryman's PCTD",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "-",
+    "availability": "The Calixian Infantryman's Portable Communications Transcription Device is a device allowing a multifaceted near silent visual-kinetic communication employed in the absence of voxcasters. Imploring use of staining liquid, breaking metal, or Fissionable Material it may be applied upon any rough surface, leaving a recognisable imprint. ",
+    "cost": "Also known as a Pen/Pencil. Poor version fails 20% of the time, requires +10 Tech-Use Test to fix. Best Works in space and has multiple colours.",
+    "effects": "Plentiful",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DOAtrcWuAD9oXTKq"
+}

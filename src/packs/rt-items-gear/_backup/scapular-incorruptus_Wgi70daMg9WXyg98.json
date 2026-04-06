@@ -1,0 +1,30 @@
+{
+  "name": "Scapular Incorruptus",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "1.5kg",
+    "availability": "A Wearer who has the Pure Faith Talent may spend a fate point to automatically pass a single Test to resist Poison, Disease, or Radiation with 1d5 Degrees of Success.",
+    "cost": "Kind of like a necklace or pendant.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Wgi70daMg9WXyg98"
+}

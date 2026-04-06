@@ -1,0 +1,54 @@
+{
+  "name": "Veloxic Bike",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 8,
+    "sizeDescriptor": "35m",
+    "faction": "",
+    "subfaction": "",
+    "type": "bike",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 8,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 8,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 8,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 20,
+      "tactical": 90,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": "Driver"
+    },
+    "passengers": 0,
+    "manoeuverability": 10,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 1,
+      "value": 1,
+      "critical": 0
+    },
+    "weapons": "<p>Hull (Front) (Optional): Autogun (100m, S/3/-, 1d10+3 I, Pen 0, Clip 30, Rld 1 Full)</p>",
+    "specialRules": "<p>Traits: Bike, Wheeled</p>\n<p>Versions that can be armed are Scarce Availability.</p>",
+    "traitsText": "Traits: Bike, Wheeled\nVersions that can be armed are Scarce Availability.",
+    "availability": "average",
+    "source": "Dark Heresy 2E: Core"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "ECbQPh0zEpAzqXRt"
+}

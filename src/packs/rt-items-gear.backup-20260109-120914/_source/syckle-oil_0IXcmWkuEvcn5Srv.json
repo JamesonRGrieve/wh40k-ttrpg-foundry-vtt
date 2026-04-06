@@ -1,0 +1,30 @@
+{
+  "name": "Syckle Oil",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "0.5kg",
+    "availability": "An oil that when applied to a metal surface makes it almost frictionless, preventing rust and tarnishing. Can be used to lubricate simple mechanisms. If applied to a weapon, for the next 12 hours or 1d10+4 attacks, reroll any test that would result in a break or jam (must keep new result).",
+    "cost": "One use.",
+    "effects": "Scarce",
+    "notes": "12 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 12 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0IXcmWkuEvcn5Srv"
+}

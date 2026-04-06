@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000uuhg6x",
+  "name": "Energy Critical - Body",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_body_consolidated",
+    "damageType": "energy",
+    "bodyPart": "body",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>A blow to the target’s body steals the air from his lungs. The target can take only a Half Action on his next turn.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The blast punches the air from the target’s body. He must make a Challenging (+0) Toughness test or be knocked Prone.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The attack cooks the flesh on the chest and abdomen. He suffers 2 levels of Fatigue and [[1d5]] Toughness damage.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The energy ripples all over the character, scorching his body with horrid third-degree burns. The target suffers [[1d10]] levels of Fatigue, and can only take a Half Action on his next turn.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>The fury of the attack forces the target to the ground, helplessly covering his face and keening in agony. The target is knocked Prone and must make a Challenging (+0) Agility test or catch fire. The target must also make a Challenging (+0) Toughness test or be Stunned for 1 round.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>Struck by the full force of the attack, the target is sent reeling to the ground; smoke spiraling out from the wound. The target suffers [[1d5]] levels of Fatigue, is knocked Prone, and is Stunned for [[1d10]] rounds. In addition, he must make a Challenging (+0) Agility test or catch fire.</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>The intense power of the energy attack cooks the target’s organs, burning his lungs and heart with intense heat. The target is Stunned for [[2d10]] rounds, and his Toughness characteristic is permanently reduced by [[1d10]].</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>As the attack washes over the target, his skin turns black and peels off, while melted fat seeps from his clothing and armour. The target is Stunned for [[2d10]] rounds. His Strength, Toughness, and Agility characteristics are reduced by half (rounding up) until he receives medical treatment. Permanently reduce the character’s Fellowship characteristic by [[2d5]].</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The target is completely encased in fire, melting his skin and bursting his eyes like superheated eggs. He falls to the ground a lifeless corpse, blackened and charred with horrid burns.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The target is completely encased in fire, melting his skin and bursting his eyes like superheated eggs. He falls to the ground a lifeless corpse, blackened and charred with horrid burns. If the target is carrying any ammunition, roll [[1d10]]: on a result of 6 or higher, it explodes. Each target within [[1d5]] metres suffers a single hit for [[1d10+5]] Explosive damage to a randomly determined Hit Location. If the target carried any grenades or missiles, these detonate on the character’s corpse with their normal effects one round after his demise.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Body (Severity 10)</strong></p><p>The target is completely encased in fire, melting his skin and bursting his eyes like superheated eggs. He falls to the ground a lifeless corpse, blackened and charred with horrid burns. If the target is carrying any ammunition, roll [[1d10]]: on a result of 6 or higher, it explodes. Each target within [[1d5]] metres suffers a single hit for [[1d10+5]] Explosive damage to a randomly determined Hit Location. If the target carried any grenades or missiles, these detonate on the character’s corpse with their normal effects one round after his demise.</p>",
+      "chat": "",
+      "summary": "Energy Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

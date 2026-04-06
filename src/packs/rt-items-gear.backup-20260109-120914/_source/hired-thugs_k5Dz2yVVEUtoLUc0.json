@@ -1,0 +1,30 @@
+{
+  "name": "Hired Thugs",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Simple Thugs requested to beat someone up or protect a location. Craftsmanship determines their equipment and loyalty. However they are unlikely to be particularly skilled or valuable.",
+    "cost": null,
+    "effects": "Ubiquitous",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Ubiquitous</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k5Dz2yVVEUtoLUc0"
+}

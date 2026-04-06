@@ -1,0 +1,64 @@
+{
+  "name": "Almace's Last Conquest [Master Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "system": {
+    "identifier": "almaces-last-conquest-master",
+    "class": "melee",
+    "type": "exotic",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "rending",
+      "bonus": 5,
+      "penetration": 7
+    },
+    "special": [
+      "tearing",
+      "unbalanced"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 16,
+    "availability": "unique",
+    "craftsmanship": "master",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Tearing, Unbalanced</p><p><b>Note:</b> Relic Weapon, Cannot be acquired, only earned. Two-handed weapon. Gain Hatred talents that fit current enemies. When spending a fate point in addition to normal effects roll 1d10: 1-2: Gain 1 Corruption, Frenzy and inflict Blood Loss on any damaged enemy  for 1d10 rounds. 3-8: +1d10 damage until end of encounter. 9-10: Gain Fearless Talent, and weapon gains Cleansing Fire and Sanctified for 1d10 rounds.</p>"
+    },
+    "modifications": [],
+    "notes": "Relic Weapon, Cannot be acquired, only earned. Two-handed weapon. Gain Hatred talents that fit current enemies. When spending a fate point in addition to normal effects roll 1d10: 1-2: Gain 1 Corruption, Frenzy and inflict Blood Loss on any damaged enemy  for 1d10 rounds. 3-8: +1d10 damage until end of encounter. 9-10: Gain Fearless Talent, and weapon gains Cleansing Fire and Sanctified for 1d10 rounds.",
+    "source": "RT: Faith and Coin",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "f21383c79886a3e0"
+}

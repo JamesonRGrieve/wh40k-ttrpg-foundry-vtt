@@ -1,0 +1,193 @@
+{
+  "name": "Navigator Mutations",
+  "img": "icons/svg/d20.svg",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "TBMiQ9nMk4I1tEBX",
+      "type": 0,
+      "text": "<p><b>Strangely Jointed Limbs</b>: Your Limbs have extra joints that articulate strangely. Gain Contortionist Skill as a Trained Basic Skill, or gain Talented (Contortionist) Talent if you already have the skill.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        15
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "6OJQbsnsF5i0eNbb",
+      "type": 0,
+      "text": "<p><b>Elongated Form</b>: You become incredibly tall and thin, permenantely lose 1d5 Toughness. Reroll if you have the Bloated Form Mutation</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        16,
+        30
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "6sEhA9B7m32aSzQx",
+      "type": 0,
+      "text": "<p><b>Pale and Hairless Flesh</b>: Your Skin is a pale white, marbled with veins, and without any hair.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        31,
+        45
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Uje0lLIgIzwP5Of4",
+      "type": 0,
+      "text": "<p><b>Eyes as Dark as the Void</b>: Your eyes are completely black, with no iris. Gain the Dark Sight Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        46,
+        55
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "LnAUEsk3AuO7vBr8",
+      "type": 0,
+      "text": "<p><b>Withered Form</b>: Your Body becomes withered as your flesh hangs from your bones. Permenantely reduce Strength by 10 and halve movement rates. Reroll if you have the Bloated Form Mutation.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        56,
+        60
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "X794FigW98ZpDqbq",
+      "type": 0,
+      "text": "<p><b>Bloated Form</b>: Your Body becomes grossly bloated and your limbs thicken. Gain  +5 Wounds and the Sturdy Trait, but you may no longer run. Reroll if you have Elongated Form or Withered Form Mutation.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        61,
+        65
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "bRojx75fxpyA9ulA",
+      "type": 0,
+      "text": "<p><b>Membranous Growths</b>: Membranes grow between your skin and digits, sagging and folding from your flesh. Suffer permenant -5 to Fellowship.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        66,
+        70
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "mXCgeumaezO3twZr",
+      "type": 0,
+      "text": "<p><b>Inhuman Visage</b>: Your face is devoid of human features, your nose is a pair of slits, ears are small holes, and eyes are unblinking. Gain Fear (1) Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        71,
+        75
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "br6qWzQNtuEKPVvg",
+      "type": 0,
+      "text": "<p><b>Fingers like Talons</b>: Your fingerbones grow into sharp and hardened talons. Gain Natural Weapons Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        76,
+        80
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "hOF9RCYRambFMArF",
+      "type": 0,
+      "text": "<p><b>Teeth as Sharp as Needles</b>: Your Mouth fills with hundreds of fine, pointed teeth. Gain Natural Weapons Trait, suffer permenant -5 to Fellowship.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        81,
+        85
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "wHL75Yqxi6aPJU0d",
+      "type": 0,
+      "text": "<p><b>Disturbing Grace</b>: You move with an unpleasent yet fluid grace. Gain Unnatural Agility (x2) Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        86,
+        90
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "2WAHLHM3F6UR45FP",
+      "type": 0,
+      "text": "<p><b>Strange Vitality</b>: Your wounds bleed a translucent fluid, close quickly, and sickeningly knit back together even after being horrifically broken. Gain Regeneration Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        91,
+        95
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "bbybAymBpHWKxi7C",
+      "type": 0,
+      "text": "<p><b>Unnatural Presence</b>: Those around you feel unpleasent sensations, a clawing touch, an invisible pressure, a metallic tang, or so on. -10 to positive social interactions, +10 to intimitating or fear-inducing interactions.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        96,
+        0
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    }
+  ],
+  "flags": {},
+  "_id": "RLMfXUhtRP8VInir"
+}

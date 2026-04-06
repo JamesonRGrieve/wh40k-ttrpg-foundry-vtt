@@ -1,0 +1,66 @@
+{
+  "name": "Beyond the Pale (Lost Worlds)",
+  "type": "talent",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "identifier": "beyond-the-pale-lost-worlds",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "26"
+    },
+    "description": {
+      "value": "<p><strong>Beyond the Pale:</strong> You have always been an explorer, travelling to places beyond the edges of the map. This time, however, you may have gone too far. You witnessed something that man was not meant to see and came back changed as a result.</p><p>Perhaps you somehow survived a warp storm, or maybe you were pulled into some other part of the galaxy where man has yet to set foot. Regardless, the experience has changed you and your perceptions—perhaps not for the better.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Select two Forbidden Lore Skills as Trained (or gain +10 to two Forbidden Lore Skills already possessed). However, gain +1d5 Corruption Points and +1d5 Insanity Points.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Lost Worlds Origin (100 XP)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 100,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Costs 100 XP from starting experience. Gain 1d5 Corruption and 1d5 Insanity Points. Choose two Forbidden Lore skills.",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Forbidden Knowledge",
+          "description": "<p>Choose two Forbidden Lore Skills as Trained (or gain +10 to two Forbidden Lore Skills already possessed). Options include: Archeotech, Daemonology, Heresy, Psykers, The Warp, Xenos.</p>"
+        },
+        {
+          "name": "Touched by the Beyond",
+          "description": "<p>Gain 1d5 Corruption Points and 1d5 Insanity Points from your experience beyond the pale.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LW00000000000003"
+}

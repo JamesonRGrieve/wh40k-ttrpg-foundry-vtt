@@ -1,0 +1,30 @@
+{
+  "name": "Sour Mud",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "1kg",
+    "availability": "A substance found on the beds of dormant tar pits, used by shamans in healing poultices, or diluted in hot water to make a foul-tasting drink that reduces fevers.\nProvides +10 to Medicae Tests when treating diseases and fevers, can be used to stop Blood Loss as a Full Action.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "45 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 45 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "plPFtTztjM0A0NQJ"
+}

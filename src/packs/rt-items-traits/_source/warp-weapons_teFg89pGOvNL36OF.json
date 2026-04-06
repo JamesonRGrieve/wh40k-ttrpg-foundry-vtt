@@ -1,0 +1,28 @@
+{
+  "name": "Warp Weapons",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>This Creature's Natural Weapons ignore AP from Armour or Cover. Forcefields and Warded/Holy armour work as intended.</p>"
+    },
+    "benefit": "<p>This Creature's Natural Weapons ignore AP from Armour or Cover. Forcefields and Warded/Holy armour work as intended.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "teFg89pGOvNL36OF"
+}

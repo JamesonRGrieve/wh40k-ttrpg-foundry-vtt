@@ -1,0 +1,54 @@
+{
+  "name": "Gun-Cutter",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "space",
+    "size": 4,
+    "sizeDescriptor": "25m / 14AU's",
+    "faction": "",
+    "subfaction": "",
+    "type": "skimmer",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 40,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 35,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 30,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 2000,
+      "notes": ""
+    },
+    "crew": {
+      "required": 4,
+      "notes": "Pilot, Co-Pilot (Optional), Enginseer, 2 Gunners."
+    },
+    "passengers": 0,
+    "manoeuverability": 45,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Pilot: 2x Long-Barrelled Autocannons (Front, 450m/5AU, Heavy, S/2/5, 4d10+5 I, Pen 4, Clip 500, Reload 2 Full)</p>\n<p>Gunner: 2x Twin-Linked Heavy Bolters (Front-Left or Front-Right, 120m/2AU, Heavy, -/-/10, 2d10 X, Pen 5, Clip 400, Reload 3 Full).</p>",
+    "specialRules": "<p>Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up.</p>",
+    "traitsText": "Is a Spacecraft, can act as Flyer or Skimmer in Atmosphere, following relevent rules and work in and out of atmosphere. When receiving Critical Hits not as a result of Righteous Fury, halve the result, rounding up.",
+    "availability": "veryrare",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "GTGlpEe7OMJEZd3R"
+}

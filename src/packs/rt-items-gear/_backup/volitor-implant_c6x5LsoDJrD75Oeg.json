@@ -1,0 +1,30 @@
+{
+  "name": "Volitor Implant",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Compells user to do/not do things, such as stay within set area, not reveal certain information, etc. Disobeying shuts down brain, knocking them out or killing them.",
+    "cost": "Common for bodyguards.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c6x5LsoDJrD75Oeg"
+}

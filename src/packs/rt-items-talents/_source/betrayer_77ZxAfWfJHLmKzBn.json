@@ -1,0 +1,69 @@
+{
+  "name": "Betrayer",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Once per game session, character can killed an allied NPC (an NPC that trusts and is friendly towards them), or one of their own Minions. They gain +10 to their next Infamy Test if killing an NPC, or +20 if a Minion. This may have consequences as determined by GM.</p>"
+    },
+    "tier": 2,
+    "isPassive": true,
+    "isRollable": true,
+    "benefit": "<p>Once per game session, character can killed an allied NPC (an NPC that trusts and is friendly towards them), or one of their own Minions. They gain +10 to their next Infamy Test if killing an NPC, or +20 if a Minion. This may have consequences as determined by GM.</p>",
+    "aptitudes": [
+      "Unaligned"
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Cold Hearted, Intimidate",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "identifier": "betrayer",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "combat": [
+          {
+            "key": "attack",
+            "value": 20,
+            "condition": "When attacking an unsuspecting ally or someone who trusts you",
+            "icon": "fa-solid fa-dagger"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "77ZxAfWfJHLmKzBn"
+}

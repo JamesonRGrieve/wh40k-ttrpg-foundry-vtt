@@ -1,0 +1,30 @@
+{
+  "name": "The Emperor's Tarot",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "0.5kg",
+    "availability": "Can be used by Diviniation Discipline Psyker. Once per session, spend 3d10 minutes and make +0 Trade (Soothsayer) Test, targeting present indivudal or one of their personal belongings. If successful, individual gains one Temporary Fate point that can be spent, but not burnt for rest of session. Tarot may also provide insight into future events.",
+    "cost": "A set of cards used to fortell the future, or if used by a psyker, potentially change it.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IdGiVZvEReU6kWCA"
+}

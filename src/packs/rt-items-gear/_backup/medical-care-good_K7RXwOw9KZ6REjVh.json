@@ -1,0 +1,30 @@
+{
+  "name": "Medical Care: Good",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Trained Doctor or Med-Serivtor with recognised skill\nInt 50, Medicae +10",
+    "cost": "For Extended Care, Cost is per day. Cost of service may vary with location and the honesty/charitability of those that offer it.",
+    "effects": "Rare",
+    "notes": "150 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 150 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "K7RXwOw9KZ6REjVh"
+}

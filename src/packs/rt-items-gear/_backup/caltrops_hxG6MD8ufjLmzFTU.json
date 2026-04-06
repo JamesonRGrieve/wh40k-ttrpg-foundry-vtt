@@ -1,0 +1,30 @@
+{
+  "name": "Caltrops",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "0.1kg",
+    "availability": "Covers 2 square meres of space. Anyone walking on them without at least 1 AP on their feet counts as being hit by a weapon with the Toxic Quality and must make a -10 Agility Test. If passed their movement is halved, if failed their movement is quartered. This speed reduction lasts until the victim receives medical treatment.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "6 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 6 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hxG6MD8ufjLmzFTU"
+}

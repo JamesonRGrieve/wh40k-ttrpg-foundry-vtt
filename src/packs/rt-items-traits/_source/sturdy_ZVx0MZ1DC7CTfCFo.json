@@ -1,0 +1,28 @@
+{
+  "name": "Sturdy",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>+20 to tests made to resist grappling and the Takedown Talent</p>"
+    },
+    "benefit": "<p>+20 to tests made to resist grappling and the Takedown Talent</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZVx0MZ1DC7CTfCFo"
+}

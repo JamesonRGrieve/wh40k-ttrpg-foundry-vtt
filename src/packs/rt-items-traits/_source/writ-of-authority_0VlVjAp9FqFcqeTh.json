@@ -1,0 +1,28 @@
+{
+  "name": "Writ of Authority",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "elite",
+    "requirements": "Elite Advance, Non-mutant Human.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Character is a senior member of a relevent organisation within the Imperium, and often carries a symbol or icon to serve as proof of the Authority this gives. Gain +10 to Command and Intimidate Tests when dealing with any that understand and either respect or fear the Organisation in question if you identify yourself as the bearer of such authority.</p>"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true,
+    "benefit": "<p>Character is a senior member of a relevent organisation within the Imperium, and often carries a symbol or icon to serve as proof of the Authority this gives. Gain +10 to Command and Intimidate Tests when dealing with any that understand and either respect or fear the Organisation in question if you identify yourself as the bearer of such authority.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0VlVjAp9FqFcqeTh"
+}

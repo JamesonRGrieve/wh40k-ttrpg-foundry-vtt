@@ -1,0 +1,68 @@
+{
+  "name": "Outraged Scion (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/holy-shield.svg",
+  "system": {
+    "identifier": "outraged-scion-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "31"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"You stand apart from your predecessors and have made yourself an example of purity to spite their foul memory. When the purges came and claimed your living relatives, you led the Inquisition to their door, glad to see them receive the punishment they deserved.\"</em></p></blockquote><p>Now free to pursue your own legacy, you hope above all else that you can leave the taint of your lineage behind.</p><p>Your rejection of your family's corruption was absolute. You turned them over to the Inquisition yourself, and in doing so learned much of the horrors they had perpetrated. That knowledge, while terrible, has made you stronger and more resilient against the temptations of the warp.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Armour of Contempt talent. Additionally, you may select two Forbidden Lore skills from the following list to treat as untrained Basic Skills: Daemonology, Heresy, Mutants, Pirates, Psykers, The Warp, or Xenos.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Accursed Be Thy Name lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Armour of Contempt and two Forbidden Lores as Basic skills.",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Armour of Contempt",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.KX2Dp1gAZcPXbZMI"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Learned from Their Sins",
+          "description": "<p>Choose two Forbidden Lore skills from this list: Daemonology, Heresy, Mutants, Pirates, Psykers, The Warp, or Xenos. These become Basic Skills for you (normally they are Advanced). You can attempt tests with these skills untrained at half your Intelligence value. This represents the dark knowledge you gained while investigating your family's crimes.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000007"
+}

@@ -480,7 +480,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         if (!identifier) return;
 
         // Try to find the quality in the weapon qualities compendium
-        const pack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
+        const pack = game.packs.get('wh40k-rpg.rt-items-weapon-qualities');
         if (!pack) {
             ui.notifications.warn('Weapon qualities compendium not found.');
             return;

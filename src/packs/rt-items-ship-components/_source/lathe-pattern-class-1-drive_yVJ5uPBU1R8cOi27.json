@@ -1,0 +1,41 @@
+{
+  "name": "Lathe Pattern Class 1 Drive",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "hullType": [
+      "transport"
+    ],
+    "effect": "Generates power rather than using it.",
+    "availability": "rare",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Generates power rather than using it.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "plasmaDrive",
+    "essential": true,
+    "power": {
+      "used": 0,
+      "generated": 40
+    },
+    "space": 12,
+    "shipPoints": 1,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "lathe-pattern-class-1-drive"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yVJ5uPBU1R8cOi27"
+}

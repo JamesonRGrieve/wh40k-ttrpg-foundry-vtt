@@ -1,0 +1,52 @@
+{
+  "name": "Chem Geld",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Immune to Seduction, Charm Tests get -10 against you. Gain 1 Insanity Point.\nTalent is renamed to Cold Hearted in later editions.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Immune to Seduction, Charm Tests get -10 against you. Gain 1 Insanity Point.\nTalent is renamed to Cold Hearted in later editions.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "-",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "chemGeld",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "insanity": 1
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Immune to Seduction",
+          "description": "<p>Immune to Seduction. Charm Tests against you have -10. Gain 1 Insanity Point when taking this talent.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sL4iIZrk0JRVATU4"
+}

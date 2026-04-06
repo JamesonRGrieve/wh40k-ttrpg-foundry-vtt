@@ -1,0 +1,28 @@
+{
+  "name": "Clumsy",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Ogryn (Innate)",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character cannot use any weapon that does not have the Ogryn-Proof Quality.</p>"
+    },
+    "benefit": "<p>Character cannot use any weapon that does not have the Ogryn-Proof Quality.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "35vUtTPVadvOXAkk"
+}

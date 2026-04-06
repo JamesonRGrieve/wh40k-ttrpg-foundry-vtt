@@ -1,0 +1,30 @@
+{
+  "name": "Sleep Dust",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "0.5kg",
+    "availability": "Tasteless powder, once inhaled on ingested make -10 Toughness test or, 1d10 minutes later, fall into a deep sleep for 1d5-TB hours.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "100 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 100 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "97W049S4YnYz9vTU"
+}

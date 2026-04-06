@@ -1,0 +1,30 @@
+{
+  "name": "Luminum Tats",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Luminous and sometimes animated Tatoos or markings engraved onto the skin. Elaborate ones may often be the work of Hereteks, and the more Puritanical Tech-Priests may favour their forcible removal should it come to their knowledge.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "10-100 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10-100 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RVaCZ3thqdxDj08W"
+}

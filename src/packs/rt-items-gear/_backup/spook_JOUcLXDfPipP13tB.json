@@ -1,0 +1,30 @@
+{
+  "name": "Spook",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] If character doesn't have Psy Rating, makes +0 Willpower test or gains 1d5 Insanity Points, on success gains a psychic power from list with Psy Rating 1 for 1d5 hours. If Character has Psy Rating 1+ makes +0 Willpower Test or gains 1 Insanity, if success adds +1 to Psy Rating for 1 hour, but +25 to any Psychic Phenomena.",
+    "cost": "1-4 Assail, 5-8 Crush, 9-12 Dominate, 13-16 Endurance, 17-20 Enfeeble, 21-24 Fire Shield, 25-28 Flame Breath, 29-32 Foreboading,  33-36 Hallucination, 37-40 Mental Fortitude, 41-44 Misfortune, 45-48 Objuration Mechanicum, 49-52 Perfect Timing, 53-56 Prescience, 57-60 Psychic Shriek, 61-64 Scrier's Gaze, 65-68 Shockwave, 69-72 Smite, 73-76 Spontaneous Combustion, 77-80 Telekine Dome, 71-84 Vortex of Doom, 85-88 Roll twice, gain both powers, 89-92 pick any one power, 93-96 Gain 1 Insanity and reroll, 97-100 Gain 3 Insanity.\n\nTaking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Rare",
+    "notes": "295 T",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 295 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JOUcLXDfPipP13tB"
+}

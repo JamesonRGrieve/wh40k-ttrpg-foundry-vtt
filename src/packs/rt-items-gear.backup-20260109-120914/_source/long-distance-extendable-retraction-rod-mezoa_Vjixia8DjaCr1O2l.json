@@ -1,0 +1,30 @@
+{
+  "name": "Long-Distance Extendable Retraction Rod (Mezoa)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "5kg",
+    "availability": "30cm metal rod that can telescopically extend up to 4 metres on pressing an activation button. Given reliable anchors it can hold 150kg without bending or stress. Good Craftsmanship: 5m, 175kg, Best: 6m, 200kg. In 30cm form, can be Melee Weapon",
+    "cost": "Weapon Stats: Melee;1d10 I; Pen 0\nEveryone needs a good stick.",
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Stars of Inquity",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Vjixia8DjaCr1O2l"
+}

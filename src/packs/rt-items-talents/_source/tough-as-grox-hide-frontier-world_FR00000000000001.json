@@ -1,0 +1,57 @@
+{
+  "name": "Tough as Grox-Hide (Frontier World)",
+  "type": "talent",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "identifier": "tough-as-grox-hide-frontier-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "10"
+    },
+    "description": {
+      "value": "<p><strong>Tough as Grox-Hide:</strong> Due to their hardy physiques and general surliness, Frontier worlders begin with one additional wound.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain +1 to your maximum Wounds.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Frontier World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 1,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants +1 Wound",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FR00000000000001"
+}

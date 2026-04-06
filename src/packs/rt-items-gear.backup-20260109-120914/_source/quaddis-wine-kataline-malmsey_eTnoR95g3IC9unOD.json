@@ -1,0 +1,30 @@
+{
+  "name": "Quaddis Wine (Kataline Malmsey)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "Highly Regarded Wines, the most expensive, said to provide such pleasure as to be lethal to those over-indulgent to its dreamlike tastes.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "10000+ T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 10000+ T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eTnoR95g3IC9unOD"
+}

@@ -1,0 +1,66 @@
+{
+  "name": "Furious Assault",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "furiousAssault",
+    "category": "combat",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>On a successful hit of an All Out Attack, can use Reaction to make another attack with the same bonuses/penalties as the original attack.\nNote using a reaction in this way means the character cannot Parry or Dodge until their next turn.</p>"
+    },
+    "tier": 2,
+    "benefit": "<p>On a successful hit of an All Out Attack, can use Reaction to make another attack with the same bonuses/penalties as the original attack.\nNote using a reaction in this way means the character cannot Parry or Dodge until their next turn.</p>",
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence",
+      "Khorne"
+    ],
+    "prerequisites": {
+      "text": "Weapon Skill 35",
+      "characteristics": {
+        "weaponSkill": 35
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Bonus Attack",
+          "description": "<p>After successful All Out Attack, use Reaction to make another attack with same bonuses/penalties. You cannot Parry or Dodge until next turn.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HiALkCK6XUIOsTka"
+}

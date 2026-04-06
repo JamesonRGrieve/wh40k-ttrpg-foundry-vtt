@@ -1,0 +1,63 @@
+{
+  "name": "Criminal (Penal World)",
+  "type": "talent",
+  "img": "icons/svg/skull.svg",
+  "system": {
+    "identifier": "criminal-penal-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "14"
+    },
+    "description": {
+      "value": "<p><strong>Criminal:</strong> Those that spend any amount of time on a penal world gain a skewed outlook when it comes to the morality of the Imperium, and have a less than savory reputation amongst Imperial authorities. Conversely, they suffer a −20 penalty on Interaction Tests when dealing with the following organisations: Adeptus Arbites, Ecclesiarchy, Enforcers, and the Military should his home world become known (at the GM's discretion). Also, should this status ever become known, the Explorer may find themselves under the scrutiny of local law enforcement and underworld crime bosses.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You suffer −20 to Interaction Tests with Adeptus Arbites, Ecclesiarchy, Enforcers, and Military if your penal world origin is known.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Penal World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "condition": "Interaction Tests with Imperial authorities (if origin known)",
+            "modifier": -20,
+            "type": "Fellowship Test"
+          }
+        ]
+      }
+    },
+    "notes": "−20 to Interaction Tests with authorities if penal world origin known",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PW00000000000002"
+}

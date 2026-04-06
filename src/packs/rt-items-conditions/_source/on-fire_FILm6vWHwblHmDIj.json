@@ -1,0 +1,40 @@
+{
+  "name": "On Fire",
+  "type": "condition",
+  "img": "icons/svg/fire.svg",
+  "system": {
+    "identifier": "on-fire",
+    "nature": "harmful",
+    "effect": "<p>An on-fire character suffers 1d10 Energy damage (ignoring armour and Toughness) at the start of each of their turns. The character must use a Full Action and pass an Agility Test to extinguish the flames.</p>",
+    "removal": "<p>Removed by passing an Agility Test as a Full Action, or by allies using a Full Action to extinguish the flames automatically.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>An on-fire character suffers 1d10 Energy damage (ignoring armour and Toughness) at the start of each of their turns. The character must use a Full Action and pass an Agility Test to extinguish the flames.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "243",
+        "custom": ""
+      }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "2.0"
+    }
+  },
+  "_id": "FILm6vWHwblHmDIj"
+}

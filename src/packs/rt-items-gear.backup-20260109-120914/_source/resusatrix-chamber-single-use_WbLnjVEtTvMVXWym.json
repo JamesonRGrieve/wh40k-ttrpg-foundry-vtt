@@ -1,0 +1,30 @@
+{
+  "name": "Resusatrix Chamber (Single Use)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Allows for the one time use of a Resusatrix Chamber",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "200 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 200 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WbLnjVEtTvMVXWym"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Thurible",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "5kg",
+    "availability": "A Self-Heating Metal Censer suspended on chains. Used for Burning Incense, Drusine Incense gives special bonuses (see that item)",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 500 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UDRB0h0sScht4kTv"
+}

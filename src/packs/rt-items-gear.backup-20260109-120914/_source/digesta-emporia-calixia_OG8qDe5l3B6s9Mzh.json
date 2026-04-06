@@ -1,0 +1,30 @@
+{
+  "name": "Digesta Emporia Calixia",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "1.5kg",
+    "availability": "A Character who possesses or who has access to this book gains +10 to Commerce Tests, and may spend a Fate Point to pass any Scrutiny Tests made during Financial Negotiations with 1d5 Degrees of Success.",
+    "cost": "A Tome that contains thousands of legal rulings and opinions of Jurists, Scholars, and magisters pertaining to trade.",
+    "effects": "Average",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OG8qDe5l3B6s9Mzh"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Book of Saint Lucius",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "1.5kg",
+    "availability": " Once per Combat, user may take 2 Full actions and make +10 Fellowship Test to grant any ally that can hear them +20 to Tests to resist effects of Fear and Pinning until the end of the encounter. If user is killed, stunned, or the sermon interrupted, gives -20 instead.",
+    "cost": "A Tome that provides inspiration and guidance.",
+    "effects": "Average",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HBKqQqXoCvcQ771P"
+}

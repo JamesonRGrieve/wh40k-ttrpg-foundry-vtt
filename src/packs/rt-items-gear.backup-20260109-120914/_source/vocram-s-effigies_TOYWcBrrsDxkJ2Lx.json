@@ -1,0 +1,30 @@
+{
+  "name": "Vocram's Effigies",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "?",
+    "availability": "Busts of the Ancient 6 powerful leaders made of hand-quarried quartz gifted to them in a grand ceremony. As the legends went, as each leader died the busts were hidden from public viewing, and servants fear to be in their presence, claiming to hear the screams of their masters and visions of endless flames. The busts vanished soon after. After staring at a bust with total concentration for a length of time, a character may remove any number of Corruption Points, however in return they suffer the same amount of nonpermenant Willpower Damage, and gain twice that amount in Insanity Points. After each use, they must roll on the Malignancies Table, if gaining a malignancy they already possess, gain 1d10 insanity instead. Excessive use may cause addictions, facial deformities, or induced jealousy amongst others who wish to possess the bust.",
+    "cost": "A Profane Object of Legend. It cannot be acquired, it must be earned or found. ",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TOYWcBrrsDxkJ2Lx"
+}

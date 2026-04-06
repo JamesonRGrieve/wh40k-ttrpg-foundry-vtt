@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Artificer Bionics",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Improves any Exceptional Craftsmanship Cybernetic, increasing the bonus the bionic provides by +10 (EG: Bionic arms provide +20 to dextrious movements and strength instead of +10).\nIf a bionic does not provide a bonus, it now provides +10 to Characteristic Tests that directly relate to its use. (GM Discretion).",
+    "cost": "Iron Hands Chapter and Deathwatch Forgemasters only.",
+    "effects": "Famed",
+    "notes": "40 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 40 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "W5ayanvBzrxURhUS"
+}

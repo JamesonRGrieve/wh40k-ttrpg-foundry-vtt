@@ -1,0 +1,68 @@
+{
+  "name": "Rivals (Product of Upbringing)",
+  "type": "talent",
+  "img": "icons/svg/combat.svg",
+  "system": {
+    "identifier": "rivals-product-of-upbringing",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "25"
+    },
+    "description": {
+      "value": "<p><strong>Rivals:</strong> You have been scorned! Another family has wronged or insulted you and it's something you cannot let rest. You will pursue the matter until satisfaction has been had, even if that means taking payment in blood.</p><p>This is a personal matter for you, and the insult may only be slight. Whatever the case may be it's a matter for you to settle and you alone. Whenever you encounter a member of this rival faction the character attempts to visit retribution upon them.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Gain +3 Fellowship. Gain the Rival Talent (the rival being a group that the character has a rivalry with, subject to GM's approval). Whenever you encounter a member of this rival faction, you attempt to visit retribution upon them—a Difficult (−10) Willpower Test can be made to prevent this once per scene. You also gain the Peer Talent for an allied group that supports you in your rivalry.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "A Product of Upbringing Origin (100 XP)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 100,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {
+        "fellowship": 3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Costs 100 XP from starting experience. Work with GM to determine rival and peer factions.",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Bitter Rivalry",
+          "description": "<p>Work with the GM to determine the rival faction you have a vendetta against. You gain the Rival Talent for this group. Whenever you encounter a member of this rival faction, you attempt to visit retribution upon them—a Difficult (−10) Willpower Test can prevent this once per scene.</p>"
+        },
+        {
+          "name": "Allied Supporters",
+          "description": "<p>Work with the GM to determine the peer faction that supports you in your rivalry. You gain the Peer Talent for this allied group.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PU00000000000002"
+}

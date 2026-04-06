@@ -1,0 +1,30 @@
+{
+  "name": "Infantry Gear: 9-70 Entrenching Tool",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "2kg",
+    "availability": "A Folding Shovel for filling sandbags and digging trenches. Can be used as an improvised weapon (1d5+3 R, Pen 0, Primitive (8), Unwieldy)",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Average",
+    "notes": "15 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 15 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JKXLu7RrS7Qrjg1o"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Joint Reconfiguration Augmentations",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "2kg",
+    "availability": "Allows joints to rotate 360 Degrees, gives +20 to Contortionist Tests, +5 to Dodge Tests, and reduces time for Squeeze Through Special Action of Contortionist Skill by Half. When gaining however, permenantly reduces Strength and Toughness by 1d5. ",
+    "cost": "Some more ignorant individuals may mistake it as a mutation due to little obvious mechanical influence.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Stars of Inquity",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4JDI4eLm75oRyHK7"
+}

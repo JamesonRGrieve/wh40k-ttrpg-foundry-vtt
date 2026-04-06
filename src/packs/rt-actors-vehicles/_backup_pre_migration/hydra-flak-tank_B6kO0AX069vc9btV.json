@@ -1,0 +1,54 @@
+{
+  "name": "Hydra Flak Tank",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 5,
+    "sizeDescriptor": "15m",
+    "faction": "",
+    "subfaction": "",
+    "type": "tank",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 30,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 18,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 16,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 50,
+      "notes": ""
+    },
+    "crew": {
+      "required": 5,
+      "notes": "Commander, Driver, Comms Op, Gunner, Loader."
+    },
+    "passengers": 0,
+    "manoeuverability": 40,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Turret: 2x Hydra Autocannons  (1500m; S/–/6; 3d10+8 I; Pen 6; Clip 200; Reload 4 Full; Reliable, Tearing, Twin-Linked)</p>\n<p>Hull, one of: Front Facing Heavy Bolter, Heavy Flamer</p>\n<p>Pintle (Optional), one of: Heavy Stubber, Storm Bolter</p>\n<p>---</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>\n<p>Heavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)</p>\n<p>Storm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)</p>",
+    "specialRules": "<p>Traits: Anti-Air (Advanced), Enclosed, Tracked Vehicle</p>\n<p>Special Rules: When successfully hitting an enemy Aircraft with Autocannons, count as having performed a Half-Action Aim (+10 to hit) for all subsequent hits against that aircraft until aircraft is destroyed, new target fired at, or firing stopped. Both Autocannons must fire at same target, which is done as a single Attack Action.</p>",
+    "traitsText": "Traits: Anti-Air (Advanced), Enclosed, Tracked Vehicle\nSpecial Rules: When successfully hitting an enemy Aircraft with Autocannons, count as having performed a Half-Action Aim (+10 to hit) for all subsequent hits against that aircraft until aircraft is destroyed, new target fired at, or firing stopped. Both Autocannons must fire at same target, which is done as a single Attack Action.",
+    "availability": "rare",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "B6kO0AX069vc9btV"
+}

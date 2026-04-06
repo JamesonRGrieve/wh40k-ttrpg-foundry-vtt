@@ -1,0 +1,30 @@
+{
+  "name": "Glow-Slug of Dusk",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "0.1kg",
+    "availability": "Each Slug provides 1 metre radius of light, this effect can be stacked by putting multiple slugs together. They may require occasional dead meat to feed on.",
+    "cost": "Native to the Planet of Dusk",
+    "effects": "Rare",
+    "notes": "8 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 8 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FsqMhItLSB2Cz228"
+}

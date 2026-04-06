@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Digital Housing",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Upgrade to a Cybernetic Limb. Before each mission, character chooses one Astartes Digitial Weapon (Astartes Digital Flamer, Astartes Digital Laser, or Astartes Digital Melta). This weapon is integrated into the arm and follows all its normal rules, it cannot be dropped. Can't use arm for any other task when firing weapon.",
+    "cost": "Iron Hands Only",
+    "effects": "Famed",
+    "notes": "35 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 35 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Dok1dqCAM4p3zqDH"
+}

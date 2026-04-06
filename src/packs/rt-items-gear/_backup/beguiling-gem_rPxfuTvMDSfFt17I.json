@@ -1,0 +1,30 @@
+{
+  "name": "Beguiling Gem",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "Individuals engaged in melee with the Character must pass a -10 Willpower Test before taking any actions on their turn, if they fail they can only make Reactions. Once passed, they do not suffer the effects of this item for the rest of the encounter.",
+    "cost": "Heretical",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rPxfuTvMDSfFt17I"
+}

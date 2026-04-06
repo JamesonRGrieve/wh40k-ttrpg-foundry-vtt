@@ -1,0 +1,30 @@
+{
+  "name": "Heretic's Wake Deck",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "A Debased version of the Emperor's Tarot used to play a card game, a popular if illegal card game within the dark corners of hive cities.",
+    "cost": "Mildly Heretical",
+    "effects": "Scarce",
+    "notes": "10 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 10 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vfjvQThKSnR3AL4b"
+}

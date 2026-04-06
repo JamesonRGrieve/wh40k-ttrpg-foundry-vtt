@@ -1,0 +1,30 @@
+{
+  "name": "Torpor",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Lasts 1d10-Toughness Bonus of subject hours. During which time they count as Fatigued, and must also make a -20 Willpower Test to perform any action of their own volition. Psychic Characters reduce their Psy Rating by 4 while under its effects.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "500 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 500 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TtXcUSz3VL08LmBq"
+}

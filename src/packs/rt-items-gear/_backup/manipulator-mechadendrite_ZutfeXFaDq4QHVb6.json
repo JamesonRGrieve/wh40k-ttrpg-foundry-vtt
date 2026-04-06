@@ -1,0 +1,30 @@
+{
+  "name": "Manipulator Mechadendrite",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Shoulder-mounted crane, extends to 1.5m, gives +20 to Strength Tests, and can be locked to an anchour point as a free action. Can also be used as a 1d5+2 I Primitive club. Can't be used for fine manipulation.",
+    "cost": "Legally, limited to members of the Adeptus Mechanicus, requires relevent Mechadendrite Use Talent and Cyber-Mantle. May not have more Mechadendrites than Toughness Bonus",
+    "effects": "Very Rare",
+    "notes": "500 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 500 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZutfeXFaDq4QHVb6"
+}

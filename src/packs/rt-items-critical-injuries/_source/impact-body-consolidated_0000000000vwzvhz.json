@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000vwzvhz",
+  "name": "Impact Critical - Body",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_body_consolidated",
+    "damageType": "impact",
+    "bodyPart": "body",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>A blow to the target's body steals the breath from his lungs. The target can take only a Half Action on his next turn.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The impact punches the air from the target's body. He suffers 1 level of Fatigue and is knocked Prone.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The attack breaks a rib with a resounding crunch. The target is Stunned for 1 round and knocked Prone.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The blow batters the target, shattering a rib. The target suffers [[1d10]] Toughness damage and must make a Challenging (+0) Agility test or be knocked Prone.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>A solid blow to the chest pulverises the target's innards, and he momentarily doubles over in pain, clutching himself and crying in agony. The target is Stunned for 2 rounds and must make a Challenging (+0) Toughness test or suffer [[1d5]] levels of Fatigue.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The attack knocks the target sprawling on the ground. The target suffers [[1d5]] levels of Fatigue, is flung [[1d5]] metres away from the attacker (stopping if he hits a solid object), and falls Prone. He is Stunned for 2 rounds.</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>With an audible crack, [[1d5]] of the target's ribs break. Permanently reduce the target's Toughness characteristic by 1d5. Until he receives medical attention, at the end of each round in which this character took an action, roll 1d10. On a result of 1 or 2, the character dies instantly as a shattered rib pierces a vital organ.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The force of the attack ruptures several of the target's organs and knocks him down, gasping in wretched pain. The target suffers Blood Loss. Permanently reduce his Toughness characteristic by 1d10.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The target jerks back from the force of the attack, throwing back his head and spewing out a jet of blood before crumpling to the ground dead.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The target jerks back from the force of the attack, throwing back his head and spewing out a jet of blood before crumpling to the ground dead. The target's lifeless form is thrown [[1d10]] metres directly away from the attack. Any target in the corpse's path must make a Challenging (+0) Agility test or be knocked Prone.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Impact Damage to Body (Severity 10)</strong></p><p>The target jerks back from the force of the attack, throwing back his head and spewing out a jet of blood before crumpling to the ground dead. The target's lifeless form is thrown [[1d10]] metres directly away from the attack. Any target in the corpse's path must make a Challenging (+0) Agility test or be knocked Prone.</p>",
+      "chat": "",
+      "summary": "Impact Body injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

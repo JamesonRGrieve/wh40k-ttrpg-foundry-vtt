@@ -1,0 +1,30 @@
+{
+  "name": "Empyrean Brain Mine",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1kg",
+    "availability": "Attached to target with Grapple Action in Melee. If successful for 3 rounds at the start of target's turn they must make -20 Agility Test, if successful can only perform one Half Action a turn, if failed can perform no actions that round, including Reactions. Of removed causes 1d10+5 Rending Dmaage not reduced by Armour if removed. After 3 rounds device burns out and dislodges on its own.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RprTHyOhlbG4c38e"
+}

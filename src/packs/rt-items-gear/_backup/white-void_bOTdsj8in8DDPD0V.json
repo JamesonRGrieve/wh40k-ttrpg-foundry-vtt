@@ -1,0 +1,30 @@
+{
+  "name": "White Void",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] Space Cocaine. User gains +20 Willpower for 1d10 minutes per dose. \nIf used more than twice a week user must make -20 Willpower Test or become addicted. Addicted users often take drug daily, leading to eye discolouration. ",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bOTdsj8in8DDPD0V"
+}

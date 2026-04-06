@@ -1,0 +1,30 @@
+{
+  "name": "Salvation Auger (Superior)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "-",
+    "availability": " Good or higher Craftsmanship give more details and the exact nature of the hazard if a +10 Tech-Use Test is made. With a -10 Tech-Use Test, the exact nature of the danger can be found.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "80 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 80 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aiCPPghtwM8xb34P"
+}

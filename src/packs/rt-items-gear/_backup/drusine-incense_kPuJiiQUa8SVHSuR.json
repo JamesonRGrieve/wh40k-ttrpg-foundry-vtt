@@ -1,0 +1,30 @@
+{
+  "name": "Drusine Incense",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "0.5kg",
+    "availability": "When burned in a censer, it creates a three metre diameter cloud. Within the Cloud, characters with the Pure Faith Talent treat the Fear Rating of any Daemonc of Psyker that has the Fear Trait as Fear (1). Warp entities with the Incorporeal or Phase Traits lose them whilst in the cloud. Burns for 1d10+20 Minutes.",
+    "cost": "A Reddish Gold powder that is burned in a metal censer suspended on chains. Used for sacred rituals and to ward off evil.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kPuJiiQUa8SVHSuR"
+}

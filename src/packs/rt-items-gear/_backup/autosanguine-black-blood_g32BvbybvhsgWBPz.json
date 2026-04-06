@@ -1,0 +1,30 @@
+{
+  "name": "Autosanguine/Black Blood",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Known to the Mechanicus as Autosanguine. The Dark Mechanicus call it Black Blood. The User is always considered Lightly Wounded, and heals two wounds per day instead of 1.",
+    "cost": "Generally Mechanicus Only although available through illegal Heretek opeartions.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "g32BvbybvhsgWBPz"
+}

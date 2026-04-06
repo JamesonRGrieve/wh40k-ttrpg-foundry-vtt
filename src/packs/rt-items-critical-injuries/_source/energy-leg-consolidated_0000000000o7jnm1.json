@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000o7jnm1",
+  "name": "Energy Critical - Leg",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_leg_consolidated",
+    "damageType": "energy",
+    "bodyPart": "leg",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>The blast of energy sears the flesh and bone of the target's leg, leaving a nasty burn scar. The target cannot use the Run or Charge actions for 2 rounds.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The attack flash-fries the target's leg, cooking chunks of flesh into char. The target must pass a Challenging (+0) Toughness test or suffer 1 level of Fatigue.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>A solid blow to the leg sends currents of agony coursing through the target. The target suffers 1 level of Fatigue and is knocked Prone. Reduce his Movement by half (rounding up) for [[1d10]] rounds.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The blast causes a nasty compound fracture in the target's leg. Until the target receives medical attention, reduce his Movement by half (rounding up), and he cannot use the Run or Charge actions.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>The target's leg endures horrific burn damage, fusing clothing and armour with flesh and bone. The target suffers 1 level of Fatigue and is knocked Prone. Reduce his Movement by half (rounding up) for [[2d10]] rounds.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The attack burns the target's foot, charring the flesh and emitting a foul aroma. The target suffers 2 levels of Fatigue. He must also make a Challenging (+0) Toughness test. If he succeeds, reduce his Movement by half (rounding up) until he receives medical attention; if he fails, he suffers the Lost Foot condition (see page 243).</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>The energy attack fries the leg, leaving it a mess of blackened flesh. The leg is broken and until repaired, the target counts as having lost the leg. He suffers [[1d5]] levels of Fatigue. He must also make a Challenging (+0) Toughness test or be Stunned for 1 round. He now suffers the Lost Leg condition (see page 243).</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>Energy sears through the bone, causing the leg to be severed. The target suffers [[1d10]] levels of Fatigue and suffers Blood Loss. He must also make a Challenging (+0) Toughness test or be Stunned for 1 round. He now suffers the Lost Leg condition (see page 243).</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The force of the attack reduces the leg to little more than a chunk of sizzling gristle. The target must make a Challenging (+0) Toughness test or die from shock. He now suffers the Lost Leg condition (see page 243).</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>In a terrifying display of power, the leg immolates and thick fire consumes the target completely. He dies in a matter of agonizing seconds, his scorched corpse surrounded with smoke and flames.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Leg (Severity 10)</strong></p><p>In a terrifying display of power, the leg immolates and thick fire consumes the target completely. He dies in a matter of agonizing seconds, his scorched corpse surrounded with smoke and flames.</p>",
+      "chat": "",
+      "summary": "Energy Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

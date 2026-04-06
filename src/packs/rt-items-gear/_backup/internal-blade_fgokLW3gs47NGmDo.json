@@ -1,0 +1,30 @@
+{
+  "name": "Internal Blade",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Acts as Mono-Knife Embedded and hidden in skin until activated. Good Craftsmanship has Toxic Quality, Best Craftsmanship has +2 Damage and PEN, and Power Field Quality.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fgokLW3gs47NGmDo"
+}

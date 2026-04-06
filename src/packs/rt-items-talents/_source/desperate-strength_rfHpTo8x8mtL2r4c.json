@@ -1,0 +1,85 @@
+{
+  "name": "Desperate Strength",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "desperateStrength",
+    "category": "combat",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>When Character is Heavily Damaged (Suffered more than 2x Toughness Bonus Wounds), they gain Unnatural Strength (1) and Unnatural Toughness (1) (or increases these traits by 1). When character is suffering Critical Damage, they increase the value of these Traits by an additional +1. Character Still Determines damage threshold based off of original Toughness Bonus before this Trait is applied.</p>"
+    },
+    "tier": 3,
+    "benefit": "<p>When Character is Heavily Damaged (Suffered more than 2x Toughness Bonus Wounds), they gain Unnatural Strength (1) and Unnatural Toughness (1) (or increases these traits by 1). When character is suffering Critical Damage, they increase the value of these Traits by an additional +1. Character Still Determines damage threshold based off of original Toughness Bonus before this Trait is applied.</p>",
+    "aptitudes": [
+      "Toughness",
+      "Defence"
+    ],
+    "prerequisites": {
+      "text": "Toughness 50, Frenzy",
+      "characteristics": {
+        "toughness": 50
+      },
+      "skills": {},
+      "talents": ["Frenzy"]
+    },
+    "cost": 900,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "strength",
+            "value": 10,
+            "condition": "When Heavily Damaged (more than 2x TB wounds)",
+            "icon": "fa-solid fa-heart-crack"
+          },
+          {
+            "key": "toughness",
+            "value": 10,
+            "condition": "When Heavily Damaged (more than 2x TB wounds)",
+            "icon": "fa-solid fa-heart-crack"
+          },
+          {
+            "key": "strength",
+            "value": 10,
+            "condition": "When suffering Critical Damage (additional bonus)",
+            "icon": "fa-solid fa-skull"
+          },
+          {
+            "key": "toughness",
+            "value": 10,
+            "condition": "When suffering Critical Damage (additional bonus)",
+            "icon": "fa-solid fa-skull"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rfHpTo8x8mtL2r4c"
+}

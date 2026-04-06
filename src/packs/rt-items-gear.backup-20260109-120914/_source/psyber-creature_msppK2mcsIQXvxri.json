@@ -1,0 +1,30 @@
+{
+  "name": "Psyber Creature",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "A Psy-Bonded Familiar, its master able to directly control and experience the senses of the familiar. Must be Scrawny Sized or Smaller animal with Bestial Trait. Can be controlled within Willpower Bonus Kilometres. Creature gains +5 Intelligence and Willpower and +1 Wound. Doesn't innately require Psychic Powers to use.",
+    "cost": "Not Mutually exclusive with Cyber Familiar Upgrade. Does not include costs of creature for Cyber Creature Upgrade and any equipment or abilities that are also implanted.",
+    "effects": "Rare",
+    "notes": "5000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 5000 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "msppK2mcsIQXvxri"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Thorian Missal",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "1kg",
+    "availability": "A user that possesses this tome gains +20 to Common Lore (Ecclesiarchy, Imperial Creed), and Scholastic Lore (Imperial Creed) Tests.",
+    "cost": "Also known as the \"Book of Hours\" by Sebastian Thore, containing many prayers, liturgies, sermons, and a calender of feast days.",
+    "effects": "Average",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2AQ1WMG8XDAtzRAL"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Sanctified",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "sanctified",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 29</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>29</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rvRTbZTpMyB7iaXz"
+}

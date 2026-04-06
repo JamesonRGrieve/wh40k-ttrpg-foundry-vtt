@@ -1,0 +1,30 @@
+{
+  "name": "Deadfall",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Poison",
+    "weight": "0.5kg",
+    "availability": "When ingested must make -20 Toughness Test or immediately fall into a coma for 3d10 hours. Tests to find any signs of life on the user have -30 (Such as Awareness, Medicae, or Scrutiny). Can awaken someone under this effect with -20 Medicae Test, if failed can try again after an hour.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iQ3EIa7cmTCx8naD"
+}

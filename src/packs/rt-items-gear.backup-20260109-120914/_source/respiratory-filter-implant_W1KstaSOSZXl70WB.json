@@ -1,0 +1,30 @@
+{
+  "name": "Respiratory Filter Implant",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Makes user immune to inhaled toxic gases, contaminants and pollution.\nAlternate: Grants +20 to resist inhaled poisions, gas weapnons, and atmospheric toxins",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "W1KstaSOSZXl70WB"
+}

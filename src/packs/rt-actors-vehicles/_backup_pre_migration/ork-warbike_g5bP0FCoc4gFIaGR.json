@@ -1,0 +1,54 @@
+{
+  "name": "Ork Warbike",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": "18m",
+    "faction": "",
+    "subfaction": "",
+    "type": "bike",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 17,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 12,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 10,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 10,
+      "tactical": 85,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": "Driver"
+    },
+    "passengers": 0,
+    "manoeuverability": 8,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Dakkagun (Front, Range 75m, Heavy, -/-/7, 1d10+6, Pen 2, Clip 100, Reload 3 Full</p>",
+    "specialRules": "<p>This Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action. Can be equipped with one Kustom Bit: Armour Plates (+3 AP Front, Right, Left or Rear), or Red Paint Job (Add 1d10 to Tactical Movement each turn). The Driver of the Vehicle gains the Auto-Stabilised Trait for the purpose of firing this vehicles weapons, however if the driver moves in the same turn they fire, they do not gain the bonus to hit from full-auto fire.</p>",
+    "traitsText": "This Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action. Can be equipped with one Kustom Bit: Armour Plates (+3 AP Front, Right, Left or Rear), or Red Paint Job (Add 1d10 to Tactical Movement each turn). The Driver of the Vehicle gains the Auto-Stabilised Trait for the purpose of firing this vehicles weapons, however if the driver moves in the same turn they fire, they do not gain the bonus to hit from full-auto fire.",
+    "availability": "scarce",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "g5bP0FCoc4gFIaGR"
+}

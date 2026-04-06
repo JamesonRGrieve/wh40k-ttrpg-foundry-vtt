@@ -1,0 +1,24 @@
+{
+  "name": "Ceramite Plating",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Carapace or Power Armour",
+    "effect": "Add +3 AP vs weapons with the Flame or Melta Quality.",
+    "weight": "2kg",
+    "availability": "rare",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>Add +3 AP vs weapons with the Flame or Melta Quality.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZYWMifyG16LOGDfn"
+}

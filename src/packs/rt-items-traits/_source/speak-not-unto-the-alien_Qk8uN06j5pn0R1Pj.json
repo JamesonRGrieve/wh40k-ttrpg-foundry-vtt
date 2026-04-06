@@ -1,0 +1,28 @@
+{
+  "name": "Speak Not Unto the Alien",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Xenos Character (innate)",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>All Fellowship Tests when dealing with species not of your own have -20, as do other species making Fellowship Tests with yours. These tests may not apply between individuals with a significant trust in each other (GM is final Arbitrator). The presence of a Xenos Character aboard a human vessel is unsettling, giving -2 to Crew Morale.</p>"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": true,
+    "benefit": "<p>All Fellowship Tests when dealing with species not of your own have -20, as do other species making Fellowship Tests with yours. These tests may not apply between individuals with a significant trust in each other (GM is final Arbitrator). The presence of a Xenos Character aboard a human vessel is unsettling, giving -2 to Crew Morale.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qk8uN06j5pn0R1Pj"
+}

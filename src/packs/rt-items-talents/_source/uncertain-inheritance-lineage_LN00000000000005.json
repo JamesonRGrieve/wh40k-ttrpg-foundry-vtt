@@ -1,0 +1,74 @@
+{
+  "name": "Uncertain Inheritance (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/dagger.svg",
+  "system": {
+    "identifier": "uncertain-inheritance-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "31"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Your early years were spent in a constant state of intrigue, as you warred silently with your siblings, cousins and rivals to be the one who inherited the power and the prestige.\"</em></p></blockquote><p>Those who failed would be condemned to lives of lesser significance, always overshadowed by the one who claimed the prize. In the end, long-fought political battles and hard-won cunning paid off and you stand triumphant—and alone.</p><p>The struggle to claim your inheritance taught you to trust no one completely, always watching for the next rival or threat.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Paranoia talent and Deceive as a trained Skill. Additionally, you receive a +3 bonus to either Intelligence or Perception (your choice).</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "A Proud Tradition lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Paranoia talent, Deceive skill, and +3 to Int or Per.",
+    "grants": {
+      "skills": [
+        {
+          "name": "Deceive",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Paranoia",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.MXViwrGcKNBtNZjx"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Survivor of Intrigue",
+          "description": "<p>Choose either Intelligence or Perception. That characteristic receives a permanent +3 bonus, representing the mental sharpness you developed while navigating family politics.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000005"
+}

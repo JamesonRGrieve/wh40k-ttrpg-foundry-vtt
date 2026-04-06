@@ -1,0 +1,54 @@
+{
+  "name": "Centaur Carrier",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": "20m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 25,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 16,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 12,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 10,
+      "tactical": 110,
+      "notes": ""
+    },
+    "crew": {
+      "required": 2,
+      "notes": "Driver, Gunner (Pintle)"
+    },
+    "passengers": 0,
+    "manoeuverability": 25,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 5,
+      "value": 5,
+      "critical": 0
+    },
+    "weapons": "<p>Pintle: Heavy Stubber (100m; –/–/8; 1d10+4 I; Pen 3; Clip 75; Reload 2 Full)</p>\n<p>Fixed (Optional), one of: Front Facing Heavy Stubber, Heavy Flamer, or Grenade Launcher</p>\n<p>---</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>\n<p>Grenade Launcher (60m, S/-/-, 2 Rld 2 Full; Damage and Pen vary with grenade fired)</p>",
+    "specialRules": "<p>Traits: Enhanced Motive Systems, Open-Topped, Rugged, Tracked Vehicle</p>\n<p>Special Rules: Optional Fixed Weapon fired by passengers. Can tow artillery pieces up to Massive in size, but halves Tactical and Cruising Speed, and reduces Manoeuvrability to -10, takes 1 Minute to attach or detach Artillery, must remain stationary to do so.</p>",
+    "traitsText": "Traits: Enhanced Motive Systems, Open-Topped, Rugged, Tracked Vehicle\nSpecial Rules: Optional Fixed Weapon fired by passengers. Can tow artillery pieces up to Massive in size, but halves Tactical and Cruising Speed, and reduces Manoeuvrability to -10, takes 1 Minute to attach or detach Artillery, must remain stationary to do so.",
+    "availability": "scarce",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "vMwpF5rRzOcBydBl"
+}

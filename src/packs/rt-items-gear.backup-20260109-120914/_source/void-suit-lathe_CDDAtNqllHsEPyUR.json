@@ -1,0 +1,30 @@
+{
+  "name": "Void Suit (Lathe)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "30kg",
+    "availability": "Sustains user for 15 hours in the void. Includes Vox, Suit-patch kit, photo-visor, and clipharness + 10m of line. Gives Flyer (3) while in low/zero G environments. However -5 to Agility while wearing. 40% of breach if taking Rending/Explosive damage, can repair as full action with tape, etc.",
+    "cost": null,
+    "effects": "Scarce",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CDDAtNqllHsEPyUR"
+}

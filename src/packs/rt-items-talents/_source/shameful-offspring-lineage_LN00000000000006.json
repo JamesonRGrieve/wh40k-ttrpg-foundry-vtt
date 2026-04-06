@@ -1,0 +1,68 @@
+{
+  "name": "Shameful Offspring (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/dice.svg",
+  "system": {
+    "identifier": "shameful-offspring-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "31"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Burdened by expectations of glory and succession, you quickly sought the first escape you could find. While your siblings worked hard to earn the prestige of the family name, you indulged your whims and desires in an effort to avoid those responsibilities.\"</em></p></blockquote><p>Whether through cruel fate, inexplicable fortune or great calamity, however, you find yourself the only heir to the line, and your forebears shudder to think of the damage you might do to the family name now that you are in charge.</p><p>Your life of excess and reckless abandon has left its mark on both your capabilities and your psyche.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain your choice of Carouse or Gamble as a trained Skill, and the Decadence talent. You also gain either 1d5 Corruption Points or 1d5 Insanity Points (your choice) due to the toll your life of reckless revelry has taken.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "A Proud Tradition lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 150,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Carouse or Gamble, Decadence talent, and 1d5 Corruption or Insanity.",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Decadence",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.8rzBqEoffSgKTAp3"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Life of Excess",
+          "description": "<p>Choose either Carouse or Gamble - you gain that skill as trained. Your character also gains either 1d5 Corruption Points or 1d5 Insanity Points (your choice, rolled once at character creation). This represents the psychological and spiritual toll of years spent avoiding responsibility through hedonistic pursuits.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000006"
+}

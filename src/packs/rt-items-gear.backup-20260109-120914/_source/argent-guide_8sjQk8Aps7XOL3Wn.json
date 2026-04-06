@@ -1,0 +1,30 @@
+{
+  "name": "Argent Guide",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "1kg",
+    "availability": "Master Crafted Relic Divinatory Cards of the Silver Skulls Chapter. Librarians with Divination Powers may double the effect of a successful Invocation Test, and gain +1 to effective Psy Rating when using the Augury Psychic Power. If used by a Space Marine without Psy Rating, allows them to cast Augury as if possessing Psy Rating 1, although requiring a -10 Ciphers (Chapter Runes) Test.",
+    "cost": "Silver Skulls Chapter Only.",
+    "effects": "Distinguished",
+    "notes": "25 R",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8sjQk8Aps7XOL3Wn"
+}
