@@ -1,17 +1,17 @@
-import { RogueTraderBaseActor } from './base-actor.mjs';
+import { WH40KBaseActor } from './base-actor.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 import { SYSTEM_ID } from '../constants.mjs';
-import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
+import { WH40KSettings } from '../wh40k-rpg-settings.mjs';
 
 /**
  * Document class for npcV2 type actors.
  * Simplified NPC implementation without the full PC overhead.
  *
- * @extends {RogueTraderBaseActor}
+ * @extends {WH40KBaseActor}
  */
-export class RogueTraderNPCV2 extends RogueTraderBaseActor {
+export class WH40KNPCV2 extends WH40KBaseActor {
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -187,7 +187,7 @@ export class RogueTraderNPCV2 extends RogueTraderBaseActor {
 
         switch (item.type) {
             case 'weapon': {
-                if (game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
                     await this.rollCharacteristic(charKey, item.name);
                 } else {
@@ -196,7 +196,7 @@ export class RogueTraderNPCV2 extends RogueTraderBaseActor {
                 return;
             }
             case 'psychicPower': {
-                if (game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simplePsychicRolls)) {
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
                     await this.rollCharacteristic('willpower', item.name);
                 } else {
                     await DHTargetedActionManager.performPsychicAttack(this, null, item);
@@ -258,7 +258,7 @@ export class RogueTraderNPCV2 extends RogueTraderBaseActor {
         const { ignoreArmour = false, ignoreToughness = false } = options;
 
         // Mark actor as hit this round (for Good armour bonus tracking)
-        await this.setFlag('rogue-trader', 'hitThisRound', true);
+        await this.setFlag('wh40k-rpg', 'hitThisRound', true);
 
         // Calculate damage reduction
         let reduction = 0;

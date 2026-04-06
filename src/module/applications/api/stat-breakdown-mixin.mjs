@@ -116,7 +116,7 @@ export default function StatBreakdownMixin(Base) {
         #createPopover(anchor, breakdown) {
             // Create popover element
             const popover = document.createElement('div');
-            popover.className = 'rt-stat-breakdown-popover';
+            popover.className = 'wh40k-stat-breakdown-popover';
 
             // Build popover content
             const html = this.#buildPopoverHTML(breakdown);
@@ -154,34 +154,34 @@ export default function StatBreakdownMixin(Base) {
             const { label, base, modifiers, total } = breakdown;
 
             let html = `
-                <div class="rt-stat-breakdown-header">
+                <div class="wh40k-stat-breakdown-header">
                     <h4>${label}: ${total}</h4>
-                    <button type="button" class="rt-stat-breakdown-close" data-action="closeBreakdown">
+                    <button type="button" class="wh40k-stat-breakdown-close" data-action="closeBreakdown">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
-                <div class="rt-stat-breakdown-body">
-                    <div class="rt-stat-breakdown-row rt-stat-breakdown-row--base">
-                        <span class="rt-stat-breakdown-source">Base</span>
-                        <span class="rt-stat-breakdown-value">${base}</span>
+                <div class="wh40k-stat-breakdown-body">
+                    <div class="wh40k-stat-breakdown-row rt-stat-breakdown-row--base">
+                        <span class="wh40k-stat-breakdown-source">Base</span>
+                        <span class="wh40k-stat-breakdown-value">${base}</span>
                     </div>
             `;
 
             // Add modifiers
             if (modifiers && modifiers.length > 0) {
-                html += '<div class="rt-stat-breakdown-modifiers">';
+                html += '<div class="wh40k-stat-breakdown-modifiers">';
                 for (const modifier of modifiers) {
-                    const valueClass = modifier.value > 0 ? 'rt-stat-breakdown-value--positive' : 'rt-stat-breakdown-value--negative';
-                    const clickable = modifier.uuid ? 'rt-stat-breakdown-row--clickable' : '';
+                    const valueClass = modifier.value > 0 ? 'wh40k-stat-breakdown-value--positive' : 'wh40k-stat-breakdown-value--negative';
+                    const clickable = modifier.uuid ? 'wh40k-stat-breakdown-row--clickable' : '';
 
                     html += `
-                        <div class="rt-stat-breakdown-row ${clickable}" 
+                        <div class="wh40k-stat-breakdown-row ${clickable}" 
                              ${modifier.uuid ? `data-action="viewBreakdownSource" data-source-uuid="${modifier.uuid}"` : ''}>
-                            <span class="rt-stat-breakdown-source">
+                            <span class="wh40k-stat-breakdown-source">
                                 ${modifier.icon ? `<i class="${modifier.icon}"></i>` : ''}
                                 ${modifier.source}
                             </span>
-                            <span class="rt-stat-breakdown-value ${valueClass}">
+                            <span class="wh40k-stat-breakdown-value ${valueClass}">
                                 ${modifier.value > 0 ? '+' : ''}${modifier.value}
                             </span>
                         </div>
@@ -192,9 +192,9 @@ export default function StatBreakdownMixin(Base) {
 
             // Add total
             html += `
-                    <div class="rt-stat-breakdown-row rt-stat-breakdown-row--total">
-                        <span class="rt-stat-breakdown-source">Total</span>
-                        <span class="rt-stat-breakdown-value">${total}</span>
+                    <div class="wh40k-stat-breakdown-row rt-stat-breakdown-row--total">
+                        <span class="wh40k-stat-breakdown-source">Total</span>
+                        <span class="wh40k-stat-breakdown-value">${total}</span>
                     </div>
                 </div>
             `;

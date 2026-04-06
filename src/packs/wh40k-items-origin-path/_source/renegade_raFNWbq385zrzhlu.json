@@ -1,0 +1,109 @@
+{
+  "name": "Renegade",
+  "type": "originPath",
+  "img": "modules/game-icons-net/whitetransparent/breaking-chain.svg",
+  "system": {
+    "identifier": "renegade",
+    "step": "lureOfTheVoid",
+    "stepIndex": 3,
+    "description": {
+      "value": "<h2>Renegade</h2><blockquote><p><em>\"The Imperium survives and prospers in no small part due to the narrowness of its vision, and by the strictures imposed by high walls, harsh order, and obedient faith on worlds where no man looks beyond the simple rotes taught in childhood.\"</em></p></blockquote><p>A rebellious mind such as yours could not be so easily constrained, however, but you have had to pay a price for your freedom and have learned those high walls are there for a reason. Perhaps you were a visionary in search of strange knowledge, seeking answers to questions those around you never thought to ask, answers that proved dark indeed.</p><p>Or perhaps you denied the sanctity of the God-Emperor's church in your heart and fled its shackles of faith, or fought as part of a bloody revolt against the tyranny and injustice of your home world. In any case, you saw your only options to be escape or death. Now, the stars beyond await you with the possibility of freedoms and powers unguessed at and perils unknown.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Lure of the Void",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "talent",
+          "label": "Choose one renegade background",
+          "options": [
+            {
+              "label": "Recidivist: Enemy (Adeptus Arbites), Resistance (Interrogation), Concealment",
+              "value": "recidivist",
+              "description": "You gain the Enemy (Adeptus Arbites) and Resistance (Interrogation) Talents. You also gain Concealment as a trained Basic Skill.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Recidivist (Renegade)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.RN00000000000001"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Free-thinker: +3 Intelligence or Perception, −3 Willpower, Enemy (Ecclesiarchy)",
+              "value": "freethinker",
+              "description": "You gain your choice of +3 Intelligence or +3 Perception. You suffer −3 Willpower and gain the Enemy (Ecclesiarchy) Talent.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Free-thinker (Renegade)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.RN00000000000002"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Dark Visionary: Dark Soul, Forbidden Lore, 1d5+1 Corruption or Insanity",
+              "value": "visionary",
+              "description": "You suffer your choice of 1d5+1 Corruption Points or 1d5+1 Insanity Points. In return, you gain the Dark Soul Talent and Forbidden Lore (choose one) as a trained Basic Skill.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Dark Visionary (Renegade)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.RN00000000000003"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "30",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": [
+      3
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "raFNWbq385zrzhlu"
+}

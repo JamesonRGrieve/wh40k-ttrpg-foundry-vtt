@@ -25,10 +25,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
   /** @override */
   static DEFAULT_OPTIONS = {
     id: 'advancement-dialog-{id}',
-    classes: ['rogue-trader', 'advancement-dialog'],
+    classes: ['wh40k-rpg', 'advancement-dialog'],
     tag: 'div',
     window: {
-      title: 'RT.Advancement.Title',
+      title: 'WH40K.Advancement.Title',
       icon: 'fa-solid fa-chart-line',
       minimizable: true,
       resizable: true
@@ -50,7 +50,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
   /** @override */
   static PARTS = {
     dialog: {
-      template: 'systems/rogue-trader/templates/dialogs/advancement-dialog.hbs',
+      template: 'systems/wh40k-rpg/templates/dialogs/advancement-dialog.hbs',
       scrollable: ['.rt-adv__content']
     }
   };
@@ -91,7 +91,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
   /** @override */
   get title() {
     const careerLabel = game.i18n.localize(CONFIG.rt?.careers?.[this.careerKey]?.label ?? this.careerKey);
-    return game.i18n.format('RT.Advancement.TitleWithCareer', { career: careerLabel });
+    return game.i18n.format('WH40K.Advancement.TitleWithCareer', { career: careerLabel });
   }
 
   /* -------------------------------------------- */
@@ -154,9 +154,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     // Prepare tabs
     context.tabs = [
-      { id: 'characteristics', label: 'RT.Advancement.Tab.Characteristics', icon: 'fa-chart-bar', active: this.#activeTab === 'characteristics' },
-      { id: 'skills', label: 'RT.Advancement.Tab.Skills', icon: 'fa-book', active: this.#activeTab === 'skills' },
-      { id: 'talents', label: 'RT.Advancement.Tab.Talents', icon: 'fa-star', active: this.#activeTab === 'talents' }
+      { id: 'characteristics', label: 'WH40K.Advancement.Tab.Characteristics', icon: 'fa-chart-bar', active: this.#activeTab === 'characteristics' },
+      { id: 'skills', label: 'WH40K.Advancement.Tab.Skills', icon: 'fa-book', active: this.#activeTab === 'skills' },
+      { id: 'talents', label: 'WH40K.Advancement.Tab.Talents', icon: 'fa-star', active: this.#activeTab === 'talents' }
     ];
 
     // Prepare characteristic advances
@@ -390,12 +390,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     const nextCost = getNextCharacteristicCost(this.careerKey, charKey, currentAdvances);
     
     if (!nextCost) {
-      ui.notifications.warn(game.i18n.localize('RT.Advancement.Error.MaxedOut'));
+      ui.notifications.warn(game.i18n.localize('WH40K.Advancement.Error.MaxedOut'));
       return;
     }
 
     if (!canAfford(this.actor, nextCost.cost)) {
-      ui.notifications.warn(game.i18n.localize('RT.Advancement.Error.CannotAfford'));
+      ui.notifications.warn(game.i18n.localize('WH40K.Advancement.Error.CannotAfford'));
       return;
     }
 
@@ -424,7 +424,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     this.#recentPurchases.add(`char:${charKey}`);
 
     // Notify success
-    ui.notifications.info(game.i18n.format('RT.Advancement.PurchasedCharacteristic', {
+    ui.notifications.info(game.i18n.format('WH40K.Advancement.PurchasedCharacteristic', {
       char: charLabel,
       tier: tierLabel,
       cost: nextCost.cost
@@ -459,13 +459,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     // Validate
     if (!canAfford(this.actor, advance.cost)) {
-      ui.notifications.warn(game.i18n.localize('RT.Advancement.Error.CannotAfford'));
+      ui.notifications.warn(game.i18n.localize('WH40K.Advancement.Error.CannotAfford'));
       return;
     }
 
     const prereqResult = checkPrerequisites(this.actor, advance.prerequisites ?? []);
     if (!prereqResult.valid) {
-      ui.notifications.warn(game.i18n.format('RT.Advancement.Error.PrerequisitesNotMet', {
+      ui.notifications.warn(game.i18n.format('WH40K.Advancement.Error.PrerequisitesNotMet', {
         reasons: prereqResult.unmet.join(', ')
       }));
       return;
@@ -494,7 +494,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     this.#recentPurchases.add(id);
 
     // Notify
-    ui.notifications.info(game.i18n.format('RT.Advancement.Purchased', {
+    ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', {
       name: displayName,
       cost: advance.cost
     }));
@@ -652,6 +652,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     // Not found
-    ui.notifications.warn(game.i18n.format('RT.Advancement.ItemNotFound', { name: itemName }));
+    ui.notifications.warn(game.i18n.format('WH40K.Advancement.ItemNotFound', { name: itemName }));
   }
 }

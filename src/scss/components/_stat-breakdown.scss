@@ -3,7 +3,7 @@
 // ============================================
 // Displays detailed stat calculation breakdowns
 
-.rt-stat-breakdown-popover {
+.wh40k-stat-breakdown-popover {
     position: fixed;
     z-index: 9999;
     min-width: 280px;
@@ -35,7 +35,7 @@
     }
 }
 
-.rt-stat-breakdown-header {
+.wh40k-stat-breakdown-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -52,7 +52,7 @@
     }
 }
 
-.rt-stat-breakdown-close {
+.wh40k-stat-breakdown-close {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -76,11 +76,11 @@
     }
 }
 
-.rt-stat-breakdown-body {
+.wh40k-stat-breakdown-body {
     padding: 12px 16px;
 }
 
-.rt-stat-breakdown-row {
+.wh40k-stat-breakdown-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -118,7 +118,7 @@
     }
 }
 
-.rt-stat-breakdown-source {
+.wh40k-stat-breakdown-source {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -131,7 +131,7 @@
     }
 }
 
-.rt-stat-breakdown-value {
+.wh40k-stat-breakdown-value {
     font-family: 'Modesto Condensed', monospace;
     font-size: 1rem;
     font-weight: 600;
@@ -148,7 +148,7 @@
     }
 }
 
-.rt-stat-breakdown-modifiers {
+.wh40k-stat-breakdown-modifiers {
     margin: 4px 0;
 }
 
@@ -157,7 +157,7 @@
 // ============================================
 // Style for elements that can show breakdowns
 
-.rt-stat-breakdown-btn {
+.wh40k-stat-breakdown-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -229,7 +229,7 @@
 }
 
 // Make stat values clickable
-.rt-stat-clickable {
+.wh40k-stat-clickable {
     cursor: pointer;
     transition: all 0.2s;
     border-radius: 4px;

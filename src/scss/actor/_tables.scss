@@ -1,7 +1,7 @@
 // ============================================
 
-.rt-tab {
-    .rt-table--border {
+.wh40k-tab {
+    .wh40k-table--border {
         border-radius: 6px;
         overflow: hidden;
         border: 1px solid rgba(74, 55, 40, 0.15);
@@ -19,7 +19,7 @@
         padding: 6px 4px;
     }
     
-    .rt-control-button {
+    .wh40k-control-button {
         opacity: 0.7;
         transition: opacity 0.2s ease, transform 0.15s ease;
         
@@ -50,7 +50,7 @@
         background: rgba(74, 55, 40, 0.08);
     }
     
-    .rt-item-img {
+    .wh40k-item-img {
         width: 24px;
         height: 24px;
         border-radius: 4px;
@@ -62,23 +62,23 @@
 // ABILITIES TAB LAYOUT
 // ============================================
 
-.rt-abilities-layout {
+.wh40k-abilities-layout {
     display: block;
     padding: 0.5rem;
 }
 
-.rt-abilities-right-col {
+.wh40k-abilities-right-col {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     
-    .rt-panel {
+    .wh40k-panel {
         width: 100%;
     }
 }
 
 @media (max-width: 1200px) {
-    .rt-abilities-layout {
+    .wh40k-abilities-layout {
         display: block;
     }
 }
@@ -87,10 +87,10 @@
 // TRACKER PANEL STYLES (Wounds, Corruption, Insanity, Fatigue)
 // ============================================
 
-.rt-wounds-tracker,
-.rt-corruption-tracker,
-.rt-insanity-tracker,
-.rt-fatigue-tracker {
+.wh40k-wounds-tracker,
+.wh40k-corruption-tracker,
+.wh40k-insanity-tracker,
+.wh40k-fatigue-tracker {
     padding: 10px;
     margin-bottom: 10px;
     background: rgba(255, 255, 255, 0.5);

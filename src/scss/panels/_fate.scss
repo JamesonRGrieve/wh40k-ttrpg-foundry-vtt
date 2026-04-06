@@ -3,11 +3,11 @@
 // ============================================
 // Complete redesign with star pips, spending menu, and sparkle animations
 
-.rt-fate-panel-v2 {
+.wh40k-fate-panel-v2 {
   // Base panel styling inherits from rt-panel
 
   // Celestial blue theme
-  .rt-panel-header {
+  .wh40k-panel-header {
     background: linear-gradient(180deg, var(--rt-fate-bg) 0%, transparent 100%);
     border-bottom: 2px solid var(--rt-fate-border);
   }
@@ -16,22 +16,22 @@
   // Main Display Area
   // ============================================
 
-  .rt-fate-display {
+  .wh40k-fate-display {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
     align-items: center;
   }
 
   // Current/Max Label
-  .rt-fate-label {
+  .wh40k-fate-label {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2px;
   }
 
-  .rt-fate-count {
+  .wh40k-fate-count {
     font-family: 'Modesto Condensed', serif;
     font-size: 1.8rem;
     font-weight: 700;
@@ -39,7 +39,7 @@
     text-shadow: 0 1px 3px var(--rt-fate-bg);
   }
 
-  .rt-fate-subtitle {
+  .wh40k-fate-subtitle {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -51,15 +51,15 @@
   // Blue Star Pips
   // ============================================
 
-  .rt-fate-pips {
+  .wh40k-fate-pips {
     display: flex;
     flex-wrap: wrap;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
     justify-content: center;
-    padding: $rt-space-sm 0;
+    padding: $wh40k-space-sm 0;
   }
 
-  .rt-fate-star {
+  .wh40k-fate-star {
     width: 42px;
     height: 42px;
     padding: 0;
@@ -94,7 +94,7 @@
   }
 
   // Filled star (available fate)
-  .rt-fate-star--filled {
+  .wh40k-fate-star--filled {
     i {
       color: var(--rt-fate-secondary);
       filter: drop-shadow(0 3px 8px var(--rt-fate-border));
@@ -133,7 +133,7 @@
     }
   }
 
-  .rt-fate-star.rt-sparkle {
+  .wh40k-fate-star.wh40k-sparkle {
     animation: sparkle 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
@@ -153,17 +153,17 @@
     }
   }
 
-  .rt-fate-star.rt-spending {
+  .wh40k-fate-star.wh40k-spending {
     animation: fade-spend 0.5s ease-out forwards;
   }
 
   // Empty state
-  .rt-fate-empty {
+  .wh40k-fate-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: $rt-space-xs;
-    padding: $rt-space-lg;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-lg;
     color: var(--rt-text-subtle);
     opacity: 0.6;
 
@@ -182,21 +182,21 @@
   // Spending Menu
   // ============================================
 
-  .rt-fate-actions {
+  .wh40k-fate-actions {
     width: 100%;
   }
 
-  .rt-fate-spend-menu {
+  .wh40k-fate-spend-menu {
     position: relative;
   }
 
-  .rt-fate-spend-btn {
+  .wh40k-fate-spend-btn {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $rt-space-sm;
-    padding: $rt-space-sm $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: linear-gradient(180deg, var(--rt-fate-bg), transparent);
     border: 2px solid var(--rt-fate-border);
     border-radius: 8px;
@@ -228,12 +228,12 @@
       transform: translateY(0);
     }
 
-    &.rt-menu-open i:last-child {
+    &.wh40k-menu-open i:last-child {
       transform: rotate(180deg);
     }
   }
 
-  .rt-fate-dropdown {
+  .wh40k-fate-dropdown {
     position: absolute;
     top: calc(100% + 4px);
     left: 0;
@@ -258,12 +258,12 @@
     }
   }
 
-  .rt-fate-option {
+  .wh40k-fate-option {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding: $rt-space-sm $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: transparent;
     border: none;
     border-bottom: 1px solid var(--rt-border-color-light);
@@ -299,7 +299,7 @@
   }
 
   // Burn fate option (dangerous action)
-  .rt-fate-option--burn {
+  .wh40k-fate-option--burn {
     color: var(--rt-wounds-secondary);
     border-top: 2px solid var(--rt-wounds-bg);
 
@@ -317,25 +317,25 @@
   // Edit Mode Sections
   // ============================================
 
-  .rt-fate-edit-section {
-    padding: $rt-space-md;
+  .wh40k-fate-edit-section {
+    padding: $wh40k-space-md;
     background: var(--rt-panel-bg-translucent);
     border: 1px solid var(--rt-border-color-light);
     border-radius: 8px;
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
 
     &:last-child {
       margin-bottom: 0;
     }
   }
 
-  .rt-fate-edit-header {
+  .wh40k-fate-edit-header {
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--rt-text-medium);
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -346,19 +346,19 @@
     }
   }
 
-  .rt-fate-edit-grid {
+  .wh40k-fate-edit-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
   }
 
-  .rt-edit-field {
+  .wh40k-edit-field {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .rt-edit-label {
+  .wh40k-edit-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -366,10 +366,10 @@
     color: var(--rt-text-muted);
   }
 
-  .rt-edit-input {
+  .wh40k-edit-input {
     width: 100%;
     height: 40px;
-    padding: 0 $rt-space-sm;
+    padding: 0 $wh40k-space-sm;
     border: 2px solid var(--rt-fate-border);
     border-radius: 6px;
     background: var(--rt-input-bg);
@@ -396,19 +396,19 @@
   // Quick Actions
   // ============================================
 
-  .rt-fate-quick-actions {
+  .wh40k-fate-quick-actions {
     display: flex;
-    gap: $rt-space-sm;
-    margin-top: $rt-space-sm;
+    gap: $wh40k-space-sm;
+    margin-top: $wh40k-space-sm;
   }
 
-  .rt-fate-quick-btn {
+  .wh40k-fate-quick-btn {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: $rt-space-sm $rt-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: var(--rt-panel-bg-solid);
     border: 2px solid var(--rt-border-color-light);
     border-radius: 8px;
@@ -434,7 +434,7 @@
     }
   }
 
-  .rt-restore-btn {
+  .wh40k-restore-btn {
     border-color: rgba(74, 143, 92, 0.4);
     color: var(--rt-success-primary);
 
@@ -448,7 +448,7 @@
     }
   }
 
-  .rt-spend-one-btn {
+  .wh40k-spend-one-btn {
     border-color: var(--rt-fatigue-border);
     color: var(--rt-fatigue-primary);
 
@@ -466,13 +466,13 @@
   // Edit Mode Star Pips (with numbers)
   // ============================================
 
-  .rt-fate-pips-edit {
-    .rt-fate-star {
+  .wh40k-fate-pips-edit {
+    .wh40k-fate-star {
       width: 48px;
       height: 48px;
       position: relative;
 
-      .rt-star-number {
+      .wh40k-star-number {
         position: absolute;
         bottom: -2px;
         left: 50%;
@@ -487,7 +487,7 @@
         pointer-events: none;
       }
 
-      &.rt-fate-star--filled .rt-star-number {
+      &.wh40k-fate-star--filled .wh40k-star-number {
         color: var(--rt-fate-secondary);
         background: var(--rt-fate-bg);
         border-color: var(--rt-fate-border);
@@ -499,10 +499,10 @@
   // Info Box
   // ============================================
 
-  .rt-fate-info-box {
+  .wh40k-fate-info-box {
     display: flex;
-    gap: $rt-space-sm;
-    padding: $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-md;
     background: var(--rt-fate-bg);
     border-left: 3px solid var(--rt-fate-border);
     border-radius: 4px;
@@ -515,10 +515,10 @@
     }
   }
 
-  .rt-info-content {
+  .wh40k-info-content {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
 
     strong {
       font-size: 0.8rem;
@@ -555,9 +555,9 @@
     }
   }
 
-  .rt-fate-warning {
+  .wh40k-fate-warning {
     margin-top: 6px;
-    padding: $rt-space-xs $rt-space-sm;
+    padding: $wh40k-space-xs $wh40k-space-sm;
     background: var(--rt-wounds-bg);
     border-left: 2px solid var(--rt-wounds-secondary);
     border-radius: 3px;

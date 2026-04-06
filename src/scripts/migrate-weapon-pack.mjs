@@ -38,7 +38,7 @@ const __dirname = path.dirname(__filename);
 // CONFIGURATION
 // ============================================================================
 
-const PACK_SOURCE_DIR = path.join(__dirname, '..', 'packs', 'rt-items-weapons', '_source');
+const PACK_SOURCE_DIR = path.join(__dirname, '..', 'packs', 'wh40k-items-weapons', '_source');
 const BACKUP_DIR = path.join(__dirname, '..', '..', 'backups', `weapons-${Date.now()}`);
 const REPORT_PATH = path.join(__dirname, '..', '..', 'WEAPON_CLEANUP_REPORT.md');
 
@@ -81,55 +81,55 @@ const stats = {
 
 const ICON_MAP = {
     melee: {
-        primitive: 'systems/rogue-trader/assets/icons/weapons/melee-primitive.svg',
-        chain: 'systems/rogue-trader/assets/icons/weapons/melee-chain.svg',
-        power: 'systems/rogue-trader/assets/icons/weapons/melee-power.svg',
-        force: 'systems/rogue-trader/assets/icons/weapons/melee-force.svg',
-        shock: 'systems/rogue-trader/assets/icons/weapons/melee-shock.svg',
-        exotic: 'systems/rogue-trader/assets/icons/weapons/melee-exotic.svg',
-        default: 'systems/rogue-trader/assets/icons/weapons/melee-default.svg',
+        primitive: 'systems/wh40k-rpg/assets/icons/weapons/melee-primitive.svg',
+        chain: 'systems/wh40k-rpg/assets/icons/weapons/melee-chain.svg',
+        power: 'systems/wh40k-rpg/assets/icons/weapons/melee-power.svg',
+        force: 'systems/wh40k-rpg/assets/icons/weapons/melee-force.svg',
+        shock: 'systems/wh40k-rpg/assets/icons/weapons/melee-shock.svg',
+        exotic: 'systems/wh40k-rpg/assets/icons/weapons/melee-exotic.svg',
+        default: 'systems/wh40k-rpg/assets/icons/weapons/melee-default.svg',
     },
     pistol: {
-        'las': 'systems/rogue-trader/assets/icons/weapons/pistol-las.svg',
-        'bolt': 'systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg',
-        'plasma': 'systems/rogue-trader/assets/icons/weapons/pistol-plasma.svg',
-        'solid-projectile': 'systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg',
-        'primitive': 'systems/rogue-trader/assets/icons/weapons/pistol-primitive.svg',
-        'exotic': 'systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg',
-        'melta': 'systems/rogue-trader/assets/icons/weapons/pistol-melta.svg',
-        'flame': 'systems/rogue-trader/assets/icons/weapons/pistol-flamer.svg',
-        'default': 'systems/rogue-trader/assets/icons/weapons/pistol-default.svg',
+        'las': 'systems/wh40k-rpg/assets/icons/weapons/pistol-las.svg',
+        'bolt': 'systems/wh40k-rpg/assets/icons/weapons/pistol-bolt.svg',
+        'plasma': 'systems/wh40k-rpg/assets/icons/weapons/pistol-plasma.svg',
+        'solid-projectile': 'systems/wh40k-rpg/assets/icons/weapons/pistol-autopistol.svg',
+        'primitive': 'systems/wh40k-rpg/assets/icons/weapons/pistol-primitive.svg',
+        'exotic': 'systems/wh40k-rpg/assets/icons/weapons/pistol-exotic.svg',
+        'melta': 'systems/wh40k-rpg/assets/icons/weapons/pistol-melta.svg',
+        'flame': 'systems/wh40k-rpg/assets/icons/weapons/pistol-flamer.svg',
+        'default': 'systems/wh40k-rpg/assets/icons/weapons/pistol-default.svg',
     },
     basic: {
-        'las': 'systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg',
-        'bolt': 'systems/rogue-trader/assets/icons/weapons/basic-bolter.svg',
-        'solid-projectile': 'systems/rogue-trader/assets/icons/weapons/basic-autogun.svg',
-        'flame': 'systems/rogue-trader/assets/icons/weapons/basic-flamer.svg',
-        'melta': 'systems/rogue-trader/assets/icons/weapons/basic-meltagun.svg',
-        'plasma': 'systems/rogue-trader/assets/icons/weapons/basic-plasma.svg',
-        'primitive': 'systems/rogue-trader/assets/icons/weapons/basic-primitive.svg',
-        'exotic': 'systems/rogue-trader/assets/icons/weapons/basic-exotic.svg',
-        'default': 'systems/rogue-trader/assets/icons/weapons/basic-default.svg',
+        'las': 'systems/wh40k-rpg/assets/icons/weapons/basic-lasgun.svg',
+        'bolt': 'systems/wh40k-rpg/assets/icons/weapons/basic-bolter.svg',
+        'solid-projectile': 'systems/wh40k-rpg/assets/icons/weapons/basic-autogun.svg',
+        'flame': 'systems/wh40k-rpg/assets/icons/weapons/basic-flamer.svg',
+        'melta': 'systems/wh40k-rpg/assets/icons/weapons/basic-meltagun.svg',
+        'plasma': 'systems/wh40k-rpg/assets/icons/weapons/basic-plasma.svg',
+        'primitive': 'systems/wh40k-rpg/assets/icons/weapons/basic-primitive.svg',
+        'exotic': 'systems/wh40k-rpg/assets/icons/weapons/basic-exotic.svg',
+        'default': 'systems/wh40k-rpg/assets/icons/weapons/basic-default.svg',
     },
     heavy: {
-        'solid-projectile': 'systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg',
-        'las': 'systems/rogue-trader/assets/icons/weapons/heavy-lascannon.svg',
-        'bolt': 'systems/rogue-trader/assets/icons/weapons/heavy-bolter.svg',
-        'flame': 'systems/rogue-trader/assets/icons/weapons/heavy-flamer.svg',
-        'launcher': 'systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg',
-        'plasma': 'systems/rogue-trader/assets/icons/weapons/heavy-plasma.svg',
-        'melta': 'systems/rogue-trader/assets/icons/weapons/heavy-multimelta.svg',
-        'exotic': 'systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg',
-        'default': 'systems/rogue-trader/assets/icons/weapons/heavy-default.svg',
+        'solid-projectile': 'systems/wh40k-rpg/assets/icons/weapons/heavy-cannon.svg',
+        'las': 'systems/wh40k-rpg/assets/icons/weapons/heavy-lascannon.svg',
+        'bolt': 'systems/wh40k-rpg/assets/icons/weapons/heavy-bolter.svg',
+        'flame': 'systems/wh40k-rpg/assets/icons/weapons/heavy-flamer.svg',
+        'launcher': 'systems/wh40k-rpg/assets/icons/weapons/heavy-launcher.svg',
+        'plasma': 'systems/wh40k-rpg/assets/icons/weapons/heavy-plasma.svg',
+        'melta': 'systems/wh40k-rpg/assets/icons/weapons/heavy-multimelta.svg',
+        'exotic': 'systems/wh40k-rpg/assets/icons/weapons/heavy-exotic.svg',
+        'default': 'systems/wh40k-rpg/assets/icons/weapons/heavy-default.svg',
     },
     thrown: {
-        explosive: 'systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg',
-        primitive: 'systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg',
-        exotic: 'systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg',
-        default: 'systems/rogue-trader/assets/icons/weapons/thrown-default.svg',
+        explosive: 'systems/wh40k-rpg/assets/icons/weapons/thrown-grenade.svg',
+        primitive: 'systems/wh40k-rpg/assets/icons/weapons/thrown-primitive.svg',
+        exotic: 'systems/wh40k-rpg/assets/icons/weapons/thrown-exotic.svg',
+        default: 'systems/wh40k-rpg/assets/icons/weapons/thrown-default.svg',
     },
     exotic: {
-        default: 'systems/rogue-trader/assets/icons/weapons/exotic-default.svg',
+        default: 'systems/wh40k-rpg/assets/icons/weapons/exotic-default.svg',
     },
 };
 
@@ -276,7 +276,7 @@ const TWO_HANDED_MELEE_PATTERNS = [
 // ============================================================================
 
 const SOURCE_ABBREVIATIONS = {
-    'Rogue Trader': 'RT',
+    'WH40K RPG': 'RT',
     'RT': 'RT',
     'Dark Heresy': 'DH',
     'DH': 'DH',
@@ -472,7 +472,7 @@ function standardizeSource(originalSource) {
 
     if (!match) {
         // Try to infer from content
-        if (originalSource.includes('Rogue Trader')) return 'RT: Core Rulebook';
+        if (originalSource.includes('WH40K RPG')) return 'RT: Core Rulebook';
         if (originalSource.includes('Dark Heresy 2')) return 'DH2: Core Rulebook';
         if (originalSource.includes('Dark Heresy')) return 'DH: Core Rulebook';
         if (originalSource.includes('Deathwatch')) return 'DW: Core Rulebook';

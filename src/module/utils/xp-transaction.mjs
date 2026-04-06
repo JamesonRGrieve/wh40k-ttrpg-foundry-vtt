@@ -59,7 +59,7 @@ export async function spendXP(actor, cost, reason = '') {
   if (available < cost) {
     return { 
       success: false, 
-      error: game.i18n.format('RT.Advancement.Error.InsufficientXP', {
+      error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
         cost,
         available
       })
@@ -90,7 +90,7 @@ export async function spendXP(actor, cost, reason = '') {
     console.error('XP Transaction failed:', error);
     return {
       success: false,
-      error: game.i18n.localize('RT.Advancement.Error.TransactionFailed')
+      error: game.i18n.localize('WH40K.Advancement.Error.TransactionFailed')
     };
   }
 }
@@ -115,7 +115,7 @@ export async function spendXPBatch(actor, purchases) {
   if (available < totalCost) {
     return {
       success: false,
-      error: game.i18n.format('RT.Advancement.Error.InsufficientXP', {
+      error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
         cost: totalCost,
         available
       })
@@ -143,7 +143,7 @@ export async function spendXPBatch(actor, purchases) {
     console.error('XP Batch Transaction failed:', error);
     return {
       success: false,
-      error: game.i18n.localize('RT.Advancement.Error.TransactionFailed')
+      error: game.i18n.localize('WH40K.Advancement.Error.TransactionFailed')
     };
   }
 }

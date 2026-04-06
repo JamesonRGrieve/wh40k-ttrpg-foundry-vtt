@@ -1,7 +1,7 @@
 <div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1 rt-panel-ship-roles">
     <div class="rt-panel-header collapsible-header" data-panel="ship-roles">
         <i class="fas fa-user-tie"></i>
-        <span class="rt-panel-title">{{localize "RT.ShipRole.Header"}}</span>
+        <span class="rt-panel-title">{{localize "WH40K.ShipRole.Header"}}</span>
         <span class="rt-panel-count">{{shipRoles.length}}</span>
         <button type="button" class="rt-panel-add-btn" data-action="itemCreate" data-item-type="shipRole" data-tooltip="Add Ship Role">
             <i class="fas fa-plus"></i>
@@ -30,28 +30,28 @@
                         <div class="rt-ship-role-body">
                             {{#if role.system.purpose}}
                             <div class="rt-role-section">
-                                <strong class="rt-role-label">{{localize "RT.ShipRole.Purpose"}}:</strong>
+                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.Purpose"}}:</strong>
                                 <span class="rt-role-value">{{{role.system.purpose}}}</span>
                             </div>
                             {{/if}}
                             
                             {{#if role.system.careerPreferencesLabel}}
                             <div class="rt-role-section">
-                                <strong class="rt-role-label">{{localize "RT.ShipRole.CareerPreferences"}}:</strong>
+                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.CareerPreferences"}}:</strong>
                                 <span class="rt-role-value">{{role.system.careerPreferencesLabel}}</span>
                             </div>
                             {{/if}}
                             
                             {{#if role.system.subordinatesLabel}}
                             <div class="rt-role-section">
-                                <strong class="rt-role-label">{{localize "RT.ShipRole.Subordinates"}}:</strong>
+                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.Subordinates"}}:</strong>
                                 <span class="rt-role-value">{{role.system.subordinatesLabel}}</span>
                             </div>
                             {{/if}}
                             
                             {{#if role.system.importantSkillsLabel}}
                             <div class="rt-role-section">
-                                <strong class="rt-role-label">{{localize "RT.ShipRole.ImportantSkills"}}:</strong>
+                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.ImportantSkills"}}:</strong>
                                 <span class="rt-role-skills">{{role.system.importantSkillsLabel}}</span>
                             </div>
                             {{/if}}
@@ -59,7 +59,7 @@
                             {{!-- Abilities (modern structured display) --}}
                             {{#if role.system.abilities.length}}
                             <div class="rt-role-section rt-role-abilities">
-                                <strong class="rt-role-label">{{localize "RT.ShipRole.Abilities"}}:</strong>
+                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.Abilities"}}:</strong>
                                 <div class="rt-role-abilities-list">
                                     {{#each role.system.abilities as |ability|}}
                                     <div class="rt-role-ability">
@@ -79,7 +79,7 @@
                             {{else if role.system.effect}}
                             {{!-- Legacy effect fallback --}}
                             <div class="rt-role-section rt-role-effect">
-                                <strong class="rt-role-label">{{localize "RT.ShipRole.Effect"}}:</strong>
+                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.Effect"}}:</strong>
                                 <span class="rt-role-value">{{{role.system.effect}}}</span>
                             </div>
                             {{/if}}
@@ -87,7 +87,7 @@
                             {{!-- Ship Bonuses --}}
                             {{#if role.system.shipBonusesArray.length}}
                             <div class="rt-role-section rt-role-bonuses">
-                                <strong class="rt-role-label">{{localize "RT.ShipRole.ShipBonuses"}}:</strong>
+                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.ShipBonuses"}}:</strong>
                                 <div class="rt-bonus-badges">
                                     {{#each role.system.shipBonusesArray as |bonus|}}
                                     <span class="rt-bonus-badge {{#if (gt bonus.value 0)}}rt-bonus-positive{{else}}rt-bonus-negative{{/if}}">
@@ -104,9 +104,9 @@
         {{else}}
             <div class="rt-empty-state">
                 <i class="fas fa-user-tie fa-3x"></i>
-                <p>{{localize "RT.ShipRole.NoRoles"}}</p>
+                <p>{{localize "WH40K.ShipRole.NoRoles"}}</p>
                 <button type="button" data-action="itemCreate" data-item-type="shipRole" class="rt-btn-create">
-                    <i class="fas fa-plus"></i> {{localize "RT.ShipRole.AddRole"}}
+                    <i class="fas fa-plus"></i> {{localize "WH40K.ShipRole.AddRole"}}
                 </button>
             </div>
         {{/if}}

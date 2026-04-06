@@ -3,7 +3,7 @@
 // ============================================
 // Standardized action buttons for items across all sheets
 
-.rt-quick-actions-bar {
+.wh40k-quick-actions-bar {
     display: flex;
     flex-wrap: wrap;
     gap: var(--rt-item-spacing-xs);
@@ -16,7 +16,7 @@
         gap: var(--rt-item-spacing-xs);
         padding: var(--rt-item-spacing-xs);
 
-        .rt-quick-action {
+        .wh40k-quick-action {
             min-width: 32px;
             padding: 6px;
 
@@ -27,7 +27,7 @@
     }
 }
 
-.rt-quick-action {
+.wh40k-quick-action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -128,15 +128,15 @@
 // ============================================
 // Slightly different styling when used in character sheet item lists
 
-.rt-item-list {
-    .rt-quick-actions-bar {
+.wh40k-item-list {
+    .wh40k-quick-actions-bar {
         padding: var(--rt-item-spacing-xs);
         background: transparent;
         border-top: none;
         justify-content: flex-end;
     }
 
-    .rt-quick-action {
+    .wh40k-quick-action {
         padding: 4px 8px;
         font-size: var(--rt-item-font-size-xs);
         min-width: 28px;
@@ -147,8 +147,8 @@
 // Keyboard Navigation Support
 // ============================================
 
-.rt-quick-actions-bar:focus-within {
-    .rt-quick-action:focus {
+.wh40k-quick-actions-bar:focus-within {
+    .wh40k-quick-action:focus {
         z-index: 1;
     }
 }

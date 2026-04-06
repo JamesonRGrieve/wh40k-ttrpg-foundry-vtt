@@ -106,7 +106,7 @@ export default class TraitData extends ItemDataModel.mixin(
    * @type {string}
    */
   get categoryLabel() {
-    if (!this.category) return game.i18n.localize("RT.TraitCategory.General");
+    if (!this.category) return game.i18n.localize("WH40K.TraitCategory.General");
     const key = `RT.TraitCategory.${this.category.capitalize()}`;
     const localized = game.i18n.localize(key);
     return localized === key ? this.category : localized;
@@ -148,7 +148,7 @@ export default class TraitData extends ItemDataModel.mixin(
 
     // Render chat template
     const content = await renderTemplate(
-      "systems/rogue-trader/templates/chat/trait-card.hbs",
+      "systems/wh40k-rpg/templates/chat/trait-card.hbs",
       templateData
     );
 
@@ -159,7 +159,7 @@ export default class TraitData extends ItemDataModel.mixin(
       type: CONST.CHAT_MESSAGE_TYPES.OTHER,
       content: content,
       flags: {
-        "rogue-trader": {
+        "wh40k-rpg": {
           itemId: this.parent.id,
           itemType: "trait"
         }

@@ -2,27 +2,27 @@
 // Panel Type Variants (Colored Left Borders)
 // ============================================
 
-.rt-panel-vitality {
-  border-left-color: $rt-accent-combat;
+.wh40k-panel-vitality {
+  border-left-color: $wh40k-accent-combat;
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-combat, 0.12) 0%, transparent 100%);
   }
   
-  .rt-panel-title i {
-    color: $rt-accent-combat;
+  .wh40k-panel-title i {
+    color: $wh40k-accent-combat;
   }
 }
 
-.rt-panel-movement {
-  border-left-color: $rt-accent-skills;
+.wh40k-panel-movement {
+  border-left-color: $wh40k-accent-skills;
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-skills, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-skills, 0.12) 0%, transparent 100%);
   }
   
-  .rt-panel-title i {
-    color: $rt-accent-skills;
+  .wh40k-panel-title i {
+    color: $wh40k-accent-skills;
   }
 }
 
@@ -30,42 +30,42 @@
 // Corruption/Insanity Panels
 // ============================================
 
-.rt-panel-corruption {
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.15) 0%, transparent 100%);
+.wh40k-panel-corruption {
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-combat, 0.15) 0%, transparent 100%);
   }
   
-  .rt-panel-title i {
-    color: $rt-accent-combat;
+  .wh40k-panel-title i {
+    color: $wh40k-accent-combat;
   }
   
-  &.degree-pure { border-left-color: $rt-degree-pure; }
-  &.degree-tainted { border-left-color: $rt-degree-tainted; }
-  &.degree-soiled { border-left-color: $rt-degree-soiled; }
-  &.degree-debased { border-left-color: $rt-degree-debased; }
-  &.degree-profane { border-left-color: $rt-degree-profane; }
-  &.degree-damned { border-left-color: $rt-degree-damned; }
+  &.degree-pure { border-left-color: $wh40k-degree-pure; }
+  &.degree-tainted { border-left-color: $wh40k-degree-tainted; }
+  &.degree-soiled { border-left-color: $wh40k-degree-soiled; }
+  &.degree-debased { border-left-color: $wh40k-degree-debased; }
+  &.degree-profane { border-left-color: $wh40k-degree-profane; }
+  &.degree-damned { border-left-color: $wh40k-degree-damned; }
 }
 
-.rt-panel-insanity {
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-powers, 0.15) 0%, transparent 100%);
+.wh40k-panel-insanity {
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-powers, 0.15) 0%, transparent 100%);
   }
   
-  .rt-panel-title i {
-    color: $rt-accent-powers;
+  .wh40k-panel-title i {
+    color: $wh40k-accent-powers;
   }
   
-  &.degree-stable { border-left-color: $rt-degree-stable; }
-  &.degree-unsettled { border-left-color: $rt-degree-unsettled; }
-  &.degree-disturbed { border-left-color: $rt-degree-disturbed; }
-  &.degree-unhinged { border-left-color: $rt-degree-unhinged; }
-  &.degree-deranged { border-left-color: $rt-degree-deranged; }
-  &.degree-terminally-insane { border-left-color: $rt-degree-terminally; }
+  &.degree-stable { border-left-color: $wh40k-degree-stable; }
+  &.degree-unsettled { border-left-color: $wh40k-degree-unsettled; }
+  &.degree-disturbed { border-left-color: $wh40k-degree-disturbed; }
+  &.degree-unhinged { border-left-color: $wh40k-degree-unhinged; }
+  &.degree-deranged { border-left-color: $wh40k-degree-deranged; }
+  &.degree-terminally-insane { border-left-color: $wh40k-degree-terminally; }
 }
 
 // Degree Badges with proper colors
-.rt-degree-badge {
+.wh40k-degree-badge {
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -76,44 +76,44 @@
   flex-shrink: 0;
   
   // Corruption degrees
-  &.degree-pure { @include rt-degree-badge-style($rt-degree-pure, 15%); }
-  &.degree-tainted { @include rt-degree-badge-style($rt-degree-tainted, 15%); }
-  &.degree-soiled { @include rt-degree-badge-style($rt-degree-soiled, 10%); }
-  &.degree-debased { @include rt-degree-badge-style($rt-degree-debased, 10%); }
-  &.degree-profane { @include rt-degree-badge-style($rt-degree-profane, 0); }
+  &.degree-pure { @include rt-degree-badge-style($wh40k-degree-pure, 15%); }
+  &.degree-tainted { @include rt-degree-badge-style($wh40k-degree-tainted, 15%); }
+  &.degree-soiled { @include rt-degree-badge-style($wh40k-degree-soiled, 10%); }
+  &.degree-debased { @include rt-degree-badge-style($wh40k-degree-debased, 10%); }
+  &.degree-profane { @include rt-degree-badge-style($wh40k-degree-profane, 0); }
   &.degree-damned { 
-    background: rgba($rt-degree-damned, 0.2);
-    border: 2px solid $rt-degree-damned;
-    color: $rt-degree-damned;
+    background: rgba($wh40k-degree-damned, 0.2);
+    border: 2px solid $wh40k-degree-damned;
+    color: $wh40k-degree-damned;
   }
   
   // Insanity degrees
-  &.degree-stable { @include rt-degree-badge-style($rt-degree-stable, 15%); }
-  &.degree-unsettled { @include rt-degree-badge-style($rt-degree-unsettled, 15%); }
-  &.degree-disturbed { @include rt-degree-badge-style($rt-degree-disturbed, 10%); }
-  &.degree-unhinged { @include rt-degree-badge-style($rt-degree-unhinged, 10%); }
-  &.degree-deranged { @include rt-degree-badge-style($rt-degree-deranged, 0); }
+  &.degree-stable { @include rt-degree-badge-style($wh40k-degree-stable, 15%); }
+  &.degree-unsettled { @include rt-degree-badge-style($wh40k-degree-unsettled, 15%); }
+  &.degree-disturbed { @include rt-degree-badge-style($wh40k-degree-disturbed, 10%); }
+  &.degree-unhinged { @include rt-degree-badge-style($wh40k-degree-unhinged, 10%); }
+  &.degree-deranged { @include rt-degree-badge-style($wh40k-degree-deranged, 0); }
   &.degree-terminally-insane { 
-    background: rgba($rt-degree-terminally, 0.2);
-    border: 2px solid $rt-degree-terminally;
-    color: $rt-degree-terminally;
+    background: rgba($wh40k-degree-terminally, 0.2);
+    border: 2px solid $wh40k-degree-terminally;
+    color: $wh40k-degree-terminally;
   }
 }
 
-.rt-tracker-row {
+.wh40k-tracker-row {
   display: flex;
   align-items: center;
-  gap: $rt-space-md;
-  margin-bottom: $rt-space-sm;
+  gap: $wh40k-space-md;
+  margin-bottom: $wh40k-space-sm;
 }
 
-.rt-tracker-main {
+.wh40k-tracker-main {
   display: flex;
   align-items: center;
   gap: 2px;
 }
 
-.rt-tracker-effect {
+.wh40k-tracker-effect {
   font-size: 0.8rem;
   color: var(--color-text-secondary);
   font-style: italic;

@@ -26,7 +26,7 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: "form",
-        classes: ["rogue-trader", "dialog", "damage-roll", "standard-form"],
+        classes: ["wh40k-rpg", "dialog", "damage-roll", "standard-form"],
         actions: {
             roll: DamageRollDialog.#onRoll,
             cancel: DamageRollDialog.#onCancel
@@ -45,7 +45,7 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/prompt/damage-roll-prompt.hbs",
+            template: "systems/wh40k-rpg/templates/prompt/damage-roll-prompt.hbs",
             scrollable: [""]
         }
     };
@@ -139,14 +139,14 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
         const form = this.element.querySelector("form") ?? this.element;
         
         const actionData = new ActionData();
-        actionData.template = "systems/rogue-trader/templates/chat/damage-roll-chat.hbs";
+        actionData.template = "systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs";
 
         // Get form values
         this.rollData.damage = form.querySelector("#damage")?.value ?? this.rollData.damage;
         this.rollData.penetration = form.querySelector("#penetration")?.value ?? this.rollData.penetration;
         this.rollData.damageType = form.querySelector("[name=damageType]")?.value ?? this.rollData.damageType;
         this.rollData.pr = form.querySelector("#pr")?.value;
-        this.rollData.template = "systems/rogue-trader/templates/chat/damage-roll-chat.hbs";
+        this.rollData.template = "systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs";
 
         // Perform the roll
         this.rollData.roll = new Roll(this.rollData.damage, this.rollData);

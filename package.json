@@ -1,7 +1,7 @@
 {
-  "name": "rogue-trader",
-  "version": "1.8.1",
-  "description": "Rogue Trader Foundry VTT",
+  "name": "wh40k-rpg",
+  "version": "2.0.0",
+  "description": "Warhammer 40K RPG Foundry VTT System",
   "scripts": {
     "version": "json -I -f package.json -e \"this.version='$npm_config_next'\" && json -I -f src/system.json -e \"this.version='$npm_config_next'\"",
     "clean": "gulp clean",
@@ -57,11 +57,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AndruQuiroga/RogueTraderVTT.git"
+    "url": "git+https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt.git"
   },
   "keywords": [],
   "bugs": {
-    "url": "https://github.com/AndruQuiroga/RogueTraderVTT/issues"
+    "url": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues"
   },
-  "homepage": "https://github.com/AndruQuiroga/RogueTraderVTT#readme"
+  "homepage": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt#readme"
 }

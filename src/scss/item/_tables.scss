@@ -12,11 +12,11 @@
   50% { box-shadow: 0 0 20px var(--rt-gold-glow); }
 }
 
-.rt-animate-pulse {
+.wh40k-animate-pulse {
   animation: rt-pulse 2s infinite ease-in-out;
 }
 
-.rt-animate-glow {
+.wh40k-animate-glow {
   animation: rt-glow 2s infinite ease-in-out;
 }
 
@@ -24,15 +24,15 @@
 // Tier Badge (for Talents)
 // ============================================
 
-.rt-tier-badge {
+.wh40k-tier-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px $rt-space-sm;
-  margin-left: $rt-space-sm;
+  padding: 2px $wh40k-space-sm;
+  margin-left: $wh40k-space-sm;
   background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
-  border-radius: $rt-radius-sm;
-  font-family: $rt-font-ui;
-  font-size: $rt-font-size-xs;
+  border-radius: $wh40k-radius-sm;
+  font-family: $wh40k-font-ui;
+  font-size: $wh40k-font-size-xs;
   font-weight: 600;
   color: var(--rt-sheet-bg);
   text-transform: uppercase;
@@ -43,16 +43,16 @@
 // Modification Row (for Armour/Weapon Mods)
 // ============================================
 
-.rt-mod-row {
+.wh40k-mod-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: $rt-space-sm $rt-space-md;
+  padding: $wh40k-space-sm $wh40k-space-md;
   background: var(--rt-panel-bg);
   border: 1px solid var(--rt-border-color-light);
-  border-radius: $rt-radius-md;
-  margin-bottom: $rt-space-sm;
-  transition: all $rt-transition-fast;
+  border-radius: $wh40k-radius-md;
+  margin-bottom: $wh40k-space-sm;
+  transition: all $wh40k-transition-fast;
   
   &:hover {
     background: var(--rt-input-bg);
@@ -62,7 +62,7 @@
   &__info {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
     
     strong {
       color: var(--rt-text-dark);
@@ -70,9 +70,9 @@
   }
   
   &__detail {
-    font-size: $rt-font-size-sm;
+    font-size: $wh40k-font-size-sm;
     color: var(--rt-text-muted);
-    margin-left: $rt-space-sm;
+    margin-left: $wh40k-space-sm;
   }
 }
 

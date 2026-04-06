@@ -1,5 +1,5 @@
 /**
- * Base data model for all Rogue Trader system data.
+ * Base data model for all WH40K RPG system data.
  * Provides common functionality for schema definition, validation, and template mixing.
  * 
  * This uses template mix-ins similar to DND5E - each template defines its own schema

@@ -441,14 +441,14 @@ export class Hit {
 export class WeaponDamageData extends DamageData {
     constructor() {
         super();
-        this.template = 'systems/rogue-trader/templates/chat/weapon-roll-chat.hbs';
+        this.template = 'systems/wh40k-rpg/templates/chat/weapon-roll-chat.hbs';
     }
 }
 
 export class PsychicDamageData extends DamageData {
     constructor() {
         super();
-        this.template = 'systems/rogue-trader/templates/chat/weapon-roll-chat.hbs';
+        this.template = 'systems/wh40k-rpg/templates/chat/weapon-roll-chat.hbs';
     }
 }
 

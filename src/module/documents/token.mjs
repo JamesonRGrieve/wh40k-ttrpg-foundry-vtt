@@ -97,18 +97,18 @@ export class TokenDocumentRT extends TokenDocument {
 
         // Build movement buttons container
         const container = document.createElement('div');
-        container.classList.add('rt-token-movement');
+        container.classList.add('wh40k-token-movement');
 
         for (const [type, config] of Object.entries(movementTypes)) {
             const speed = movement[type];
             if (speed === undefined) continue;
 
             const btn = document.createElement('button');
-            btn.classList.add('rt-token-movement__btn');
+            btn.classList.add('wh40k-token-movement__btn');
             if (type === activeType) btn.classList.add('active');
             btn.dataset.movementType = type;
             btn.title = `${game.i18n.localize(config.label)}: ${speed}m`;
-            btn.innerHTML = `<i class="${config.icon}"></i><span class="rt-token-movement__value">${speed}m</span>`;
+            btn.innerHTML = `<i class="${config.icon}"></i><span class="wh40k-token-movement__value">${speed}m</span>`;
 
             btn.addEventListener('click', (event) => {
                 event.preventDefault();
@@ -139,7 +139,7 @@ export class TokenDocumentRT extends TokenDocument {
         const config = CONFIG.rt.movementTypes[type];
         const label = config ? game.i18n.localize(config.label) : type;
         const speed = token.actor?.system?.movement?.[type];
-        token.update({ 'flags.rogue-trader.movementAction': type });
+        token.update({ 'flags.wh40k-rpg.movementAction': type });
         ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
     }
 }

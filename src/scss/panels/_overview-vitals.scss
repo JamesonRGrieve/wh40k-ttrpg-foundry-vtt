@@ -4,128 +4,128 @@
 // Compact, color-coded vital panels for easy identification
 
 // Panel Theme Colors
-.rt-wounds-panel-v2 {
-  border-left: 3px solid $rt-accent-combat;
+.wh40k-wounds-panel-v2 {
+  border-left: 3px solid $wh40k-accent-combat;
   
-  .rt-panel-header {
-    background: linear-gradient(90deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(90deg, rgba($wh40k-accent-combat, 0.12) 0%, transparent 100%);
     
-    .rt-panel-title i {
-      color: $rt-accent-combat;
+    .wh40k-panel-title i {
+      color: $wh40k-accent-combat;
     }
   }
 }
 
-.rt-fatigue-panel-v2 {
-  border-left: 3px solid $rt-color-gold;
+.wh40k-fatigue-panel-v2 {
+  border-left: 3px solid $wh40k-color-gold;
   
-  .rt-panel-header {
-    background: linear-gradient(90deg, rgba($rt-color-gold, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, transparent 100%);
     
-    .rt-panel-title i {
-      color: $rt-color-gold;
+    .wh40k-panel-title i {
+      color: $wh40k-color-gold;
     }
   }
 }
 
-.rt-fate-panel-v2 {
+.wh40k-fate-panel-v2 {
   border-left: 3px solid var(--rt-fate-border);
   
-  .rt-panel-header {
+  .wh40k-panel-header {
     background: linear-gradient(90deg, var(--rt-fate-bg) 0%, transparent 100%);
     
-    .rt-panel-title i {
+    .wh40k-panel-title i {
       color: var(--rt-fate-secondary);
     }
   }
 }
 
-.rt-corruption-panel-v2 {
+.wh40k-corruption-panel-v2 {
   border-left: 3px solid #2d7a6b;
   
-  .rt-panel-header {
+  .wh40k-panel-header {
     background: linear-gradient(90deg, rgba(45, 122, 107, 0.12) 0%, transparent 100%);
     
-    .rt-panel-title i {
+    .wh40k-panel-title i {
       color: #3ea88e;
     }
   }
 }
 
-.rt-insanity-panel-v2 {
+.wh40k-insanity-panel-v2 {
   border-left: 3px solid #7b5aa6;
   
-  .rt-panel-header {
+  .wh40k-panel-header {
     background: linear-gradient(90deg, rgba(123, 90, 166, 0.12) 0%, transparent 100%);
     
-    .rt-panel-title i {
+    .wh40k-panel-title i {
       color: #9573bd;
     }
   }
 }
 
-.rt-experience-panel {
-  border-left: 3px solid $rt-color-gold;
+.wh40k-experience-panel {
+  border-left: 3px solid $wh40k-color-gold;
   
-  .rt-panel-header {
-    background: linear-gradient(90deg, rgba($rt-color-gold, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, transparent 100%);
     
-    .rt-panel-title i {
-      color: $rt-color-gold;
+    .wh40k-panel-title i {
+      color: $wh40k-color-gold;
     }
   }
 }
 
 // Compact Tracker Style (for all vitals)
-.rt-vital-tracker-compact {
+.wh40k-vital-tracker-compact {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm 0;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-sm 0;
 }
 
-// NOTE: .rt-vital-btn-compact is now aliased from .rt-btn-control--compact in _unified-components.scss
+// NOTE: .wh40k-vital-btn-compact is now aliased from .wh40k-btn-control--compact in _unified-components.scss
 // Keep this for any additional overrides specific to vital buttons
-.rt-vital-btn-compact {
-  @extend .rt-btn-control;
+.wh40k-vital-btn-compact {
+  @extend .wh40k-btn-control;
   width: 26px;
   height: 26px;
   font-size: 1rem;
 }
 
-.rt-vital-value-compact {
+.wh40k-vital-value-compact {
   display: flex;
   align-items: baseline;
   gap: 4px;
   font-family: var(--rt-font-display, 'Modesto Condensed', serif);
   
-  .rt-vital-current {
+  .wh40k-vital-current {
     font-size: 1.6rem;
     font-weight: 700;
     color: var(--color-text-primary);
   }
   
-  .rt-vital-sep {
+  .wh40k-vital-sep {
     font-size: 1.2rem;
     color: var(--color-text-tertiary);
   }
   
-  .rt-vital-max {
+  .wh40k-vital-max {
     font-size: 1rem;
     color: var(--color-text-secondary);
   }
 }
 
 // Compact progress bar
-.rt-vital-bar-compact {
+.wh40k-vital-bar-compact {
   height: 6px;
   background: var(--color-bg-tertiary);
   border-radius: 3px;
   overflow: hidden;
-  margin-top: $rt-space-xs;
+  margin-top: $wh40k-space-xs;
   
-  .rt-vital-bar-fill {
+  .wh40k-vital-bar-fill {
     height: 100%;
     border-radius: 3px;
     transition: width 0.3s ease;
@@ -133,61 +133,61 @@
 }
 
 // Compact auto-calc badge
-.rt-auto-badge-compact {
+.wh40k-auto-badge-compact {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 2px 6px;
-  background: rgba($rt-accent-gold, 0.1);
-  border: 1px solid rgba($rt-accent-gold, 0.2);
+  background: rgba($wh40k-accent-gold, 0.1);
+  border: 1px solid rgba($wh40k-accent-gold, 0.2);
   border-radius: 3px;
   font-size: var(--rt-text-micro, 0.65rem);
   color: var(--color-text-tertiary);
-  margin-top: $rt-space-xs;
+  margin-top: $wh40k-space-xs;
   
   i {
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
     font-size: 0.7rem;
   }
 }
 
 // Quick action button (for fatigue clear, fate restore, etc.)
-// NOTE: Use .rt-btn-quick for new code; this maintains backwards compatibility
-.rt-quick-action-btn {
-  @extend .rt-btn-quick;
+// NOTE: Use .wh40k-btn-quick for new code; this maintains backwards compatibility
+.wh40k-quick-action-btn {
+  @extend .wh40k-btn-quick;
   width: 100%;
-  margin-top: $rt-space-xs;
+  margin-top: $wh40k-space-xs;
 }
 
 // ============================================
 // Experience Panel (Compact)
 // ============================================
 
-.rt-experience-panel {
-  .rt-panel-body {
-    padding: $rt-space-sm;
+.wh40k-experience-panel {
+  .wh40k-panel-body {
+    padding: $wh40k-space-sm;
   }
 }
 
-.rt-xp-display {
+.wh40k-xp-display {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-xp-row {
+.wh40k-xp-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-xp-field {
+.wh40k-xp-field {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.rt-xp-label {
+.wh40k-xp-label {
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -195,7 +195,7 @@
   color: var(--color-text-secondary);
 }
 
-.rt-xp-input {
+.wh40k-xp-input {
   width: 100%;
   padding: 6px 8px;
   background: var(--color-bg-option);
@@ -211,27 +211,27 @@
   &:focus {
     outline: none;
     background: var(--color-bg-tertiary);
-    border-color: $rt-accent-gold;
-    box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.2);
+    border-color: $wh40k-accent-gold;
+    box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
   }
   
-  &.rt-xp-spent {
+  &.wh40k-xp-spent {
     color: var(--color-text-secondary);
   }
 }
 
-.rt-xp-available-display {
+.wh40k-xp-available-display {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: $rt-space-sm;
-  background: linear-gradient(135deg, rgba($rt-color-gold, 0.15) 0%, rgba($rt-color-gold, 0.05) 100%);
-  border: 2px solid rgba($rt-color-gold, 0.3);
+  padding: $wh40k-space-sm;
+  background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15) 0%, rgba($wh40k-color-gold, 0.05) 100%);
+  border: 2px solid rgba($wh40k-color-gold, 0.3);
   border-radius: 6px;
 }
 
-.rt-xp-available-label {
+.wh40k-xp-available-label {
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -239,26 +239,26 @@
   color: var(--color-text-secondary);
 }
 
-.rt-xp-available-value {
+.wh40k-xp-available-value {
   font-size: 1.5rem;
   font-weight: 700;
   font-family: 'Modesto Condensed', serif;
-  color: $rt-color-gold;
-  text-shadow: 0 0 8px rgba($rt-color-gold, 0.3);
+  color: $wh40k-color-gold;
+  text-shadow: 0 0 8px rgba($wh40k-color-gold, 0.3);
 }
 
-.rt-xp-bar {
+.wh40k-xp-bar {
   height: 6px;
   background: var(--color-bg-tertiary);
   border-radius: 3px;
   overflow: hidden;
 
-  .rt-xp-bar-fill {
+  .wh40k-xp-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, $rt-color-gold-dark 0%, $rt-color-gold 100%);
+    background: linear-gradient(90deg, $wh40k-color-gold-dark 0%, $wh40k-color-gold 100%);
     border-radius: 3px;
     transition: width 0.3s ease;
-    box-shadow: 0 0 6px rgba($rt-color-gold, 0.3);
+    box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.3);
   }
 }
 
@@ -266,22 +266,22 @@
 // Fate Panel (Compact)
 // ============================================
 
-.rt-fate-display-compact {
+.wh40k-fate-display-compact {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
   align-items: center;
-  padding: $rt-space-xs 0;
+  padding: $wh40k-space-xs 0;
 }
 
-.rt-fate-pips-compact {
+.wh40k-fate-pips-compact {
   display: flex;
   gap: 6px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-.rt-fate-actions-compact {
+.wh40k-fate-actions-compact {
   width: 100%;
 }
 
@@ -289,11 +289,11 @@
 // Overview Tab Layout Fix
 // ============================================
 
-.rt-overview-grid {
+.wh40k-overview-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $rt-space-md;
-  padding: $rt-space-md;
+  gap: $wh40k-space-md;
+  padding: $wh40k-space-md;
   height: 100%;
   overflow-y: auto; // Only the grid scrolls
   overflow-x: hidden;
@@ -317,9 +317,9 @@
   }
 }
 
-.rt-overview-col {
+.wh40k-overview-col {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   // No overflow - columns don't scroll individually
 }

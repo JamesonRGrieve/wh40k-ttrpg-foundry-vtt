@@ -1,9 +1,9 @@
 /**
- * Extended ActiveEffect document for Rogue Trader system.
+ * Extended ActiveEffect document for WH40K RPG system.
  * Integrates with the existing modifier system and provides proper effect application.
  * @extends {ActiveEffect}
  */
-export class RogueTraderActiveEffect extends ActiveEffect {
+export class WH40KActiveEffect extends ActiveEffect {
 
   /* -------------------------------------------- */
   /*  Properties                                  */
@@ -33,7 +33,7 @@ export class RogueTraderActiveEffect extends ActiveEffect {
    */
   get sourceName() {
     const source = this.source;
-    return source?.name ?? game.i18n.localize("RT.ActiveEffect.UnknownSource");
+    return source?.name ?? game.i18n.localize("WH40K.ActiveEffect.UnknownSource");
   }
 
   /**
@@ -43,7 +43,7 @@ export class RogueTraderActiveEffect extends ActiveEffect {
    */
   get nature() {
     // Check explicit flag
-    const flagNature = this.getFlag('rogue-trader', 'nature');
+    const flagNature = this.getFlag('wh40k-rpg', 'nature');
     if ( flagNature ) return flagNature;
 
     // Analyze changes to determine nature
@@ -76,14 +76,14 @@ export class RogueTraderActiveEffect extends ActiveEffect {
 
   /**
    * Apply this Active Effect to a target Actor or Item.
-   * Extends the core method to handle Rogue Trader-specific data paths.
+   * Extends the core method to handle WH40K RPG-specific data paths.
    * @param {Actor|Item} target       The target to which this effect is applied
    * @param {object} change           The change data being applied
    * @returns {*}                     The resulting applied value
    * @override
    */
   apply(target, change) {
-    // Handle Rogue Trader-specific change keys
+    // Handle WH40K RPG-specific change keys
     const key = change.key;
 
     // Handle characteristic modifications (e.g., "characteristics.strength")
@@ -293,22 +293,22 @@ export class RogueTraderActiveEffect extends ActiveEffect {
     const d = this.duration;
     
     if ( !this.isTemporary ) {
-      return game.i18n.localize("RT.ActiveEffect.Permanent");
+      return game.i18n.localize("WH40K.ActiveEffect.Permanent");
     }
     
     if ( d.rounds ) {
-      return game.i18n.format("RT.ActiveEffect.DurationRounds", { rounds: d.rounds });
+      return game.i18n.format("WH40K.ActiveEffect.DurationRounds", { rounds: d.rounds });
     }
     
     if ( d.turns ) {
-      return game.i18n.format("RT.ActiveEffect.DurationTurns", { turns: d.turns });
+      return game.i18n.format("WH40K.ActiveEffect.DurationTurns", { turns: d.turns });
     }
     
     if ( d.seconds ) {
-      return game.i18n.format("RT.ActiveEffect.DurationSeconds", { seconds: d.seconds });
+      return game.i18n.format("WH40K.ActiveEffect.DurationSeconds", { seconds: d.seconds });
     }
     
-    return game.i18n.localize("RT.ActiveEffect.Unknown");
+    return game.i18n.localize("WH40K.ActiveEffect.Unknown");
   }
 
   /**

@@ -1,5 +1,5 @@
 /**
- * @file API module exports for Rogue Trader ApplicationV2 framework
+ * @file API module exports for WH40K RPG ApplicationV2 framework
  */
 
 export { default as ApplicationV2Mixin } from "./application-v2-mixin.mjs";

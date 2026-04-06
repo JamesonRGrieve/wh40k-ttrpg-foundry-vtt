@@ -1,5 +1,5 @@
 /**
- * Rogue Trader VTT - Dice Module
+ * WH40K RPG VTT - Dice Module
  * Modern roll classes using three-stage workflow
  */
 

@@ -1,6 +1,6 @@
 /**
  * @file AcolyteSheet - Character sheet for acolyte/character actors using ApplicationV2
- * This is the main player character sheet for Rogue Trader
+ * This is the main player character sheet for WH40K RPG
  */
 
 import BaseActorSheet from './base-actor-sheet.mjs';
@@ -8,14 +8,14 @@ import { DHBasicActionManager } from '../../actions/basic-action-manager.mjs';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.mjs';
 import { Hit } from '../../rolls/damage-data.mjs';
 import { AssignDamageData } from '../../rolls/assign-damage-data.mjs';
-import ROGUE_TRADER from '../../config.mjs';
+import WH40K from '../../config.mjs';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.mjs';
 import { HandlebarManager } from '../../handlebars/handlebars-manager.mjs';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.mjs';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.mjs';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.mjs';
 import AdvancementDialog from '../dialogs/advancement-dialog.mjs';
-import { RTContextMenu } from '../api/context-menu-mixin.mjs';
+import { WH40KContextMenu } from '../api/context-menu-mixin.mjs';
 
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
@@ -114,7 +114,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             // Misc actions
             'bonusVocalize': AcolyteSheet.#bonusVocalize,
         },
-        classes: ['rogue-trader', 'sheet', 'actor', 'acolyte'],
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'acolyte'],
         position: {
             width: 1050,
             height: 800,
@@ -133,44 +133,44 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     static PARTS = {
         header: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/header.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/acolyte/header.hbs',
         },
         tabs: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tabs.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/acolyte/tabs.hbs',
         },
         overview: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tab-overview.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-overview.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         combat: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tab-combat.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-combat.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         skills: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tab-skills.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-skills.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         talents: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tab-talents.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-talents.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         equipment: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tab-equipment.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-equipment.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         powers: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tab-powers.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-powers.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         biography: {
-            template: 'systems/rogue-trader/templates/actor/acolyte/tab-biography.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-biography.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
     };
@@ -182,13 +182,13 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @override
      */
     static TABS = [
-        { tab: 'overview', label: 'RT.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
-        { tab: 'skills', label: 'RT.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
-        { tab: 'talents', label: 'RT.Tabs.Talents', group: 'primary', cssClass: 'tab-talents' },
-        { tab: 'combat', label: 'RT.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
-        { tab: 'equipment', label: 'RT.Tabs.Equipment', group: 'primary', cssClass: 'tab-equipment' },
-        // { tab: 'powers', label: 'RT.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
-        { tab: 'biography', label: 'RT.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
+        { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
+        { tab: 'skills', label: 'WH40K.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
+        { tab: 'talents', label: 'WH40K.Tabs.Talents', group: 'primary', cssClass: 'tab-talents' },
+        { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
+        { tab: 'equipment', label: 'WH40K.Tabs.Equipment', group: 'primary', cssClass: 'tab-equipment' },
+        // { tab: 'powers', label: 'WH40K.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
+        { tab: 'biography', label: 'WH40K.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
     ];
 
     /* -------------------------------------------- */
@@ -281,7 +281,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const context = await super._prepareContext(options);
 
         // RT-specific configuration
-        context.dh = CONFIG.rt || ROGUE_TRADER;
+        context.dh = CONFIG.rt || WH40K;
 
         // Prepare characteristic HUD data
         this._prepareCharacteristicHUD(context);
@@ -305,9 +305,9 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Prepare combat station data (uses cached categorized items)
         this._prepareCombatData(context, categorized);
 
-        // Prepare Rogue Trader specific fields
+        // Prepare WH40K RPG specific fields
         if (context.system) {
-            context.system.rogueTrader = this._prepareRogueTraderFields(context.system.rogueTrader ?? {});
+            context.system.rogueTrader = this._prepareWH40KFields(context.system.rogueTrader ?? {});
         }
 
         // Prepare dynasty tab data
@@ -948,12 +948,12 @@ export default class AcolyteSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Prepare Rogue Trader specific fields.
+     * Prepare WH40K RPG specific fields.
      * @param {object} rogueTraderData  The rogueTrader data object.
      * @returns {object}
      * @protected
      */
-    _prepareRogueTraderFields(rogueTraderData) {
+    _prepareWH40KFields(rogueTraderData) {
         const prepared = rogueTraderData ?? {};
         prepared.armour = prepared.armour ?? {
             head: 0,
@@ -1000,7 +1000,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const modifier = pf.modifier ?? 0;
         const effectivePF = currentPF + modifier;
 
-        // Determine wealth tier (Rogue Trader wealth categories)
+        // Determine wealth tier (WH40K RPG wealth categories)
         let wealthTier;
         if (effectivePF >= 100) {
             wealthTier = { key: 'legendary', label: 'Legendary Wealth', min: 100 };
@@ -1093,7 +1093,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @protected
      */
     _prepareFavoriteSkills() {
-        const favorites = this.actor.getFlag('rogue-trader', 'favoriteSkills') || [];
+        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
         const skills = this.actor.skills ?? {};
         const characteristics = this.actor.characteristics ?? {};
 
@@ -1170,7 +1170,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @protected
      */
     _prepareFavoriteTalents() {
-        const favorites = this.actor.getFlag('rogue-trader', 'favoriteTalents') || [];
+        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
         const talents = this.actor.items.filter((i) => i.type === 'talent');
 
         // Map favorite talent IDs to full talent objects
@@ -1428,13 +1428,13 @@ export default class AcolyteSheet extends BaseActorSheet {
             const roll = await new Roll('1d10 + @ab', { ab: agBonus }).evaluate();
 
             const content = `
-                <div class="rt-hit-location-result">
+                <div class="wh40k-hit-location-result">
                     <h3><i class="fas fa-bolt"></i> Initiative Roll</h3>
-                    <div class="rt-hit-roll">
-                        <span class="rt-roll-result">${roll.total}</span>
+                    <div class="wh40k-hit-roll">
+                        <span class="wh40k-roll-result">${roll.total}</span>
                     </div>
-                    <div class="rt-hit-location">
-                        <span class="rt-location-armour">1d10 + Agility Bonus (${agBonus})</span>
+                    <div class="wh40k-hit-location">
+                        <span class="wh40k-location-armour">1d10 + Agility Bonus (${agBonus})</span>
                     </div>
                 </div>
             `;
@@ -1444,7 +1444,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                 content,
                 rolls: [roll],
                 flags: {
-                    'rogue-trader': {
+                    'wh40k-rpg': {
                         type: 'initiative',
                     },
                 },
@@ -1534,7 +1534,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const chatData = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: await renderTemplate('systems/rogue-trader/templates/chat/combat-action-card.hbs', {
+            content: await renderTemplate('systems/wh40k-rpg/templates/chat/combat-action-card.hbs', {
                 name: game.i18n.localize(actionConfig.label),
                 actor: this.actor.name,
                 actionType: actionConfig.type,
@@ -1574,7 +1574,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const chatData = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: await renderTemplate('systems/rogue-trader/templates/chat/movement-card.hbs', {
+            content: await renderTemplate('systems/wh40k-rpg/templates/chat/movement-card.hbs', {
                 actor: this.actor.name,
                 movementType: movementType,
                 movementLabel: movement.label,
@@ -1602,12 +1602,12 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Find the actor's active token on the canvas
         const token = this.actor.getActiveTokens()?.[0]?.document;
         if (!token) {
-            ui.notifications.info(game.i18n.localize('RT.MOVEMENT.Label') + ': No active token on canvas.');
+            ui.notifications.info(game.i18n.localize('WH40K.MOVEMENT.Label') + ': No active token on canvas.');
             return;
         }
 
         // Store movement action on token flags
-        await token.update({ 'flags.rogue-trader.movementAction': movementType });
+        await token.update({ 'flags.wh40k-rpg.movementAction': movementType });
 
         const config = CONFIG.rt.movementTypes[movementType];
         const label = config ? game.i18n.localize(config.label) : movementType;
@@ -1960,7 +1960,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: `
-                <div class="rt-fate-spend-message">
+                <div class="wh40k-fate-spend-message">
                     <div style="display: flex; align-items: center; gap: 8px; padding: 12px; background: rgba(196, 135, 29, 0.1); border-left: 3px solid #c4871d; border-radius: 4px;">
                         <i class="fas fa-star" style="font-size: 1.5rem; color: #c4871d;"></i>
                         <div>${message}</div>
@@ -2311,7 +2311,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         // Create a simple context menu programmatically
         const menu = document.createElement('div');
-        menu.className = 'rt-context-menu rt-utility-menu';
+        menu.className = 'wh40k-context-menu rt-utility-menu';
         menu.style.position = 'fixed';
         menu.style.zIndex = '1000';
 
@@ -2365,12 +2365,12 @@ export default class AcolyteSheet extends BaseActorSheet {
     _getUtilityMenuOptions() {
         return [
             {
-                name: game.i18n.localize('RT.Utility.SetupCharacteristics'),
+                name: game.i18n.localize('WH40K.Utility.SetupCharacteristics'),
                 icon: '<i class="fa-solid fa-dice-d20"></i>',
                 callback: () => CharacteristicSetupDialog.open(this.actor),
             },
             {
-                name: game.i18n.localize('RT.Utility.SetupOriginPath'),
+                name: game.i18n.localize('WH40K.Utility.SetupOriginPath'),
                 icon: '<i class="fa-solid fa-route"></i>',
                 callback: () => this._openOriginPathBuilder(),
                 condition: () => !!game.rt?.openOriginPathBuilder,
@@ -2387,10 +2387,10 @@ export default class AcolyteSheet extends BaseActorSheet {
             if (game.rt?.openOriginPathBuilder) {
                 await game.rt.openOriginPathBuilder(this.actor);
             } else {
-                ui.notifications.warn(game.i18n.localize('RT.Utility.OriginPathNotAvailable'));
+                ui.notifications.warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
             }
         } catch (error) {
-            ui.notifications.error(`${game.i18n.localize('RT.Utility.OriginPathError')}: ${error.message}`);
+            ui.notifications.error(`${game.i18n.localize('WH40K.Utility.OriginPathError')}: ${error.message}`);
             console.error('Origin Path Builder error:', error);
         }
     }
@@ -2461,7 +2461,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         if (visibleCount === 0 && itemCards.length > 0) {
             const noResults = document.createElement('div');
-            noResults.className = 'rt-no-results';
+            noResults.className = 'wh40k-no-results';
             noResults.innerHTML = '<i class="fas fa-search"></i><span>No items match your filters</span>';
             equipmentPanel.appendChild(noResults);
         }
@@ -2533,7 +2533,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         if (!skillKey) return;
 
         // Get current favorite skills
-        const favorites = this.actor.getFlag('rogue-trader', 'favoriteSkills') || [];
+        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
         const index = favorites.indexOf(skillKey);
 
         // Toggle
@@ -2544,7 +2544,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         }
 
         // Save
-        await this.actor.setFlag('rogue-trader', 'favoriteSkills', favorites);
+        await this.actor.setFlag('wh40k-rpg', 'favoriteSkills', favorites);
 
         // Re-render skills tab and overview tab
         await this.render({ parts: ['skills', 'overview'] });
@@ -2567,7 +2567,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const favoriteKey = `${skillKey}:${entryIndex}`;
 
         // Get current favorite specialist skills
-        const favorites = this.actor.getFlag('rogue-trader', 'favoriteSpecialistSkills') || [];
+        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') || [];
         const index = favorites.indexOf(favoriteKey);
 
         // Toggle
@@ -2578,7 +2578,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         }
 
         // Save
-        await this.actor.setFlag('rogue-trader', 'favoriteSpecialistSkills', favorites);
+        await this.actor.setFlag('wh40k-rpg', 'favoriteSpecialistSkills', favorites);
 
         // Re-render talents tab
         await this.render({ parts: ['talents'] });
@@ -2607,7 +2607,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         // Build the skill selector content
         const content = `
-            <form class="rt-add-specialist-form">
+            <form class="wh40k-add-specialist-form">
                 <div class="form-group">
                     <label for="skill-select">Select Skill Type</label>
                     <select id="skill-select" name="skillKey" required style="width: 100%; padding: 8px; font-size: 1rem;">
@@ -2663,7 +2663,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         if (!itemId) return;
 
         // Get current favorite talents
-        const favorites = this.actor.getFlag('rogue-trader', 'favoriteTalents') || [];
+        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
         const index = favorites.indexOf(itemId);
 
         // Toggle
@@ -2674,7 +2674,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         }
 
         // Save
-        await this.actor.setFlag('rogue-trader', 'favoriteTalents', favorites);
+        await this.actor.setFlag('wh40k-rpg', 'favoriteTalents', favorites);
 
         // Re-render talents tab and overview tab
         await this.render({ parts: ['talents', 'overview'] });
@@ -2919,7 +2919,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                 // Fallback: create a simple chat message
                 await ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    content: `<div class="rt-power-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
+                    content: `<div class="wh40k-power-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
             }
         } catch (error) {
@@ -2989,7 +2989,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             } else {
                 await ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    content: `<div class="rt-ritual-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
+                    content: `<div class="wh40k-ritual-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
             }
         } catch (error) {
@@ -3035,7 +3035,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             } else {
                 await ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    content: `<div class="rt-order-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
+                    content: `<div class="wh40k-order-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
             }
         } catch (error) {
@@ -3062,7 +3062,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                 const table =
                     game.tables.getName('Psychic Phenomena') ||
                     (await game.packs
-                        .get('rogue-trader.rt-rolltables-psychic')
+                        .get('wh40k-rpg.rt-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs) => docs.find((d) => d.name.includes('Phenomena'))));
 
@@ -3073,7 +3073,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                     const roll = await new Roll('1d100').evaluate();
                     await ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                        content: `<div class="rt-phenomena-roll"><h3>Psychic Phenomena</h3><p>Roll: ${roll.total}</p></div>`,
+                        content: `<div class="wh40k-phenomena-roll"><h3>Psychic Phenomena</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],
                     });
                 }
@@ -3102,7 +3102,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                 const table =
                     game.tables.getName('Perils of the Warp') ||
                     (await game.packs
-                        .get('rogue-trader.rt-rolltables-psychic')
+                        .get('wh40k-rpg.rt-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs) => docs.find((d) => d.name.includes('Perils'))));
 
@@ -3113,7 +3113,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                     const roll = await new Roll('1d100').evaluate();
                     await ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                        content: `<div class="rt-perils-roll"><h3>Perils of the Warp</h3><p>Roll: ${roll.total}</p></div>`,
+                        content: `<div class="wh40k-perils-roll"><h3>Perils of the Warp</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],
                     });
                 }

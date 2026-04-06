@@ -4,7 +4,7 @@
  * Provides canonical mapping between skill display names and internal keys,
  * validates skill keys against actor schema, and identifies specialist skills.
  * 
- * All 51 Rogue Trader skills + 3 compatibility skills (athletics, parry, stealth).
+ * All 51 WH40K RPG skills + 3 compatibility skills (athletics, parry, stealth).
  */
 
 export class SkillKeyHelper {

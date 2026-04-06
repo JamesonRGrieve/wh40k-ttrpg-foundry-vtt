@@ -141,7 +141,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(
     }
     
     if ( this.sustained ) {
-      props.push(game.i18n.localize("RT.PsychicPower.Sustained"));
+      props.push(game.i18n.localize("WH40K.PsychicPower.Sustained"));
     }
     
     return props;

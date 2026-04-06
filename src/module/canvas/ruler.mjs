@@ -1,5 +1,5 @@
 /**
- * Custom Token Ruler for the Rogue Trader system.
+ * Custom Token Ruler for the WH40K RPG system.
  * Colors ruler segments based on movement speed budget (green/yellow/red).
  */
 export default class TokenRulerRT extends foundry.canvas.placeables.tokens.TokenRuler {

@@ -4,7 +4,7 @@ import { AssignDamageData } from '../rolls/assign-damage-data.mjs';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.mjs';
 import { DHTargetedActionManager } from './targeted-action-manager.mjs';
 import { Hit } from '../rolls/damage-data.mjs';
-import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
+import { WH40KSettings } from '../wh40k-rpg-settings.mjs';
 import { SYSTEM_ID } from '../constants.mjs';
 import { ConfirmationDialog } from '../applications/dialogs/_module.mjs';
 
@@ -90,7 +90,7 @@ export class BasicActionManager {
             psychicEffect: actionData.psychicEffect || null,
         };
 
-        const template = 'systems/rogue-trader/templates/chat/damage-roll-chat.hbs';
+        const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await renderTemplate(template, templateData);
         const chatData = {
             user: game.user.id,
@@ -288,7 +288,7 @@ export class BasicActionManager {
      * @returns {Promise<void>}
      */
     async sendItemVocalizeChat(data) {
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/item-vocalize-chat.hbs', data);
+        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
         let chatData = {
             user: game.user.id,
             content: html,

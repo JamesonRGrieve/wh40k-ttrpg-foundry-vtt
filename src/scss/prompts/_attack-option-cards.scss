@@ -8,28 +8,28 @@
 .urd-card-group {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
-    padding: $rt-space-sm 0;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-sm 0;
 
     & + .urd-card-group {
-        border-top: 1px solid $rt-border-light;
+        border-top: 1px solid $wh40k-border-light;
     }
 
     &--collapsible {
-        padding-bottom: $rt-space-xs;
+        padding-bottom: $wh40k-space-xs;
     }
 }
 
 .urd-card-group__title {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    font-family: $rt-font-ui;
-    font-size: $rt-font-size-xs;
+    gap: $wh40k-space-sm;
+    font-family: $wh40k-font-ui;
+    font-size: $wh40k-font-size-xs;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $rt-text-secondary;
+    color: $wh40k-text-secondary;
     padding: 0;
     margin: 0;
     background: none;
@@ -37,8 +37,8 @@
     cursor: default;
 
     i:first-child {
-        color: $rt-color-gold;
-        font-size: $rt-font-size-xs;
+        color: $wh40k-color-gold;
+        font-size: $wh40k-font-size-xs;
     }
 
     &--toggle {
@@ -47,15 +47,15 @@
         justify-content: flex-start;
 
         &:hover {
-            color: $rt-text-primary;
+            color: $wh40k-text-primary;
         }
     }
 }
 
 .urd-card-group__chevron {
     margin-left: auto;
-    font-size: $rt-font-size-2xs;
-    transition: transform $rt-transition-fast;
+    font-size: $wh40k-font-size-2xs;
+    transition: transform $wh40k-transition-fast;
 }
 
 // Inline summary shown when section is collapsed
@@ -63,14 +63,14 @@
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
-    font-size: $rt-font-size-2xs;
+    gap: $wh40k-space-xs;
+    font-size: $wh40k-font-size-2xs;
     font-weight: 400;
     text-transform: none;
     letter-spacing: 0;
 
     &-label {
-        color: $rt-text-primary;
+        color: $wh40k-text-primary;
     }
 
     &-mod {
@@ -78,26 +78,26 @@
 
         &--positive { color: #4ade80; }
         &--negative { color: #f87171; }
-        &--neutral { color: $rt-text-muted; }
+        &--neutral { color: $wh40k-text-muted; }
     }
 }
 
 .urd-card-group__action {
     margin-left: auto;
-    padding: 2px $rt-space-sm;
-    font-size: $rt-font-size-2xs;
-    font-family: $rt-font-ui;
-    color: $rt-text-secondary;
-    background: $rt-bg-subtle;
-    border: 1px solid $rt-border-light;
-    border-radius: $rt-radius-sm;
+    padding: 2px $wh40k-space-sm;
+    font-size: $wh40k-font-size-2xs;
+    font-family: $wh40k-font-ui;
+    color: $wh40k-text-secondary;
+    background: $wh40k-bg-subtle;
+    border: 1px solid $wh40k-border-light;
+    border-radius: $wh40k-radius-sm;
     cursor: pointer;
-    transition: all $rt-transition-fast;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
-        color: $rt-text-primary;
-        border-color: $rt-color-gold;
-        background: $rt-bg-input-focus;
+        color: $wh40k-text-primary;
+        border-color: $wh40k-color-gold;
+        background: $wh40k-bg-input-focus;
     }
 
     i {
@@ -110,28 +110,28 @@
 .urd-card-group__cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
 
     &--sub {
-        padding-left: $rt-space-sm;
+        padding-left: $wh40k-space-sm;
     }
 }
 
 .urd-card-group__expand {
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
-    padding: 2px $rt-space-sm;
-    font-size: $rt-font-size-2xs;
-    font-family: $rt-font-ui;
-    color: $rt-text-muted;
+    gap: $wh40k-space-xs;
+    padding: 2px $wh40k-space-sm;
+    font-size: $wh40k-font-size-2xs;
+    font-family: $wh40k-font-ui;
+    color: $wh40k-text-muted;
     background: none;
     border: none;
     cursor: pointer;
-    transition: color $rt-transition-fast;
+    transition: color $wh40k-transition-fast;
 
     &:hover {
-        color: $rt-text-secondary;
+        color: $wh40k-text-secondary;
     }
 
     i {
@@ -142,14 +142,14 @@
 .urd-card-group__hint {
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
-    padding: 2px $rt-space-sm;
-    font-size: $rt-font-size-2xs;
-    color: $rt-text-muted;
+    gap: $wh40k-space-xs;
+    padding: 2px $wh40k-space-sm;
+    font-size: $wh40k-font-size-2xs;
+    color: $wh40k-text-muted;
     font-style: italic;
 
     i {
-        color: $rt-color-gold;
+        color: $wh40k-color-gold;
     }
 
     &--melta {
@@ -169,25 +169,25 @@
     align-items: center;
     justify-content: center;
     gap: 2px;
-    padding: $rt-space-xs $rt-space-xs;
-    background: $rt-bg-paper;
-    border: 1px solid $rt-border-light;
-    border-radius: $rt-radius-md;
+    padding: $wh40k-space-xs $wh40k-space-xs;
+    background: $wh40k-bg-paper;
+    border: 1px solid $wh40k-border-light;
+    border-radius: $wh40k-radius-md;
     cursor: pointer;
-    transition: all $rt-transition-fast;
-    font-family: $rt-font-ui;
-    font-size: $rt-font-size-2xs;
-    color: $rt-text-secondary;
+    transition: all $wh40k-transition-fast;
+    font-family: $wh40k-font-ui;
+    font-size: $wh40k-font-size-2xs;
+    color: $wh40k-text-secondary;
     position: relative;
     min-height: 56px;
     text-align: center;
 
     &:hover:not(:disabled) {
-        border-color: $rt-border-medium;
-        background: $rt-bg-paper-light;
+        border-color: $wh40k-border-medium;
+        background: $wh40k-bg-paper-light;
         transform: translateY(-1px);
-        box-shadow: $rt-shadow-sm;
-        color: $rt-text-primary;
+        box-shadow: $wh40k-shadow-sm;
+        color: $wh40k-text-primary;
     }
 
     &:active:not(:disabled) {
@@ -197,36 +197,36 @@
 
     // ── Selected state ──
     &--selected {
-        border-color: $rt-color-gold;
-        background: rgba($rt-color-gold, 0.1);
-        color: $rt-text-primary;
-        box-shadow: 0 0 6px rgba($rt-color-gold, 0.15);
+        border-color: $wh40k-color-gold;
+        background: rgba($wh40k-color-gold, 0.1);
+        color: $wh40k-text-primary;
+        box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.15);
 
         &:hover:not(:disabled) {
-            border-color: $rt-color-gold-light;
-            background: rgba($rt-color-gold, 0.15);
-            box-shadow: 0 0 8px rgba($rt-color-gold, 0.25);
+            border-color: $wh40k-color-gold-light;
+            background: rgba($wh40k-color-gold, 0.15);
+            box-shadow: 0 0 8px rgba($wh40k-color-gold, 0.25);
         }
 
         .urd-card__icon {
-            color: $rt-color-gold;
+            color: $wh40k-color-gold;
         }
     }
 
     // ── Active toggle state (multi-select) ──
     &--active {
-        border-color: $rt-color-gold;
-        background: rgba($rt-color-gold, 0.1);
-        color: $rt-text-primary;
-        box-shadow: 0 0 6px rgba($rt-color-gold, 0.15);
+        border-color: $wh40k-color-gold;
+        background: rgba($wh40k-color-gold, 0.1);
+        color: $wh40k-text-primary;
+        box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.15);
 
         &:hover:not(:disabled) {
-            border-color: $rt-color-gold-light;
-            background: rgba($rt-color-gold, 0.15);
+            border-color: $wh40k-color-gold-light;
+            background: rgba($wh40k-color-gold, 0.15);
         }
 
         .urd-card__icon {
-            color: $rt-color-gold;
+            color: $wh40k-color-gold;
         }
     }
 
@@ -241,14 +241,14 @@
 // ── Card Sub-elements ────────────────────────
 
 .urd-card__icon {
-    font-size: $rt-font-size-xs;
-    color: $rt-text-muted;
-    transition: color $rt-transition-fast;
+    font-size: $wh40k-font-size-xs;
+    color: $wh40k-text-muted;
+    transition: color $wh40k-transition-fast;
 }
 
 .urd-card__name {
     font-weight: 500;
-    font-size: $rt-font-size-2xs;
+    font-size: $wh40k-font-size-2xs;
     line-height: 1.1;
 }
 
@@ -258,19 +258,19 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    color: $rt-text-muted;
-    background: $rt-bg-overlay-light;
-    border-radius: $rt-radius-sm;
+    color: $wh40k-text-muted;
+    background: $wh40k-bg-overlay-light;
+    border-radius: $wh40k-radius-sm;
 }
 
 .urd-card__range {
     font-size: 0.5rem;
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
 }
 
 .urd-card__mod {
     font-weight: 600;
-    font-size: $rt-font-size-2xs;
+    font-size: $wh40k-font-size-2xs;
 
     &--positive {
         color: #4ade80;
@@ -281,7 +281,7 @@
     }
 
     &--neutral {
-        color: $rt-text-muted;
+        color: $wh40k-text-muted;
     }
 }
 

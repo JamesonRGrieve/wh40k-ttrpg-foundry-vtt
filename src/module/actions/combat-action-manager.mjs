@@ -37,7 +37,7 @@ export class CombatActionManager {
     async resetFirstAttackFlags(combat) {
         for (const combatant of combat.combatants) {
             if (combatant.actor) {
-                await combatant.actor.unsetFlag('rogue-trader', 'hitThisRound');
+                await combatant.actor.unsetFlag('wh40k-rpg', 'hitThisRound');
             }
         }
     }

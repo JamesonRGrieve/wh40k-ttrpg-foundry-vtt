@@ -2,7 +2,7 @@
 // GOTHIC QUICK STATUS DISPLAY
 // ============================================
 
-.rt-quick-status-gothic {
+.wh40k-quick-status-gothic {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -18,13 +18,13 @@
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
-.rt-quick-status-gothic .rt-degree-label,
-.rt-quick-status-gothic .rt-degree-modifier {
+.wh40k-quick-status-gothic .wh40k-degree-label,
+.wh40k-quick-status-gothic .wh40k-degree-modifier {
     color: #666;
     text-shadow: none;
 }
 
-.rt-status-panel {
+.wh40k-status-panel {
     flex: 0 0 auto;
     width: 78px;
     height: 64px;
@@ -41,7 +41,7 @@
     }
 }
 
-.rt-status-header {
+.wh40k-status-header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,13 +51,13 @@
     border-bottom: 1px solid rgba(120, 120, 120, 0.2);
 }
 
-.rt-status-icon {
+.wh40k-status-icon {
     font-size: 12px;
     color: #666;
     text-shadow: none;
 }
 
-.rt-status-title {
+.wh40k-status-title {
     font-size: 0.6em;
     font-weight: 700;
     text-transform: uppercase;
@@ -66,7 +66,7 @@
     text-shadow: none;
 }
 
-.rt-status-body {
+.wh40k-status-body {
     padding: 4px 6px 6px;
     display: flex;
     flex-direction: column;
@@ -76,7 +76,7 @@
     justify-content: center;
 }
 
-.rt-hud-value {
+.wh40k-hud-value {
     font-size: 1.1em;
     font-weight: 700;
     color: #2a1a0a;
@@ -85,37 +85,37 @@
     gap: 2px;
 }
 
-.rt-hud-divider {
+.wh40k-hud-divider {
     font-size: 0.8em;
     color: #777;
     font-weight: 600;
 }
 
-.rt-hud-sub {
+.wh40k-hud-sub {
     font-size: 0.6em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: #666;
 }
 
-.rt-status-row {
+.wh40k-status-row {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-.rt-status-input {
+.wh40k-status-input {
     width: 30px;
 }
 
-.rt-status-sub {
+.wh40k-status-sub {
     font-size: 0.65em;
     color: #666;
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
 
-.rt-gothic-input {
+.wh40k-gothic-input {
     width: 32px;
     height: 24px;
     text-align: center;
@@ -142,7 +142,7 @@
     -moz-appearance: textfield;
 }
 
-.rt-arrow-btn {
+.wh40k-arrow-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -169,57 +169,57 @@
     }
 }
 
-.rt-arrow-up {
+.wh40k-arrow-up {
     color: #666;
     &:hover { color: #333; }
 }
 
-.rt-arrow-down {
+.wh40k-arrow-down {
     color: #666;
     &:hover { color: #333; }
 }
 
 // Wounds Display
-.rt-wounds-panel {
-    .rt-status-header { border-left: 3px solid #b8b8b8; }
+.wh40k-wounds-panel {
+    .wh40k-status-header { border-left: 3px solid #b8b8b8; }
 }
 
-.rt-wounds-display {
+.wh40k-wounds-display {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.rt-wounds-current {
+.wh40k-wounds-current {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2px;
 }
 
-.rt-wounds-separator {
+.wh40k-wounds-separator {
     color: #a89070;
     font-size: 0.8em;
     text-transform: lowercase;
 }
 
-.rt-max-wounds {
+.wh40k-max-wounds {
     width: 32px;
     opacity: 0.8;
 }
 
 // Critical Damage Display
-.rt-crit-panel {
-    .rt-status-header { border-left: 3px solid #b8b8b8; }
+.wh40k-crit-panel {
+    .wh40k-status-header { border-left: 3px solid #b8b8b8; }
 }
 
-.rt-crit-display {
+.wh40k-crit-display {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-.rt-crit-value {
+.wh40k-crit-value {
     font-size: 1.3em;
     font-weight: bold;
     color: #444;
@@ -228,33 +228,33 @@
     text-align: center;
 }
 
-.rt-crit-separator {
+.wh40k-crit-separator {
     color: #a89070;
     font-size: 0.9em;
 }
 
-.rt-crit-max {
+.wh40k-crit-max {
     color: #888;
     font-size: 0.9em;
 }
 
 // Fate Display
-.rt-fate-panel {
-    .rt-status-header { border-left: 3px solid #b8b8b8; }
+.wh40k-fate-panel {
+    .wh40k-status-header { border-left: 3px solid #b8b8b8; }
 }
 
-.rt-move-panel {
+.wh40k-move-panel {
     width: 88px;
     
-    .rt-status-header { border-left: 3px solid #b8b8b8; }
+    .wh40k-status-header { border-left: 3px solid #b8b8b8; }
 }
 
-.rt-move-body {
+.wh40k-move-body {
     gap: 4px;
     align-items: center;
 }
 
-.rt-move-line {
+.wh40k-move-line {
     font-size: 0.7em;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -270,27 +270,27 @@
     text-align: center;
 }
 
-.rt-fate-display {
+.wh40k-fate-display {
     display: flex;
     align-items: center;
     gap: 4px;
     
-    .rt-gothic-input {
+    .wh40k-gothic-input {
         width: 28px;
     }
 }
 
-.rt-fate-separator {
+.wh40k-fate-separator {
     color: #a89070;
     font-size: 0.9em;
 }
 
 // Corruption Display
-.rt-corruption-panel {
-    .rt-status-header { border-left: 3px solid #b8b8b8; }
+.wh40k-corruption-panel {
+    .wh40k-status-header { border-left: 3px solid #b8b8b8; }
 }
 
-.rt-corruptiontable--border {
+.wh40k-corruptiontable--border {
     .table-row--head {
         display: grid;
         grid-template-columns: 1fr auto;
@@ -303,32 +303,32 @@
     }
 }
 
-.rt-corruption-display,
-.rt-insanity-display {
+.wh40k-corruption-display,
+.wh40k-insanity-display {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
 }
 
-.rt-points-row {
+.wh40k-points-row {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-.rt-points-input {
+.wh40k-points-input {
     width: 40px;
 }
 
-.rt-degree-display {
+.wh40k-degree-display {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1px;
 }
 
-.rt-degree-label {
+.wh40k-degree-label {
     font-size: 0.7em;
     font-weight: 700;
     text-transform: uppercase;
@@ -337,86 +337,86 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
-.rt-degree-modifier {
+.wh40k-degree-modifier {
     font-size: 0.65em;
     color: #a89070;
 }
 
 // Insanity Display
-.rt-insanity-panel {
-    .rt-status-header { border-left: 3px solid #b8b8b8; }
+.wh40k-insanity-panel {
+    .wh40k-status-header { border-left: 3px solid #b8b8b8; }
 }
 
 // Corruption Degree Classes
 .degree-pure {
-    .rt-degree-label { color: #90EE90; }
+    .wh40k-degree-label { color: #90EE90; }
 }
 
 .degree-tainted {
-    .rt-degree-label { color: #98FB98; }
+    .wh40k-degree-label { color: #98FB98; }
 }
 
 .degree-soiled {
-    .rt-degree-label { color: #FFFF00; }
-    .rt-degree-modifier { color: #FFD700; }
+    .wh40k-degree-label { color: #FFFF00; }
+    .wh40k-degree-modifier { color: #FFD700; }
 }
 
 .degree-debased {
-    .rt-degree-label { color: #FFA500; }
-    .rt-degree-modifier { color: #FF8C00; }
+    .wh40k-degree-label { color: #FFA500; }
+    .wh40k-degree-modifier { color: #FF8C00; }
 }
 
 .degree-profane {
-    .rt-degree-label { color: #FF6347; }
-    .rt-degree-modifier { color: #FF4500; }
+    .wh40k-degree-label { color: #FF6347; }
+    .wh40k-degree-modifier { color: #FF4500; }
 }
 
 .degree-damned {
-    .rt-degree-label { color: #8B0000; text-shadow: 0 0 8px rgba(139, 0, 0, 0.8); }
-    .rt-degree-modifier { color: #DC143C; }
+    .wh40k-degree-label { color: #8B0000; text-shadow: 0 0 8px rgba(139, 0, 0, 0.8); }
+    .wh40k-degree-modifier { color: #DC143C; }
     
-    &.rt-status-panel,
-    &.rt-degree-field {
+    &.wh40k-status-panel,
+    &.wh40k-degree-field {
         background: linear-gradient(180deg, rgba(60, 20, 20, 0.9), rgba(40, 10, 10, 0.95));
     }
 }
 
 // Insanity Degree Classes
 .degree-stable {
-    .rt-degree-label { color: #87CEEB; }
+    .wh40k-degree-label { color: #87CEEB; }
 }
 
 .degree-unsettled {
-    .rt-degree-label { color: #90EE90; }
-    .rt-degree-modifier { color: #98FB98; }
+    .wh40k-degree-label { color: #90EE90; }
+    .wh40k-degree-modifier { color: #98FB98; }
 }
 
 .degree-disturbed {
-    .rt-degree-label { color: #FFFF00; }
+    .wh40k-degree-label { color: #FFFF00; }
 }
 
 .degree-unhinged {
-    .rt-degree-label { color: #FFA500; }
-    .rt-degree-modifier { color: #FF8C00; }
+    .wh40k-degree-label { color: #FFA500; }
+    .wh40k-degree-modifier { color: #FF8C00; }
 }
 
 .degree-deranged {
-    .rt-degree-label { color: #FF6347; }
-    .rt-degree-modifier { color: #FF4500; }
+    .wh40k-degree-label { color: #FF6347; }
+    .wh40k-degree-modifier { color: #FF4500; }
 }
 
 .degree-terminally-insane {
-    .rt-degree-label { color: #9400D3; text-shadow: 0 0 8px rgba(148, 0, 211, 0.8); }
-    .rt-degree-modifier { color: #BA55D3; }
+    .wh40k-degree-label { color: #9400D3; text-shadow: 0 0 8px rgba(148, 0, 211, 0.8); }
+    .wh40k-degree-modifier { color: #BA55D3; }
     
-    &.rt-status-panel,
-    &.rt-degree-field {
+    &.wh40k-status-panel,
+    &.wh40k-degree-field {
         background: linear-gradient(180deg, rgba(40, 20, 60, 0.9), rgba(25, 10, 40, 0.95));
     }
 }
 
-.rt-quick-status-gothic .rt-status-panel.degree-damned,
-.rt-quick-status-gothic .rt-status-panel.degree-terminally-insane {
+.wh40k-quick-status-gothic .wh40k-status-panel.degree-damned,
+.wh40k-quick-status-gothic .wh40k-status-panel.degree-terminally-insane {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(242, 242, 242, 0.95));
 }
 

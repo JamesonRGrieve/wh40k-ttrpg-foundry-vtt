@@ -10,7 +10,7 @@
                 <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Weapon Name" />
                 <div class="rt-item-title__type">
                     <i class="fas fa-crosshairs"></i>
-                    <span>{{localize "RT.ShipWeapon"}}</span>
+                    <span>{{localize "WH40K.ShipWeapon"}}</span>
                 </div>
             </div>
         </header>
@@ -18,10 +18,10 @@
         <!-- Tab Navigation -->
         <nav class="rt-tabs" data-group="primary">
             <a class="rt-tab active" data-tab="details" data-group="primary">
-                <i class="fas fa-info-circle"></i> {{localize "RT.Item.Tabs.Details"}}
+                <i class="fas fa-info-circle"></i> {{localize "WH40K.Item.Tabs.Details"}}
             </a>
             <a class="rt-tab" data-tab="effects" data-group="primary">
-                <i class="fas fa-magic"></i> {{localize "RT.Item.Tabs.Effects"}}
+                <i class="fas fa-magic"></i> {{localize "WH40K.Item.Tabs.Effects"}}
             </a>
         </nav>
 
@@ -36,21 +36,21 @@
                     </div>
                     <div class="rt-panel__content">
                         <div class="form-group">
-                            <label>{{localize "RT.ShipWeapon.Type"}}</label>
+                            <label>{{localize "WH40K.ShipWeapon.Type"}}</label>
                             <select name="system.weaponType">
                                 {{selectOptions weaponTypes selected=system.weaponType}}
                             </select>
                         </div>
                         
                         <div class="form-group">
-                            <label>{{localize "RT.ShipLocation"}}</label>
+                            <label>{{localize "WH40K.ShipLocation"}}</label>
                             <select name="system.location">
                                 {{selectOptions locations selected=system.location}}
                             </select>
                         </div>
                         
                         <div class="form-group">
-                            <label>{{localize "RT.HullType"}}</label>
+                            <label>{{localize "WH40K.HullType"}}</label>
                             <select name="system.hullType" multiple>
                                 {{selectOptions hullTypes selected=system.hullType}}
                             </select>
@@ -58,7 +58,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label>{{localize "RT.Availability"}}</label>
+                            <label>{{localize "WH40K.Availability"}}</label>
                             <select name="system.availability">
                                 {{selectOptions availabilities selected=system.availability}}
                             </select>
@@ -157,7 +157,7 @@
 
             <!-- Effects Tab -->
             <div class="tab" data-tab="effects" data-group="primary">
-                {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+                {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
             </div>
         </section>
     </form>

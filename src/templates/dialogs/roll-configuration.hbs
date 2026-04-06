@@ -18,24 +18,24 @@
     {{!-- Target Display --}}
     <div class="roll-config-target">
         <div class="roll-config-target-row">
-            <span class="roll-config-label">{{localize "RT.Roll.BaseTarget"}}</span>
+            <span class="roll-config-label">{{localize "WH40K.Roll.BaseTarget"}}</span>
             <span class="roll-config-value">{{baseTarget}}</span>
         </div>
         {{#if (ne totalModifier 0)}}
         <div class="roll-config-target-row roll-config-target-row--modifier {{#if (gt totalModifier 0)}}positive{{else}}negative{{/if}}">
-            <span class="roll-config-label">{{localize "RT.Roll.Modifier"}}</span>
+            <span class="roll-config-label">{{localize "WH40K.Roll.Modifier"}}</span>
             <span class="roll-config-value">{{#if (gt totalModifier 0)}}+{{/if}}{{totalModifier}}</span>
         </div>
         {{/if}}
         <div class="roll-config-target-row roll-config-target-row--final">
-            <span class="roll-config-label">{{localize "RT.Roll.FinalTarget"}}</span>
+            <span class="roll-config-label">{{localize "WH40K.Roll.FinalTarget"}}</span>
             <span class="roll-config-value roll-config-value--large">{{finalTarget}}</span>
         </div>
     </div>
 
     {{!-- Difficulty Selection --}}
     <div class="form-group">
-        <label>{{localize "RT.Roll.Difficulty"}}</label>
+        <label>{{localize "WH40K.Roll.Difficulty"}}</label>
         <select name="difficulty" class="roll-config-select">
             {{#each difficulties}}
             <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>
@@ -48,7 +48,7 @@
     {{!-- Situational Modifiers --}}
     {{#if hasSituationalModifiers}}
     <div class="form-group roll-config-situational">
-        <label>{{localize "RT.Roll.SituationalModifiers"}}</label>
+        <label>{{localize "WH40K.Roll.SituationalModifiers"}}</label>
         <div class="roll-config-situational-list">
             {{#each situationalModifiers}}
             <button type="button" 
@@ -66,11 +66,11 @@
         </div>
         {{#if (gt situationalModifierTotal 0)}}
         <div class="roll-config-situational-total positive">
-            {{localize "RT.Roll.SituationalTotal"}}: +{{situationalModifierTotal}}
+            {{localize "WH40K.Roll.SituationalTotal"}}: +{{situationalModifierTotal}}
         </div>
         {{else if (lt situationalModifierTotal 0)}}
         <div class="roll-config-situational-total negative">
-            {{localize "RT.Roll.SituationalTotal"}}: {{situationalModifierTotal}}
+            {{localize "WH40K.Roll.SituationalTotal"}}: {{situationalModifierTotal}}
         </div>
         {{/if}}
     </div>
@@ -79,7 +79,7 @@
     {{!-- Permanent Modifiers (from items, conditions, talents, traits) --}}
     {{#if hasPermanentModifiers}}
     <div class="form-group roll-config-permanent">
-        <label>{{localize "RT.Roll.PermanentModifiers"}}</label>
+        <label>{{localize "WH40K.Roll.PermanentModifiers"}}</label>
         <div class="roll-config-permanent-list">
             {{#each permanentModifiers}}
             <div class="roll-config-permanent-item">
@@ -88,7 +88,7 @@
                         class="roll-config-permanent-source"
                         data-action="viewModifierSource"
                         data-uuid="{{this.uuid}}"
-                        title="{{localize "RT.Roll.ClickToView"}}">
+                        title="{{localize "WH40K.Roll.ClickToView"}}">
                     {{#if this.icon}}<i class="{{this.icon}}"></i>{{/if}}
                     <span>{{this.source}}</span>
                 </button>
@@ -106,15 +106,15 @@
         </div>
         {{#if (gt permanentModifierTotal 0)}}
         <div class="roll-config-permanent-total positive">
-            {{localize "RT.Roll.PermanentTotal"}}: +{{permanentModifierTotal}}
+            {{localize "WH40K.Roll.PermanentTotal"}}: +{{permanentModifierTotal}}
         </div>
         {{else if (lt permanentModifierTotal 0)}}
         <div class="roll-config-permanent-total negative">
-            {{localize "RT.Roll.PermanentTotal"}}: {{permanentModifierTotal}}
+            {{localize "WH40K.Roll.PermanentTotal"}}: {{permanentModifierTotal}}
         </div>
         {{else if (eq permanentModifierTotal 0)}}
         <div class="roll-config-permanent-total neutral">
-            {{localize "RT.Roll.PermanentTotal"}}: {{permanentModifierTotal}}
+            {{localize "WH40K.Roll.PermanentTotal"}}: {{permanentModifierTotal}}
         </div>
         {{/if}}
     </div>
@@ -122,16 +122,16 @@
 
     {{!-- Custom Modifier --}}
     <div class="form-group">
-        <label>{{localize "RT.Roll.CustomModifier"}}</label>
+        <label>{{localize "WH40K.Roll.CustomModifier"}}</label>
         <div class="roll-config-modifier-input">
             <input type="number" name="customModifier" value="{{customModifier}}" placeholder="±0" />
-            <span class="roll-config-modifier-hint">{{localize "RT.Roll.CustomModifierHint"}}</span>
+            <span class="roll-config-modifier-hint">{{localize "WH40K.Roll.CustomModifierHint"}}</span>
         </div>
     </div>
 
     {{!-- Roll Mode --}}
     <div class="form-group">
-        <label>{{localize "RT.Roll.RollMode"}}</label>
+        <label>{{localize "WH40K.Roll.RollMode"}}</label>
         <select name="rollMode" class="roll-config-select">
             {{#each rollModes}}
             <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>

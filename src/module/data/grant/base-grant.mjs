@@ -70,7 +70,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel {
 
   /**
    * The parent item containing this grant.
-   * @type {RogueTraderItem|null}
+   * @type {WH40KItem|null}
    */
   get item() {
     return this.parent?.parent ?? null;
@@ -78,7 +78,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel {
 
   /**
    * The actor this grant is being applied to (if any).
-   * @type {RogueTraderActor|null}
+   * @type {WH40KActor|null}
    */
   get actor() {
     return this.item?.actor ?? null;
@@ -98,7 +98,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel {
 
   /**
    * Apply this grant to an actor.
-   * @param {RogueTraderActor} actor - The actor to receive the grant
+   * @param {WH40KActor} actor - The actor to receive the grant
    * @param {object} data - Data from the grant flow (player selections, etc)
    * @param {object} [options={}] - Application options
    * @param {boolean} [options.dryRun=false] - Preview mode, don't actually apply
@@ -111,7 +111,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel {
 
   /**
    * Reverse/undo this grant from an actor.
-   * @param {RogueTraderActor} actor - The actor to remove the grant from
+   * @param {WH40KActor} actor - The actor to remove the grant from
    * @param {object} appliedState - The state from when grant was applied
    * @returns {Promise<object>} Data needed to restore the grant
    * @abstract
@@ -122,7 +122,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel {
 
   /**
    * Restore a previously reversed grant.
-   * @param {RogueTraderActor} actor - The actor to restore the grant to
+   * @param {WH40KActor} actor - The actor to restore the grant to
    * @param {object} restoreData - Data returned from reverse()
    * @returns {Promise<GrantApplicationResult>}
    */
@@ -178,7 +178,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel {
    */
   _createGrantFlags(sourceUuid) {
     return {
-      'rogue-trader': {
+      'wh40k-rpg': {
         sourceId: sourceUuid,
         grantId: this._id,
         grantType: this.constructor.TYPE,

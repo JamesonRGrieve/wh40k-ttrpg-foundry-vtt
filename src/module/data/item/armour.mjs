@@ -285,13 +285,13 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get coverageLabel() {
         const coverage = this._getEffectiveCoverage();
-        if (coverage.has('all')) return game.i18n.localize('RT.Coverage.All');
+        if (coverage.has('all')) return game.i18n.localize('WH40K.Coverage.All');
 
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         const covered = locations.filter((loc) => coverage.has(loc));
 
-        if (covered.length === 0) return game.i18n.localize('RT.Coverage.None');
-        if (covered.length === 6) return game.i18n.localize('RT.Coverage.All');
+        if (covered.length === 0) return game.i18n.localize('WH40K.Coverage.None');
+        if (covered.length === 6) return game.i18n.localize('WH40K.Coverage.All');
 
         // Check for symmetrical coverage
         const hasArms = covered.includes('leftArm') && covered.includes('rightArm');
@@ -735,7 +735,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get propertiesArray() {
         const props = [];
-        const config = CONFIG.ROGUE_TRADER?.armourProperties ?? {};
+        const config = CONFIG.WH40K?.armourProperties ?? {};
 
         for (const propId of this.properties) {
             // Convert kebab-case to PascalCase for i18n lookup
@@ -795,7 +795,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get craftsmanship-derived modifiers for armour.
-     * Applies Rogue Trader armour craftsmanship rules:
+     * Applies WH40K RPG armour craftsmanship rules:
      *
      * ARMOUR:
      * - Poor: -10 to Agility tests

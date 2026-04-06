@@ -3,9 +3,9 @@
 // Uses CSS custom properties from _gothic-theme.scss
 // ============================================
 
-.rt-armour-panel {
+.wh40k-armour-panel {
 
-  .rt-panel-body {
+  .wh40k-panel-body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -15,7 +15,7 @@
   }
 }
 
-.rt-hit-location-roll {
+.wh40k-hit-location-roll {
   width: 24px;
   height: 24px;
   padding: 0;
@@ -56,7 +56,7 @@
 //       [BODY]           (body extends down)
 //     [R.LEG][L.LEG]     (longer legs)
 
-.rt-armour-silhouette {
+.wh40k-armour-silhouette {
   display: grid !important; // Force grid display
   visibility: visible !important;
   grid-template-columns: 80px 1fr 80px;  // Arms on sides, body center
@@ -73,7 +73,7 @@
 }
 
 // Base box styling shared by all locations
-.rt-armour-box {
+.wh40k-armour-box {
   display: flex !important; // Force display
   visibility: visible !important;
   flex-direction: column;
@@ -97,13 +97,13 @@
       0 4px 12px var(--rt-shadow-medium),
       0 0 8px rgba(212, 175, 55, 0.2);
     
-    .rt-box-ap {
+    .wh40k-box-ap {
       border-color: var(--rt-gold);
       box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
       transform: scale(1.08);
     }
     
-    .rt-box-range {
+    .wh40k-box-range {
       background: var(--rt-gold);
       color: #fff;
     }
@@ -111,7 +111,7 @@
 }
 
 // Location label (top text)
-.rt-box-label {
+.wh40k-box-label {
   font-size: 0.6rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -123,7 +123,7 @@
 }
 
 // AP value (center, large circular badge)
-.rt-box-ap {
+.wh40k-box-ap {
   width: 38px;
   height: 38px;
   display: flex;
@@ -144,7 +144,7 @@
 }
 
 // Roll range (bottom badge)
-.rt-box-range {
+.wh40k-box-range {
   font-size: 0.55rem;
   font-weight: 700;
   color: var(--rt-text-muted, #8a7a6a);
@@ -163,27 +163,27 @@
 // Grid Area Positioning
 // ============================================
 
-.rt-box-head {
+.wh40k-box-head {
   grid-area: head;
   justify-self: center;
   min-width: 72px;
   min-height: 68px;
 }
 
-.rt-box-body {
+.wh40k-box-body {
   grid-area: body;
   grid-row: 2 / 3;  // Spans rows 2-3 (arms and legs row)
   min-height: 140px;
   align-self: stretch;
   
-  .rt-box-ap {
+  .wh40k-box-ap {
     width: 48px;
     height: 48px;
     font-size: 1.8rem;
   }
 }
 
-.rt-box-right-arm {
+.wh40k-box-right-arm {
   grid-area: rarm;
   justify-self: end;
   align-self: center;  // Center vertically with body
@@ -191,7 +191,7 @@
   min-width: 60px;
 }
 
-.rt-box-left-arm {
+.wh40k-box-left-arm {
   grid-area: larm;
   justify-self: start;
   align-self: center;  // Center vertically with body
@@ -199,7 +199,7 @@
   min-width: 60px;
 }
 
-.rt-box-right-leg {
+.wh40k-box-right-leg {
   grid-area: rleg;
   justify-self: end;   // Align with body edge
   align-self: start;
@@ -208,7 +208,7 @@
   margin-right: -40px;
 }
 
-.rt-box-left-leg {
+.wh40k-box-left-leg {
   grid-area: lleg;
   justify-self: start; // Align with body edge
   align-self: start;
@@ -221,7 +221,7 @@
 // Hit Location Highlight Animation
 // ============================================
 
-.rt-hit-location-highlight {
+.wh40k-hit-location-highlight {
   animation: hitLocationPulse 0.5s ease-in-out 4;
 }
 
@@ -242,7 +242,7 @@
 // Hit Location Chat Message Styles
 // ============================================
 
-.rt-hit-location-result {
+.wh40k-hit-location-result {
   padding: 12px;
   background: var(--rt-panel-bg-solid);
   border: 2px solid var(--rt-border-color);
@@ -268,11 +268,11 @@
   }
 }
 
-.rt-hit-roll {
+.wh40k-hit-roll {
   margin-bottom: 10px;
 }
 
-.rt-roll-result {
+.wh40k-roll-result {
   display: inline-block;
   font-family: 'Modesto Condensed', serif;
   font-size: 2.5em;
@@ -288,14 +288,14 @@
     0 2px 4px var(--rt-shadow-medium);
 }
 
-.rt-hit-location {
+.wh40k-hit-location {
   display: flex;
   flex-direction: column;
   gap: 4px;
   margin-top: 8px;
 }
 
-.rt-location-name {
+.wh40k-location-name {
   font-size: 1.2em;
   font-weight: 700;
   color: var(--rt-text-dark);
@@ -303,7 +303,7 @@
   letter-spacing: 0.05em;
 }
 
-.rt-location-armour {
+.wh40k-location-armour {
   font-size: 0.95em;
   color: var(--rt-text-muted);
   font-weight: 600;

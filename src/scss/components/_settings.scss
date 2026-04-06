@@ -9,10 +9,10 @@
         grid-template-columns: 1fr 1fr;
         gap: 3px;
 
-        input.rt-settings__input[type='text'],
-        input.rt-settings__input[type='number'],
-        textarea.rt-settings__textarea,
-        select.rt-settings__select {
+        input.wh40k-settings__input[type='text'],
+        input.wh40k-settings__input[type='number'],
+        textarea.wh40k-settings__textarea,
+        select.wh40k-settings__select {
             background-color: $form-input-background;
             color: $form-input-foreground;
             border-radius: 3px;
@@ -20,14 +20,14 @@
         }
 
         &--border {
-            @extend .rt-settings;
+            @extend .wh40k-settings;
             gap: 0;
 
             .clean {
                 border-top: none;
             }
 
-            .rt-settings {
+            .wh40k-settings {
                 &__row--xlarge,
                 &__row--large,
                 &__row {
@@ -53,7 +53,7 @@
         }
 
         &--noborder {
-            @extend .rt-settings;
+            @extend .wh40k-settings;
             border: 0;
         }
 
@@ -68,7 +68,7 @@
         }
 
         &--large {
-            @extend .rt-settings;
+            @extend .wh40k-settings;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
         }
 
@@ -78,36 +78,36 @@
             text-align: left;
 
             &--large {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 0.3fr 1fr 0.3fr 1fr 0.3fr 1fr;
             }
 
             &--xlarge {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 0.4fr 1fr 0.4fr 1fr 0.4fr 1fr 0.4fr 1fr;
             }
 
             &--label {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-template-columns: 5rem 1fr;
             }
 
             &--span {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 9rem 1fr;
             }
 
             &--span-even {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 1fr 1fr;
             }
 
             &--characteristics {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-column: 1 / -1;
                 grid-template-columns: 1.5fr repeat(10, 1fr);
 
@@ -144,13 +144,13 @@
             }
 
             &--invert {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-template-columns: 2fr 0.5fr;
                 text-align: left;
             }
 
             &--skill {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-template-columns: 1fr 0.35fr;
                 gap: 3px;
                 margin-bottom: 3pt;
@@ -159,7 +159,7 @@
             &--skillinit,
             &--talentinit,
             &--traitinit {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-template-columns: 1fr 0.45fr 0.45fr;
                 gap: 3px;
                 margin-bottom: 3pt;
@@ -167,7 +167,7 @@
 
             &--talent,
             &--trait {
-                @extend .rt-settings__row;
+                @extend .wh40k-settings__row;
                 grid-template-columns: 1fr 0.35fr;
                 gap: 3px;
                 margin-bottom: 3pt;
@@ -179,8 +179,8 @@
             margin-left: 5pt;
 
             &--add {
-                @extend .rt-material;
-                @extend .rt-settings__label;
+                @extend .wh40k-material;
+                @extend .wh40k-settings__label !optional;
                 cursor: pointer;
                 &:hover {
                     color: red;
@@ -206,7 +206,7 @@
                 display: none;
             }
 
-            input.rt-settings__input.rt-settings__input[type='number'] {
+            input.wh40k-settings__input.wh40k-settings__input[type='number'] {
                 pointer-events: none;
                 background: transparent;
                 color: #000;
@@ -257,7 +257,7 @@
         }
 
         &__controlwrap {
-            span.rt-current_level {
+            span.wh40k-current_level {
               //noinspection CssUnknownTarget
               &--1,
                 &--2,
@@ -292,7 +292,7 @@
                             display: none;
                         }
 
-                        & ~ span.rt-current_level--#{$level} {
+                        & ~ span.wh40k-current_level--#{$level} {
                             display: block;
                         }
                     }

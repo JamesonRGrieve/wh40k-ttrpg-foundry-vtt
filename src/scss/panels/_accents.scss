@@ -2,133 +2,133 @@
 // Tab-Specific Accent Colors
 // ============================================
 
-.rt-tab[data-tab="overview"],
-.rt-tab-overview {
-  // Override the base .rt-tab grid display  
+.wh40k-tab[data-tab="overview"],
+.wh40k-tab-overview {
+  // Override the base .wh40k-tab grid display  
   &.active {
     display: block !important;
   }
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-gold, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.12) 0%, transparent 100%);
   }
 }
 
-.rt-tab[data-tab="status"],
-.rt-tab-status {
-  // Override the base .rt-tab grid display  
+.wh40k-tab[data-tab="status"],
+.wh40k-tab-status {
+  // Override the base .wh40k-tab grid display  
   &.active {
     display: block !important;
   }
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.08) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-combat, 0.08) 0%, transparent 100%);
   }
 }
 
-.rt-tab[data-tab="combat"],
-.rt-tab-combat {
-  // Override the base .rt-tab grid display
+.wh40k-tab[data-tab="combat"],
+.wh40k-tab-combat {
+  // Override the base .wh40k-tab grid display
   &.active {
     display: block !important;
   }
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-combat, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-combat, 0.12) 0%, transparent 100%);
   }
   
-  .rt-panel-title i {
-    color: $rt-accent-combat;
+  .wh40k-panel-title i {
+    color: $wh40k-accent-combat;
   }
 }
 
-.rt-tab[data-tab="abilities"] {
-  // Override the base .rt-tab grid display
+.wh40k-tab[data-tab="abilities"] {
+  // Override the base .wh40k-tab grid display
   &.active {
     display: block !important;
   }
-  padding: $rt-space-md;
+  padding: $wh40k-space-md;
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-skills, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-skills, 0.12) 0%, transparent 100%);
   }
   
-  .rt-panel-title i {
-    color: $rt-accent-skills;
+  .wh40k-panel-title i {
+    color: $wh40k-accent-skills;
   }
 }
 
-.rt-tab-abilities {
-  // Override the base .rt-tab grid display
+.wh40k-tab-abilities {
+  // Override the base .wh40k-tab grid display
   &.active {
     display: block !important;
   }
-  padding: $rt-space-md;
+  padding: $wh40k-space-md;
 }
 
 // Characteristics Panel in Skills Tab
-.rt-chars-panel {
-  margin-bottom: $rt-space-md;
+.wh40k-chars-panel {
+  margin-bottom: $wh40k-space-md;
 }
 
-.rt-tab[data-tab="specialties"] {
+.wh40k-tab[data-tab="specialties"] {
   // Note: specialties uses rt-specialties-layout which has its own grid styling
-  .rt-panel-header,
-  .rt-specialist-header {
-    background: linear-gradient(180deg, rgba($rt-accent-talents, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header,
+  .wh40k-specialist-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.12) 0%, transparent 100%);
   }
 }
 
-.rt-tab[data-tab="talents"],
+.wh40k-tab[data-tab="talents"],
 .tab[data-tab="talents"] {
-  .rt-panel-header,
-  .rt-specialist-header,
-  .rt-ability-header {
-    background: linear-gradient(180deg, rgba($rt-accent-talents, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header,
+  .wh40k-specialist-header,
+  .wh40k-ability-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.12) 0%, transparent 100%);
   }
 }
 
-.rt-tab[data-tab="equipment"] {
-  // Override the base .rt-tab grid display
+.wh40k-tab[data-tab="equipment"] {
+  // Override the base .wh40k-tab grid display
   &.active {
     display: block !important;
   }
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-equipment, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-equipment, 0.12) 0%, transparent 100%);
   }
 }
 
-.rt-tab[data-tab="powers"] {
-  // Override the base .rt-tab grid display
+.wh40k-tab[data-tab="powers"] {
+  // Override the base .wh40k-tab grid display
   &.active {
     display: block !important;
   }
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-powers, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-powers, 0.12) 0%, transparent 100%);
   }
 }
 
-.rt-tab[data-tab="dynasty"] {
-  // Override the base .rt-tab grid display
+.wh40k-tab[data-tab="dynasty"] {
+  // Override the base .wh40k-tab grid display
   &.active {
     display: block !important;
   }
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-dynasty, 0.12) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-dynasty, 0.12) 0%, transparent 100%);
   }
 }
 
-.rt-tab[data-tab="bio"] {
-  // Override the base .rt-tab grid display
+.wh40k-tab[data-tab="bio"] {
+  // Override the base .wh40k-tab grid display
   &.active {
     display: block !important;
   }
   
-  .rt-panel-header {
-    background: linear-gradient(180deg, rgba($rt-accent-bio, 0.08) 0%, transparent 100%);
+  .wh40k-panel-header {
+    background: linear-gradient(180deg, rgba($wh40k-accent-bio, 0.08) 0%, transparent 100%);
   }
 }
 
@@ -136,35 +136,35 @@
 // Layout Helpers
 // ============================================
 
-.rt-specialties-layout {
+.wh40k-specialties-layout {
   // This class already overridden in _actor.scss with specific grid
   // Just add padding and flex for children
-  padding: $rt-space-md;
+  padding: $wh40k-space-md;
   
-  .rt-specialties-left,
-  .rt-specialties-right {
+  .wh40k-specialties-left,
+  .wh40k-specialties-right {
     display: flex;
     flex-direction: column;
   }
 }
 
-.rt-abilities-layout {
-  padding: $rt-space-md;
+.wh40k-abilities-layout {
+  padding: $wh40k-space-md;
   
-  .rt-abilities-right-col {
+  .wh40k-abilities-right-col {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
   }
 }
 
 // Reset grid spans for panels within modern layout
-.rt-tab .rt-panel {
-  &.rt-grid-col-2,
-  &.rt-grid-col-3,
-  &.rt-grid-col-4,
-  &.rt-grid-col-5,
-  &.rt-grid-col-6 {
+.wh40k-tab .wh40k-panel {
+  &.wh40k-grid-col-2,
+  &.wh40k-grid-col-3,
+  &.wh40k-grid-col-4,
+  &.wh40k-grid-col-5,
+  &.wh40k-grid-col-6 {
     grid-column: auto;
   }
 }

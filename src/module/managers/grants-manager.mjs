@@ -71,8 +71,8 @@ export class GrantsManager {
   /**
    * Apply all grants from an item to an actor.
    * 
-   * @param {RogueTraderItem} item - The item containing grants
-   * @param {RogueTraderActor} actor - The actor to receive grants
+   * @param {WH40KItem} item - The item containing grants
+   * @param {WH40KActor} actor - The actor to receive grants
    * @param {object} [options={}] - Application options
    * @param {object} [options.selections={}] - Player selections for choices
    * @param {object} [options.rolledValues={}] - Pre-rolled values for resources
@@ -187,8 +187,8 @@ export class GrantsManager {
   /**
    * Reverse/undo all grants from an item.
    * 
-   * @param {RogueTraderItem} item - The item whose grants to reverse
-   * @param {RogueTraderActor} actor - The actor to remove grants from
+   * @param {WH40KItem} item - The item whose grants to reverse
+   * @param {WH40KActor} actor - The actor to remove grants from
    * @param {object} appliedState - State from when grants were applied
    * @returns {Promise<object>} Restore data for re-applying
    */
@@ -216,7 +216,7 @@ export class GrantsManager {
   /**
    * Get a preview/summary of what an item would grant.
    * 
-   * @param {RogueTraderItem} item - The item to preview
+   * @param {WH40KItem} item - The item to preview
    * @returns {Promise<object>} Summary of grants
    */
   static async getGrantsSummary(item) {
@@ -240,7 +240,7 @@ export class GrantsManager {
   /**
    * Validate all grants on an item.
    * 
-   * @param {RogueTraderItem} item - The item to validate
+   * @param {WH40KItem} item - The item to validate
    * @returns {string[]} Array of validation errors
    */
   static validateItemGrants(item) {
@@ -267,8 +267,8 @@ export class GrantsManager {
    * Process grants from multiple items in batch.
    * Used by origin path builder to apply all selected origins at once.
    * 
-   * @param {RogueTraderItem[]} items - Array of items with grants
-   * @param {RogueTraderActor} actor - The actor to receive grants
+   * @param {WH40KItem[]} items - Array of items with grants
+   * @param {WH40KActor} actor - The actor to receive grants
    * @param {object} [options={}] - Application options
    * @param {boolean} [options.reverseExisting=false] - Reverse all existing grants before applying
    * @returns {Promise<GrantsApplicationResult>}
@@ -341,7 +341,7 @@ export class GrantsManager {
   /**
    * Save applied grant state to actor flags.
    * 
-   * @param {RogueTraderActor} actor - The actor
+   * @param {WH40KActor} actor - The actor
    * @param {string} sourceKey - Unique key for the source (UUID or item key)
    * @param {object} state - The applied state to save
    * @param {object} [metadata={}] - Additional metadata
@@ -360,21 +360,21 @@ export class GrantsManager {
     // Sanitize the key for use in flag path (remove dots, special chars)
     const safeKey = this._sanitizeKey(sourceKey);
     
-    await actor.setFlag("rogue-trader", `${this.FLAG_KEY}.${safeKey}`, flagData);
+    await actor.setFlag("wh40k-rpg", `${this.FLAG_KEY}.${safeKey}`, flagData);
     game.rt?.log(`GrantsManager: Saved applied state for ${sourceKey}`);
   }
 
   /**
    * Load applied grant state from actor flags.
    * 
-   * @param {RogueTraderActor} actor - The actor
+   * @param {WH40KActor} actor - The actor
    * @param {string} [sourceKey] - Optional source key to load specific grants
    * @returns {object|null} The applied state, or null if not found
    */
   static loadAppliedState(actor, sourceKey = null) {
     if (!actor) return null;
 
-    const allGrants = actor.getFlag("rogue-trader", this.FLAG_KEY) || {};
+    const allGrants = actor.getFlag("wh40k-rpg", this.FLAG_KEY) || {};
 
     if (sourceKey) {
       const safeKey = this._sanitizeKey(sourceKey);
@@ -387,7 +387,7 @@ export class GrantsManager {
   /**
    * Clear applied grant state from actor flags.
    * 
-   * @param {RogueTraderActor} actor - The actor
+   * @param {WH40KActor} actor - The actor
    * @param {string} [sourceKey] - Optional source key to clear specific grants
    * @returns {Promise<void>}
    */
@@ -396,10 +396,10 @@ export class GrantsManager {
 
     if (sourceKey) {
       const safeKey = this._sanitizeKey(sourceKey);
-      await actor.unsetFlag("rogue-trader", `${this.FLAG_KEY}.${safeKey}`);
+      await actor.unsetFlag("wh40k-rpg", `${this.FLAG_KEY}.${safeKey}`);
       game.rt?.log(`GrantsManager: Cleared applied state for ${sourceKey}`);
     } else {
-      await actor.unsetFlag("rogue-trader", this.FLAG_KEY);
+      await actor.unsetFlag("wh40k-rpg", this.FLAG_KEY);
       game.rt?.log(`GrantsManager: Cleared all applied grant state`);
     }
   }
@@ -407,7 +407,7 @@ export class GrantsManager {
   /**
    * Check if grants from a source have already been applied.
    * 
-   * @param {RogueTraderActor} actor - The actor
+   * @param {WH40KActor} actor - The actor
    * @param {string} sourceKey - The source key to check
    * @returns {boolean}
    */
@@ -434,7 +434,7 @@ export class GrantsManager {
   /**
    * Reverse all applied grants from a specific source.
    * 
-   * @param {RogueTraderActor} actor - The actor
+   * @param {WH40KActor} actor - The actor
    * @param {string} sourceKey - The source key to reverse
    * @returns {Promise<object>} Result of the reversal
    */
@@ -487,7 +487,7 @@ export class GrantsManager {
   /**
    * Reverse all applied grants from all sources (full reset).
    * 
-   * @param {RogueTraderActor} actor - The actor
+   * @param {WH40KActor} actor - The actor
    * @returns {Promise<object>} Result of the reversal
    */
   static async reverseAllAppliedGrants(actor) {
@@ -531,7 +531,7 @@ export class GrantsManager {
 
   /**
    * Reverse a single grant.
-   * @param {RogueTraderActor} actor 
+   * @param {WH40KActor} actor 
    * @param {string} grantId 
    * @param {object} grantState 
    * @returns {Promise<object>}
@@ -844,7 +844,7 @@ export class GrantsManager {
 
   /**
    * Extract grants configuration from an item.
-   * @param {RogueTraderItem} item 
+   * @param {WH40KItem} item 
    * @returns {object[]}
    * @private
    */
@@ -866,7 +866,7 @@ export class GrantsManager {
 
   /**
    * Process nested grants from granted items.
-   * @param {RogueTraderActor} actor 
+   * @param {WH40KActor} actor 
    * @param {object} appliedItems - Map of UUID to item ID
    * @param {object} options 
    * @private

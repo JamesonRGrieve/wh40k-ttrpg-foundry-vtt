@@ -2,14 +2,14 @@
 <form class="csd-form" autocomplete="off">
     {{!-- Header Instructions --}}
     <div class="csd-instructions">
-        <p>{{localize "RT.CharacteristicSetup.Instructions"}}</p>
+        <p>{{localize "WH40K.CharacteristicSetup.Instructions"}}</p>
     </div>
 
     {{!-- Rolls Bank --}}
     <section class="csd-section csd-rolls-bank" data-drop-zone="bank">
         <h3 class="csd-section-header">
             <i class="fa-solid fa-dice-d20"></i>
-            {{localize "RT.CharacteristicSetup.RollsBank"}}
+            {{localize "WH40K.CharacteristicSetup.RollsBank"}}
         </h3>
         <div class="csd-rolls-container">
             {{#each rollsBank}}
@@ -17,18 +17,18 @@
                  data-roll-index="{{index}}"
                  {{#unless isEmpty}}{{#unless isAssigned}}draggable="true"{{/unless}}{{/unless}}>
                 <span class="csd-roll-value">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
-                <span class="csd-roll-label">{{localize "RT.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
+                <span class="csd-roll-label">{{localize "WH40K.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
             </div>
             {{/each}}
         </div>
-        <p class="csd-bank-hint">{{localize "RT.CharacteristicSetup.ClickToEdit"}}</p>
+        <p class="csd-bank-hint">{{localize "WH40K.CharacteristicSetup.ClickToEdit"}}</p>
     </section>
 
     {{!-- Characteristics Grid --}}
     <section class="csd-section csd-characteristics">
         <h3 class="csd-section-header">
             <i class="fa-solid fa-user-gear"></i>
-            {{localize "RT.CharacteristicSetup.Characteristics"}}
+            {{localize "WH40K.CharacteristicSetup.Characteristics"}}
         </h3>
         <div class="csd-char-grid">
             {{#each characteristicRows}}
@@ -50,7 +50,7 @@
                             {{else}}
                             <span class="csd-base-value">{{base}}</span>
                             {{/if}}
-                            <span class="csd-base-label">{{localize "RT.CharacteristicSetup.Base"}}</span>
+                            <span class="csd-base-label">{{localize "WH40K.CharacteristicSetup.Base"}}</span>
                         </div>
                         <span class="csd-char-plus">+</span>
                         <div class="csd-char-roll-slot">
@@ -84,19 +84,19 @@
         <button type="button" class="csd-toggle-btn" data-action="toggleAdvanced">
             <i class="fa-solid {{#if advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
             {{#if advancedMode}}
-            {{localize "RT.CharacteristicSetup.AdvancedModeOn"}}
+            {{localize "WH40K.CharacteristicSetup.AdvancedModeOn"}}
             {{else}}
-            {{localize "RT.CharacteristicSetup.AdvancedModeOff"}}
+            {{localize "WH40K.CharacteristicSetup.AdvancedModeOff"}}
             {{/if}}
         </button>
-        <span class="csd-toggle-hint">{{localize "RT.CharacteristicSetup.AdvancedHint"}}</span>
+        <span class="csd-toggle-hint">{{localize "WH40K.CharacteristicSetup.AdvancedHint"}}</span>
     </div>
 
     {{!-- Preview Summary --}}
     <section class="csd-section csd-preview">
         <h3 class="csd-section-header">
             <i class="fa-solid fa-chart-bar"></i>
-            {{localize "RT.CharacteristicSetup.Preview"}}
+            {{localize "WH40K.CharacteristicSetup.Preview"}}
         </h3>
         <div class="csd-preview-bar">
             {{#each preview}}
@@ -112,11 +112,11 @@
     <footer class="csd-footer">
         <button type="button" class="csd-btn csd-btn-secondary" data-action="reset">
             <i class="fa-solid fa-rotate-left"></i>
-            {{localize "RT.CharacteristicSetup.Reset"}}
+            {{localize "WH40K.CharacteristicSetup.Reset"}}
         </button>
         <button type="button" class="csd-btn csd-btn-primary" data-action="apply" {{#unless canApply}}disabled{{/unless}}>
             <i class="fa-solid fa-check"></i>
-            {{localize "RT.CharacteristicSetup.Apply"}}
+            {{localize "WH40K.CharacteristicSetup.Apply"}}
         </button>
     </footer>
 </form>

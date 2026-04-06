@@ -1,7 +1,7 @@
 import SystemDataModel from "./system-data-model.mjs";
 
 /**
- * Base data model for all Actor types in Rogue Trader.
+ * Base data model for all Actor types in WH40K RPG.
  * Provides shared functionality and schema patterns for actors.
  * 
  * Key features:

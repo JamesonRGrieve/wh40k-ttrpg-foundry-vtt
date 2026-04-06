@@ -2,17 +2,17 @@
 // Affliction Lists (Malignancies, Mutations, Disorders)
 // ============================================
 
-.rt-affliction-section {
-  margin-top: $rt-space-sm;
-  padding-top: $rt-space-sm;
-  border-top: 1px solid $rt-border-light;
+.wh40k-affliction-section {
+  margin-top: $wh40k-space-sm;
+  padding-top: $wh40k-space-sm;
+  border-top: 1px solid $wh40k-border-light;
 }
 
-.rt-affliction-header {
+.wh40k-affliction-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: $rt-space-xs;
+  margin-bottom: $wh40k-space-xs;
   
   span {
     font-size: 0.75rem;
@@ -22,52 +22,52 @@
   }
 }
 
-.rt-add-btn {
-  @include rt-icon-button(20px, $rt-accent-gold, 0.65rem);
+.wh40k-add-btn {
+  @include rt-icon-button(20px, $wh40k-accent-gold, 0.65rem);
 }
 
-.rt-affliction-list {
+.wh40k-affliction-list {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-height: 24px;
 }
 
-.rt-affliction-row {
+.wh40k-affliction-row {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
   padding: 4px 8px;
-  background: $rt-bg-paper-light;
-  border: 1px solid $rt-border-light;
+  background: $wh40k-bg-paper-light;
+  border: 1px solid $wh40k-border-light;
   border-radius: 4px;
   
   &:hover {
-    background: $rt-bg-paper;
-    border-color: $rt-border-medium;
+    background: $wh40k-bg-paper;
+    border-color: $wh40k-border-medium;
   }
 }
 
-.rt-affliction-name {
+.wh40k-affliction-name {
   flex: 1;
   font-size: 0.85rem;
   color: var(--color-text-primary);
   cursor: pointer;
   
   &:hover {
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
   }
 }
 
-.rt-affliction-del {
+.wh40k-affliction-del {
   background: transparent;
   border: none;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   cursor: pointer;
   padding: 2px;
   
   &:hover {
-    color: $rt-accent-combat;
+    color: $wh40k-accent-combat;
   }
 }
 
@@ -75,8 +75,8 @@
 // Movement Panel - Modern Design
 // ============================================
 
-.rt-movement-panel {
-  .rt-panel-header {
+.wh40k-movement-panel {
+  .wh40k-panel-header {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -87,59 +87,59 @@
 // Mobility Panel - Clean Design
 // ============================================
 
-.rt-panel-mobility {
-  .rt-panel-body {
-    padding: $rt-space-md;
+.wh40k-panel-mobility {
+  .wh40k-panel-body {
+    padding: $wh40k-space-md;
   }
 }
 
-.rt-mobility-speeds {
+.wh40k-mobility-speeds {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: $rt-space-sm;
-  margin-bottom: $rt-space-md;
+  gap: $wh40k-space-sm;
+  margin-bottom: $wh40k-space-md;
 }
 
-.rt-speed-box {
+.wh40k-speed-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $rt-space-xs;
-  padding: $rt-space-sm;
-  background: $rt-bg-paper-light;
-  border: 1px solid $rt-border-light;
+  gap: $wh40k-space-xs;
+  padding: $wh40k-space-sm;
+  background: $wh40k-bg-paper-light;
+  border: 1px solid $wh40k-border-light;
   border-radius: 6px;
   transition: all 0.2s ease;
   cursor: pointer;
   
   &:hover {
     background: rgba(255, 255, 255, 0.8);
-    border-color: $rt-border-medium;
+    border-color: $wh40k-border-medium;
     transform: translateY(-2px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   &.active,
   &[data-action="setMovementMode"]:active {
-    border-color: $rt-accent-gold;
-    box-shadow: 0 0 6px rgba($rt-accent-gold, 0.4);
-    background: rgba($rt-accent-gold, 0.08);
+    border-color: $wh40k-accent-gold;
+    box-shadow: 0 0 6px rgba($wh40k-accent-gold, 0.4);
+    background: rgba($wh40k-accent-gold, 0.08);
   }
   
   i {
     font-size: 1.2rem;
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
     opacity: 0.7;
   }
 }
 
-.rt-speed-data {
+.wh40k-speed-data {
   display: flex;
   align-items: baseline;
   gap: 2px;
 }
 
-.rt-speed-value {
+.wh40k-speed-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 1.5rem;
   font-weight: 700;
@@ -147,32 +147,32 @@
   line-height: 1;
 }
 
-.rt-speed-unit {
+.wh40k-speed-unit {
   font-size: 0.75rem;
   font-weight: 500;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
 }
 
-.rt-speed-label {
+.wh40k-speed-label {
   font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
 }
 
 // Speed-specific colors
-.rt-speed-half i { color: #27ae60; }
-.rt-speed-full i { color: #2980b9; }
-.rt-speed-charge i { color: #e67e22; }
-.rt-speed-run i { color: #c0392b; }
+.wh40k-speed-half i { color: #27ae60; }
+.wh40k-speed-full i { color: #2980b9; }
+.wh40k-speed-charge i { color: #e67e22; }
+.wh40k-speed-run i { color: #c0392b; }
 
 // Expanded details sections
-.rt-mobility-section {
-  margin-bottom: $rt-space-md;
-  padding: $rt-space-sm;
-  background: $rt-bg-paper-light;
-  border: 1px solid $rt-border-light;
+.wh40k-mobility-section {
+  margin-bottom: $wh40k-space-md;
+  padding: $wh40k-space-sm;
+  background: $wh40k-bg-paper-light;
+  border: 1px solid $wh40k-border-light;
   border-radius: 6px;
   
   &:last-child {
@@ -180,17 +180,17 @@
   }
 }
 
-.rt-section-header {
+.wh40k-section-header {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
-  margin-bottom: $rt-space-sm;
-  padding-bottom: $rt-space-xs;
-  border-bottom: 1px solid $rt-border-light;
+  gap: $wh40k-space-xs;
+  margin-bottom: $wh40k-space-sm;
+  padding-bottom: $wh40k-space-xs;
+  border-bottom: 1px solid $wh40k-border-light;
   
   i {
     font-size: 0.85rem;
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
   }
   
   span {
@@ -198,88 +198,88 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
   }
 }
 
-.rt-athletics-grid {
+.wh40k-athletics-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-athletic-stat {
+.wh40k-athletic-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: $rt-space-xs;
+  padding: $wh40k-space-xs;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
 }
 
-.rt-athletic-label {
+.wh40k-athletic-label {
   font-size: 0.65rem;
   font-weight: 500;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   text-align: center;
 }
 
-.rt-athletic-value {
+.wh40k-athletic-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-text-primary);
 }
 
-.rt-carrying-grid {
+.wh40k-carrying-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-carry-stat {
+.wh40k-carry-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: $rt-space-xs;
+  padding: $wh40k-space-xs;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
 }
 
-.rt-carry-label {
+.wh40k-carry-label {
   font-size: 0.65rem;
   font-weight: 500;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   text-align: center;
 }
 
-.rt-carry-value {
+.wh40k-carry-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-text-primary);
 }
 
-.rt-carry-unit {
+.wh40k-carry-unit {
   font-size: 0.7rem;
   font-weight: 400;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   margin-left: 2px;
 }
 
-.rt-size-section {
-  padding: $rt-space-md;
+.wh40k-size-section {
+  padding: $wh40k-space-md;
 }
 
-.rt-size-select {
+.wh40k-size-select {
   width: 100%;
-  padding: $rt-space-xs $rt-space-sm;
+  padding: $wh40k-space-xs $wh40k-space-sm;
   font-size: 0.85rem;
   font-weight: 600;
   text-align: center;
-  border: 1px solid $rt-border-medium;
+  border: 1px solid $wh40k-border-medium;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.8);
   color: var(--color-text-primary);
@@ -287,56 +287,56 @@
   transition: all 0.2s ease;
   
   &:hover {
-    border-color: $rt-accent-gold;
+    border-color: $wh40k-accent-gold;
   }
   
   &:focus {
     outline: none;
-    border-color: $rt-accent-gold;
-    box-shadow: 0 0 0 3px rgba($rt-accent-gold, 0.15);
+    border-color: $wh40k-accent-gold;
+    box-shadow: 0 0 0 3px rgba($wh40k-accent-gold, 0.15);
   }
 }
 
-.rt-movement-grid {
+.wh40k-movement-grid {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-md;
-  padding: $rt-space-sm;
+  gap: $wh40k-space-md;
+  padding: $wh40k-space-sm;
 }
 
-.rt-movement-size {
-  margin-bottom: $rt-space-sm;
+.wh40k-movement-size {
+  margin-bottom: $wh40k-space-sm;
 }
 
-.rt-movement-section {
-  background: $rt-bg-paper-light;
-  border: 1px solid $rt-border-light;
+.wh40k-movement-section {
+  background: $wh40k-bg-paper-light;
+  border: 1px solid $wh40k-border-light;
   border-radius: 6px;
-  padding: $rt-space-sm;
+  padding: $wh40k-space-sm;
 }
 
-.rt-movement-header {
+.wh40k-movement-header {
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: $rt-text-muted;
-  margin-bottom: $rt-space-xs;
-  border-bottom: 1px solid $rt-border-light;
-  padding-bottom: $rt-space-xs;
+  color: $wh40k-text-muted;
+  margin-bottom: $wh40k-space-xs;
+  border-bottom: 1px solid $wh40k-border-light;
+  padding-bottom: $wh40k-space-xs;
 }
 
-.rt-movement-rates {
+.wh40k-movement-rates {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
 }
 
-.rt-movement-item {
+.wh40k-movement-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: $rt-space-xs;
+  padding: $wh40k-space-xs;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   transition: background 0.15s ease;
@@ -347,19 +347,19 @@
   }
 
   &[data-action="setMovementMode"]:active {
-    background: rgba($rt-accent-gold, 0.15);
+    background: rgba($wh40k-accent-gold, 0.15);
   }
 }
 
-.rt-movement-label {
+.wh40k-movement-label {
   font-size: 0.6rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   letter-spacing: 0.05em;
 }
 
-.rt-movement-value {
+.wh40k-movement-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 1.1rem;
   font-weight: 700;
@@ -367,49 +367,49 @@
 }
 
 // Legacy movement grid (fallback)
-.rt-move-cell {
+.wh40k-move-cell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: $rt-space-xs;
-  background: $rt-bg-paper-light;
-  border: 1px solid $rt-border-light;
+  padding: $wh40k-space-xs;
+  background: $wh40k-bg-paper-light;
+  border: 1px solid $wh40k-border-light;
   border-radius: 4px;
 }
 
-.rt-move-label {
+.wh40k-move-label {
   font-size: 0.6rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
 }
 
-.rt-move-value {
+.wh40k-move-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 1rem;
   font-weight: 700;
   color: var(--color-text-primary);
 }
 
-.rt-capacity-row {
+.wh40k-capacity-row {
   display: flex;
-  gap: $rt-space-md;
-  padding-top: $rt-space-xs;
-  border-top: 1px solid $rt-border-light;
+  gap: $wh40k-space-md;
+  padding-top: $wh40k-space-xs;
+  border-top: 1px solid $wh40k-border-light;
 }
 
-.rt-capacity-item {
+.wh40k-capacity-item {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
 }
 
-.rt-capacity-label {
+.wh40k-capacity-label {
   font-size: 0.7rem;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
 }
 
-.rt-capacity-value {
+.wh40k-capacity-value {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--color-text-primary);
@@ -419,13 +419,13 @@
 // Modern Compact Movement Panel (Combat Tab)
 // ============================================
 
-.rt-movement-modern-compact {
+.wh40k-movement-modern-compact {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.rt-move-modern-cell {
+.wh40k-move-modern-cell {
   position: relative;
   display: flex;
   align-items: center;
@@ -445,21 +445,21 @@
   }
 }
 
-.rt-move-modern-icon {
+.wh40k-move-modern-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.15) 0%, rgba($rt-accent-gold, 0.05) 100%);
-  color: $rt-accent-gold;
+  background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.15) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
+  color: $wh40k-accent-gold;
   font-size: 0.9rem;
   flex-shrink: 0;
   z-index: 2;
 }
 
-.rt-move-modern-content {
+.wh40k-move-modern-content {
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -467,16 +467,16 @@
   z-index: 2;
 }
 
-.rt-move-modern-label {
+.wh40k-move-modern-label {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   min-width: 50px;
 }
 
-.rt-move-modern-value {
+.wh40k-move-modern-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 1.3rem;
   font-weight: 700;
@@ -484,44 +484,44 @@
   line-height: 1;
 }
 
-.rt-move-unit {
+.wh40k-move-unit {
   font-size: 0.8rem;
   font-weight: 400;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   margin-left: 2px;
 }
 
-.rt-move-modern-bar {
+.wh40k-move-modern-bar {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   width: var(--move-percent, 50%);
   background: linear-gradient(90deg, 
-    rgba($rt-accent-gold, 0.08) 0%, 
-    rgba($rt-accent-gold, 0.02) 100%);
-  border-right: 2px solid rgba($rt-accent-gold, 0.2);
+    rgba($wh40k-accent-gold, 0.08) 0%, 
+    rgba($wh40k-accent-gold, 0.02) 100%);
+  border-right: 2px solid rgba($wh40k-accent-gold, 0.2);
   z-index: 1;
   transition: width 0.3s ease;
 }
 
 // Specific movement type styling
-.rt-move-half .rt-move-modern-icon {
+.wh40k-move-half .wh40k-move-modern-icon {
   background: linear-gradient(135deg, rgba(#2ecc71, 0.15) 0%, rgba(#2ecc71, 0.05) 100%);
   color: #27ae60;
 }
 
-.rt-move-full .rt-move-modern-icon {
+.wh40k-move-full .wh40k-move-modern-icon {
   background: linear-gradient(135deg, rgba(#3498db, 0.15) 0%, rgba(#3498db, 0.05) 100%);
   color: #2980b9;
 }
 
-.rt-move-charge .rt-move-modern-icon {
+.wh40k-move-charge .wh40k-move-modern-icon {
   background: linear-gradient(135deg, rgba(#f39c12, 0.15) 0%, rgba(#f39c12, 0.05) 100%);
   color: #e67e22;
 }
 
-.rt-move-run .rt-move-modern-icon {
+.wh40k-move-run .wh40k-move-modern-icon {
   background: linear-gradient(135deg, rgba(#e74c3c, 0.15) 0%, rgba(#e74c3c, 0.05) 100%);
   color: #c0392b;
 }
@@ -530,18 +530,18 @@
 // Dense Movement Grid (Overview Tab Full Panel)
 // ============================================
 
-.rt-movement-dense-grid {
+.wh40k-movement-dense-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
-.rt-stat-compact {
+.wh40k-stat-compact {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: $rt-space-sm;
+  padding: $wh40k-space-sm;
   background: var(--color-bg-option);
   border: 1px solid var(--color-border-light);
   border-radius: 6px;
@@ -560,7 +560,7 @@
   }
 }
 
-.rt-stat-label {
+.wh40k-stat-label {
   font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -569,7 +569,7 @@
   text-align: center;
 }
 
-.rt-stat-value {
+.wh40k-stat-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 1rem;
   font-weight: 700;
@@ -578,8 +578,8 @@
 }
 
 // Size select field
-.rt-size-select-wrapper {
-  .rt-size-select-inline {
+.wh40k-size-select-wrapper {
+  .wh40k-size-select-inline {
     width: 100%;
     padding: 2px 4px;
     font-size: 0.75rem;
@@ -598,8 +598,8 @@
 }
 
 // Encumbrance status
-.rt-enc-compact {
-  .rt-enc-over {
+.wh40k-enc-compact {
+  .wh40k-enc-over {
     color: #e74c3c;
     font-weight: 700;
   }
@@ -608,7 +608,7 @@
 // ============================================
 // Token HUD Movement Buttons
 // ============================================
-.rt-token-movement {
+.wh40k-token-movement {
   display: flex;
   gap: 4px;
   justify-content: center;
@@ -620,7 +620,7 @@
   white-space: nowrap;
 }
 
-.rt-token-movement__btn {
+.wh40k-token-movement__btn {
   display: flex;
   align-items: center;
   gap: 3px;
@@ -650,7 +650,7 @@
   }
 }
 
-.rt-token-movement__value {
+.wh40k-token-movement__value {
   font-weight: 700;
   font-family: 'Modesto Condensed', serif;
 }

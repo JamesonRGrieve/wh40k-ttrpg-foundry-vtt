@@ -22,7 +22,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /** @override */
     static DEFAULT_OPTIONS = {
         id: "confirmation-dialog-{id}",
-        classes: ["rogue-trader", "confirmation-dialog"],
+        classes: ["wh40k-rpg", "confirmation-dialog"],
         tag: "div",
         window: {
             title: "Confirm",
@@ -46,7 +46,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /** @override */
     static PARTS = {
         content: {
-            template: "systems/rogue-trader/templates/dialogs/confirmation.hbs"
+            template: "systems/wh40k-rpg/templates/dialogs/confirmation.hbs"
         }
     };
 

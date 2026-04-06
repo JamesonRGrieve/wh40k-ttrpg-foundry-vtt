@@ -7,7 +7,7 @@
 // CONTAINER
 // ============================================
 
-.rt-talent-sheet {
+.wh40k-talent-sheet {
   --talent-color: var(--rt-talents-primary, #a07818);
   --talent-bg: var(--rt-talents-bg, rgba(160, 120, 24, 0.1));
   --talent-border: var(--rt-talents-border, rgba(160, 120, 24, 0.3));
@@ -34,7 +34,7 @@
 // HEADER
 // ============================================
 
-.rt-talent-header {
+.wh40k-talent-header {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -64,7 +64,7 @@
       transform: scale(1.05);
       box-shadow: 0 4px 12px var(--rt-shadow-medium);
       
-      .rt-talent-header__image-overlay {
+      .wh40k-talent-header__image-overlay {
         opacity: 1;
       }
     }
@@ -124,7 +124,7 @@
 // STATS BAR
 // ============================================
 
-.rt-talent-stats {
+.wh40k-talent-stats {
   display: flex;
   flex-wrap: wrap;
   gap: 2px;
@@ -134,7 +134,7 @@
   flex-shrink: 0;
 }
 
-.rt-talent-stat {
+.wh40k-talent-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -175,13 +175,13 @@
   
   // Tier stat
   &--tier {
-    .rt-talent-stat__icon { color: var(--talent-color); }
-    .rt-talent-stat__value { color: var(--talent-color); }
+    .wh40k-talent-stat__icon { color: var(--talent-color); }
+    .wh40k-talent-stat__value { color: var(--talent-color); }
   }
   
   // XP cost stat
   &--cost {
-    .rt-talent-stat__icon { color: var(--rt-gold); }
+    .wh40k-talent-stat__icon { color: var(--rt-gold); }
   }
 }
 
@@ -189,7 +189,7 @@
 // BADGES
 // ============================================
 
-.rt-talent-badge {
+.wh40k-talent-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -258,7 +258,7 @@
 // CONTENT BODY (legacy - use rt-talent-content from _item-tabs.scss)
 // ============================================
 
-.rt-talent-body {
+.wh40k-talent-body {
   flex: 1;
   overflow-y: auto;
   padding: 12px;
@@ -269,7 +269,7 @@
 // SECTIONS
 // ============================================
 
-.rt-talent-section {
+.wh40k-talent-section {
   background: var(--rt-panel-bg);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 6px;
@@ -305,7 +305,7 @@
 }
 
 // Legacy support for old section title style
-.rt-section-title {
+.wh40k-section-title {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -328,13 +328,13 @@
 // PROPERTIES GRID
 // ============================================
 
-.rt-properties-grid {
+.wh40k-properties-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px;
 }
 
-.rt-property {
+.wh40k-property {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -345,14 +345,14 @@
   }
 }
 
-.rt-property-label {
+.wh40k-property-label {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--rt-text-muted);
   
-  .rt-field-hint {
+  .wh40k-field-hint {
     font-size: 0.7rem;
     font-weight: 400;
     text-transform: none;
@@ -363,7 +363,7 @@
   }
 }
 
-.rt-property-label-inline {
+.wh40k-property-label-inline {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -378,8 +378,8 @@
   }
 }
 
-.rt-property-input,
-.rt-property-textarea {
+.wh40k-property-input,
+.wh40k-property-textarea {
   width: 100%;
   padding: 6px 10px;
   background: var(--rt-panel-bg-translucent);
@@ -407,7 +407,7 @@
   }
 }
 
-.rt-property-textarea {
+.wh40k-property-textarea {
   resize: vertical;
   min-height: 60px;
   font-family: 'Roboto', sans-serif;
@@ -417,13 +417,13 @@
 // APTITUDES DISPLAY
 // ============================================
 
-.rt-aptitudes-display {
+.wh40k-aptitudes-display {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.rt-aptitude-tag {
+.wh40k-aptitude-tag {
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
@@ -439,14 +439,14 @@
 // PREREQUISITES DISPLAY
 // ============================================
 
-.rt-prerequisites-display {
+.wh40k-prerequisites-display {
   padding: 12px;
   background: var(--rt-panel-bg-translucent);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 4px;
 }
 
-.rt-prereq-label {
+.wh40k-prereq-label {
   margin: 0;
   font-size: 0.85rem;
   color: var(--rt-text-dark);
@@ -457,20 +457,20 @@
 // MODIFIERS DISPLAY
 // ============================================
 
-.rt-modifiers-display {
+.wh40k-modifiers-display {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px;
 }
 
-.rt-modifier-group {
+.wh40k-modifier-group {
   background: var(--rt-panel-bg-translucent);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 4px;
   padding: 10px;
 }
 
-.rt-modifier-group-title {
+.wh40k-modifier-group-title {
   margin: 0 0 8px 0;
   font-family: 'Cinzel', serif;
   font-size: 0.8rem;
@@ -480,13 +480,13 @@
   color: var(--rt-text-muted);
 }
 
-.rt-modifier-list {
+.wh40k-modifier-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.rt-modifier-item {
+.wh40k-modifier-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -495,13 +495,13 @@
   border-radius: 3px;
 }
 
-.rt-modifier-name {
+.wh40k-modifier-name {
   font-size: 0.8rem;
   color: var(--rt-text-dark);
   text-transform: capitalize;
 }
 
-.rt-modifier-value {
+.wh40k-modifier-value {
   font-family: 'Cinzel', serif;
   font-size: 0.85rem;
   font-weight: 700;
@@ -519,7 +519,7 @@
 // EMPTY STATE
 // ============================================
 
-.rt-empty-state {
+.wh40k-empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -538,7 +538,7 @@
     margin: 4px 0;
     font-size: 0.9rem;
     
-    &.rt-field-hint {
+    &.wh40k-field-hint {
       font-size: 0.75rem;
       opacity: 0.7;
     }
@@ -549,7 +549,7 @@
 // FIELD HINTS
 // ============================================
 
-.rt-field-hint {
+.wh40k-field-hint {
   font-size: 0.75rem;
   color: var(--rt-text-muted);
   font-style: italic;
@@ -564,7 +564,7 @@
 // EDITOR CONTAINER
 // ============================================
 
-.rt-editor-container {
+.wh40k-editor-container {
   border: 1px solid var(--rt-border-color-light);
   border-radius: 4px;
   overflow: hidden;
@@ -578,14 +578,14 @@
 // GRANTS DISPLAY
 // ============================================
 
-.rt-grants-display {
+.wh40k-grants-display {
   background: var(--rt-panel-bg-translucent);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 6px;
   padding: 12px;
 }
 
-.rt-grants-group {
+.wh40k-grants-group {
   margin-bottom: 16px;
   
   &:last-child {
@@ -593,7 +593,7 @@
   }
 }
 
-.rt-grants-group-title {
+.wh40k-grants-group-title {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -614,7 +614,7 @@
   }
 }
 
-.rt-grants-list {
+.wh40k-grants-list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -623,7 +623,7 @@
   gap: 6px;
 }
 
-.rt-grants-item {
+.wh40k-grants-item {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -640,24 +640,24 @@
   }
 }
 
-.rt-grants-name {
+.wh40k-grants-name {
   font-weight: 600;
   color: var(--rt-text-dark);
 }
 
-.rt-grants-specialization {
+.wh40k-grants-specialization {
   font-style: italic;
   color: var(--rt-text-muted);
 }
 
-.rt-grants-level {
+.wh40k-grants-level {
   margin-left: auto;
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--rt-bronze);
 }
 
-.rt-grants-special {
+.wh40k-grants-special {
   padding: 10px;
   background: var(--rt-panel-bg);
   border: 1px solid var(--rt-border-color-light);
@@ -669,7 +669,7 @@
   }
 }
 
-.rt-grants-special-name {
+.wh40k-grants-special-name {
   margin: 0 0 8px 0;
   font-family: 'Cinzel', serif;
   font-size: 0.9rem;
@@ -677,7 +677,7 @@
   color: var(--rt-text-dark);
 }
 
-.rt-grants-special-description {
+.wh40k-grants-special-description {
   font-size: 0.85rem;
   line-height: 1.5;
   color: var(--rt-text-dark);

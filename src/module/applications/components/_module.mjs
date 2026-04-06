@@ -4,7 +4,7 @@
 
 export {
     TooltipsRT,
-    RTTooltip,
+    WH40KTooltip,
     prepareCharacteristicTooltipData,
     prepareSkillTooltipData,
     prepareArmorTooltipData,

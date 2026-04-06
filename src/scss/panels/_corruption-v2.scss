@@ -3,17 +3,17 @@
 // ============================================
 // Complete redesign with threshold warnings and malignancy tracking
 
-.rt-corruption-panel-v2 {
+.wh40k-corruption-panel-v2 {
   // Base panel styling inherits from rt-panel
 
   // Dynamic border color based on corruption degree
-  &.degree-pure { border-left: 4px solid $rt-degree-pure; }
-  &.degree-tainted { border-left: 4px solid $rt-degree-tainted; }
-  &.degree-soiled { border-left: 4px solid $rt-degree-soiled; }
-  &.degree-debased { border-left: 4px solid $rt-degree-debased; }
-  &.degree-profane { border-left: 4px solid $rt-degree-profane; }
+  &.degree-pure { border-left: 4px solid $wh40k-degree-pure; }
+  &.degree-tainted { border-left: 4px solid $wh40k-degree-tainted; }
+  &.degree-soiled { border-left: 4px solid $wh40k-degree-soiled; }
+  &.degree-debased { border-left: 4px solid $wh40k-degree-debased; }
+  &.degree-profane { border-left: 4px solid $wh40k-degree-profane; }
   &.degree-damned {
-    border-left: 4px solid $rt-degree-damned;
+    border-left: 4px solid $wh40k-degree-damned;
     animation: damned-pulse 2s ease-in-out infinite;
   }
 
@@ -30,7 +30,7 @@
   // Header Status (Badge with Icon)
   // ============================================
 
-  .rt-corruption-header-status {
+  .wh40k-corruption-header-status {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -38,7 +38,7 @@
     margin-right: 8px;
   }
 
-  .rt-corruption-badge {
+  .wh40k-corruption-badge {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,12 +53,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    .rt-badge-icon {
+    .wh40k-badge-icon {
       font-size: 1rem;
       transition: all 0.2s ease;
     }
 
-    .rt-badge-label {
+    .wh40k-badge-label {
       font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -72,7 +72,7 @@
       border-color: #16a34a;
       color: #15803d;
       
-      .rt-badge-label {
+      .wh40k-badge-label {
         text-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
       }
     }
@@ -83,7 +83,7 @@
       border-color: #ca8a04;
       color: #a16207;
       
-      .rt-badge-label {
+      .wh40k-badge-label {
         text-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
       }
     }
@@ -94,7 +94,7 @@
       border-color: #ea580c;
       color: #c2410c;
       
-      .rt-badge-label {
+      .wh40k-badge-label {
         text-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
       }
     }
@@ -105,7 +105,7 @@
       border-color: #dc2626;
       color: #b91c1c;
       
-      .rt-badge-label {
+      .wh40k-badge-label {
         text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
       }
     }
@@ -117,7 +117,7 @@
       color: #991b1b;
       animation: badge-pulse 2s ease-in-out infinite;
       
-      .rt-badge-label {
+      .wh40k-badge-label {
         text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
       }
     }
@@ -130,7 +130,7 @@
       animation: badge-pulse 1s ease-in-out infinite;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 8px rgba(127, 29, 29, 0.4);
       
-      .rt-badge-label {
+      .wh40k-badge-label {
         text-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
       }
     }
@@ -158,28 +158,28 @@
   // Main Display Area
   // ============================================
 
-  .rt-corruption-display {
+  .wh40k-corruption-display {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
   }
 
   // Header with value and modifier
-  .rt-corruption-header {
+  .wh40k-corruption-header {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
     align-items: center;
   }
 
-  .rt-corruption-value {
+  .wh40k-corruption-value {
     display: flex;
     align-items: center;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
   }
 
   // +/- Control Buttons
-  .rt-corruption-btn {
+  .wh40k-corruption-btn {
     width: 36px;
     height: 36px;
     padding: 0;
@@ -210,7 +210,7 @@
     }
   }
 
-  .rt-corruption-minus {
+  .wh40k-corruption-minus {
     color: var(--rt-success-secondary);
     &:hover {
       border-color: var(--rt-success-primary);
@@ -218,7 +218,7 @@
     }
   }
 
-  .rt-corruption-plus {
+  .wh40k-corruption-plus {
     color: var(--rt-corruption-primary);
     &:hover {
       border-color: var(--rt-corruption-primary);
@@ -227,28 +227,28 @@
   }
 
   // Number Display
-  .rt-corruption-number {
+  .wh40k-corruption-number {
     display: flex;
     align-items: baseline;
     gap: 4px;
     font-family: 'Modesto Condensed', serif;
   }
 
-  .rt-corruption-current {
+  .wh40k-corruption-current {
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--rt-corruption-primary);
     line-height: 1;
   }
 
-  .rt-corruption-max {
+  .wh40k-corruption-max {
     font-size: 1.3rem;
     color: var(--rt-text-muted);
     font-weight: 600;
   }
 
   // Modifier Display
-  .rt-corruption-modifier {
+  .wh40k-corruption-modifier {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -257,7 +257,7 @@
     color: var(--rt-text-muted);
   }
 
-  .rt-modifier-value {
+  .wh40k-modifier-value {
     font-size: 1.1rem;
     color: var(--rt-corruption-primary);
     font-family: 'Modesto Condensed', serif;
@@ -267,12 +267,12 @@
   // Progress Bar with Threshold Markers
   // ============================================
 
-  .rt-corruption-bar-container {
+  .wh40k-corruption-bar-container {
     width: 100%;
     position: relative;
   }
 
-  .rt-corruption-bar {
+  .wh40k-corruption-bar {
     width: 100%;
     height: 14px;
     background: var(--rt-border-accent);
@@ -282,7 +282,7 @@
     box-shadow: inset 0 1px 3px var(--rt-shadow-medium);
   }
 
-  .rt-corruption-bar-fill {
+  .wh40k-corruption-bar-fill {
     height: 100%;
     border-radius: 7px;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
@@ -290,34 +290,34 @@
   }
 
   // Bar color matches current degree
-  .degree-pure .rt-corruption-bar-fill {
+  .degree-pure .wh40k-corruption-bar-fill {
     background-color: #22c55e;
   }
 
-  .degree-tainted .rt-corruption-bar-fill {
+  .degree-tainted .wh40k-corruption-bar-fill {
     background-color: #eab308;
   }
 
-  .degree-soiled .rt-corruption-bar-fill {
+  .degree-soiled .wh40k-corruption-bar-fill {
     background-color: #f97316;
   }
 
-  .degree-debased .rt-corruption-bar-fill {
+  .degree-debased .wh40k-corruption-bar-fill {
     background-color: #ef4444;
   }
 
-  .degree-profane .rt-corruption-bar-fill {
+  .degree-profane .wh40k-corruption-bar-fill {
     background-color: #dc2626;
     box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);
   }
 
-  .degree-damned .rt-corruption-bar-fill {
+  .degree-damned .wh40k-corruption-bar-fill {
     background-color: #7f1d1d;
     box-shadow: 0 0 10px rgba(127, 29, 29, 0.6);
   }
 
   // Threshold Markers
-  .rt-threshold-marker {
+  .wh40k-threshold-marker {
     position: absolute;
     top: 0;
     transform: translateX(-50%);
@@ -328,14 +328,14 @@
     pointer-events: none;
   }
 
-  .rt-threshold-line {
+  .wh40k-threshold-line {
     width: 2px;
     height: 14px;
     background: rgba(255, 255, 255, 0.6);
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
   }
 
-  .rt-threshold-label {
+  .wh40k-threshold-label {
     font-size: 0.65rem;
     font-weight: 700;
     color: var(--rt-text-muted);
@@ -349,11 +349,11 @@
   // Alert Messages
   // ============================================
 
-  .rt-corruption-alert {
+  .wh40k-corruption-alert {
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
-    padding: $rt-space-sm;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-sm;
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -365,20 +365,20 @@
     }
   }
 
-  .rt-alert-debased {
+  .wh40k-alert-debased {
     background: rgba(139, 69, 19, 0.2);
     color: #8b4513;
     border: 2px solid rgba(139, 69, 19, 0.5);
   }
 
-  .rt-alert-profane {
+  .wh40k-alert-profane {
     background: rgba(139, 0, 0, 0.2);
     color: #8b0000;
     border: 2px solid rgba(139, 0, 0, 0.6);
     animation: alert-pulse 2s ease-in-out infinite;
   }
 
-  .rt-alert-damned {
+  .wh40k-alert-damned {
     background: rgba(0, 0, 0, 0.3);
     color: #ff0000;
     border: 2px solid #8b0000;
@@ -409,17 +409,17 @@
   // Malignancy Preview
   // ============================================
 
-  .rt-malignancy-preview {
-    padding: $rt-space-sm;
+  .wh40k-malignancy-preview {
+    padding: $wh40k-space-sm;
     background: var(--rt-corruption-bg);
     border: 1px solid var(--rt-corruption-border);
     border-radius: 6px;
   }
 
-  .rt-malignancy-count {
+  .wh40k-malignancy-count {
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--rt-corruption-primary);
@@ -433,7 +433,7 @@
   // Degree Badge (in header)
   // ============================================
 
-  .rt-corruption-degree-badge {
+  .wh40k-corruption-degree-badge {
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 0.75rem;
@@ -445,39 +445,39 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 
     &.degree-pure {
-      background: rgba($rt-degree-pure, 0.2);
-      border: 2px solid $rt-degree-pure;
-      color: darken($rt-degree-pure, 20%);
+      background: rgba($wh40k-degree-pure, 0.2);
+      border: 2px solid $wh40k-degree-pure;
+      color: darken($wh40k-degree-pure, 20%);
     }
 
     &.degree-tainted {
-      background: rgba($rt-degree-tainted, 0.2);
-      border: 2px solid $rt-degree-tainted;
-      color: darken($rt-degree-tainted, 25%);
+      background: rgba($wh40k-degree-tainted, 0.2);
+      border: 2px solid $wh40k-degree-tainted;
+      color: darken($wh40k-degree-tainted, 25%);
     }
 
     &.degree-soiled {
-      background: rgba($rt-degree-soiled, 0.2);
-      border: 2px solid $rt-degree-soiled;
-      color: darken($rt-degree-soiled, 20%);
+      background: rgba($wh40k-degree-soiled, 0.2);
+      border: 2px solid $wh40k-degree-soiled;
+      color: darken($wh40k-degree-soiled, 20%);
     }
 
     &.degree-debased {
-      background: rgba($rt-degree-debased, 0.25);
-      border: 2px solid $rt-degree-debased;
-      color: $rt-degree-debased;
+      background: rgba($wh40k-degree-debased, 0.25);
+      border: 2px solid $wh40k-degree-debased;
+      color: $wh40k-degree-debased;
     }
 
     &.degree-profane {
-      background: rgba($rt-degree-profane, 0.3);
-      border: 2px solid $rt-degree-profane;
-      color: $rt-degree-profane;
+      background: rgba($wh40k-degree-profane, 0.3);
+      border: 2px solid $wh40k-degree-profane;
+      color: $wh40k-degree-profane;
     }
 
     &.degree-damned {
-      background: rgba($rt-degree-damned, 0.3);
-      border: 2px solid $rt-degree-damned;
-      color: $rt-degree-damned;
+      background: rgba($wh40k-degree-damned, 0.3);
+      border: 2px solid $wh40k-degree-damned;
+      color: $wh40k-degree-damned;
       animation: badge-pulse 2s ease-in-out infinite;
     }
   }
@@ -495,25 +495,25 @@
   // Edit Mode Sections
   // ============================================
 
-  .rt-corruption-edit-section {
-    padding: $rt-space-md;
+  .wh40k-corruption-edit-section {
+    padding: $wh40k-space-md;
     background: var(--rt-panel-bg-translucent);
     border: 1px solid var(--rt-border-color-light);
     border-radius: 8px;
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
 
     &:last-child {
       margin-bottom: 0;
     }
   }
 
-  .rt-corruption-edit-header {
+  .wh40k-corruption-edit-header {
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--rt-text-medium);
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -525,13 +525,13 @@
     }
   }
 
-  .rt-corruption-edit-field {
+  .wh40k-corruption-edit-field {
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
 
-  .rt-edit-label {
+  .wh40k-edit-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -539,10 +539,10 @@
     color: var(--rt-text-muted);
   }
 
-  .rt-edit-input {
+  .wh40k-edit-input {
     width: 100%;
     height: 40px;
-    padding: 0 $rt-space-sm;
+    padding: 0 $wh40k-space-sm;
     border: 2px solid var(--rt-corruption-border);
     border-radius: 6px;
     background: var(--rt-input-bg);
@@ -566,15 +566,15 @@
   }
 
   // Quick Adjust Buttons
-  .rt-corruption-quick-set {
+  .wh40k-corruption-quick-set {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: $rt-space-xs;
-    margin-top: $rt-space-sm;
+    gap: $wh40k-space-xs;
+    margin-top: $wh40k-space-sm;
   }
 
-  .rt-quick-adjust-btn {
-    padding: $rt-space-sm;
+  .wh40k-quick-adjust-btn {
+    padding: $wh40k-space-sm;
     background: var(--rt-panel-bg-solid);
     border: 2px solid var(--rt-border-color);
     border-radius: 4px;
@@ -620,9 +620,9 @@
     }
   }
 
-  .rt-quick-set-btn {
+  .wh40k-quick-set-btn {
     flex: 1;
-    padding: $rt-space-xs $rt-space-sm;
+    padding: $wh40k-space-xs $wh40k-space-sm;
     background: var(--rt-panel-bg-solid);
     border: 1px solid var(--rt-border-color-light);
     border-radius: 4px;
@@ -653,17 +653,17 @@
   // Malignancy List
   // ============================================
 
-  .rt-malignancy-list {
+  .wh40k-malignancy-list {
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
 
-  .rt-malignancy-card {
+  .wh40k-malignancy-card {
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
-    padding: $rt-space-xs $rt-space-sm;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-xs $wh40k-space-sm;
     background: var(--rt-corruption-bg);
     border: 1px solid var(--rt-corruption-border);
     border-radius: 6px;
@@ -675,7 +675,7 @@
     }
   }
 
-  .rt-malignancy-name {
+  .wh40k-malignancy-name {
     flex: 1;
     background: none;
     border: none;
@@ -700,7 +700,7 @@
     }
   }
 
-  .rt-malignancy-delete {
+  .wh40k-malignancy-delete {
     width: 24px;
     height: 24px;
     padding: 0;
@@ -726,21 +726,21 @@
   }
 
   // Drop zone styling (special state for empty malignancies)
-  .rt-corruption-edit-section .rt-dropzone-empty {
-    .rt-dropzone-icon {
+  .wh40k-corruption-edit-section .wh40k-dropzone-empty {
+    .wh40k-dropzone-icon {
       color: rgba(34, 197, 94, 0.6); // Green shield for "protected" state
     }
     
-    .rt-dropzone-text {
+    .wh40k-dropzone-text {
       color: var(--rt-success-secondary);
     }
     
     &:hover {
-      .rt-dropzone-icon {
+      .wh40k-dropzone-icon {
         color: rgba(34, 197, 94, 0.8);
       }
       
-      .rt-dropzone-text {
+      .wh40k-dropzone-text {
         color: var(--rt-success-primary);
       }
     }
@@ -750,10 +750,10 @@
   // Info Box
   // ============================================
 
-  .rt-corruption-info-box {
+  .wh40k-corruption-info-box {
     display: flex;
-    gap: $rt-space-sm;
-    padding: $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-md;
     background: var(--rt-corruption-bg);
     border-left: 3px solid var(--rt-corruption-border);
     border-radius: 4px;
@@ -766,10 +766,10 @@
     }
   }
 
-  .rt-info-content {
+  .wh40k-info-content {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
 
     strong {
       font-size: 0.8rem;
@@ -779,7 +779,7 @@
       letter-spacing: 0.03em;
     }
 
-    .rt-degree-list {
+    .wh40k-degree-list {
       font-size: 0.75rem;
       color: var(--rt-text-muted);
       line-height: 1.6;
@@ -790,12 +790,12 @@
         margin: 4px 0;
       }
 
-      .rt-degree-name {
+      .wh40k-degree-name {
         font-weight: 700;
         color: var(--rt-text-medium);
       }
 
-      .rt-degree-damned {
+      .wh40k-degree-damned {
         color: var(--rt-corruption-primary);
       }
 
@@ -815,8 +815,8 @@
     }
   }
 
-  .rt-corruption-warning {
-    padding: $rt-space-xs $rt-space-sm;
+  .wh40k-corruption-warning {
+    padding: $wh40k-space-xs $wh40k-space-sm;
     background: var(--rt-corruption-bg);
     border-left: 2px solid var(--rt-corruption-primary);
     border-radius: 3px;
@@ -831,7 +831,7 @@
   // Add Button Small
   // ============================================
 
-  .rt-add-btn-small {
+  .wh40k-add-btn-small {
     width: 24px;
     height: 24px;
     padding: 0;

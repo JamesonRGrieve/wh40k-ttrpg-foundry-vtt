@@ -3,7 +3,7 @@
  * Inline expandable previews for items on character sheets
  */
 
-.rt-item-preview {
+.wh40k-item-preview {
     display: none;
     opacity: 0;
     max-height: 0;
@@ -50,7 +50,7 @@
 }
 
 /* Header Section */
-.rt-item-preview-header {
+.wh40k-item-preview-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -60,7 +60,7 @@
     border-bottom: 1px solid var(--rt-panel-border, rgba(255, 255, 255, 0.1));
 }
 
-.rt-item-preview-title {
+.wh40k-item-preview-title {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -70,14 +70,14 @@
     color: var(--rt-text-primary, #fff);
 }
 
-.rt-item-preview-icon {
+.wh40k-item-preview-icon {
     width: 32px;
     height: 32px;
     border-radius: 4px;
     border: 1px solid var(--rt-panel-border, rgba(255, 255, 255, 0.1));
 }
 
-.rt-item-preview-actions {
+.wh40k-item-preview-actions {
     display: flex;
     gap: 4px;
     flex-wrap: wrap;
@@ -85,11 +85,11 @@
 }
 
 /* Body Section */
-.rt-item-preview-body {
+.wh40k-item-preview-body {
     font-size: 0.95em;
 }
 
-.rt-item-preview-description {
+.wh40k-item-preview-description {
     margin-top: 8px;
     padding: 8px;
     background: rgba(0, 0, 0, 0.2);
@@ -106,13 +106,13 @@
     }
 }
 
-.rt-item-preview-empty {
+.wh40k-item-preview-empty {
     color: var(--rt-text-disabled, rgba(255, 255, 255, 0.4));
     font-style: italic;
 }
 
 /* Weapon Preview */
-.rt-weapon-preview-stats {
+.wh40k-weapon-preview-stats {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -120,20 +120,20 @@
 }
 
 /* Armour Preview */
-.rt-armour-preview-locations {
+.wh40k-armour-preview-locations {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 6px;
     margin-bottom: 8px;
 }
 
-.rt-armour-location {
+.wh40k-armour-location {
     padding: 6px 8px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
     font-size: 0.9em;
 
-    .rt-location-label {
+    .wh40k-location-label {
         color: var(--rt-text-secondary, rgba(255, 255, 255, 0.7));
         margin-right: 4px;
     }
@@ -144,7 +144,7 @@
 }
 
 /* Qualities/Properties */
-.rt-item-preview-qualities {
+.wh40k-item-preview-qualities {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
@@ -152,7 +152,7 @@
 }
 
 /* Condition Preview */
-.rt-condition-preview-meta {
+.wh40k-condition-preview-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
@@ -160,7 +160,7 @@
 }
 
 /* Talent/Trait Preview */
-.rt-item-preview-prereqs {
+.wh40k-item-preview-prereqs {
     margin-bottom: 8px;
     padding: 6px 8px;
     background: rgba(168, 85, 247, 0.1);
@@ -173,13 +173,13 @@
     }
 }
 
-.rt-item-preview-benefit {
+.wh40k-item-preview-benefit {
     margin-bottom: 8px;
     line-height: 1.5;
     color: var(--rt-text-secondary, rgba(255, 255, 255, 0.8));
 }
 
-.rt-item-preview-modifiers {
+.wh40k-item-preview-modifiers {
     margin-top: 8px;
     padding: 8px;
     background: rgba(0, 0, 0, 0.2);
@@ -204,8 +204,8 @@
 }
 
 /* Gear Preview */
-.rt-gear-quantity,
-.rt-gear-uses {
+.wh40k-gear-quantity,
+.wh40k-gear-uses {
     margin-bottom: 6px;
     font-size: 0.95em;
 
@@ -216,9 +216,9 @@
 }
 
 /* Power Preview */
-.rt-power-cost,
-.rt-power-range,
-.rt-power-sustained {
+.wh40k-power-cost,
+.wh40k-power-range,
+.wh40k-power-sustained {
     margin-bottom: 6px;
     font-size: 0.95em;
 
@@ -229,7 +229,7 @@
 }
 
 /* Trait Level */
-.rt-trait-level {
+.wh40k-trait-level {
     margin-bottom: 8px;
     padding: 6px 8px;
     background: rgba(0, 0, 0, 0.2);
@@ -244,21 +244,21 @@
 
 /* Mobile Responsive */
 @media (max-width: 600px) {
-    .rt-item-preview-header {
+    .wh40k-item-preview-header {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .rt-item-preview-actions {
+    .wh40k-item-preview-actions {
         width: 100%;
         justify-content: flex-start;
     }
 
-    .rt-weapon-preview-stats {
+    .wh40k-weapon-preview-stats {
         grid-template-columns: 1fr 1fr;
     }
 
-    .rt-armour-preview-locations {
+    .wh40k-armour-preview-locations {
         grid-template-columns: 1fr;
     }
 }

@@ -17,13 +17,13 @@
                        name="name" 
                        type="text" 
                        value="{{actor.name}}" 
-                       placeholder="{{localize 'RT.Vehicle.Name'}}" />
+                       placeholder="{{localize 'WH40K.Vehicle.Name'}}" />
             </div>
             
             <div class="rt-vehicle-v2-meta-row">
                 {{!-- Type --}}
                 <div class="rt-vehicle-v2-field">
-                    <label>{{localize "RT.Vehicle.Type"}}</label>
+                    <label>{{localize "WH40K.Vehicle.Type"}}</label>
                     <select name="system.type" class="rt-vehicle-v2-select">
                         <option value="vehicle" {{#if (eq system.type "vehicle")}}selected{{/if}}>Vehicle</option>
                         <option value="walker" {{#if (eq system.type "walker")}}selected{{/if}}>Walker</option>
@@ -34,7 +34,7 @@
                 
                 {{!-- Faction --}}
                 <div class="rt-vehicle-v2-field rt-vehicle-v2-field--wide">
-                    <label>{{localize "RT.NPC.Faction"}}</label>
+                    <label>{{localize "WH40K.NPC.Faction"}}</label>
                     <input type="text" 
                            name="system.faction" 
                            value="{{system.faction}}" 

@@ -55,7 +55,7 @@ export class ForceFieldData {
             });
         }
 
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/force-field-roll-chat.hbs', this);
+        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs', this);
         let chatData = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),

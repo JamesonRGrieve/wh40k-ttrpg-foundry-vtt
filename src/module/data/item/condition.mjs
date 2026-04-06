@@ -136,7 +136,7 @@ export default class ConditionData extends ItemDataModel.mixin(
    */
   get durationDisplay() {
     if ( this.duration.units === "permanent" ) {
-      const key = "RT.Condition.Duration.Permanent";
+      const key = "WH40K.Condition.Duration.Permanent";
       return game.i18n.has(key) ? game.i18n.localize(key) : "Permanent";
     }
     const unitKey = `RT.Condition.Duration.${this.duration.units.capitalize()}`;
@@ -164,13 +164,13 @@ export default class ConditionData extends ItemDataModel.mixin(
     ];
     
     if ( this.stackable ) {
-      const stacksKey = "RT.Condition.Stacks.Label";
+      const stacksKey = "WH40K.Condition.Stacks.Label";
       const stacksLabel = game.i18n.has(stacksKey) ? game.i18n.localize(stacksKey) : "Stacks";
       props.push(`${stacksLabel}: ${this.stacks}`);
     }
     
     if ( this.isTemporary ) {
-      const durationKey = "RT.Condition.Duration.Label";
+      const durationKey = "WH40K.Condition.Duration.Label";
       const durationLabel = game.i18n.has(durationKey) ? game.i18n.localize(durationKey) : "Duration";
       props.push(`${durationLabel}: ${this.durationDisplay}`);
     }

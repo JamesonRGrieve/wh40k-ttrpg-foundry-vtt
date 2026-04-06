@@ -6,17 +6,17 @@
         </div>
         <div class="rt-header-info">
             <div class="rt-header-row rt-name-row">
-                <span class="rt-header-label">{{localize "RT.Vehicle.Name"}}</span>
+                <span class="rt-header-label">{{localize "WH40K.Vehicle.Name"}}</span>
                 <input class="rt-header-input rt-name-input" name="name" type="text" value="{{actor.name}}" />
             </div>
             <div class="rt-header-row">
-                <span class="rt-header-label">{{localize "RT.Vehicle.Type"}}</span>
+                <span class="rt-header-label">{{localize "WH40K.Vehicle.Type"}}</span>
                 <select class="rt-header-input" name="system.type">
                     {{selectOptions dh.vehicleTypes selected=actor.system.type labelAttr="label" valueAttr="@key"}}
                 </select>
             </div>
             <div class="rt-header-row">
-                <span class="rt-header-label">{{localize "RT.Vehicle.Class"}}</span>
+                <span class="rt-header-label">{{localize "WH40K.Vehicle.Class"}}</span>
                 <select class="rt-header-input" name="system.vehicleClass">
                     {{selectOptions dh.vehicleClasses selected=actor.system.vehicleClass labelAttr="label" valueAttr="@key"}}
                 </select>

@@ -10,7 +10,7 @@
  */
 
 export default class CriticalInjuryMigration {
-    static PACK_NAME = 'rogue-trader.rt-items-critical-injuries';
+    static PACK_NAME = 'wh40k-rpg.rt-items-critical-injuries';
     static DAMAGE_TYPES = ['impact', 'rending', 'explosive', 'energy'];
     static BODY_PARTS = ['head', 'arm', 'body', 'leg'];
 
@@ -196,7 +196,7 @@ export default class CriticalInjuryMigration {
                         chat: description.chat || '',
                         summary: description.summary || `${damageLabel} ${bodyLabel} injury`,
                     },
-                    source: source || { book: 'Rogue Trader Core Rulebook', page: '254-257', custom: '' },
+                    source: source || { book: 'WH40K RPG Core Rulebook', page: '254-257', custom: '' },
                 },
                 flags: {
                     rt: {

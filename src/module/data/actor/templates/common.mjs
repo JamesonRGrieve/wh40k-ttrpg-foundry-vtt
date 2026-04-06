@@ -1,7 +1,7 @@
 import ActorDataModel from "../../abstract/actor-data-model.mjs";
 
 /**
- * Common template for ALL actor types in Rogue Trader.
+ * Common template for ALL actor types in WH40K RPG.
  * 
  * This template contains ONLY utilities that are truly shared across ALL actor types,
  * including creatures, vehicles, and starships.

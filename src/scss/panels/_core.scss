@@ -2,12 +2,12 @@
 // ============================================
 // Single source of truth for panel styling across all tabs
 
-.rt-panel {
+.wh40k-panel {
   background: var(--rt-panel-bg);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: $rt-space-md;
+  margin-bottom: $wh40k-space-md;
   box-shadow: 0 2px 8px var(--rt-shadow-soft);
   position: relative;
 
@@ -28,40 +28,40 @@
   }
   
   // Accent color modifiers (use CSS custom properties for icon/accent colors)
-  &--wounds { --panel-accent: #{$rt-accent-combat}; }
-  &--fatigue { --panel-accent: #{$rt-color-gold}; }
+  &--wounds { --panel-accent: #{$wh40k-accent-combat}; }
+  &--fatigue { --panel-accent: #{$wh40k-color-gold}; }
   &--fate { --panel-accent: var(--rt-fate-secondary); }
   &--corruption { --panel-accent: #2d7a6b; }
   &--insanity { --panel-accent: #7b5aa6; }
-  &--skills { --panel-accent: #{$rt-accent-skills}; }
-  &--talents { --panel-accent: #{$rt-accent-talents}; }
-  &--equipment { --panel-accent: #{$rt-accent-equipment}; }
-  &--powers { --panel-accent: #{$rt-accent-powers}; }
-  &--dynasty { --panel-accent: #{$rt-accent-dynasty}; }
-  &--bio { --panel-accent: #{$rt-accent-bio}; }
-  &--combat { --panel-accent: #{$rt-accent-combat}; }
-  &--xp { --panel-accent: #{$rt-color-gold}; }
+  &--skills { --panel-accent: #{$wh40k-accent-skills}; }
+  &--talents { --panel-accent: #{$wh40k-accent-talents}; }
+  &--equipment { --panel-accent: #{$wh40k-accent-equipment}; }
+  &--powers { --panel-accent: #{$wh40k-accent-powers}; }
+  &--dynasty { --panel-accent: #{$wh40k-accent-dynasty}; }
+  &--bio { --panel-accent: #{$wh40k-accent-bio}; }
+  &--combat { --panel-accent: #{$wh40k-accent-combat}; }
+  &--xp { --panel-accent: #{$wh40k-color-gold}; }
   
   // Apply accent color to header icon when modifier is present
-  &[class*="--"] .rt-panel-header .rt-panel-title i {
-    color: var(--panel-accent, $rt-accent-gold);
+  &[class*="--"] .wh40k-panel-header .wh40k-panel-title i {
+    color: var(--panel-accent, $wh40k-accent-gold);
   }
 }
 
-.rt-panel-header {
+.wh40k-panel-header {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm $rt-space-md;
-  background: linear-gradient(180deg, rgba($rt-accent-gold, 0.15) 0%, rgba($rt-accent-gold, 0.05) 100%);
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-sm $wh40k-space-md;
+  background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.15) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
   border-bottom: 1px solid var(--rt-border-color-light);
   transition: box-shadow 0.2s ease, background 0.2s ease;
   width: 100% !important;
   box-sizing: border-box !important;
   min-width: 0 !important;
   
-  .rt-panel-title {
+  .wh40k-panel-title {
     flex: 1 1 auto !important;
     font-family: var(--rt-font-display, 'Modesto Condensed', serif);
     font-size: var(--rt-text-h3, 1.1rem);
@@ -73,12 +73,12 @@
     text-overflow: ellipsis;
     display: flex !important;
     align-items: center !important;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
     min-width: 0;
     
     i {
       margin-right: 0;
-      color: var(--panel-accent, $rt-accent-gold);
+      color: var(--panel-accent, $wh40k-accent-gold);
       flex-shrink: 0;
     }
   }
@@ -86,56 +86,56 @@
   // Ensure buttons don't break layout
   > button,
   > label,
-  > .rt-control-button,
-  > .rt-header-btn,
-  > .rt-btn-icon,
-  > .rt-btn-control {
+  > .wh40k-control-button,
+  > .wh40k-header-btn,
+  > .wh40k-btn-icon,
+  > .wh40k-btn-control {
     flex-shrink: 0 !important;
     margin-left: auto;
   }
 }
 
 // Clickable panel header for expand/collapse
-.rt-panel-header--clickable {
+.wh40k-panel-header--clickable {
   cursor: pointer;
   user-select: none;
   
   &:hover {
-    background: linear-gradient(180deg, rgba($rt-accent-gold, 0.2) 0%, rgba($rt-accent-gold, 0.08) 100%);
+    background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.2) 0%, rgba($wh40k-accent-gold, 0.08) 100%);
   }
   
   &:active {
-    background: linear-gradient(180deg, rgba($rt-accent-gold, 0.25) 0%, rgba($rt-accent-gold, 0.12) 100%);
+    background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.25) 0%, rgba($wh40k-accent-gold, 0.12) 100%);
   }
 }
 
 // Chevron indicator for collapsible panels
-.rt-panel-chevron {
+.wh40k-panel-chevron {
   font-size: 0.75rem;
   color: var(--rt-text-muted);
   transition: transform 0.2s ease, color 0.15s ease;
   margin-left: auto;
   flex-shrink: 0;
   
-  .rt-panel-header--clickable:hover & {
-    color: $rt-accent-gold;
+  .wh40k-panel-header--clickable:hover & {
+    color: $wh40k-accent-gold;
   }
 }
 
-.rt-panel-chevron--open {
+.wh40k-panel-chevron--open {
   transform: rotate(180deg);
 }
 
-.rt-panel-body {
-  padding: $rt-space-md;
+.wh40k-panel-body {
+  padding: $wh40k-space-md;
   background: var(--rt-panel-body-bg);
 }
 
 // Expandable details section within panel body
-.rt-panel-details {
-  margin-top: $rt-space-md;
-  padding-top: $rt-space-md;
-  border-top: 1px solid rgba($rt-border-light, 0.5);
+.wh40k-panel-details {
+  margin-top: $wh40k-space-md;
+  padding-top: $wh40k-space-md;
+  border-top: 1px solid rgba($wh40k-border-light, 0.5);
   
   // Collapsed state - hide the details
   &--collapsed {
@@ -143,7 +143,7 @@
   }
 }
 
-.rt-panel:hover .rt-panel-header {
+.wh40k-panel:hover .wh40k-panel-header {
   box-shadow: inset 0 -1px 0 var(--rt-text-shadow), 0 6px 14px var(--rt-shadow-soft);
 }
 
@@ -152,13 +152,13 @@
   100% { opacity: 1; transform: translateY(0); }
 }
 
-.rt-tab.active .rt-panel {
+.wh40k-tab.active .wh40k-panel {
   animation: rt-panel-in 0.3s ease both;
 }
 
-.rt-tab.active .rt-panel:nth-of-type(2) { animation-delay: 0.03s; }
-.rt-tab.active .rt-panel:nth-of-type(3) { animation-delay: 0.06s; }
-.rt-tab.active .rt-panel:nth-of-type(4) { animation-delay: 0.09s; }
-.rt-tab.active .rt-panel:nth-of-type(5) { animation-delay: 0.12s; }
+.wh40k-tab.active .wh40k-panel:nth-of-type(2) { animation-delay: 0.03s; }
+.wh40k-tab.active .wh40k-panel:nth-of-type(3) { animation-delay: 0.06s; }
+.wh40k-tab.active .wh40k-panel:nth-of-type(4) { animation-delay: 0.09s; }
+.wh40k-tab.active .wh40k-panel:nth-of-type(5) { animation-delay: 0.12s; }
 
 // ============================================

@@ -3,8 +3,8 @@
     {{!-- Base Characteristics --}}
     <div class="rt-panel">
         <header class="rt-panel-header">
-            <h3><i class="fas fa-dice-d20"></i> {{localize "RT.NPC.Template.BaseCharacteristics"}}</h3>
-            <span class="panel-note">{{localize "RT.NPC.Template.CharacteristicsNote"}}</span>
+            <h3><i class="fas fa-dice-d20"></i> {{localize "WH40K.NPC.Template.BaseCharacteristics"}}</h3>
+            <span class="panel-note">{{localize "WH40K.NPC.Template.CharacteristicsNote"}}</span>
         </header>
         <div class="rt-panel-content">
             <div class="characteristics-grid">
@@ -22,7 +22,7 @@
     {{!-- Unnatural Characteristics --}}
     <div class="rt-panel">
         <header class="rt-panel-header">
-            <h3><i class="fas fa-bolt"></i> {{localize "RT.NPC.Template.UnnaturalCharacteristics"}}</h3>
+            <h3><i class="fas fa-bolt"></i> {{localize "WH40K.NPC.Template.UnnaturalCharacteristics"}}</h3>
         </header>
         <div class="rt-panel-content">
             <div class="characteristics-grid small">
@@ -40,22 +40,22 @@
     {{!-- Wounds & Movement --}}
     <div class="rt-panel">
         <header class="rt-panel-header">
-            <h3><i class="fas fa-heart"></i> {{localize "RT.NPC.Template.VitalStats"}}</h3>
+            <h3><i class="fas fa-heart"></i> {{localize "WH40K.NPC.Template.VitalStats"}}</h3>
         </header>
         <div class="rt-panel-content">
             <div class="vital-stats-grid">
                 <div class="vital-field">
-                    <label>{{localize "RT.Wounds"}}</label>
+                    <label>{{localize "WH40K.Wounds"}}</label>
                     <input type="number" name="system.baseWounds" value="{{system.baseWounds}}" min="1" />
                 </div>
                 
                 <div class="vital-field">
-                    <label>{{localize "RT.Movement"}}</label>
+                    <label>{{localize "WH40K.Movement"}}</label>
                     <input type="number" name="system.baseMovement" value="{{system.baseMovement}}" min="0" />
                 </div>
                 
                 <div class="vital-field">
-                    <label>{{localize "RT.NPC.Armour"}}</label>
+                    <label>{{localize "WH40K.NPC.Armour"}}</label>
                     <input type="number" name="system.baseArmour" value="{{system.baseArmour}}" min="0" />
                 </div>
             </div>
@@ -65,7 +65,7 @@
     {{!-- Trained Skills --}}
     <div class="rt-panel">
         <header class="rt-panel-header">
-            <h3><i class="fas fa-graduation-cap"></i> {{localize "RT.NPC.Template.TrainedSkills"}}</h3>
+            <h3><i class="fas fa-graduation-cap"></i> {{localize "WH40K.NPC.Template.TrainedSkills"}}</h3>
             <button type="button" class="rt-btn rt-btn-icon" data-action="addSkill">
                 <i class="fas fa-plus"></i>
             </button>
@@ -79,7 +79,7 @@
                     <span class="skill-char">{{skill.characteristic}}</span>
                     <div class="skill-level">
                         <select name="system.trainedSkills.{{idx}}.level">
-                            <option value="trained" {{#eq skill.level "trained"}}selected{{/eq}}>{{localize "RT.Skills.Trained"}}</option>
+                            <option value="trained" {{#eq skill.level "trained"}}selected{{/eq}}>{{localize "WH40K.Skills.Trained"}}</option>
                             <option value="plus10" {{#eq skill.level "plus10"}}selected{{/eq}}>+10</option>
                             <option value="plus20" {{#eq skill.level "plus20"}}selected{{/eq}}>+20</option>
                         </select>
@@ -94,7 +94,7 @@
                 {{/each}}
             </div>
             {{else}}
-            <p class="empty-message">{{localize "RT.NPC.Template.NoSkills"}}</p>
+            <p class="empty-message">{{localize "WH40K.NPC.Template.NoSkills"}}</p>
             {{/if}}
         </div>
     </div>

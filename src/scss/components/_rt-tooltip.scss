@@ -1,11 +1,11 @@
 /**
  * RT Rich Tooltips
  * Gothic 40K themed contextual tooltips with breakdowns
- * Applied to Foundry's #tooltip element when .rt-tooltip class is added
+ * Applied to Foundry's #tooltip element when .wh40k-tooltip class is added
  */
 
-// When Foundry's tooltip gets the .rt-tooltip class, apply our styling
-#tooltip.rt-tooltip {
+// When Foundry's tooltip gets the .wh40k-tooltip class, apply our styling
+#tooltip.wh40k-tooltip {
     // Override Foundry's default tooltip styling
     min-width: 250px;
     max-width: 350px;
@@ -33,7 +33,7 @@
     }
 
     /* Header */
-    .rt-tooltip__header {
+    .wh40k-tooltip__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -41,7 +41,7 @@
         background: linear-gradient(135deg, rgba(205, 127, 50, 0.3) 0%, rgba(62, 62, 62, 0.3) 100%);
         border-bottom: 1px solid rgba(212, 175, 55, 0.5);
 
-        .rt-tooltip__title {
+        .wh40k-tooltip__title {
             margin: 0;
             font-family: var(--rt-font-header, 'Caslon Antique', serif);
             font-size: 1.1rem;
@@ -52,7 +52,7 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
 
-        .rt-tooltip__total {
+        .wh40k-tooltip__total {
             font-size: 1.3rem;
             font-weight: bold;
             color: white;
@@ -61,37 +61,37 @@
     }
 
     /* Divider */
-    .rt-tooltip__divider {
+    .wh40k-tooltip__divider {
         height: 1px;
         background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
         margin: 0 1rem;
     }
 
     /* Breakdown Section */
-    .rt-tooltip__breakdown {
+    .wh40k-tooltip__breakdown {
         padding: 0.75rem 1rem;
 
-        .rt-tooltip__line {
+        .wh40k-tooltip__line {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0.35rem 0;
             font-size: 0.9rem;
 
-            &.rt-tooltip__line--modifier {
+            &.wh40k-tooltip__line--modifier {
                 color: rgba(232, 220, 200, 0.9);
             }
 
-            .rt-tooltip__label {
+            .wh40k-tooltip__label {
                 color: rgba(232, 220, 200, 0.7);
                 font-size: 0.85rem;
             }
 
-            .rt-tooltip__value {
+            .wh40k-tooltip__value {
                 font-weight: 600;
                 color: var(--rt-bone, #e8dcc8);
 
-                &.rt-tooltip__value--bonus {
+                &.wh40k-tooltip__value--bonus {
                     font-size: 1.2rem;
                     color: var(--rt-gold, #d4af37);
                 }
@@ -100,10 +100,10 @@
     }
 
     /* Modifier Sources */
-    .rt-tooltip__sources {
+    .wh40k-tooltip__sources {
         padding: 0.75rem 1rem;
 
-        .rt-tooltip__sources-title {
+        .wh40k-tooltip__sources-title {
             font-size: 0.85rem;
             font-weight: bold;
             color: var(--rt-gold, #d4af37);
@@ -112,7 +112,7 @@
             letter-spacing: 0.5px;
         }
 
-        .rt-tooltip__source {
+        .wh40k-tooltip__source {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -122,11 +122,11 @@
             margin-bottom: 0.25rem;
             font-size: 0.85rem;
 
-            .rt-tooltip__source-name {
+            .wh40k-tooltip__source-name {
                 color: rgba(232, 220, 200, 0.8);
             }
 
-            .rt-tooltip__source-value {
+            .wh40k-tooltip__source-value {
                 font-weight: bold;
                 color: var(--rt-gold, #d4af37);
             }
@@ -134,26 +134,26 @@
     }
 
     /* Bonus Display */
-    .rt-tooltip__bonus {
+    .wh40k-tooltip__bonus {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0.75rem 1rem;
         background: rgba(212, 175, 55, 0.1);
 
-        .rt-tooltip__label {
+        .wh40k-tooltip__label {
             font-size: 0.9rem;
             color: rgba(232, 220, 200, 0.7);
         }
 
-        .rt-tooltip__value {
+        .wh40k-tooltip__value {
             font-size: 1.3rem;
             font-weight: bold;
             color: var(--rt-gold, #d4af37);
             text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
         }
 
-        .rt-tooltip__bonus-calc {
+        .wh40k-tooltip__bonus-calc {
             font-size: 0.8rem;
             color: rgba(232, 220, 200, 0.6);
             font-style: italic;
@@ -161,10 +161,10 @@
     }
 
     /* Training Track */
-    .rt-tooltip__training {
+    .wh40k-tooltip__training {
         padding: 0.75rem 1rem;
 
-        .rt-tooltip__training-title {
+        .wh40k-tooltip__training-title {
             font-size: 0.85rem;
             font-weight: bold;
             color: var(--rt-gold, #d4af37);
@@ -173,7 +173,7 @@
             letter-spacing: 0.5px;
         }
 
-        .rt-tooltip__training-track {
+        .wh40k-tooltip__training-track {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -206,10 +206,10 @@
     }
 
     /* Equipped Items */
-    .rt-tooltip__equipped {
+    .wh40k-tooltip__equipped {
         padding: 0.75rem 1rem;
 
-        .rt-tooltip__equipped-title {
+        .wh40k-tooltip__equipped-title {
             font-size: 0.85rem;
             font-weight: bold;
             color: var(--rt-gold, #d4af37);
@@ -218,7 +218,7 @@
             letter-spacing: 0.5px;
         }
 
-        .rt-tooltip__equipped-item {
+        .wh40k-tooltip__equipped-item {
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -249,10 +249,10 @@
     }
 
     /* Qualities */
-    .rt-tooltip__qualities {
+    .wh40k-tooltip__qualities {
         padding: 0.75rem 1rem;
 
-        .rt-tooltip__qualities-title {
+        .wh40k-tooltip__qualities-title {
             font-size: 0.85rem;
             font-weight: bold;
             color: var(--rt-gold, #d4af37);
@@ -261,7 +261,7 @@
             letter-spacing: 0.5px;
         }
 
-        .rt-tooltip__quality {
+        .wh40k-tooltip__quality {
             display: inline-block;
             padding: 0.25rem 0.5rem;
             margin-right: 0.25rem;
@@ -275,7 +275,7 @@
     }
 
     /* Action Hint */
-    .rt-tooltip__action {
+    .wh40k-tooltip__action {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -293,7 +293,7 @@
     }
 
     /* Hint text (non-interactive guidance) */
-    .rt-tooltip__hint {
+    .wh40k-tooltip__hint {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -312,7 +312,7 @@
     }
 
     /* Skill description */
-    .rt-tooltip__description {
+    .wh40k-tooltip__description {
         padding: 0.5rem 1rem;
         font-size: 0.85rem;
         line-height: 1.4;
@@ -322,7 +322,7 @@
     }
 
     /* Generic Content */
-    .rt-tooltip__content {
+    .wh40k-tooltip__content {
         padding: 0.75rem 1rem;
         font-size: 0.9rem;
         line-height: 1.4;
@@ -331,33 +331,33 @@
 }
 
 /* Type-specific styling */
-#tooltip.rt-tooltip--characteristic {
-    .rt-tooltip__header {
+#tooltip.wh40k-tooltip--characteristic {
+    .wh40k-tooltip__header {
         background: linear-gradient(135deg, rgba(220, 20, 60, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%);
     }
 }
 
-#tooltip.rt-tooltip--skill {
-    .rt-tooltip__header {
+#tooltip.wh40k-tooltip--skill {
+    .wh40k-tooltip__header {
         background: linear-gradient(135deg, rgba(70, 130, 180, 0.3) 0%, rgba(25, 25, 112, 0.3) 100%);
     }
 }
 
-#tooltip.rt-tooltip--armor,
-#tooltip.rt-tooltip--armour {
-    .rt-tooltip__header {
+#tooltip.wh40k-tooltip--armor,
+#tooltip.wh40k-tooltip--armour {
+    .wh40k-tooltip__header {
         background: linear-gradient(135deg, rgba(105, 105, 105, 0.3) 0%, rgba(47, 79, 79, 0.3) 100%);
     }
 }
 
-#tooltip.rt-tooltip--weapon {
-    .rt-tooltip__header {
+#tooltip.wh40k-tooltip--weapon {
+    .wh40k-tooltip__header {
         background: linear-gradient(135deg, rgba(178, 34, 34, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%);
     }
 }
 
-#tooltip.rt-tooltip--quality {
-    .rt-tooltip__header {
+#tooltip.wh40k-tooltip--quality {
+    .wh40k-tooltip__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -365,11 +365,11 @@
         background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(143, 76, 38, 0.25) 100%);
     }
 
-    .rt-tooltip__title {
+    .wh40k-tooltip__title {
         flex: 1;
     }
 
-    .rt-tooltip__badge {
+    .wh40k-tooltip__badge {
         padding: 4px 8px;
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(212, 175, 55, 0.4);
@@ -392,7 +392,7 @@
         }
     }
 
-    .rt-tooltip__info {
+    .wh40k-tooltip__info {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -408,7 +408,7 @@
         }
     }
 
-    .rt-tooltip__source-ref {
+    .wh40k-tooltip__source-ref {
         display: flex;
         align-items: center;
         gap: 6px;

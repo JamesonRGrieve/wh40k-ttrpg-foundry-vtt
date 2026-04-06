@@ -1,7 +1,7 @@
-import { RogueTraderBaseActor } from './base-actor.mjs';
+import { WH40KBaseActor } from './base-actor.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 
-export class RogueTraderVehicle extends RogueTraderBaseActor {
+export class WH40KVehicle extends WH40KBaseActor {
 
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);

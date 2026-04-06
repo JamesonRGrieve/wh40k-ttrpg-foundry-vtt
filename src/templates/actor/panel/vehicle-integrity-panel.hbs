@@ -1,16 +1,16 @@
 <div class="rt-panel spacer rt-grid-col-2">
     <h1 class="rt-panel-header">
         <i class="fas fa-heart-broken"></i>
-        {{localize "RT.Vehicle.Integrity"}}
+        {{localize "WH40K.Vehicle.Integrity"}}
     </h1>
     <div class="rt-integrity-display">
         <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "RT.Vehicle.Integrity.Max"}}</span>
+            <span class="rt-field__header">{{localize "WH40K.Vehicle.Integrity.Max"}}</span>
             <input type="number" data-dtype="Number" class="rt-field__input" 
                    name="system.integrity.max" value="{{system.integrity.max}}" />
         </div>
         <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "RT.Vehicle.Integrity.Current"}}</span>
+            <span class="rt-field__header">{{localize "WH40K.Vehicle.Integrity.Current"}}</span>
             <div class="rt-integrity-controls">
                 <button class="rt-control-button" data-action="adjustIntegrity" data-delta="-1" title="Damage">
                     <i class="fas fa-minus"></i>
@@ -23,20 +23,20 @@
             </div>
         </div>
         <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "RT.Vehicle.Integrity.Critical"}}</span>
+            <span class="rt-field__header">{{localize "WH40K.Vehicle.Integrity.Critical"}}</span>
             <input type="number" data-dtype="Number" class="rt-field__input" 
                    name="system.integrity.critical" value="{{system.integrity.critical}}" />
         </div>
         {{#if actor.system.isDamaged}}
         <div class="rt-integrity-status rt-status-damaged">
             <i class="fas fa-exclamation-triangle"></i>
-            {{localize "RT.Vehicle.Status.Damaged"}} ({{system.integrityPercentage}}%)
+            {{localize "WH40K.Vehicle.Status.Damaged"}} ({{system.integrityPercentage}}%)
         </div>
         {{/if}}
         {{#if actor.system.isDestroyed}}
         <div class="rt-integrity-status rt-status-destroyed">
             <i class="fas fa-skull-crossbones"></i>
-            {{localize "RT.Vehicle.Status.Destroyed"}}
+            {{localize "WH40K.Vehicle.Status.Destroyed"}}
         </div>
         {{/if}}
     </div>

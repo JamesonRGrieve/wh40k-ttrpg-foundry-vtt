@@ -13,7 +13,7 @@ import { ReloadActionManager } from '../../actions/reload-action-manager.mjs';
 export default class WeaponSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'item', 'weapon', 'rt-weapon-sheet-v3'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'weapon', 'wh40k-weapon-sheet-v3'],
         actions: {
             reload: WeaponSheet.#onReload,
             addModification: WeaponSheet.#onAddModification,
@@ -47,7 +47,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/rogue-trader/templates/item/item-weapon-sheet-modern.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-weapon-sheet-modern.hbs',
             scrollable: ['.rt-weapon-body'],
         },
     };
@@ -123,7 +123,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             const match = q.match(/-(\d+)$/);
             const level = match ? parseInt(match[1]) : null;
 
-            // Get localized label using CONFIG helper (CONFIG.rt not CONFIG.ROGUE_TRADER)
+            // Get localized label using CONFIG helper (CONFIG.rt not CONFIG.WH40K)
             const label = CONFIG.rt?.getQualityLabel?.(q, level) || q;
 
             // Get definition for description
@@ -417,7 +417,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             targetActor: null,
         };
 
-        const template = 'systems/rogue-trader/templates/chat/damage-roll-chat.hbs';
+        const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await renderTemplate(template, templateData);
         const chatData = {
             user: game.user.id,
@@ -480,7 +480,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         if (!identifier) return;
 
         // Try to find the quality in the weapon qualities compendium
-        const pack = game.packs.get('rogue-trader.rt-items-weapon-qualities');
+        const pack = game.packs.get('wh40k-rpg.rt-items-weapon-qualities');
         if (!pack) {
             ui.notifications.warn('Weapon qualities compendium not found.');
             return;

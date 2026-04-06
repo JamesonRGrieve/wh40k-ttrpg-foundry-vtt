@@ -1,5 +1,5 @@
 /**
- * Item Data Models for Rogue Trader
+ * Item Data Models for WH40K RPG
  */
 
 // Equipment

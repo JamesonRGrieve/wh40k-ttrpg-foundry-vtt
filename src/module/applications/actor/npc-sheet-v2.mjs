@@ -26,7 +26,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'actor', 'npc-v2'],
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'npc-v2'],
         position: {
             width: 900,
             height: 700,
@@ -90,21 +90,21 @@ export default class NPCSheetV2 extends BaseActorSheet {
     /** @override */
     static PARTS = {
         navigation: {
-            template: 'systems/rogue-trader/templates/actor/npc-v2/navigation.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/npc-v2/navigation.hbs',
         },
         overview: {
-            template: 'systems/rogue-trader/templates/actor/npc-v2/tab-overview.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/npc-v2/tab-overview.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         combat: {
-            template: 'systems/rogue-trader/templates/actor/npc-v2/tab-combat.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/npc-v2/tab-combat.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         abilities: {
-            template: 'systems/rogue-trader/templates/actor/npc-v2/tab-abilities.hbs',
-            container: { classes: ['rt-body'], id: 'tab-body' },
+            template: 'systems/wh40k-rpg/templates/actor/npc-v2/tab-abilities.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
     };
@@ -113,9 +113,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
     /** @override */
     static TABS = [
-        { tab: 'overview', label: 'RT.NPC.Interaction', icon: 'fa-solid fa-hand-pointer', group: 'primary', cssClass: 'tab-overview' },
-        { tab: 'combat', label: 'RT.Tabs.Combat', icon: 'fa-solid fa-swords', group: 'primary', cssClass: 'tab-combat' },
-        { tab: 'abilities', label: 'RT.Tabs.Abilities', icon: 'fa-solid fa-stars', group: 'primary', cssClass: 'tab-abilities' },
+        { tab: 'overview', label: 'WH40K.NPC.Interaction', icon: 'fa-solid fa-hand-pointer', group: 'primary', cssClass: 'tab-overview' },
+        { tab: 'combat', label: 'WH40K.Tabs.Combat', icon: 'fa-solid fa-swords', group: 'primary', cssClass: 'tab-combat' },
+        { tab: 'abilities', label: 'WH40K.Tabs.Abilities', icon: 'fa-solid fa-stars', group: 'primary', cssClass: 'tab-abilities' },
     ];
 
     /* -------------------------------------------- */
@@ -303,7 +303,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         context.pinnedAbilities = context.items.filter((i) => pinnedIds.includes(i.id) && (i.type === 'talent' || i.type === 'trait'));
 
         // Favorite Skills
-        const favoriteSkillKeys = this.actor.getFlag('rogue-trader', 'favoriteSkills') || [];
+        const favoriteSkillKeys = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
         context.favoriteSkills = favoriteSkillKeys
             .map((key) => {
                 const skillData = context.system.trainedSkills[key];
@@ -348,7 +348,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
             .filter((s) => s !== null);
 
         // Favorite Talents
-        const favoriteTalentIds = this.actor.getFlag('rogue-trader', 'favoriteTalents') || [];
+        const favoriteTalentIds = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
         context.favoriteTalents = context.items.filter((i) => favoriteTalentIds.includes(i.id) && i.type === 'talent');
 
         // Armour data
@@ -459,7 +459,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         context.trainedSkillsList = context.system.trainedSkillsList || [];
 
         // Get favorite skills
-        const favoriteSkillKeys = this.actor.getFlag('rogue-trader', 'favoriteSkills') || [];
+        const favoriteSkillKeys = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
 
         // Define all basic skills with their characteristics
         const allBasicSkills = [
@@ -789,14 +789,14 @@ export default class NPCSheetV2 extends BaseActorSheet {
             const options = skills.map((s) => `<option value="${s.key}">${s.name}</option>`).join('');
 
             const content = `
-        <form class="rt-skill-add-dialog">
-          <div class="rt-form-group">
-            <label class="rt-form-label">Skill</label>
-            <select name="skill" class="rt-form-select">${options}</select>
+        <form class="wh40k-skill-add-dialog">
+          <div class="wh40k-form-group">
+            <label class="wh40k-form-label">Skill</label>
+            <select name="skill" class="wh40k-form-select">${options}</select>
           </div>
-          <div class="rt-form-group">
-            <label class="rt-form-label">Training Level</label>
-            <select name="level" class="rt-form-select">
+          <div class="wh40k-form-group">
+            <label class="wh40k-form-label">Training Level</label>
+            <select name="level" class="wh40k-form-select">
               <option value="trained">Trained</option>
               <option value="plus10">+10 (Experienced)</option>
               <option value="plus20">+20 (Expert)</option>
@@ -808,7 +808,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
             const dialog = new foundry.applications.api.DialogV2({
                 window: { title: 'Add Trained Skill', icon: 'fa-solid fa-book-open' },
                 content,
-                classes: ['rogue-trader', 'rt-dialog-skill'],
+                classes: ['wh40k-rpg', 'wh40k-dialog-skill'],
                 position: { width: 320 },
                 buttons: [
                     {
@@ -1393,17 +1393,17 @@ export default class NPCSheetV2 extends BaseActorSheet {
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const currentFavorites = this.actor.getFlag('rogue-trader', 'favoriteSkills') || [];
+        const currentFavorites = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
         const isFavorite = currentFavorites.includes(skillKey);
 
         if (isFavorite) {
             await this.actor.setFlag(
-                'rogue-trader',
+                'wh40k-rpg',
                 'favoriteSkills',
                 currentFavorites.filter((k) => k !== skillKey),
             );
         } else {
-            await this.actor.setFlag('rogue-trader', 'favoriteSkills', [...currentFavorites, skillKey]);
+            await this.actor.setFlag('wh40k-rpg', 'favoriteSkills', [...currentFavorites, skillKey]);
         }
 
         await this.render({ parts: ['overview', 'skills'] });
@@ -1421,17 +1421,17 @@ export default class NPCSheetV2 extends BaseActorSheet {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
-        const currentFavorites = this.actor.getFlag('rogue-trader', 'favoriteTalents') || [];
+        const currentFavorites = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
         const isFavorite = currentFavorites.includes(itemId);
 
         if (isFavorite) {
             await this.actor.setFlag(
-                'rogue-trader',
+                'wh40k-rpg',
                 'favoriteTalents',
                 currentFavorites.filter((id) => id !== itemId),
             );
         } else {
-            await this.actor.setFlag('rogue-trader', 'favoriteTalents', [...currentFavorites, itemId]);
+            await this.actor.setFlag('wh40k-rpg', 'favoriteTalents', [...currentFavorites, itemId]);
         }
 
         await this.render({ parts: ['overview', 'abilities'] });

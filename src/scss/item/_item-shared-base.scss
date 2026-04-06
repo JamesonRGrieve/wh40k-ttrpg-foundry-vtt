@@ -57,7 +57,7 @@
 // Base Item Sheet Wrapper
 // ────────────────────────────────────────────
 
-.rt-item-sheet {
+.wh40k-item-sheet {
     font-family: var(--rt-item-font-family);
     font-size: var(--rt-item-font-size-base);
     color: var(--color-text-primary, #e2e8f0);
@@ -102,7 +102,7 @@
     }
 
     // Empty state text
-    .rt-empty-text {
+    .wh40k-empty-text {
         color: var(--color-text-secondary, #94a3b8);
         font-style: italic;
         opacity: 0.7;
@@ -113,10 +113,10 @@
 // Common Section Styles
 // ────────────────────────────────────────────
 
-.rt-item-section,
-.rt-armour-section,
-.rt-weapon-section,
-.rt-talent-section {
+.wh40k-item-section,
+.wh40k-armour-section,
+.wh40k-weapon-section,
+.wh40k-talent-section {
     margin-bottom: var(--rt-item-spacing-md);
 
     &__header {
@@ -164,7 +164,7 @@
 // Form Field Grid Layouts
 // ────────────────────────────────────────────
 
-.rt-field-grid {
+.wh40k-field-grid {
     display: grid;
     gap: var(--rt-item-spacing-md);
 
@@ -190,7 +190,7 @@
     }
 }
 
-.rt-field {
+.wh40k-field {
     display: flex;
     flex-direction: column;
     gap: var(--rt-item-spacing-xs);

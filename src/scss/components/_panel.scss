@@ -2,21 +2,21 @@
 // Panel Component System
 // ============================================
 // NOTE: This file contains LEGACY panel styles for backwards compatibility
-// The canonical .rt-panel definition is in abstracts/_unified-components.scss
+// The canonical .wh40k-panel definition is in abstracts/_unified-components.scss
 // DO NOT use these legacy styles in new code
 
-.rt-controls {
+.wh40k-controls {
     button {
         background: rgba($form-button-background, 0.125);
         text-align: center;
     }
 }
 
-// LEGACY: Old .rt-panel style with border images (pre-V2)
+// LEGACY: Old .wh40k-panel style with border images (pre-V2)
 // This is kept for backwards compatibility with old templates only
-// DO NOT use in new templates - use the unified .rt-panel from _unified-components.scss
+// DO NOT use in new templates - use the unified .wh40k-panel from _unified-components.scss
 //noinspection CssUnknownTarget
-.rt-panel-legacy {
+.wh40k-panel-legacy {
     position: relative;
     padding: 2px;
 
@@ -39,13 +39,13 @@
     h1 {
         border-bottom: $grid-border;
 
-        &.rt-panel__header {
+        &.wh40k-panel__header {
             font-size: $h1-size;
             font-weight: normal;
             text-align: center;
             text-transform: uppercase;
 
-            .rt-trait-toggle__span {
+            .wh40k-trait-toggle__span {
                 font-size: $h1-size;
                 font-weight: normal;
                 text-align: center;
@@ -60,7 +60,7 @@
 }
 
 //noinspection CssUnknownTarget
-.rt-divider {
+.wh40k-divider {
     width: 100%;
     height: 10px;
     grid-column: 1/-1;
@@ -68,7 +68,7 @@
     background: url('../images/divider.png') no-repeat center/100% 100%;
 }
 
-.rt-item-img {
+.wh40k-item-img {
     width: 24px;
     height: 24px;
     border: none;

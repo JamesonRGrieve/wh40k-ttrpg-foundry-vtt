@@ -4,7 +4,7 @@
 
 import BaseActorSheet from "./base-actor-sheet.mjs";
 import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
-import ROGUE_TRADER from "../../config.mjs";
+import WH40K from "../../config.mjs";
 
 /**
  * Actor sheet for Vehicle type actors.
@@ -32,24 +32,24 @@ export default class VehicleSheet extends BaseActorSheet {
     /** @override */
     static PARTS = {
         header: {
-            template: "systems/rogue-trader/templates/actor/vehicle/header.hbs"
+            template: "systems/wh40k-rpg/templates/actor/vehicle/header.hbs"
         },
         tabs: {
-            template: "systems/rogue-trader/templates/actor/vehicle/tabs.hbs"
+            template: "systems/wh40k-rpg/templates/actor/vehicle/tabs.hbs"
         },
         stats: {
-            template: "systems/rogue-trader/templates/actor/vehicle/tab-stats.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
+            template: "systems/wh40k-rpg/templates/actor/vehicle/tab-stats.hbs",
+            container: { classes: ["wh40k-body"], id: "tab-body" },
             scrollable: [""]
         },
         weapons: {
-            template: "systems/rogue-trader/templates/actor/vehicle/tab-weapons.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
+            template: "systems/wh40k-rpg/templates/actor/vehicle/tab-weapons.hbs",
+            container: { classes: ["wh40k-body"], id: "tab-body" },
             scrollable: [""]
         },
         traits: {
-            template: "systems/rogue-trader/templates/actor/vehicle/tab-traits.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
+            template: "systems/wh40k-rpg/templates/actor/vehicle/tab-traits.hbs",
+            container: { classes: ["wh40k-body"], id: "tab-body" },
             scrollable: [""]
         }
     };
@@ -58,9 +58,9 @@ export default class VehicleSheet extends BaseActorSheet {
 
     /** @override */
     static TABS = [
-        { tab: "stats", label: "RT.Vehicle.Tabs.Stats", group: "primary", cssClass: "tab-stats" },
-        { tab: "weapons", label: "RT.Vehicle.Tabs.Weapons", group: "primary", cssClass: "tab-weapons" },
-        { tab: "traits", label: "RT.Vehicle.Tabs.Traits", group: "primary", cssClass: "tab-traits" }
+        { tab: "stats", label: "WH40K.Vehicle.Tabs.Stats", group: "primary", cssClass: "tab-stats" },
+        { tab: "weapons", label: "WH40K.Vehicle.Tabs.Weapons", group: "primary", cssClass: "tab-weapons" },
+        { tab: "traits", label: "WH40K.Vehicle.Tabs.Traits", group: "primary", cssClass: "tab-traits" }
     ];
 
     /* -------------------------------------------- */
@@ -77,7 +77,7 @@ export default class VehicleSheet extends BaseActorSheet {
      */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        context.dh = CONFIG.rt || ROGUE_TRADER;
+        context.dh = CONFIG.rt || WH40K;
         
         // Categorize items
         context.weapons = this.actor.items.filter(i => i.type === 'weapon');

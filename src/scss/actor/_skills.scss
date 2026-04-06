@@ -2,17 +2,17 @@
 // SKILLS TAB LIST LAYOUT
 // ============================================
 
-.rt-skills-panel .rt-skills-split {
+.wh40k-skills-panel .wh40k-skills-split {
     padding: 14px 10px 10px;
 }
 
-.rt-skills-columns {
+.wh40k-skills-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
 
-.rt-skills-column {
+.wh40k-skills-column {
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -23,17 +23,17 @@
     position: relative;
 }
 
-.rt-skills-split.rt-skilltable--border {
+.wh40k-skills-split.wh40k-skilltable--border {
     border: none;
     box-shadow: none;
 }
 
-.rt-skills-split .rt-skills-header,
-.rt-skills-split .rt-skill-row {
+.wh40k-skills-split .wh40k-skills-header,
+.wh40k-skills-split .wh40k-skill-row {
     border: none;
 }
 
-.rt-skills-column::after {
+.wh40k-skills-column::after {
     content: "";
     position: absolute;
     top: 8px;
@@ -47,79 +47,79 @@
 
 
 
-.rt-skills-split {
-    .rt-skills-header,
-    .rt-skill-row {
+.wh40k-skills-split {
+    .wh40k-skills-header,
+    .wh40k-skill-row {
         grid-template-columns: 1.6fr 1.2fr 0.7fr;
     }
 }
 
-.rt-skill-training select {
+.wh40k-skill-training select {
     color: var(--rt-text-dark);
 }
 
-.rt-skills-header {
+.wh40k-skills-header {
     border-bottom: 1px solid var(--rt-border-color-light);
     background: var(--rt-panel-bg-solid) !important;
 }
 
-.rt-skills-column {
-    .rt-skill-row {
+.wh40k-skills-column {
+    .wh40k-skill-row {
         border-bottom: 1px solid var(--rt-border-color-light);
     }
     
-    .rt-skill-row:last-child {
+    .wh40k-skill-row:last-child {
         border-bottom: none;
     }
 }
 
-.rt-skill-name {
+.wh40k-skill-name {
     padding-right: 4px;
 }
 
-.rt-wrapper .rt-skills-panel .rt-skill-name {
+.wh40k-wrapper .wh40k-skills-panel .wh40k-skill-name {
     display: flex !important;
     align-items: center;
     width: 100% !important;
     line-height: 1;
 }
 
-.rt-wrapper .rt-skills-panel .rt-skill-info {
+.wh40k-wrapper .wh40k-skills-panel .wh40k-skill-info {
     display: flex !important;
     align-items: center;
     gap: 6px;
 }
 
-.rt-wrapper .rt-skills-panel .rt-skill-label {
+.wh40k-wrapper .wh40k-skills-panel .wh40k-skill-label {
     display: inline-flex;
     align-items: baseline;
     gap: 4px;
     line-height: 1;
 }
 
-.rt-wrapper .rt-skills-panel .rt-skill-icon {
+.wh40k-wrapper .wh40k-skills-panel .wh40k-skill-icon {
     display: block;
     align-self: center;
     box-shadow: none;
     border: none;
 }
 
-.rt-skill-training {
+.wh40k-skill-training {
     justify-content: center;
 }
 
-.rt-skill-char-tag {
+.wh40k-skill-char-tag {
     font-size: 0.75em;
     color: var(--rt-text-muted);
     margin-left: 4px;
 }
 
-.rt-tooltip {
+.wh40k-tooltip {
     position: relative;
     cursor: help;
 }
 
-.rt-tooltip::after {
+.wh40k-tooltip::after {
     content: attr(data-tooltip);
     position: absolute;
     bottom: 125%;
@@ -144,7 +144,7 @@
     white-space: normal;
 }
 
-.rt-tooltip::before {
+.wh40k-tooltip::before {
     content: "";
     position: absolute;
     bottom: 115%;
@@ -158,36 +158,36 @@
     z-index: 3;
 }
 
-.rt-tooltip:hover::after,
-.rt-tooltip:hover::before {
+.wh40k-tooltip:hover::after,
+.wh40k-tooltip:hover::before {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
 
 @media (max-width: 1200px) {
-    .rt-skills-columns {
+    .wh40k-skills-columns {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 1100px) {
-    .rt-character-header .rt-header__info {
+    .wh40k-character-header .wh40k-header__info {
         grid-template-columns: 1fr;
     }
 
-    .rt-header-right {
+    .wh40k-header-right {
         align-items: flex-start;
         justify-self: start;
         padding-right: 0;
     }
 
-    .rt-characteristics-hud {
+    .wh40k-characteristics-hud {
         max-width: 100%;
         justify-content: flex-start;
     }
 }
 
-.rt-portrait-container {
+.wh40k-portrait-container {
     flex-shrink: 0;
     width: 100px;
     height: 100px;
@@ -196,13 +196,13 @@
     justify-content: center;
     cursor: pointer;
     
-    &:hover .rt-portrait {
+    &:hover .wh40k-portrait {
         border-color: var(--rt-gold, #d4af37);
         box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
     }
 }
 
-.rt-header-info {
+.wh40k-header-info {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -210,14 +210,14 @@
     flex: 1;
 }
 
-.rt-quick-status-gothic {
+.wh40k-quick-status-gothic {
     grid-column: 3;
     grid-row: 1;
     justify-self: end;
     align-self: start;
 }
 
-.rt-portrait {
+.wh40k-portrait {
     width: 96px;
     height: 96px;
     object-fit: cover;
@@ -226,14 +226,14 @@
     transition: all 0.3s ease;
 }
 
-.rt-header-row {
+.wh40k-header-row {
     display: flex;
     align-items: baseline;
     gap: 10px;
     min-width: 0;
 }
 
-.rt-header-label {
+.wh40k-header-label {
     font-size: 0.85em;
     font-weight: bold;
     text-transform: uppercase;
@@ -241,14 +241,14 @@
     min-width: 70px;
 }
 
-.rt-header-value {
+.wh40k-header-value {
     font-size: 1em;
     color: var(--rt-text-dark);
     min-width: 0;
 }
 
 // Header layout for single column (no HUD)
-.rt-header-single-column {
+.wh40k-header-single-column {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -257,7 +257,7 @@
 }
 
 // Header input fields
-.rt-header-input {
+.wh40k-header-input {
     border: none;
     background: transparent;
     border-bottom: 1px solid var(--rt-border-color);
@@ -273,20 +273,20 @@
     }
 }
 
-.rt-name-input {
+.wh40k-name-input {
     font-size: 1.2em;
     font-weight: bold;
     max-width: 320px;
 }
 
-.rt-player-input,
-.rt-rank-input {
+.wh40k-player-input,
+.wh40k-rank-input {
     font-size: 1em;
     max-width: 240px;
 }
 
 // Optional: Header HUD section
-.rt-header-hud {
+.wh40k-header-hud {
     margin-top: 8px;
     padding-top: 12px;
     border-top: 1px solid var(--rt-border-color-light);

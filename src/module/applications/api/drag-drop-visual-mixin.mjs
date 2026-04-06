@@ -1,6 +1,6 @@
 /**
  * @file DragDropVisualMixin - Visual drag-drop feedback layer
- * Extends the base DragDropAPIMixin with Rogue Trader-specific visual enhancements
+ * Extends the base DragDropAPIMixin with WH40K RPG-specific visual enhancements
  * 
  * Features:
  * - Custom Gothic 40K drag ghost images
@@ -199,7 +199,7 @@ export default function EnhancedDragDropMixin(Base) {
          */
         _createDragGhost(item, event) {
             const ghost = document.createElement("div");
-            ghost.className = "rt-drag-ghost";
+            ghost.className = "wh40k-drag-ghost";
             
             // Check for split
             const quantity = this._splitResult ? this._splitResult.quantity : (item.system.quantity || 1);
@@ -256,7 +256,7 @@ export default function EnhancedDragDropMixin(Base) {
                 new Dialog({
                     title: `Split ${item.name}`,
                     content: `
-                        <form class="rt-split-dialog">
+                        <form class="wh40k-split-dialog">
                             <div class="form-group">
                                 <label>Quantity to move (max ${quantity})</label>
                                 <input type="number" name="quantity" min="1" max="${quantity}" value="1" autofocus />
@@ -330,7 +330,7 @@ export default function EnhancedDragDropMixin(Base) {
             
             // Add drag-over visual feedback
             if (zoneType === "personal" || zoneType === "ship") {
-                zone.classList.add("rt-drag-over");
+                zone.classList.add("wh40k-drag-over");
                 event.dataTransfer.dropEffect = "move";
             }
             // Check if this is a valid drop for equipment zones
@@ -352,7 +352,7 @@ export default function EnhancedDragDropMixin(Base) {
         _onEnhancedDragLeave(event) {
             const zone = event.currentTarget;
             zone.classList.remove("drop-hover");
-            zone.classList.remove("rt-drag-over");
+            zone.classList.remove("wh40k-drag-over");
         }
 
         /* -------------------------------------------- */
@@ -692,7 +692,7 @@ export default function EnhancedDragDropMixin(Base) {
          * @private
          */
         async _addToFavorites(item) {
-            const favorites = this.document.getFlag("rogue-trader", "favorites") || [];
+            const favorites = this.document.getFlag("wh40k-rpg", "favorites") || [];
             
             if (favorites.includes(item.id)) {
                 ui.notifications.warn(`${item.name} is already in favorites`);
@@ -705,7 +705,7 @@ export default function EnhancedDragDropMixin(Base) {
             }
 
             favorites.push(item.id);
-            await this.document.setFlag("rogue-trader", "favorites", favorites);
+            await this.document.setFlag("wh40k-rpg", "favorites", favorites);
 
             ui.notifications.info(`Added ${item.name} to favorites`);
         }
@@ -783,9 +783,9 @@ export default function EnhancedDragDropMixin(Base) {
          * @public
          */
         async removeFromFavorites(itemId) {
-            const favorites = this.document.getFlag("rogue-trader", "favorites") || [];
+            const favorites = this.document.getFlag("wh40k-rpg", "favorites") || [];
             const newFavorites = favorites.filter(id => id !== itemId);
-            await this.document.setFlag("rogue-trader", "favorites", newFavorites);
+            await this.document.setFlag("wh40k-rpg", "favorites", newFavorites);
         }
 
         /* -------------------------------------------- */
@@ -795,7 +795,7 @@ export default function EnhancedDragDropMixin(Base) {
          * @public
          */
         async clearFavorites() {
-            await this.document.setFlag("rogue-trader", "favorites", []);
+            await this.document.setFlag("wh40k-rpg", "favorites", []);
         }
 
         /* -------------------------------------------- */
@@ -806,7 +806,7 @@ export default function EnhancedDragDropMixin(Base) {
          * @public
          */
         getFavoriteItems() {
-            const favorites = this.document.getFlag("rogue-trader", "favorites") || [];
+            const favorites = this.document.getFlag("wh40k-rpg", "favorites") || [];
             return favorites.map(id => this.document.items.get(id)).filter(i => i);
         }
     };

@@ -1,14 +1,14 @@
 /**
  * Context Menu Styles
  * Styles for Foundry V13 native ContextMenu with Rogue Trader theming
- * The .rt-context-menu class is added by RTContextMenu._setPosition()
+ * The .wh40k-context-menu class is added by RTContextMenu._setPosition()
  */
 
 /* -------------------------------------------- */
 /*  Native ContextMenu with RT Theme            */
 /* -------------------------------------------- */
 
-#context-menu.rt-context-menu {
+#context-menu.wh40k-context-menu {
     // Override Foundry defaults with RT theming
     min-width: 200px;
     max-width: 300px;
@@ -101,7 +101,7 @@
 /*  Focus States (Accessibility)                */
 /* -------------------------------------------- */
 
-#context-menu.rt-context-menu .context-item:focus {
+#context-menu.wh40k-context-menu .context-item:focus {
     outline: 2px solid var(--rt-gold, #d4af37);
     outline-offset: -2px;
     background: rgba(212, 175, 55, 0.1);
@@ -113,7 +113,7 @@
 
 // Light theme adjustments
 [data-theme="light"] {
-    #context-menu.rt-context-menu {
+    #context-menu.wh40k-context-menu {
         background: var(--color-bg-primary);
         box-shadow: 
             0 8px 24px rgba(0, 0, 0, 0.2),
@@ -129,7 +129,7 @@
 
 // High contrast mode
 @media (prefers-contrast: high) {
-    #context-menu.rt-context-menu {
+    #context-menu.wh40k-context-menu {
         border-width: 3px;
         
         .context-item {
@@ -144,7 +144,7 @@
 
 // Reduced motion
 @media (prefers-reduced-motion: reduce) {
-    #context-menu.rt-context-menu {
+    #context-menu.wh40k-context-menu {
         transition: none;
         
         .context-item {

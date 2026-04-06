@@ -85,7 +85,7 @@ export async function createSkillMacro(data, slot) {
 
     const macro = await Macro.create({
         name: macroName,
-        img: 'systems/rogue-trader/icons/talents/red/r_36.png',
+        img: 'systems/wh40k-rpg/icons/talents/red/r_36.png',
         type: 'script',
         command: command,
         flags: { 'dh.skillMacro': true },
@@ -115,7 +115,7 @@ export async function createCharacteristicMacro(data, slot) {
 
     const macro = await Macro.create({
         name: macroName,
-        img: 'systems/rogue-trader/icons/talents/violet/p_05.png',
+        img: 'systems/wh40k-rpg/icons/talents/violet/p_05.png',
         type: 'script',
         command: command,
         flags: { 'dh.characteristicMacro': true },

@@ -85,8 +85,8 @@ export default function ExpandableTooltipMixin(Base) {
             const panel = wrapper.querySelector('.rt-expansion-panel');
 
             if (trigger && panel) {
-                trigger.classList.add('rt-expandable--expanded');
-                panel.classList.add('rt-expansion-panel--open');
+                trigger.classList.add('wh40k-expandable--expanded');
+                panel.classList.add('wh40k-expansion-panel--open');
                 this.#openPanels.add(panelId);
 
                 // Enrich content if needed
@@ -107,8 +107,8 @@ export default function ExpandableTooltipMixin(Base) {
             const panel = wrapper.querySelector('.rt-expansion-panel');
 
             if (trigger && panel) {
-                trigger.classList.remove('rt-expandable--expanded');
-                panel.classList.remove('rt-expansion-panel--open');
+                trigger.classList.remove('wh40k-expandable--expanded');
+                panel.classList.remove('wh40k-expansion-panel--open');
                 this.#openPanels.delete(panelId);
             }
         }

@@ -23,7 +23,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /** @override */
     static DEFAULT_OPTIONS = {
         id: "talent-editor-dialog",
-        classes: ["rogue-trader", "dialog", "talent-editor-dialog"],
+        classes: ["wh40k-rpg", "dialog", "talent-editor-dialog"],
         tag: "form",
         form: {
             handler: TalentEditorDialog.#formHandler,
@@ -50,7 +50,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/dialogs/talent-editor-dialog.hbs",
+            template: "systems/wh40k-rpg/templates/dialogs/talent-editor-dialog.hbs",
             scrollable: [".ted-content"]
         }
     };

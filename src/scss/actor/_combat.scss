@@ -2,31 +2,31 @@
 // COMBAT TAB STYLES
 // ============================================
 
-.rt-tab[data-tab="overview"] {
-    .rt-panel {
+.wh40k-tab[data-tab="overview"] {
+    .wh40k-panel {
         background: linear-gradient(135deg, rgba(36, 107, 131, 0.22), rgba(24, 80, 96, 0.14));
         border-top-color: rgba(36, 107, 131, 0.5);
         border-bottom-color: rgba(24, 80, 96, 0.5);
     }
 }
 
-.rt-tab[data-tab="specialties"] {
-    .rt-panel,
-    .rt-specialist-group {
+.wh40k-tab[data-tab="specialties"] {
+    .wh40k-panel,
+    .wh40k-specialist-group {
         background: linear-gradient(135deg, rgba(36, 107, 131, 0.22), rgba(24, 80, 96, 0.14));
         border-top-color: rgba(36, 107, 131, 0.5);
         border-bottom-color: rgba(24, 80, 96, 0.5);
     }
 }
 
-.rt-tab[data-tab="combat"] {
-    .rt-panel {
+.wh40k-tab[data-tab="combat"] {
+    .wh40k-panel {
         background: linear-gradient(135deg, rgba(139, 0, 0, 0.18), rgba(90, 0, 30, 0.12));
         border-top-color: rgba(139, 0, 0, 0.5);
         border-bottom-color: rgba(90, 0, 30, 0.5);
     }
 
-    .rt-field__wrapper {
+    .wh40k-field__wrapper {
         padding: 6px 8px;
         margin: 2px 4px;
         background: rgba(255, 255, 255, 0.6);
@@ -38,13 +38,13 @@
         font-weight: 600;
     }
 
-    .rt-controls__wrapper {
+    .wh40k-controls__wrapper {
         display: grid;
         gap: 6px;
         padding: 6px 8px;
     }
 
-    .rt-controls .combat-control {
+    .wh40k-controls .combat-control {
         width: 100%;
         padding: 6px 8px;
         border-radius: 6px;
@@ -57,25 +57,25 @@
         transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     }
 
-    .rt-controls .combat-control:hover {
+    .wh40k-controls .combat-control:hover {
         background: rgba(139, 0, 0, 0.16);
         border-color: rgba(139, 0, 0, 0.4);
         color: #5a1f1f;
     }
 
-    .rt-armour__wrapper {
+    .wh40k-armour__wrapper {
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(245, 240, 232, 0.65));
         border-radius: 6px;
         padding: 6px;
     }
 
-    .rt-armour__display {
+    .wh40k-armour__display {
         border-color: rgba(139, 0, 0, 0.35);
         background: rgba(255, 255, 255, 0.85);
     }
 
-    .rt-armour__location,
-    .rt-armour__roll {
+    .wh40k-armour__location,
+    .wh40k-armour__roll {
         color: #4a1a1a;
     }
 }

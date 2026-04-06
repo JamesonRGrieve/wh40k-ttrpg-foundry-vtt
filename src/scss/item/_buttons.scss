@@ -2,20 +2,20 @@
 // Action Buttons
 // ============================================
 
-.rt-btn {
+.wh40k-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: $rt-space-xs;
-  padding: $rt-space-sm $rt-space-md;
+  gap: $wh40k-space-xs;
+  padding: $wh40k-space-sm $wh40k-space-md;
   background: var(--rt-btn-bg);
   border: 1px solid var(--rt-border-color);
-  border-radius: $rt-radius-md;
+  border-radius: $wh40k-radius-md;
   color: var(--rt-text-dark);
-  font-family: $rt-font-body;
-  font-size: $rt-font-size-sm;
+  font-family: $wh40k-font-body;
+  font-size: $wh40k-font-size-sm;
   cursor: pointer;
-  transition: all $rt-transition-base;
+  transition: all $wh40k-transition-base;
   
   i {
     font-size: 14px;
@@ -51,7 +51,7 @@
   }
   
   &--icon-only {
-    padding: $rt-space-xs;
+    padding: $wh40k-space-xs;
     width: 28px;
     height: 28px;
   }
@@ -61,18 +61,18 @@
 // Tables
 // ============================================
 
-.rt-table {
+.wh40k-table {
   width: 100%;
   border-collapse: collapse;
   
   th, td {
-    padding: $rt-space-sm;
+    padding: $wh40k-space-sm;
     text-align: left;
     border-bottom: 1px solid var(--rt-border-color-light);
   }
   
   th {
-    font-size: $rt-font-size-xs;
+    font-size: $wh40k-font-size-xs;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--rt-text-muted);
@@ -80,7 +80,7 @@
   }
   
   tr {
-    transition: background $rt-transition-fast;
+    transition: background $wh40k-transition-fast;
     
     &:hover {
       background: rgba(212, 175, 55, 0.05);

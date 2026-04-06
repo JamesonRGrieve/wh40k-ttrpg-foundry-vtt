@@ -1,6 +1,6 @@
-import { RogueTraderBaseActor } from './base-actor.mjs';
+import { WH40KBaseActor } from './base-actor.mjs';
 
-export class RogueTraderStarship extends RogueTraderBaseActor {
+export class WH40KStarship extends WH40KBaseActor {
 
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
@@ -154,7 +154,7 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
             detectionBonus: this.detectionBonus
         };
 
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/ship-weapon-chat.hbs', cardData);
+        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
         await ChatMessage.create({
             user: game.user.id,
@@ -171,13 +171,13 @@ export class RogueTraderStarship extends RogueTraderBaseActor {
         const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
         
         const content = `
-            <div class="rt-hit-location-result">
+            <div class="wh40k-hit-location-result">
                 <h3><i class="fas fa-satellite-dish"></i> Ship Initiative</h3>
-                <div class="rt-hit-roll">
-                    <span class="rt-roll-result">${roll.total}</span>
+                <div class="wh40k-hit-roll">
+                    <span class="wh40k-roll-result">${roll.total}</span>
                 </div>
-                <div class="rt-hit-location">
-                    <span class="rt-location-armour">1d10 + Detection Bonus (${this.detectionBonus})</span>
+                <div class="wh40k-hit-location">
+                    <span class="wh40k-location-armour">1d10 + Detection Bonus (${this.detectionBonus})</span>
                 </div>
             </div>
         `;

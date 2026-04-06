@@ -11,7 +11,7 @@ const { ApplicationV2 } = foundry.applications.api;
  */
 export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     /**
-     * @param {RogueTraderAcolyte} actor  The actor to modify.
+     * @param {WH40KAcolyte} actor  The actor to modify.
      * @param {object} [options={}]       Dialog options.
      */
     constructor(actor, options = {}) {
@@ -25,7 +25,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: "form",
-        classes: ["rogue-trader", "dialog", "add-xp-dialog", "standard-form"],
+        classes: ["wh40k-rpg", "dialog", "add-xp-dialog", "standard-form"],
         actions: {
             apply: AddXPDialog.#onApply,
             cancel: AddXPDialog.#onCancel
@@ -50,7 +50,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/prompt/add-xp-prompt.hbs",
+            template: "systems/wh40k-rpg/templates/prompt/add-xp-prompt.hbs",
             scrollable: [""]
         }
     };
@@ -61,7 +61,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /**
      * The actor being modified.
-     * @type {RogueTraderAcolyte}
+     * @type {WH40KAcolyte}
      */
     actor;
 
@@ -177,7 +177,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
 
 /**
  * Open an add XP dialog.
- * @param {RogueTraderAcolyte} actor  The actor to modify.
+ * @param {WH40KAcolyte} actor  The actor to modify.
  */
 export async function openAddXPDialog(actor) {
     const dialog = new AddXPDialog(actor);

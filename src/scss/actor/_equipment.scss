@@ -2,8 +2,8 @@
 // EQUIPMENT TAB STYLES
 // ============================================
 
-.rt-tab[data-tab="equipment"] {
-    .rt-panel {
+.wh40k-tab[data-tab="equipment"] {
+    .wh40k-panel {
         background: linear-gradient(135deg, rgba(47, 79, 79, 0.18), rgba(28, 54, 54, 0.12));
         border-top-color: rgba(47, 79, 79, 0.5);
         border-bottom-color: rgba(28, 54, 54, 0.5);
@@ -22,8 +22,8 @@
         }
     }
     
-    .rt-armourtable--border,
-    .rt-geartable--border {
+    .wh40k-armourtable--border,
+    .wh40k-geartable--border {
         .table-cell--description {
             background: rgba(245, 250, 248, 0.6);
             border-left: 3px solid rgba(47, 79, 79, 0.3);
@@ -35,14 +35,14 @@
 // DYNASTY TAB STYLES
 // ============================================
 
-.rt-tab[data-tab="dynasty"] {
-    .rt-panel {
+.wh40k-tab[data-tab="dynasty"] {
+    .wh40k-panel {
         background: linear-gradient(135deg, rgba(218, 165, 32, 0.18), rgba(150, 110, 20, 0.12));
         border-top-color: rgba(218, 165, 32, 0.5);
         border-bottom-color: rgba(150, 110, 20, 0.5);
     }
 
-    .rt-field__wrapper {
+    .wh40k-field__wrapper {
         padding: 8px 10px;
         margin: 4px;
         background: rgba(255, 255, 255, 0.6);
@@ -50,7 +50,7 @@
         border: 1px solid rgba(218, 165, 32, 0.15);
     }
     
-    .rt-field__header {
+    .wh40k-field__header {
         font-weight: 600;
         color: #8B6914;
         text-transform: uppercase;
@@ -58,7 +58,7 @@
         letter-spacing: 0.05em;
     }
     
-    .rt-profit-current {
+    .wh40k-profit-current {
         font-size: 1.4em;
         color: #8B6914;
     }
@@ -72,16 +72,16 @@
 // BIOGRAPHY TAB STYLES
 // ============================================
 
-.rt-tab[data-tab="bio"] {
-    .rt-panel {
+.wh40k-tab[data-tab="bio"] {
+    .wh40k-panel {
         background: linear-gradient(135deg, rgba(74, 55, 40, 0.18), rgba(50, 35, 28, 0.12));
         border-top-color: rgba(74, 55, 40, 0.5);
         border-bottom-color: rgba(50, 35, 28, 0.5);
     }
 
-    .rt-header__item-wrapper,
-    .rt-header__item-wrapper--span-2,
-    .rt-header__item-wrapper--span-4 {
+    .wh40k-header__item-wrapper,
+    .wh40k-header__item-wrapper--span-2,
+    .wh40k-header__item-wrapper--span-4 {
         padding: 8px;
         background: rgba(255, 255, 255, 0.5);
         border-radius: 4px;
@@ -89,7 +89,7 @@
         margin: 2px;
     }
     
-    .rt-header__title {
+    .wh40k-header__title {
         font-weight: 600;
         color: #4a3728;
         text-transform: uppercase;
@@ -97,8 +97,8 @@
         letter-spacing: 0.05em;
     }
     
-    .rt-header__input,
-    .rt-header__textarea {
+    .wh40k-header__input,
+    .wh40k-header__textarea {
         border: 1px solid rgba(74, 55, 40, 0.2);
         border-radius: 4px;
         padding: 6px 8px;

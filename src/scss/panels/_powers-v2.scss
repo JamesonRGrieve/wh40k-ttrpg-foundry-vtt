@@ -7,29 +7,29 @@
 // Tab Layout
 // ============================================
 
-.rt-tab-powers {
+.wh40k-tab-powers {
   &.active {
     display: block !important;
   }
-  padding: $rt-space-md;
+  padding: $wh40k-space-md;
 }
 
-.rt-powers-layout {
+.wh40k-powers-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $rt-space-lg;
+  gap: $wh40k-space-lg;
   min-height: 0;
 }
 
-.rt-powers-col {
+.wh40k-powers-col {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   min-width: 0;
 }
 
 @media (max-width: 900px) {
-  .rt-powers-layout {
+  .wh40k-powers-layout {
     grid-template-columns: 1fr;
   }
 }
@@ -38,25 +38,25 @@
 // Powers Panel Base Styling
 // ============================================
 
-.rt-panel-powers {
-  .rt-panel-header {
+.wh40k-panel-powers {
+  .wh40k-panel-header {
     background: linear-gradient(135deg, 
-      rgba($rt-accent-powers, 0.15) 0%, 
-      rgba($rt-accent-powers, 0.05) 100%);
-    border-bottom: 2px solid rgba($rt-accent-powers, 0.3);
+      rgba($wh40k-accent-powers, 0.15) 0%, 
+      rgba($wh40k-accent-powers, 0.05) 100%);
+    border-bottom: 2px solid rgba($wh40k-accent-powers, 0.3);
     
-    .rt-panel-title {
+    .wh40k-panel-title {
       color: var(--rt-text-dark);
       
       i {
-        color: $rt-accent-powers;
+        color: $wh40k-accent-powers;
       }
     }
   }
   
-  .rt-count-badge {
-    background: rgba($rt-accent-powers, 0.2);
-    color: $rt-accent-powers;
+  .wh40k-count-badge {
+    background: rgba($wh40k-accent-powers, 0.2);
+    color: $wh40k-accent-powers;
     padding: 2px 8px;
     border-radius: 10px;
     font-size: 0.75rem;
@@ -68,8 +68,8 @@
 // Psy Rating Panel
 // ============================================
 
-.rt-panel-psy-rating {
-  .rt-panel-header {
+.wh40k-panel-psy-rating {
+  .wh40k-panel-header {
     background: linear-gradient(135deg, 
       rgba(#7c3aed, 0.2) 0%, 
       rgba(#7c3aed, 0.08) 100%);
@@ -81,27 +81,27 @@
   }
 }
 
-.rt-psy-display {
+.wh40k-psy-display {
   display: flex;
-  gap: $rt-space-md;
-  padding: $rt-space-sm;
+  gap: $wh40k-space-md;
+  padding: $wh40k-space-sm;
   background: var(--rt-panel-bg-translucent);
-  border-radius: $rt-radius-md;
-  margin-bottom: $rt-space-md;
+  border-radius: $wh40k-radius-md;
+  margin-bottom: $wh40k-space-md;
 }
 
-.rt-psy-current {
+.wh40k-psy-current {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.rt-psy-value {
+.wh40k-psy-value {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: $rt-space-md;
+  padding: $wh40k-space-md;
   background: linear-gradient(135deg, 
     rgba(#7c3aed, 0.25) 0%, 
     rgba(#7c3aed, 0.1) 100%);
@@ -112,14 +112,14 @@
   justify-content: center;
 }
 
-.rt-psy-number {
+.wh40k-psy-number {
   font-size: 2rem;
   font-weight: 700;
   color: #7c3aed;
   line-height: 1;
 }
 
-.rt-psy-label {
+.wh40k-psy-label {
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -127,30 +127,30 @@
   margin-top: 2px;
 }
 
-.rt-psy-stats {
+.wh40k-psy-stats {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
   justify-content: center;
 }
 
-.rt-psy-stat {
+.wh40k-psy-stat {
   label {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
   }
 }
 
-.rt-stat-label {
+.wh40k-stat-label {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--rt-text-secondary);
   min-width: 70px;
 }
 
-.rt-psy-input {
+.wh40k-psy-input {
   width: 60px;
   padding: 4px 8px;
   border: 1px solid var(--rt-border-color);
@@ -168,7 +168,7 @@
   }
 }
 
-.rt-psy-select {
+.wh40k-psy-select {
   flex: 1;
   padding: 6px 10px;
   border: 1px solid var(--rt-border-color);
@@ -185,27 +185,27 @@
   }
 }
 
-.rt-psy-details {
+.wh40k-psy-details {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
-  margin-bottom: $rt-space-md;
+  gap: $wh40k-space-sm;
+  margin-bottom: $wh40k-space-md;
 }
 
-.rt-psy-detail-row {
+.wh40k-psy-detail-row {
   display: flex;
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   align-items: center;
 }
 
-.rt-psy-detail {
+.wh40k-psy-detail {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.rt-detail-label {
+.wh40k-detail-label {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -213,7 +213,7 @@
   color: var(--rt-text-muted);
 }
 
-.rt-psy-text {
+.wh40k-psy-text {
   width: 100%;
   padding: 6px 10px;
   border: 1px solid var(--rt-border-color);
@@ -229,10 +229,10 @@
   }
 }
 
-.rt-psy-checkbox-row {
+.wh40k-psy-checkbox-row {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   cursor: pointer;
   padding: 4px 8px;
   background: var(--rt-panel-bg-translucent);
@@ -245,12 +245,12 @@
     border-color: var(--rt-border-color);
   }
   
-  .rt-checkbox {
+  .wh40k-checkbox {
     width: 16px;
     height: 16px;
   }
   
-  .rt-checkbox-label {
+  .wh40k-checkbox-label {
     font-size: 0.8rem;
     color: var(--rt-text-secondary);
     display: flex;
@@ -263,17 +263,17 @@
   }
 }
 
-.rt-psy-actions {
+.wh40k-psy-actions {
   display: flex;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-psy-action-btn {
+.wh40k-psy-action-btn {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   padding: 8px 12px;
   border: 1px solid var(--rt-border-color);
   border-radius: 4px;
@@ -294,11 +294,11 @@
     color: #7c3aed;
   }
   
-  &.rt-btn-danger {
+  &.wh40k-btn-danger {
     &:hover {
-      background: rgba($rt-accent-combat, 0.1);
-      border-color: rgba($rt-accent-combat, 0.4);
-      color: $rt-accent-combat;
+      background: rgba($wh40k-accent-combat, 0.1);
+      border-color: rgba($wh40k-accent-combat, 0.4);
+      color: $wh40k-accent-combat;
     }
   }
 }
@@ -307,17 +307,17 @@
 // Power Filters
 // ============================================
 
-.rt-power-filters {
+.wh40k-power-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  padding: $rt-space-sm;
+  padding: $wh40k-space-sm;
   background: var(--rt-panel-bg-translucent);
-  border-radius: $rt-radius-sm;
-  margin-bottom: $rt-space-md;
+  border-radius: $wh40k-radius-sm;
+  margin-bottom: $wh40k-space-md;
 }
 
-.rt-filter-btn {
+.wh40k-filter-btn {
   padding: 4px 10px;
   border: 1px solid var(--rt-border-color-light);
   border-radius: 12px;
@@ -335,30 +335,30 @@
   }
   
   &.active {
-    background: $rt-accent-powers;
+    background: $wh40k-accent-powers;
     color: white;
-    border-color: $rt-accent-powers;
+    border-color: $wh40k-accent-powers;
   }
 }
 
 // Discipline-specific filter colors
-.rt-filter-telepathy.active { background: #8b5cf6; border-color: #8b5cf6; }
-.rt-filter-telekinesis.active { background: #06b6d4; border-color: #06b6d4; }
-.rt-filter-divination.active { background: #f59e0b; border-color: #f59e0b; }
-.rt-filter-pyromancy.active { background: #ef4444; border-color: #ef4444; }
-.rt-filter-biomancy.active { background: #22c55e; border-color: #22c55e; }
-.rt-filter-daemonology.active { background: #dc2626; border-color: #dc2626; }
-.rt-filter-malefic.active { background: #7c2d12; border-color: #7c2d12; }
-.rt-filter-sanctic.active { background: #eab308; border-color: #eab308; }
+.wh40k-filter-telepathy.active { background: #8b5cf6; border-color: #8b5cf6; }
+.wh40k-filter-telekinesis.active { background: #06b6d4; border-color: #06b6d4; }
+.wh40k-filter-divination.active { background: #f59e0b; border-color: #f59e0b; }
+.wh40k-filter-pyromancy.active { background: #ef4444; border-color: #ef4444; }
+.wh40k-filter-biomancy.active { background: #22c55e; border-color: #22c55e; }
+.wh40k-filter-daemonology.active { background: #dc2626; border-color: #dc2626; }
+.wh40k-filter-malefic.active { background: #7c2d12; border-color: #7c2d12; }
+.wh40k-filter-sanctic.active { background: #eab308; border-color: #eab308; }
 
 // ============================================
 // Powers List
 // ============================================
 
-.rt-powers-list {
+.wh40k-powers-list {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
   min-height: 60px;
   
   &[data-drop-zone] {
@@ -366,11 +366,11 @@
     
     &.drop-valid {
       background: linear-gradient(135deg, 
-        rgba($rt-accent-powers, 0.08) 0%, 
-        rgba($rt-accent-powers, 0.02) 100%);
-      border: 2px dashed rgba($rt-accent-powers, 0.5);
+        rgba($wh40k-accent-powers, 0.08) 0%, 
+        rgba($wh40k-accent-powers, 0.02) 100%);
+      border: 2px dashed rgba($wh40k-accent-powers, 0.5);
       border-radius: 6px;
-      padding: $rt-space-sm;
+      padding: $wh40k-space-sm;
     }
   }
 }
@@ -379,10 +379,10 @@
 // Power Card Base
 // ============================================
 
-.rt-power-card {
+.wh40k-power-card {
   background: var(--rt-panel-bg-solid);
   border: 1px solid var(--rt-border-color-light);
-  border-left: 3px solid $rt-accent-powers;
+  border-left: 3px solid $wh40k-accent-powers;
   border-radius: 6px;
   overflow: hidden;
   transition: all 0.2s ease;
@@ -404,15 +404,15 @@
 }
 
 // Type-specific accents
-.rt-navigator-card {
+.wh40k-navigator-card {
   border-left-color: #0891b2; // Cyan for Navigator
 }
 
-.rt-ritual-card {
+.wh40k-ritual-card {
   border-left-color: #d97706; // Amber for Rituals
 }
 
-.rt-order-card {
+.wh40k-order-card {
   border-left-color: #0284c7; // Sky blue for Orders
 }
 
@@ -420,17 +420,17 @@
 // Power Card Header
 // ============================================
 
-.rt-power-card-header {
+.wh40k-power-card-header {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm $rt-space-md;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-sm $wh40k-space-md;
   background: linear-gradient(135deg, 
-    rgba($rt-accent-powers, 0.08) 0%, 
+    rgba($wh40k-accent-powers, 0.08) 0%, 
     transparent 100%);
 }
 
-.rt-power-icon {
+.wh40k-power-icon {
   width: 36px;
   height: 36px;
   border-radius: 4px;
@@ -439,12 +439,12 @@
   flex-shrink: 0;
 }
 
-.rt-power-info {
+.wh40k-power-info {
   flex: 1;
   min-width: 0;
 }
 
-.rt-power-name {
+.wh40k-power-name {
   display: block;
   background: transparent;
   border: none;
@@ -460,26 +460,26 @@
   width: 100%;
   
   &:hover {
-    color: $rt-accent-powers;
+    color: $wh40k-accent-powers;
   }
 }
 
-.rt-power-meta {
+.wh40k-power-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 2px;
 }
 
-.rt-power-discipline,
-.rt-power-type,
-.rt-ritual-type,
-.rt-order-category {
+.wh40k-power-discipline,
+.wh40k-power-type,
+.wh40k-ritual-type,
+.wh40k-order-category {
   display: inline-flex;
   align-items: center;
   gap: 3px;
   padding: 2px 6px;
-  background: rgba($rt-accent-powers, 0.15);
+  background: rgba($wh40k-accent-powers, 0.15);
   border-radius: 3px;
   font-size: 0.7rem;
   font-weight: 600;
@@ -492,43 +492,43 @@
 }
 
 // Discipline colors
-.rt-disc-telepathy { background: rgba(#8b5cf6, 0.2); color: #8b5cf6; }
-.rt-disc-telekinesis { background: rgba(#06b6d4, 0.2); color: #06b6d4; }
-.rt-disc-divination { background: rgba(#f59e0b, 0.2); color: #f59e0b; }
-.rt-disc-pyromancy { background: rgba(#ef4444, 0.2); color: #ef4444; }
-.rt-disc-biomancy { background: rgba(#22c55e, 0.2); color: #22c55e; }
-.rt-disc-daemonology { background: rgba(#dc2626, 0.2); color: #dc2626; }
-.rt-disc-malefic { background: rgba(#7c2d12, 0.2); color: #7c2d12; }
-.rt-disc-sanctic { background: rgba(#eab308, 0.2); color: #eab308; }
+.wh40k-disc-telepathy { background: rgba(#8b5cf6, 0.2); color: #8b5cf6; }
+.wh40k-disc-telekinesis { background: rgba(#06b6d4, 0.2); color: #06b6d4; }
+.wh40k-disc-divination { background: rgba(#f59e0b, 0.2); color: #f59e0b; }
+.wh40k-disc-pyromancy { background: rgba(#ef4444, 0.2); color: #ef4444; }
+.wh40k-disc-biomancy { background: rgba(#22c55e, 0.2); color: #22c55e; }
+.wh40k-disc-daemonology { background: rgba(#dc2626, 0.2); color: #dc2626; }
+.wh40k-disc-malefic { background: rgba(#7c2d12, 0.2); color: #7c2d12; }
+.wh40k-disc-sanctic { background: rgba(#eab308, 0.2); color: #eab308; }
 
 // Navigator type
-.rt-type-navigator { 
+.wh40k-type-navigator { 
   background: rgba(#0891b2, 0.2); 
   color: #0891b2; 
 }
 
 // Ritual types
-.rt-type-prayer { background: rgba(#d97706, 0.2); color: #d97706; }
-.rt-type-rite { background: rgba(#7c3aed, 0.2); color: #7c3aed; }
-.rt-type-invocation { background: rgba(#dc2626, 0.2); color: #dc2626; }
-.rt-type-ceremony { background: rgba(#0284c7, 0.2); color: #0284c7; }
-.rt-type-tech-rite { background: rgba(#64748b, 0.2); color: #64748b; }
+.wh40k-type-prayer { background: rgba(#d97706, 0.2); color: #d97706; }
+.wh40k-type-rite { background: rgba(#7c3aed, 0.2); color: #7c3aed; }
+.wh40k-type-invocation { background: rgba(#dc2626, 0.2); color: #dc2626; }
+.wh40k-type-ceremony { background: rgba(#0284c7, 0.2); color: #0284c7; }
+.wh40k-type-tech-rite { background: rgba(#64748b, 0.2); color: #64748b; }
 
 // Order categories
-.rt-cat-combat { background: rgba(#ef4444, 0.2); color: #ef4444; }
-.rt-cat-maneuver { background: rgba(#3b82f6, 0.2); color: #3b82f6; }
-.rt-cat-command { background: rgba(#f59e0b, 0.2); color: #f59e0b; }
-.rt-cat-support { background: rgba(#22c55e, 0.2); color: #22c55e; }
-.rt-cat-special { background: rgba(#8b5cf6, 0.2); color: #8b5cf6; }
+.wh40k-cat-combat { background: rgba(#ef4444, 0.2); color: #ef4444; }
+.wh40k-cat-maneuver { background: rgba(#3b82f6, 0.2); color: #3b82f6; }
+.wh40k-cat-command { background: rgba(#f59e0b, 0.2); color: #f59e0b; }
+.wh40k-cat-support { background: rgba(#22c55e, 0.2); color: #22c55e; }
+.wh40k-cat-special { background: rgba(#8b5cf6, 0.2); color: #8b5cf6; }
 
-.rt-power-pr,
-.rt-order-action {
+.wh40k-power-pr,
+.wh40k-order-action {
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--rt-text-muted);
 }
 
-.rt-power-sustained {
+.wh40k-power-sustained {
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -550,13 +550,13 @@
 // Power Card Actions
 // ============================================
 
-.rt-power-card-actions {
+.wh40k-power-card-actions {
   display: flex;
   gap: 2px;
   flex-shrink: 0;
 }
 
-.rt-power-btn {
+.wh40k-power-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -575,25 +575,25 @@
     color: var(--rt-text-dark);
   }
   
-  &.rt-btn-roll:hover {
-    background: rgba($rt-accent-powers, 0.15);
-    border-color: rgba($rt-accent-powers, 0.3);
-    color: $rt-accent-powers;
+  &.wh40k-btn-roll:hover {
+    background: rgba($wh40k-accent-powers, 0.15);
+    border-color: rgba($wh40k-accent-powers, 0.3);
+    color: $wh40k-accent-powers;
   }
   
-  &.rt-btn-damage:hover {
+  &.wh40k-btn-damage:hover {
     background: rgba(#ef4444, 0.15);
     border-color: rgba(#ef4444, 0.3);
     color: #ef4444;
   }
   
-  &.rt-btn-chat:hover {
+  &.wh40k-btn-chat:hover {
     background: rgba(#3b82f6, 0.15);
     border-color: rgba(#3b82f6, 0.3);
     color: #3b82f6;
   }
   
-  &.rt-btn-expand {
+  &.wh40k-btn-expand {
     i {
       transition: transform 0.2s ease;
     }
@@ -608,22 +608,22 @@
 // Power Stats Row
 // ============================================
 
-.rt-power-stats {
+.wh40k-power-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: $rt-space-sm;
-  padding: $rt-space-xs $rt-space-md;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-xs $wh40k-space-md;
   background: var(--rt-panel-bg-translucent);
   border-top: 1px solid var(--rt-border-color-light);
 }
 
-.rt-power-stat {
+.wh40k-power-stat {
   display: flex;
   flex-direction: column;
   gap: 1px;
   min-width: 80px;
   
-  .rt-stat-label {
+  .wh40k-stat-label {
     font-size: 0.65rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -631,7 +631,7 @@
     color: var(--rt-text-muted);
   }
   
-  .rt-stat-value {
+  .wh40k-stat-value {
     font-size: 0.8rem;
     font-weight: 500;
     color: var(--rt-text-dark);
@@ -642,15 +642,15 @@
 // Navigator Level Badges
 // ============================================
 
-.rt-navigator-levels {
+.wh40k-navigator-levels {
   display: flex;
   gap: 4px;
-  padding: $rt-space-xs $rt-space-md;
+  padding: $wh40k-space-xs $wh40k-space-md;
   background: var(--rt-panel-bg-translucent);
   border-top: 1px solid var(--rt-border-color-light);
 }
 
-.rt-level-badge {
+.wh40k-level-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -664,19 +664,19 @@
   }
 }
 
-.rt-level-novice {
+.wh40k-level-novice {
   background: rgba(#22c55e, 0.15);
   color: #22c55e;
   border: 1px solid rgba(#22c55e, 0.3);
 }
 
-.rt-level-adept {
+.wh40k-level-adept {
   background: rgba(#3b82f6, 0.15);
   color: #3b82f6;
   border: 1px solid rgba(#3b82f6, 0.3);
 }
 
-.rt-level-master {
+.wh40k-level-master {
   background: rgba(#f59e0b, 0.15);
   color: #f59e0b;
   border: 1px solid rgba(#f59e0b, 0.3);
@@ -686,8 +686,8 @@
 // Expandable Details
 // ============================================
 
-.rt-power-details {
-  padding: $rt-space-md;
+.wh40k-power-details {
+  padding: $wh40k-space-md;
   background: var(--rt-panel-bg-translucent);
   border-top: 1px solid var(--rt-border-color-light);
   animation: expandDown 0.2s ease;
@@ -708,18 +708,18 @@
   }
 }
 
-.rt-power-detail-section {
-  margin-bottom: $rt-space-md;
+.wh40k-power-detail-section {
+  margin-bottom: $wh40k-space-md;
   
   &:last-of-type {
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
   }
 }
 
-.rt-detail-heading {
+.wh40k-detail-heading {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -732,8 +732,8 @@
   }
 }
 
-.rt-detail-content {
-  padding: $rt-space-sm;
+.wh40k-detail-content {
+  padding: $wh40k-space-sm;
   background: var(--rt-panel-bg);
   border-radius: 4px;
   font-size: 0.8rem;
@@ -750,27 +750,27 @@
 }
 
 // Section type styling
-.rt-section-overbleed .rt-detail-heading {
+.wh40k-section-overbleed .wh40k-detail-heading {
   color: #f59e0b;
 }
 
-.rt-section-success .rt-detail-heading {
+.wh40k-section-success .wh40k-detail-heading {
   color: #22c55e;
 }
 
-.rt-section-danger .rt-detail-heading {
+.wh40k-section-danger .wh40k-detail-heading {
   color: #ef4444;
 }
 
-.rt-section-novice .rt-detail-heading {
+.wh40k-section-novice .wh40k-detail-heading {
   color: #22c55e;
 }
 
-.rt-section-adept .rt-detail-heading {
+.wh40k-section-adept .wh40k-detail-heading {
   color: #3b82f6;
 }
 
-.rt-section-master .rt-detail-heading {
+.wh40k-section-master .wh40k-detail-heading {
   color: #f59e0b;
 }
 
@@ -778,15 +778,15 @@
 // Detail Actions
 // ============================================
 
-.rt-power-detail-actions {
+.wh40k-power-detail-actions {
   display: flex;
-  gap: $rt-space-sm;
-  margin-top: $rt-space-md;
-  padding-top: $rt-space-sm;
+  gap: $wh40k-space-sm;
+  margin-top: $wh40k-space-md;
+  padding-top: $wh40k-space-sm;
   border-top: 1px solid var(--rt-border-color-light);
 }
 
-.rt-detail-btn {
+.wh40k-detail-btn {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -805,7 +805,7 @@
     border-color: var(--rt-border-color-strong);
   }
   
-  &.rt-btn-danger:hover {
+  &.wh40k-btn-danger:hover {
     background: rgba(#ef4444, 0.1);
     border-color: rgba(#ef4444, 0.3);
     color: #ef4444;
@@ -816,18 +816,18 @@
 // Empty States
 // ============================================
 
-.rt-empty-state {
+.wh40k-empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: $rt-space-xl;
+  padding: $wh40k-space-xl;
   color: var(--rt-text-muted);
   text-align: center;
   
   i {
     font-size: 2rem;
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
     opacity: 0.4;
   }
   
@@ -842,33 +842,33 @@
 // Dropzones (uses shared styles from _loadout.scss)
 // ============================================
 
-.rt-panel-powers .rt-dropzone {
+.wh40k-panel-powers .wh40k-dropzone {
   background: repeating-linear-gradient(
     45deg,
-    rgba($rt-accent-powers, 0.03),
-    rgba($rt-accent-powers, 0.03) 10px,
-    rgba($rt-accent-powers, 0.08) 10px,
-    rgba($rt-accent-powers, 0.08) 20px
+    rgba($wh40k-accent-powers, 0.03),
+    rgba($wh40k-accent-powers, 0.03) 10px,
+    rgba($wh40k-accent-powers, 0.08) 10px,
+    rgba($wh40k-accent-powers, 0.08) 20px
   );
-  border: 2px dashed rgba($rt-accent-powers, 0.3);
+  border: 2px dashed rgba($wh40k-accent-powers, 0.3);
   
   &:hover {
     background: repeating-linear-gradient(
       45deg,
-      rgba($rt-accent-powers, 0.08),
-      rgba($rt-accent-powers, 0.08) 10px,
-      rgba($rt-accent-powers, 0.15) 10px,
-      rgba($rt-accent-powers, 0.15) 20px
+      rgba($wh40k-accent-powers, 0.08),
+      rgba($wh40k-accent-powers, 0.08) 10px,
+      rgba($wh40k-accent-powers, 0.15) 10px,
+      rgba($wh40k-accent-powers, 0.15) 20px
     );
-    border-color: rgba($rt-accent-powers, 0.5);
+    border-color: rgba($wh40k-accent-powers, 0.5);
   }
   
-  .rt-dropzone-icon {
-    color: rgba($rt-accent-powers, 0.5);
+  .wh40k-dropzone-icon {
+    color: rgba($wh40k-accent-powers, 0.5);
   }
   
-  &:hover .rt-dropzone-icon {
-    color: $rt-accent-powers;
+  &:hover .wh40k-dropzone-icon {
+    color: $wh40k-accent-powers;
   }
 }
 
@@ -876,7 +876,7 @@
 // Panel-specific header styling
 // ============================================
 
-.rt-panel-psychic-powers .rt-panel-header {
+.wh40k-panel-psychic-powers .wh40k-panel-header {
   background: linear-gradient(135deg, 
     rgba(#8b5cf6, 0.15) 0%, 
     rgba(#8b5cf6, 0.05) 100%);
@@ -885,7 +885,7 @@
   i { color: #8b5cf6; }
 }
 
-.rt-panel-navigator-powers .rt-panel-header {
+.wh40k-panel-navigator-powers .wh40k-panel-header {
   background: linear-gradient(135deg, 
     rgba(#0891b2, 0.15) 0%, 
     rgba(#0891b2, 0.05) 100%);
@@ -894,7 +894,7 @@
   i { color: #0891b2; }
 }
 
-.rt-panel-rituals .rt-panel-header {
+.wh40k-panel-rituals .wh40k-panel-header {
   background: linear-gradient(135deg, 
     rgba(#d97706, 0.15) 0%, 
     rgba(#d97706, 0.05) 100%);
@@ -903,7 +903,7 @@
   i { color: #d97706; }
 }
 
-.rt-panel-orders .rt-panel-header {
+.wh40k-panel-orders .wh40k-panel-header {
   background: linear-gradient(135deg, 
     rgba(#0284c7, 0.15) 0%, 
     rgba(#0284c7, 0.05) 100%);
@@ -917,21 +917,21 @@
 // ============================================
 
 @media (max-width: 700px) {
-  .rt-power-card-header {
+  .wh40k-power-card-header {
     flex-wrap: wrap;
   }
   
-  .rt-power-card-actions {
+  .wh40k-power-card-actions {
     width: 100%;
     justify-content: flex-end;
-    margin-top: $rt-space-xs;
+    margin-top: $wh40k-space-xs;
   }
   
-  .rt-power-stats {
+  .wh40k-power-stats {
     flex-direction: column;
   }
   
-  .rt-navigator-levels {
+  .wh40k-navigator-levels {
     flex-wrap: wrap;
   }
 }

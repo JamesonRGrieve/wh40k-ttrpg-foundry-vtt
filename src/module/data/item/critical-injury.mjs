@@ -130,7 +130,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * @type {string}
      */
     get severityLabel() {
-        const key = 'RT.CriticalInjury.Severity';
+        const key = 'WH40K.CriticalInjury.Severity';
         const label = game.i18n.has(key) ? game.i18n.localize(key) : 'Severity';
         return `${label}: ${this.severity}`;
     }
@@ -196,7 +196,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
         const props = [this.damageTypeLabel, this.bodyPartLabel, this.severityLabel];
 
         if (this.isPermanent) {
-            const key = 'RT.CriticalInjury.Permanent';
+            const key = 'WH40K.CriticalInjury.Permanent';
             props.push(game.i18n.has(key) ? game.i18n.localize(key) : 'Permanent');
         }
 

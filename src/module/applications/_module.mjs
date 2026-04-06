@@ -1,5 +1,5 @@
 /**
- * @file Main applications module exports for Rogue Trader
+ * @file Main applications module exports for WH40K RPG
  */
 
 // API exports

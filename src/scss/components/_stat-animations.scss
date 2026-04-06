@@ -277,7 +277,7 @@ input[type="text"].stat-value,
 /*  Brief Notifications                         */
 /* -------------------------------------------- */
 
-.rt-brief-notification {
+.wh40k-brief-notification {
     padding: 6px 12px;
     border-radius: 4px;
     font-size: 0.85em;
@@ -286,22 +286,22 @@ input[type="text"].stat-value,
     white-space: nowrap;
     pointer-events: none;
     
-    &.rt-notification-success {
+    &.wh40k-notification-success {
         background: linear-gradient(135deg, #4caf50, #66bb6a);
         color: white;
     }
     
-    &.rt-notification-error {
+    &.wh40k-notification-error {
         background: linear-gradient(135deg, #f44336, #e57373);
         color: white;
     }
     
-    &.rt-notification-info {
+    &.wh40k-notification-info {
         background: linear-gradient(135deg, #2196f3, #64b5f6);
         color: white;
     }
     
-    &.rt-notification-warning {
+    &.wh40k-notification-warning {
         background: linear-gradient(135deg, #ff9800, #ffb74d);
         color: white;
     }
@@ -311,11 +311,11 @@ input[type="text"].stat-value,
 /*  Enhanced Wounds Bar Animation               */
 /* -------------------------------------------- */
 
-.rt-wounds-bar {
+.wh40k-wounds-bar {
     position: relative;
     overflow: hidden;
     
-    .rt-wounds-bar-fill {
+    .wh40k-wounds-bar-fill {
         width: var(--wounds-percent, 100%);
         transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
                     background-color 0.3s ease;
@@ -324,10 +324,10 @@ input[type="text"].stat-value,
 }
 
 /* Smooth threshold marker transitions */
-.rt-threshold-marker {
+.wh40k-threshold-marker {
     transition: opacity 0.3s ease;
     
-    .rt-wounds-bar[data-percent="0"] & {
+    .wh40k-wounds-bar[data-percent="0"] & {
         opacity: 0.3;
     }
 }
@@ -437,13 +437,13 @@ input[type="text"].stat-value,
     .stat-display,
     .rollable,
     .progress-bar,
-    .rt-wounds-bar-fill {
+    .wh40k-wounds-bar-fill {
         animation: none !important;
         transition: none !important;
         transform: none !important;
     }
     
-    .rt-brief-notification {
+    .wh40k-brief-notification {
         transition: opacity 0.1s ease !important;
     }
 }

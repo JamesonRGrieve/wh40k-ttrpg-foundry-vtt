@@ -31,7 +31,7 @@ export default class AssignDamageDialog extends BaseRollDialog {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/prompt/assign-damage-prompt.hbs",
+            template: "systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs",
             scrollable: [""]
         }
     };

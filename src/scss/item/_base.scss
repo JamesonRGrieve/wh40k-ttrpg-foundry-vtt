@@ -7,7 +7,7 @@
 // Base Window Content - Transparent for item sheets
 // ============================================
 
-.rogue-trader.sheet.item .window-content {
+.wh40k-rpg.sheet.item .window-content {
   background: transparent;
   padding: 0;
   overflow: hidden;
@@ -17,14 +17,14 @@
 // Base Item Sheet Container
 // ============================================
 
-.rt-item-sheet {
+.wh40k-item-sheet {
   display: flex;
   flex-direction: column;
   height: 100%;
   background: var(--rt-sheet-bg);
   color: var(--rt-text-dark);
-  font-family: $rt-font-body;
-  font-size: $rt-font-size-base;
+  font-family: $wh40k-font-body;
+  font-size: $wh40k-font-size-base;
   overflow: hidden;
   
   // Form should fill container
@@ -38,19 +38,19 @@
   
   // Modern scrollbar
   &::-webkit-scrollbar,
-  .rt-tab-content::-webkit-scrollbar {
+  .wh40k-tab-content::-webkit-scrollbar {
     width: 8px;
   }
   
   &::-webkit-scrollbar-track,
-  .rt-tab-content::-webkit-scrollbar-track {
+  .wh40k-tab-content::-webkit-scrollbar-track {
     background: var(--rt-panel-bg);
   }
   
   &::-webkit-scrollbar-thumb,
-  .rt-tab-content::-webkit-scrollbar-thumb {
+  .wh40k-tab-content::-webkit-scrollbar-thumb {
     background: var(--rt-border-color);
-    border-radius: $rt-radius-md;
+    border-radius: $wh40k-radius-md;
     
     &:hover {
       background: var(--rt-gold-dark);

@@ -258,7 +258,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @type {string}
      */
     get categoryLabel() {
-        const config = CONFIG.ROGUE_TRADER?.gearCategories?.[this.category];
+        const config = CONFIG.WH40K?.gearCategories?.[this.category];
         if (config?.label) return game.i18n.localize(config.label);
         return game.i18n.localize(`RT.GearCategory.${this.category.capitalize()}`);
     }
@@ -268,7 +268,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @type {string}
      */
     get categoryIcon() {
-        const config = CONFIG.ROGUE_TRADER?.gearCategories?.[this.category];
+        const config = CONFIG.WH40K?.gearCategories?.[this.category];
         return config?.icon || 'fa-box';
     }
 
@@ -315,7 +315,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Get craftsmanship-derived modifiers.
-     * Applies Rogue Trader craftsmanship rules for gear:
+     * Applies WH40K RPG craftsmanship rules for gear:
      * - Poor: Weight +10%, functionality issues (flavor)
      * - Good: Weight -10%, improved function
      * - Best: Weight -20%, superior performance
@@ -377,11 +377,11 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.categoryLabel];
 
         if (this.hasLimitedUses) {
-            props.push(game.i18n.format('RT.Gear.UsesRemaining', { uses: this.usesDisplay }));
+            props.push(game.i18n.format('WH40K.Gear.UsesRemaining', { uses: this.usesDisplay }));
         }
 
         if (this.duration) {
-            props.push(game.i18n.format('RT.Gear.Duration', { duration: this.duration }));
+            props.push(game.i18n.format('WH40K.Gear.Duration', { duration: this.duration }));
         }
 
         return props;
@@ -399,7 +399,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         labels.push({
             label: this.categoryLabel,
             icon: `fa-solid ${this.categoryIcon}`,
-            tooltip: game.i18n.localize('RT.Gear.Category'),
+            tooltip: game.i18n.localize('WH40K.Gear.Category'),
         });
 
         // Uses indicator (if limited)
@@ -407,7 +407,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
             labels.push({
                 label: this.usesDisplay,
                 icon: 'fa-solid fa-battery-three-quarters',
-                tooltip: game.i18n.localize('RT.Gear.Uses'),
+                tooltip: game.i18n.localize('WH40K.Gear.Uses'),
                 cssClass: this.usesExhausted ? 'exhausted' : '',
             });
         }
@@ -425,12 +425,12 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      */
     async consume() {
         if (!this.hasLimitedUses) {
-            ui.notifications.warn(game.i18n.localize('RT.Gear.NoConsumableUses'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Gear.NoConsumableUses'));
             return this.parent;
         }
 
         if (this.usesExhausted) {
-            ui.notifications.warn(game.i18n.localize('RT.Gear.UsesExhausted'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Gear.UsesExhausted'));
             return this.parent;
         }
 
@@ -439,7 +439,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
         // Notification
         ui.notifications.info(
-            game.i18n.format('RT.Gear.ConsumedUse', {
+            game.i18n.format('WH40K.Gear.ConsumedUse', {
                 name: this.parent.name,
                 remaining: `${newValue}/${this.uses.max}`,
             }),
@@ -458,7 +458,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         await this.parent?.update({ 'system.uses.value': this.uses.max });
 
         ui.notifications.info(
-            game.i18n.format('RT.Gear.UsesReset', {
+            game.i18n.format('WH40K.Gear.UsesReset', {
                 name: this.parent.name,
                 max: this.uses.max,
             }),

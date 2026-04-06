@@ -62,7 +62,7 @@ export default class MutationData extends ItemDataModel.mixin(
   /** @override */
   get chatProperties() {
     const props = [this.categoryLabel];
-    if ( this.visible ) props.push(game.i18n.localize("RT.Mutation.Visible"));
+    if ( this.visible ) props.push(game.i18n.localize("WH40K.Mutation.Visible"));
     return props;
   }
 

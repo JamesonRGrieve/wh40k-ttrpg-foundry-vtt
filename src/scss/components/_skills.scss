@@ -2,13 +2,13 @@
 // Improved layout and readability for skills panels
 
 // Grid layout variables
-$rt-skill-grid: 2fr 0.7fr 1fr 0.7fr 0.8fr;
-$rt-skill-group-grid: 1.5rem 1fr auto;
+$wh40k-skill-grid: 2fr 0.7fr 1fr 0.7fr 0.8fr;
+$wh40k-skill-group-grid: 1.5rem 1fr auto;
 
 // Skills panel layout adjustments
-.rt-skills-panel,
-.rt-specialist-skills-panel {
-  .rt-panel__header {
+.wh40k-skills-panel,
+.wh40k-specialist-skills-panel {
+  .wh40k-panel__header {
     font-size: 1.2em;
     padding: 0.5rem;
     text-align: center;
@@ -20,7 +20,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Skills table header
-.rt-skills-header {
+.wh40k-skills-header {
   background: linear-gradient(180deg, rgba(250, 248, 244, 0.98), rgba(235, 232, 226, 0.95)) !important;
   font-weight: 600;
   text-transform: uppercase;
@@ -34,15 +34,15 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
     text-align: center;
   }
   
-  .rt-skill-name {
+  .wh40k-skill-name {
     text-align: center;
     padding-left: 0;
   }
 }
 
 // Skill row styling
-.rt-skill-row,
-.rt-specialist-row {
+.wh40k-skill-row,
+.wh40k-specialist-row {
   border-bottom: none;
   transition: background-color 0.2s ease, transform 0.2s ease;
   
@@ -56,16 +56,16 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   }
 }
 
-.rt-skill-row:nth-child(even),
-.rt-specialist-row:nth-child(even) {
+.wh40k-skill-row:nth-child(even),
+.wh40k-specialist-row:nth-child(even) {
   background: rgba(255, 255, 255, 0.5);
 }
 
 // Skill name column
-.rt-skill-name {
+.wh40k-skill-name {
   text-align: left !important;
   
-  .rt-skill-button {
+  .wh40k-skill-button {
     background: transparent;
     border: none;
     color: #3a2a1d;
@@ -93,10 +93,10 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Characteristic dropdown
-.rt-skill-char {
+.wh40k-skill-char {
   text-align: center;
   
-  .rt-char-select {
+  .wh40k-char-select {
     width: 100%;
     padding: 0.25rem;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -113,11 +113,11 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Training selector
-.rt-skill-training {
+.wh40k-skill-training {
   text-align: center !important;
 }
 
-.rt-training-select {
+.wh40k-training-select {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -145,7 +145,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
     }
   }
 
-  .rt-training-caret {
+  .wh40k-training-caret {
     position: absolute;
     right: 0.5rem;
     width: 0;
@@ -158,10 +158,10 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Bonus input
-.rt-skill-bonus {
+.wh40k-skill-bonus {
   text-align: center;
   
-  .rt-bonus-input {
+  .wh40k-bonus-input {
     width: 100%;
     padding: 0.25rem;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -178,11 +178,11 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Total value display
-.rt-skill-total {
+.wh40k-skill-total {
   text-align: center !important;
   font-weight: bold;
   
-  .rt-total-value {
+  .wh40k-total-value {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -198,31 +198,31 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Specialist skills specific styling
-.rt-specialist-group {
+.wh40k-specialist-group {
   background: rgba(36, 107, 131, 0.25);
   border-top: 2px solid rgba(36, 107, 131, 0.4);
   border-bottom: 2px solid rgba(36, 107, 131, 0.4);
   margin-top: 0.5rem;
   
-  .rt-specialist-group-name {
+  .wh40k-specialist-group-name {
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 0.95em;
     padding: 0.5rem !important;
     
-    .rt-group-label {
+    .wh40k-group-label {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
     }
   }
   
-  .rt-specialist-add {
+  .wh40k-specialist-add {
     text-align: right !important;
     padding-right: 0.5rem !important;
     
-    .rt-add-specialization {
+    .wh40k-add-specialization {
       background: #246b83;
       color: white;
       border: none;
@@ -254,12 +254,12 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Specialist name field
-.rt-specialist-name {
+.wh40k-specialist-name {
   display: flex !important;
   gap: 0.5rem;
   align-items: center;
   
-  .rt-specialization-input {
+  .wh40k-specialization-input {
     flex: 1;
     padding: 0.35rem 0.5rem;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -273,7 +273,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
     }
   }
   
-  .rt-skill-button {
+  .wh40k-skill-button {
     flex-shrink: 0;
     padding: 0.35rem 0.5rem;
     min-width: auto;
@@ -285,10 +285,10 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Empty state message
-.rt-no-specializations {
+.wh40k-no-specializations {
   background: rgba(0, 0, 0, 0.02);
   
-  .rt-empty-message {
+  .wh40k-empty-message {
     padding: 1rem !important;
     text-align: center !important;
     color: #666;
@@ -306,20 +306,20 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Update the grid layout for skill tables
-.rt-skilltable--border {
+.wh40k-skilltable--border {
   .table-row--head,
   .table-row,
-  .rt-skill-row,
-  .rt-specialist-row {
-    grid-template-columns: $rt-skill-grid;
+  .wh40k-skill-row,
+  .wh40k-specialist-row {
+    grid-template-columns: $wh40k-skill-grid;
     display: grid;
     align-items: center;
   }
   
   .table-row--grouped,
-  .rt-specialist-group,
-  .rt-no-specializations {
-    grid-template-columns: $rt-skill-group-grid;
+  .wh40k-specialist-group,
+  .wh40k-no-specializations {
+    grid-template-columns: $wh40k-skill-group-grid;
     display: grid;
     align-items: center;
   }
@@ -327,29 +327,29 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 
 // Responsive adjustments for smaller screens
 @media (max-width: 1200px) {
-  .rt-skills-panel,
-  .rt-specialist-skills-panel {
+  .wh40k-skills-panel,
+  .wh40k-specialist-skills-panel {
     grid-column: span 6 !important;
   }
   
-  .rt-skilltable--border {
+  .wh40k-skilltable--border {
     .table-row--head,
     .table-row,
-    .rt-skill-row,
-    .rt-specialist-row {
+    .wh40k-skill-row,
+    .wh40k-specialist-row {
       grid-template-columns: 1.6fr 0.6fr 0.9fr 0.6fr 0.7fr;
       font-size: 0.9em;
     }
   }
   
-  .rt-skill-button {
+  .wh40k-skill-button {
     font-size: 0.85em;
   }
 }
 
 // Additional polish
-.rt-skills-panel .rt-table--border,
-.rt-specialist-skills-panel .rt-table--border {
+.wh40k-skills-panel .wh40k-table--border,
+.wh40k-specialist-skills-panel .wh40k-table--border {
   border: 1px solid rgba(36, 107, 131, 0.3);
   border-radius: 4px;
   overflow: hidden;
@@ -361,7 +361,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 // These styles highlight Common Lore, Forbidden Lore, and Scholastic Lore
 // skills with distinct but subtle colors
 
-.rt-specialist-panel .rt-specialist-group {
+.wh40k-specialist-panel .wh40k-specialist-group {
   --rt-spec-a: rgba(36, 107, 131, 0.22);
   --rt-spec-b: rgba(24, 80, 96, 0.14);
   --rt-spec-top: rgba(36, 107, 131, 0.5);
@@ -371,88 +371,88 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   border-bottom-color: var(--rt-spec-bottom);
 }
 
-.rt-specialist-panel .rt-specialist-group .rt-specialist-header {
+.wh40k-specialist-panel .wh40k-specialist-group .wh40k-specialist-header {
   background: linear-gradient(180deg, var(--rt-spec-a) 0%, transparent 100%);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(2) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(2) {
   --rt-spec-a: rgba(92, 0, 0, 0.18);
   --rt-spec-b: rgba(60, 0, 40, 0.12);
   --rt-spec-top: rgba(92, 0, 0, 0.5);
   --rt-spec-bottom: rgba(60, 0, 40, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(3) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(3) {
   --rt-spec-a: rgba(25, 25, 112, 0.15);
   --rt-spec-b: rgba(0, 0, 128, 0.1);
   --rt-spec-top: rgba(0, 0, 139, 0.5);
   --rt-spec-bottom: rgba(0, 0, 139, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(4) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(4) {
   --rt-spec-a: rgba(42, 120, 60, 0.18);
   --rt-spec-b: rgba(28, 80, 44, 0.12);
   --rt-spec-top: rgba(42, 120, 60, 0.5);
   --rt-spec-bottom: rgba(28, 80, 44, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(5) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(5) {
   --rt-spec-a: rgba(158, 112, 40, 0.18);
   --rt-spec-b: rgba(120, 80, 24, 0.12);
   --rt-spec-top: rgba(158, 112, 40, 0.5);
   --rt-spec-bottom: rgba(120, 80, 24, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(6) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(6) {
   --rt-spec-a: rgba(84, 72, 140, 0.18);
   --rt-spec-b: rgba(60, 50, 100, 0.12);
   --rt-spec-top: rgba(84, 72, 140, 0.5);
   --rt-spec-bottom: rgba(60, 50, 100, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(7) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(7) {
   --rt-spec-a: rgba(96, 56, 22, 0.18);
   --rt-spec-b: rgba(74, 38, 18, 0.12);
   --rt-spec-top: rgba(96, 56, 22, 0.5);
   --rt-spec-bottom: rgba(74, 38, 18, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(8) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(8) {
   --rt-spec-a: rgba(18, 86, 96, 0.18);
   --rt-spec-b: rgba(12, 64, 72, 0.12);
   --rt-spec-top: rgba(18, 86, 96, 0.5);
   --rt-spec-bottom: rgba(12, 64, 72, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(9) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(9) {
   --rt-spec-a: rgba(120, 90, 18, 0.18);
   --rt-spec-b: rgba(86, 62, 12, 0.12);
   --rt-spec-top: rgba(120, 90, 18, 0.5);
   --rt-spec-bottom: rgba(86, 62, 12, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(10) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(10) {
   --rt-spec-a: rgba(24, 96, 132, 0.18);
   --rt-spec-b: rgba(16, 70, 98, 0.12);
   --rt-spec-top: rgba(24, 96, 132, 0.5);
   --rt-spec-bottom: rgba(16, 70, 98, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(11) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(11) {
   --rt-spec-a: rgba(132, 54, 54, 0.18);
   --rt-spec-b: rgba(92, 38, 38, 0.12);
   --rt-spec-top: rgba(132, 54, 54, 0.5);
   --rt-spec-bottom: rgba(92, 38, 38, 0.5);
 }
 
-.rt-specialist-panel .rt-specialist-group:nth-of-type(12) {
+.wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(12) {
   --rt-spec-a: rgba(66, 96, 36, 0.18);
   --rt-spec-b: rgba(50, 72, 26, 0.12);
   --rt-spec-top: rgba(66, 96, 36, 0.5);
   --rt-spec-bottom: rgba(50, 72, 26, 0.5);
 }
 
-.rt-specialist-group {
+.wh40k-specialist-group {
   // Common Lore - Subtle bronze/amber theme (knowledge of common topics)
   &[data-skill="commonLore"],
   &.spec_skills_commonLore {
@@ -460,11 +460,11 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
     border-top-color: rgba(139, 116, 88, 0.4);
     border-bottom-color: rgba(139, 116, 88, 0.4);
     
-    .rt-specialist-group-name {
+    .wh40k-specialist-group-name {
       color: #4a3728;
     }
     
-    .rt-add-specialization {
+    .wh40k-add-specialization {
       background: linear-gradient(135deg, #5d4e42, #4a3728);
       
       &:hover {
@@ -480,11 +480,11 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
     border-top-color: rgba(92, 0, 0, 0.5);
     border-bottom-color: rgba(60, 0, 40, 0.5);
     
-    .rt-specialist-group-name {
+    .wh40k-specialist-group-name {
       color: #5c0000;
     }
     
-    .rt-add-specialization {
+    .wh40k-add-specialization {
       background: linear-gradient(135deg, #6b0000, #3c0028);
       
       &:hover {
@@ -500,11 +500,11 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
     border-top-color: rgba(0, 0, 139, 0.5);
     border-bottom-color: rgba(0, 0, 139, 0.5);
     
-    .rt-specialist-group-name {
+    .wh40k-specialist-group-name {
       color: #191970;
     }
     
-    .rt-add-specialization {
+    .wh40k-add-specialization {
       background: linear-gradient(135deg, #191970, #000080);
       
       &:hover {
@@ -515,9 +515,9 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
 }
 
 // Lore specialization rows styling
-.rt-specialist-block {
+.wh40k-specialist-block {
   &.spec_skills_commonLore {
-    .rt-specialist-row {
+    .wh40k-specialist-row {
       border-left: 3px solid rgba(139, 116, 88, 0.35);
       
       &:hover {
@@ -527,7 +527,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   }
   
   &.spec_skills_forbiddenLore {
-    .rt-specialist-row {
+    .wh40k-specialist-row {
       border-left: 3px solid rgba(92, 0, 0, 0.4);
       
       &:hover {
@@ -537,7 +537,7 @@ $rt-skill-group-grid: 1.5rem 1fr auto;
   }
   
   &.spec_skills_scholasticLore {
-    .rt-specialist-row {
+    .wh40k-specialist-row {
       border-left: 3px solid rgba(0, 0, 139, 0.4);
       
       &:hover {

@@ -15,10 +15,10 @@
 }
 
 @mixin rt-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
-  .rt-vitals-progress {
+  .wh40k-vitals-progress {
     @include rt-progress-gradient($progress-gradient);
   }
-  .rt-vitals-title {
+  .wh40k-vitals-title {
     color: $title-color;
     i { color: $icon-color; }
   }
@@ -27,7 +27,7 @@
 @mixin rt-panel-tint($color, $border-opacity: 0.75, $header-opacity: 0.12) {
   border-left: 3px solid rgba($color, $border-opacity);
   
-  .rt-panel-header {
+  .wh40k-panel-header {
     background: linear-gradient(180deg, rgba($color, $header-opacity), transparent);
   }
 }
