@@ -89,7 +89,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /** @inheritDoc */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        context.dh = CONFIG.rt || WH40K;
+        context.dh = CONFIG.wh40k || WH40K;
 
         // Prepare ship-specific data
         this._prepareShipData(context);

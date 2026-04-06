@@ -78,10 +78,10 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const context = await super._prepareContext(options);
         
         // Add CONFIG reference for template helpers
-        context.dh = CONFIG.rt || {};
+        context.dh = CONFIG.wh40k || {};
         
         // Add armour types config for restrictions
-        context.armourTypes = CONFIG.rt?.armourTypes || {};
+        context.armourTypes = CONFIG.wh40k?.armourTypes || {};
         context.armourTypesArray = Object.entries(context.armourTypes).map(([key, config]) => ({
             key,
             label: game.i18n.localize(config.label),
@@ -89,7 +89,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         }));
         
         // Add properties config
-        context.armourProperties = CONFIG.rt?.armourProperties || {};
+        context.armourProperties = CONFIG.wh40k?.armourProperties || {};
         
         // Prepare added properties array
         context.addedPropertiesArray = Array.from(this.item.system.addedProperties).map(key => {

@@ -90,7 +90,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
   /** @override */
   get title() {
-    const careerLabel = game.i18n.localize(CONFIG.rt?.careers?.[this.careerKey]?.label ?? this.careerKey);
+    const careerLabel = game.i18n.localize(CONFIG.wh40k?.careers?.[this.careerKey]?.label ?? this.careerKey);
     return game.i18n.format('WH40K.Advancement.TitleWithCareer', { career: careerLabel });
   }
 
@@ -185,7 +185,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     const characteristics = this.actor.system.characteristics ?? {};
     const available = getAvailableXP(this.actor);
 
-    return Object.entries(CONFIG.rt?.characteristics ?? {})
+    return Object.entries(CONFIG.wh40k?.characteristics ?? {})
       .filter(([key]) => key !== 'influence') // Influence typically can't be advanced
       .map(([key, config]) => {
         const char = characteristics[key] ?? {};
@@ -198,7 +198,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Build tier display
         const tiers = TIER_ORDER.map((tier, index) => ({
           tier,
-          label: game.i18n.localize(CONFIG.rt?.advancementTiers?.[tier]?.label ?? tier),
+          label: game.i18n.localize(CONFIG.wh40k?.advancementTiers?.[tier]?.label ?? tier),
           purchased: index < currentAdvances,
           current: index === currentAdvances
         }));
@@ -212,7 +212,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
           tiers,
           nextCost: nextCost?.cost ?? null,
           nextTier: nextCost?.tier ?? null,
-          nextTierLabel: nextCost ? game.i18n.localize(CONFIG.rt?.advancementTiers?.[nextCost.tier]?.label ?? nextCost.tier) : null,
+          nextTierLabel: nextCost ? game.i18n.localize(CONFIG.wh40k?.advancementTiers?.[nextCost.tier]?.label ?? nextCost.tier) : null,
           isMaxed,
           canPurchase,
           cantAfford: !isMaxed && nextCost && available < nextCost.cost,
@@ -400,9 +400,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     // Get display info
-    const charConfig = CONFIG.rt?.characteristics?.[charKey];
+    const charConfig = CONFIG.wh40k?.characteristics?.[charKey];
     const charLabel = charConfig ? game.i18n.localize(charConfig.label) : charKey;
-    const tierLabel = game.i18n.localize(CONFIG.rt?.advancementTiers?.[nextCost.tier]?.label ?? nextCost.tier);
+    const tierLabel = game.i18n.localize(CONFIG.wh40k?.advancementTiers?.[nextCost.tier]?.label ?? nextCost.tier);
 
     // Spend XP
     const result = await spendXP(this.actor, nextCost.cost, `${charLabel} (${tierLabel})`);

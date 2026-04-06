@@ -118,7 +118,7 @@ function checkCharacteristicPrereq(actor, prereq) {
   }
 
   // Get display name for the characteristic
-  const charConfig = CONFIG.rt?.characteristics?.[charKey];
+  const charConfig = CONFIG.wh40k?.characteristics?.[charKey];
   const charLabel = charConfig?.abbreviation ?? prereq.key;
 
   return {

@@ -15,10 +15,10 @@ export class TokenDocumentRT extends TokenDocument {
      * Register RT movement actions in CONFIG.Token.movement.actions.
      * Creates new action entries for Half/Full/Charge/Run and configures
      * their cost functions and animation options.
-     * Called during system init after CONFIG.rt is set.
+     * Called during system init after CONFIG.wh40k is set.
      */
     static registerMovementActions() {
-        for (const [type, config] of Object.entries(CONFIG.rt.movementTypes)) {
+        for (const [type, config] of Object.entries(CONFIG.wh40k.movementTypes)) {
             // Create the action entry if it doesn't already exist (RT-specific actions)
             CONFIG.Token.movement.actions[type] ??= {
                 label: config.label,
@@ -91,7 +91,7 @@ export class TokenDocumentRT extends TokenDocument {
         const movement = actor?.system?.movement;
         if (!movement) return;
 
-        const movementTypes = CONFIG.rt.movementTypes;
+        const movementTypes = CONFIG.wh40k.movementTypes;
         const activeType = token.getFlag(SYSTEM_ID, 'movementAction');
         const $html = html instanceof HTMLElement ? html : html[0] ?? html;
 
@@ -136,7 +136,7 @@ export class TokenDocumentRT extends TokenDocument {
      * @param {string} type - Movement type key
      */
     static #setMovementAction(token, type) {
-        const config = CONFIG.rt.movementTypes[type];
+        const config = CONFIG.wh40k.movementTypes[type];
         const label = config ? game.i18n.localize(config.label) : type;
         const speed = token.actor?.system?.movement?.[type];
         token.update({ 'flags.wh40k-rpg.movementAction': type });

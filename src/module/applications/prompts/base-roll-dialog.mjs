@@ -94,7 +94,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
             ...context,
             ...this.rollData,
             rollData: this.rollData,
-            dh: CONFIG.rt,
+            dh: CONFIG.wh40k,
             isEditable: true
         };
     }

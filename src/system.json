@@ -2,7 +2,7 @@
   "id": "wh40k-rpg",
   "title": "Warhammer 40K RPG",
   "description": "Unified Foundry VTT system for FFG/Cubicle 7 Warhammer 40,000 RPGs (Dark Heresy 2e, Rogue Trader, Black Crusade, Only War, Deathwatch).",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": 13,
     "verified": "14.349",
@@ -35,22 +35,12 @@
   "scripts": [],
   "documentTypes": {
     "Actor": {
-      "acolyte": {
-        "htmlFields": [
-          "details.biography"
-        ]
-      },
       "character": {
         "htmlFields": [
           "details.biography"
         ]
       },
       "npc": {
-        "htmlFields": [
-          "details.biography"
-        ]
-      },
-      "npcV2": {
         "htmlFields": [
           "description",
           "tactics",
