@@ -1,54 +1,49 @@
 {
-  "name": "Dragonfire Bolts",
-  "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
-  "system": {
-    "identifier": "dragonfire-bolts",
-    "weaponTypes": [
-      "bolt"
-    ],
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "range": 0,
-      "rateOfFire": {
-        "single": 0,
-        "semi": 0,
-        "full": 0
-      }
+    "name": "Dragonfire Bolts",
+    "type": "ammunition",
+    "img": "icons/svg/ammo.svg",
+    "system": {
+        "identifier": "dragonfire-bolts",
+        "weaponTypes": ["bolt"],
+        "modifiers": {
+            "damage": 0,
+            "penetration": 0,
+            "range": 0,
+            "rateOfFire": {
+                "single": 0,
+                "semi": 0,
+                "full": 0
+            }
+        },
+        "addedQualities": ["blast-2", "reduce-damage-by-1"],
+        "removedQualities": [],
+        "clipModifier": 0,
+        "effect": "<p>Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.</p>",
+        "notes": "",
+        "weight": 0,
+        "availability": "very-rare",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Damage/Effect:</b> Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.</p><p><b>Qualities:</b> Blast (2)</p>"
+        },
+        "source": "RT: Faith and Coin",
+        "damage": {
+            "formula": "",
+            "type": "impact",
+            "bonus": 0,
+            "penetration": 0
+        },
+        "special": []
     },
-    "addedQualities": [
-      "blast-2",
-      "reduce-damage-by-1"
-    ],
-    "removedQualities": [],
-    "clipModifier": 0,
-    "effect": "<p>Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.</p>",
-    "notes": "",
-    "weight": 0,
-    "availability": "very-rare",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 0,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Damage/Effect:</b> Weapon gains Blast (2) Quality, reduce Damage by 1. Creatures struck by this weapon must pass +20 Agility Test or catch on fire.</p><p><b>Qualities:</b> Blast (2)</p>"
-    },
-    "source": "RT: Faith and Coin",
-    "damage": {
-      "formula": "",
-      "type": "impact",
-      "bonus": 0,
-      "penetration": 0
-    },
-    "special": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "sdxZMZl3T1eE2sEh"
+    "effects": [],
+    "flags": {},
+    "_id": "sdxZMZl3T1eE2sEh"
 }

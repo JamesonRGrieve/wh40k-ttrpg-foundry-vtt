@@ -1,41 +1,39 @@
 {
-  "name": "Field Bracing",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "all"
-    ],
-    "effect": "Increases Hull Integrity by twice the amount of power supplied (max +6 Hull, for 3 Power). If component is supplied less power or is damaged, bonus is lost, although cannot bring Hull Integrity below 0. Can increase Supplied power with +0 Tech-use check, unpowering other components at GM Discretion.",
-    "availability": "rare",
-    "source": "RT: BF Koronus",
-    "description": {
-      "value": "<p>Increases Hull Integrity by twice the amount of power supplied (max +6 Hull, for 3 Power). If component is supplied less power or is damaged, bonus is lost, although cannot bring Hull Integrity below 0. Can increase Supplied power with +0 Tech-use check, unpowering other components at GM Discretion.</p>"
+    "name": "Field Bracing",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["all"],
+        "effect": "Increases Hull Integrity by twice the amount of power supplied (max +6 Hull, for 3 Power). If component is supplied less power or is damaged, bonus is lost, although cannot bring Hull Integrity below 0. Can increase Supplied power with +0 Tech-use check, unpowering other components at GM Discretion.",
+        "availability": "rare",
+        "source": "RT: BF Koronus",
+        "description": {
+            "value": "<p>Increases Hull Integrity by twice the amount of power supplied (max +6 Hull, for 3 Power). If component is supplied less power or is damaged, bonus is lost, although cannot bring Hull Integrity below 0. Can increase Supplied power with +0 Tech-use check, unpowering other components at GM Discretion.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "augment",
+        "essential": false,
+        "power": {
+            "used": 0,
+            "generated": 0
+        },
+        "space": 1,
+        "shipPoints": 2,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "field-bracing"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "augment",
-    "essential": false,
-    "power": {
-      "used": 0,
-      "generated": 0
-    },
-    "space": 1,
-    "shipPoints": 2,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "field-bracing"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "PQJ2YvpdH2jI5hSq"
+    "effects": [],
+    "flags": {},
+    "_id": "PQJ2YvpdH2jI5hSq"
 }

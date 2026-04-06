@@ -313,7 +313,7 @@ function createErrorElement(original, error) {
  * @param {MouseEvent} event  The click event.
  */
 async function handleEnricherClick(event) {
-    const enricher = event.target.closest(".rt-enricher");
+    const enricher = event.target.closest('.rt-enricher');
     if (!enricher) return;
 
     const type = enricher.dataset.enricherType;
@@ -325,7 +325,7 @@ async function handleEnricherClick(event) {
     event.stopPropagation();
 
     switch (type) {
-        case "characteristic":
+        case 'characteristic':
             if (actorUuid) {
                 const actor = await fromUuid(actorUuid);
                 if (actor?.rollCharacteristic) {
@@ -334,19 +334,19 @@ async function handleEnricherClick(event) {
             }
             break;
 
-        case "skill":
+        case 'skill':
             if (actorUuid) {
                 const actor = await fromUuid(actorUuid);
                 if (actor?.rollSkill) {
-                    const [skillKey, specialization] = config.split(":");
+                    const [skillKey, specialization] = config.split(':');
                     await actor.rollSkill(skillKey, specialization);
                 }
             }
             break;
 
-        case "quality":
-        case "property":
-        case "condition":
+        case 'quality':
+        case 'property':
+        case 'condition':
             // Show expandable info panel
             if (itemUuid) {
                 const item = await fromUuid(itemUuid);
@@ -354,7 +354,7 @@ async function handleEnricherClick(event) {
                     // Check for Shift+Click to post to chat
                     if (event.shiftKey) {
                         item.toMessage();
-                    } 
+                    }
                     // Check for Ctrl+Click to open sheet
                     else if (event.ctrlKey || event.metaKey) {
                         item.sheet.render(true);
@@ -391,21 +391,21 @@ async function enrichQuality(match, options) {
     // Try to find the quality in compendiums
     const qualityPack = game.packs.get('wh40k-rpg.rt-items-weapon-qualities');
     let quality = null;
-    
+
     if (qualityPack) {
         const index = await qualityPack.getIndex();
-        const entry = index.find(e => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
+        const entry = index.find((e) => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
         if (entry) {
             quality = await qualityPack.getDocument(entry._id);
         }
     }
 
     // Create enriched element
-    const span = document.createElement("span");
-    span.className = "wh40k-enricher rt-enricher-quality";
-    span.dataset.enricherType = "quality";
+    const span = document.createElement('span');
+    span.className = 'wh40k-enricher rt-enricher-quality';
+    span.dataset.enricherType = 'quality';
     span.dataset.enricherConfig = config;
-    
+
     if (quality) {
         span.dataset.itemUuid = quality.uuid;
         span.title = `${quality.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
@@ -413,7 +413,7 @@ async function enrichQuality(match, options) {
         span.title = config;
     }
 
-    const displayLabel = label || (quality?.name || config);
+    const displayLabel = label || quality?.name || config;
     span.innerHTML = `<i class="fa-solid fa-star"></i> ${displayLabel}`;
 
     return span;
@@ -432,21 +432,21 @@ async function enrichProperty(match, options) {
     // Try to find the property in compendiums
     const propertyPack = game.packs.get('wh40k-rpg.rt-items-armour-properties');
     let property = null;
-    
+
     if (propertyPack) {
         const index = await propertyPack.getIndex();
-        const entry = index.find(e => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
+        const entry = index.find((e) => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
         if (entry) {
             property = await propertyPack.getDocument(entry._id);
         }
     }
 
     // Create enriched element
-    const span = document.createElement("span");
-    span.className = "wh40k-enricher rt-enricher-property";
-    span.dataset.enricherType = "property";
+    const span = document.createElement('span');
+    span.className = 'wh40k-enricher rt-enricher-property';
+    span.dataset.enricherType = 'property';
     span.dataset.enricherConfig = config;
-    
+
     if (property) {
         span.dataset.itemUuid = property.uuid;
         span.title = `${property.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
@@ -454,7 +454,7 @@ async function enrichProperty(match, options) {
         span.title = config;
     }
 
-    const displayLabel = label || (property?.name || config);
+    const displayLabel = label || property?.name || config;
     span.innerHTML = `<i class="fa-solid fa-shield"></i> ${displayLabel}`;
 
     return span;
@@ -473,21 +473,21 @@ async function enrichCondition(match, options) {
     // Try to find the condition in compendiums
     const conditionPack = game.packs.get('wh40k-rpg.rt-items-conditions');
     let condition = null;
-    
+
     if (conditionPack) {
         const index = await conditionPack.getIndex();
-        const entry = index.find(e => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
+        const entry = index.find((e) => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
         if (entry) {
             condition = await conditionPack.getDocument(entry._id);
         }
     }
 
     // Create enriched element
-    const span = document.createElement("span");
-    span.className = "wh40k-enricher rt-enricher-condition";
-    span.dataset.enricherType = "condition";
+    const span = document.createElement('span');
+    span.className = 'wh40k-enricher rt-enricher-condition';
+    span.dataset.enricherType = 'condition';
     span.dataset.enricherConfig = config;
-    
+
     if (condition) {
         span.dataset.itemUuid = condition.uuid;
         span.title = `${condition.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
@@ -495,9 +495,8 @@ async function enrichCondition(match, options) {
         span.title = config;
     }
 
-    const displayLabel = label || (condition?.name || config);
+    const displayLabel = label || condition?.name || config;
     span.innerHTML = `<i class="fa-solid fa-exclamation-triangle"></i> ${displayLabel}`;
 
     return span;
 }
-

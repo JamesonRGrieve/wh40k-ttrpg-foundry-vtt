@@ -1,41 +1,41 @@
 {
-  "name": "Aerial Pinions",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "tools",
-    "weight": 10,
-    "availability": "scarce",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 300,
-      "currency": "throne"
+    "name": "Aerial Pinions",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "tools",
+        "weight": 10,
+        "availability": "scarce",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 300,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>A Set of grappling hook blades and lines set on motorised arms that allow for a user to effortlessly climb nearby surfaces hands free. Comes in 4 Line and 6 Line Variants. 4 Line allows for Half Movement Speed and can't Run or Charge, 6 Line allows for an Agility Test to move at full speed until coming to a stop, and another to Run or Charge, failiure halts the user, 3+ DoF Fall.</p>\n<h3>Requirements</h3><p>4 Line: 10kg, Scarce, 300 Throne Cost\n6 Line: 15kg, Rare, 500 Throne Cost</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 300 T</p>",
+            "chat": "",
+            "summary": "A Set of grappling hook blades and lines set on motorised arms that allow for a user to effortlessly climb nearby surfaces hands free. Comes in 4 Line and 6 Line Variants. 4 Line allows for Half Movem"
+        },
+        "source": {
+            "book": "DH: The Inquisitor's Handbook",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "A Set of grappling hook blades and lines set on motorised arms that allow for a user to effortlessly climb nearby surfaces hands free. Comes in 4 Line and 6 Line Variants. 4 Line allows for Half Movement Speed and can't Run or Charge, 6 Line allows for an Agility Test to move at full speed until coming to a stop, and another to Run or Charge, failiure halts the user, 3+ DoF Fall.",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>A Set of grappling hook blades and lines set on motorised arms that allow for a user to effortlessly climb nearby surfaces hands free. Comes in 4 Line and 6 Line Variants. 4 Line allows for Half Movement Speed and can't Run or Charge, 6 Line allows for an Agility Test to move at full speed until coming to a stop, and another to Run or Charge, failiure halts the user, 3+ DoF Fall.</p>\n<h3>Requirements</h3><p>4 Line: 10kg, Scarce, 300 Throne Cost\n6 Line: 15kg, Rare, 500 Throne Cost</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 300 T</p>",
-      "chat": "",
-      "summary": "A Set of grappling hook blades and lines set on motorised arms that allow for a user to effortlessly climb nearby surfaces hands free. Comes in 4 Line and 6 Line Variants. 4 Line allows for Half Movem"
-    },
-    "source": {
-      "book": "DH: The Inquisitor's Handbook",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "A Set of grappling hook blades and lines set on motorised arms that allow for a user to effortlessly climb nearby surfaces hands free. Comes in 4 Line and 6 Line Variants. 4 Line allows for Half Movement Speed and can't Run or Charge, 6 Line allows for an Agility Test to move at full speed until coming to a stop, and another to Run or Charge, failiure halts the user, 3+ DoF Fall.",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "BSsR9f1fo4qVQ6PV"
+    "effects": [],
+    "flags": {},
+    "_id": "BSsR9f1fo4qVQ6PV"
 }

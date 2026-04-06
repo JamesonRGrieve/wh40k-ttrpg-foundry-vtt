@@ -1,106 +1,104 @@
 {
-  "name": "Stubjack",
-  "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/anchor.svg",
-  "system": {
-    "identifier": "stubjack",
-    "step": "birthright",
-    "stepIndex": 2,
-    "description": {
-      "value": "<h2>Stubjack</h2><blockquote><p><em>\"You were born to violence. It has surrounded you your whole life, and you've had a weapon in easy reach ever since you were strong enough to grip one.\"</em></p></blockquote><p>You could have joined the PDF or even become a Guardsman, but what sort of life is that? Joining a regiment means orders here, orders there, and none that make any sense. It was clear to you that fighting for Thrones as a mercenary was the best way for a warrior to become rich in his trade and still escape with his skin.</p><p>You've seen death, victory, and most of the ugly things that lie in-between, but as long as there is always a fat purse waiting on the far side of the battlefield that's fine with you. As for the dead, the Emperor will know his own.</p>"
-    },
-    "requirements": {
-      "text": "Origin Path: Birthright",
-      "previousSteps": [],
-      "excludedSteps": []
-    },
-    "grants": {
-      "skills": [
-        {
-          "name": "Intimidate",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [
-        {
-          "name": "Quick Draw",
-          "specialization": "",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.qdn5GQvS11uRvnIO"
+    "name": "Stubjack",
+    "type": "originPath",
+    "img": "modules/game-icons-net/whitetransparent/anchor.svg",
+    "system": {
+        "identifier": "stubjack",
+        "step": "birthright",
+        "stepIndex": 2,
+        "description": {
+            "value": "<h2>Stubjack</h2><blockquote><p><em>\"You were born to violence. It has surrounded you your whole life, and you've had a weapon in easy reach ever since you were strong enough to grip one.\"</em></p></blockquote><p>You could have joined the PDF or even become a Guardsman, but what sort of life is that? Joining a regiment means orders here, orders there, and none that make any sense. It was clear to you that fighting for Thrones as a mercenary was the best way for a warrior to become rich in his trade and still escape with his skin.</p><p>You've seen death, victory, and most of the ugly things that lie in-between, but as long as there is always a fat purse waiting on the far side of the battlefield that's fine with you. As for the dead, the Emperor will know his own.</p>"
         },
-        {
-          "name": "Battle-Scarred (Stubjack)",
-          "specialization": "",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.STJ0000000000001"
-        }
-      ],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [],
-      "choices": [
-        {
-          "type": "characteristic",
-          "label": "Choose one combat characteristic bonus",
-          "options": [
-            {
-              "label": "+5 Weapon Skill",
-              "value": "weaponSkill",
-              "description": "Gain +5 to Weapon Skill.",
-              "grants": {
-                "characteristics": {
-                  "weaponSkill": 5
+        "requirements": {
+            "text": "Origin Path: Birthright",
+            "previousSteps": [],
+            "excludedSteps": []
+        },
+        "grants": {
+            "skills": [
+                {
+                    "name": "Intimidate",
+                    "specialization": "",
+                    "level": "trained"
                 }
-              }
+            ],
+            "talents": [
+                {
+                    "name": "Quick Draw",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.qdn5GQvS11uRvnIO"
+                },
+                {
+                    "name": "Battle-Scarred (Stubjack)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.STJ0000000000001"
+                }
+            ],
+            "traits": [],
+            "aptitudes": [],
+            "equipment": [],
+            "specialAbilities": [],
+            "choices": [
+                {
+                    "type": "characteristic",
+                    "label": "Choose one combat characteristic bonus",
+                    "options": [
+                        {
+                            "label": "+5 Weapon Skill",
+                            "value": "weaponSkill",
+                            "description": "Gain +5 to Weapon Skill.",
+                            "grants": {
+                                "characteristics": {
+                                    "weaponSkill": 5
+                                }
+                            }
+                        },
+                        {
+                            "label": "+5 Ballistic Skill",
+                            "value": "ballisticSkill",
+                            "description": "Gain +5 to Ballistic Skill.",
+                            "grants": {
+                                "characteristics": {
+                                    "ballisticSkill": 5
+                                }
+                            }
+                        }
+                    ],
+                    "count": 1
+                }
+            ]
+        },
+        "modifiers": {
+            "characteristics": {
+                "fellowship": -5
             },
-            {
-              "label": "+5 Ballistic Skill",
-              "value": "ballisticSkill",
-              "description": "Gain +5 to Ballistic Skill.",
-              "grants": {
-                "characteristics": {
-                  "ballisticSkill": 5
-                }
-              }
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
             }
-          ],
-          "count": 1
-        }
-      ]
+        },
+        "effectText": "",
+        "notes": "Note: This origin path always applies 1d5 Insanity Points upon selection.",
+        "source": {
+            "book": "Rogue Trader Core Rulebook",
+            "page": "29",
+            "custom": ""
+        },
+        "selectedChoices": {},
+        "activeModifiers": [],
+        "positions": [3]
     },
-    "modifiers": {
-      "characteristics": {
-        "fellowship": -5
-      },
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "effectText": "",
-    "notes": "Note: This origin path always applies 1d5 Insanity Points upon selection.",
-    "source": {
-      "book": "Rogue Trader Core Rulebook",
-      "page": "29",
-      "custom": ""
-    },
-    "selectedChoices": {},
-    "activeModifiers": [],
-    "positions": [
-      3
-    ]
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "RBpW3W9ZOIQYKgKg"
+    "effects": [],
+    "flags": {},
+    "_id": "RBpW3W9ZOIQYKgKg"
 }

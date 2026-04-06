@@ -23,12 +23,12 @@
     border-radius: 6px;
     overflow: hidden;
     transition: all 0.2s ease;
-    
+
     &:hover {
         border-color: var(--rt-border-color);
         box-shadow: 0 2px 8px var(--rt-shadow-soft);
     }
-    
+
     &.wh40k-origin-step--filled {
         border-color: var(--rt-border-color-strong);
         background: var(--rt-panel-bg-solid);
@@ -90,7 +90,7 @@
     font-weight: bold;
     color: var(--rt-text-dark);
     cursor: pointer;
-    
+
     &:hover {
         text-decoration: underline;
         color: var(--rt-gold);
@@ -100,12 +100,12 @@
 .wh40k-origin-item-delete {
     opacity: 0.5;
     cursor: pointer;
-    
+
     &:hover {
         opacity: 1;
         color: var(--rt-red-bright);
     }
-    
+
     .material-icons {
         font-size: 18px;
     }
@@ -121,7 +121,7 @@
     border-radius: 4px;
     color: var(--rt-text-muted);
     transition: all 0.2s ease;
-    
+
     &:hover {
         border-color: var(--rt-border-color-strong);
         background: var(--rt-panel-bg-translucent);
@@ -190,16 +190,15 @@
     text-align: center;
     padding: 30px;
     color: var(--rt-text-muted);
-    
+
     .wh40k-empty-icon {
         font-size: 48px;
         opacity: 0.3;
         margin-bottom: 10px;
     }
-    
+
     p {
         font-style: italic;
         margin: 0;
     }
 }
-

@@ -1,55 +1,49 @@
 {
-  "name": "Airtorch Canister",
-  "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
-  "system": {
-    "identifier": "airtorch-canister",
-    "weaponTypes": [
-      "melta"
-    ],
-    "modifiers": {
-      "damage": 0,
-      "penetration": 0,
-      "range": -50,
-      "rateOfFire": {
-        "single": 0,
-        "semi": 0,
-        "full": 0
-      }
+    "name": "Airtorch Canister",
+    "type": "ammunition",
+    "img": "icons/svg/ammo.svg",
+    "system": {
+        "identifier": "airtorch-canister",
+        "weaponTypes": ["melta"],
+        "modifiers": {
+            "damage": 0,
+            "penetration": 0,
+            "range": -50,
+            "rateOfFire": {
+                "single": 0,
+                "semi": 0,
+                "full": 0
+            }
+        },
+        "addedQualities": ["scatter", "overheats", "overheat-qualities"],
+        "removedQualities": [],
+        "clipModifier": 0,
+        "effect": "<p>Spreads fire of weapon. Gains Scatter and Overheat Qualities. Halve weapon range.</p>",
+        "notes": "",
+        "weight": 0,
+        "availability": "extremely-rare",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Damage/Effect:</b> Spreads fire of weapon. Gains Scatter and Overheat Qualities. Halve weapon range.</p><p><b>Qualities:</b> Scatter, Overheats</p>"
+        },
+        "source": "RT: Into the Storm",
+        "damage": {
+            "formula": "",
+            "type": "impact",
+            "bonus": 0,
+            "penetration": 0
+        },
+        "special": []
     },
-    "addedQualities": [
-      "scatter",
-      "overheats",
-      "overheat-qualities"
-    ],
-    "removedQualities": [],
-    "clipModifier": 0,
-    "effect": "<p>Spreads fire of weapon. Gains Scatter and Overheat Qualities. Halve weapon range.</p>",
-    "notes": "",
-    "weight": 0,
-    "availability": "extremely-rare",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 0,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Damage/Effect:</b> Spreads fire of weapon. Gains Scatter and Overheat Qualities. Halve weapon range.</p><p><b>Qualities:</b> Scatter, Overheats</p>"
-    },
-    "source": "RT: Into the Storm",
-    "damage": {
-      "formula": "",
-      "type": "impact",
-      "bonus": 0,
-      "penetration": 0
-    },
-    "special": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "ro4HVHkAbxbX5I7t"
+    "effects": [],
+    "flags": {},
+    "_id": "ro4HVHkAbxbX5I7t"
 }

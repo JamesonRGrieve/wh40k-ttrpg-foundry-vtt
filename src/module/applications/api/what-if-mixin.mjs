@@ -1,7 +1,7 @@
 /**
  * @file WhatIfMixin - Preview stat changes before committing
  * Allows users to test changes and see their impacts before saving
- * 
+ *
  * Features:
  * - Preview characteristic advances
  * - Preview equipment changes
@@ -13,7 +13,7 @@
  * - Clear visual distinction from reality
  */
 
-import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
+import ConfirmationDialog from '../dialogs/confirmation-dialog.mjs';
 
 /**
  * Mixin that adds "What-If" mode functionality to actor sheets
@@ -23,7 +23,6 @@ import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
  */
 export default function WhatIfMixin(Base) {
     return class WhatIfApplication extends Base {
-
         /* -------------------------------------------- */
         /*  What-If Mode State                          */
         /* -------------------------------------------- */
@@ -68,7 +67,7 @@ export default function WhatIfMixin(Base) {
             context.whatIf = {
                 active: this._whatIfActive,
                 changeCount: Object.keys(this._whatIfChanges).length,
-                impacts: this._whatIfImpacts
+                impacts: this._whatIfImpacts,
             };
 
             return context;
@@ -94,10 +93,10 @@ export default function WhatIfMixin(Base) {
          */
         _renderWhatIfOverlay() {
             // Add overlay class to sheet
-            this.element.classList.add("what-if-mode");
+            this.element.classList.add('what-if-mode');
 
             // Create toolbar if not exists
-            let toolbar = this.element.querySelector(".what-if-toolbar");
+            let toolbar = this.element.querySelector('.what-if-toolbar');
             if (!toolbar) {
                 toolbar = this._createWhatIfToolbar();
                 this.element.prepend(toolbar);
@@ -115,11 +114,11 @@ export default function WhatIfMixin(Base) {
          * @private
          */
         _createWhatIfToolbar() {
-            const toolbar = document.createElement("div");
-            toolbar.className = "what-if-toolbar";
-            
+            const toolbar = document.createElement('div');
+            toolbar.className = 'what-if-toolbar';
+
             const changeCount = Object.keys(this._whatIfChanges).length;
-            
+
             toolbar.innerHTML = `
                 <div class="what-if-toolbar-content">
                     <div class="what-if-status">
@@ -174,7 +173,7 @@ export default function WhatIfMixin(Base) {
         _compareCharacteristics(current, preview) {
             for (const [key, previewChar] of Object.entries(preview.system.characteristics)) {
                 const currentChar = current.system.characteristics[key];
-                
+
                 if (!currentChar) continue;
 
                 // Compare totals
@@ -182,7 +181,7 @@ export default function WhatIfMixin(Base) {
                     this._showComparison(`[data-characteristic="${key}"]`, {
                         current: currentChar.total,
                         preview: previewChar.total,
-                        type: "characteristic"
+                        type: 'characteristic',
                     });
                 }
 
@@ -191,7 +190,7 @@ export default function WhatIfMixin(Base) {
                     this._showComparison(`[data-characteristic-bonus="${key}"]`, {
                         current: currentChar.bonus,
                         preview: previewChar.bonus,
-                        type: "bonus"
+                        type: 'bonus',
                     });
                 }
             }
@@ -208,7 +207,7 @@ export default function WhatIfMixin(Base) {
         _compareSkills(current, preview) {
             for (const [key, previewSkill] of Object.entries(preview.system.skills)) {
                 const currentSkill = current.system.skills[key];
-                
+
                 if (!currentSkill) continue;
 
                 // Compare current values
@@ -216,7 +215,7 @@ export default function WhatIfMixin(Base) {
                     this._showComparison(`[data-skill="${key}"]`, {
                         current: currentSkill.current,
                         preview: previewSkill.current,
-                        type: "skill"
+                        type: 'skill',
                     });
                 }
 
@@ -228,7 +227,7 @@ export default function WhatIfMixin(Base) {
                             this._showComparison(`[data-skill="${key}"][data-entry-index="${index}"]`, {
                                 current: currentEntry.current,
                                 preview: previewEntry.current,
-                                type: "skill"
+                                type: 'skill',
                             });
                         }
                     });
@@ -246,12 +245,12 @@ export default function WhatIfMixin(Base) {
          */
         _compareDerivedStats(current, preview) {
             const comparisons = [
-                { path: "system.wounds.max", selector: "[data-stat='wounds-max']", type: "wounds" },
-                { path: "system.initiative.bonus", selector: "[data-stat='initiative']", type: "initiative" },
-                { path: "system.movement.half", selector: "[data-stat='movement-half']", type: "movement" },
-                { path: "system.movement.full", selector: "[data-stat='movement-full']", type: "movement" },
-                { path: "system.movement.charge", selector: "[data-stat='movement-charge']", type: "movement" },
-                { path: "system.movement.run", selector: "[data-stat='movement-run']", type: "movement" }
+                { path: 'system.wounds.max', selector: "[data-stat='wounds-max']", type: 'wounds' },
+                { path: 'system.initiative.bonus', selector: "[data-stat='initiative']", type: 'initiative' },
+                { path: 'system.movement.half', selector: "[data-stat='movement-half']", type: 'movement' },
+                { path: 'system.movement.full', selector: "[data-stat='movement-full']", type: 'movement' },
+                { path: 'system.movement.charge', selector: "[data-stat='movement-charge']", type: 'movement' },
+                { path: 'system.movement.run', selector: "[data-stat='movement-run']", type: 'movement' },
             ];
 
             for (const comp of comparisons) {
@@ -262,7 +261,7 @@ export default function WhatIfMixin(Base) {
                     this._showComparison(comp.selector, {
                         current: currentValue,
                         preview: previewValue,
-                        type: comp.type
+                        type: comp.type,
                     });
                 }
             }
@@ -278,22 +277,22 @@ export default function WhatIfMixin(Base) {
          */
         _showComparison(selector, data) {
             const elements = this.element.querySelectorAll(selector);
-            
-            elements.forEach(element => {
-                element.classList.add("what-if-preview");
-                
+
+            elements.forEach((element) => {
+                element.classList.add('what-if-preview');
+
                 const difference = data.preview - data.current;
-                const sign = difference > 0 ? "+" : "";
-                
+                const sign = difference > 0 ? '+' : '';
+
                 // Add comparison badge
-                let badge = element.querySelector(".what-if-badge");
+                let badge = element.querySelector('.what-if-badge');
                 if (!badge) {
-                    badge = document.createElement("div");
-                    badge.className = "what-if-badge";
+                    badge = document.createElement('div');
+                    badge.className = 'what-if-badge';
                     element.appendChild(badge);
                 }
 
-                badge.className = `what-if-badge ${difference > 0 ? "positive" : "negative"}`;
+                badge.className = `what-if-badge ${difference > 0 ? 'positive' : 'negative'}`;
                 badge.textContent = `${data.current} → ${data.preview} (${sign}${difference})`;
                 badge.dataset.current = data.current;
                 badge.dataset.preview = data.preview;
@@ -311,7 +310,7 @@ export default function WhatIfMixin(Base) {
          */
         async enterWhatIfMode() {
             if (this._whatIfActive) {
-                ui.notifications.warn("Already in What-If mode");
+                ui.notifications.warn('Already in What-If mode');
                 return;
             }
 
@@ -322,7 +321,7 @@ export default function WhatIfMixin(Base) {
             // Re-render to show toolbar
             await this.render(false);
 
-            ui.notifications.info("What-If mode activated - changes will be previewed");
+            ui.notifications.info('What-If mode activated - changes will be previewed');
         }
 
         /* -------------------------------------------- */
@@ -349,10 +348,10 @@ export default function WhatIfMixin(Base) {
             this._updateComparisonDisplays();
 
             // Update toolbar
-            const toolbar = this.element.querySelector(".what-if-toolbar");
+            const toolbar = this.element.querySelector('.what-if-toolbar');
             if (toolbar) {
                 const count = Object.keys(this._whatIfChanges).length;
-                const countEl = toolbar.querySelector(".what-if-count");
+                const countEl = toolbar.querySelector('.what-if-count');
                 if (countEl) {
                     countEl.textContent = `${count} change${count !== 1 ? 's' : ''}`;
                 }
@@ -368,11 +367,7 @@ export default function WhatIfMixin(Base) {
         async _updatePreview() {
             // Create preview data
             const baseData = this.document.toObject();
-            const previewData = foundry.utils.mergeObject(
-                baseData,
-                this._whatIfChanges,
-                { inplace: false }
-            );
+            const previewData = foundry.utils.mergeObject(baseData, this._whatIfChanges, { inplace: false });
 
             // Create temporary actor (not in world)
             this._whatIfPreview = new CONFIG.Actor.documentClass(previewData, { parent: null });
@@ -400,8 +395,8 @@ export default function WhatIfMixin(Base) {
                 const currentChar = current.system.characteristics[key];
                 if (currentChar.bonus !== previewChar.bonus) {
                     impacts.push({
-                        type: "characteristic",
-                        message: `${previewChar.label} Bonus: ${currentChar.bonus} → ${previewChar.bonus}`
+                        type: 'characteristic',
+                        message: `${previewChar.label} Bonus: ${currentChar.bonus} → ${previewChar.bonus}`,
                     });
                 }
             }
@@ -409,24 +404,24 @@ export default function WhatIfMixin(Base) {
             // Check initiative changes
             if (current.system.initiative.bonus !== preview.system.initiative.bonus) {
                 impacts.push({
-                    type: "combat",
-                    message: `Initiative: ${current.system.initiative.bonus} → ${preview.system.initiative.bonus}`
+                    type: 'combat',
+                    message: `Initiative: ${current.system.initiative.bonus} → ${preview.system.initiative.bonus}`,
                 });
             }
 
             // Check wounds changes
             if (current.system.wounds.max !== preview.system.wounds.max) {
                 impacts.push({
-                    type: "survival",
-                    message: `Max Wounds: ${current.system.wounds.max} → ${preview.system.wounds.max}`
+                    type: 'survival',
+                    message: `Max Wounds: ${current.system.wounds.max} → ${preview.system.wounds.max}`,
                 });
             }
 
             // Check movement changes
             if (current.system.movement.half !== preview.system.movement.half) {
                 impacts.push({
-                    type: "movement",
-                    message: `Half Move: ${current.system.movement.half}m → ${preview.system.movement.half}m`
+                    type: 'movement',
+                    message: `Half Move: ${current.system.movement.half}m → ${preview.system.movement.half}m`,
                 });
             }
 
@@ -443,7 +438,7 @@ export default function WhatIfMixin(Base) {
             if (!this._whatIfActive) return;
 
             if (Object.keys(this._whatIfChanges).length === 0) {
-                ui.notifications.warn("No changes to commit");
+                ui.notifications.warn('No changes to commit');
                 await this.exitWhatIfMode();
                 return;
             }
@@ -467,13 +462,13 @@ export default function WhatIfMixin(Base) {
             if (!this._whatIfActive) return;
 
             const count = Object.keys(this._whatIfChanges).length;
-            
+
             if (count > 0) {
                 const confirm = await ConfirmationDialog.confirm({
-                    title: "Cancel What-If Mode",
+                    title: 'Cancel What-If Mode',
                     content: `Discard ${count} pending change${count !== 1 ? 's' : ''}?`,
-                    confirmLabel: "Discard",
-                    cancelLabel: "Keep Editing"
+                    confirmLabel: 'Discard',
+                    cancelLabel: 'Keep Editing',
                 });
 
                 if (!confirm) return;
@@ -481,7 +476,7 @@ export default function WhatIfMixin(Base) {
 
             await this.exitWhatIfMode();
 
-            ui.notifications.info("What-If mode cancelled - changes discarded");
+            ui.notifications.info('What-If mode cancelled - changes discarded');
         }
 
         /* -------------------------------------------- */
@@ -500,16 +495,16 @@ export default function WhatIfMixin(Base) {
             this._whatIfImpacts = {};
 
             // Remove overlay
-            this.element.classList.remove("what-if-mode");
-            
+            this.element.classList.remove('what-if-mode');
+
             // Remove toolbar
-            const toolbar = this.element.querySelector(".what-if-toolbar");
+            const toolbar = this.element.querySelector('.what-if-toolbar');
             if (toolbar) toolbar.remove();
 
             // Remove all comparison badges
-            this.element.querySelectorAll(".what-if-badge").forEach(badge => badge.remove());
-            this.element.querySelectorAll(".what-if-preview").forEach(el => {
-                el.classList.remove("what-if-preview");
+            this.element.querySelectorAll('.what-if-badge').forEach((badge) => badge.remove());
+            this.element.querySelectorAll('.what-if-preview').forEach((el) => {
+                el.classList.remove('what-if-preview');
             });
 
             // Re-render to clean state
@@ -544,7 +539,7 @@ export default function WhatIfMixin(Base) {
                 active: this._whatIfActive,
                 changes: foundry.utils.deepClone(this._whatIfChanges),
                 impacts: foundry.utils.deepClone(this._whatIfImpacts),
-                changeCount: Object.keys(this._whatIfChanges).length
+                changeCount: Object.keys(this._whatIfChanges).length,
             };
         }
 

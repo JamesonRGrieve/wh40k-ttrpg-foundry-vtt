@@ -1,66 +1,64 @@
 {
-  "name": "Warp Bane",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "psychic",
-    "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>"
-    },
-    "tier": 3,
-    "benefit": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>",
-    "aptitudes": [
-      "Willpower"
-    ],
-    "prerequisites": {
-      "text": "Tier 3: Untouchable E.Adv, Warp Disruption, Willpower 55.",
-      "characteristics": {
-        "wp": 55
-      },
-      "skills": [],
-      "talents": []
-    },
-    "cost": 900,
-    "isPassive": true,
-    "identifier": "warpBane",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {
-        "attack": 0,
-        "damage": 0,
-        "penetration": 0,
-        "defense": 0,
-        "initiative": 0,
-        "speed": 0
-      },
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Warp Bane",
-          "description": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>"
+    "name": "Warp Bane",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "psychic",
+        "source": "Dark Heresy 2E: Core",
+        "description": {
+            "value": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>"
+        },
+        "tier": 3,
+        "benefit": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>",
+        "aptitudes": ["Willpower"],
+        "prerequisites": {
+            "text": "Tier 3: Untouchable E.Adv, Warp Disruption, Willpower 55.",
+            "characteristics": {
+                "wp": 55
+            },
+            "skills": [],
+            "talents": []
+        },
+        "cost": 900,
+        "isPassive": true,
+        "identifier": "warpBane",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {
+                "attack": 0,
+                "damage": 0,
+                "penetration": 0,
+                "defense": 0,
+                "initiative": 0,
+                "speed": 0
+            },
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Warp Bane",
+                    "description": "<p>The Range of the Warp Disruption Talent is doubled from Willpower Bonus to 2x Willpower Bonus metres.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "Xx1zG3xxR5foPDkg"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "Xx1zG3xxR5foPDkg"
 }

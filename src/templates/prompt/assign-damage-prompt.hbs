@@ -1,7 +1,7 @@
-{{!-- Rogue Trader Assign Damage Prompt - Modern Design --}}
+{{! Rogue Trader Assign Damage Prompt - Modern Design }}
 <div class="dialog-content">
     <form class="rt-prompt rt-prompt--damage" autocomplete="off">
-        {{!-- Character Info --}}
+        {{! Character Info }}
         <div class="rt-prompt__panel">
             <div class="rt-prompt__header">
                 <img class="rt-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
@@ -10,7 +10,7 @@
                     <div class="rt-prompt__subtitle">Assign Damage</div>
                 </div>
             </div>
-            
+
             <div class="rt-prompt__grid rt-prompt__grid--3col">
                 <div class="rt-prompt__stat">
                     <span class="rt-prompt__stat-value">{{this.actor.system.wounds.value}}/{{this.actor.system.wounds.max}}</span>
@@ -27,10 +27,10 @@
             </div>
         </div>
 
-        {{!-- Damage Details --}}
+        {{! Damage Details }}
         <div class="rt-prompt__panel">
             <h3 class="rt-prompt__section-title">Incoming Damage</h3>
-            
+
             <div class="rt-prompt__field">
                 <span class="rt-prompt__label">Hit Location</span>
                 <select class="rt-prompt__select" name="hit.location" id="location">
@@ -43,9 +43,9 @@
                     {{selectOptions damageType selected=this.hit.damageType}}
                 </select>
             </div>
-            
+
             <div class="rt-prompt__divider"></div>
-            
+
             <div class="rt-prompt__field">
                 <span class="rt-prompt__label">Total Damage</span>
                 <input class="rt-prompt__input" type="number" data-dtype="Number" name="hit.totalDamage" value="{{this.hit.totalDamage}}" />
@@ -58,9 +58,9 @@
                 <span class="rt-prompt__label">Fatigue</span>
                 <input class="rt-prompt__input" type="number" data-dtype="Number" name="hit.totalFatigue" value="{{this.hit.totalFatigue}}" />
             </div>
-            
+
             <div class="rt-prompt__divider"></div>
-            
+
             <div class="rt-prompt__field">
                 <span class="rt-prompt__label">Location Armour</span>
                 <input class="rt-prompt__input" type="number" data-dtype="Number" name="armour" value="{{this.armour}}" />
@@ -73,7 +73,7 @@
     </form>
 </div>
 
-{{!-- Dialog Buttons --}}
+{{! Dialog Buttons }}
 <div class="dialog-buttons">
     <button class="dialog-button roll default" data-button="roll" id="assign-damage">
         <span class="material-icons">api</span>

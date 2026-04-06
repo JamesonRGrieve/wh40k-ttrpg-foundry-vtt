@@ -1,18 +1,18 @@
 {
-  "name": "Launcher*",
-  "type": "weaponQuality",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "identifier": "launcher",
-    "hasLevel": false,
-    "level": null,
-    "effect": "<p>Effect reference: 29</p>",
-    "notes": "",
-    "description": {
-      "value": "<p>29</p>"
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "W2aFUSiSKYdXYKkB"
+    "name": "Launcher*",
+    "type": "weaponQuality",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "identifier": "launcher",
+        "hasLevel": false,
+        "level": null,
+        "effect": "<p>Effect reference: 29</p>",
+        "notes": "",
+        "description": {
+            "value": "<p>29</p>"
+        }
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "W2aFUSiSKYdXYKkB"
 }

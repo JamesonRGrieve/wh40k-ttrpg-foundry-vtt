@@ -7,8 +7,8 @@ import { roll1d100 } from '../rolls/roll-helpers.mjs';
 export async function handleBleeding(actor) {
     const context = {
         template: 'systems/wh40k-rpg/templates/chat/bleeding-chat.hbs',
-        actor: actor
-    }
+        actor: actor,
+    };
     await sendActiveEffectMessage(context);
 }
 
@@ -17,8 +17,8 @@ export async function handleOnFire(actor) {
         template: 'systems/wh40k-rpg/templates/chat/burning-chat.hbs',
         actor: actor,
         roll: await roll1d100(),
-        target: actor.characteristics.willpower.total
-    }
+        target: actor.characteristics.willpower.total,
+    };
     const rollTotal = context.roll.total;
     context.success = rollTotal === 1 || (rollTotal <= context.target && rollTotal !== 100);
 
@@ -60,15 +60,15 @@ export async function sendActiveEffectMessage(activeContext) {
 export async function createEffect(actor, effectData, options = {}) {
     const data = {
         name: effectData.name,
-        icon: effectData.icon ?? "icons/svg/aura.svg",
+        icon: effectData.icon ?? 'icons/svg/aura.svg',
         changes: effectData.changes ?? [],
         disabled: effectData.disabled ?? false,
         origin: effectData.origin,
         duration: effectData.duration ?? {},
-        flags: effectData.flags ?? {}
+        flags: effectData.flags ?? {},
     };
 
-    return await actor.createEmbeddedDocuments("ActiveEffect", [data], options);
+    return await actor.createEmbeddedDocuments('ActiveEffect', [data], options);
 }
 
 /**
@@ -82,18 +82,20 @@ export async function createEffect(actor, effectData, options = {}) {
 export async function createCharacteristicEffect(actor, characteristic, value, options = {}) {
     const charLabel = game.i18n.localize(`RT.Characteristic.${characteristic.capitalize()}`);
     const name = options.name ?? `${charLabel} ${value > 0 ? '+' : ''}${value}`;
-    
+
     return await createEffect(actor, {
         name,
-        icon: options.icon ?? "icons/svg/upgrade.svg",
-        changes: [{
-            key: `system.characteristics.${characteristic}.modifier`,
-            mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-            value: value
-        }],
+        icon: options.icon ?? 'icons/svg/upgrade.svg',
+        changes: [
+            {
+                key: `system.characteristics.${characteristic}.modifier`,
+                mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+                value: value,
+            },
+        ],
         duration: options.duration,
         origin: options.origin,
-        flags: options.flags
+        flags: options.flags,
     });
 }
 
@@ -108,18 +110,20 @@ export async function createCharacteristicEffect(actor, characteristic, value, o
 export async function createSkillEffect(actor, skill, value, options = {}) {
     const skillLabel = game.i18n.localize(`RT.Skill.${skill}`);
     const name = options.name ?? `${skillLabel} ${value > 0 ? '+' : ''}${value}`;
-    
+
     return await createEffect(actor, {
         name,
-        icon: options.icon ?? "icons/svg/upgrade.svg",
-        changes: [{
-            key: `system.skills.${skill}.bonus`,
-            mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-            value: value
-        }],
+        icon: options.icon ?? 'icons/svg/upgrade.svg',
+        changes: [
+            {
+                key: `system.skills.${skill}.bonus`,
+                mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+                value: value,
+            },
+        ],
         duration: options.duration,
         origin: options.origin,
-        flags: options.flags
+        flags: options.flags,
     });
 }
 
@@ -134,18 +138,20 @@ export async function createSkillEffect(actor, skill, value, options = {}) {
 export async function createCombatEffect(actor, type, value, options = {}) {
     const typeLabel = game.i18n.localize(`RT.Combat.${type.capitalize()}`);
     const name = options.name ?? `${typeLabel} ${value > 0 ? '+' : ''}${value}`;
-    
+
     return await createEffect(actor, {
         name,
-        icon: options.icon ?? "icons/svg/combat.svg",
-        changes: [{
-            key: `system.combat.${type}`,
-            mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-            value: value
-        }],
+        icon: options.icon ?? 'icons/svg/combat.svg',
+        changes: [
+            {
+                key: `system.combat.${type}`,
+                mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+                value: value,
+            },
+        ],
         duration: options.duration,
         origin: options.origin,
-        flags: options.flags
+        flags: options.flags,
     });
 }
 
@@ -160,69 +166,63 @@ export async function createConditionEffect(actor, condition, options = {}) {
     // Predefined conditions with their effects
     const conditions = {
         stunned: {
-            name: "Stunned",
-            icon: "icons/svg/daze.svg",
+            name: 'Stunned',
+            icon: 'icons/svg/daze.svg',
             changes: [
-                { key: "system.combat.defense", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-                { key: "system.combat.attack", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
+                { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
+                { key: 'system.combat.attack', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
             ],
-            flags: { "wh40k-rpg": { nature: "harmful" } }
+            flags: { 'wh40k-rpg': { nature: 'harmful' } },
         },
         prone: {
-            name: "Prone",
-            icon: "icons/svg/falling.svg",
-            changes: [
-                { key: "system.combat.defense", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
-            ],
-            flags: { "wh40k-rpg": { nature: "harmful" } }
+            name: 'Prone',
+            icon: 'icons/svg/falling.svg',
+            changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
+            flags: { 'wh40k-rpg': { nature: 'harmful' } },
         },
         blinded: {
-            name: "Blinded",
-            icon: "icons/svg/blind.svg",
+            name: 'Blinded',
+            icon: 'icons/svg/blind.svg',
             changes: [
-                { key: "system.characteristics.ballisticSkill.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
-                { key: "system.characteristics.weaponSkill.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 }
+                { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
+                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
             ],
-            flags: { "wh40k-rpg": { nature: "harmful" } }
+            flags: { 'wh40k-rpg': { nature: 'harmful' } },
         },
         deafened: {
-            name: "Deafened",
-            icon: "icons/svg/deaf.svg",
-            changes: [
-                { key: "system.characteristics.perception.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
-            ],
-            flags: { "wh40k-rpg": { nature: "harmful" } }
+            name: 'Deafened',
+            icon: 'icons/svg/deaf.svg',
+            changes: [{ key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
+            flags: { 'wh40k-rpg': { nature: 'harmful' } },
         },
         grappled: {
-            name: "Grappled",
-            icon: "icons/svg/combat.svg",
+            name: 'Grappled',
+            icon: 'icons/svg/combat.svg',
             changes: [
-                { key: "system.characteristics.weaponSkill.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-                { key: "system.characteristics.agility.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
+                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
+                { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
             ],
-            flags: { "wh40k-rpg": { nature: "harmful" } }
+            flags: { 'wh40k-rpg': { nature: 'harmful' } },
         },
         inspired: {
-            name: "Inspired",
-            icon: "icons/svg/upgrade.svg",
+            name: 'Inspired',
+            icon: 'icons/svg/upgrade.svg',
             changes: [
-                { key: "system.characteristics.willpower.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
-                { key: "system.characteristics.fellowship.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }
+                { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
+                { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
             ],
-            flags: { "wh40k-rpg": { nature: "beneficial" } }
+            flags: { 'wh40k-rpg': { nature: 'beneficial' } },
         },
         blessed: {
-            name: "Blessed",
-            icon: "icons/svg/holy-shield.svg",
-            changes: [
-                { key: "system.combat.defense", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }
-            ],
-            flags: { "wh40k-rpg": { nature: "beneficial" } }
-        }
+            name: 'Blessed',
+            icon: 'icons/svg/holy-shield.svg',
+            changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }],
+            flags: { 'wh40k-rpg': { nature: 'beneficial' } },
+        },
     };
 
     const conditionData = conditions[condition.toLowerCase()];
-    if ( !conditionData ) {
+    if (!conditionData) {
         ui.notifications.warn(`Unknown condition: ${condition}`);
         return null;
     }
@@ -231,7 +231,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
         ...conditionData,
         ...options,
         changes: options.changes ?? conditionData.changes,
-        flags: foundry.utils.mergeObject(conditionData.flags ?? {}, options.flags ?? {})
+        flags: foundry.utils.mergeObject(conditionData.flags ?? {}, options.flags ?? {}),
     });
 }
 
@@ -246,18 +246,18 @@ export async function createConditionEffect(actor, condition, options = {}) {
  */
 export async function createTemporaryEffect(actor, name, changes, rounds, options = {}) {
     const combat = game.combat;
-    
+
     return await createEffect(actor, {
         name,
-        icon: options.icon ?? "icons/svg/clockwork.svg",
+        icon: options.icon ?? 'icons/svg/clockwork.svg',
         changes,
         duration: {
             rounds,
             startRound: combat?.round ?? 0,
-            startTurn: combat?.turn ?? 0
+            startTurn: combat?.turn ?? 0,
         },
         origin: options.origin,
-        flags: options.flags
+        flags: options.flags,
     });
 }
 
@@ -269,9 +269,9 @@ export async function createTemporaryEffect(actor, name, changes, rounds, option
  */
 export async function removeEffects(actor, filter) {
     const effects = actor.effects.filter(filter);
-    const ids = effects.map(e => e.id);
-    if ( ids.length ) {
-        await actor.deleteEmbeddedDocuments("ActiveEffect", ids);
+    const ids = effects.map((e) => e.id);
+    if (ids.length) {
+        await actor.deleteEmbeddedDocuments('ActiveEffect', ids);
     }
 }
 
@@ -282,7 +282,7 @@ export async function removeEffects(actor, filter) {
  * @returns {Promise<void>}
  */
 export async function removeEffectByName(actor, name) {
-    await removeEffects(actor, e => e.name === name);
+    await removeEffects(actor, (e) => e.name === name);
 }
 
 /**
@@ -293,8 +293,7 @@ export async function removeEffectByName(actor, name) {
  */
 export async function toggleEffect(actor, effectId) {
     const effect = actor.effects.get(effectId);
-    if ( effect ) {
+    if (effect) {
         await effect.update({ disabled: !effect.disabled });
     }
 }
-

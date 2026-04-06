@@ -2,7 +2,7 @@
  * @file SpecialistSkillDialog - V2 dialog for adding specialist skills
  */
 
-import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
+import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -24,19 +24,19 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: "form",
-        classes: ["wh40k-rpg", "dialog", "specialist-skill", "standard-form"],
+        tag: 'form',
+        classes: ['wh40k-rpg', 'dialog', 'specialist-skill', 'standard-form'],
         actions: {
             add: SpecialistSkillDialog.#onAdd,
-            cancel: SpecialistSkillDialog.#onCancel
+            cancel: SpecialistSkillDialog.#onCancel,
         },
         position: {
-            width: 400
+            width: 400,
         },
         window: {
-            title: "Create Specialist Skill",
-            minimizable: false
-        }
+            title: 'Create Specialist Skill',
+            minimizable: false,
+        },
     };
 
     /* -------------------------------------------- */
@@ -44,9 +44,9 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/wh40k-rpg/templates/prompt/add-speciality-prompt.hbs",
-            scrollable: [""]
-        }
+            template: 'systems/wh40k-rpg/templates/prompt/add-speciality-prompt.hbs',
+            scrollable: [''],
+        },
     };
 
     /* -------------------------------------------- */
@@ -80,7 +80,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         return {
             ...context,
             ...this.simpleSkillData,
-            specializations: this.specializations
+            specializations: this.specializations,
         };
     }
 
@@ -91,18 +91,18 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
      * @protected
      */
     async _loadSpecializations() {
-        const skillsCompendium = game.packs.get("wh40k-rpg.rt-items-skills");
+        const skillsCompendium = game.packs.get('wh40k-rpg.rt-items-skills');
         if (!skillsCompendium) return;
 
         // Find the skill in the compendium by matching the label
         const index = await skillsCompendium.getIndex();
-        const skillEntries = index.filter(entry => entry.name.includes("(X)"));
+        const skillEntries = index.filter((entry) => entry.name.includes('(X)'));
 
         const skillLabel = this.simpleSkillData.skill?.label;
         if (!skillLabel) return;
 
-        const skillEntry = skillEntries.find(entry => {
-            const baseName = entry.name.replace(/\s*\(X\)\s*$/i, "").trim();
+        const skillEntry = skillEntries.find((entry) => {
+            const baseName = entry.name.replace(/\s*\(X\)\s*$/i, '').trim();
             return baseName.toLowerCase() === skillLabel.toLowerCase();
         });
 
@@ -124,19 +124,18 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         await super._onRender(context, options);
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (event) => {
-                    event.target.select();
-                });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (event) => {
+                event.target.select();
             });
+        });
 
         // Set up button listeners for V1-style templates
-        this.element.querySelector("[data-action='add']")?.addEventListener("click", (e) => {
+        this.element.querySelector("[data-action='add']")?.addEventListener('click', (e) => {
             e.preventDefault();
             this._addSpecialization();
         });
-        this.element.querySelector("[data-action='cancel']")?.addEventListener("click", (e) => {
+        this.element.querySelector("[data-action='cancel']")?.addEventListener('click', (e) => {
             e.preventDefault();
             this.close();
         });
@@ -177,30 +176,30 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
      * @protected
      */
     async _addSpecialization() {
-        const form = this.element.querySelector("form") ?? this.element;
-        
-        let speciality = "";
-        const dropdownElement = form.querySelector("#speciality-name");
-        const customElement = form.querySelector("#custom-speciality-name");
+        const form = this.element.querySelector('form') ?? this.element;
 
-        if (dropdownElement && dropdownElement.tagName === "SELECT") {
+        let speciality = '';
+        const dropdownElement = form.querySelector('#speciality-name');
+        const customElement = form.querySelector('#custom-speciality-name');
+
+        if (dropdownElement && dropdownElement.tagName === 'SELECT') {
             // We have a dropdown with specializations
-            const selectedValue = dropdownElement.value?.trim() ?? "";
-            const customValue = customElement?.value?.trim() ?? "";
+            const selectedValue = dropdownElement.value?.trim() ?? '';
+            const customValue = customElement?.value?.trim() ?? '';
 
             // Prioritize custom input if provided
-            if (customValue !== "") {
+            if (customValue !== '') {
                 speciality = customValue;
-            } else if (selectedValue !== "") {
+            } else if (selectedValue !== '') {
                 speciality = selectedValue;
             }
         } else if (dropdownElement) {
             // Just a text input
-            speciality = dropdownElement.value?.trim() ?? "";
+            speciality = dropdownElement.value?.trim() ?? '';
         }
 
         if (!speciality) {
-            ui.notifications.warn("Please enter or select a specialization name");
+            ui.notifications.warn('Please enter or select a specialization name');
             return;
         }
 

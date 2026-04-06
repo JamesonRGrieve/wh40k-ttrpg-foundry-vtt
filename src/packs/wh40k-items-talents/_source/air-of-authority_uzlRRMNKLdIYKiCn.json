@@ -1,64 +1,64 @@
 {
-  "name": "Air of Authority",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "identifier": "airOfAuthority",
-    "category": "social",
-    "source": "Only War Core",
-    "description": {
-      "value": "<p>When making Command Skill Tests, character can affect a number of targets up to 100x their Fellowship Bonus rather than 10x. If Character gives an order to their squad, the order's range is increased by 100m. Only effects non-hostile NPC's.\nMinions have +10 Loyalty. Command Tests in Social Conflicts get +10.</p>"
-    },
-    "tier": 1,
-    "isPassive": true,
-    "isRollable": true,
-    "benefit": "<p>When making Command Skill Tests, character can affect a number of targets up to 100x their Fellowship Bonus rather than 10x. If Character gives an order to their squad, the order's range is increased by 100m. Only effects non-hostile NPC's.\nMinions have +10 Loyalty. Command Tests in Social Conflicts get +10.</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Fellowship 30",
-      "characteristics": {
-        "fellowship": 30
-      },
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [
-          {
-            "key": "command",
-            "value": 10,
-            "condition": "In Social Conflicts",
-            "icon": "fa-solid fa-gavel"
-          }
-        ],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Expanded Command Radius",
-          "description": "<p>Can affect up to 100x Fellowship Bonus targets (instead of 10x) with Command tests. Squad orders have +100m range.</p>"
+    "name": "Air of Authority",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "identifier": "airOfAuthority",
+        "category": "social",
+        "source": "Only War Core",
+        "description": {
+            "value": "<p>When making Command Skill Tests, character can affect a number of targets up to 100x their Fellowship Bonus rather than 10x. If Character gives an order to their squad, the order's range is increased by 100m. Only effects non-hostile NPC's.\nMinions have +10 Loyalty. Command Tests in Social Conflicts get +10.</p>"
         },
-        {
-          "name": "Loyal Minions",
-          "description": "<p>Minions have +10 Loyalty.</p>"
+        "tier": 1,
+        "isPassive": true,
+        "isRollable": true,
+        "benefit": "<p>When making Command Skill Tests, character can affect a number of targets up to 100x their Fellowship Bonus rather than 10x. If Character gives an order to their squad, the order's range is increased by 100m. Only effects non-hostile NPC's.\nMinions have +10 Loyalty. Command Tests in Social Conflicts get +10.</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Fellowship 30",
+            "characteristics": {
+                "fellowship": 30
+            },
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [
+                    {
+                        "key": "command",
+                        "value": 10,
+                        "condition": "In Social Conflicts",
+                        "icon": "fa-solid fa-gavel"
+                    }
+                ],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Expanded Command Radius",
+                    "description": "<p>Can affect up to 100x Fellowship Bonus targets (instead of 10x) with Command tests. Squad orders have +100m range.</p>"
+                },
+                {
+                    "name": "Loyal Minions",
+                    "description": "<p>Minions have +10 Loyalty.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "uzlRRMNKLdIYKiCn"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "uzlRRMNKLdIYKiCn"
 }

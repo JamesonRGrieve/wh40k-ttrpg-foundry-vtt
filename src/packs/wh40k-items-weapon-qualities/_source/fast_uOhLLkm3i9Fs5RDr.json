@@ -1,18 +1,18 @@
 {
-  "name": "Fast",
-  "type": "weaponQuality",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "identifier": "fast",
-    "hasLevel": false,
-    "level": null,
-    "effect": "<p>Effect reference: 5</p>",
-    "notes": "",
-    "description": {
-      "value": "<p>5</p>"
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "uOhLLkm3i9Fs5RDr"
+    "name": "Fast",
+    "type": "weaponQuality",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "identifier": "fast",
+        "hasLevel": false,
+        "level": null,
+        "effect": "<p>Effect reference: 5</p>",
+        "notes": "",
+        "description": {
+            "value": "<p>5</p>"
+        }
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "uOhLLkm3i9Fs5RDr"
 }

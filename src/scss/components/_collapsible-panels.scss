@@ -14,7 +14,7 @@
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.2) 100%);
     overflow: hidden;
     transition: all 0.3s ease;
-    
+
     &:hover {
         border-color: var(--rt-bronze, #cd7f32);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
@@ -30,23 +30,17 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    background: linear-gradient(90deg, 
-        var(--rt-iron, #3e3e3e) 0%, 
-        var(--rt-bronze, #cd7f32) 100%
-    );
+    background: linear-gradient(90deg, var(--rt-iron, #3e3e3e) 0%, var(--rt-bronze, #cd7f32) 100%);
     border-bottom: 2px solid var(--rt-gold, #d4af37);
     cursor: pointer;
     user-select: none;
     transition: all 0.2s ease;
-    
+
     &:hover {
-        background: linear-gradient(90deg, 
-            var(--rt-bronze, #cd7f32) 0%, 
-            var(--rt-gold, #d4af37) 100%
-        );
+        background: linear-gradient(90deg, var(--rt-bronze, #cd7f32) 0%, var(--rt-gold, #d4af37) 100%);
         transform: translateX(2px);
     }
-    
+
     &:active {
         transform: translateX(0);
     }
@@ -56,14 +50,14 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: var(--rt-font-header, "Caslon Antique", serif);
+    font-family: var(--rt-font-header, 'Caslon Antique', serif);
     font-size: 1.1em;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--rt-bone, #e8dcc8);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    
+
     i {
         font-size: 0.9em;
         color: var(--rt-gold, #d4af37);
@@ -74,7 +68,7 @@
     font-size: 1.2em;
     color: var(--rt-bone, #e8dcc8);
     transition: transform 0.3s ease;
-    
+
     .collapsed & {
         transform: rotate(-90deg);
     }
@@ -103,7 +97,7 @@
     overflow: hidden;
     transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
     opacity: 1;
-    
+
     .collapsed & {
         max-height: 0 !important;
         opacity: 0;
@@ -134,31 +128,25 @@
     padding: 4px 8px;
     border: 1px solid var(--rt-bronze, #cd7f32);
     border-radius: 3px;
-    background: linear-gradient(135deg, 
-        rgba(62, 62, 62, 0.8) 0%, 
-        rgba(0, 0, 0, 0.6) 100%
-    );
+    background: linear-gradient(135deg, rgba(62, 62, 62, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
     color: var(--rt-bone, #e8dcc8);
     font-size: 0.85em;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    
+
     i {
         font-size: 0.9em;
         color: var(--rt-gold, #d4af37);
     }
-    
+
     &:hover {
-        background: linear-gradient(135deg, 
-            var(--rt-bronze, #cd7f32) 0%, 
-            var(--rt-iron, #3e3e3e) 100%
-        );
+        background: linear-gradient(135deg, var(--rt-bronze, #cd7f32) 0%, var(--rt-iron, #3e3e3e) 100%);
         border-color: var(--rt-gold, #d4af37);
         transform: translateY(-1px);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
-    
+
     &:active {
         transform: translateY(0);
     }
@@ -195,7 +183,7 @@
         padding: 0;
         border-top: none;
     }
-    
+
     .wh40k-panel-toggle-icon {
         transform: rotate(-90deg);
     }
@@ -205,7 +193,7 @@
 .wh40k-collapsible-panel.disabled {
     opacity: 0.6;
     pointer-events: none;
-    
+
     .wh40k-panel-header-collapsible {
         cursor: not-allowed;
     }
@@ -214,7 +202,7 @@
 /* Loading state */
 .wh40k-collapsible-panel.loading {
     .wh40k-panel-header-collapsible::after {
-        content: "";
+        content: '';
         display: inline-block;
         width: 16px;
         height: 16px;
@@ -241,11 +229,11 @@
     .wh40k-panel-header-collapsible {
         padding: 6px 10px;
     }
-    
+
     .wh40k-panel-title {
         font-size: 0.95em;
     }
-    
+
     .wh40k-panel-body {
         padding: 8px;
     }
@@ -255,26 +243,20 @@
 .wh40k-collapsible-panel.highlighted {
     border-color: var(--rt-gold, #d4af37);
     box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
-    
+
     .wh40k-panel-header-collapsible {
-        background: linear-gradient(90deg, 
-            var(--rt-bronze, #cd7f32) 0%, 
-            var(--rt-gold, #d4af37) 100%
-        );
+        background: linear-gradient(90deg, var(--rt-bronze, #cd7f32) 0%, var(--rt-gold, #d4af37) 100%);
     }
 }
 
 /* Warning variant */
 .wh40k-collapsible-panel.warning {
     border-color: #ff9800;
-    
+
     .wh40k-panel-header-collapsible {
-        background: linear-gradient(90deg, 
-            rgba(255, 152, 0, 0.3) 0%, 
-            rgba(139, 0, 0, 0.3) 100%
-        );
+        background: linear-gradient(90deg, rgba(255, 152, 0, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%);
     }
-    
+
     .wh40k-panel-title i {
         color: #ff9800;
         animation: pulse-warning 2s infinite;
@@ -282,7 +264,8 @@
 }
 
 @keyframes pulse-warning {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
     }
     50% {
@@ -293,14 +276,11 @@
 /* Danger variant */
 .wh40k-collapsible-panel.danger {
     border-color: #dc143c;
-    
+
     .wh40k-panel-header-collapsible {
-        background: linear-gradient(90deg, 
-            rgba(139, 0, 0, 0.5) 0%, 
-            rgba(75, 0, 0, 0.5) 100%
-        );
+        background: linear-gradient(90deg, rgba(139, 0, 0, 0.5) 0%, rgba(75, 0, 0, 0.5) 100%);
     }
-    
+
     .wh40k-panel-title i {
         color: #dc143c;
     }
@@ -313,7 +293,7 @@
 .wh40k-collapsible-panel .wh40k-collapsible-panel {
     margin: 8px 0;
     border-width: 1px;
-    
+
     .wh40k-panel-header-collapsible {
         padding: 6px 10px;
         font-size: 0.9em;
@@ -341,15 +321,33 @@
 }
 
 /* Stagger animation for multiple panels */
-.wh40k-collapsible-panel:nth-child(1) { animation-delay: 0.05s; }
-.wh40k-collapsible-panel:nth-child(2) { animation-delay: 0.1s; }
-.wh40k-collapsible-panel:nth-child(3) { animation-delay: 0.15s; }
-.wh40k-collapsible-panel:nth-child(4) { animation-delay: 0.2s; }
-.wh40k-collapsible-panel:nth-child(5) { animation-delay: 0.25s; }
-.wh40k-collapsible-panel:nth-child(6) { animation-delay: 0.3s; }
-.wh40k-collapsible-panel:nth-child(7) { animation-delay: 0.35s; }
-.wh40k-collapsible-panel:nth-child(8) { animation-delay: 0.4s; }
-.wh40k-collapsible-panel:nth-child(9) { animation-delay: 0.45s; }
+.wh40k-collapsible-panel:nth-child(1) {
+    animation-delay: 0.05s;
+}
+.wh40k-collapsible-panel:nth-child(2) {
+    animation-delay: 0.1s;
+}
+.wh40k-collapsible-panel:nth-child(3) {
+    animation-delay: 0.15s;
+}
+.wh40k-collapsible-panel:nth-child(4) {
+    animation-delay: 0.2s;
+}
+.wh40k-collapsible-panel:nth-child(5) {
+    animation-delay: 0.25s;
+}
+.wh40k-collapsible-panel:nth-child(6) {
+    animation-delay: 0.3s;
+}
+.wh40k-collapsible-panel:nth-child(7) {
+    animation-delay: 0.35s;
+}
+.wh40k-collapsible-panel:nth-child(8) {
+    animation-delay: 0.4s;
+}
+.wh40k-collapsible-panel:nth-child(9) {
+    animation-delay: 0.45s;
+}
 
 /* -------------------------------------------- */
 /*  Gothic 40K Theme Enhancements               */
@@ -358,7 +356,7 @@
 /* Rivets decoration */
 .wh40k-panel-header-collapsible::before,
 .wh40k-panel-header-collapsible::after {
-    content: "•";
+    content: '•';
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -377,7 +375,7 @@
 
 /* Aquila ornament (for important panels) */
 .wh40k-collapsible-panel.important .wh40k-panel-title::before {
-    content: "⚜";
+    content: '⚜';
     margin-right: 4px;
     color: var(--rt-gold, #d4af37);
     text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
@@ -385,9 +383,7 @@
 
 /* Parchment texture background */
 .wh40k-panel-body {
-    background: 
-        linear-gradient(rgba(244, 234, 213, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(244, 234, 213, 0.02) 1px, transparent 1px);
+    background: linear-gradient(rgba(244, 234, 213, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(244, 234, 213, 0.02) 1px, transparent 1px);
     background-size: 20px 20px;
 }
 
@@ -404,7 +400,7 @@
         animation: none !important;
         transition: none !important;
     }
-    
+
     .wh40k-panel-toggle-icon {
         .collapsed & {
             transform: none;
@@ -417,7 +413,7 @@
     .wh40k-collapsible-panel {
         border-width: 3px;
     }
-    
+
     .wh40k-panel-header-collapsible {
         border-bottom-width: 3px;
     }
@@ -445,12 +441,12 @@
     .wh40k-panel-presets {
         flex-direction: column;
     }
-    
+
     .wh40k-preset-btn {
         width: 100%;
         justify-content: center;
     }
-    
+
     .wh40k-panel-shortcut {
         display: none; // Hide keyboard shortcuts on mobile
     }

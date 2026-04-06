@@ -1,41 +1,41 @@
 {
-  "name": "Recoil Gloves",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "clothing",
-    "weight": 0.5,
-    "availability": "rare",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 85,
-      "currency": "throne"
+    "name": "Recoil Gloves",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "clothing",
+        "weight": 0.5,
+        "availability": "rare",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 85,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Can fire basic weapons and two-handed pistol weapons one-handed without the penalty for firing them one-handed.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 85 T</p>",
+            "chat": "",
+            "summary": "Can fire basic weapons and two-handed pistol weapons one-handed without the penalty for firing them one-handed."
+        },
+        "source": {
+            "book": "Rogue Trader Core",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Can fire basic weapons and two-handed pistol weapons one-handed without the penalty for firing them one-handed.",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Can fire basic weapons and two-handed pistol weapons one-handed without the penalty for firing them one-handed.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 85 T</p>",
-      "chat": "",
-      "summary": "Can fire basic weapons and two-handed pistol weapons one-handed without the penalty for firing them one-handed."
-    },
-    "source": {
-      "book": "Rogue Trader Core",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Can fire basic weapons and two-handed pistol weapons one-handed without the penalty for firing them one-handed.",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "S3XfYOYdhFut5t23"
+    "effects": [],
+    "flags": {},
+    "_id": "S3XfYOYdhFut5t23"
 }

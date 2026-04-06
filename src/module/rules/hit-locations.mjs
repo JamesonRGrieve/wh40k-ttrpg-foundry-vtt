@@ -4,7 +4,7 @@ export function getHitLocationForRoll(roll) {
     const reverseArray = rollString.reverse();
     const joinArray = reverseArray.join('');
     const reverseInt = parseInt(joinArray);
-    return creatureHitLocations().find((i) => (reverseInt >= i.min) && (reverseInt <= i.max))?.name;
+    return creatureHitLocations().find((i) => reverseInt >= i.min && reverseInt <= i.max)?.name;
 }
 
 export function hitDropdown() {
@@ -21,55 +21,13 @@ export function hitLocationNames() {
 
 export function additionalHitLocations() {
     return {
-        'Head': [
-            'Head',
-            'Head',
-            'Right Arm',
-            'Body',
-            'Left Arm',
-            'Body'
-        ],
-        'Right Arm': [
-            'Right Arm',
-            'Right Arm',
-            'Body',
-            'Head',
-            'Body',
-            'Right Arm'
-        ],
-        'Left Arm': [
-            'Left Arm',
-            'Left Arm',
-            'Body',
-            'Head',
-            'Body',
-            'Left Arm'
-        ],
-        'Body': [
-            'Body',
-            'Body',
-            'Left Arm',
-            'Head',
-            'Right Arm',
-            'Body'
-        ],
-        'Right Leg': [
-            'Right Leg',
-            'Right Leg',
-            'Body',
-            'Right Arm',
-            'Head',
-            'Body'
-        ],
-        'Left Leg': [
-            'Left Leg',
-            'Left Leg',
-            'Body',
-            'Left Arm',
-            'Head',
-            'Body'
-        ]
-    }
+        'Head': ['Head', 'Head', 'Right Arm', 'Body', 'Left Arm', 'Body'],
+        'Right Arm': ['Right Arm', 'Right Arm', 'Body', 'Head', 'Body', 'Right Arm'],
+        'Left Arm': ['Left Arm', 'Left Arm', 'Body', 'Head', 'Body', 'Left Arm'],
+        'Body': ['Body', 'Body', 'Left Arm', 'Head', 'Right Arm', 'Body'],
+        'Right Leg': ['Right Leg', 'Right Leg', 'Body', 'Right Arm', 'Head', 'Body'],
+        'Left Leg': ['Left Leg', 'Left Leg', 'Body', 'Left Arm', 'Head', 'Body'],
+    };
 }
 
 export function creatureHitLocations() {

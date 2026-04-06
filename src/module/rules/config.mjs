@@ -13,9 +13,9 @@ WH40K.originPath = {
         { key: 'lureOfTheVoid', label: 'Lure of the Void', choiceGroup: 'origin.lure-of-the-void' },
         { key: 'trialsAndTravails', label: 'Trials and Travails', choiceGroup: 'origin.trials-and-travails' },
         { key: 'motivation', label: 'Motivation', choiceGroup: 'origin.motivation' },
-        { key: 'career', label: 'Career', choiceGroup: 'origin.career' }
+        { key: 'career', label: 'Career', choiceGroup: 'origin.career' },
     ],
-    compendium: 'wh40k-rpg.rt-items-origin-path'
+    compendium: 'wh40k-rpg.rt-items-origin-path',
 };
 
 WH40K.bio = {
@@ -31,7 +31,7 @@ WH40K.bio = {
         8: 'Immense (8)',
         9: 'Monumental (9)',
         10: 'Titanic (10)',
-    }
+    },
 };
 
 // Sizes object for selectOptions helper (matches bio.size structure)
@@ -51,7 +51,7 @@ WH40K.sizes = {
 WH40K.items = {
     availability: ['Ubiquitous', 'Abundant', 'Plentiful', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
     craftsmanship: ['Poor', 'Common', 'Good', 'Best'],
-    vehicle_types: ['Walker', 'Wheeled', 'Tracked', 'Skimmer', 'Aircraft', 'Spacecraft']
+    vehicle_types: ['Walker', 'Wheeled', 'Tracked', 'Skimmer', 'Aircraft', 'Spacecraft'],
 };
 
 WH40K.combat = {
@@ -81,22 +81,22 @@ WH40K.combat = {
     ],
     armour_type: ['Basic', 'Flak', 'Mesh', 'Carapace', 'Power'],
     characteristics: {
-        'weaponSkill': 'WS',
-        'ballisticSkill': 'BS',
-        'strength': 'S',
-        'toughness': 'T',
-        'agility': 'Ag',
-        'intelligence': 'Int',
-        'perception': 'Per',
-        'willpower': 'WP',
-        'fellowship': 'Fel'
-    }
+        weaponSkill: 'WS',
+        ballisticSkill: 'BS',
+        strength: 'S',
+        toughness: 'T',
+        agility: 'Ag',
+        intelligence: 'Int',
+        perception: 'Per',
+        willpower: 'WP',
+        fellowship: 'Fel',
+    },
 };
 
 // Ship-related configuration
 WH40K.ship = {
     hullTypes: ['Transport', 'Raider', 'Frigate', 'Light Cruiser', 'Cruiser', 'Grand Cruiser', 'Battleship'],
-    componentTypes: ['Essential', 'Supplemental', 'Weapon', 'Hull']
+    componentTypes: ['Essential', 'Supplemental', 'Weapon', 'Hull'],
 };
 
 WH40K.ui = {

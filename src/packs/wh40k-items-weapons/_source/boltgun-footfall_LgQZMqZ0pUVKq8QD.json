@@ -1,64 +1,61 @@
 {
-  "name": "Boltgun (Footfall)",
-  "type": "weapon",
-  "img": "systems/wh40k-rpg/assets/icons/weapons/basic-bolter.svg",
-  "system": {
-    "identifier": "boltgun-footfall",
-    "class": "basic",
-    "type": "bolt",
-    "twoHanded": true,
-    "melee": false,
-    "attack": {
-      "type": "ranged",
-      "characteristic": "ballisticSkill",
-      "modifier": 0,
-      "range": {
-        "value": 80,
-        "units": "m",
-        "special": ""
-      },
-      "rateOfFire": {
-        "single": true,
-        "semi": 3,
-        "full": 0
-      }
+    "name": "Boltgun (Footfall)",
+    "type": "weapon",
+    "img": "systems/wh40k-rpg/assets/icons/weapons/basic-bolter.svg",
+    "system": {
+        "identifier": "boltgun-footfall",
+        "class": "basic",
+        "type": "bolt",
+        "twoHanded": true,
+        "melee": false,
+        "attack": {
+            "type": "ranged",
+            "characteristic": "ballisticSkill",
+            "modifier": 0,
+            "range": {
+                "value": 80,
+                "units": "m",
+                "special": ""
+            },
+            "rateOfFire": {
+                "single": true,
+                "semi": 3,
+                "full": 0
+            }
+        },
+        "damage": {
+            "formula": "1d10",
+            "type": "explosive",
+            "bonus": 4,
+            "penetration": 2
+        },
+        "special": ["tearing", "unreliable"],
+        "clip": {
+            "max": 18,
+            "value": 18,
+            "type": ""
+        },
+        "reload": "full",
+        "weight": 8,
+        "availability": "rare",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Can't use Unusual Ammunition. Debatably legal.</p>"
+        },
+        "modifications": [],
+        "notes": "Can't use Unusual Ammunition. Debatably legal.",
+        "source": "RT: Hostile Acquisitions",
+        "requiredTraining": ""
     },
-    "damage": {
-      "formula": "1d10",
-      "type": "explosive",
-      "bonus": 4,
-      "penetration": 2
-    },
-    "special": [
-      "tearing",
-      "unreliable"
-    ],
-    "clip": {
-      "max": 18,
-      "value": 18,
-      "type": ""
-    },
-    "reload": "full",
-    "weight": 8,
-    "availability": "rare",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 0,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Special:</b> Tearing, Unreliable</p><p><b>Note:</b> Can't use Unusual Ammunition. Debatably legal.</p>"
-    },
-    "modifications": [],
-    "notes": "Can't use Unusual Ammunition. Debatably legal.",
-    "source": "RT: Hostile Acquisitions",
-    "requiredTraining": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "LgQZMqZ0pUVKq8QD"
+    "effects": [],
+    "flags": {},
+    "_id": "LgQZMqZ0pUVKq8QD"
 }

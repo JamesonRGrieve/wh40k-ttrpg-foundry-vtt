@@ -1,41 +1,41 @@
 {
-  "name": "Infantry Gear: Compass",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "survival",
-    "weight": 0,
-    "availability": "scarce",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 25,
-      "currency": "throne"
+    "name": "Infantry Gear: Compass",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "survival",
+        "weight": 0,
+        "availability": "scarce",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 25,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Simple Magnetic Compass calibrated to the current planet's True north.</p>\n<h3>Requirements</h3><p>Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 25 T</p>",
+            "chat": "",
+            "summary": "Simple Magnetic Compass calibrated to the current planet's True north."
+        },
+        "source": {
+            "book": "DH: The Inquisitor's Handbook",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Simple Magnetic Compass calibrated to the current planet's True north.",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Simple Magnetic Compass calibrated to the current planet's True north.</p>\n<h3>Requirements</h3><p>Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 25 T</p>",
-      "chat": "",
-      "summary": "Simple Magnetic Compass calibrated to the current planet's True north."
-    },
-    "source": {
-      "book": "DH: The Inquisitor's Handbook",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Simple Magnetic Compass calibrated to the current planet's True north.",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "baCChDCGZyPsyE4R"
+    "effects": [],
+    "flags": {},
+    "_id": "baCChDCGZyPsyE4R"
 }

@@ -1,7 +1,7 @@
-{{!-- Rogue Trader Force Field Prompt - Modern Design --}}
+{{! Rogue Trader Force Field Prompt - Modern Design }}
 <div class="dialog-content">
     <form class="rt-prompt" autocomplete="off">
-        {{!-- Character & Field Info --}}
+        {{! Character & Field Info }}
         <div class="rt-prompt__panel">
             <div class="rt-prompt__header">
                 <img class="rt-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
@@ -10,7 +10,7 @@
                     <div class="rt-prompt__subtitle">{{this.forceField.name}}</div>
                 </div>
             </div>
-            
+
             <div class="rt-prompt__field">
                 <span class="rt-prompt__label">Character</span>
                 <span class="rt-prompt__value">{{this.actor.name}}</span>
@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        {{!-- Protection Settings --}}
+        {{! Protection Settings }}
         <div class="rt-prompt__panel">
             <h3 class="rt-prompt__section-title">Protection</h3>
             <div class="rt-prompt__field">
@@ -44,7 +44,7 @@
     </form>
 </div>
 
-{{!-- Dialog Buttons --}}
+{{! Dialog Buttons }}
 <div class="dialog-buttons">
     <button class="dialog-button roll default" data-button="roll" id="roll-force-field">
         <span class="material-icons">casino</span>

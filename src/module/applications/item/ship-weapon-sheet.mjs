@@ -2,7 +2,7 @@
  * @file ShipWeaponSheet - ApplicationV2 sheet for ship weapon items
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for ship weapon items.
@@ -11,11 +11,11 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class ShipWeaponSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["wh40k-rpg", "sheet", "item", "ship-weapon"],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'ship-weapon'],
         position: {
             width: 600,
-            height: 700
-        }
+            height: 700,
+        },
     };
 
     /* -------------------------------------------- */
@@ -23,24 +23,24 @@ export default class ShipWeaponSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/wh40k-rpg/templates/item/ship-weapon-sheet.hbs",
-            scrollable: [".rt-tab-content"]
-        }
+            template: 'systems/wh40k-rpg/templates/item/ship-weapon-sheet.hbs',
+            scrollable: ['.rt-tab-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "details", group: "primary", label: "WH40K.Item.Tabs.Details" },
-        { tab: "effects", group: "primary", label: "WH40K.Item.Tabs.Effects" }
+        { tab: 'details', group: 'primary', label: 'WH40K.Item.Tabs.Details' },
+        { tab: 'effects', group: 'primary', label: 'WH40K.Item.Tabs.Effects' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "details"
+        primary: 'details',
     };
 
     /* -------------------------------------------- */
@@ -48,16 +48,16 @@ export default class ShipWeaponSheet extends BaseItemSheet {
     /** @override */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        
+
         // Add weapon-specific choices
         context.weaponTypes = this._getWeaponTypeChoices();
         context.locations = this._getLocationChoices();
         context.hullTypes = this._getHullTypeChoices();
         context.availabilities = this._getAvailabilityChoices();
-        
+
         // Add display helpers
         context.hasSpecialQualities = context.system.special?.size > 0;
-        
+
         return context;
     }
 
@@ -69,13 +69,13 @@ export default class ShipWeaponSheet extends BaseItemSheet {
      */
     _getWeaponTypeChoices() {
         return {
-            macrobattery: game.i18n.localize("WH40K.ShipWeapon.Type.Macrobattery"),
-            lance: game.i18n.localize("WH40K.ShipWeapon.Type.Lance"),
-            "nova-cannon": game.i18n.localize("WH40K.ShipWeapon.Type.NovaCannon"),
-            torpedo: game.i18n.localize("WH40K.ShipWeapon.Type.Torpedo"),
-            "bombardment-cannon": game.i18n.localize("WH40K.ShipWeapon.Type.BombardmentCannon"),
-            "landing-bay": game.i18n.localize("WH40K.ShipWeapon.Type.LandingBay"),
-            "attack-craft": game.i18n.localize("WH40K.ShipWeapon.Type.AttackCraft")
+            'macrobattery': game.i18n.localize('WH40K.ShipWeapon.Type.Macrobattery'),
+            'lance': game.i18n.localize('WH40K.ShipWeapon.Type.Lance'),
+            'nova-cannon': game.i18n.localize('WH40K.ShipWeapon.Type.NovaCannon'),
+            'torpedo': game.i18n.localize('WH40K.ShipWeapon.Type.Torpedo'),
+            'bombardment-cannon': game.i18n.localize('WH40K.ShipWeapon.Type.BombardmentCannon'),
+            'landing-bay': game.i18n.localize('WH40K.ShipWeapon.Type.LandingBay'),
+            'attack-craft': game.i18n.localize('WH40K.ShipWeapon.Type.AttackCraft'),
         };
     }
 
@@ -85,11 +85,11 @@ export default class ShipWeaponSheet extends BaseItemSheet {
      */
     _getLocationChoices() {
         return {
-            prow: game.i18n.localize("WH40K.ShipLocation.Prow"),
-            dorsal: game.i18n.localize("WH40K.ShipLocation.Dorsal"),
-            port: game.i18n.localize("WH40K.ShipLocation.Port"),
-            starboard: game.i18n.localize("WH40K.ShipLocation.Starboard"),
-            keel: game.i18n.localize("WH40K.ShipLocation.Keel")
+            prow: game.i18n.localize('WH40K.ShipLocation.Prow'),
+            dorsal: game.i18n.localize('WH40K.ShipLocation.Dorsal'),
+            port: game.i18n.localize('WH40K.ShipLocation.Port'),
+            starboard: game.i18n.localize('WH40K.ShipLocation.Starboard'),
+            keel: game.i18n.localize('WH40K.ShipLocation.Keel'),
         };
     }
 
@@ -99,14 +99,14 @@ export default class ShipWeaponSheet extends BaseItemSheet {
      */
     _getHullTypeChoices() {
         return {
-            all: game.i18n.localize("WH40K.HullType.All"),
-            transport: game.i18n.localize("WH40K.HullType.Transport"),
-            raider: game.i18n.localize("WH40K.HullType.Raider"),
-            frigate: game.i18n.localize("WH40K.HullType.Frigate"),
-            "light-cruiser": game.i18n.localize("WH40K.HullType.LightCruiser"),
-            cruiser: game.i18n.localize("WH40K.HullType.Cruiser"),
-            battlecruiser: game.i18n.localize("WH40K.HullType.Battlecruiser"),
-            "grand-cruiser": game.i18n.localize("WH40K.HullType.GrandCruiser")
+            'all': game.i18n.localize('WH40K.HullType.All'),
+            'transport': game.i18n.localize('WH40K.HullType.Transport'),
+            'raider': game.i18n.localize('WH40K.HullType.Raider'),
+            'frigate': game.i18n.localize('WH40K.HullType.Frigate'),
+            'light-cruiser': game.i18n.localize('WH40K.HullType.LightCruiser'),
+            'cruiser': game.i18n.localize('WH40K.HullType.Cruiser'),
+            'battlecruiser': game.i18n.localize('WH40K.HullType.Battlecruiser'),
+            'grand-cruiser': game.i18n.localize('WH40K.HullType.GrandCruiser'),
         };
     }
 
@@ -116,17 +116,17 @@ export default class ShipWeaponSheet extends BaseItemSheet {
      */
     _getAvailabilityChoices() {
         return {
-            ubiquitous: game.i18n.localize("WH40K.Availability.Ubiquitous"),
-            abundant: game.i18n.localize("WH40K.Availability.Abundant"),
-            plentiful: game.i18n.localize("WH40K.Availability.Plentiful"),
-            common: game.i18n.localize("WH40K.Availability.Common"),
-            average: game.i18n.localize("WH40K.Availability.Average"),
-            scarce: game.i18n.localize("WH40K.Availability.Scarce"),
-            rare: game.i18n.localize("WH40K.Availability.Rare"),
-            "very-rare": game.i18n.localize("WH40K.Availability.VeryRare"),
-            "extremely-rare": game.i18n.localize("WH40K.Availability.ExtremelyRare"),
-            "near-unique": game.i18n.localize("WH40K.Availability.NearUnique"),
-            unique: game.i18n.localize("WH40K.Availability.Unique")
+            'ubiquitous': game.i18n.localize('WH40K.Availability.Ubiquitous'),
+            'abundant': game.i18n.localize('WH40K.Availability.Abundant'),
+            'plentiful': game.i18n.localize('WH40K.Availability.Plentiful'),
+            'common': game.i18n.localize('WH40K.Availability.Common'),
+            'average': game.i18n.localize('WH40K.Availability.Average'),
+            'scarce': game.i18n.localize('WH40K.Availability.Scarce'),
+            'rare': game.i18n.localize('WH40K.Availability.Rare'),
+            'very-rare': game.i18n.localize('WH40K.Availability.VeryRare'),
+            'extremely-rare': game.i18n.localize('WH40K.Availability.ExtremelyRare'),
+            'near-unique': game.i18n.localize('WH40K.Availability.NearUnique'),
+            'unique': game.i18n.localize('WH40K.Availability.Unique'),
         };
     }
 }

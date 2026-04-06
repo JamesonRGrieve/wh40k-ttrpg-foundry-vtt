@@ -1,33 +1,31 @@
 {
-  "name": "Carapace Chestplate",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "carapace",
-    "weight": 7,
-    "availability": "rare",
-    "notes": "May consist of easily removable plates to help with repair",
-    "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>May consist of easily removable plates to help with repair</p>"
+    "name": "Carapace Chestplate",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "carapace",
+        "weight": 7,
+        "availability": "rare",
+        "notes": "May consist of easily removable plates to help with repair",
+        "source": "Rogue Trader Core",
+        "description": {
+            "value": "<p>May consist of easily removable plates to help with repair</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["body"],
+        "armourPoints": {
+            "head": 6,
+            "body": 6,
+            "leftArm": 6,
+            "rightArm": 6,
+            "leftLeg": 6,
+            "rightLeg": 6
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "body"
-    ],
-    "armourPoints": {
-      "head": 6,
-      "body": 6,
-      "leftArm": 6,
-      "rightArm": 6,
-      "leftLeg": 6,
-      "rightLeg": 6
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "PHaMdRSNkXFYJbc3"
+    "effects": [],
+    "flags": {},
+    "_id": "PHaMdRSNkXFYJbc3"
 }

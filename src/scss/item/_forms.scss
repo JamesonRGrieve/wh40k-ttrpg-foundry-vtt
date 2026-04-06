@@ -3,110 +3,116 @@
 // ============================================
 
 .wh40k-field {
-  display: flex;
-  flex-direction: column;
-  gap: $wh40k-space-xs;
-  
-  &__label {
-    font-size: $wh40k-font-size-xs;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--rt-text-muted);
-  }
-  
-  &__input,
-  &__select,
-  &__textarea {
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
-    border-radius: $wh40k-radius-sm;
-    padding: $wh40k-space-xs $wh40k-space-sm;
-    color: var(--rt-text-dark);
-    font-family: $wh40k-font-body;
-    font-size: $wh40k-font-size-base;
-    transition: all $wh40k-transition-fast;
-    
-    &:focus {
-      outline: none;
-      border-color: var(--rt-gold);
-      background: var(--rt-input-bg-focus);
-      box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-    }
-    
-    &::placeholder {
-      color: var(--rt-text-subtle);
-    }
-    
-    &--centered {
-      text-align: center;
-    }
-  }
-  
-  &__select {
-    cursor: pointer;
-    
-    option {
-      background: var(--rt-sheet-bg);
-      color: var(--rt-text-dark);
-    }
-  }
-  
-  &__textarea {
-    min-height: 80px;
-    resize: vertical;
-  }
-  
-  &__checkbox {
     display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
-    cursor: pointer;
-    color: var(--rt-text-dark);
-    font-size: $wh40k-font-size-sm;
-    
-    input[type="checkbox"] {
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--rt-border-color);
-      border-radius: $wh40k-radius-sm;
-      background: var(--rt-input-bg);
-      cursor: pointer;
-      position: relative;
-      transition: all $wh40k-transition-fast;
-      flex-shrink: 0;
-      
-      &:checked {
-        background: var(--rt-gold);
-        border-color: var(--rt-gold);
-        
-        &::after {
-          content: '✓';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          color: #1a1a1a;
-          font-size: 12px;
-          font-weight: bold;
-        }
-      }
-      
-      &:hover {
-        border-color: var(--rt-gold);
-      }
+    flex-direction: column;
+    gap: $wh40k-space-xs;
+
+    &__label {
+        font-size: $wh40k-font-size-xs;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--rt-text-muted);
     }
-  }
+
+    &__input,
+    &__select,
+    &__textarea {
+        background: var(--rt-input-bg);
+        border: 1px solid var(--rt-border-color-light);
+        border-radius: $wh40k-radius-sm;
+        padding: $wh40k-space-xs $wh40k-space-sm;
+        color: var(--rt-text-dark);
+        font-family: $wh40k-font-body;
+        font-size: $wh40k-font-size-base;
+        transition: all $wh40k-transition-fast;
+
+        &:focus {
+            outline: none;
+            border-color: var(--rt-gold);
+            background: var(--rt-input-bg-focus);
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+        }
+
+        &::placeholder {
+            color: var(--rt-text-subtle);
+        }
+
+        &--centered {
+            text-align: center;
+        }
+    }
+
+    &__select {
+        cursor: pointer;
+
+        option {
+            background: var(--rt-sheet-bg);
+            color: var(--rt-text-dark);
+        }
+    }
+
+    &__textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    &__checkbox {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-sm;
+        cursor: pointer;
+        color: var(--rt-text-dark);
+        font-size: $wh40k-font-size-sm;
+
+        input[type='checkbox'] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--rt-border-color);
+            border-radius: $wh40k-radius-sm;
+            background: var(--rt-input-bg);
+            cursor: pointer;
+            position: relative;
+            transition: all $wh40k-transition-fast;
+            flex-shrink: 0;
+
+            &:checked {
+                background: var(--rt-gold);
+                border-color: var(--rt-gold);
+
+                &::after {
+                    content: '✓';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: #1a1a1a;
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+            }
+
+            &:hover {
+                border-color: var(--rt-gold);
+            }
+        }
+    }
 }
 
 // Field Grid Layouts
 .wh40k-field-grid {
-  display: grid;
-  gap: $wh40k-space-md;
-  
-  &--2 { grid-template-columns: repeat(2, 1fr); }
-  &--3 { grid-template-columns: repeat(3, 1fr); }
-  &--4 { grid-template-columns: repeat(4, 1fr); }
+    display: grid;
+    gap: $wh40k-space-md;
+
+    &--2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    &--3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    &--4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 // ============================================
@@ -114,41 +120,46 @@
 // ============================================
 
 .wh40k-description {
-  background: var(--rt-panel-body-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: $wh40k-radius-md;
-  padding: $wh40k-space-md;
-  min-height: 80px;
-  
-  .editor-content,
-  .editor {
-    color: var(--rt-text-dark);
-    line-height: 1.6;
-    
-    h1, h2, h3, h4 {
-      font-family: $wh40k-font-heading;
-      color: var(--rt-gold);
-      margin-top: $wh40k-space-md;
-      margin-bottom: $wh40k-space-sm;
+    background: var(--rt-panel-body-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: $wh40k-radius-md;
+    padding: $wh40k-space-md;
+    min-height: 80px;
+
+    .editor-content,
+    .editor {
+        color: var(--rt-text-dark);
+        line-height: 1.6;
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: $wh40k-font-heading;
+            color: var(--rt-gold);
+            margin-top: $wh40k-space-md;
+            margin-bottom: $wh40k-space-sm;
+        }
+
+        p {
+            margin-bottom: $wh40k-space-sm;
+        }
+
+        strong,
+        b {
+            color: var(--rt-text-dark);
+        }
+
+        ul,
+        ol {
+            padding-left: $wh40k-space-lg;
+            margin-bottom: $wh40k-space-sm;
+        }
+
+        li {
+            margin-bottom: $wh40k-space-xs;
+        }
     }
-    
-    p {
-      margin-bottom: $wh40k-space-sm;
-    }
-    
-    strong, b {
-      color: var(--rt-text-dark);
-    }
-    
-    ul, ol {
-      padding-left: $wh40k-space-lg;
-      margin-bottom: $wh40k-space-sm;
-    }
-    
-    li {
-      margin-bottom: $wh40k-space-xs;
-    }
-  }
 }
 
 // ============================================
@@ -156,9 +167,8 @@
 // ============================================
 
 .wh40k-empty-state {
-  color: var(--rt-text-subtle);
-  font-style: italic;
-  text-align: center;
-  padding: $wh40k-space-md;
+    color: var(--rt-text-subtle);
+    font-style: italic;
+    text-align: center;
+    padding: $wh40k-space-md;
 }
-

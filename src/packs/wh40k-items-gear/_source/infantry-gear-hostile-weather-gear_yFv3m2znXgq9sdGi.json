@@ -1,41 +1,41 @@
 {
-  "name": "Infantry Gear: Hostile Weather Gear",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "survival",
-    "weight": 2,
-    "availability": "common",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 10,
-      "currency": "throne"
+    "name": "Infantry Gear: Hostile Weather Gear",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "survival",
+        "weight": 2,
+        "availability": "common",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 10,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Can vary depending on climate, from Tent Liners, Heating Bricks, Sunscreen, Extra Blankets, insect repellent, heavy gloves, greatcoats, parkers, filtration plugs, rad pills ,etc.</p>\n<h3>Requirements</h3><p>Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 10 T</p>",
+            "chat": "",
+            "summary": "Can vary depending on climate, from Tent Liners, Heating Bricks, Sunscreen, Extra Blankets, insect repellent, heavy gloves, greatcoats, parkers, filtration plugs, rad pills ,etc."
+        },
+        "source": {
+            "book": "DH: The Inquisitor's Handbook",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Can vary depending on climate, from Tent Liners, Heating Bricks, Sunscreen, Extra Blankets, insect repellent, heavy gloves, greatcoats, parkers, filtration plugs, rad pills ,etc.",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Can vary depending on climate, from Tent Liners, Heating Bricks, Sunscreen, Extra Blankets, insect repellent, heavy gloves, greatcoats, parkers, filtration plugs, rad pills ,etc.</p>\n<h3>Requirements</h3><p>Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 10 T</p>",
-      "chat": "",
-      "summary": "Can vary depending on climate, from Tent Liners, Heating Bricks, Sunscreen, Extra Blankets, insect repellent, heavy gloves, greatcoats, parkers, filtration plugs, rad pills ,etc."
-    },
-    "source": {
-      "book": "DH: The Inquisitor's Handbook",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Can vary depending on climate, from Tent Liners, Heating Bricks, Sunscreen, Extra Blankets, insect repellent, heavy gloves, greatcoats, parkers, filtration plugs, rad pills ,etc.",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "yFv3m2znXgq9sdGi"
+    "effects": [],
+    "flags": {},
+    "_id": "yFv3m2znXgq9sdGi"
 }

@@ -1,7 +1,7 @@
-{{!-- Rogue Trader Ship Weapon Fire Card - Modern Design --}}
+{{! Rogue Trader Ship Weapon Fire Card - Modern Design }}
 <div class="rt-chat">
     <div class="rt-item-card rt-item-card--weapon">
-        {{!-- Header --}}
+        {{! Header }}
         <div class="rt-item-card__header">
             <img class="rt-item-card__image" src="{{weapon.img}}" alt="{{weapon.name}}" />
             <div class="rt-item-card__title-group">
@@ -9,8 +9,8 @@
                 <span class="rt-item-card__type">{{weapon.system.weaponType}} • {{weapon.system.location}}</span>
             </div>
         </div>
-        
-        {{!-- Body --}}
+
+        {{! Body }}
         <div class="rt-item-card__body">
             <div class="rt-item-card__stats">
                 <div class="rt-item-card__stat">
@@ -38,14 +38,19 @@
                 </div>
             {{/if}}
         </div>
-        
-        {{!-- Actions --}}
+
+        {{! Actions }}
         <div class="rt-item-card__actions">
             <button class="rt-item-card__btn rt-item-card__btn--attack rt-ship-attack-roll" data-weapon-id="{{weapon._id}}" data-crew-rating="{{crewRating}}">
                 <span class="material-icons">casino</span>
-                Hit (Crew: {{crewRating}})
+                Hit (Crew:
+                {{crewRating}})
             </button>
-            <button class="rt-item-card__btn rt-item-card__btn--damage rt-ship-damage-roll" data-damage="{{weapon.system.damage}}" data-strength="{{weapon.system.strength}}">
+            <button
+                class="rt-item-card__btn rt-item-card__btn--damage rt-ship-damage-roll"
+                data-damage="{{weapon.system.damage}}"
+                data-strength="{{weapon.system.strength}}"
+            >
                 <span class="material-icons">whatshot</span>
                 Damage
             </button>

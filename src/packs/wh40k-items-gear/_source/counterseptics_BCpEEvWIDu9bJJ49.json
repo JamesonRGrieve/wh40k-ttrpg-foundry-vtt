@@ -1,41 +1,41 @@
 {
-  "name": "Counterseptics",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "consumable",
-    "weight": 0,
-    "availability": "common",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 25,
-      "currency": "throne"
+    "name": "Counterseptics",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "consumable",
+        "weight": 0,
+        "availability": "common",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 25,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Provides +20 to Tests to resist disease or infections for 6 hours. Includes a broad range of antiseptics injected through a prepackaged needle or ingested as a tablet.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 25 T</p>",
+            "chat": "",
+            "summary": "Provides +20 to Tests to resist disease or infections for 6 hours. Includes a broad range of antiseptics injected through a prepackaged needle or ingested as a tablet."
+        },
+        "source": {
+            "book": "DH: The Inquisitor's Handbook",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Provides +20 to Tests to resist disease or infections for 6 hours. Includes a broad range of antiseptics injected through a prepackaged needle or ingested as a tablet.",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Provides +20 to Tests to resist disease or infections for 6 hours. Includes a broad range of antiseptics injected through a prepackaged needle or ingested as a tablet.</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 25 T</p>",
-      "chat": "",
-      "summary": "Provides +20 to Tests to resist disease or infections for 6 hours. Includes a broad range of antiseptics injected through a prepackaged needle or ingested as a tablet."
-    },
-    "source": {
-      "book": "DH: The Inquisitor's Handbook",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Provides +20 to Tests to resist disease or infections for 6 hours. Includes a broad range of antiseptics injected through a prepackaged needle or ingested as a tablet.",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "BCpEEvWIDu9bJJ49"
+    "effects": [],
+    "flags": {},
+    "_id": "BCpEEvWIDu9bJJ49"
 }

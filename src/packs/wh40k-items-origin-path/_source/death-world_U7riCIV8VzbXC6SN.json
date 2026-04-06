@@ -1,127 +1,125 @@
 {
-  "name": "Death World",
-  "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/death-skull.svg",
-  "system": {
-    "identifier": "death-world",
-    "step": "homeWorld",
-    "stepIndex": 1,
-    "description": {
-      "value": "<h2>Death World</h2><blockquote><p><em>\"Death worlds are teeming with threats to survival, meaning that those who thrive on such planets are unlike anyone else. Peril and violence have always been a part of your life, and you are stronger because of it. You are aggressive and inured to hardship, proficient at staying alive where others cannot, and aloof from your fellow man.\"</em></p></blockquote><p>Upon death worlds, the plants, beasts, and sometimes even the environment itself takes aggressive and destructive forms inimical to human life. Whilst exceptionally difficult to colonise, many death worlds possess valuable resources that require an outpost or other human presence upon the planet's surface to harvest. Death worlders often band together in tribes, clans, gangs, or other social groups in order to survive. An upbringing in such a harsh environment breeds very hardy and resilient examples of the human race—those tested and found wanting die young.</p><h3>Life on a Death World</h3><p>Death worlds, whilst not common within the Imperium, can be found in every segmentum. From the depths of the jungle hell of Catachan to the predator-filled deserts of Luther McIntyre, death worlds have a well-earned reputation as some of the most dangerous planets in the galaxy. The inhabitants of these worlds are determined, tenacious people, highly valued for their strength and stamina, and are often drawn upon as recruits for both the Imperial Guard and some Space Marine Chapters.</p><p>For most death worlders, their survival is the only export their world provides. Death worlds vary widely in appearance and environment; some are rich and verdant, stalked by ambulatory, carnivorous plants, whilst others are empty deserts scoured by ionic storms. Each death world presents a thousand new and different ways to die.</p><p>Those unlucky enough to be raised on a death world are naturally pragmatic and fatalistic. Death is a constant companion, and only by accepting that can a death worlder hope to reach maturity with his sanity intact. Usually, the greatest achievement a death worlder can strive for is to achieve some truly impressive feat before his death, so he will be remembered by his descendants.</p>"
-    },
-    "requirements": {
-      "text": "Origin Path: Home World",
-      "previousSteps": [],
-      "excludedSteps": []
-    },
-    "grants": {
-      "woundsFormula": "2xTB+1d5+2",
-      "wounds": 0,
-      "fateFormula": "(1-5|=2),(6-10|=3)",
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "Survival",
-          "specialization": "",
-          "level": "trained"
-        }
-      ],
-      "talents": [
-        {
-          "name": "If It Bleeds, I Can Kill It (Death World)",
-          "specialization": "",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.DW00000000000002"
+    "name": "Death World",
+    "type": "originPath",
+    "img": "modules/game-icons-net/whitetransparent/death-skull.svg",
+    "system": {
+        "identifier": "death-world",
+        "step": "homeWorld",
+        "stepIndex": 1,
+        "description": {
+            "value": "<h2>Death World</h2><blockquote><p><em>\"Death worlds are teeming with threats to survival, meaning that those who thrive on such planets are unlike anyone else. Peril and violence have always been a part of your life, and you are stronger because of it. You are aggressive and inured to hardship, proficient at staying alive where others cannot, and aloof from your fellow man.\"</em></p></blockquote><p>Upon death worlds, the plants, beasts, and sometimes even the environment itself takes aggressive and destructive forms inimical to human life. Whilst exceptionally difficult to colonise, many death worlds possess valuable resources that require an outpost or other human presence upon the planet's surface to harvest. Death worlders often band together in tribes, clans, gangs, or other social groups in order to survive. An upbringing in such a harsh environment breeds very hardy and resilient examples of the human race—those tested and found wanting die young.</p><h3>Life on a Death World</h3><p>Death worlds, whilst not common within the Imperium, can be found in every segmentum. From the depths of the jungle hell of Catachan to the predator-filled deserts of Luther McIntyre, death worlds have a well-earned reputation as some of the most dangerous planets in the galaxy. The inhabitants of these worlds are determined, tenacious people, highly valued for their strength and stamina, and are often drawn upon as recruits for both the Imperial Guard and some Space Marine Chapters.</p><p>For most death worlders, their survival is the only export their world provides. Death worlds vary widely in appearance and environment; some are rich and verdant, stalked by ambulatory, carnivorous plants, whilst others are empty deserts scoured by ionic storms. Each death world presents a thousand new and different ways to die.</p><p>Those unlucky enough to be raised on a death world are naturally pragmatic and fatalistic. Death is a constant companion, and only by accepting that can a death worlder hope to reach maturity with his sanity intact. Usually, the greatest achievement a death worlder can strive for is to achieve some truly impressive feat before his death, so he will be remembered by his descendants.</p>"
         },
-        {
-          "name": "Paranoid (Death World)",
-          "specialization": "",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.DW00000000000003"
+        "requirements": {
+            "text": "Origin Path: Home World",
+            "previousSteps": [],
+            "excludedSteps": []
         },
-        {
-          "name": "Survivor (Death World)",
-          "specialization": "",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.DW00000000000004"
-        }
-      ],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [],
-      "choices": [
-        {
-          "type": "talent",
-          "label": "Hardened: Choose one",
-          "options": [
-            {
-              "label": "Jaded",
-              "value": "jaded",
-              "description": "Mundane traumatic events do not force you to gain Insanity Points or make Fear Tests. Terrors of the Warp still affect you normally.",
-              "grants": {
-                "talents": [
-                  {
-                    "name": "Jaded",
+        "grants": {
+            "woundsFormula": "2xTB+1d5+2",
+            "wounds": 0,
+            "fateFormula": "(1-5|=2),(6-10|=3)",
+            "fateThreshold": 0,
+            "blessedByEmperor": false,
+            "skills": [
+                {
+                    "name": "Survival",
                     "specialization": "",
-                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.ldTw7wC9T3dPeOig"
-                  }
-                ]
-              }
+                    "level": "trained"
+                }
+            ],
+            "talents": [
+                {
+                    "name": "If It Bleeds, I Can Kill It (Death World)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.DW00000000000002"
+                },
+                {
+                    "name": "Paranoid (Death World)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.DW00000000000003"
+                },
+                {
+                    "name": "Survivor (Death World)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.DW00000000000004"
+                }
+            ],
+            "traits": [],
+            "aptitudes": [],
+            "equipment": [],
+            "specialAbilities": [],
+            "choices": [
+                {
+                    "type": "talent",
+                    "label": "Hardened: Choose one",
+                    "options": [
+                        {
+                            "label": "Jaded",
+                            "value": "jaded",
+                            "description": "Mundane traumatic events do not force you to gain Insanity Points or make Fear Tests. Terrors of the Warp still affect you normally.",
+                            "grants": {
+                                "talents": [
+                                    {
+                                        "name": "Jaded",
+                                        "specialization": "",
+                                        "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.ldTw7wC9T3dPeOig"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "label": "Resistance (Poisons)",
+                            "value": "resistance_poisons",
+                            "description": "Gain +10 to resist poison effects.",
+                            "grants": {
+                                "talents": [
+                                    {
+                                        "name": "Resistance (Poisons)",
+                                        "specialization": "Poisons",
+                                        "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.FWzsS62FRJhejE0b"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "count": 1
+                }
+            ]
+        },
+        "modifiers": {
+            "characteristics": {
+                "strength": 5,
+                "toughness": 5,
+                "willpower": -5,
+                "fellowship": -5
             },
-            {
-              "label": "Resistance (Poisons)",
-              "value": "resistance_poisons",
-              "description": "Gain +10 to resist poison effects.",
-              "grants": {
-                "talents": [
-                  {
-                    "name": "Resistance (Poisons)",
-                    "specialization": "Poisons",
-                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.FWzsS62FRJhejE0b"
-                  }
-                ]
-              }
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
             }
-          ],
-          "count": 1
-        }
-      ]
+        },
+        "effectText": "",
+        "notes": "",
+        "source": {
+            "book": "Rogue Trader Core Rulebook",
+            "page": "21",
+            "custom": ""
+        },
+        "selectedChoices": {},
+        "activeModifiers": [],
+        "positions": [1]
     },
-    "modifiers": {
-      "characteristics": {
-        "strength": 5,
-        "toughness": 5,
-        "willpower": -5,
-        "fellowship": -5
-      },
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "effectText": "",
-    "notes": "",
-    "source": {
-      "book": "Rogue Trader Core Rulebook",
-      "page": "21",
-      "custom": ""
-    },
-    "selectedChoices": {},
-    "activeModifiers": [],
-    "positions": [
-      1
-    ]
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "U7riCIV8VzbXC6SN"
+    "effects": [],
+    "flags": {},
+    "_id": "U7riCIV8VzbXC6SN"
 }

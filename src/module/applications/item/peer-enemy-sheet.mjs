@@ -2,7 +2,7 @@
  * @file PeerEnemySheet - ApplicationV2 sheet for peer/enemy items
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for peer and enemy items.
@@ -10,11 +10,11 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class PeerEnemySheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["wh40k-rpg", "sheet", "item", "peer-enemy"],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'peer-enemy'],
         position: {
             width: 500,
-            height: 380
-        }
+            height: 380,
+        },
     };
 
     /* -------------------------------------------- */
@@ -22,23 +22,23 @@ export default class PeerEnemySheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/wh40k-rpg/templates/item/item-peer-enemy-sheet.hbs",
-            scrollable: [".rt-tab-content"]
-        }
+            template: 'systems/wh40k-rpg/templates/item/item-peer-enemy-sheet.hbs',
+            scrollable: ['.rt-tab-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "details", group: "primary", label: "Details" },
-        { tab: "description", group: "primary", label: "Description" }
+        { tab: 'details', group: 'primary', label: 'Details' },
+        { tab: 'description', group: 'primary', label: 'Description' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "details"
+        primary: 'details',
     };
 }

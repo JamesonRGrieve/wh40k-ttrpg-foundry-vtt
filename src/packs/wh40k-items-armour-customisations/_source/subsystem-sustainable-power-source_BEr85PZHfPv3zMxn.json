@@ -1,28 +1,26 @@
 {
-  "name": "Subsystem: Sustainable Power Source",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "Suit of armour does not need to be recharged.\nLoyalist Astartes Suits have this by default.",
-    "availability": "Special",
-    "source": "Black Crusade: Core",
-    "description": {
-      "value": "<p>Suit of armour does not need to be recharged.\nLoyalist Astartes Suits have this by default.</p>"
+    "name": "Subsystem: Sustainable Power Source",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "Suit of armour does not need to be recharged.\nLoyalist Astartes Suits have this by default.",
+        "availability": "Special",
+        "source": "Black Crusade: Core",
+        "description": {
+            "value": "<p>Suit of armour does not need to be recharged.\nLoyalist Astartes Suits have this by default.</p>"
+        },
+        "modifiers": {
+            "armourPoints": 0,
+            "maxAgility": 0,
+            "weight": 0
+        },
+        "restrictions": {
+            "armourTypes": ["power"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 0,
-      "maxAgility": 0,
-      "weight": 0
-    },
-    "restrictions": {
-      "armourTypes": [
-        "power"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "BEr85PZHfPv3zMxn"
+    "effects": [],
+    "flags": {},
+    "_id": "BEr85PZHfPv3zMxn"
 }

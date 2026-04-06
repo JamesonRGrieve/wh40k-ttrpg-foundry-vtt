@@ -5,7 +5,6 @@
  * @extends Roll
  */
 export default class BasicRollRT extends Roll {
-
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -14,19 +13,19 @@ export default class BasicRollRT extends Roll {
      * Default flavor text for this roll type
      * @type {string}
      */
-    static defaultFlavor = "WH40K RPG Roll";
+    static defaultFlavor = 'WH40K RPG Roll';
 
     /**
      * Default chat template for this roll type
      * @type {string}
      */
-    static chatTemplate = "systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs";
+    static chatTemplate = 'systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs';
 
     /**
      * V13: Define EVALUATION_TEMPLATE for dice tooltip
      * @type {string}
      */
-    static EVALUATION_TEMPLATE = "systems/wh40k-rpg/templates/chat/roll-tooltip.hbs";
+    static EVALUATION_TEMPLATE = 'systems/wh40k-rpg/templates/chat/roll-tooltip.hbs';
 
     /* -------------------------------------------- */
     /*  Instance Properties                         */
@@ -73,7 +72,7 @@ export default class BasicRollRT extends Roll {
      */
     static async buildConfigure(config) {
         // Fire pre-roll hook - allows modules to modify or cancel the roll
-        const hookResult = Hooks.call("wh40k-rpg.preRoll", this, config);
+        const hookResult = Hooks.call('wh40k-rpg.preRoll', this, config);
         if (hookResult === false) return null;
 
         // Show configuration dialog if needed
@@ -86,7 +85,7 @@ export default class BasicRollRT extends Roll {
         }
 
         // Fire post-configuration hook
-        Hooks.callAll("wh40k-rpg.postRollConfiguration", this, config);
+        Hooks.callAll('wh40k-rpg.postRollConfiguration', this, config);
 
         return config;
     }
@@ -112,11 +111,11 @@ export default class BasicRollRT extends Roll {
     static async buildEvaluate(config) {
         // Construct roll formula
         const formula = this.constructFormula(config);
-        
+
         // Create roll with clean options (only pass valid Roll options)
         const rollOptions = {
             flavor: config.flavor,
-            ...config.rollOptions
+            ...config.rollOptions,
         };
         const roll = new this(formula, config.data || {}, rollOptions);
 
@@ -127,7 +126,7 @@ export default class BasicRollRT extends Roll {
         await roll.evaluate();
 
         // Fire post-evaluation hook
-        Hooks.callAll("wh40k-rpg.postRollEvaluate", roll, config);
+        Hooks.callAll('wh40k-rpg.postRollEvaluate', roll, config);
 
         return roll;
     }
@@ -144,14 +143,14 @@ export default class BasicRollRT extends Roll {
         const chatData = await this._prepareChatData(roll, config);
 
         // Apply roll mode visibility
-        const rollMode = config.rollMode || game.settings.get("core", "rollMode");
+        const rollMode = config.rollMode || game.settings.get('core', 'rollMode');
         ChatMessage.applyRollMode(chatData, rollMode);
 
         // Create the chat message
         const message = await ChatMessage.create(chatData);
 
         // Fire post-message hook
-        Hooks.callAll("wh40k-rpg.postRollPost", message, roll, config);
+        Hooks.callAll('wh40k-rpg.postRollPost', message, roll, config);
 
         return message;
     }
@@ -178,12 +177,12 @@ export default class BasicRollRT extends Roll {
             content: content,
             flavor: config.flavor || this.defaultFlavor,
             flags: {
-                "wh40k-rpg": {
+                'wh40k-rpg': {
                     rollType: this.name,
                     target: config.target,
-                    ...config.flags
-                }
-            }
+                    ...config.flags,
+                },
+            },
         };
     }
 
@@ -201,8 +200,8 @@ export default class BasicRollRT extends Roll {
                 name: config.flavor || this.defaultFlavor,
                 roll: roll,
                 render: await roll.render(),
-                ...config
-            }
+                ...config,
+            },
         };
     }
 
@@ -213,7 +212,7 @@ export default class BasicRollRT extends Roll {
      * @returns {string} The roll formula
      */
     static constructFormula(config) {
-        const parts = [config.base || "1d100"];
+        const parts = [config.base || '1d100'];
 
         // Add flat modifier
         if (config.modifier) {
@@ -223,7 +222,7 @@ export default class BasicRollRT extends Roll {
             }
         }
 
-        return parts.join(" ");
+        return parts.join(' ');
     }
 
     /* -------------------------------------------- */
@@ -276,12 +275,12 @@ export default class BasicRollRT extends Roll {
         try {
             // Let parent class handle core roll reconstruction
             const roll = super.fromData(data);
-            
+
             // Restore our custom configuration
             if (data.configuration) {
                 roll.configuration = data.configuration;
             }
-            
+
             return roll;
         } catch (error) {
             console.warn(`Failed to recreate ${this.name} from data:`, error);

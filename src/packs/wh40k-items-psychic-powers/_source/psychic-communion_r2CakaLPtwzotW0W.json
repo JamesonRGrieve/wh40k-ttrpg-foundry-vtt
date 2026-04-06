@@ -1,24 +1,24 @@
 {
-  "name": "Psychic Communion",
-  "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
-  "system": {
-    "discipline": "Sanctic Daemonology",
-    "prerequisites": "Perception 35,",
-    "focusPower": "Full Action\nConcentration",
-    "action": "10m x Psy Rating",
-    "range": "+10 Willpower",
-    "opposed": "Yes",
-    "sustained": "Character selects up to Psy rating allies witin range. Whilst power is sustained the character and selected allies add +2 to Initiative, this can affect the already established initiative order during combat.",
-    "effect": "100xp",
-    "source": "DH 2E: Enemies Beyond",
-    "description": {
-      "value": "<p>100xp</p>"
+    "name": "Psychic Communion",
+    "type": "psychicPower",
+    "img": "icons/svg/eye.svg",
+    "system": {
+        "discipline": "Sanctic Daemonology",
+        "prerequisites": "Perception 35,",
+        "focusPower": "Full Action\nConcentration",
+        "action": "10m x Psy Rating",
+        "range": "+10 Willpower",
+        "opposed": "Yes",
+        "sustained": "Character selects up to Psy rating allies witin range. Whilst power is sustained the character and selected allies add +2 to Initiative, this can affect the already established initiative order during combat.",
+        "effect": "100xp",
+        "source": "DH 2E: Enemies Beyond",
+        "description": {
+            "value": "<p>100xp</p>"
+        },
+        "focusTime": "Half Action",
+        "threshold": 0
     },
-    "focusTime": "Half Action",
-    "threshold": 0
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "r2CakaLPtwzotW0W"
+    "effects": [],
+    "flags": {},
+    "_id": "r2CakaLPtwzotW0W"
 }

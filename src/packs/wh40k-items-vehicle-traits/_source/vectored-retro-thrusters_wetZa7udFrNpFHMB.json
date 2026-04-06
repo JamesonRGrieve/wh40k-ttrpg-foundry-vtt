@@ -1,24 +1,24 @@
 {
-  "name": "Vectored Retro Thrusters",
-  "type": "vehicleTrait",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "descriptionText": "Wearer can make the Disengage Action as a Half Action.",
-    "description": {
-      "value": "<p>Wearer can make the Disengage Action as a Half Action.</p>"
+    "name": "Vectored Retro Thrusters",
+    "type": "vehicleTrait",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "descriptionText": "Wearer can make the Disengage Action as a Half Action.",
+        "description": {
+            "value": "<p>Wearer can make the Disengage Action as a Half Action.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "armour": 0,
+            "integrity": 0
+        },
+        "identifier": "",
+        "hasLevel": false,
+        "level": null,
+        "notes": ""
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "armour": 0,
-      "integrity": 0
-    },
-    "identifier": "",
-    "hasLevel": false,
-    "level": null,
-    "notes": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "wetZa7udFrNpFHMB"
+    "effects": [],
+    "flags": {},
+    "_id": "wetZa7udFrNpFHMB"
 }

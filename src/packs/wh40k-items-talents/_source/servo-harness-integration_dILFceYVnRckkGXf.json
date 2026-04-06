@@ -1,66 +1,66 @@
 {
-  "name": "Servo-Harness Integration",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "general",
-    "source": "Deathwatch: Core",
-    "description": {
-      "value": "<p>Character is fitted with a Servo-Harness and may use it proficiently.</p>"
+    "name": "Servo-Harness Integration",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "general",
+        "source": "Deathwatch: Core",
+        "description": {
+            "value": "<p>Character is fitted with a Servo-Harness and may use it proficiently.</p>"
+        },
+        "tier": 1,
+        "benefit": "<p>Character is fitted with a Servo-Harness and may use it proficiently.</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Techmarine Implants, Mechadendrite Use (Servo-Arm/Utility)",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "identifier": "servoharnessIntegration",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {
+                "attack": 0,
+                "damage": 0,
+                "penetration": 0,
+                "defense": 0,
+                "initiative": 0,
+                "speed": 0
+            },
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Proficient Servo-Harness Use",
+                    "description": "<p>You are fitted with a Servo-Harness and may use it proficiently. The Servo-Harness grants multiple mechadendrite limbs for manipulation and combat.</p>"
+                }
+            ]
+        },
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": ""
     },
-    "tier": 1,
-    "benefit": "<p>Character is fitted with a Servo-Harness and may use it proficiently.</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Techmarine Implants, Mechadendrite Use (Servo-Arm/Utility)",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "identifier": "servoharnessIntegration",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {
-        "attack": 0,
-        "damage": 0,
-        "penetration": 0,
-        "defense": 0,
-        "initiative": 0,
-        "speed": 0
-      },
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Proficient Servo-Harness Use",
-          "description": "<p>You are fitted with a Servo-Harness and may use it proficiently. The Servo-Harness grants multiple mechadendrite limbs for manipulation and combat.</p>"
-        }
-      ]
-    },
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "dILFceYVnRckkGXf"
+    "effects": [],
+    "flags": {},
+    "_id": "dILFceYVnRckkGXf"
 }

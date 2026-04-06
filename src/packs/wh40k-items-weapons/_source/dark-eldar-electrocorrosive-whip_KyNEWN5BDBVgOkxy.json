@@ -1,64 +1,61 @@
 {
-  "name": "Dark Eldar Electrocorrosive Whip",
-  "type": "weapon",
-  "img": "systems/wh40k-rpg/assets/icons/weapons/melee-exotic.svg",
-  "system": {
-    "identifier": "dark-eldar-electrocorrosive-whip",
-    "class": "melee",
-    "type": "exotic",
-    "twoHanded": false,
-    "melee": true,
-    "attack": {
-      "type": "melee",
-      "characteristic": "weaponSkill",
-      "modifier": 0,
-      "range": {
-        "value": 3,
-        "units": "m",
-        "special": ""
-      },
-      "rateOfFire": {
-        "single": false,
-        "semi": 0,
-        "full": 0
-      }
+    "name": "Dark Eldar Electrocorrosive Whip",
+    "type": "weapon",
+    "img": "systems/wh40k-rpg/assets/icons/weapons/melee-exotic.svg",
+    "system": {
+        "identifier": "dark-eldar-electrocorrosive-whip",
+        "class": "melee",
+        "type": "exotic",
+        "twoHanded": false,
+        "melee": true,
+        "attack": {
+            "type": "melee",
+            "characteristic": "weaponSkill",
+            "modifier": 0,
+            "range": {
+                "value": 3,
+                "units": "m",
+                "special": ""
+            },
+            "rateOfFire": {
+                "single": false,
+                "semi": 0,
+                "full": 0
+            }
+        },
+        "damage": {
+            "formula": "1d10",
+            "type": "rending",
+            "bonus": 4,
+            "penetration": 8
+        },
+        "special": ["flexible", "shocking"],
+        "clip": {
+            "max": 0,
+            "value": 0,
+            "type": ""
+        },
+        "reload": "-",
+        "weight": 2,
+        "availability": "unique",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Special:</b> Flexible, Shocking</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Any Creature that suffers at least wound from this also takes 1d10 Non Permenant Strength Damage.</p>"
+        },
+        "modifications": [],
+        "notes": "Rare Availability if acquired from Dark Eldar Settlement. Any Creature that suffers at least wound from this also takes 1d10 Non Permenant Strength Damage.",
+        "source": "RT: The Soul Reaver",
+        "requiredTraining": ""
     },
-    "damage": {
-      "formula": "1d10",
-      "type": "rending",
-      "bonus": 4,
-      "penetration": 8
-    },
-    "special": [
-      "flexible",
-      "shocking"
-    ],
-    "clip": {
-      "max": 0,
-      "value": 0,
-      "type": ""
-    },
-    "reload": "-",
-    "weight": 2,
-    "availability": "unique",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 0,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Special:</b> Flexible, Shocking</p><p><b>Note:</b> Rare Availability if acquired from Dark Eldar Settlement. Any Creature that suffers at least wound from this also takes 1d10 Non Permenant Strength Damage.</p>"
-    },
-    "modifications": [],
-    "notes": "Rare Availability if acquired from Dark Eldar Settlement. Any Creature that suffers at least wound from this also takes 1d10 Non Permenant Strength Damage.",
-    "source": "RT: The Soul Reaver",
-    "requiredTraining": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "KyNEWN5BDBVgOkxy"
+    "effects": [],
+    "flags": {},
+    "_id": "KyNEWN5BDBVgOkxy"
 }

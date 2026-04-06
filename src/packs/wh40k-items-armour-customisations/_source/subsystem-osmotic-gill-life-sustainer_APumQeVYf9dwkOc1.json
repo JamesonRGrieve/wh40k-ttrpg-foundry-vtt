@@ -1,28 +1,26 @@
 {
-  "name": "Subsystem: Osmotic Gill Life Sustainer",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "Armour is Environmentally Sealed and can maintain adequate oxygen as long as armour is powered.",
-    "availability": "Special",
-    "source": "Black Crusade: Core",
-    "description": {
-      "value": "<p>Armour is Environmentally Sealed and can maintain adequate oxygen as long as armour is powered.</p>"
+    "name": "Subsystem: Osmotic Gill Life Sustainer",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "Armour is Environmentally Sealed and can maintain adequate oxygen as long as armour is powered.",
+        "availability": "Special",
+        "source": "Black Crusade: Core",
+        "description": {
+            "value": "<p>Armour is Environmentally Sealed and can maintain adequate oxygen as long as armour is powered.</p>"
+        },
+        "modifiers": {
+            "armourPoints": 0,
+            "maxAgility": 0,
+            "weight": 0
+        },
+        "restrictions": {
+            "armourTypes": ["power"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 0,
-      "maxAgility": 0,
-      "weight": 0
-    },
-    "restrictions": {
-      "armourTypes": [
-        "power"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "APumQeVYf9dwkOc1"
+    "effects": [],
+    "flags": {},
+    "_id": "APumQeVYf9dwkOc1"
 }

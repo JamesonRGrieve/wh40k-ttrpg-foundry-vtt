@@ -1,41 +1,41 @@
 {
-  "name": "Isotropic Fuel Rods",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "tools",
-    "weight": 10,
-    "availability": "average",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 5000,
-      "currency": "throne"
+    "name": "Isotropic Fuel Rods",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "tools",
+        "weight": 10,
+        "availability": "average",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 5000,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>A Rougly Metre-Long Liquid Metal Energy storage medium, can power a small settlement of hab-block for several weeks. Highly Valulable.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 5000 T</p>",
+            "chat": "",
+            "summary": "A Rougly Metre-Long Liquid Metal Energy storage medium, can power a small settlement of hab-block for several weeks. Highly Valulable."
+        },
+        "source": {
+            "book": "DH: The Inquisitor's Handbook",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "A Rougly Metre-Long Liquid Metal Energy storage medium, can power a small settlement of hab-block for several weeks. Highly Valulable.",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>A Rougly Metre-Long Liquid Metal Energy storage medium, can power a small settlement of hab-block for several weeks. Highly Valulable.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 5000 T</p>",
-      "chat": "",
-      "summary": "A Rougly Metre-Long Liquid Metal Energy storage medium, can power a small settlement of hab-block for several weeks. Highly Valulable."
-    },
-    "source": {
-      "book": "DH: The Inquisitor's Handbook",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "A Rougly Metre-Long Liquid Metal Energy storage medium, can power a small settlement of hab-block for several weeks. Highly Valulable.",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "DA21UcIBsjrzKUXx"
+    "effects": [],
+    "flags": {},
+    "_id": "DA21UcIBsjrzKUXx"
 }

@@ -1,41 +1,39 @@
 {
-  "name": "Variable Figurehead",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "all"
-    ],
-    "effect": "Imperial Ships are partially identified by the figurehead on their bows, this component allows it to take one of five different designs. Typically variations on the Imperial Eagle. Modifying these patterns requies extensive refitting. Component can't be damaged or destroyed except via a Critical Hit. One per Vessel.",
-    "availability": "rare",
-    "source": "RT: Hostile Acquisitions",
-    "description": {
-      "value": "<p>Imperial Ships are partially identified by the figurehead on their bows, this component allows it to take one of five different designs. Typically variations on the Imperial Eagle. Modifying these patterns requies extensive refitting. Component can't be damaged or destroyed except via a Critical Hit. One per Vessel.</p>"
+    "name": "Variable Figurehead",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["all"],
+        "effect": "Imperial Ships are partially identified by the figurehead on their bows, this component allows it to take one of five different designs. Typically variations on the Imperial Eagle. Modifying these patterns requies extensive refitting. Component can't be damaged or destroyed except via a Critical Hit. One per Vessel.",
+        "availability": "rare",
+        "source": "RT: Hostile Acquisitions",
+        "description": {
+            "value": "<p>Imperial Ships are partially identified by the figurehead on their bows, this component allows it to take one of five different designs. Typically variations on the Imperial Eagle. Modifying these patterns requies extensive refitting. Component can't be damaged or destroyed except via a Critical Hit. One per Vessel.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "augment",
+        "essential": false,
+        "power": {
+            "used": 1,
+            "generated": 0
+        },
+        "space": 0,
+        "shipPoints": 2,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "variable-figurehead"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "augment",
-    "essential": false,
-    "power": {
-      "used": 1,
-      "generated": 0
-    },
-    "space": 0,
-    "shipPoints": 2,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "variable-figurehead"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "VgMpV94bbfCF2XTO"
+    "effects": [],
+    "flags": {},
+    "_id": "VgMpV94bbfCF2XTO"
 }

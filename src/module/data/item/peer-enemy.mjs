@@ -1,5 +1,5 @@
-import ItemDataModel from "../abstract/item-data-model.mjs";
-import DescriptionTemplate from "../shared/description-template.mjs";
+import ItemDataModel from '../abstract/item-data-model.mjs';
+import DescriptionTemplate from '../shared/description-template.mjs';
 
 /**
  * Data model for Peer and Enemy items.
@@ -11,8 +11,8 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
-            group: new fields.StringField({ initial: "" }),
-            modifier: new fields.NumberField({ integer: true, initial: 0 })
+            group: new fields.StringField({ initial: '' }),
+            modifier: new fields.NumberField({ integer: true, initial: 0 }),
         };
     }
 
@@ -23,7 +23,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
             props.push(this.group);
         }
         if (this.modifier !== 0) {
-            const sign = this.modifier > 0 ? "+" : "";
+            const sign = this.modifier > 0 ? '+' : '';
             props.push(`${sign}${this.modifier}`);
         }
         return props;
@@ -33,8 +33,8 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
     get headerLabels() {
         const labels = [];
         if (this.modifier !== 0) {
-            const sign = this.modifier > 0 ? "+" : "";
-            labels.push({ label: `${sign}${this.modifier}`, icon: "fa-solid fa-users" });
+            const sign = this.modifier > 0 ? '+' : '';
+            labels.push({ label: `${sign}${this.modifier}`, icon: 'fa-solid fa-users' });
         }
         return labels;
     }

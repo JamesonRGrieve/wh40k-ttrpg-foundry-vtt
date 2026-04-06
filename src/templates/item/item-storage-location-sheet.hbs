@@ -1,5 +1,5 @@
 <form class="rt-item-sheet rt-item-sheet--storage" autocomplete="off">
-    {{!-- Header --}}
+    {{! Header }}
     <header class="rt-item-sheet__header">
         <div class="rt-item-sheet__portrait">
             <img class="rt-item-sheet__portrait-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
@@ -13,7 +13,7 @@
         </div>
     </header>
 
-    {{!-- Tab Navigation --}}
+    {{! Tab Navigation }}
     <nav class="rt-item-sheet__tabs" data-group="primary">
         <a class="rt-item-sheet__tab item" data-tab="items" data-group="primary">
             <span class="material-icons">category</span>
@@ -25,7 +25,7 @@
         </a>
     </nav>
 
-    {{!-- Items Tab --}}
+    {{! Items Tab }}
     <section class="rt-item-sheet__body tab" data-group="primary" data-tab="items">
         <div class="rt-item-sheet__panel">
             <h2 class="rt-item-sheet__panel-title">
@@ -33,34 +33,34 @@
                 Stored Items
                 <span class="rt-item-sheet__panel-count">{{item.items.length}}</span>
             </h2>
-            
+
             {{#if item.items.length}}
-            <div class="rt-item-sheet__storage-list">
-                {{#each item.items as |embedded|}}
-                <div class="rt-item-sheet__storage-item item-drag" data-item-id="{{embedded.id}}" data-item-type="{{embedded.type}}">
-                    <button type="button" class="rt-item-sheet__storage-edit item-edit" data-item-id="{{embedded.id}}" title="Edit Item">
-                        <span class="material-icons">settings</span>
-                    </button>
-                    <div class="rt-item-sheet__storage-info">
-                        <span class="rt-item-sheet__storage-name">{{embedded.name}}</span>
-                        <span class="rt-item-sheet__storage-type">{{capitalize embedded.type}}</span>
-                    </div>
-                    <button type="button" class="rt-item-sheet__storage-delete item-delete" data-item-id="{{embedded.id}}" title="Remove Item">
-                        <span class="material-icons">delete</span>
-                    </button>
+                <div class="rt-item-sheet__storage-list">
+                    {{#each item.items as |embedded|}}
+                        <div class="rt-item-sheet__storage-item item-drag" data-item-id="{{embedded.id}}" data-item-type="{{embedded.type}}">
+                            <button type="button" class="rt-item-sheet__storage-edit item-edit" data-item-id="{{embedded.id}}" title="Edit Item">
+                                <span class="material-icons">settings</span>
+                            </button>
+                            <div class="rt-item-sheet__storage-info">
+                                <span class="rt-item-sheet__storage-name">{{embedded.name}}</span>
+                                <span class="rt-item-sheet__storage-type">{{capitalize embedded.type}}</span>
+                            </div>
+                            <button type="button" class="rt-item-sheet__storage-delete item-delete" data-item-id="{{embedded.id}}" title="Remove Item">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    {{/each}}
                 </div>
-                {{/each}}
-            </div>
             {{else}}
-            <div class="rt-item-sheet__empty">
-                <span class="material-icons">inbox</span>
-                <p>No items stored. Drag items here to store them.</p>
-            </div>
+                <div class="rt-item-sheet__empty">
+                    <span class="material-icons">inbox</span>
+                    <p>No items stored. Drag items here to store them.</p>
+                </div>
             {{/if}}
         </div>
     </section>
 
-    {{!-- Description Tab --}}
+    {{! Description Tab }}
     <section class="rt-item-sheet__body tab" data-group="primary" data-tab="description">
         <div class="rt-item-sheet__panel rt-item-sheet__panel--description">
             <h2 class="rt-item-sheet__panel-title">
@@ -68,10 +68,12 @@
                 Description
             </h2>
             <div class="rt-item-sheet__field rt-item-sheet__field--full">
-                <textarea class="rt-item-sheet__textarea rt-item-sheet__textarea--large" name="system.description" placeholder="Describe this storage location...">{{item.system.description}}</textarea>
+                <textarea
+                    class="rt-item-sheet__textarea rt-item-sheet__textarea--large"
+                    name="system.description"
+                    placeholder="Describe this storage location..."
+                >{{item.system.description}}</textarea>
             </div>
         </div>
     </section>
 </form>
-
-

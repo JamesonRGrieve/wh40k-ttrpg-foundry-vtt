@@ -1,64 +1,64 @@
 {
-  "name": "Last Man Standing",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "identifier": "lastManStanding",
-    "category": "combat",
-    "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Immune to Pinning from Pistols and Basic Weapons, Add +1 AP to cover protecting you from ranged attacks.</p>"
-    },
-    "tier": 1,
-    "benefit": "<p>Immune to Pinning from Pistols and Basic Weapons, Add +1 AP to cover protecting you from ranged attacks.</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Nerves of Steel",
-      "characteristics": {},
-      "skills": [],
-      "talents": ["Nerves of Steel"]
-    },
-    "cost": 300,
-    "isPassive": true,
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Pinning Immunity",
-          "description": "<p>You are immune to Pinning from Pistol and Basic weapons.</p>"
+    "name": "Last Man Standing",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "identifier": "lastManStanding",
+        "category": "combat",
+        "source": "Rogue Trader Core",
+        "description": {
+            "value": "<p>Immune to Pinning from Pistols and Basic Weapons, Add +1 AP to cover protecting you from ranged attacks.</p>"
         },
-        {
-          "name": "Enhanced Cover",
-          "description": "<p>Add +1 AP to any cover protecting you from ranged attacks.</p>"
+        "tier": 1,
+        "benefit": "<p>Immune to Pinning from Pistols and Basic Weapons, Add +1 AP to cover protecting you from ranged attacks.</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Nerves of Steel",
+            "characteristics": {},
+            "skills": [],
+            "talents": ["Nerves of Steel"]
+        },
+        "cost": 300,
+        "isPassive": true,
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Pinning Immunity",
+                    "description": "<p>You are immune to Pinning from Pistol and Basic weapons.</p>"
+                },
+                {
+                    "name": "Enhanced Cover",
+                    "description": "<p>Add +1 AP to any cover protecting you from ranged attacks.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "AmcuI0l5Ezg32UB5"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "AmcuI0l5Ezg32UB5"
 }

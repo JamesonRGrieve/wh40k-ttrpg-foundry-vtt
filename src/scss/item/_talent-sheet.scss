@@ -8,26 +8,26 @@
 // ============================================
 
 .wh40k-talent-sheet {
-  --talent-color: var(--rt-talents-primary, #a07818);
-  --talent-bg: var(--rt-talents-bg, rgba(160, 120, 24, 0.1));
-  --talent-border: var(--rt-talents-border, rgba(160, 120, 24, 0.3));
-  
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--rt-sheet-bg);
-  color: var(--rt-text-dark);
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.9rem;
-  overflow: hidden;
-  
-  form {
+    --talent-color: var(--rt-talents-primary, #a07818);
+    --talent-bg: var(--rt-talents-bg, rgba(160, 120, 24, 0.1));
+    --talent-border: var(--rt-talents-border, rgba(160, 120, 24, 0.3));
+
     display: flex;
     flex-direction: column;
-    flex: 1;
-    min-height: 0;
+    height: 100%;
+    background: var(--rt-sheet-bg);
+    color: var(--rt-text-dark);
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem;
     overflow: hidden;
-  }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+    }
 }
 
 // ============================================
@@ -35,89 +35,89 @@
 // ============================================
 
 .wh40k-talent-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: linear-gradient(135deg, var(--talent-bg) 0%, transparent 100%);
-  border-bottom: 2px solid var(--talent-border);
-  flex-shrink: 0;
-  
-  &__image {
-    position: relative;
-    width: 64px;
-    height: 64px;
-    flex-shrink: 0;
-    border: 2px solid var(--rt-bronze);
-    border-radius: 6px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px var(--rt-shadow-medium);
-      
-      .wh40k-talent-header__image-overlay {
-        opacity: 1;
-      }
-    }
-  }
-  
-  &__image-overlay {
-    position: absolute;
-    inset: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.6);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    
-    i {
-      color: white;
-      font-size: 1.2rem;
+    gap: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--talent-bg) 0%, transparent 100%);
+    border-bottom: 2px solid var(--talent-border);
+    flex-shrink: 0;
+
+    &__image {
+        position: relative;
+        width: 64px;
+        height: 64px;
+        flex-shrink: 0;
+        border: 2px solid var(--rt-bronze);
+        border-radius: 6px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px var(--rt-shadow-medium);
+
+            .wh40k-talent-header__image-overlay {
+                opacity: 1;
+            }
+        }
     }
-  }
-  
-  &__info {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  &__name {
-    width: 100%;
-    padding: 4px 8px;
-    margin: 0;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid transparent;
-    font-family: 'Cinzel', serif;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--rt-text-dark);
-    transition: border-color 0.2s ease;
-    
-    &:hover,
-    &:focus {
-      border-bottom-color: var(--rt-gold);
-      outline: none;
+
+    &__image-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+
+        i {
+            color: white;
+            font-size: 1.2rem;
+        }
     }
-  }
-  
-  &__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 6px;
-    padding-left: 8px;
-  }
+
+    &__info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__name {
+        width: 100%;
+        padding: 4px 8px;
+        margin: 0;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid transparent;
+        font-family: 'Cinzel', serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--rt-text-dark);
+        transition: border-color 0.2s ease;
+
+        &:hover,
+        &:focus {
+            border-bottom-color: var(--rt-gold);
+            outline: none;
+        }
+    }
+
+    &__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+        padding-left: 8px;
+    }
 }
 
 // ============================================
@@ -125,64 +125,70 @@
 // ============================================
 
 .wh40k-talent-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-  padding: 8px;
-  background: var(--rt-panel-bg-solid);
-  border-bottom: 1px solid var(--rt-border-color-light);
-  flex-shrink: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 8px;
+    background: var(--rt-panel-bg-solid);
+    border-bottom: 1px solid var(--rt-border-color-light);
+    flex-shrink: 0;
 }
 
 .wh40k-talent-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  min-width: 60px;
-  padding: 8px 6px;
-  background: var(--rt-panel-bg);
-  border-radius: 4px;
-  border: 1px solid var(--rt-border-color-light);
-  
-  &__icon {
-    font-size: 1rem;
-    color: var(--rt-bronze);
-    margin-bottom: 4px;
-  }
-  
-  &__content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
-  }
-  
-  &__label {
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--rt-text-muted);
-  }
-  
-  &__value {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--rt-text-dark);
-  }
-  
-  // Tier stat
-  &--tier {
-    .wh40k-talent-stat__icon { color: var(--talent-color); }
-    .wh40k-talent-stat__value { color: var(--talent-color); }
-  }
-  
-  // XP cost stat
-  &--cost {
-    .wh40k-talent-stat__icon { color: var(--rt-gold); }
-  }
+    flex: 1;
+    min-width: 60px;
+    padding: 8px 6px;
+    background: var(--rt-panel-bg);
+    border-radius: 4px;
+    border: 1px solid var(--rt-border-color-light);
+
+    &__icon {
+        font-size: 1rem;
+        color: var(--rt-bronze);
+        margin-bottom: 4px;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+    }
+
+    &__label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--rt-text-muted);
+    }
+
+    &__value {
+        font-family: 'Cinzel', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--rt-text-dark);
+    }
+
+    // Tier stat
+    &--tier {
+        .wh40k-talent-stat__icon {
+            color: var(--talent-color);
+        }
+        .wh40k-talent-stat__value {
+            color: var(--talent-color);
+        }
+    }
+
+    // XP cost stat
+    &--cost {
+        .wh40k-talent-stat__icon {
+            color: var(--rt-gold);
+        }
+    }
 }
 
 // ============================================
@@ -190,68 +196,68 @@
 // ============================================
 
 .wh40k-talent-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  background: var(--rt-panel-bg);
-  border: 1px solid var(--rt-border-color-light);
-  color: var(--rt-text-dark);
-  
-  i {
-    font-size: 0.75rem;
-    opacity: 0.8;
-  }
-  
-  &--tier {
-    background: var(--talent-bg);
-    border-color: var(--talent-border);
-    color: var(--talent-color);
-    font-weight: 700;
-    
-    &1 { 
-      --talent-color: #4a9d62;
-      --talent-bg: rgba(74, 157, 98, 0.15);
-      --talent-border: rgba(74, 157, 98, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
+    color: var(--rt-text-dark);
+
+    i {
+        font-size: 0.75rem;
+        opacity: 0.8;
     }
-    &2 { 
-      --talent-color: #3b7fa8;
-      --talent-bg: rgba(59, 127, 168, 0.15);
-      --talent-border: rgba(59, 127, 168, 0.4);
+
+    &--tier {
+        background: var(--talent-bg);
+        border-color: var(--talent-border);
+        color: var(--talent-color);
+        font-weight: 700;
+
+        &1 {
+            --talent-color: #4a9d62;
+            --talent-bg: rgba(74, 157, 98, 0.15);
+            --talent-border: rgba(74, 157, 98, 0.4);
+        }
+        &2 {
+            --talent-color: #3b7fa8;
+            --talent-bg: rgba(59, 127, 168, 0.15);
+            --talent-border: rgba(59, 127, 168, 0.4);
+        }
+        &3 {
+            --talent-color: #9d4a9d;
+            --talent-bg: rgba(157, 74, 157, 0.15);
+            --talent-border: rgba(157, 74, 157, 0.4);
+        }
     }
-    &3 { 
-      --talent-color: #9d4a9d;
-      --talent-bg: rgba(157, 74, 157, 0.15);
-      --talent-border: rgba(157, 74, 157, 0.4);
+
+    &--category {
+        background: var(--talent-bg);
+        border-color: var(--talent-border);
+        color: var(--talent-color);
     }
-  }
-  
-  &--category {
-    background: var(--talent-bg);
-    border-color: var(--talent-border);
-    color: var(--talent-color);
-  }
-  
-  &--cost {
-    background: rgba(201, 162, 39, 0.1);
-    border-color: rgba(201, 162, 39, 0.3);
-    color: var(--rt-gold);
-  }
-  
-  &--passive {
-    background: rgba(74, 157, 98, 0.1);
-    border-color: rgba(74, 157, 98, 0.3);
-    color: #4a9d62;
-  }
-  
-  &--stackable {
-    background: rgba(59, 127, 168, 0.1);
-    border-color: rgba(59, 127, 168, 0.3);
-    color: #3b7fa8;
-  }
+
+    &--cost {
+        background: rgba(201, 162, 39, 0.1);
+        border-color: rgba(201, 162, 39, 0.3);
+        color: var(--rt-gold);
+    }
+
+    &--passive {
+        background: rgba(74, 157, 98, 0.1);
+        border-color: rgba(74, 157, 98, 0.3);
+        color: #4a9d62;
+    }
+
+    &--stackable {
+        background: rgba(59, 127, 168, 0.1);
+        border-color: rgba(59, 127, 168, 0.3);
+        color: #3b7fa8;
+    }
 }
 
 // ============================================
@@ -259,10 +265,10 @@
 // ============================================
 
 .wh40k-talent-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-  min-height: 0;
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    min-height: 0;
 }
 
 // ============================================
@@ -270,58 +276,58 @@
 // ============================================
 
 .wh40k-talent-section {
-  background: var(--rt-panel-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 6px;
-  margin-bottom: 12px;
-  overflow: hidden;
-  
-  &__header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
-    border-bottom: 1px solid var(--rt-border-color-light);
-    
-    i {
-      font-size: 0.9rem;
-      color: var(--rt-bronze);
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    overflow: hidden;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
+        border-bottom: 1px solid var(--rt-border-color-light);
+
+        i {
+            font-size: 0.9rem;
+            color: var(--rt-bronze);
+        }
+
+        h3 {
+            flex: 1;
+            margin: 0;
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--rt-text-dark);
+        }
     }
-    
-    h3 {
-      flex: 1;
-      margin: 0;
-      font-family: 'Cinzel', serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--rt-text-dark);
+
+    &__body {
+        padding: 12px;
     }
-  }
-  
-  &__body {
-    padding: 12px;
-  }
 }
 
 // Legacy support for old section title style
 .wh40k-section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 12px 0;
-  padding: 8px 12px;
-  background: linear-gradient(90deg, var(--talent-bg) 0%, transparent 100%);
-  border-left: 3px solid var(--talent-color);
-  font-family: 'Cinzel', serif;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--rt-text-dark);
-  
-  i {
-    color: var(--talent-color);
-    font-size: 0.9rem;
-  }
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px 0;
+    padding: 8px 12px;
+    background: linear-gradient(90deg, var(--talent-bg) 0%, transparent 100%);
+    border-left: 3px solid var(--talent-color);
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+
+    i {
+        color: var(--talent-color);
+        font-size: 0.9rem;
+    }
 }
 
 // ============================================
@@ -329,88 +335,88 @@
 // ============================================
 
 .wh40k-properties-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
 }
 
 .wh40k-property {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  
-  &--checkbox {
-    flex-direction: row;
-    align-items: center;
-  }
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &--checkbox {
+        flex-direction: row;
+        align-items: center;
+    }
 }
 
 .wh40k-property-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--rt-text-muted);
-  
-  .wh40k-field-hint {
-    font-size: 0.7rem;
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--rt-text-muted);
-    opacity: 0.7;
-    font-style: italic;
-  }
+
+    .wh40k-field-hint {
+        font-size: 0.7rem;
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--rt-text-muted);
+        opacity: 0.7;
+        font-style: italic;
+    }
 }
 
 .wh40k-property-label-inline {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--rt-text-dark);
-  cursor: pointer;
-  
-  input[type="checkbox"] {
-    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--rt-text-dark);
     cursor: pointer;
-  }
+
+    input[type='checkbox'] {
+        margin: 0;
+        cursor: pointer;
+    }
 }
 
 .wh40k-property-input,
 .wh40k-property-textarea {
-  width: 100%;
-  padding: 6px 10px;
-  background: var(--rt-panel-bg-translucent);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.85rem;
-  color: var(--rt-text-dark);
-  transition: all 0.2s ease;
-  
-  &:hover {
-    border-color: var(--rt-border-color);
-  }
-  
-  &:focus {
-    outline: none;
-    border-color: var(--rt-gold);
-    background: var(--rt-panel-bg);
-    box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.1);
-  }
-  
-  &::placeholder {
-    color: var(--rt-text-muted);
-    opacity: 0.5;
-  }
+    width: 100%;
+    padding: 6px 10px;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.85rem;
+    color: var(--rt-text-dark);
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: var(--rt-border-color);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--rt-gold);
+        background: var(--rt-panel-bg);
+        box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.1);
+    }
+
+    &::placeholder {
+        color: var(--rt-text-muted);
+        opacity: 0.5;
+    }
 }
 
 .wh40k-property-textarea {
-  resize: vertical;
-  min-height: 60px;
-  font-family: 'Roboto', sans-serif;
+    resize: vertical;
+    min-height: 60px;
+    font-family: 'Roboto', sans-serif;
 }
 
 // ============================================
@@ -418,21 +424,21 @@
 // ============================================
 
 .wh40k-aptitudes-display {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
 .wh40k-aptitude-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  background: var(--talent-bg);
-  border: 1px solid var(--talent-border);
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--talent-color);
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: var(--talent-bg);
+    border: 1px solid var(--talent-border);
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--talent-color);
 }
 
 // ============================================
@@ -440,17 +446,17 @@
 // ============================================
 
 .wh40k-prerequisites-display {
-  padding: 12px;
-  background: var(--rt-panel-bg-translucent);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
+    padding: 12px;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
 }
 
 .wh40k-prereq-label {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--rt-text-dark);
-  line-height: 1.5;
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--rt-text-dark);
+    line-height: 1.5;
 }
 
 // ============================================
@@ -458,61 +464,61 @@
 // ============================================
 
 .wh40k-modifiers-display {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
 }
 
 .wh40k-modifier-group {
-  background: var(--rt-panel-bg-translucent);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
-  padding: 10px;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    padding: 10px;
 }
 
 .wh40k-modifier-group-title {
-  margin: 0 0 8px 0;
-  font-family: 'Cinzel', serif;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--rt-text-muted);
+    margin: 0 0 8px 0;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
 }
 
 .wh40k-modifier-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .wh40k-modifier-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 8px;
-  background: var(--rt-panel-bg);
-  border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    background: var(--rt-panel-bg);
+    border-radius: 3px;
 }
 
 .wh40k-modifier-name {
-  font-size: 0.8rem;
-  color: var(--rt-text-dark);
-  text-transform: capitalize;
+    font-size: 0.8rem;
+    color: var(--rt-text-dark);
+    text-transform: capitalize;
 }
 
 .wh40k-modifier-value {
-  font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  
-  &.positive {
-    color: #4a9d62;
-  }
-  
-  &.negative {
-    color: #c94a4a;
-  }
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    &.positive {
+        color: #4a9d62;
+    }
+
+    &.negative {
+        color: #c94a4a;
+    }
 }
 
 // ============================================
@@ -520,29 +526,29 @@
 // ============================================
 
 .wh40k-empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  text-align: center;
-  color: var(--rt-text-muted);
-  
-  i {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
-    opacity: 0.3;
-  }
-  
-  p {
-    margin: 4px 0;
-    font-size: 0.9rem;
-    
-    &.wh40k-field-hint {
-      font-size: 0.75rem;
-      opacity: 0.7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--rt-text-muted);
+
+    i {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+        opacity: 0.3;
     }
-  }
+
+    p {
+        margin: 4px 0;
+        font-size: 0.9rem;
+
+        &.wh40k-field-hint {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+    }
 }
 
 // ============================================
@@ -550,14 +556,14 @@
 // ============================================
 
 .wh40k-field-hint {
-  font-size: 0.75rem;
-  color: var(--rt-text-muted);
-  font-style: italic;
-  
-  i {
-    margin-right: 4px;
-    opacity: 0.7;
-  }
+    font-size: 0.75rem;
+    color: var(--rt-text-muted);
+    font-style: italic;
+
+    i {
+        margin-right: 4px;
+        opacity: 0.7;
+    }
 }
 
 // ============================================
@@ -565,13 +571,13 @@
 // ============================================
 
 .wh40k-editor-container {
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
-  overflow: hidden;
-  
-  .editor {
-    min-height: 150px;
-  }
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    overflow: hidden;
+
+    .editor {
+        min-height: 150px;
+    }
 }
 
 // ============================================
@@ -579,114 +585,114 @@
 // ============================================
 
 .wh40k-grants-display {
-  background: var(--rt-panel-bg-translucent);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 6px;
-  padding: 12px;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 6px;
+    padding: 12px;
 }
 
 .wh40k-grants-group {
-  margin-bottom: 16px;
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
+    margin-bottom: 16px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .wh40k-grants-group-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 10px 0;
-  padding: 6px 10px;
-  background: linear-gradient(90deg, rgba(201, 162, 39, 0.1) 0%, transparent 100%);
-  border-left: 3px solid var(--rt-gold);
-  font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--rt-text-dark);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  
-  i {
-    color: var(--rt-gold);
-    font-size: 0.8rem;
-  }
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px 0;
+    padding: 6px 10px;
+    background: linear-gradient(90deg, rgba(201, 162, 39, 0.1) 0%, transparent 100%);
+    border-left: 3px solid var(--rt-gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    i {
+        color: var(--rt-gold);
+        font-size: 0.8rem;
+    }
 }
 
 .wh40k-grants-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .wh40k-grants-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  background: var(--rt-panel-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
-  font-size: 0.85rem;
-  color: var(--rt-text-dark);
-  
-  i {
-    color: var(--rt-gold);
-    font-size: 0.7rem;
-  }
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: var(--rt-text-dark);
+
+    i {
+        color: var(--rt-gold);
+        font-size: 0.7rem;
+    }
 }
 
 .wh40k-grants-name {
-  font-weight: 600;
-  color: var(--rt-text-dark);
+    font-weight: 600;
+    color: var(--rt-text-dark);
 }
 
 .wh40k-grants-specialization {
-  font-style: italic;
-  color: var(--rt-text-muted);
+    font-style: italic;
+    color: var(--rt-text-muted);
 }
 
 .wh40k-grants-level {
-  margin-left: auto;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--rt-bronze);
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--rt-bronze);
 }
 
 .wh40k-grants-special {
-  padding: 10px;
-  background: var(--rt-panel-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
-  margin-bottom: 10px;
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
+    padding: 10px;
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    margin-bottom: 10px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .wh40k-grants-special-name {
-  margin: 0 0 8px 0;
-  font-family: 'Cinzel', serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--rt-text-dark);
+    margin: 0 0 8px 0;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
 }
 
 .wh40k-grants-special-description {
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--rt-text-dark);
-  
-  p {
-    margin: 0 0 8px 0;
-    
-    &:last-child {
-      margin-bottom: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--rt-text-dark);
+
+    p {
+        margin: 0 0 8px 0;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
-  }
 }

@@ -34,11 +34,11 @@
     cursor: pointer;
     padding: 2px;
     text-align: left;
-    
+
     &:hover {
         background: rgba(0, 0, 0, 0.05);
     }
-    
+
     .wh40k-item-img {
         width: 20px;
         height: 20px;
@@ -95,7 +95,7 @@
     background: rgba(255, 255, 255, 0.7);
     overflow: hidden;
     transition: all 0.2s ease;
-    
+
     &:hover {
         border-color: rgba(74, 55, 40, 0.35);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -112,29 +112,29 @@
     list-style: none;
     font-weight: 600;
     color: #4a3728;
-    
+
     &::-webkit-details-marker {
         display: none;
     }
-    
+
     &::marker {
         content: '';
     }
-    
+
     &::after {
-        content: ">";
+        content: '>';
         font-size: 0.8em;
         color: #666;
         transition: transform 0.15s ease;
     }
-    
+
     &:hover {
         background: rgba(74, 55, 40, 0.05);
     }
 }
 
 .wh40k-char-item[open] .wh40k-char-summary::after {
-    content: "v";
+    content: 'v';
 }
 
 .wh40k-char-name {
@@ -166,14 +166,14 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #4a3728;
-    
+
     select {
         border: 1px solid rgba(74, 55, 40, 0.2);
         border-radius: 4px;
         padding: 4px 6px;
         background: rgba(255, 255, 255, 0.9);
         font-size: 0.9em;
-        
+
         &:focus {
             outline: none;
             border-color: rgba(74, 55, 40, 0.4);
@@ -187,7 +187,7 @@
         background: rgba(255, 255, 255, 0.9);
         font-size: 0.9em;
         text-align: center;
-        
+
         &:focus {
             outline: none;
             border-color: rgba(74, 55, 40, 0.4);
@@ -201,7 +201,7 @@
 }
 
 .wh40k-origin-penalty {
-    color: #8B0000;
+    color: #8b0000;
     font-weight: bold;
 }
 
@@ -214,7 +214,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        
+
         .wh40k-panel-count {
             margin-left: auto;
             padding: 2px 8px;
@@ -223,7 +223,7 @@
             font-size: 0.85em;
             font-weight: 600;
         }
-        
+
         .wh40k-panel-add-btn {
             padding: 4px 8px;
             background: none;
@@ -231,7 +231,7 @@
             color: inherit;
             cursor: pointer;
             transition: all 0.2s ease;
-            
+
             &:hover {
                 color: var(--rt-accent-gold, #d4af37);
                 transform: scale(1.1);
@@ -252,7 +252,7 @@
     border-radius: 8px;
     overflow: hidden;
     transition: all 0.2s ease;
-    
+
     &:hover {
         border-color: rgba(74, 55, 40, 0.3);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -279,18 +279,18 @@
     cursor: pointer;
     text-align: left;
     transition: opacity 0.2s ease;
-    
+
     &:hover {
         opacity: 0.7;
     }
-    
+
     .wh40k-item-img {
         width: 28px;
         height: 28px;
         border-radius: 4px;
         border: 1px solid rgba(74, 55, 40, 0.2);
     }
-    
+
     .wh40k-role-name-text {
         font-size: 1.05em;
         font-weight: 600;
@@ -327,7 +327,7 @@
     flex-direction: column;
     gap: 4px;
     font-size: 0.9em;
-    
+
     &.wh40k-role-abilities,
     &.wh40k-role-bonuses {
         margin-top: 4px;
@@ -387,13 +387,13 @@
     border-radius: 12px;
     font-size: 0.85em;
     font-weight: 700;
-    
+
     &.wh40k-bonus-positive {
         background: linear-gradient(135deg, rgba(40, 180, 80, 0.2) 0%, rgba(30, 160, 70, 0.25) 100%);
         border: 1px solid rgba(40, 180, 80, 0.3);
         color: #1a6a2a;
     }
-    
+
     &.wh40k-bonus-negative {
         background: linear-gradient(135deg, rgba(200, 60, 60, 0.2) 0%, rgba(180, 40, 40, 0.25) 100%);
         border: 1px solid rgba(200, 60, 60, 0.3);
@@ -407,7 +407,7 @@
     font-size: 0.9em;
     color: #666;
     line-height: 1.4;
-    
+
     p {
         margin: 0;
     }
@@ -427,13 +427,13 @@
     border-radius: 14px;
     font-size: 0.85em;
     font-weight: 600;
-    
+
     &.wh40k-bonus-positive {
         background: linear-gradient(135deg, rgba(40, 180, 80, 0.15) 0%, rgba(30, 160, 70, 0.2) 100%);
         border: 1px solid rgba(40, 180, 80, 0.3);
         color: #1a6a2a;
     }
-    
+
     &.wh40k-bonus-negative {
         background: linear-gradient(135deg, rgba(200, 60, 60, 0.15) 0%, rgba(180, 40, 40, 0.2) 100%);
         border: 1px solid rgba(200, 60, 60, 0.3);
@@ -449,17 +449,17 @@
     padding: 40px 20px;
     text-align: center;
     color: #999;
-    
+
     i {
         margin-bottom: 16px;
         opacity: 0.4;
     }
-    
+
     p {
         margin: 0 0 16px 0;
         font-size: 0.95em;
     }
-    
+
     .wh40k-btn-create {
         display: inline-flex;
         align-items: center;
@@ -472,7 +472,7 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
-        
+
         &:hover {
             background: linear-gradient(180deg, #e0c050 0%, var(--rt-accent-gold, #d4af37) 100%);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -579,14 +579,19 @@
 }
 
 @keyframes pulse-warning {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.85; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.85;
+    }
 }
 
 .wh40k-resource-icon {
     font-size: 1.4em;
     color: #3a7a4a;
-    
+
     .wh40k-shortage & {
         color: #a03030;
     }
@@ -598,7 +603,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #2a5a3a;
-    
+
     .wh40k-shortage & {
         color: #802020;
     }
@@ -608,11 +613,11 @@
     font-size: 1.3em;
     font-weight: 700;
     margin-left: auto;
-    
+
     &.wh40k-positive {
         color: #2a7a3a;
     }
-    
+
     &.wh40k-negative {
         color: #c02020;
     }
@@ -636,23 +641,23 @@
     border: 1px solid rgba(30, 60, 90, 0.2);
     border-radius: 6px;
     text-align: center;
-    
+
     h3 {
         margin: 0 0 8px 0;
         color: #2a4a6a;
         font-size: 1.1em;
-        
+
         i {
             margin-right: 6px;
         }
     }
-    
+
     .wh40k-roll-formula {
         font-size: 0.85em;
         color: #666;
         margin-bottom: 8px;
     }
-    
+
     .wh40k-roll-result {
         font-size: 2em;
         font-weight: 700;

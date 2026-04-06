@@ -1,68 +1,65 @@
 {
-  "name": "Leaping Dodge",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "identifier": "leapingDodge",
-    "category": "combat",
-    "source": "DH 2E: Enemies Without",
-    "description": {
-      "value": "<p>Character can replace Agility with Dodge when making tests to avoid attacks made by Spray Weapons.</p>"
-    },
-    "tier": 1,
-    "isPassive": true,
-    "isRollable": true,
-    "benefit": "<p>Character can replace Agility with Dodge when making tests to avoid attacks made by Spray Weapons.</p>",
-    "aptitudes": [
-      "Agility",
-      "Defence"
-    ],
-    "prerequisites": {
-      "text": "Tier 1: Agility 35, Dodge +10",
-      "characteristics": {
-        "ag": 35
-      },
-      "skills": {
-        "dodge": 1
-      },
-      "talents": []
-    },
-    "cost": 300,
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Evasive Leap",
-          "description": "<p>When avoiding Spray Weapon attacks, you may use your Dodge skill instead of an Agility test.</p>"
+    "name": "Leaping Dodge",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "identifier": "leapingDodge",
+        "category": "combat",
+        "source": "DH 2E: Enemies Without",
+        "description": {
+            "value": "<p>Character can replace Agility with Dodge when making tests to avoid attacks made by Spray Weapons.</p>"
+        },
+        "tier": 1,
+        "isPassive": true,
+        "isRollable": true,
+        "benefit": "<p>Character can replace Agility with Dodge when making tests to avoid attacks made by Spray Weapons.</p>",
+        "aptitudes": ["Agility", "Defence"],
+        "prerequisites": {
+            "text": "Tier 1: Agility 35, Dodge +10",
+            "characteristics": {
+                "ag": 35
+            },
+            "skills": {
+                "dodge": 1
+            },
+            "talents": []
+        },
+        "cost": 300,
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Evasive Leap",
+                    "description": "<p>When avoiding Spray Weapon attacks, you may use your Dodge skill instead of an Agility test.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "RZjZQh4sBTFlCk5k"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "RZjZQh4sBTFlCk5k"
 }

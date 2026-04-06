@@ -12,36 +12,32 @@
     </div>
     <div class="rt-field__wrapper">
         <span class="rt-field__header">{{localize "WH40K.Vehicle.SizeDescriptor"}}</span>
-        <input type="text" class="rt-field__input" name="system.sizeDescriptor" 
-               value="{{system.sizeDescriptor}}" placeholder="e.g., 20m" />
+        <input type="text" class="rt-field__input" name="system.sizeDescriptor" value="{{system.sizeDescriptor}}" placeholder="e.g., 20m" />
     </div>
     <div class="rt-field__wrapper">
         <span class="rt-field__header">{{localize "WH40K.Vehicle.Speed.Cruising"}}</span>
         <div class="rt-input-with-unit">
-            <input type="number" data-dtype="Number" class="rt-field__input" 
-                   name="system.speed.cruising" value="{{system.speed.cruising}}" />
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.speed.cruising" value="{{system.speed.cruising}}" />
             <span class="rt-unit">kph</span>
         </div>
     </div>
     <div class="rt-field__wrapper">
         <span class="rt-field__header">{{localize "WH40K.Vehicle.Speed.Tactical"}}</span>
         <div class="rt-input-with-unit">
-            <input type="number" data-dtype="Number" class="rt-field__input" 
-                   name="system.speed.tactical" value="{{system.speed.tactical}}" />
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.speed.tactical" value="{{system.speed.tactical}}" />
             <span class="rt-unit">m</span>
         </div>
     </div>
     <div class="rt-field__wrapper">
         <span class="rt-field__header">{{localize "WH40K.Vehicle.Manoeuverability"}}</span>
-        <input type="number" data-dtype="Number" class="rt-field__input" 
-               name="system.manoeuverability" value="{{system.manoeuverability}}" />
+        <input type="number" data-dtype="Number" class="rt-field__input" name="system.manoeuverability" value="{{system.manoeuverability}}" />
     </div>
     <div class="rt-field__wrapper rt-field__full">
         <span class="rt-field__header">{{localize "WH40K.Vehicle.Speed.Notes"}}</span>
-        <input type="text" class="rt-field__input" name="system.speed.notes" 
-               value="{{system.speed.notes}}" placeholder="Speed modifiers, special rules..." />
+        <input type="text" class="rt-field__input" name="system.speed.notes" value="{{system.speed.notes}}" placeholder="Speed modifiers, special rules..." />
     </div>
     <div class="rt-movement-summary">
-        <strong>{{localize "WH40K.Vehicle.Speed.Summary"}}:</strong> {{system.speedSummary}}
+        <strong>{{localize "WH40K.Vehicle.Speed.Summary"}}:</strong>
+        {{system.speedSummary}}
     </div>
 </div>

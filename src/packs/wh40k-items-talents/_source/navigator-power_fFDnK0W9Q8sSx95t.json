@@ -1,63 +1,63 @@
 {
-  "name": "Navigator Power",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "psychic",
-    "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Gain a new Navigator Power, can take this talent multiple times for different powers.</p>"
+    "name": "Navigator Power",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "psychic",
+        "source": "Rogue Trader Core",
+        "description": {
+            "value": "<p>Gain a new Navigator Power, can take this talent multiple times for different powers.</p>"
+        },
+        "tier": 1,
+        "benefit": "<p>Gain a new Navigator Power, can take this talent multiple times for different powers.</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Navigator",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "identifier": "navigatorPower",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {
+                "attack": 0,
+                "damage": 0,
+                "penetration": 0,
+                "defense": 0,
+                "initiative": 0,
+                "speed": 0
+            },
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Navigator Power",
+                    "description": "<p>You learn one Navigator power.</p>"
+                }
+            ]
+        },
+        "stackable": true
     },
-    "tier": 1,
-    "benefit": "<p>Gain a new Navigator Power, can take this talent multiple times for different powers.</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Navigator",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "identifier": "navigatorPower",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {
-        "attack": 0,
-        "damage": 0,
-        "penetration": 0,
-        "defense": 0,
-        "initiative": 0,
-        "speed": 0
-      },
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Navigator Power",
-          "description": "<p>You learn one Navigator power.</p>"
-        }
-      ]
-    },
-    "stackable": true
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "fFDnK0W9Q8sSx95t"
+    "effects": [],
+    "flags": {},
+    "_id": "fFDnK0W9Q8sSx95t"
 }

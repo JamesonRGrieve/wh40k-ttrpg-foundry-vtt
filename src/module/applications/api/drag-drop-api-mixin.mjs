@@ -2,7 +2,7 @@
  * @file DragDropAPIMixin - Core drag-drop API functionality
  * Provides base drag-drop handling for ApplicationV2 sheets
  * Based on dnd5e's DragDropApplicationMixin pattern
- * 
+ *
  * This is the API layer - for visual feedback, see drag-drop-visual-mixin.mjs
  */
 
@@ -17,9 +17,9 @@ export default function DragDropMixin(Base) {
         /** @override */
         static DEFAULT_OPTIONS = {
             dragDrop: [
-                { dragSelector: "[data-item-id] .item-row", dropSelector: null },
-                { dragSelector: "[data-effect-id] .item-row", dropSelector: null }
-            ]
+                { dragSelector: '[data-item-id] .item-row', dropSelector: null },
+                { dragSelector: '[data-effect-id] .item-row', dropSelector: null },
+            ],
         };
 
         /* -------------------------------------------- */
@@ -34,8 +34,8 @@ export default function DragDropMixin(Base) {
          * @protected
          */
         _allowedDropBehaviors(event, data) {
-            if (!data?.uuid) return new Set(["copy", "link"]);
-            return new Set(["copy", "move", "link"]);
+            if (!data?.uuid) return new Set(['copy', 'link']);
+            return new Set(['copy', 'move', 'link']);
         }
 
         /* -------------------------------------------- */
@@ -48,12 +48,11 @@ export default function DragDropMixin(Base) {
          * @protected
          */
         _defaultDropBehavior(event, data) {
-            if (!data?.uuid) return "copy";
+            if (!data?.uuid) return 'copy';
             const d = foundry.utils.parseUuid(data.uuid);
             const t = foundry.utils.parseUuid(this.document.uuid);
-            const base = d.embedded?.length ? "document" : "primary";
-            return (d.collection === t.collection) && (d[`${base}Id`] === t[`${base}Id`])
-                && (d[`${base}Type`] === t[`${base}Type`]) ? "move" : "copy";
+            const base = d.embedded?.length ? 'document' : 'primary';
+            return d.collection === t.collection && d[`${base}Id`] === t[`${base}Id`] && d[`${base}Type`] === t[`${base}Type`] ? 'move' : 'copy';
         }
 
         /* -------------------------------------------- */
@@ -67,9 +66,9 @@ export default function DragDropMixin(Base) {
         _dropBehavior(event) {
             const data = TextEditor.getDragEventData(event);
             const allowed = this._allowedDropBehaviors(event, data);
-            if (event.shiftKey && allowed.has("copy")) return "copy";
-            if (event.altKey && allowed.has("link")) return "link";
-            if (event.ctrlKey && allowed.has("none")) return "none";
+            if (event.shiftKey && allowed.has('copy')) return 'copy';
+            if (event.altKey && allowed.has('link')) return 'link';
+            if (event.ctrlKey && allowed.has('none')) return 'none';
             const defaultBehavior = this._defaultDropBehavior(event, data);
             return allowed.has(defaultBehavior) ? defaultBehavior : allowed.first();
         }
@@ -80,7 +79,7 @@ export default function DragDropMixin(Base) {
         async _onDragStart(event) {
             await super._onDragStart(event);
             if (!this.document.isOwner || this.document.collection?.locked) {
-                event.dataTransfer.effectAllowed = "copyLink";
+                event.dataTransfer.effectAllowed = 'copyLink';
             }
         }
     };

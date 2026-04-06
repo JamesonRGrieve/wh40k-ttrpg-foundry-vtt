@@ -1,21 +1,21 @@
 {
-  "name": "Stand Watch",
-  "type": "order",
-  "img": "icons/svg/compass.svg",
-  "system": {
-    "typeAndAction": "Basic Order\nFull Action",
-    "requirements": ",Vigilant Talent\nApt: Defence, Perception",
-    "descriptionText": "Character within comms range observes a 45-Degree Arc of space defined by the Character. The Character does not count as Surprised as long as an enemy arrives from this area, and adds their Perception Bonus to their Initiative if attacked from this angle. The Comrade can continue to maintain this order on further turns without being ordered to, but in doing so cannot make any other actions.",
-    "source": "OW: Hammer of The Emperor",
-    "description": {
-      "value": "<p>Character within comms range observes a 45-Degree Arc of space defined by the Character. The Character does not count as Surprised as long as an enemy arrives from this area, and adds their Perception Bonus to their Initiative if attacked from this angle. The Comrade can continue to maintain this order on further turns without being ordered to, but in doing so cannot make any other actions.</p>"
+    "name": "Stand Watch",
+    "type": "order",
+    "img": "icons/svg/compass.svg",
+    "system": {
+        "typeAndAction": "Basic Order\nFull Action",
+        "requirements": ",Vigilant Talent\nApt: Defence, Perception",
+        "descriptionText": "Character within comms range observes a 45-Degree Arc of space defined by the Character. The Character does not count as Surprised as long as an enemy arrives from this area, and adds their Perception Bonus to their Initiative if attacked from this angle. The Comrade can continue to maintain this order on further turns without being ordered to, but in doing so cannot make any other actions.",
+        "source": "OW: Hammer of The Emperor",
+        "description": {
+            "value": "<p>Character within comms range observes a 45-Degree Arc of space defined by the Character. The Character does not count as Surprised as long as an enemy arrives from this area, and adds their Perception Bonus to their Initiative if attacked from this angle. The Comrade can continue to maintain this order on further turns without being ordered to, but in doing so cannot make any other actions.</p>"
+        },
+        "skill": "command",
+        "modifier": 0,
+        "duration": "1 Round",
+        "shipAction": true
     },
-    "skill": "command",
-    "modifier": 0,
-    "duration": "1 Round",
-    "shipAction": true
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "plRxT7YrnLzeib9W"
+    "effects": [],
+    "flags": {},
+    "_id": "plRxT7YrnLzeib9W"
 }

@@ -8,9 +8,9 @@
 // ============================================
 
 .wh40k-rpg.sheet.item .window-content {
-  background: transparent;
-  padding: 0;
-  overflow: hidden;
+    background: transparent;
+    padding: 0;
+    overflow: hidden;
 }
 
 // ============================================
@@ -18,48 +18,47 @@
 // ============================================
 
 .wh40k-item-sheet {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--rt-sheet-bg);
-  color: var(--rt-text-dark);
-  font-family: $wh40k-font-body;
-  font-size: $wh40k-font-size-base;
-  overflow: hidden;
-  
-  // Form should fill container
-  form {
     display: flex;
     flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
+    height: 100%;
+    background: var(--rt-sheet-bg);
+    color: var(--rt-text-dark);
+    font-family: $wh40k-font-body;
+    font-size: $wh40k-font-size-base;
     overflow: hidden;
-  }
-  
-  // Modern scrollbar
-  &::-webkit-scrollbar,
-  .wh40k-tab-content::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  &::-webkit-scrollbar-track,
-  .wh40k-tab-content::-webkit-scrollbar-track {
-    background: var(--rt-panel-bg);
-  }
-  
-  &::-webkit-scrollbar-thumb,
-  .wh40k-tab-content::-webkit-scrollbar-thumb {
-    background: var(--rt-border-color);
-    border-radius: $wh40k-radius-md;
-    
-    &:hover {
-      background: var(--rt-gold-dark);
-    }
-  }
-  
-  // All boxes use border-box
-  * {
-    box-sizing: border-box;
-  }
-}
 
+    // Form should fill container
+    form {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    // Modern scrollbar
+    &::-webkit-scrollbar,
+    .wh40k-tab-content::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track,
+    .wh40k-tab-content::-webkit-scrollbar-track {
+        background: var(--rt-panel-bg);
+    }
+
+    &::-webkit-scrollbar-thumb,
+    .wh40k-tab-content::-webkit-scrollbar-thumb {
+        background: var(--rt-border-color);
+        border-radius: $wh40k-radius-md;
+
+        &:hover {
+            background: var(--rt-gold-dark);
+        }
+    }
+
+    // All boxes use border-box
+    * {
+        box-sizing: border-box;
+    }
+}

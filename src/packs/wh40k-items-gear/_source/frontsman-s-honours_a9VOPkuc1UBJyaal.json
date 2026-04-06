@@ -1,41 +1,41 @@
 {
-  "name": "Frontsman's Honours",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "general",
-    "weight": 0,
-    "availability": "average",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 0,
-      "currency": "throne"
+    "name": "Frontsman's Honours",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "general",
+        "weight": 0,
+        "availability": "average",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron.</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Hold a Pass, Fortification, or Entrenchment against an Ork Horde of at least 100 for 24 hours or longer.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+            "chat": "",
+            "summary": "+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron."
+        },
+        "source": {
+            "book": "OW: Enemies of the Imperium",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron.",
+        "duration": "",
+        "notes": "-",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron.</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Hold a Pass, Fortification, or Entrenchment against an Ork Horde of at least 100 for 24 hours or longer.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
-      "chat": "",
-      "summary": "+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron."
-    },
-    "source": {
-      "book": "OW: Enemies of the Imperium",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "+20 to Pinning Tests made whilst benefitting from cover.\nMedals can't be acquired, only earned. Looks like a Gold Medallion inlaid with iron.",
-    "duration": "",
-    "notes": "-",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "a9VOPkuc1UBJyaal"
+    "effects": [],
+    "flags": {},
+    "_id": "a9VOPkuc1UBJyaal"
 }

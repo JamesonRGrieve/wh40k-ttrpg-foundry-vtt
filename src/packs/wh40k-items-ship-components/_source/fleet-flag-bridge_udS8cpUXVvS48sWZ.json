@@ -1,43 +1,39 @@
 {
-  "name": "Fleet Flag Bridge",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "battlecruiser",
-      "grand-cruiser",
-      "cruiser"
-    ],
-    "effect": "Where Characters command the ship. As long as this component is undamaged, +10 to all Command Tests made by the ship's commanding officers on the Bridge and +5 to Piloting and Navigation Tests made by this vessel or any allied vessel in 30 VU's.",
-    "availability": "rare",
-    "source": "RT: BF Koronus",
-    "description": {
-      "value": "<p>Where Characters command the ship. As long as this component is undamaged, +10 to all Command Tests made by the ship's commanding officers on the Bridge and +5 to Piloting and Navigation Tests made by this vessel or any allied vessel in 30 VU's.</p>"
+    "name": "Fleet Flag Bridge",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["battlecruiser", "grand-cruiser", "cruiser"],
+        "effect": "Where Characters command the ship. As long as this component is undamaged, +10 to all Command Tests made by the ship's commanding officers on the Bridge and +5 to Piloting and Navigation Tests made by this vessel or any allied vessel in 30 VU's.",
+        "availability": "rare",
+        "source": "RT: BF Koronus",
+        "description": {
+            "value": "<p>Where Characters command the ship. As long as this component is undamaged, +10 to all Command Tests made by the ship's commanding officers on the Bridge and +5 to Piloting and Navigation Tests made by this vessel or any allied vessel in 30 VU's.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "bridge",
+        "essential": true,
+        "power": {
+            "used": 4,
+            "generated": 0
+        },
+        "space": 4,
+        "shipPoints": 1,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "fleet-flag-bridge"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "bridge",
-    "essential": true,
-    "power": {
-      "used": 4,
-      "generated": 0
-    },
-    "space": 4,
-    "shipPoints": 1,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "fleet-flag-bridge"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "udS8cpUXVvS48sWZ"
+    "effects": [],
+    "flags": {},
+    "_id": "udS8cpUXVvS48sWZ"
 }

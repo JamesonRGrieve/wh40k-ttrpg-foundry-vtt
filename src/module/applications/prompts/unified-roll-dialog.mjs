@@ -10,9 +10,9 @@
  * - Auto Roll for digital rolling
  */
 
-import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
-import { getDegree, roll1d100, sendActionDataToChat } from "../../rolls/roll-helpers.mjs";
-import { RANGE_BRACKETS, calculateTokenDistance } from "../../utils/range-calculator.mjs";
+import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
+import { getDegree, roll1d100, sendActionDataToChat } from '../../rolls/roll-helpers.mjs';
+import { RANGE_BRACKETS, calculateTokenDistance } from '../../utils/range-calculator.mjs';
 import {
     getAvailableAttackModes,
     getMeleeSpecialOptions,
@@ -22,8 +22,8 @@ import {
     getAttackModeKeyForAction,
     getAimKeyForModifier,
     isMeleeSpecialOption,
-    AIM_OPTIONS
-} from "../../rules/attack-options.mjs";
+    AIM_OPTIONS,
+} from '../../rules/attack-options.mjs';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -38,12 +38,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     constructor(actionData, options = {}) {
         super(options);
         this.actionData = actionData;
-        this._selectedDifficultyIndex = this.constructor.DIFFICULTIES.findIndex(d => d.default);
+        this._selectedDifficultyIndex = this.constructor.DIFFICULTIES.findIndex((d) => d.default);
         this._situationalModifiers = {};
         this._customModifier = 0;
         this._manualRollTens = null;
         this._manualRollUnits = null;
-        this._diceInputMode = "two-dice";
+        this._diceInputMode = 'two-dice';
         this._singleRollValue = null;
         this._rollResult = null;
         this._difficultyPickerOpen = false;
@@ -56,7 +56,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._attackModeKey = 'standard';
         this._aimModeKey = 'none';
         this._activeCombatSituationals = new Set();
-        this._sizeModifierKey = null;  // null = use target actor size, string = user override
+        this._sizeModifierKey = null; // null = use target actor size, string = user override
         this._specialOptionsExpanded = false;
         this._sizeExpanded = false;
         this._rangeExpanded = false;
@@ -67,8 +67,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: "form",
-        classes: ["wh40k-rpg", "dialog", "unified-roll-dialog", "standard-form"],
+        tag: 'form',
+        classes: ['wh40k-rpg', 'dialog', 'unified-roll-dialog', 'standard-form'],
         actions: {
             toggleDifficultyPicker: UnifiedRollDialog.#onToggleDifficultyPicker,
             selectDifficulty: UnifiedRollDialog.#onSelectDifficulty,
@@ -93,21 +93,21 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             toggleSizeSection: UnifiedRollDialog.#onToggleSizeSection,
             toggleRangeSection: UnifiedRollDialog.#onToggleRangeSection,
             toggleSituationalSection: UnifiedRollDialog.#onToggleSituationalSection,
-            cancel: UnifiedRollDialog.#onCancel
+            cancel: UnifiedRollDialog.#onCancel,
         },
         form: {
             handler: UnifiedRollDialog.#onFormSubmit,
             submitOnChange: true,
-            closeOnSubmit: false
+            closeOnSubmit: false,
         },
         position: {
             width: 460,
-            height: "auto"
+            height: 'auto',
         },
         window: {
-            title: "Roll Test",
-            minimizable: false
-        }
+            title: 'Roll Test',
+            minimizable: false,
+        },
     };
 
     /* -------------------------------------------- */
@@ -115,23 +115,23 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /** @override */
     static PARTS = {
         header: {
-            template: "systems/wh40k-rpg/templates/prompt/unified/header.hbs"
+            template: 'systems/wh40k-rpg/templates/prompt/unified/header.hbs',
         },
         targetDisplay: {
-            template: "systems/wh40k-rpg/templates/prompt/unified/target-display.hbs"
+            template: 'systems/wh40k-rpg/templates/prompt/unified/target-display.hbs',
         },
         modifiers: {
-            template: "systems/wh40k-rpg/templates/prompt/unified/modifiers.hbs"
+            template: 'systems/wh40k-rpg/templates/prompt/unified/modifiers.hbs',
         },
         contextPanel: {
-            template: "systems/wh40k-rpg/templates/prompt/unified/context-panel.hbs"
+            template: 'systems/wh40k-rpg/templates/prompt/unified/context-panel.hbs',
         },
         diceInput: {
-            template: "systems/wh40k-rpg/templates/prompt/unified/dice-input.hbs"
+            template: 'systems/wh40k-rpg/templates/prompt/unified/dice-input.hbs',
         },
         footer: {
-            template: "systems/wh40k-rpg/templates/prompt/unified/footer.hbs"
-        }
+            template: 'systems/wh40k-rpg/templates/prompt/unified/footer.hbs',
+        },
     };
 
     /* -------------------------------------------- */
@@ -139,20 +139,20 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /* -------------------------------------------- */
 
     static DIFFICULTIES = [
-        { key: "trivial", label: "Trivial", modifier: 60, icon: "fa-smile", description: "Automatic success unless complications" },
-        { key: "easy", label: "Easy", modifier: 30, icon: "fa-grin", description: "Simple tasks with no pressure" },
-        { key: "routine", label: "Routine", modifier: 20, icon: "fa-meh", description: "Standard tasks with time" },
-        { key: "ordinary", label: "Ordinary", modifier: 10, icon: "fa-smile-beam", description: "Typical difficulty" },
-        { key: "challenging", label: "Challenging", modifier: 0, icon: "fa-grimace", description: "No modifier (baseline)", default: true },
-        { key: "difficult", label: "Difficult", modifier: -10, icon: "fa-frown", description: "Complex or contested tasks" },
-        { key: "hard", label: "Hard", modifier: -20, icon: "fa-dizzy", description: "Very challenging circumstances" },
-        { key: "veryHard", label: "Very Hard", modifier: -30, icon: "fa-tired", description: "Exceptional difficulty" },
-        { key: "hellish", label: "Hellish", modifier: -60, icon: "fa-skull", description: "Near-impossible feats" }
+        { key: 'trivial', label: 'Trivial', modifier: 60, icon: 'fa-smile', description: 'Automatic success unless complications' },
+        { key: 'easy', label: 'Easy', modifier: 30, icon: 'fa-grin', description: 'Simple tasks with no pressure' },
+        { key: 'routine', label: 'Routine', modifier: 20, icon: 'fa-meh', description: 'Standard tasks with time' },
+        { key: 'ordinary', label: 'Ordinary', modifier: 10, icon: 'fa-smile-beam', description: 'Typical difficulty' },
+        { key: 'challenging', label: 'Challenging', modifier: 0, icon: 'fa-grimace', description: 'No modifier (baseline)', default: true },
+        { key: 'difficult', label: 'Difficult', modifier: -10, icon: 'fa-frown', description: 'Complex or contested tasks' },
+        { key: 'hard', label: 'Hard', modifier: -20, icon: 'fa-dizzy', description: 'Very challenging circumstances' },
+        { key: 'veryHard', label: 'Very Hard', modifier: -30, icon: 'fa-tired', description: 'Exceptional difficulty' },
+        { key: 'hellish', label: 'Hellish', modifier: -60, icon: 'fa-skull', description: 'Near-impossible feats' },
     ];
 
     static WEAPON_MODIFIERS = [
-        { key: "aimHalf", label: "Aim (Half)", value: 10, description: "Half action aim bonus" },
-        { key: "aimFull", label: "Aim (Full)", value: 20, description: "Full action aim bonus" }
+        { key: 'aimHalf', label: 'Aim (Half)', value: 10, description: 'Half action aim bonus' },
+        { key: 'aimFull', label: 'Aim (Full)', value: 20, description: 'Full action aim bonus' },
     ];
 
     /* -------------------------------------------- */
@@ -171,10 +171,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      */
     get rollType() {
         const rd = this.rollData;
-        if (rd?.constructor?.name === "WeaponRollData") return "weapon";
-        if (rd?.constructor?.name === "PsychicRollData") return "psychic";
-        if (rd?.forceField) return "forceField";
-        return "simple";
+        if (rd?.constructor?.name === 'WeaponRollData') return 'weapon';
+        if (rd?.constructor?.name === 'PsychicRollData') return 'psychic';
+        if (rd?.forceField) return 'forceField';
+        return 'simple';
     }
 
     /** @returns {object} The underlying roll data (ForceFieldData IS the rollData) */
@@ -194,7 +194,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     /** Compute the manual roll total, or null if incomplete */
     get _manualRollTotal() {
-        if (this._diceInputMode === "two-dice") {
+        if (this._diceInputMode === 'two-dice') {
             if (this._manualRollTens === null || this._manualRollUnits === null) return null;
             const total = this._manualRollTens * 10 + this._manualRollUnits;
             return total === 0 ? 100 : total;
@@ -215,7 +215,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this._initialized = true;
 
             // Sync card state with initial rollData
-            if (this.rollType === "weapon") {
+            if (this.rollType === 'weapon') {
                 const isRanged = !!this.rollData.weapon?.isRanged;
                 this._attackModeKey = getAttackModeKeyForAction(this.rollData.action, isRanged);
                 this._aimModeKey = getAimKeyForModifier(this.rollData.modifiers?.aim ?? 0);
@@ -228,7 +228,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         const context = await super._prepareContext(options);
         const rollData = this.rollData;
-        const isForceField = this.rollType === "forceField";
+        const isForceField = this.rollType === 'forceField';
 
         // Collect situational modifiers from the actor
         if (!isForceField) {
@@ -239,20 +239,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const difficultyMod = isForceField ? 0 : this._currentDifficulty.modifier;
         const situationalMod = isForceField ? 0 : this._calculateSituationalModifiers();
         const customMod = isForceField ? 0 : this._customModifier;
-        const combatSitMod = (!isForceField && this.rollType === "weapon")
-            ? this._calculateCombatSituationalModifiers() : 0;
+        const combatSitMod = !isForceField && this.rollType === 'weapon' ? this._calculateCombatSituationalModifiers() : 0;
 
-        const baseTarget = isForceField
-            ? (rollData.protectionRating || 0)
-            : (rollData.baseTarget || 0);
+        const baseTarget = isForceField ? rollData.protectionRating || 0 : rollData.baseTarget || 0;
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
-        const dialogManagedKeys = new Set(["difficulty", "situational", "modifier", "range", "combat-situational"]);
+        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational']);
         const weaponModSum = !isForceField
             ? Object.entries(rollData.modifiers || {})
-                .filter(([k]) => !dialogManagedKeys.has(k))
-                .reduce((sum, [, v]) => sum + (parseInt(v) || 0), 0)
-                + (rollData.rangeBonus || 0)
+                  .filter(([k]) => !dialogManagedKeys.has(k))
+                  .reduce((sum, [, v]) => sum + (parseInt(v) || 0), 0) + (rollData.rangeBonus || 0)
             : 0;
 
         const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod);
@@ -269,12 +265,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Dynamic color class based on success chance
         let targetColorClass;
-        if (finalTarget <= 15) targetColorClass = "urd-target__number--dire";
-        else if (finalTarget <= 30) targetColorClass = "urd-target__number--poor";
-        else if (finalTarget <= 45) targetColorClass = "urd-target__number--fair";
-        else if (finalTarget <= 60) targetColorClass = "urd-target__number--good";
-        else if (finalTarget <= 80) targetColorClass = "urd-target__number--great";
-        else targetColorClass = "urd-target__number--legendary";
+        if (finalTarget <= 15) targetColorClass = 'urd-target__number--dire';
+        else if (finalTarget <= 30) targetColorClass = 'urd-target__number--poor';
+        else if (finalTarget <= 45) targetColorClass = 'urd-target__number--fair';
+        else if (finalTarget <= 60) targetColorClass = 'urd-target__number--good';
+        else if (finalTarget <= 80) targetColorClass = 'urd-target__number--great';
+        else targetColorClass = 'urd-target__number--legendary';
 
         // Track previous target for animation
         this._previousTarget = this._previousTarget ?? finalTarget;
@@ -304,15 +300,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             ...d,
             index: i,
             isCurrent: i === this._selectedDifficultyIndex,
-            modifierLabel: d.modifier >= 0 ? `+${d.modifier}` : `${d.modifier}`
+            modifierLabel: d.modifier >= 0 ? `+${d.modifier}` : `${d.modifier}`,
         }));
 
         // Situational modifiers with toggle state
-        const situationalModifiers = (this._cachedSituationalModifiers || []).map(m => ({
+        const situationalModifiers = (this._cachedSituationalModifiers || []).map((m) => ({
             ...m,
-            active: this._situationalModifiers[m.key + "_" + m.source] ?? false,
-            toggleKey: m.key + "_" + m.source,
-            valueLabel: m.value >= 0 ? `+${m.value}` : `${m.value}`
+            active: this._situationalModifiers[m.key + '_' + m.source] ?? false,
+            toggleKey: m.key + '_' + m.source,
+            valueLabel: m.value >= 0 ? `+${m.value}` : `${m.value}`,
         }));
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
@@ -320,22 +316,18 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod;
 
         // Roll type specific data
-        const isWeapon = this.rollType === "weapon";
-        const isPsychic = this.rollType === "psychic";
-        const isSimple = this.rollType === "simple";
+        const isWeapon = this.rollType === 'weapon';
+        const isPsychic = this.rollType === 'psychic';
+        const isSimple = this.rollType === 'simple';
 
         // Actor info (ForceFieldData uses .actor, ActionData uses .sourceActor or .actor)
         const actor = rollData.sourceActor || rollData.actor;
-        const actorName = actor?.name || "";
-        const actorImg = actor?.img || "";
+        const actorName = actor?.name || '';
+        const actorImg = actor?.img || '';
 
         // Roll name
-        let rollName = isForceField
-            ? (rollData.forceField?.name || "Force Field")
-            : (rollData.name || rollData.nameOverride || "Test");
-        const rollSubtitle = isForceField
-            ? "Force Field Activation"
-            : (rollData.type || rollData.action || "");
+        let rollName = isForceField ? rollData.forceField?.name || 'Force Field' : rollData.name || rollData.nameOverride || 'Test';
+        const rollSubtitle = isForceField ? 'Force Field Activation' : rollData.type || rollData.action || '';
 
         return {
             ...context,
@@ -364,7 +356,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             manualRollUnits: this._manualRollUnits,
             singleRollValue: this._singleRollValue,
             diceInputMode: this._diceInputMode,
-            isTwoDice: this._diceInputMode === "two-dice",
+            isTwoDice: this._diceInputMode === 'two-dice',
             hasManualRoll: manualTotal !== null,
             manualRollTotal: manualTotal,
             contextExpanded: this._contextExpanded,
@@ -381,7 +373,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // Force field data
             ...(isForceField ? this._getForceFieldContext() : {}),
             // Base char
-            baseChar: rollData.baseChar || ""
+            baseChar: rollData.baseChar || '',
         };
     }
 
@@ -390,54 +382,53 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await super._onRender(context, options);
 
         // Auto-select number inputs on focus
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (e) => e.target.select());
-            });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (e) => e.target.select());
+        });
 
         // Set up two-dice input handlers
-        const tensInput = this.element.querySelector("#manual-tens");
-        const unitsInput = this.element.querySelector("#manual-units");
+        const tensInput = this.element.querySelector('#manual-tens');
+        const unitsInput = this.element.querySelector('#manual-units');
         if (tensInput) {
-            tensInput.addEventListener("input", (e) => {
+            tensInput.addEventListener('input', (e) => {
                 const val = parseInt(e.target.value);
-                this._manualRollTens = (val >= 0 && val <= 9) ? val : null;
+                this._manualRollTens = val >= 0 && val <= 9 ? val : null;
                 if (this._manualRollTens !== null && unitsInput) {
                     unitsInput.focus();
                     unitsInput.select();
                 }
-                this.render(false, { parts: ["diceInput", "footer"] });
+                this.render(false, { parts: ['diceInput', 'footer'] });
             });
         }
         if (unitsInput) {
-            unitsInput.addEventListener("input", (e) => {
+            unitsInput.addEventListener('input', (e) => {
                 const val = parseInt(e.target.value);
-                this._manualRollUnits = (val >= 0 && val <= 9) ? val : null;
-                this.render(false, { parts: ["diceInput", "footer"] });
+                this._manualRollUnits = val >= 0 && val <= 9 ? val : null;
+                this.render(false, { parts: ['diceInput', 'footer'] });
             });
         }
 
         // Single number input
-        const singleInput = this.element.querySelector("#manual-single");
+        const singleInput = this.element.querySelector('#manual-single');
         if (singleInput) {
-            singleInput.addEventListener("input", (e) => {
+            singleInput.addEventListener('input', (e) => {
                 const val = parseInt(e.target.value);
-                this._singleRollValue = (val >= 1 && val <= 100) ? val : null;
-                this.render(false, { parts: ["diceInput", "footer"] });
+                this._singleRollValue = val >= 1 && val <= 100 ? val : null;
+                this.render(false, { parts: ['diceInput', 'footer'] });
             });
         }
 
         // Custom modifier input
-        const customInput = this.element.querySelector("#unified-custom-modifier");
+        const customInput = this.element.querySelector('#unified-custom-modifier');
         if (customInput) {
-            customInput.addEventListener("change", (e) => {
+            customInput.addEventListener('change', (e) => {
                 this._customModifier = parseInt(e.target.value) || 0;
-                this.render(false, { parts: ["targetDisplay", "modifiers", "diceInput"] });
+                this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
             });
         }
 
         // Animate target number if changed
-        const targetEl = this.element.querySelector(".urd-target__number");
+        const targetEl = this.element.querySelector('.urd-target__number');
         if (targetEl && this._previousTarget !== null) {
             const newTarget = parseInt(targetEl.dataset.value) || 0;
             if (this._previousTarget !== newTarget) {
@@ -449,33 +440,33 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Click-outside to close difficulty picker
         if (this._pickerOutsideHandler) {
-            document.removeEventListener("pointerdown", this._pickerOutsideHandler);
+            document.removeEventListener('pointerdown', this._pickerOutsideHandler);
             this._pickerOutsideHandler = null;
         }
         if (this._difficultyPickerOpen) {
-            const picker = this.element.querySelector(".urd-difficulty-picker");
+            const picker = this.element.querySelector('.urd-difficulty-picker');
             if (picker) {
                 this._pickerOutsideHandler = (e) => {
                     if (!picker.contains(e.target) && !e.target.closest('[data-action="toggleDifficultyPicker"]')) {
                         this._difficultyPickerOpen = false;
-                        document.removeEventListener("pointerdown", this._pickerOutsideHandler);
+                        document.removeEventListener('pointerdown', this._pickerOutsideHandler);
                         this._pickerOutsideHandler = null;
-                        this.render(false, { parts: ["targetDisplay"] });
+                        this.render(false, { parts: ['targetDisplay'] });
                     }
                 };
-                setTimeout(() => document.addEventListener("pointerdown", this._pickerOutsideHandler), 0);
+                setTimeout(() => document.addEventListener('pointerdown', this._pickerOutsideHandler), 0);
             }
         }
 
         // Keyboard: Enter submits, Escape closes picker
-        this.element.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && this._difficultyPickerOpen) {
+        this.element.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this._difficultyPickerOpen) {
                 e.preventDefault();
                 this._difficultyPickerOpen = false;
-                this.render(false, { parts: ["targetDisplay"] });
+                this.render(false, { parts: ['targetDisplay'] });
                 return;
             }
-            if (e.key === "Enter" && !e.shiftKey) {
+            if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 this._submitToChat();
             }
@@ -501,55 +492,64 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Build range bracket list for UI with meter values
         const maxRange = rd.maxRange || 0;
-        const rangeBrackets = rd.weapon?.isRanged ? Object.entries(RANGE_BRACKETS).map(([key, b]) => {
-            let rangeText = "";
-            if (maxRange > 0) {
-                if (key === "pointBlank") rangeText = "≤2m";
-                else if (key === "short") rangeText = `≤${Math.floor(maxRange * 0.5)}m`;
-                else if (key === "standard") rangeText = `≤${maxRange * 2}m`;
-                else if (key === "long") rangeText = `≤${maxRange * 3}m`;
-                else if (key === "extreme") rangeText = `>${maxRange * 3}m`;
-            }
-            return {
-                key,
-                label: b.label,
-                modifier: b.modifier,
-                modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
-                rangeText,
-                isSelected: (this._selectedRangeBracket ?? rd.rangeBracket) === key
-            };
-        }) : [];
+        const rangeBrackets = rd.weapon?.isRanged
+            ? Object.entries(RANGE_BRACKETS).map(([key, b]) => {
+                  let rangeText = '';
+                  if (maxRange > 0) {
+                      if (key === 'pointBlank') rangeText = '≤2m';
+                      else if (key === 'short') rangeText = `≤${Math.floor(maxRange * 0.5)}m`;
+                      else if (key === 'standard') rangeText = `≤${maxRange * 2}m`;
+                      else if (key === 'long') rangeText = `≤${maxRange * 3}m`;
+                      else if (key === 'extreme') rangeText = `>${maxRange * 3}m`;
+                  }
+                  return {
+                      key,
+                      label: b.label,
+                      modifier: b.modifier,
+                      modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
+                      rangeText,
+                      isSelected: (this._selectedRangeBracket ?? rd.rangeBracket) === key,
+                  };
+              })
+            : [];
 
         // Card-based attack modes
         const isRanged = !!rd.weapon?.isRanged;
-        const attackModes = rd.weapon ? getAvailableAttackModes(rd.weapon).map(m => ({
-            ...m,
-            isSelected: this._attackModeKey === m.key,
-            modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`
-        })) : [];
+        const attackModes = rd.weapon
+            ? getAvailableAttackModes(rd.weapon).map((m) => ({
+                  ...m,
+                  isSelected: this._attackModeKey === m.key,
+                  modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`,
+              }))
+            : [];
 
         // Melee special options
-        const meleeSpecialOptions = (!isRanged && rd.weapon) ? getMeleeSpecialOptions().map(m => ({
-            ...m,
-            isSelected: this._attackModeKey === m.key,
-            modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`
-        })) : [];
+        const meleeSpecialOptions =
+            !isRanged && rd.weapon
+                ? getMeleeSpecialOptions().map((m) => ({
+                      ...m,
+                      isSelected: this._attackModeKey === m.key,
+                      modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`,
+                  }))
+                : [];
 
         // Aim options
         const canAim = rd.canAim !== false;
-        const aimOptions = AIM_OPTIONS.map(a => ({
+        const aimOptions = AIM_OPTIONS.map((a) => ({
             ...a,
             isSelected: this._aimModeKey === a.key,
             modifierLabel: a.modifier >= 0 ? `+${a.modifier}` : `${a.modifier}`,
-            disabled: !canAim && a.key !== 'none'
+            disabled: !canAim && a.key !== 'none',
         }));
 
         // Combat situational modifiers
-        const combatSituationals = rd.weapon ? getSituationalModifiers(isRanged).map(s => ({
-            ...s,
-            isActive: this._activeCombatSituationals.has(s.key),
-            modifierLabel: s.modifier >= 0 ? `+${s.modifier}` : `${s.modifier}`
-        })) : [];
+        const combatSituationals = rd.weapon
+            ? getSituationalModifiers(isRanged).map((s) => ({
+                  ...s,
+                  isActive: this._activeCombatSituationals.has(s.key),
+                  modifierLabel: s.modifier >= 0 ? `+${s.modifier}` : `${s.modifier}`,
+              }))
+            : [];
 
         // Size modifiers from config (values are plain strings like "Average (4)")
         const sizes = CONFIG.wh40k?.sizes || {};
@@ -561,31 +561,29 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 label,
                 modifier,
                 modifierLabel: modifier >= 0 ? `+${modifier}` : `${modifier}`,
-                isSelected: key === currentSizeMod
+                isSelected: key === currentSizeMod,
             };
         });
 
         // Selected range summary for collapsed header
         const currentRangeKey = this._selectedRangeBracket ?? rd.rangeBracket;
-        const currentRangeBracket = rangeBrackets.find(b => b.key === currentRangeKey) || rangeBrackets.find(b => b.key === 'standard') || rangeBrackets[0];
+        const currentRangeBracket = rangeBrackets.find((b) => b.key === currentRangeKey) || rangeBrackets.find((b) => b.key === 'standard') || rangeBrackets[0];
         const selectedRangeSummary = currentRangeBracket
             ? { label: currentRangeBracket.label, modifier: currentRangeBracket.modifier, modifierLabel: currentRangeBracket.modifierLabel }
             : { label: 'Standard', modifier: 0, modifierLabel: '+0' };
 
         // Selected situational summary for collapsed header
-        const activeSituationals = combatSituationals.filter(s => s.isActive);
+        const activeSituationals = combatSituationals.filter((s) => s.isActive);
         const sitTotal = activeSituationals.reduce((sum, s) => sum + s.modifier, 0);
         const selectedSituationalSummary = {
             hasActive: activeSituationals.length > 0,
-            label: activeSituationals.length > 0
-                ? activeSituationals.map(s => s.label).join(', ')
-                : 'None',
+            label: activeSituationals.length > 0 ? activeSituationals.map((s) => s.label).join(', ') : 'None',
             total: sitTotal,
-            totalLabel: sitTotal >= 0 ? `+${sitTotal}` : `${sitTotal}`
+            totalLabel: sitTotal >= 0 ? `+${sitTotal}` : `${sitTotal}`,
         };
 
         // Selected size summary for collapsed header
-        const currentSizeOption = sizeOptions.find(s => s.isSelected) || sizeOptions.find(s => s.key === '4');
+        const currentSizeOption = sizeOptions.find((s) => s.isSelected) || sizeOptions.find((s) => s.key === '4');
         const selectedSizeSummary = currentSizeOption
             ? { label: currentSizeOption.label, modifier: currentSizeOption.modifier, modifierLabel: currentSizeOption.modifierLabel }
             : { label: 'Average (4)', modifier: 0, modifierLabel: '+0' };
@@ -625,7 +623,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             calledShotLocation: rd.calledShotLocation,
             locations: rd.locations,
             actions: rd.actions || {},
-            currentAction: rd.action
+            currentAction: rd.action,
         };
     }
 
@@ -638,7 +636,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (rd.targetActor?.system?.size) {
             return String(rd.targetActor.system.size);
         }
-        return "4"; // Average
+        return '4'; // Average
     }
 
     _getPsychicContext() {
@@ -654,7 +652,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             distance: rd.distance,
             rangeName: rd.rangeName,
             maxRange: rd.maxRange,
-            difficulties: rd.difficulties
+            difficulties: rd.difficulties,
         };
     }
 
@@ -662,7 +660,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         return {
             forceField: rd.forceField,
-            protectionRating: rd.protectionRating
+            protectionRating: rd.protectionRating,
         };
     }
 
@@ -681,8 +679,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     _calculateSituationalModifiers() {
         let total = 0;
-        for (const mod of (this._cachedSituationalModifiers || [])) {
-            const toggleKey = mod.key + "_" + mod.source;
+        for (const mod of this._cachedSituationalModifiers || []) {
+            const toggleKey = mod.key + '_' + mod.source;
             if (this._situationalModifiers[toggleKey]) total += mod.value;
         }
         return total;
@@ -710,7 +708,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (newIndex < 0 || newIndex >= this.constructor.DIFFICULTIES.length) return;
         this._selectedDifficultyIndex = newIndex;
         this._difficultyPickerOpen = false;
-        this.render(false, { parts: ["targetDisplay", "modifiers", "diceInput"] });
+        this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
     /**
@@ -730,16 +728,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         };
         requestAnimationFrame(step);
         // Flash color
-        el.classList.remove("urd-target-increase", "urd-target-decrease");
+        el.classList.remove('urd-target-increase', 'urd-target-decrease');
         void el.offsetWidth; // force reflow
-        el.classList.add(to > from ? "urd-target-increase" : "urd-target-decrease");
+        el.classList.add(to > from ? 'urd-target-increase' : 'urd-target-decrease');
     }
 
     /**
      * Play a subtle tick sound when target changes.
      */
     _playTickSound() {
-        const src = "sounds/dice.wav";
+        const src = 'sounds/dice.wav';
         foundry.audio.AudioHelper.play({ src, volume: 0.15, autoplay: true, loop: false }, false);
     }
 
@@ -756,7 +754,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 await this.rollData.update();
             }
             // Re-render dependent parts (e.g., Called Shot location dropdown, range info)
-            await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+            await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
         }
     }
 
@@ -766,7 +764,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onToggleDifficultyPicker(event, target) {
         this._difficultyPickerOpen = !this._difficultyPickerOpen;
-        await this.render(false, { parts: ["targetDisplay"] });
+        await this.render(false, { parts: ['targetDisplay'] });
     }
 
     static async #onSelectDifficulty(event, target) {
@@ -774,7 +772,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (Number.isInteger(index) && index >= 0 && index < this.constructor.DIFFICULTIES.length) {
             this._selectedDifficultyIndex = index;
             this._difficultyPickerOpen = false;
-            await this.render(false, { parts: ["targetDisplay", "modifiers", "diceInput"] });
+            await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
         }
     }
 
@@ -782,23 +780,23 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const key = target.dataset.toggleKey;
         if (!key) return;
         this._situationalModifiers[key] = !this._situationalModifiers[key];
-        await this.render(false, { parts: ["targetDisplay", "modifiers", "diceInput"] });
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
     static async #onCustomModUp(event, target) {
         this._customModifier += 5;
-        await this.render(false, { parts: ["targetDisplay", "modifiers", "diceInput"] });
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
     static async #onCustomModDown(event, target) {
         this._customModifier -= 5;
-        await this.render(false, { parts: ["targetDisplay", "modifiers", "diceInput"] });
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
     static async #onToggleCustomModifier(event, target) {
         this._showCustomModifier = !this._showCustomModifier;
         if (!this._showCustomModifier) this._customModifier = 0;
-        await this.render(false, { parts: ["targetDisplay", "modifiers", "diceInput"] });
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
     static async #onSubmitToChat(event, target) {
@@ -814,21 +812,21 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._manualRollUnits = null;
         this._singleRollValue = null;
         this._rollResult = null;
-        await this.render(false, { parts: ["diceInput", "footer"] });
+        await this.render(false, { parts: ['diceInput', 'footer'] });
     }
 
     static async #onToggleDiceMode(event, target) {
-        this._diceInputMode = this._diceInputMode === "two-dice" ? "single" : "two-dice";
+        this._diceInputMode = this._diceInputMode === 'two-dice' ? 'single' : 'two-dice';
         this._manualRollTens = null;
         this._manualRollUnits = null;
         this._singleRollValue = null;
         this._rollResult = null;
-        await this.render(false, { parts: ["diceInput", "footer"] });
+        await this.render(false, { parts: ['diceInput', 'footer'] });
     }
 
     static async #onToggleContextSection(event, target) {
         this._contextExpanded = !this._contextExpanded;
-        await this.render(false, { parts: ["contextPanel"] });
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
     static async #onSelectWeapon(event, target) {
@@ -879,7 +877,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this.rollData.modifiers['aim'] = 0;
         }
 
-        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     static async #onSelectAimMode(event, target) {
@@ -888,7 +886,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._aimModeKey = key;
         this.rollData.modifiers['aim'] = getAimModifier(key);
         if (this.rollData.update) await this.rollData.update();
-        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     static async #onToggleCombatSituational(event, target) {
@@ -899,7 +897,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         } else {
             this._activeCombatSituationals.add(key);
         }
-        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     static async #onSelectSizeModifier(event, target) {
@@ -907,27 +905,27 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (!key) return;
         this._sizeModifierKey = key;
         this.rollData.modifiers['target-size'] = (parseInt(key) - 4) * 10;
-        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     static async #onToggleSpecialOptions(event, target) {
         this._specialOptionsExpanded = !this._specialOptionsExpanded;
-        await this.render(false, { parts: ["contextPanel"] });
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
     static async #onToggleSizeSection(event, target) {
         this._sizeExpanded = !this._sizeExpanded;
-        await this.render(false, { parts: ["contextPanel"] });
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
     static async #onToggleRangeSection(event, target) {
         this._rangeExpanded = !this._rangeExpanded;
-        await this.render(false, { parts: ["contextPanel"] });
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
     static async #onToggleSituationalSection(event, target) {
         this._situationalExpanded = !this._situationalExpanded;
-        await this.render(false, { parts: ["contextPanel"] });
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
     static async #onSelectRangeBracket(event, target) {
@@ -940,7 +938,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this.rollData.rangeBonus = bracketData.modifier;
             this.rollData.rangeBracket = bracket;
         }
-        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     static async #onSelectTarget(event, target) {
@@ -949,14 +947,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (!actor) return;
         const sourceToken = actor.token ?? actor.getActiveTokens()[0];
         if (!sourceToken) {
-            ui.notifications.warn("No token found for the attacking actor.");
+            ui.notifications.warn('No token found for the attacking actor.');
             return;
         }
 
         // Check for existing target
         const targets = game.user.targets;
         if (targets.size === 0) {
-            ui.notifications.info("Target a token first, then click Select Target.");
+            ui.notifications.info('Target a token first, then click Select Target.');
             return;
         }
         const targetToken = [...targets.values()][0];
@@ -972,7 +970,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Clear manual bracket override so calculated bracket takes effect
         this._selectedRangeBracket = null;
-        await this.render(false, { parts: ["contextPanel", "targetDisplay", "diceInput"] });
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     /* -------------------------------------------- */
@@ -998,11 +996,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this.rollData.isManualRoll = true;
         }
 
-        if (rollType === "weapon") {
+        if (rollType === 'weapon') {
             await this._submitWeaponRoll(manualTotal);
-        } else if (rollType === "psychic") {
+        } else if (rollType === 'psychic') {
             await this._submitPsychicRoll(manualTotal);
-        } else if (rollType === "forceField") {
+        } else if (rollType === 'forceField') {
             await this._submitForceFieldRoll(manualTotal);
         } else {
             await this._submitSimpleRoll(manualTotal);
@@ -1018,14 +1016,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._applyModifiersToRollData();
 
         const rollType = this.rollType;
-        if (rollType === "weapon") {
+        if (rollType === 'weapon') {
             if (!this._validateWeaponRoll()) return;
             await this.rollData.finalize();
             await this.actionData.performActionAndSendToChat();
-        } else if (rollType === "psychic") {
+        } else if (rollType === 'psychic') {
             await this.rollData.finalize();
             await this.actionData.performActionAndSendToChat();
-        } else if (rollType === "forceField") {
+        } else if (rollType === 'forceField') {
             if (!this._validateForceFieldRoll()) return;
             await this.rollData.finalize();
             await this.rollData.performActionAndSendToChat();
@@ -1041,12 +1039,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     _applyModifiersToRollData() {
         const rd = this.rollData;
         if (!rd.modifiers) return;
-        rd.modifiers["difficulty"] = this._currentDifficulty.modifier;
-        rd.modifiers["situational"] = this._calculateSituationalModifiers();
-        rd.modifiers["modifier"] = this._customModifier;
+        rd.modifiers['difficulty'] = this._currentDifficulty.modifier;
+        rd.modifiers['situational'] = this._calculateSituationalModifiers();
+        rd.modifiers['modifier'] = this._customModifier;
 
         // Apply combat situational card modifiers (weapon panel)
-        if (this.rollType === "weapon" && this._activeCombatSituationals.size > 0) {
+        if (this.rollType === 'weapon' && this._activeCombatSituationals.size > 0) {
             const isRanged = !!rd.weapon?.isRanged;
             const situationals = getSituationalModifiers(isRanged);
             let combatSitTotal = 0;
@@ -1055,7 +1053,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                     combatSitTotal += s.modifier;
                 }
             }
-            rd.modifiers["combat-situational"] = combatSitTotal;
+            rd.modifiers['combat-situational'] = combatSitTotal;
         }
     }
 
@@ -1094,7 +1092,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // Target-only post
             await this.rollData.finalize();
             this.rollData.isTargetOnly = true;
-            this.rollData.render = "";
+            this.rollData.render = '';
             this.rollData.template = this.actionData.template;
             await sendActionDataToChat(this.actionData);
         }
@@ -1108,7 +1106,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         } else {
             await this.rollData.finalize();
             this.rollData.isTargetOnly = true;
-            this.rollData.render = "";
+            this.rollData.render = '';
             this.rollData.template = this.actionData.template;
             await sendActionDataToChat(this.actionData);
         }
@@ -1134,7 +1132,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     _validateWeaponRoll() {
         if (this.rollData.fireRate === 0) {
-            ui.notifications.warn("Not enough ammo to perform action. Do you need to reload?");
+            ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
             return false;
         }
         return true;
@@ -1142,11 +1140,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     _validateForceFieldRoll() {
         if (!this.rollData.forceField?.system?.activated) {
-            ui.notifications.warn("Force Field not activated!");
+            ui.notifications.warn('Force Field not activated!');
             return false;
         }
         if (this.rollData.forceField?.system?.overloaded) {
-            ui.notifications.warn("Force Field currently overloaded!");
+            ui.notifications.warn('Force Field currently overloaded!');
             return false;
         }
         return true;

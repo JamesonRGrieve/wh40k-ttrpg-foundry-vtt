@@ -3,7 +3,7 @@
  * Based on dnd5e's Dialog5e pattern for Foundry V13+
  */
 
-import ApplicationV2Mixin from "./application-v2-mixin.mjs";
+import ApplicationV2Mixin from './application-v2-mixin.mjs';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -13,19 +13,19 @@ const { ApplicationV2 } = foundry.applications.api;
 export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: "dialog",
-        classes: ["wh40k-rpg", "dialog", "standard-form"],
+        tag: 'dialog',
+        classes: ['wh40k-rpg', 'dialog', 'standard-form'],
         window: {
-            contentTag: "form",
-            contentClasses: ["standard-form"],
-            minimizable: false
+            contentTag: 'form',
+            contentClasses: ['standard-form'],
+            minimizable: false,
         },
         position: {
-            width: 400
+            width: 400,
         },
         form: {
-            closeOnSubmit: true
-        }
+            closeOnSubmit: true,
+        },
     };
 
     /* -------------------------------------------- */
@@ -33,11 +33,11 @@ export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static PARTS = {
         content: {
-            template: "systems/wh40k-rpg/templates/prompt/dialog-content.hbs"
+            template: 'systems/wh40k-rpg/templates/prompt/dialog-content.hbs',
         },
         footer: {
-            template: "templates/generic/form-footer.hbs"
-        }
+            template: 'templates/generic/form-footer.hbs',
+        },
     };
 
     /* -------------------------------------------- */
@@ -47,10 +47,10 @@ export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
     /** @inheritDoc */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        context.content = this.options.content ?? "";
-        context.buttons = this.options.buttons?.map(button => ({
+        context.content = this.options.content ?? '';
+        context.buttons = this.options.buttons?.map((button) => ({
             ...button,
-            cssClass: button.class
+            cssClass: button.class,
         }));
         return context;
     }
@@ -65,9 +65,13 @@ export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
         return new Promise((resolve, reject) => {
             this._resolve = resolve;
             this._reject = reject;
-            this.addEventListener("close", () => {
-                if (!this._submitted) resolve(null);
-            }, { once: true });
+            this.addEventListener(
+                'close',
+                () => {
+                    if (!this._submitted) resolve(null);
+                },
+                { once: true },
+            );
             this.render(true);
         });
     }
@@ -103,17 +107,17 @@ export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
                 buttons: {
                     yes: {
                         icon: '<i class="fas fa-check"></i>',
-                        label: game.i18n.localize("Yes"),
-                        callback: () => resolve(true)
+                        label: game.i18n.localize('Yes'),
+                        callback: () => resolve(true),
                     },
                     no: {
                         icon: '<i class="fas fa-times"></i>',
-                        label: game.i18n.localize("No"),
-                        callback: () => resolve(false)
-                    }
+                        label: game.i18n.localize('No'),
+                        callback: () => resolve(false),
+                    },
                 },
-                default: defaultYes ? "yes" : "no",
-                close: () => resolve(null)
+                default: defaultYes ? 'yes' : 'no',
+                close: () => resolve(null),
             }).render(true);
         });
     }
@@ -127,7 +131,7 @@ export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Function} options.callback   Callback when submitted.
      * @returns {Promise<any>}
      */
-    static async prompt({ title, content, label = "OK", callback } = {}) {
+    static async prompt({ title, content, label = 'OK', callback } = {}) {
         return new Promise((resolve) => {
             new Dialog({
                 title,
@@ -139,16 +143,16 @@ export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
                         callback: (html) => {
                             const result = callback?.(html);
                             resolve(result);
-                        }
+                        },
                     },
                     cancel: {
                         icon: '<i class="fas fa-times"></i>',
-                        label: game.i18n.localize("Cancel"),
-                        callback: () => resolve(null)
-                    }
+                        label: game.i18n.localize('Cancel'),
+                        callback: () => resolve(null),
+                    },
                 },
-                default: "ok",
-                close: () => resolve(null)
+                default: 'ok',
+                close: () => resolve(null),
             }).render(true);
         });
     }

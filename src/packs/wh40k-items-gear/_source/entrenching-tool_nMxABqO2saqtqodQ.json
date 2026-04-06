@@ -1,41 +1,41 @@
 {
-  "name": "Entrenching Tool",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "tools",
-    "weight": 2,
-    "availability": "plentiful",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 15,
-      "currency": "throne"
+    "name": "Entrenching Tool",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "tools",
+        "weight": 2,
+        "availability": "plentiful",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 15,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Small Folding Spade, effective at digging trenches, shoring mounts, or hitting people.\nFunctions as Primitive Melee Weapon (1d5+3 R, Pen 0, Primitive (8), Unwieldy)</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 15 T</p>",
+            "chat": "",
+            "summary": "Small Folding Spade, effective at digging trenches, shoring mounts, or hitting people.\nFunctions as Primitive Melee Weapon (1d5+3 R, Pen 0, Primitive (8), Unwieldy)"
+        },
+        "source": {
+            "book": "OW: Hammer of the Emperor",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Small Folding Spade, effective at digging trenches, shoring mounts, or hitting people.\nFunctions as Primitive Melee Weapon (1d5+3 R, Pen 0, Primitive (8), Unwieldy)",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Small Folding Spade, effective at digging trenches, shoring mounts, or hitting people.\nFunctions as Primitive Melee Weapon (1d5+3 R, Pen 0, Primitive (8), Unwieldy)</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 15 T</p>",
-      "chat": "",
-      "summary": "Small Folding Spade, effective at digging trenches, shoring mounts, or hitting people.\nFunctions as Primitive Melee Weapon (1d5+3 R, Pen 0, Primitive (8), Unwieldy)"
-    },
-    "source": {
-      "book": "OW: Hammer of the Emperor",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Small Folding Spade, effective at digging trenches, shoring mounts, or hitting people.\nFunctions as Primitive Melee Weapon (1d5+3 R, Pen 0, Primitive (8), Unwieldy)",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "nMxABqO2saqtqodQ"
+    "effects": [],
+    "flags": {},
+    "_id": "nMxABqO2saqtqodQ"
 }

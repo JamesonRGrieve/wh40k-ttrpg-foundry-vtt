@@ -3,58 +3,58 @@
 // ============================================
 
 .wh40k-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: $wh40k-space-xs;
-  padding: $wh40k-space-sm $wh40k-space-md;
-  background: var(--rt-btn-bg);
-  border: 1px solid var(--rt-border-color);
-  border-radius: $wh40k-radius-md;
-  color: var(--rt-text-dark);
-  font-family: $wh40k-font-body;
-  font-size: $wh40k-font-size-sm;
-  cursor: pointer;
-  transition: all $wh40k-transition-base;
-  
-  i {
-    font-size: 14px;
-  }
-  
-  &:hover {
-    background: var(--rt-btn-bg-hover);
-    border-color: var(--rt-gold);
-    color: var(--rt-gold);
-    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-  }
-  
-  &--primary {
-    background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
-    border-color: var(--rt-gold);
-    color: #1a1a1a;
-    
-    &:hover {
-      background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-bright) 100%);
-      color: #1a1a1a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-sm $wh40k-space-md;
+    background: var(--rt-btn-bg);
+    border: 1px solid var(--rt-border-color);
+    border-radius: $wh40k-radius-md;
+    color: var(--rt-text-dark);
+    font-family: $wh40k-font-body;
+    font-size: $wh40k-font-size-sm;
+    cursor: pointer;
+    transition: all $wh40k-transition-base;
+
+    i {
+        font-size: 14px;
     }
-  }
-  
-  &--danger {
-    border-color: var(--rt-red-dark);
-    
+
     &:hover {
-      background: var(--rt-red-dark);
-      border-color: var(--rt-red);
-      color: #fff;
-      box-shadow: 0 0 8px rgba(139, 0, 0, 0.4);
+        background: var(--rt-btn-bg-hover);
+        border-color: var(--rt-gold);
+        color: var(--rt-gold);
+        box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
     }
-  }
-  
-  &--icon-only {
-    padding: $wh40k-space-xs;
-    width: 28px;
-    height: 28px;
-  }
+
+    &--primary {
+        background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
+        border-color: var(--rt-gold);
+        color: #1a1a1a;
+
+        &:hover {
+            background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-bright) 100%);
+            color: #1a1a1a;
+        }
+    }
+
+    &--danger {
+        border-color: var(--rt-red-dark);
+
+        &:hover {
+            background: var(--rt-red-dark);
+            border-color: var(--rt-red);
+            color: #fff;
+            box-shadow: 0 0 8px rgba(139, 0, 0, 0.4);
+        }
+    }
+
+    &--icon-only {
+        padding: $wh40k-space-xs;
+        width: 28px;
+        height: 28px;
+    }
 }
 
 // ============================================
@@ -62,33 +62,33 @@
 // ============================================
 
 .wh40k-table {
-  width: 100%;
-  border-collapse: collapse;
-  
-  th, td {
-    padding: $wh40k-space-sm;
-    text-align: left;
-    border-bottom: 1px solid var(--rt-border-color-light);
-  }
-  
-  th {
-    font-size: $wh40k-font-size-xs;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--rt-text-muted);
-    background: var(--rt-panel-bg-translucent);
-  }
-  
-  tr {
-    transition: background $wh40k-transition-fast;
-    
-    &:hover {
-      background: rgba(212, 175, 55, 0.05);
-    }
-  }
-  
-  td {
-    color: var(--rt-text-dark);
-  }
-}
+    width: 100%;
+    border-collapse: collapse;
 
+    th,
+    td {
+        padding: $wh40k-space-sm;
+        text-align: left;
+        border-bottom: 1px solid var(--rt-border-color-light);
+    }
+
+    th {
+        font-size: $wh40k-font-size-xs;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--rt-text-muted);
+        background: var(--rt-panel-bg-translucent);
+    }
+
+    tr {
+        transition: background $wh40k-transition-fast;
+
+        &:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+    }
+
+    td {
+        color: var(--rt-text-dark);
+    }
+}

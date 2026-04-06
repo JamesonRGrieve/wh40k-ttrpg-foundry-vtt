@@ -1,126 +1,124 @@
 {
-  "name": "Void-Master",
-  "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/steering-wheel.svg",
-  "system": {
-    "identifier": "void-master",
-    "step": "career",
-    "stepIndex": 6,
-    "description": {
-      "value": "<h2>Void-Master</h2><p>The Void-Master is the supreme navigator and pilot of the void, a master of starship operations and void combat. Born to the black, they have spent their lives aboard starships, learning every aspect of void travel and ship handling. Whether guiding a vessel through asteroid fields, coordinating devastating broadsides, or piloting attack craft in the heat of battle, the Void-Master's skill is unmatched.</p><h3>Starting Skills</h3><p>Common Lore (Imperial Navy, War) (Int), Forbidden Lore (Xenos) (Int), Navigation (Stellar) (Int), Pilot (Space Craft, Flyers) (Ag), Scholastic Lore (Astromancy) (Int), Speak Language (Low Gothic) (Int)</p><h3>Starting Talents</h3><p>Pistol Weapon Training (Universal), Melee Weapon Training (Universal), Nerves of Steel, Voidborn Mastery</p><h3>Starting Gear</h3><p>Best-craftsmanship mono-sword or common-craftsmanship power sword. Best-craftsmanship hand cannon or common-craftsmanship bolt pistol. Guard flak armour. Micro-bead, void suit, blessed ship token, re-breather, Imperial Navy uniform or beggar's cloak, 2 bottles of amasec, pict-recorder, vox-caster.</p><h3>Special Ability</h3><p><strong>Voidborn Mastery:</strong> Select one of the following at character creation:</p><p><em>Mastery of Space:</em> The Void-master can re-roll all failed Tests with Manoeuvre Actions aboard a space ship.</p><p><em>Mastery of Gunnery:</em> The Void-master can re-roll all failed Tests with Shooting Actions aboard a starship.</p><p><em>Mastery of Augurs:</em> The Void-master can re-roll all failed Tests involving Detection aboard a starship.</p><p><em>Mastery of Small Craft:</em> The Void-master can re-roll all failed Pilot Tests with small craft (shuttles, heavy lifters, guncutters, starfighters, bombers, and so forth).</p>"
+    "name": "Void-Master",
+    "type": "originPath",
+    "img": "modules/game-icons-net/whitetransparent/steering-wheel.svg",
+    "system": {
+        "identifier": "void-master",
+        "step": "career",
+        "stepIndex": 6,
+        "description": {
+            "value": "<h2>Void-Master</h2><p>The Void-Master is the supreme navigator and pilot of the void, a master of starship operations and void combat. Born to the black, they have spent their lives aboard starships, learning every aspect of void travel and ship handling. Whether guiding a vessel through asteroid fields, coordinating devastating broadsides, or piloting attack craft in the heat of battle, the Void-Master's skill is unmatched.</p><h3>Starting Skills</h3><p>Common Lore (Imperial Navy, War) (Int), Forbidden Lore (Xenos) (Int), Navigation (Stellar) (Int), Pilot (Space Craft, Flyers) (Ag), Scholastic Lore (Astromancy) (Int), Speak Language (Low Gothic) (Int)</p><h3>Starting Talents</h3><p>Pistol Weapon Training (Universal), Melee Weapon Training (Universal), Nerves of Steel, Voidborn Mastery</p><h3>Starting Gear</h3><p>Best-craftsmanship mono-sword or common-craftsmanship power sword. Best-craftsmanship hand cannon or common-craftsmanship bolt pistol. Guard flak armour. Micro-bead, void suit, blessed ship token, re-breather, Imperial Navy uniform or beggar's cloak, 2 bottles of amasec, pict-recorder, vox-caster.</p><h3>Special Ability</h3><p><strong>Voidborn Mastery:</strong> Select one of the following at character creation:</p><p><em>Mastery of Space:</em> The Void-master can re-roll all failed Tests with Manoeuvre Actions aboard a space ship.</p><p><em>Mastery of Gunnery:</em> The Void-master can re-roll all failed Tests with Shooting Actions aboard a starship.</p><p><em>Mastery of Augurs:</em> The Void-master can re-roll all failed Tests involving Detection aboard a starship.</p><p><em>Mastery of Small Craft:</em> The Void-master can re-roll all failed Pilot Tests with small craft (shuttles, heavy lifters, guncutters, starfighters, bombers, and so forth).</p>"
+        },
+        "requirements": {
+            "text": "Origin Path: Career",
+            "previousSteps": [],
+            "excludedSteps": []
+        },
+        "grants": {
+            "woundsFormula": "",
+            "wounds": 0,
+            "fateFormula": "",
+            "fateThreshold": 0,
+            "blessedByEmperor": false,
+            "skills": [
+                {
+                    "name": "Common Lore",
+                    "specialization": "Imperial Navy",
+                    "level": "trained"
+                },
+                {
+                    "name": "Common Lore",
+                    "specialization": "War",
+                    "level": "trained"
+                },
+                {
+                    "name": "Forbidden Lore",
+                    "specialization": "Xenos",
+                    "level": "trained"
+                },
+                {
+                    "name": "Navigation",
+                    "specialization": "Stellar",
+                    "level": "trained"
+                },
+                {
+                    "name": "Pilot",
+                    "specialization": "Flyers",
+                    "level": "trained"
+                },
+                {
+                    "name": "Pilot",
+                    "specialization": "Space Craft",
+                    "level": "trained"
+                },
+                {
+                    "name": "Scholastic Lore",
+                    "specialization": "Astromancy",
+                    "level": "trained"
+                },
+                {
+                    "name": "Speak Language",
+                    "specialization": "Low Gothic",
+                    "level": "trained"
+                }
+            ],
+            "talents": [
+                {
+                    "name": "Pistol Weapon Training (Universal)",
+                    "specialization": "Universal",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.o76kP0Y85FTEcS7G"
+                },
+                {
+                    "name": "Melee Weapon Training (Universal)",
+                    "specialization": "Universal",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.IA7IeKuu9Sura3tN"
+                },
+                {
+                    "name": "Nerves of Steel",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.ew2l7tuorQ7fCJD8"
+                },
+                {
+                    "name": "Voidborn Mastery (Void-Master)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.CA00000000000008"
+                }
+            ],
+            "traits": [],
+            "aptitudes": [],
+            "equipment": [],
+            "specialAbilities": [],
+            "choices": []
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "effectText": "",
+        "notes": "",
+        "source": {
+            "book": "Rogue Trader Core Rulebook",
+            "page": "67",
+            "custom": ""
+        },
+        "selectedChoices": {},
+        "activeModifiers": [],
+        "positions": [3]
     },
-    "requirements": {
-      "text": "Origin Path: Career",
-      "previousSteps": [],
-      "excludedSteps": []
-    },
-    "grants": {
-      "woundsFormula": "",
-      "wounds": 0,
-      "fateFormula": "",
-      "fateThreshold": 0,
-      "blessedByEmperor": false,
-      "skills": [
-        {
-          "name": "Common Lore",
-          "specialization": "Imperial Navy",
-          "level": "trained"
-        },
-        {
-          "name": "Common Lore",
-          "specialization": "War",
-          "level": "trained"
-        },
-        {
-          "name": "Forbidden Lore",
-          "specialization": "Xenos",
-          "level": "trained"
-        },
-        {
-          "name": "Navigation",
-          "specialization": "Stellar",
-          "level": "trained"
-        },
-        {
-          "name": "Pilot",
-          "specialization": "Flyers",
-          "level": "trained"
-        },
-        {
-          "name": "Pilot",
-          "specialization": "Space Craft",
-          "level": "trained"
-        },
-        {
-          "name": "Scholastic Lore",
-          "specialization": "Astromancy",
-          "level": "trained"
-        },
-        {
-          "name": "Speak Language",
-          "specialization": "Low Gothic",
-          "level": "trained"
-        }
-      ],
-      "talents": [
-        {
-          "name": "Pistol Weapon Training (Universal)",
-          "specialization": "Universal",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.o76kP0Y85FTEcS7G"
-        },
-        {
-          "name": "Melee Weapon Training (Universal)",
-          "specialization": "Universal",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.IA7IeKuu9Sura3tN"
-        },
-        {
-          "name": "Nerves of Steel",
-          "specialization": "",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.ew2l7tuorQ7fCJD8"
-        },
-        {
-          "name": "Voidborn Mastery (Void-Master)",
-          "specialization": "",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.CA00000000000008"
-        }
-      ],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [],
-      "choices": []
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "effectText": "",
-    "notes": "",
-    "source": {
-      "book": "Rogue Trader Core Rulebook",
-      "page": "67",
-      "custom": ""
-    },
-    "selectedChoices": {},
-    "activeModifiers": [],
-    "positions": [
-      3
-    ]
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "yrCCXTtAJeAVeARi"
+    "effects": [],
+    "flags": {},
+    "_id": "yrCCXTtAJeAVeARi"
 }

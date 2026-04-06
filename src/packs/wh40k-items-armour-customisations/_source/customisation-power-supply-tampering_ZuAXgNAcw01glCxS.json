@@ -1,28 +1,26 @@
 {
-  "name": "Customisation: Power Supply Tampering",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "Can connect any Pistol/Basic Las or Pistol Melta, Plasma, or Flame Weapon to the armour's power supply. The weapon no longer needs reloading and has infinite ammo as long as the armour is powered. Weapon cannot benefit from Quick Draw Talent.",
-    "availability": "Special",
-    "source": "Black Crusade: Core",
-    "description": {
-      "value": "<p>Can connect any Pistol/Basic Las or Pistol Melta, Plasma, or Flame Weapon to the armour's power supply. The weapon no longer needs reloading and has infinite ammo as long as the armour is powered. Weapon cannot benefit from Quick Draw Talent.</p>"
+    "name": "Customisation: Power Supply Tampering",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "Can connect any Pistol/Basic Las or Pistol Melta, Plasma, or Flame Weapon to the armour's power supply. The weapon no longer needs reloading and has infinite ammo as long as the armour is powered. Weapon cannot benefit from Quick Draw Talent.",
+        "availability": "Special",
+        "source": "Black Crusade: Core",
+        "description": {
+            "value": "<p>Can connect any Pistol/Basic Las or Pistol Melta, Plasma, or Flame Weapon to the armour's power supply. The weapon no longer needs reloading and has infinite ammo as long as the armour is powered. Weapon cannot benefit from Quick Draw Talent.</p>"
+        },
+        "modifiers": {
+            "armourPoints": 0,
+            "maxAgility": 0,
+            "weight": 0.5
+        },
+        "restrictions": {
+            "armourTypes": ["power"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 0,
-      "maxAgility": 0,
-      "weight": 0.5
-    },
-    "restrictions": {
-      "armourTypes": [
-        "power"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "ZuAXgNAcw01glCxS"
+    "effects": [],
+    "flags": {},
+    "_id": "ZuAXgNAcw01glCxS"
 }

@@ -1,33 +1,31 @@
 {
-  "name": "Salvation Shield",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "void",
-    "weight": 0.05,
-    "availability": "near-unique",
-    "notes": "Tiny buttons, broaches, or rings that generate silent, invisible shields covering one suqare metre. Can only last a few minutes and takes several hours to recharge itself.  [AP: 70%]",
-    "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>Tiny buttons, broaches, or rings that generate silent, invisible shields covering one suqare metre. Can only last a few minutes and takes several hours to recharge itself. </p>"
+    "name": "Salvation Shield",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "void",
+        "weight": 0.05,
+        "availability": "near-unique",
+        "notes": "Tiny buttons, broaches, or rings that generate silent, invisible shields covering one suqare metre. Can only last a few minutes and takes several hours to recharge itself.  [AP: 70%]",
+        "source": "RT: Into the Storm",
+        "description": {
+            "value": "<p>Tiny buttons, broaches, or rings that generate silent, invisible shields covering one suqare metre. Can only last a few minutes and takes several hours to recharge itself. </p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["all"],
+        "armourPoints": {
+            "head": 0,
+            "body": 0,
+            "leftArm": 0,
+            "rightArm": 0,
+            "leftLeg": 0,
+            "rightLeg": 0
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "all"
-    ],
-    "armourPoints": {
-      "head": 0,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "ZDPq7cc8iSCoNJau"
+    "effects": [],
+    "flags": {},
+    "_id": "ZDPq7cc8iSCoNJau"
 }

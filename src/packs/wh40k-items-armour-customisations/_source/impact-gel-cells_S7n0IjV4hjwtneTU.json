@@ -1,29 +1,26 @@
 {
-  "name": "Impact Gel Cells",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "Gives +2 AP vs Impact damage",
-    "availability": "rare",
-    "source": "RT: Hostile Acq.",
-    "description": {
-      "value": "<p>Gives +2 AP vs Impact damage</p>"
+    "name": "Impact Gel Cells",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "Gives +2 AP vs Impact damage",
+        "availability": "rare",
+        "source": "RT: Hostile Acq.",
+        "description": {
+            "value": "<p>Gives +2 AP vs Impact damage</p>"
+        },
+        "modifiers": {
+            "armourPoints": 2,
+            "maxAgility": 0,
+            "weight": 0.5
+        },
+        "restrictions": {
+            "armourTypes": ["primitive", "non-primitive"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 2,
-      "maxAgility": 0,
-      "weight": 0.5
-    },
-    "restrictions": {
-      "armourTypes": [
-        "primitive",
-        "non-primitive"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "S7n0IjV4hjwtneTU"
+    "effects": [],
+    "flags": {},
+    "_id": "S7n0IjV4hjwtneTU"
 }

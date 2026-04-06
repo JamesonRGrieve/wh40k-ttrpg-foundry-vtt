@@ -1,18 +1,18 @@
 {
-  "name": "Overheats",
-  "type": "weaponQuality",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "identifier": "overheats",
-    "hasLevel": false,
-    "level": null,
-    "effect": "<p>Effect reference: 38</p>",
-    "notes": "",
-    "description": {
-      "value": "<p>38</p>"
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "QfHy8JUGxlPu2sbm"
+    "name": "Overheats",
+    "type": "weaponQuality",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "identifier": "overheats",
+        "hasLevel": false,
+        "level": null,
+        "effect": "<p>Effect reference: 38</p>",
+        "notes": "",
+        "description": {
+            "value": "<p>38</p>"
+        }
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "QfHy8JUGxlPu2sbm"
 }

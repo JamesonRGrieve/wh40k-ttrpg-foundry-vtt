@@ -76,9 +76,15 @@
     &-mod {
         font-weight: 600;
 
-        &--positive { color: #4ade80; }
-        &--negative { color: #f87171; }
-        &--neutral { color: $wh40k-text-muted; }
+        &--positive {
+            color: #4ade80;
+        }
+        &--negative {
+            color: #f87171;
+        }
+        &--neutral {
+            color: $wh40k-text-muted;
+        }
     }
 }
 
@@ -288,9 +294,15 @@
 // ── Animations ───────────────────────────────
 
 @keyframes urd-card-select {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.04); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.04);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .urd-card--selected,

@@ -1,63 +1,63 @@
 {
-  "name": "Death from Above",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "combat",
-    "source": "Deathwatch: Core",
-    "description": "<p>The character has mastered jump pack assault tactics, delivering devastating attacks from above.</p>",
-    "tier": 1,
-    "benefit": "<p>When the character makes a Charge Action whilst using a Junp Pack, their melee attack deals an extra 1d10 damage per two degrees of success on the melee attack they make at the end of their charge. Max 2d10.</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Astartes, Pilot (Personal)",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "identifier": "deathFromAbove",
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Death from Above",
-          "description": "<p>When you make a Charge Action whilst using a Jump Pack, your melee attack deals an extra 1d10 damage per two degrees of success on the melee attack you make at the end of your charge (maximum 2d10).</p>"
+    "name": "Death from Above",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "combat",
+        "source": "Deathwatch: Core",
+        "description": "<p>The character has mastered jump pack assault tactics, delivering devastating attacks from above.</p>",
+        "tier": 1,
+        "benefit": "<p>When the character makes a Charge Action whilst using a Junp Pack, their melee attack deals an extra 1d10 damage per two degrees of success on the melee attack they make at the end of their charge. Max 2d10.</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Astartes, Pilot (Personal)",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "identifier": "deathFromAbove",
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Death from Above",
+                    "description": "<p>When you make a Charge Action whilst using a Jump Pack, your melee attack deals an extra 1d10 damage per two degrees of success on the melee attack you make at the end of your charge (maximum 2d10).</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "HF8SKxmLQO2il7Wm"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "HF8SKxmLQO2il7Wm"
 }

@@ -1,41 +1,41 @@
 {
-  "name": "Redole Re-breather",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "clothing",
-    "weight": 1,
-    "availability": "rare",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 250,
-      "currency": "throne"
+    "name": "Redole Re-breather",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "clothing",
+        "weight": 1,
+        "availability": "rare",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 250,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing replacement. Offers no Protection against harmful air-born toxins, only designed to work underwater.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 250 T</p>",
+            "chat": "",
+            "summary": "A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing r"
+        },
+        "source": {
+            "book": "DH: The Inquisitor's Handbook",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing replacement. Offers no Protection against harmful air-born toxins, only designed to work underwater.",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing replacement. Offers no Protection against harmful air-born toxins, only designed to work underwater.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 250 T</p>",
-      "chat": "",
-      "summary": "A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing r"
-    },
-    "source": {
-      "book": "DH: The Inquisitor's Handbook",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "A Helmet that draws breathable oxygen from water, allowing a wearer to stay underwater indefinitely, As long as its flesh-components are kept wet. It has a functional life of a decade before needing replacement. Offers no Protection against harmful air-born toxins, only designed to work underwater.",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "SfOQG3MqcEgEmDhH"
+    "effects": [],
+    "flags": {},
+    "_id": "SfOQG3MqcEgEmDhH"
 }

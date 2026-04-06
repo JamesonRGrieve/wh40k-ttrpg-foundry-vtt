@@ -1,41 +1,39 @@
 {
-  "name": "Auto-stabilised Logis-Targeter",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "all"
-    ],
-    "effect": "+5 Ship Detection, +5 to Ship Weapon Ballistic Skill Tests. Can't be Damaged or Destroyed Except from a Critical Hit. Can be used as the Ship's Auger Array.",
-    "availability": "extremely-rare",
-    "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>+5 Ship Detection, +5 to Ship Weapon Ballistic Skill Tests. Can't be Damaged or Destroyed Except from a Critical Hit. Can be used as the Ship's Auger Array.</p>"
+    "name": "Auto-stabilised Logis-Targeter",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["all"],
+        "effect": "+5 Ship Detection, +5 to Ship Weapon Ballistic Skill Tests. Can't be Damaged or Destroyed Except from a Critical Hit. Can be used as the Ship's Auger Array.",
+        "availability": "extremely-rare",
+        "source": "Rogue Trader Core",
+        "description": {
+            "value": "<p>+5 Ship Detection, +5 to Ship Weapon Ballistic Skill Tests. Can't be Damaged or Destroyed Except from a Critical Hit. Can be used as the Ship's Auger Array.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "supplemental",
+        "essential": true,
+        "power": {
+            "used": 5,
+            "generated": 0
+        },
+        "space": 0,
+        "shipPoints": 2,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "auto-stabilised-logis-targeter"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "supplemental",
-    "essential": true,
-    "power": {
-      "used": 5,
-      "generated": 0
-    },
-    "space": 0,
-    "shipPoints": 2,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "auto-stabilised-logis-targeter"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "lHyvryFHnISPbamX"
+    "effects": [],
+    "flags": {},
+    "_id": "lHyvryFHnISPbamX"
 }

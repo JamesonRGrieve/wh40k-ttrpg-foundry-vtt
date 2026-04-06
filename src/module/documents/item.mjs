@@ -2,7 +2,6 @@ import { WH40KItemContainer } from './item-container.mjs';
 import { capitalize } from '../handlebars/handlebars-helpers.mjs';
 
 export class WH40KItem extends WH40KItemContainer {
-    
     /**
      * Override to clean/validate img field before validation runs.
      * Foundry V13 has strict img validation - ensure valid file extension.
@@ -15,7 +14,7 @@ export class WH40KItem extends WH40KItemContainer {
         // CRITICAL: Clean img field if present - V13 validation is very strict
         if ('img' in source) {
             const imgValue = source.img;
-            
+
             // Handle empty, null, undefined, or non-string img values
             if (!imgValue || imgValue === '' || typeof imgValue !== 'string' || imgValue.trim() === '') {
                 // Set to type-specific default
@@ -25,14 +24,14 @@ export class WH40KItem extends WH40KItemContainer {
                 // Check if has valid extension
                 const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif', '.webm'];
                 const imgStr = imgValue.toLowerCase().trim();
-                
+
                 // Also check for obviously invalid paths
                 if (imgStr === 'null' || imgStr === 'undefined' || imgStr.length < 5) {
                     source.img = this._getDefaultIcon(source.type || 'unknown');
                     console.warn(`WH40K | cleanData: Invalid img path "${imgValue}" for type "${source.type}", using default: ${source.img}`);
                 } else {
-                    const hasValidExtension = validExtensions.some(ext => imgStr.endsWith(ext));
-                    
+                    const hasValidExtension = validExtensions.some((ext) => imgStr.endsWith(ext));
+
                     if (!hasValidExtension) {
                         // Invalid extension - use type-specific default
                         source.img = this._getDefaultIcon(source.type || 'unknown');
@@ -43,10 +42,10 @@ export class WH40KItem extends WH40KItemContainer {
         }
         // Note: If img is not in source, that's fine - it just won't be updated
         // No need to add a default since the existing document img will remain
-        
+
         return super.cleanData(source, options);
     }
-    
+
     /**
      * Get default icon path for an item type.
      * Uses Foundry's built-in default icons which are guaranteed to exist.
@@ -75,13 +74,13 @@ export class WH40KItem extends WH40KItemContainer {
             combatAction: 'icons/svg/combat.svg',
             originPath: 'icons/svg/direction.svg',
             order: 'icons/svg/pawprint.svg',
-            ritual: 'icons/svg/book.svg'
+            ritual: 'icons/svg/book.svg',
         };
-        
+
         // Return type-specific icon or generic mystery-man fallback
         return defaultIcons[type] || 'icons/svg/mystery-man.svg';
     }
-    
+
     get totalWeight() {
         let weight = this.system.weight || 0;
         if (this.items && this.items.size > 0) {
@@ -295,19 +294,19 @@ export class WH40KItem extends WH40KItemContainer {
         this.convertNestedToItems();
 
         if (this.isPsychicPower) {
-            if(!this.system.damage || this.system.damage === '') {
+            if (!this.system.damage || this.system.damage === '') {
                 this.system.damage = 0;
             }
-            if(!this.system.penetration || this.system.penetration === '') {
+            if (!this.system.penetration || this.system.penetration === '') {
                 this.system.penetration = 0;
             }
         }
 
         // Fix Broken Selects
-        if(!this.system.craftsmanship || this.system.craftsmanship === '') {
+        if (!this.system.craftsmanship || this.system.craftsmanship === '') {
             this.system.craftsmanship = 'Common';
         }
-        if(!this.system.availability || this.system.availability === '') {
+        if (!this.system.availability || this.system.availability === '') {
             this.system.availability = 'Common';
         }
     }
@@ -386,7 +385,7 @@ export class WH40KItem extends WH40KItemContainer {
             cybernetic: 'Cybernetic',
             consumable: 'Consumable',
             ammunition: 'Ammunition',
-            forceField: 'Force Field'
+            forceField: 'Force Field',
         };
         return typeLabels[this.type] || this.type;
     }
@@ -396,8 +395,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {boolean}
      */
     get hasActions() {
-        return this.isWeapon || this.isPsychicPower || this.isNavigatorPower || 
-               (this.isTalent && this.system?.isRollable);
+        return this.isWeapon || this.isPsychicPower || this.isNavigatorPower || (this.isTalent && this.system?.isRollable);
     }
 
     /**
@@ -405,8 +403,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {boolean}
      */
     get isRollable() {
-        return (this.isTalent && this.system?.isRollable) || 
-               (this.isSkill && this.system?.rollConfig);
+        return (this.isTalent && this.system?.isRollable) || (this.isSkill && this.system?.rollConfig);
     }
 
     /**
@@ -427,7 +424,7 @@ export class WH40KItem extends WH40KItemContainer {
             isRollable: this.isRollable,
             isUsable: this.isConsumable || this.isDrug || this.isTool,
             actor: this.actor,
-            ...options
+            ...options,
         };
 
         // Use type-specific templates
@@ -439,28 +436,30 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         const html = await renderTemplate(template, cardData);
-        
+
         const chatData = {
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             // Set flags for ChatMessageRT enrichment
             flags: {
-                "wh40k-rpg": {
+                'wh40k-rpg': {
                     itemCard: true,
                     item: {
                         uuid: this.uuid,
                         id: this.id,
                         name: this.name,
-                        type: this.type
+                        type: this.type,
                     },
-                    actor: this.actor ? {
-                        uuid: this.actor.uuid,
-                        id: this.actor.id,
-                        name: this.actor.name
-                    } : null
-                }
-            }
+                    actor: this.actor
+                        ? {
+                              uuid: this.actor.uuid,
+                              id: this.actor.id,
+                              name: this.actor.name,
+                          }
+                        : null,
+                },
+            },
         };
 
         const rollMode = game.settings.get('core', 'rollMode');
@@ -481,7 +480,7 @@ export class WH40KItem extends WH40KItemContainer {
             // Weapon attack - handled by the actor sheet
             return this.actor?.rollWeaponAction?.(this) || this.sendToChat();
         } else if (this.isPsychicPower) {
-            // Psychic power - handled by the actor sheet  
+            // Psychic power - handled by the actor sheet
             return this.actor?.rollPsychicPower?.(this) || this.sendToChat();
         } else if (this.isNavigatorPower) {
             // Navigator power - roll navigator power
@@ -522,11 +521,11 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         const targetValue = characteristic.total + (rollConfig.modifier || 0);
-        
+
         // Create the roll
         const roll = new Roll('1d100');
         await roll.evaluate();
-        
+
         const success = roll.total <= targetValue;
         const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
 
@@ -540,16 +539,16 @@ export class WH40KItem extends WH40KItemContainer {
             characteristic: characteristic,
             charKey: charKey,
             actor: this.actor.name,
-            rollDescription: rollConfig.description || ''
+            rollDescription: rollConfig.description || '',
         };
 
         const html = await renderTemplate('systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs', cardData);
-        
+
         return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            rolls: [roll]
+            rolls: [roll],
         });
     }
 
@@ -564,15 +563,15 @@ export class WH40KItem extends WH40KItemContainer {
         // Navigator powers typically use Perception or Willpower
         const perception = this.actor.characteristics?.perception;
         const willpower = this.actor.characteristics?.willpower;
-        
+
         // Use the higher of the two as base, modified by Navigator Rank
         const navigatorRank = this.actor.system?.navigatorRank || 0;
         const baseChar = perception?.total > willpower?.total ? perception : willpower;
-        const targetValue = (baseChar?.total || 30) + (navigatorRank * 5);
+        const targetValue = (baseChar?.total || 30) + navigatorRank * 5;
 
         const roll = new Roll('1d100');
         await roll.evaluate();
-        
+
         const success = roll.total <= targetValue;
         const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
 
@@ -583,16 +582,16 @@ export class WH40KItem extends WH40KItemContainer {
             targetValue: targetValue,
             success: success,
             degrees: degrees,
-            actor: this.actor.name
+            actor: this.actor.name,
         };
 
         const html = await renderTemplate('systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs', cardData);
-        
+
         return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            rolls: [roll]
+            rolls: [roll],
         });
     }
 
@@ -610,7 +609,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const roll = new Roll('1d100');
         await roll.evaluate();
-        
+
         const success = roll.total <= targetValue;
         const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
 
@@ -621,16 +620,16 @@ export class WH40KItem extends WH40KItemContainer {
             targetValue: targetValue,
             success: success,
             degrees: degrees,
-            actor: this.actor.name
+            actor: this.actor.name,
         };
 
         const html = await renderTemplate('systems/wh40k-rpg/templates/chat/order-roll-chat.hbs', cardData);
-        
+
         return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            rolls: [roll]
+            rolls: [roll],
         });
     }
 
@@ -648,7 +647,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const roll = new Roll('1d100');
         await roll.evaluate();
-        
+
         const success = roll.total <= targetValue;
         const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
 
@@ -659,16 +658,16 @@ export class WH40KItem extends WH40KItemContainer {
             targetValue: targetValue,
             success: success,
             degrees: degrees,
-            actor: this.actor.name
+            actor: this.actor.name,
         };
 
         const html = await renderTemplate('systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs', cardData);
-        
+
         return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            rolls: [roll]
+            rolls: [roll],
         });
     }
 
@@ -716,7 +715,7 @@ export class WH40KItem extends WH40KItemContainer {
                 const skillPack = game.packs.get('wh40k-rpg.rt-items-skills');
                 if (skillPack) {
                     const index = await skillPack.getIndex({ fields: ['name'] });
-                    const skillEntry = index.find(s => s.name.toLowerCase() === skillName.toLowerCase());
+                    const skillEntry = index.find((s) => s.name.toLowerCase() === skillName.toLowerCase());
                     if (skillEntry) {
                         const skill = await skillPack.getDocument(skillEntry._id);
                         if (skill) itemsToAdd.push(skill.toObject());
@@ -731,7 +730,7 @@ export class WH40KItem extends WH40KItemContainer {
                 const talentPack = game.packs.get('wh40k-rpg.rt-items-talents');
                 if (talentPack) {
                     const index = await talentPack.getIndex({ fields: ['name'] });
-                    const talentEntry = index.find(t => t.name.toLowerCase() === talentName.toLowerCase());
+                    const talentEntry = index.find((t) => t.name.toLowerCase() === talentName.toLowerCase());
                     if (talentEntry) {
                         const talent = await talentPack.getDocument(talentEntry._id);
                         if (talent) itemsToAdd.push(talent.toObject());
@@ -769,7 +768,7 @@ export class WH40KItem extends WH40KItemContainer {
             fate: modifiers.fate || 0,
             skills: modifiers.skills || [],
             talents: modifiers.talents || [],
-            traits: modifiers.traits || []
+            traits: modifiers.traits || [],
         };
 
         // Build characteristic preview
@@ -779,7 +778,7 @@ export class WH40KItem extends WH40KItemContainer {
                     const charName = key.charAt(0).toUpperCase() + key.slice(1);
                     preview.characteristics.push({
                         name: charName,
-                        value: value > 0 ? `+${value}` : value
+                        value: value > 0 ? `+${value}` : value,
                     });
                 }
             }

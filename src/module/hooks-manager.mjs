@@ -454,7 +454,7 @@ Enable Debug with: game.rt.debug = true
         documents.TokenDocumentRT.registerMovementActions();
         documents.TokenDocumentRT.registerHUDListeners();
         CONFIG.Token.movement.costAggregator = (results, distance, segment) => {
-            return Math.max(...results.map(i => i.cost));
+            return Math.max(...results.map((i) => i.cost));
         };
     }
 

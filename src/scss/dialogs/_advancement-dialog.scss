@@ -19,602 +19,622 @@ $adv-transition-normal: 250ms ease;
 // Main Container
 // ============================================
 .advancement-dialog {
-  background: var(--color-bg-secondary);
-  
-  .window-content {
-    padding: 0;
-    background: transparent;
-  }
+    background: var(--color-bg-secondary);
+
+    .window-content {
+        padding: 0;
+        background: transparent;
+    }
 }
 
 .wh40k-adv {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 0;
-  font-family: 'Roboto', sans-serif;
-
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
 // ============================================
 // Header with XP Display
 // ============================================
 .wh40k-adv__header {
-  padding: 1rem 1.25rem;
-  background: linear-gradient(135deg, rgba(30, 25, 20, 0.95), rgba(40, 35, 28, 0.9));
-  border-bottom: 2px solid $wh40k-color-gold-dark;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(30, 25, 20, 0.95), rgba(40, 35, 28, 0.9));
+    border-bottom: 2px solid $wh40k-color-gold-dark;
 }
 
 .wh40k-adv__xp-display {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .wh40k-adv__xp-bar {
-  height: 8px;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
 }
 
 .wh40k-adv__xp-fill {
-  height: 100%;
-  background: linear-gradient(90deg, $wh40k-color-gold-dark, $wh40k-color-gold);
-  border-radius: 4px;
-  transition: width 0.5s ease-out;
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    animation: xp-shimmer 2s infinite;
-  }
+    height: 100%;
+    background: linear-gradient(90deg, $wh40k-color-gold-dark, $wh40k-color-gold);
+    border-radius: 4px;
+    transition: width 0.5s ease-out;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        animation: xp-shimmer 2s infinite;
+    }
 }
 
 @keyframes xp-shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 .wh40k-adv__xp-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
 }
 
 .wh40k-adv__xp-available {
-  color: $wh40k-color-gold;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  
-  i {
-    color: $wh40k-color-gold-light;
-  }
-  
-  strong {
-    font-size: 1.2rem;
-    font-weight: 700;
-  }
+    color: $wh40k-color-gold;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    i {
+        color: $wh40k-color-gold-light;
+    }
+
+    strong {
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
 }
 
 .wh40k-adv__xp-total {
-  color: var(--color-text-secondary);
-  font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
 }
 
 // ============================================
 // No Career Blocked State
 // ============================================
 .wh40k-adv__blocked-state {
-  display: flex;
-  background: var(--rt-panel-bg);
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 2rem;
-  text-align: center;
-  flex: 1;
-  animation: fadeIn $adv-transition-normal;
+    display: flex;
+    background: var(--rt-panel-bg);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    flex: 1;
+    animation: fadeIn $adv-transition-normal;
 }
 
 .wh40k-adv__blocked-icon {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgba(139, 105, 20, 0.15);
-  border: 2px dashed rgba(139, 105, 20, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  
-  i {
-    font-size: 2.5rem;
-    color: $wh40k-color-warning;
-    opacity: 0.7;
-  }
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(139, 105, 20, 0.15);
+    border: 2px dashed rgba(139, 105, 20, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+
+    i {
+        font-size: 2.5rem;
+        color: $wh40k-color-warning;
+        opacity: 0.7;
+    }
 }
 
 .wh40k-adv__blocked-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: $wh40k-color-gold;
-  margin: 0 0 0.75rem 0;
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: $wh40k-color-gold;
+    margin: 0 0 0.75rem 0;
 }
 
 .wh40k-adv__blocked-message {
-  font-size: 0.95rem;
-  color: var(--color-text-secondary);
-  max-width: 360px;
-  line-height: 1.5;
-  margin: 0 0 1.5rem 0;
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    max-width: 360px;
+    line-height: 1.5;
+    margin: 0 0 1.5rem 0;
 }
 
 .wh40k-adv__blocked-hint {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  background: rgba(201, 162, 39, 0.1);
-  border: 1px solid rgba(201, 162, 39, 0.3);
-  border-radius: 6px;
-  font-size: 0.85rem;
-  color: $wh40k-color-gold-light;
-  
-  i {
-    font-size: 1rem;
-    color: $wh40k-color-gold;
-  }
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(201, 162, 39, 0.1);
+    border: 1px solid rgba(201, 162, 39, 0.3);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: $wh40k-color-gold-light;
+
+    i {
+        font-size: 1rem;
+        color: $wh40k-color-gold;
+    }
 }
 
 // ============================================
 // Tab Navigation
 // ============================================
 .wh40k-adv__tabs {
-  display: flex;
-  gap: 0;
-  background: rgba(30, 25, 20, 0.8);
-  border-bottom: 1px solid $adv-card-border;
+    display: flex;
+    gap: 0;
+    background: rgba(30, 25, 20, 0.8);
+    border-bottom: 1px solid $adv-card-border;
 }
 
 .wh40k-adv__tab {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  background: transparent;
-  border: none;
-  border-bottom: 3px solid transparent;
-  color: var(--color-text-secondary);
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: all $adv-transition-fast;
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--color-text-primary);
-  }
-  
-  &--active {
-    color: $wh40k-color-gold;
-    border-bottom-color: $wh40k-color-gold;
-    background: rgba(201, 162, 39, 0.1);
-    
-    i {
-      color: $wh40k-color-gold-light;
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all $adv-transition-fast;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--color-text-primary);
     }
-  }
-  
-  i {
-    font-size: 1rem;
-  }
+
+    &--active {
+        color: $wh40k-color-gold;
+        border-bottom-color: $wh40k-color-gold;
+        background: rgba(201, 162, 39, 0.1);
+
+        i {
+            color: $wh40k-color-gold-light;
+        }
+    }
+
+    i {
+        font-size: 1rem;
+    }
 }
 
 // ============================================
 // Content Area
 // ============================================
 .wh40k-adv__content {
-  background: var(--rt-panel-bg);
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem;
+    background: var(--rt-panel-bg);
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
 }
 
 .wh40k-adv__panel {
-  animation: fadeIn $adv-transition-normal;
+    animation: fadeIn $adv-transition-normal;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 // ============================================
 // Characteristic Cards Grid
 // ============================================
 .wh40k-adv__char-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
 }
 
 .wh40k-adv__char-card {
-  background: $adv-card-bg;
-  border: 1px solid $adv-card-border;
-  border-radius: 8px;
-  padding: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  transition: all $adv-transition-fast;
-  
-  &:hover:not(&--maxed) {
-    border-color: $adv-card-hover-border;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  }
-  
-  &--maxed {
-    opacity: 0.7;
-    background: rgba(45, 80, 22, 0.15);
-    border-color: rgba(45, 80, 22, 0.4);
-  }
-  
-  &--purchased {
-    animation: purchasePulse 0.6s ease-out;
-  }
+    background: $adv-card-bg;
+    border: 1px solid $adv-card-border;
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all $adv-transition-fast;
+
+    &:hover:not(&--maxed) {
+        border-color: $adv-card-hover-border;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    &--maxed {
+        opacity: 0.7;
+        background: rgba(45, 80, 22, 0.15);
+        border-color: rgba(45, 80, 22, 0.4);
+    }
+
+    &--purchased {
+        animation: purchasePulse 0.6s ease-out;
+    }
 }
 
 @keyframes purchasePulse {
-  0% { box-shadow: 0 0 0 0 $adv-purchased-glow; }
-  50% { box-shadow: 0 0 20px 10px $adv-purchased-glow; }
-  100% { box-shadow: 0 0 0 0 transparent; }
+    0% {
+        box-shadow: 0 0 0 0 $adv-purchased-glow;
+    }
+    50% {
+        box-shadow: 0 0 20px 10px $adv-purchased-glow;
+    }
+    100% {
+        box-shadow: 0 0 0 0 transparent;
+    }
 }
 
 .wh40k-adv__char-header {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  width: 100%;
-  justify-content: center;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: center;
 }
 
 .wh40k-adv__char-abbr {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: $wh40k-color-gold;
-  font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $wh40k-color-gold;
+    font-family: 'Cinzel', serif;
 }
 
 .wh40k-adv__char-value {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--color-text-primary);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
 }
 
 .wh40k-adv__char-name {
-  font-size: 0.7rem;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 // Tier Progress Dots
 .wh40k-adv__char-tiers {
-  display: flex;
-  gap: 6px;
-  margin: 0.3rem 0;
+    display: flex;
+    gap: 6px;
+    margin: 0.3rem 0;
 }
 
 .wh40k-adv__tier-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid $adv-card-border;
-  transition: all $adv-transition-fast;
-  
-  &--purchased {
-    background: $wh40k-color-gold;
-    border-color: $wh40k-color-gold-light;
-    box-shadow: 0 0 4px $wh40k-color-gold;
-  }
-  
-  &--current {
-    border-color: $wh40k-color-gold;
-    animation: currentPulse 1.5s ease-in-out infinite;
-  }
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid $adv-card-border;
+    transition: all $adv-transition-fast;
+
+    &--purchased {
+        background: $wh40k-color-gold;
+        border-color: $wh40k-color-gold-light;
+        box-shadow: 0 0 4px $wh40k-color-gold;
+    }
+
+    &--current {
+        border-color: $wh40k-color-gold;
+        animation: currentPulse 1.5s ease-in-out infinite;
+    }
 }
 
 @keyframes currentPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4); }
-  50% { box-shadow: 0 0 6px 2px rgba(201, 162, 39, 0.6); }
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 6px 2px rgba(201, 162, 39, 0.6);
+    }
 }
 
 // Purchase Button
 .wh40k-adv__char-btn {
-  width: 100%;
-  padding: 0.4rem 0.6rem;
-  background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
-  border: 1px solid $wh40k-color-gold-dark;
-  border-radius: 4px;
-  color: $wh40k-color-gold-light;
-  font-size: 0.75rem;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  transition: all $adv-transition-fast;
-  
-  &:hover {
-    background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));
-    border-color: $wh40k-color-gold;
-    transform: scale(1.02);
-  }
-  
-  &:active {
-    transform: scale(0.98);
-  }
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
+    border: 1px solid $wh40k-color-gold-dark;
+    border-radius: 4px;
+    color: $wh40k-color-gold-light;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: all $adv-transition-fast;
+
+    &:hover {
+        background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));
+        border-color: $wh40k-color-gold;
+        transform: scale(1.02);
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
 }
 
 .wh40k-adv__char-tier-label {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  opacity: 0.8;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
 }
 
 .wh40k-adv__char-cost {
-  font-weight: 600;
-  
-  &--expensive {
-    color: $wh40k-color-crimson-light;
-  }
+    font-weight: 600;
+
+    &--expensive {
+        color: $wh40k-color-crimson-light;
+    }
 }
 
 .wh40k-adv__char-status {
-  font-size: 0.75rem;
-  padding: 0.3rem 0.5rem;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  
-  &--maxed {
-    color: rgba(45, 80, 22, 1);
-    background: rgba(45, 80, 22, 0.2);
-    
-    i {
-      color: $wh40k-color-gold;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+
+    &--maxed {
+        color: rgba(45, 80, 22, 1);
+        background: rgba(45, 80, 22, 0.2);
+
+        i {
+            color: $wh40k-color-gold;
+        }
     }
-  }
-  
-  &--cant-afford {
-    color: var(--color-text-secondary);
-    opacity: 0.7;
-  }
+
+    &--cant-afford {
+        color: var(--color-text-secondary);
+        opacity: 0.7;
+    }
 }
 
 // ============================================
 // Skills & Talents List
 // ============================================
 .wh40k-adv__advance-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .wh40k-adv__advance-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0.8rem;
-  background: $adv-card-bg;
-  border: 1px solid $adv-card-border;
-  border-radius: 6px;
-  transition: all $adv-transition-fast;
-  
-  &:hover:not(&--owned):not(&--blocked) {
-    border-color: $adv-card-hover-border;
-    background: rgba(50, 45, 35, 0.9);
-  }
-  
-  &--owned {
-    background: rgba(45, 80, 22, 0.15);
-    border-color: rgba(45, 80, 22, 0.3);
-    opacity: 0.8;
-  }
-  
-  &--blocked {
-    opacity: $adv-blocked-opacity;
-    
-    .wh40k-adv__advance-name {
-      color: var(--color-text-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.8rem;
+    background: $adv-card-bg;
+    border: 1px solid $adv-card-border;
+    border-radius: 6px;
+    transition: all $adv-transition-fast;
+
+    &:hover:not(&--owned):not(&--blocked) {
+        border-color: $adv-card-hover-border;
+        background: rgba(50, 45, 35, 0.9);
     }
-  }
-  
-  &--cant-afford {
-    .wh40k-adv__advance-cost {
-      color: $wh40k-color-crimson-light;
+
+    &--owned {
+        background: rgba(45, 80, 22, 0.15);
+        border-color: rgba(45, 80, 22, 0.3);
+        opacity: 0.8;
     }
-  }
-  
-  &--purchased {
-    animation: purchasePulse 0.6s ease-out;
-  }
+
+    &--blocked {
+        opacity: $adv-blocked-opacity;
+
+        .wh40k-adv__advance-name {
+            color: var(--color-text-secondary);
+        }
+    }
+
+    &--cant-afford {
+        .wh40k-adv__advance-cost {
+            color: $wh40k-color-crimson-light;
+        }
+    }
+
+    &--purchased {
+        animation: purchasePulse 0.6s ease-out;
+    }
 }
 
 .wh40k-adv__advance-info {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 .wh40k-adv__advance-name {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
 }
 
 .wh40k-adv__advance-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 3px;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all $adv-transition-fast;
-  
-  i {
-    font-size: 0.7rem;
-  }
-  
-  &:hover {
-    color: $wh40k-color-gold;
-    background: rgba(201, 162, 39, 0.15);
-  }
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all $adv-transition-fast;
+
+    i {
+        font-size: 0.7rem;
+    }
+
+    &:hover {
+        color: $wh40k-color-gold;
+        background: rgba(201, 162, 39, 0.15);
+    }
 }
 
 .wh40k-adv__advance-badge {
-  font-size: 0.7rem;
-  padding: 0.15rem 0.4rem;
-  border-radius: 3px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  width: fit-content;
-  
-  &--owned {
-    background: rgba(45, 80, 22, 0.3);
-    color: #7cb342;
-  }
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    width: fit-content;
+
+    &--owned {
+        background: rgba(45, 80, 22, 0.3);
+        color: #7cb342;
+    }
 }
 
 .wh40k-adv__advance-prereq {
-  font-size: 0.7rem;
-  color: $wh40k-color-warning;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  cursor: help;
-  
-  i {
-    font-size: 0.65rem;
-  }
+    font-size: 0.7rem;
+    color: $wh40k-color-warning;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: help;
+
+    i {
+        font-size: 0.65rem;
+    }
 }
 
 .wh40k-adv__advance-btn {
-  padding: 0.4rem 0.8rem;
-  background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
-  border: 1px solid $wh40k-color-gold-dark;
-  border-radius: 4px;
-  color: $wh40k-color-gold-light;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all $adv-transition-fast;
-  
-  &:hover {
-    background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));
-    border-color: $wh40k-color-gold;
-    transform: scale(1.05);
-  }
-  
-  &:active {
-    transform: scale(0.98);
-  }
+    padding: 0.4rem 0.8rem;
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
+    border: 1px solid $wh40k-color-gold-dark;
+    border-radius: 4px;
+    color: $wh40k-color-gold-light;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $adv-transition-fast;
+
+    &:hover {
+        background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));
+        border-color: $wh40k-color-gold;
+        transform: scale(1.05);
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
 }
 
 .wh40k-adv__advance-blocked {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-text-secondary);
-  cursor: help;
-  
-  i {
-    color: $wh40k-color-warning;
-  }
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-secondary);
+    cursor: help;
+
+    i {
+        color: $wh40k-color-warning;
+    }
 }
 
 .wh40k-adv__advance-status {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--color-text-secondary);
-  
-  i {
-    color: #7cb342;
-  }
-  
-  &--cant-afford {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-text-secondary);
+
     i {
-      color: $wh40k-color-crimson-light;
+        color: #7cb342;
     }
-  }
+
+    &--cant-afford {
+        i {
+            color: $wh40k-color-crimson-light;
+        }
+    }
 }
 
 .wh40k-adv__advance-cost {
-  font-weight: 500;
+    font-weight: 500;
 }
 
 // ============================================
 // Empty State
 // ============================================
 .wh40k-adv__empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  color: var(--color-text-secondary);
-  text-align: center;
-  
-  i {
-    font-size: 3rem;
-    opacity: 0.3;
-    margin-bottom: 1rem;
-  }
-  
-  p {
-    font-size: 0.9rem;
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+
+    i {
+        font-size: 3rem;
+        opacity: 0.3;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
 }
 
 // ============================================
 // Reduced Motion
 // ============================================
 @media (prefers-reduced-motion: reduce) {
-  .wh40k-adv__xp-fill::after {
-    animation: none;
-  }
-  
-  .wh40k-adv__tier-dot--current {
-    animation: none;
-  }
-  
-  .wh40k-adv__char-card--purchased,
-  .wh40k-adv__advance-card--purchased {
-    animation: none;
-  }
-  
-  .wh40k-adv__panel {
-    animation: none;
-  }
+    .wh40k-adv__xp-fill::after {
+        animation: none;
+    }
+
+    .wh40k-adv__tier-dot--current {
+        animation: none;
+    }
+
+    .wh40k-adv__char-card--purchased,
+    .wh40k-adv__advance-card--purchased {
+        animation: none;
+    }
+
+    .wh40k-adv__panel {
+        animation: none;
+    }
 }

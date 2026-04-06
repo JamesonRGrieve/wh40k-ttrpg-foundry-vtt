@@ -1,34 +1,31 @@
 {
-  "name": "Carapace Greaves",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "carapace",
-    "weight": 3,
-    "availability": "rare",
-    "notes": null,
-    "source": "Dark Heresy: Core",
-    "description": {
-      "value": ""
+    "name": "Carapace Greaves",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "carapace",
+        "weight": 3,
+        "availability": "rare",
+        "notes": null,
+        "source": "Dark Heresy: Core",
+        "description": {
+            "value": ""
+        },
+        "modificationSlots": 2,
+        "coverage": ["leftLeg", "rightLeg"],
+        "armourPoints": {
+            "head": 5,
+            "body": 5,
+            "leftArm": 5,
+            "rightArm": 5,
+            "leftLeg": 5,
+            "rightLeg": 5
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "leftLeg",
-      "rightLeg"
-    ],
-    "armourPoints": {
-      "head": 5,
-      "body": 5,
-      "leftArm": 5,
-      "rightArm": 5,
-      "leftLeg": 5,
-      "rightLeg": 5
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "iqeNaYL24yuuzRu5"
+    "effects": [],
+    "flags": {},
+    "_id": "iqeNaYL24yuuzRu5"
 }

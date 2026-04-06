@@ -4,33 +4,33 @@
     </div>
     <div class="rt-panel-body">
         <div class="rt-table--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">{{localize "WH40K.NavigatorPowers.Name"}}</div>
-            <div class="table-cell">{{localize "WH40K.NavigatorPowers.Range"}}</div>
-            <div class="table-cell">{{localize "WH40K.NavigatorPowers.Test"}}</div>
-            <div class="table-cell--last">
-                <label class="rt-control-button">
-                    <span class="rt-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
-                </label>
-            </div>
-        </div>
-        {{#each navigatorPowers as |power|}}
-            <div class="table-row">
-                <div class="table-cell--span2">
-                    <button class="item-name" data-item-id="{{power._id}}" type="button">
-                        <img class="rt-item-img" src="{{power.img}}" alt="{{power.name}}" />
-                        {{power.name}}
-                    </button>
-                </div>
-                <div class="table-cell">{{power.system.range}}</div>
-                <div class="table-cell">{{power.system.test}}</div>
+            <div class="table-row--head">
+                <div class="table-cell--span2">{{localize "WH40K.NavigatorPowers.Name"}}</div>
+                <div class="table-cell">{{localize "WH40K.NavigatorPowers.Range"}}</div>
+                <div class="table-cell">{{localize "WH40K.NavigatorPowers.Test"}}</div>
                 <div class="table-cell--last">
-                    <label class="rt-control-button item-delete" data-item-id="{{power._id}}">
-                        <span class="rt-control-button__span material-icons">delete</span>
+                    <label class="rt-control-button">
+                        <span class="rt-control-button__span material-icons">{{defaultVal icon "add_circle"}}</span>
                     </label>
                 </div>
             </div>
-        {{/each}}
+            {{#each navigatorPowers as |power|}}
+                <div class="table-row">
+                    <div class="table-cell--span2">
+                        <button class="item-name" data-item-id="{{power._id}}" type="button">
+                            <img class="rt-item-img" src="{{power.img}}" alt="{{power.name}}" />
+                            {{power.name}}
+                        </button>
+                    </div>
+                    <div class="table-cell">{{power.system.range}}</div>
+                    <div class="table-cell">{{power.system.test}}</div>
+                    <div class="table-cell--last">
+                        <label class="rt-control-button item-delete" data-item-id="{{power._id}}">
+                            <span class="rt-control-button__span material-icons">delete</span>
+                        </label>
+                    </div>
+                </div>
+            {{/each}}
         </div>
     </div>
 </div>

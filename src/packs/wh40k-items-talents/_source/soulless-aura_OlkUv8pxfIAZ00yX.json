@@ -1,55 +1,52 @@
 {
-  "name": "Soulless Aura",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "social",
-    "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>Enemies within Willpower Bonus metres of the Untouchable suffer -10 to all Charm and Deceive Tests.</p>"
-    },
-    "tier": 1,
-    "benefit": "<p>Enemies within Willpower Bonus metres of the Untouchable suffer -10 to all Charm and Deceive Tests.</p>",
-    "aptitudes": [
-      "Finesse",
-      "Willpower"
-    ],
-    "prerequisites": {
-      "text": "Tier 1: Untouchable E.Adv, Willpower 30",
-      "characteristics": {
-        "willpower": 30
-      },
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "identifier": "soullessAura",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Unsettling Presence",
-          "description": "<p>Enemies within Willpower Bonus meters suffer -10 to Charm and Deceive tests.</p>"
+    "name": "Soulless Aura",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "social",
+        "source": "Dark Heresy 2E: Core",
+        "description": {
+            "value": "<p>Enemies within Willpower Bonus metres of the Untouchable suffer -10 to all Charm and Deceive Tests.</p>"
+        },
+        "tier": 1,
+        "benefit": "<p>Enemies within Willpower Bonus metres of the Untouchable suffer -10 to all Charm and Deceive Tests.</p>",
+        "aptitudes": ["Finesse", "Willpower"],
+        "prerequisites": {
+            "text": "Tier 1: Untouchable E.Adv, Willpower 30",
+            "characteristics": {
+                "willpower": 30
+            },
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "identifier": "soullessAura",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Unsettling Presence",
+                    "description": "<p>Enemies within Willpower Bonus meters suffer -10 to Charm and Deceive tests.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "OlkUv8pxfIAZ00yX"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "OlkUv8pxfIAZ00yX"
 }

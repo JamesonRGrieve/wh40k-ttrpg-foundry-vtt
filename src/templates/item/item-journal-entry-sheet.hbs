@@ -1,5 +1,5 @@
 <form class="rt-item-sheet rt-item-sheet--journal" autocomplete="off">
-    {{!-- Header --}}
+    {{! Header }}
     <header class="rt-item-sheet__header">
         <div class="rt-item-sheet__portrait rt-item-sheet__portrait--small">
             <span class="material-icons rt-item-sheet__portrait-icon">auto_stories</span>
@@ -13,7 +13,7 @@
         </div>
     </header>
 
-    {{!-- Entry Details Panel --}}
+    {{! Entry Details Panel }}
     <section class="rt-item-sheet__panel">
         <h2 class="rt-item-sheet__panel-title">
             <span class="material-icons">event</span>
@@ -31,14 +31,18 @@
         </div>
     </section>
 
-    {{!-- Entry Content Panel --}}
+    {{! Entry Content Panel }}
     <section class="rt-item-sheet__panel rt-item-sheet__panel--description">
         <h2 class="rt-item-sheet__panel-title">
             <span class="material-icons">edit_note</span>
             Entry
         </h2>
         <div class="rt-item-sheet__field rt-item-sheet__field--full">
-            <textarea class="rt-item-sheet__textarea rt-item-sheet__textarea--large" name="system.description" placeholder="Record your thoughts, discoveries, and observations...">{{item.system.description}}</textarea>
+            <textarea
+                class="rt-item-sheet__textarea rt-item-sheet__textarea--large"
+                name="system.description"
+                placeholder="Record your thoughts, discoveries, and observations..."
+            >{{item.system.description}}</textarea>
         </div>
     </section>
 </form>

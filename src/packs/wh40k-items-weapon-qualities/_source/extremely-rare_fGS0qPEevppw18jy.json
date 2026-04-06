@@ -1,18 +1,18 @@
 {
-  "name": "Extremely Rare",
-  "type": "weaponQuality",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "identifier": "extremely-rare",
-    "hasLevel": false,
-    "level": null,
-    "effect": "<p>Effect reference: 153</p>",
-    "notes": "",
-    "description": {
-      "value": "<p>153</p>"
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "fGS0qPEevppw18jy"
+    "name": "Extremely Rare",
+    "type": "weaponQuality",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "identifier": "extremely-rare",
+        "hasLevel": false,
+        "level": null,
+        "effect": "<p>Effect reference: 153</p>",
+        "notes": "",
+        "description": {
+            "value": "<p>153</p>"
+        }
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "fGS0qPEevppw18jy"
 }

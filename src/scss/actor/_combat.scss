@@ -2,7 +2,7 @@
 // COMBAT TAB STYLES
 // ============================================
 
-.wh40k-tab[data-tab="overview"] {
+.wh40k-tab[data-tab='overview'] {
     .wh40k-panel {
         background: linear-gradient(135deg, rgba(36, 107, 131, 0.22), rgba(24, 80, 96, 0.14));
         border-top-color: rgba(36, 107, 131, 0.5);
@@ -10,7 +10,7 @@
     }
 }
 
-.wh40k-tab[data-tab="specialties"] {
+.wh40k-tab[data-tab='specialties'] {
     .wh40k-panel,
     .wh40k-specialist-group {
         background: linear-gradient(135deg, rgba(36, 107, 131, 0.22), rgba(24, 80, 96, 0.14));
@@ -19,7 +19,7 @@
     }
 }
 
-.wh40k-tab[data-tab="combat"] {
+.wh40k-tab[data-tab='combat'] {
     .wh40k-panel {
         background: linear-gradient(135deg, rgba(139, 0, 0, 0.18), rgba(90, 0, 30, 0.12));
         border-top-color: rgba(139, 0, 0, 0.5);
@@ -32,7 +32,7 @@
         background: rgba(255, 255, 255, 0.6);
         border-radius: 4px;
     }
-    
+
     .table-row--head {
         background: rgba(139, 0, 0, 0.1);
         font-weight: 600;
@@ -83,4 +83,3 @@
 // ============================================
 // COMBAT ARMOUR PANEL - Styles moved to components/_armour.scss
 // ============================================
-

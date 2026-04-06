@@ -9,7 +9,7 @@ export function calculateCombatActionModifier(rollData) {
 
     game.rt.log('calculateCombatActionModifier', currentAction);
     if (rollData.action === 'Called Shot') {
-        if(rollData.isCalledShot === false) {
+        if (rollData.isCalledShot === false) {
             rollData.isCalledShot = true;
             rollData.calledShotLocation = hitLocationNames()[0];
         }
@@ -17,7 +17,7 @@ export function calculateCombatActionModifier(rollData) {
         rollData.isCalledShot = false;
     }
 
-    const actionInfo = allCombatActions().find(action => action.name === currentAction);
+    const actionInfo = allCombatActions().find((action) => action.name === currentAction);
     if (actionInfo && actionInfo.attack?.modifier) {
         rollData.modifiers['attack'] = actionInfo.attack.modifier;
     } else {
@@ -247,8 +247,7 @@ function allCombatActions() {
             name: 'Suppressing Fire - Semi',
             type: ['Full'],
             subtype: ['Attack', 'Ranged'],
-            description:
-                'Fires a semi-auto (in 30 degree arc) burst at -20 to BS. Enemies in the arc must make a -10 Pinning save or become pinned.',
+            description: 'Fires a semi-auto (in 30 degree arc) burst at -20 to BS. Enemies in the arc must make a -10 Pinning save or become pinned.',
             attack: {
                 modifier: -20,
             },
@@ -257,8 +256,7 @@ function allCombatActions() {
             name: 'Suppressing Fire - Full',
             type: ['Full'],
             subtype: ['Attack', 'Ranged'],
-            description:
-                'Fires a full-auto (in 45 degree arc) burst at -20 to BS. Enemies in the arc must make a -20 Pinning save or become pinned.',
+            description: 'Fires a full-auto (in 45 degree arc) burst at -20 to BS. Enemies in the arc must make a -20 Pinning save or become pinned.',
             attack: {
                 modifier: -20,
             },

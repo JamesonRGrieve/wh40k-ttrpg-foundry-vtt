@@ -1,26 +1,25 @@
-import ActorDataModel from "../../abstract/actor-data-model.mjs";
+import ActorDataModel from '../../abstract/actor-data-model.mjs';
 
 /**
  * Common template for ALL actor types in WH40K RPG.
- * 
+ *
  * This template contains ONLY utilities that are truly shared across ALL actor types,
  * including creatures, vehicles, and starships.
- * 
+ *
  * **What belongs here:**
  * - Shared utility methods (e.g., common calculations, helpers)
  * - Base migration helpers that apply to all actors
  * - Common metadata or configuration
- * 
+ *
  * **What does NOT belong here:**
  * - Characteristics, wounds, movement (creature-specific → CreatureTemplate)
  * - Skills, fate, psy (creature-specific → CreatureTemplate)
  * - Vehicle-specific systems (→ VehicleData)
  * - Starship-specific systems (→ StarshipData)
- * 
+ *
  * @extends {ActorDataModel}
  */
 export default class CommonTemplate extends ActorDataModel {
-
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */

@@ -1,33 +1,31 @@
 {
-  "name": "Reinforced Hauberk",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "flak",
-    "weight": 15,
-    "availability": "Special",
-    "notes": "Generated as Treasure from Treasure Generator.",
-    "source": "RT: Stars of Inequity",
-    "description": {
-      "value": "<p>Generated as Treasure from Treasure Generator.</p>"
+    "name": "Reinforced Hauberk",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "flak",
+        "weight": 15,
+        "availability": "Special",
+        "notes": "Generated as Treasure from Treasure Generator.",
+        "source": "RT: Stars of Inequity",
+        "description": {
+            "value": "<p>Generated as Treasure from Treasure Generator.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["body"],
+        "armourPoints": {
+            "head": 4,
+            "body": 4,
+            "leftArm": 4,
+            "rightArm": 4,
+            "leftLeg": 4,
+            "rightLeg": 4
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "body"
-    ],
-    "armourPoints": {
-      "head": 4,
-      "body": 4,
-      "leftArm": 4,
-      "rightArm": 4,
-      "leftLeg": 4,
-      "rightLeg": 4
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "ejprvxWaWZaehr5I"
+    "effects": [],
+    "flags": {},
+    "_id": "ejprvxWaWZaehr5I"
 }

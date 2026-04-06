@@ -30,9 +30,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             WhatIfMixin(
                 EnhancedDragDropMixin(
                     ContextMenuMixin(
-                        CollapsiblePanelMixin(
-                            EnhancedAnimationsMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ActorSheetV2))))),
-                        ),
+                        CollapsiblePanelMixin(EnhancedAnimationsMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ActorSheetV2)))))),
                     ),
                 ),
             ),
@@ -488,8 +486,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                             notes: '',
                             cost: 0,
                             current: 0,
-                            skillKey: key,  // Store skill key for template access
-                            entryIndex: entryIndex,  // Store index for template access
+                            skillKey: key, // Store skill key for template access
+                            entryIndex: entryIndex, // Store index for template access
                         };
                     }
 
@@ -513,10 +511,10 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                     normalized.entryIndex = entryIndex;
                     return normalized;
                 });
-                
+
                 // Check favorite status for specialist skills
                 const specialistFavorites = this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') || [];
-                
+
                 plainEntries.forEach((entry) => {
                     this._augmentSkillData(key, entry, characteristics, data);
                     // Check if this specialist entry is a favorite
@@ -538,7 +536,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Split standard into columns
         const splitIndex = Math.ceil(standard.length / 2);
         const standardColumns = [standard.slice(0, splitIndex), standard.slice(splitIndex)];
-        
+
         // Check if any specialist skill has entries (for empty state display)
         const hasSpecialistEntries = specialist.some(([_, skillData]) => skillData.entries?.length > 0);
 
@@ -745,7 +743,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const rawDescription = talent.system.description;
         const benefit = typeof rawBenefit === 'string' ? rawBenefit : '';
         const description = typeof rawDescription === 'string' ? rawDescription : '';
-        
+
         let tooltipText = talent.name;
         if (benefit) {
             // Strip HTML tags for tooltip
@@ -1104,7 +1102,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             if (el.dataset.itemId) {
                 // Skip if this element or any ancestor is a talent row
                 if (el.closest('.rt-tp_row') || el.closest('.rt-talent-row')) return;
-                
+
                 el.setAttribute('draggable', true);
                 el.addEventListener('dragstart', this._onDragItem.bind(this), false);
             }

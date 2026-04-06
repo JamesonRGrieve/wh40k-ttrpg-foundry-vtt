@@ -2,7 +2,7 @@
  * @file SkillSheet - ApplicationV2 sheet for skill items (compendium skills)
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for skill items (used in compendiums).
@@ -11,11 +11,11 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class SkillSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["wh40k-rpg", "sheet", "item", "skill"],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'skill'],
         position: {
             width: 600,
-            height: 700
-        }
+            height: 700,
+        },
     };
 
     /* -------------------------------------------- */
@@ -23,9 +23,9 @@ export default class SkillSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/wh40k-rpg/templates/item/item-skill-sheet-modern.hbs",
-            scrollable: [".rt-item-body"]
-        }
+            template: 'systems/wh40k-rpg/templates/item/item-skill-sheet-modern.hbs',
+            scrollable: ['.rt-item-body'],
+        },
     };
 
     /* -------------------------------------------- */
@@ -33,10 +33,10 @@ export default class SkillSheet extends BaseItemSheet {
     /** @override */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        
+
         // Add any additional context data needed for the skill sheet
         // None needed currently - all data comes from DataModel
-        
+
         return context;
     }
 }

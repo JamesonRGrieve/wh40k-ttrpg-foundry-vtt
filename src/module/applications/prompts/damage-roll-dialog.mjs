@@ -2,9 +2,9 @@
  * @file DamageRollDialog - V2 dialog for damage rolls
  */
 
-import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
-import { sendActionDataToChat } from "../../rolls/roll-helpers.mjs";
-import { ActionData } from "../../rolls/action-data.mjs";
+import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
+import { sendActionDataToChat } from '../../rolls/roll-helpers.mjs';
+import { ActionData } from '../../rolls/action-data.mjs';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -25,19 +25,19 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: "form",
-        classes: ["wh40k-rpg", "dialog", "damage-roll", "standard-form"],
+        tag: 'form',
+        classes: ['wh40k-rpg', 'dialog', 'damage-roll', 'standard-form'],
         actions: {
             roll: DamageRollDialog.#onRoll,
-            cancel: DamageRollDialog.#onCancel
+            cancel: DamageRollDialog.#onCancel,
         },
         position: {
-            width: 300
+            width: 300,
         },
         window: {
-            title: "Damage Roll",
-            minimizable: false
-        }
+            title: 'Damage Roll',
+            minimizable: false,
+        },
     };
 
     /* -------------------------------------------- */
@@ -45,9 +45,9 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/wh40k-rpg/templates/prompt/damage-roll-prompt.hbs",
-            scrollable: [""]
-        }
+            template: 'systems/wh40k-rpg/templates/prompt/damage-roll-prompt.hbs',
+            scrollable: [''],
+        },
     };
 
     /* -------------------------------------------- */
@@ -70,7 +70,7 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
         return {
             ...context,
             ...this.rollData,
-            dh: CONFIG.wh40k
+            dh: CONFIG.wh40k,
         };
     }
 
@@ -83,19 +83,18 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
         await super._onRender(context, options);
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (event) => {
-                    event.target.select();
-                });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (event) => {
+                event.target.select();
             });
+        });
 
         // Set up button listeners for V1-style templates
-        this.element.querySelector("[data-action='roll']")?.addEventListener("click", (e) => {
+        this.element.querySelector("[data-action='roll']")?.addEventListener('click', (e) => {
             e.preventDefault();
             this._performRoll();
         });
-        this.element.querySelector("[data-action='cancel']")?.addEventListener("click", (e) => {
+        this.element.querySelector("[data-action='cancel']")?.addEventListener('click', (e) => {
             e.preventDefault();
             this.close();
         });
@@ -136,17 +135,17 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
      * @protected
      */
     async _performRoll() {
-        const form = this.element.querySelector("form") ?? this.element;
-        
+        const form = this.element.querySelector('form') ?? this.element;
+
         const actionData = new ActionData();
-        actionData.template = "systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs";
+        actionData.template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
 
         // Get form values
-        this.rollData.damage = form.querySelector("#damage")?.value ?? this.rollData.damage;
-        this.rollData.penetration = form.querySelector("#penetration")?.value ?? this.rollData.penetration;
-        this.rollData.damageType = form.querySelector("[name=damageType]")?.value ?? this.rollData.damageType;
-        this.rollData.pr = form.querySelector("#pr")?.value;
-        this.rollData.template = "systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs";
+        this.rollData.damage = form.querySelector('#damage')?.value ?? this.rollData.damage;
+        this.rollData.penetration = form.querySelector('#penetration')?.value ?? this.rollData.penetration;
+        this.rollData.damageType = form.querySelector('[name=damageType]')?.value ?? this.rollData.damageType;
+        this.rollData.pr = form.querySelector('#pr')?.value;
+        this.rollData.template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
 
         // Perform the roll
         this.rollData.roll = new Roll(this.rollData.damage, this.rollData);

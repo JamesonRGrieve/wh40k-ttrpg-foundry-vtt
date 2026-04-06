@@ -1,41 +1,41 @@
 {
-  "name": "Shade-Servitor",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "tools",
-    "weight": 3,
-    "availability": "rare",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 400,
-      "currency": "throne"
+    "name": "Shade-Servitor",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "tools",
+        "weight": 3,
+        "availability": "rare",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 400,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Not technically a servitor. Instead, small cone-shaped objects with rotating blades that may hover over their user, keeping them shaded and occasionally blasted with cold air. Last for 12 hours that can recharge on the go via solar cells as long as there is light. They reduce the amount of fatigue gained from hot environments (GM Discretion as to exact effect)</p>\n<h3>Requirements</h3><p>Rumoured versions exist that can fire their blades at enemies or fitted with forcefields. </p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 400 T</p>",
+            "chat": "",
+            "summary": "Not technically a servitor. Instead, small cone-shaped objects with rotating blades that may hover over their user, keeping them shaded and occasionally blasted with cold air. Last for 12 hours that c"
+        },
+        "source": {
+            "book": "DH: The Inquisitor's Handbook",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Not technically a servitor. Instead, small cone-shaped objects with rotating blades that may hover over their user, keeping them shaded and occasionally blasted with cold air. Last for 12 hours that can recharge on the go via solar cells as long as there is light. They reduce the amount of fatigue gained from hot environments (GM Discretion as to exact effect)",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Not technically a servitor. Instead, small cone-shaped objects with rotating blades that may hover over their user, keeping them shaded and occasionally blasted with cold air. Last for 12 hours that can recharge on the go via solar cells as long as there is light. They reduce the amount of fatigue gained from hot environments (GM Discretion as to exact effect)</p>\n<h3>Requirements</h3><p>Rumoured versions exist that can fire their blades at enemies or fitted with forcefields. </p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 400 T</p>",
-      "chat": "",
-      "summary": "Not technically a servitor. Instead, small cone-shaped objects with rotating blades that may hover over their user, keeping them shaded and occasionally blasted with cold air. Last for 12 hours that c"
-    },
-    "source": {
-      "book": "DH: The Inquisitor's Handbook",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Not technically a servitor. Instead, small cone-shaped objects with rotating blades that may hover over their user, keeping them shaded and occasionally blasted with cold air. Last for 12 hours that can recharge on the go via solar cells as long as there is light. They reduce the amount of fatigue gained from hot environments (GM Discretion as to exact effect)",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "AcVFvDvZJDDZTNVT"
+    "effects": [],
+    "flags": {},
+    "_id": "AcVFvDvZJDDZTNVT"
 }

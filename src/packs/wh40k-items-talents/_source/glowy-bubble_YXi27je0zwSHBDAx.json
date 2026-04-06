@@ -1,61 +1,61 @@
 {
-  "name": "Glowy Bubble",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "psychic",
-    "source": "RT: The Navis Primer",
-    "description": {
-      "value": "<p>When entering combat, a bubble of energy surrounds the character. It Imposes -30 on all Concealment Tests and provides Psy Rating AP of Cover to the Character and anyone standing behind them. This Cover's AP reduces as normal when penetrated, but can be refreshed with a +0 Willpower Test as a Half Action.</p>"
+    "name": "Glowy Bubble",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "psychic",
+        "source": "RT: The Navis Primer",
+        "description": {
+            "value": "<p>When entering combat, a bubble of energy surrounds the character. It Imposes -30 on all Concealment Tests and provides Psy Rating AP of Cover to the Character and anyone standing behind them. This Cover's AP reduces as normal when penetrated, but can be refreshed with a +0 Willpower Test as a Half Action.</p>"
+        },
+        "tier": 1,
+        "benefit": "<p>When entering combat, a bubble of energy surrounds the character. It Imposes -30 on all Concealment Tests and provides Psy Rating AP of Cover to the Character and anyone standing behind them. This Cover's AP reduces as normal when penetrated, but can be refreshed with a +0 Willpower Test as a Half Action.</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Ork Weirdboy, Da Power of Waaagh!, Willpower 40",
+            "characteristics": {
+                "wp": 40
+            },
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "identifier": "glowyBubble",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {
+                "willpower": 0
+            },
+            "combat": {
+                "attack": 0,
+                "damage": 0,
+                "penetration": 0,
+                "defense": 0,
+                "initiative": 0,
+                "speed": 0
+            },
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": []
+        }
     },
-    "tier": 1,
-    "benefit": "<p>When entering combat, a bubble of energy surrounds the character. It Imposes -30 on all Concealment Tests and provides Psy Rating AP of Cover to the Character and anyone standing behind them. This Cover's AP reduces as normal when penetrated, but can be refreshed with a +0 Willpower Test as a Half Action.</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Ork Weirdboy, Da Power of Waaagh!, Willpower 40",
-      "characteristics": {
-        "wp": 40
-      },
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "identifier": "glowyBubble",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {
-        "willpower": 0
-      },
-      "combat": {
-        "attack": 0,
-        "damage": 0,
-        "penetration": 0,
-        "defense": 0,
-        "initiative": 0,
-        "speed": 0
-      },
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": []
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "YXi27je0zwSHBDAx"
+    "effects": [],
+    "flags": {},
+    "_id": "YXi27je0zwSHBDAx"
 }

@@ -1,4 +1,4 @@
-{{!-- Vehicle Crew Panel --}}
+{{! Vehicle Crew Panel }}
 <div class="rt-panel spacer rt-grid-col-2">
     <h1 class="rt-panel-header">
         <i class="fas fa-users"></i>
@@ -7,20 +7,28 @@
     <div class="rt-crew-info">
         <div class="rt-field__wrapper">
             <span class="rt-field__header">{{localize "WH40K.Vehicle.Crew.Required"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" 
-                   name="system.crew.required" value="{{system.crew.required}}" 
-                   min="0" placeholder="1" />
+            <input
+                type="number"
+                data-dtype="Number"
+                class="rt-field__input"
+                name="system.crew.required"
+                value="{{system.crew.required}}"
+                min="0"
+                placeholder="1"
+            />
         </div>
         <div class="rt-field__wrapper">
             <span class="rt-field__header">{{localize "WH40K.Vehicle.Passengers"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" 
-                   name="system.passengers" value="{{system.passengers}}" 
-                   min="0" placeholder="0" />
+            <input type="number" data-dtype="Number" class="rt-field__input" name="system.passengers" value="{{system.passengers}}" min="0" placeholder="0" />
         </div>
         <div class="rt-field__wrapper rt-field__full">
             <span class="rt-field__header">{{localize "WH40K.Vehicle.Crew.Notes"}}</span>
-            <textarea class="rt-field__textarea" name="system.crew.notes" 
-                      rows="3" placeholder="Crew positions, roles, requirements...">{{system.crew.notes}}</textarea>
+            <textarea
+                class="rt-field__textarea"
+                name="system.crew.notes"
+                rows="3"
+                placeholder="Crew positions, roles, requirements..."
+            >{{system.crew.notes}}</textarea>
         </div>
     </div>
 </div>

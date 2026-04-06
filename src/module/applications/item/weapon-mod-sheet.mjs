@@ -2,7 +2,7 @@
  * @file WeaponModSheet - ApplicationV2 sheet for weapon modification items
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for weapon modification items.
@@ -10,11 +10,11 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class WeaponModSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["wh40k-rpg", "sheet", "item", "weapon-mod"],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'weapon-mod'],
         position: {
             width: 500,
-            height: 420
-        }
+            height: 420,
+        },
     };
 
     /* -------------------------------------------- */
@@ -22,23 +22,23 @@ export default class WeaponModSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/wh40k-rpg/templates/item/item-weapon-mod-sheet.hbs",
-            scrollable: [".rt-tab-content"]
-        }
+            template: 'systems/wh40k-rpg/templates/item/item-weapon-mod-sheet.hbs',
+            scrollable: ['.rt-tab-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "details", group: "primary", label: "Details" },
-        { tab: "description", group: "primary", label: "Description" }
+        { tab: 'details', group: 'primary', label: 'Details' },
+        { tab: 'description', group: 'primary', label: 'Description' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "details"
+        primary: 'details',
     };
 }

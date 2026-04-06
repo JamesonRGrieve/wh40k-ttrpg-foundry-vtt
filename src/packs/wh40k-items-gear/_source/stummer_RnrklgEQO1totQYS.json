@@ -1,41 +1,41 @@
 {
-  "name": "Stummer",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "tools",
-    "weight": 2,
-    "availability": "average",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 25,
-      "currency": "throne"
+    "name": "Stummer",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "tools",
+        "weight": 2,
+        "availability": "average",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 25,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. </p>\n<h3>Requirements</h3><p>Device Cancels out surrounding noise.</p>\n<p><b>Effect:</b> Average / Initiated</p><p><b>Notes:</b> 25 T\n5 R</p>",
+            "chat": "",
+            "summary": "+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. "
+        },
+        "source": {
+            "book": "Rogue Trader Core",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. ",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. </p>\n<h3>Requirements</h3><p>Device Cancels out surrounding noise.</p>\n<p><b>Effect:</b> Average / Initiated</p><p><b>Notes:</b> 25 T\n5 R</p>",
-      "chat": "",
-      "summary": "+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. "
-    },
-    "source": {
-      "book": "Rogue Trader Core",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. ",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "RnrklgEQO1totQYS"
+    "effects": [],
+    "flags": {},
+    "_id": "RnrklgEQO1totQYS"
 }

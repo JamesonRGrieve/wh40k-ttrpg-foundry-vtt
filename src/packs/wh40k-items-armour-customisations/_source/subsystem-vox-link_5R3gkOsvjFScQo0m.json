@@ -1,28 +1,26 @@
 {
-  "name": "Subsystem: Vox Link",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "Armour has inbuilt Vox, if armour has a functioning Bio-Monitor it can transmit its information through this link, allowing allies to view wearer's vitals.",
-    "availability": "Special",
-    "source": "Black Crusade: Core",
-    "description": {
-      "value": "<p>Armour has inbuilt Vox, if armour has a functioning Bio-Monitor it can transmit its information through this link, allowing allies to view wearer's vitals.</p>"
+    "name": "Subsystem: Vox Link",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "Armour has inbuilt Vox, if armour has a functioning Bio-Monitor it can transmit its information through this link, allowing allies to view wearer's vitals.",
+        "availability": "Special",
+        "source": "Black Crusade: Core",
+        "description": {
+            "value": "<p>Armour has inbuilt Vox, if armour has a functioning Bio-Monitor it can transmit its information through this link, allowing allies to view wearer's vitals.</p>"
+        },
+        "modifiers": {
+            "armourPoints": 0,
+            "maxAgility": 0,
+            "weight": 0
+        },
+        "restrictions": {
+            "armourTypes": ["power"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 0,
-      "maxAgility": 0,
-      "weight": 0
-    },
-    "restrictions": {
-      "armourTypes": [
-        "power"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "5R3gkOsvjFScQo0m"
+    "effects": [],
+    "flags": {},
+    "_id": "5R3gkOsvjFScQo0m"
 }

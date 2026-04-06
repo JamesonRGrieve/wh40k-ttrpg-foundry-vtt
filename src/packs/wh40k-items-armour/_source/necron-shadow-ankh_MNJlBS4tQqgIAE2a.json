@@ -1,33 +1,31 @@
 {
-  "name": "Necron Shadow Ankh",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "void",
-    "weight": 0,
-    "availability": "unique",
-    "notes": "Always Best Quality. All Focus Power Tests and Warp Instability Tests within 30m have -20.\nAlways Overload 01-05, Force Field only protects against Psychic Powers, Creatures with Daemonic/Warp Instability Traits, and attacks with Warp Weapon Quality. [AP: 50%]",
-    "source": "BC: Tome of Fate",
-    "description": {
-      "value": "<p>Always Best Quality. All Focus Power Tests and Warp Instability Tests within 30m have -20.\nAlways Overload 01-05, Force Field only protects against Psychic Powers, Creatures with Daemonic/Warp Instability Traits, and attacks with Warp Weapon Quality.</p>"
+    "name": "Necron Shadow Ankh",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "void",
+        "weight": 0,
+        "availability": "unique",
+        "notes": "Always Best Quality. All Focus Power Tests and Warp Instability Tests within 30m have -20.\nAlways Overload 01-05, Force Field only protects against Psychic Powers, Creatures with Daemonic/Warp Instability Traits, and attacks with Warp Weapon Quality. [AP: 50%]",
+        "source": "BC: Tome of Fate",
+        "description": {
+            "value": "<p>Always Best Quality. All Focus Power Tests and Warp Instability Tests within 30m have -20.\nAlways Overload 01-05, Force Field only protects against Psychic Powers, Creatures with Daemonic/Warp Instability Traits, and attacks with Warp Weapon Quality.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["all"],
+        "armourPoints": {
+            "head": 0,
+            "body": 0,
+            "leftArm": 0,
+            "rightArm": 0,
+            "leftLeg": 0,
+            "rightLeg": 0
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "all"
-    ],
-    "armourPoints": {
-      "head": 0,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "MNJlBS4tQqgIAE2a"
+    "effects": [],
+    "flags": {},
+    "_id": "MNJlBS4tQqgIAE2a"
 }

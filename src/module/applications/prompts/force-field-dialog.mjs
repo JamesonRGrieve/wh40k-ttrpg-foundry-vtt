@@ -2,7 +2,7 @@
  * @file ForceFieldDialog - V2 dialog for force field rolls
  */
 
-import BaseRollDialog from "./base-roll-dialog.mjs";
+import BaseRollDialog from './base-roll-dialog.mjs';
 
 /**
  * Dialog for configuring force field rolls.
@@ -20,10 +20,10 @@ export default class ForceFieldDialog extends BaseRollDialog {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["force-field"],
+        classes: ['force-field'],
         window: {
-            title: "Force Field"
-        }
+            title: 'Force Field',
+        },
     };
 
     /* -------------------------------------------- */
@@ -31,9 +31,9 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs",
-            scrollable: [""]
-        }
+            template: 'systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs',
+            scrollable: [''],
+        },
     };
 
     /* -------------------------------------------- */
@@ -45,16 +45,15 @@ export default class ForceFieldDialog extends BaseRollDialog {
         await super._onRender(context, options);
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (event) => {
-                    event.target.select();
-                });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (event) => {
+                event.target.select();
             });
+        });
 
         // Set up button listeners
-        this.element.querySelector("#roll-force-field")?.addEventListener("click", this._onRollForceField.bind(this));
-        this.element.querySelector("#cancel-prompt")?.addEventListener("click", this._onCancelPrompt.bind(this));
+        this.element.querySelector('#roll-force-field')?.addEventListener('click', this._onRollForceField.bind(this));
+        this.element.querySelector('#cancel-prompt')?.addEventListener('click', this._onCancelPrompt.bind(this));
     }
 
     /* -------------------------------------------- */
@@ -88,12 +87,12 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /** @override */
     _validateRoll() {
         if (!this.rollData.forceField?.system?.activated) {
-            ui.notifications.warn("Force Field not activated!");
+            ui.notifications.warn('Force Field not activated!');
             return false;
         }
 
         if (this.rollData.forceField?.system?.overloaded) {
-            ui.notifications.warn("Force Field currently overloaded!");
+            ui.notifications.warn('Force Field currently overloaded!');
             return false;
         }
 

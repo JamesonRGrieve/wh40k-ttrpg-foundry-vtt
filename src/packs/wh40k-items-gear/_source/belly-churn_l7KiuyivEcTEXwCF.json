@@ -1,41 +1,41 @@
 {
-  "name": "Belly-Churn",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "consumable",
-    "weight": 1,
-    "availability": "average",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 10,
-      "currency": "throne"
+    "name": "Belly-Churn",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "consumable",
+        "weight": 1,
+        "availability": "average",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 10,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Cheese made in an animal stomach filled with milk which is sewn shut to curdle. Keeps Fresh for a long time.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10 T</p>",
+            "chat": "",
+            "summary": "Cheese made in an animal stomach filled with milk which is sewn shut to curdle. Keeps Fresh for a long time."
+        },
+        "source": {
+            "book": "DH: The Inquisitor's Handbook",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Cheese made in an animal stomach filled with milk which is sewn shut to curdle. Keeps Fresh for a long time.",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Cheese made in an animal stomach filled with milk which is sewn shut to curdle. Keeps Fresh for a long time.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10 T</p>",
-      "chat": "",
-      "summary": "Cheese made in an animal stomach filled with milk which is sewn shut to curdle. Keeps Fresh for a long time."
-    },
-    "source": {
-      "book": "DH: The Inquisitor's Handbook",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Cheese made in an animal stomach filled with milk which is sewn shut to curdle. Keeps Fresh for a long time.",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "l7KiuyivEcTEXwCF"
+    "effects": [],
+    "flags": {},
+    "_id": "l7KiuyivEcTEXwCF"
 }

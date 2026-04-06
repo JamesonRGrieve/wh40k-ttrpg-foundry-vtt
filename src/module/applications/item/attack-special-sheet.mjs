@@ -2,7 +2,7 @@
  * @file AttackSpecialSheet - ApplicationV2 sheet for attack special items
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for attack special/quality items.
@@ -10,11 +10,11 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class AttackSpecialSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["wh40k-rpg", "sheet", "item", "attack-special"],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'attack-special'],
         position: {
             width: 500,
-            height: 400
-        }
+            height: 400,
+        },
     };
 
     /* -------------------------------------------- */
@@ -22,23 +22,23 @@ export default class AttackSpecialSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/wh40k-rpg/templates/item/item-attack-special-sheet.hbs",
-            scrollable: [".rt-tab-content"]
-        }
+            template: 'systems/wh40k-rpg/templates/item/item-attack-special-sheet.hbs',
+            scrollable: ['.rt-tab-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "details", group: "primary", label: "Details" },
-        { tab: "description", group: "primary", label: "Description" }
+        { tab: 'details', group: 'primary', label: 'Details' },
+        { tab: 'description', group: 'primary', label: 'Description' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "details"
+        primary: 'details',
     };
 }

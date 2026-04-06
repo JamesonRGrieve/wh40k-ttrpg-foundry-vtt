@@ -7,16 +7,13 @@
  * Encumbrance lookup table (S+T bonus -> carry capacity in kg)
  * Index corresponds to S+T bonus value (0-20)
  */
-const ENCUMBRANCE_TABLE = [
-    0.9, 2.25, 4.5, 9, 18, 27, 36, 45, 56, 67,
-    78, 90, 112, 225, 337, 450, 675, 900, 1350, 1800, 2250
-];
+const ENCUMBRANCE_TABLE = [0.9, 2.25, 4.5, 9, 18, 27, 36, 45, 56, 67, 78, 90, 112, 225, 337, 450, 675, 900, 1350, 1800, 2250];
 
 /**
  * Computes encumbrance from carried items on an actor.
  * Handles backpack/combat vest logic and calculates current vs max weight.
  * Items in ship storage are excluded from weight calculations.
- * 
+ *
  * @param {Actor} actor - The actor to compute encumbrance for
  * @returns {object} Encumbrance data with current, max, and encumbered flags
  */
@@ -24,7 +21,7 @@ export function computeEncumbrance(actor) {
     let currentWeight = 0;
     let backpackWeight = 0;
     const backpack = actor.system.backpack;
-    const backpackMax = backpack?.hasBackpack ? (backpack.weight?.max ?? 0) : 0;
+    const backpackMax = backpack?.hasBackpack ? backpack.weight?.max ?? 0 : 0;
 
     // Filter out storage location items and ship-stowed items
     const carriedItems = actor.items.filter((item) => {

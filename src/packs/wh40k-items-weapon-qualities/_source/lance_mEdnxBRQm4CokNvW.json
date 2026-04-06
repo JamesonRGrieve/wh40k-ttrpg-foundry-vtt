@@ -1,18 +1,18 @@
 {
-  "name": "Lance,",
-  "type": "weaponQuality",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "identifier": "lance",
-    "hasLevel": false,
-    "level": null,
-    "effect": "<p>Effect reference: 0</p>",
-    "notes": "",
-    "description": {
-      "value": ""
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "mEdnxBRQm4CokNvW"
+    "name": "Lance,",
+    "type": "weaponQuality",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "identifier": "lance",
+        "hasLevel": false,
+        "level": null,
+        "effect": "<p>Effect reference: 0</p>",
+        "notes": "",
+        "description": {
+            "value": ""
+        }
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "mEdnxBRQm4CokNvW"
 }

@@ -1,52 +1,49 @@
 {
-  "name": "Delicate Interrogation",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "social",
-    "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>Whenever a character would decrease their group's Subtlety due to an Interrogation, the amount of Subtlety lost is reduced by 1d5, if the total result would be a negative number, the group's subtlety instead increases by 1.</p>"
+    "name": "Delicate Interrogation",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "social",
+        "source": "Dark Heresy 2E: Core",
+        "description": {
+            "value": "<p>Whenever a character would decrease their group's Subtlety due to an Interrogation, the amount of Subtlety lost is reduced by 1d5, if the total result would be a negative number, the group's subtlety instead increases by 1.</p>"
+        },
+        "tier": 3,
+        "benefit": "<p>Whenever a character would decrease their group's Subtlety due to an Interrogation, the amount of Subtlety lost is reduced by 1d5, if the total result would be a negative number, the group's subtlety instead increases by 1.</p>",
+        "aptitudes": ["Intelligence", "Finesse."],
+        "prerequisites": {
+            "text": "Coordinated Interrogation, Fellowship 50.",
+            "characteristics": {
+                "fellowship": 50
+            },
+            "skills": [],
+            "talents": []
+        },
+        "cost": 900,
+        "isPassive": true,
+        "identifier": "delicateInterrogation",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {
+                "interrogation": 10
+            },
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": []
+        }
     },
-    "tier": 3,
-    "benefit": "<p>Whenever a character would decrease their group's Subtlety due to an Interrogation, the amount of Subtlety lost is reduced by 1d5, if the total result would be a negative number, the group's subtlety instead increases by 1.</p>",
-    "aptitudes": [
-      "Intelligence",
-      "Finesse."
-    ],
-    "prerequisites": {
-      "text": "Coordinated Interrogation, Fellowship 50.",
-      "characteristics": {
-        "fellowship": 50
-      },
-      "skills": [],
-      "talents": []
-    },
-    "cost": 900,
-    "isPassive": true,
-    "identifier": "delicateInterrogation",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {
-        "interrogation": 10
-      },
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": []
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "pnsO9omfTKMJo69u"
+    "effects": [],
+    "flags": {},
+    "_id": "pnsO9omfTKMJo69u"
 }

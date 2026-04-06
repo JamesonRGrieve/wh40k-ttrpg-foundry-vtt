@@ -1,61 +1,58 @@
 {
-  "name": "Ace Operator",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "tech",
-    "source": "OW: Hammer of the Emperor",
-    "description": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>",
-    "tier": 2,
-    "benefit": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>",
-    "aptitudes": [
-      "Agility",
-      "Tech"
-    ],
-    "prerequisites": {
-      "text": "Operate (Any) +10",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
+    "name": "Ace Operator",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "tech",
+        "source": "OW: Hammer of the Emperor",
+        "description": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>",
+        "tier": 2,
+        "benefit": "<p>When the charater fails an Operate Test, they can spend a Fate Point to reduce their Degrees of Failiure by their Agility Bonus</p>",
+        "aptitudes": ["Agility", "Tech"],
+        "prerequisites": {
+            "text": "Operate (Any) +10",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 600,
+        "isPassive": true,
+        "identifier": "aceOperator",
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": []
+        }
     },
-    "cost": 600,
-    "isPassive": true,
-    "identifier": "aceOperator",
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": []
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "CqtmEfgSa8zHnqlN"
+    "effects": [],
+    "flags": {},
+    "_id": "CqtmEfgSa8zHnqlN"
 }

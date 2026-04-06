@@ -3,7 +3,7 @@
  * Based on dnd5e's PrimarySheetMixin pattern
  */
 
-import DragDropMixin from "./drag-drop-api-mixin.mjs";
+import DragDropMixin from './drag-drop-api-mixin.mjs';
 
 /**
  * Adds V2 sheet functionality shared between primary document sheets (Actors & Items).
@@ -18,8 +18,8 @@ export default function PrimarySheetMixin(Base) {
             actions: {
                 editDocument: PrimarySheetRT.#showDocument,
                 deleteDocument: PrimarySheetRT.#deleteDocument,
-                showDocument: PrimarySheetRT.#showDocument
-            }
+                showDocument: PrimarySheetRT.#showDocument,
+            },
         };
 
         /* -------------------------------------------- */
@@ -38,7 +38,7 @@ export default function PrimarySheetMixin(Base) {
          */
         static MODES = {
             PLAY: 1,
-            EDIT: 2
+            EDIT: 2,
         };
 
         /* -------------------------------------------- */
@@ -70,7 +70,7 @@ export default function PrimarySheetMixin(Base) {
 
             // Set initial mode
             let { mode, renderContext } = options;
-            if ((mode === undefined) && (renderContext === "createItem")) mode = this.constructor.MODES.EDIT;
+            if (mode === undefined && renderContext === 'createItem') mode = this.constructor.MODES.EDIT;
             this._mode = mode ?? this._mode ?? this.constructor.MODES.PLAY;
         }
 
@@ -80,7 +80,7 @@ export default function PrimarySheetMixin(Base) {
         _configureRenderParts(options) {
             const parts = super._configureRenderParts(options);
             for (const key of Object.keys(parts)) {
-                const tab = this.constructor.TABS.find(t => t.tab === key);
+                const tab = this.constructor.TABS.find((t) => t.tab === key);
                 if (tab?.condition && !tab.condition(this.document)) delete parts[key];
             }
             return parts;
@@ -91,7 +91,7 @@ export default function PrimarySheetMixin(Base) {
         /** @inheritDoc */
         async _renderFrame(options) {
             const html = await super._renderFrame(options);
-            if (!game.user.isGM && this.document.limited) html.classList.add("limited");
+            if (!game.user.isGM && this.document.limited) html.classList.add('limited');
             return html;
         }
 
@@ -102,17 +102,17 @@ export default function PrimarySheetMixin(Base) {
          * @protected
          */
         _renderModeToggle() {
-            const header = this.element.querySelector(".window-header");
-            const toggle = header?.querySelector(".mode-slider");
+            const header = this.element.querySelector('.window-header');
+            const toggle = header?.querySelector('.mode-slider');
             if (this.isEditable && !toggle) {
-                const newToggle = document.createElement("slide-toggle");
+                const newToggle = document.createElement('slide-toggle');
                 newToggle.checked = this._mode === this.constructor.MODES.EDIT;
-                newToggle.classList.add("mode-slider");
-                newToggle.dataset.tooltip = "WH40K.SheetModeEdit";
-                newToggle.setAttribute("aria-label", game.i18n.localize("WH40K.SheetModeEdit"));
-                newToggle.addEventListener("change", this._onChangeSheetMode.bind(this));
-                newToggle.addEventListener("dblclick", event => event.stopPropagation());
-                newToggle.addEventListener("pointerdown", event => event.stopPropagation());
+                newToggle.classList.add('mode-slider');
+                newToggle.dataset.tooltip = 'WH40K.SheetModeEdit';
+                newToggle.setAttribute('aria-label', game.i18n.localize('WH40K.SheetModeEdit'));
+                newToggle.addEventListener('change', this._onChangeSheetMode.bind(this));
+                newToggle.addEventListener('dblclick', (event) => event.stopPropagation());
+                newToggle.addEventListener('pointerdown', (event) => event.stopPropagation());
                 header.prepend(newToggle);
             } else if (this.isEditable && toggle) {
                 toggle.checked = this._mode === this.constructor.MODES.EDIT;
@@ -128,7 +128,7 @@ export default function PrimarySheetMixin(Base) {
             const context = await super._prepareContext(options);
             context.owner = this.document.isOwner;
             context.locked = !this.isEditable;
-            context.editable = this.isEditable && (this._mode === this.constructor.MODES.EDIT);
+            context.editable = this.isEditable && this._mode === this.constructor.MODES.EDIT;
             context.tabs = this._getTabs();
             return context;
         }
@@ -151,13 +151,14 @@ export default function PrimarySheetMixin(Base) {
          */
         _getTabs() {
             return this.constructor.TABS.reduce((tabs, { tab, condition, ...config }) => {
-                if (!condition || condition(this.document)) tabs[tab] = {
-                    ...config,
-                    id: tab,
-                    group: "primary",
-                    active: this.tabGroups.primary === tab,
-                    cssClass: this.tabGroups.primary === tab ? "active" : ""
-                };
+                if (!condition || condition(this.document))
+                    tabs[tab] = {
+                        ...config,
+                        id: tab,
+                        group: 'primary',
+                        active: this.tabGroups.primary === tab,
+                        cssClass: this.tabGroups.primary === tab ? 'active' : '',
+                    };
                 return tabs;
             }, {});
         }
@@ -180,30 +181,30 @@ export default function PrimarySheetMixin(Base) {
 
             // Set toggle state and add status class to frame
             this._renderModeToggle();
-            this.element.classList.toggle("editable", this.isEditable && (this._mode === this.constructor.MODES.EDIT));
-            this.element.classList.toggle("interactable", this.isEditable && (this._mode === this.constructor.MODES.PLAY));
-            this.element.classList.toggle("locked", !this.isEditable);
+            this.element.classList.toggle('editable', this.isEditable && this._mode === this.constructor.MODES.EDIT);
+            this.element.classList.toggle('interactable', this.isEditable && this._mode === this.constructor.MODES.PLAY);
+            this.element.classList.toggle('locked', !this.isEditable);
 
             if (this.isEditable) {
                 // Automatically select input contents when focused
-                this.element.querySelectorAll("input").forEach(e => e.addEventListener("focus", e.select));
+                this.element.querySelectorAll('input').forEach((e) => e.addEventListener('focus', e.select));
             }
 
             // Prevent inputs from firing drag listeners.
-            this.element.querySelectorAll(".draggable input").forEach(el => {
+            this.element.querySelectorAll('.draggable input').forEach((el) => {
                 el.draggable = true;
-                el.ondragstart = event => {
+                el.ondragstart = (event) => {
                     event.preventDefault();
                     event.stopPropagation();
                 };
             });
-            
+
             // Activate legacy V1-style tabs for templates that use data-tab/data-group
             this._activateLegacyTabs();
         }
 
         /* -------------------------------------------- */
-        
+
         /**
          * Activate legacy V1-style tabs that use data-tab and data-group attributes.
          * This provides compatibility for templates not yet migrated to V2 tab patterns.
@@ -216,27 +217,27 @@ export default function PrimarySheetMixin(Base) {
                 const nav = this.element.querySelector(navSelector);
                 const content = this.element.querySelector(contentSelector);
                 if (!nav || !content) continue;
-                
+
                 // Get current active tab from tabGroups or use initial
-                const group = nav.dataset.group || "primary";
+                const group = nav.dataset.group || 'primary';
                 const activeTab = this.tabGroups?.[group] ?? initial;
-                
+
                 // Set up tab click handlers
-                nav.querySelectorAll("[data-tab]").forEach(tabLink => {
-                    tabLink.addEventListener("click", event => {
+                nav.querySelectorAll('[data-tab]').forEach((tabLink) => {
+                    tabLink.addEventListener('click', (event) => {
                         event.preventDefault();
                         const tab = tabLink.dataset.tab;
                         this._activateTab(tab, group, nav, content);
                     });
                 });
-                
+
                 // Activate initial tab
                 if (activeTab) {
                     this._activateTab(activeTab, group, nav, content);
                 }
             }
         }
-        
+
         /**
          * Activate a specific tab.
          * @param {string} tab         The tab identifier.
@@ -248,22 +249,22 @@ export default function PrimarySheetMixin(Base) {
         _activateTab(tab, group, nav, content) {
             // Update tabGroups tracking
             if (this.tabGroups) this.tabGroups[group] = tab;
-            
+
             // Update nav active states
-            nav.querySelectorAll("[data-tab]").forEach(link => {
+            nav.querySelectorAll('[data-tab]').forEach((link) => {
                 const isActive = link.dataset.tab === tab;
-                link.classList.toggle("active", isActive);
-                link.closest(".rt-navigation__item, .rt-nav-item")?.classList.toggle("active", isActive);
+                link.classList.toggle('active', isActive);
+                link.closest('.rt-navigation__item, .rt-nav-item')?.classList.toggle('active', isActive);
             });
-            
+
             // Update content tab visibility
-            content.querySelectorAll(":scope > [data-tab]").forEach(tabContent => {
+            content.querySelectorAll(':scope > [data-tab]').forEach((tabContent) => {
                 const isActive = tabContent.dataset.tab === tab;
-                tabContent.classList.toggle("active", isActive);
+                tabContent.classList.toggle('active', isActive);
             });
-            
+
             // Update application element class
-            this.element.className = this.element.className.replace(/\btab-\w+/g, "");
+            this.element.className = this.element.className.replace(/\btab-\w+/g, '');
             this.element.classList.add(`tab-${tab}`);
         }
 
@@ -274,25 +275,29 @@ export default function PrimarySheetMixin(Base) {
          * @param {HTMLElement} element  The element to animate.
          * @param {string} type          Animation type: "increase", "decrease", "changed", "critical", "success".
          */
-        animateStatChange(element, type = "changed") {
+        animateStatChange(element, type = 'changed') {
             if (!element) return;
-            
+
             const animClass = `rt-stat-${type}`;
-            
+
             // Remove any existing animation classes
-            element.classList.remove("wh40k-stat-increase", "wh40k-stat-decrease", "wh40k-stat-changed", "wh40k-stat-critical", "wh40k-stat-success");
-            
+            element.classList.remove('wh40k-stat-increase', 'wh40k-stat-decrease', 'wh40k-stat-changed', 'wh40k-stat-critical', 'wh40k-stat-success');
+
             // Force reflow to restart animation
             void element.offsetWidth;
-            
+
             // Add the animation class
             element.classList.add(animClass);
-            
+
             // Remove the class after animation completes (unless it's a persistent one)
-            if (type !== "critical") {
-                element.addEventListener("animationend", () => {
-                    element.classList.remove(animClass);
-                }, { once: true });
+            if (type !== 'critical') {
+                element.addEventListener(
+                    'animationend',
+                    () => {
+                        element.classList.remove(animClass);
+                    },
+                    { once: true },
+                );
             }
         }
 
@@ -306,8 +311,8 @@ export default function PrimarySheetMixin(Base) {
          */
         animateValueChange(element, oldValue, newValue) {
             if (!element || oldValue === newValue) return;
-            
-            const type = newValue > oldValue ? "increase" : "decrease";
+
+            const type = newValue > oldValue ? 'increase' : 'decrease';
             this.animateStatChange(element, type);
         }
 
@@ -330,8 +335,8 @@ export default function PrimarySheetMixin(Base) {
         /** @inheritDoc */
         changeTab(tab, group, options) {
             super.changeTab(tab, group, options);
-            if (group !== "primary") return;
-            this.element.className = this.element.className.replace(/tab-\w+/g, "");
+            if (group !== 'primary') return;
+            this.element.className = this.element.className.replace(/tab-\w+/g, '');
             this.element.classList.add(`tab-${tab}`);
         }
 
@@ -344,8 +349,8 @@ export default function PrimarySheetMixin(Base) {
          * @param {HTMLElement} target  Button that was clicked.
          */
         static async #deleteDocument(event, target) {
-            if (await this._deleteDocument(event, target) === false) return;
-            const uuid = target.closest("[data-uuid]")?.dataset.uuid;
+            if ((await this._deleteDocument(event, target)) === false) return;
+            const uuid = target.closest('[data-uuid]')?.dataset.uuid;
             const doc = await fromUuid(uuid);
             doc?.deleteDialog();
         }
@@ -370,9 +375,9 @@ export default function PrimarySheetMixin(Base) {
         async _onChangeSheetMode(event) {
             const { MODES } = this.constructor;
             const toggle = event.currentTarget;
-            const label = game.i18n.localize(`RT.SheetMode${toggle.checked ? "Play" : "Edit"}`);
+            const label = game.i18n.localize(`RT.SheetMode${toggle.checked ? 'Play' : 'Edit'}`);
             toggle.dataset.tooltip = label;
-            toggle.setAttribute("aria-label", label);
+            toggle.setAttribute('aria-label', label);
             this._mode = toggle.checked ? MODES.EDIT : MODES.PLAY;
             await this.submit();
             this.render();
@@ -382,7 +387,7 @@ export default function PrimarySheetMixin(Base) {
 
         /** @inheritDoc */
         _onClickAction(event, target) {
-            if (target.dataset.action === "addDocument") this._addDocument(event, target);
+            if (target.dataset.action === 'addDocument') this._addDocument(event, target);
             else super._onClickAction(event, target);
         }
 
@@ -395,9 +400,9 @@ export default function PrimarySheetMixin(Base) {
          * @param {HTMLElement} target  Button that was clicked.
          */
         static async #showDocument(event, target) {
-            if (await this._showDocument(event, target) === false) return;
-            if ([HTMLInputElement, HTMLSelectElement].some(el => event.target instanceof el)) return;
-            const uuid = target.closest("[data-uuid]")?.dataset.uuid;
+            if ((await this._showDocument(event, target)) === false) return;
+            if ([HTMLInputElement, HTMLSelectElement].some((el) => event.target instanceof el)) return;
+            const uuid = target.closest('[data-uuid]')?.dataset.uuid;
             const doc = await fromUuid(uuid);
             doc?.sheet?.render({ force: true });
         }

@@ -7,174 +7,174 @@
 
 .journal-entry-page .editor-content,
 .journal-entry-content {
-  font-family: 'Crimson Text', Georgia, serif;
-  line-height: 1.6;
-  color: #2c2c2c;
+    font-family: 'Crimson Text', Georgia, serif;
+    line-height: 1.6;
+    color: #2c2c2c;
 }
 
 /* Styled Headers */
 .journal-entry-page .wh40k-header,
 .journal-entry-content .wh40k-header {
-  background: linear-gradient(135deg, #8b0000 0%, #4a0000 100%);
-  color: #d4af37;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  text-align: center;
-  border: 2px solid #d4af37;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #8b0000 0%, #4a0000 100%);
+    color: #d4af37;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 2px solid #d4af37;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .journal-entry-page .wh40k-header h1,
 .journal-entry-content .wh40k-header h1 {
-  margin: 0;
-  font-size: 2.5em;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  font-family: 'Cinzel', serif;
+    margin: 0;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-family: 'Cinzel', serif;
 }
 
 .journal-entry-page .wh40k-header p,
 .journal-entry-content .wh40k-header p {
-  margin: 10px 0 0 0;
-  font-style: italic;
-  color: #f4e4c1;
+    margin: 10px 0 0 0;
+    font-style: italic;
+    color: #f4e4c1;
 }
 
 /* Content Sections */
 .journal-entry-page .wh40k-section,
 .journal-entry-content .wh40k-section {
-  background: #f9f7f4;
-  border-left: 4px solid #8b0000;
-  padding: 15px;
-  margin: 20px 0;
-  border-radius: 4px;
+    background: #f9f7f4;
+    border-left: 4px solid #8b0000;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
 }
 
 .journal-entry-page .wh40k-section h2,
 .journal-entry-content .wh40k-section h2 {
-  color: #8b0000;
-  margin-top: 0;
-  font-family: 'Cinzel', serif;
-  border-bottom: 2px solid #d4af37;
-  padding-bottom: 8px;
+    color: #8b0000;
+    margin-top: 0;
+    font-family: 'Cinzel', serif;
+    border-bottom: 2px solid #d4af37;
+    padding-bottom: 8px;
 }
 
 /* Styled Tables */
 .journal-entry-page .wh40k-table,
 .journal-entry-content .wh40k-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 15px 0;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .journal-entry-page .wh40k-table th,
 .journal-entry-content .wh40k-table th {
-  background: linear-gradient(180deg, #8b0000 0%, #6a0000 100%);
-  color: #d4af37;
-  padding: 12px;
-  text-align: left;
-  font-weight: bold;
-  border: 1px solid #4a0000;
+    background: linear-gradient(180deg, #8b0000 0%, #6a0000 100%);
+    color: #d4af37;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    border: 1px solid #4a0000;
 }
 
 .journal-entry-page .wh40k-table td,
 .journal-entry-content .wh40k-table td {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  vertical-align: top;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    vertical-align: top;
 }
 
 .journal-entry-page .wh40k-table tr:nth-child(even),
 .journal-entry-content .wh40k-table tr:nth-child(even) {
-  background: #f5f5f5;
+    background: #f5f5f5;
 }
 
 .journal-entry-page .wh40k-table tr:hover,
 .journal-entry-content .wh40k-table tr:hover {
-  background: #fff8dc;
+    background: #fff8dc;
 }
 
 /* Callout Boxes */
 .journal-entry-page .wh40k-callout,
 .journal-entry-content .wh40k-callout {
-  background: #fff8dc;
-  border: 2px solid #d4af37;
-  border-radius: 6px;
-  padding: 15px;
-  margin: 15px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: #fff8dc;
+    border: 2px solid #d4af37;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .journal-entry-page .wh40k-callout.warning,
 .journal-entry-content .wh40k-callout.warning {
-  background: #ffe4e1;
-  border-color: #8b0000;
+    background: #ffe4e1;
+    border-color: #8b0000;
 }
 
 .journal-entry-page .wh40k-callout h3,
 .journal-entry-content .wh40k-callout h3 {
-  margin-top: 0;
-  color: #8b0000;
+    margin-top: 0;
+    color: #8b0000;
 }
 
 /* Stat Blocks */
 .journal-entry-page .wh40k-stat-block,
 .journal-entry-content .wh40k-stat-block {
-  background: #2c2c2c;
-  color: #d4af37;
-  padding: 15px;
-  border-radius: 6px;
-  font-family: monospace;
-  margin: 15px 0;
+    background: #2c2c2c;
+    color: #d4af37;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: monospace;
+    margin: 15px 0;
 }
 
 /* Dice Notation */
 .journal-entry-page .wh40k-dice-roll,
 .journal-entry-content .wh40k-dice-roll {
-  display: inline-block;
-  background: #8b0000;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-weight: bold;
-  font-family: monospace;
+    display: inline-block;
+    background: #8b0000;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-family: monospace;
 }
 
 /* Characteristic Badges */
 .journal-entry-page .wh40k-characteristic,
 .journal-entry-content .wh40k-characteristic {
-  display: inline-block;
-  background: #4a0000;
-  color: #d4af37;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-weight: bold;
-  margin: 0 2px;
+    display: inline-block;
+    background: #4a0000;
+    color: #d4af37;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+    margin: 0 2px;
 }
 
 /* Skills and Talents */
 .journal-entry-page .wh40k-skill,
 .journal-entry-content .wh40k-skill {
-  color: #006400;
-  font-weight: bold;
+    color: #006400;
+    font-weight: bold;
 }
 
 .journal-entry-page .wh40k-talent,
 .journal-entry-content .wh40k-talent {
-  color: #00008b;
-  font-style: italic;
+    color: #00008b;
+    font-style: italic;
 }
 
 /* GM Secret Sections */
 .journal-entry-page .wh40k-gm-secret,
 .journal-entry-content .wh40k-gm-secret {
-  background: #f0f0f0;
-  border-left: 4px solid #666;
-  padding: 10px;
-  margin: 10px 0;
-  font-style: italic;
+    background: #f0f0f0;
+    border-left: 4px solid #666;
+    padding: 10px;
+    margin: 10px 0;
+    font-style: italic;
 }
 
 /* Lists */
@@ -182,38 +182,38 @@
 .journal-entry-page ol.wh40k-list,
 .journal-entry-content ul.wh40k-list,
 .journal-entry-content ol.wh40k-list {
-  margin-left: 20px;
+    margin-left: 20px;
 }
 
 .journal-entry-page ul.wh40k-list li,
 .journal-entry-page ol.wh40k-list li,
 .journal-entry-content ul.wh40k-list li,
 .journal-entry-content ol.wh40k-list li {
-  margin: 8px 0;
+    margin: 8px 0;
 }
 
 /* Example Boxes */
 .journal-entry-page .wh40k-example,
 .journal-entry-content .wh40k-example {
-  background: #e8f4f8;
-  border-left: 4px solid #4682b4;
-  padding: 12px;
-  margin: 15px 0;
-  font-style: italic;
+    background: #e8f4f8;
+    border-left: 4px solid #4682b4;
+    padding: 12px;
+    margin: 15px 0;
+    font-style: italic;
 }
 
 /* Quick Reference Cards */
 .journal-entry-page .wh40k-quick-ref,
 .journal-entry-content .wh40k-quick-ref {
-  background: #f0fff0;
-  border: 2px dashed #228b22;
-  padding: 15px;
-  margin: 20px 0;
-  border-radius: 6px;
+    background: #f0fff0;
+    border: 2px dashed #228b22;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 6px;
 }
 
 .journal-entry-page .wh40k-quick-ref h4,
 .journal-entry-content .wh40k-quick-ref h4 {
-  margin-top: 0;
-  color: #228b22;
+    margin-top: 0;
+    color: #228b22;
 }

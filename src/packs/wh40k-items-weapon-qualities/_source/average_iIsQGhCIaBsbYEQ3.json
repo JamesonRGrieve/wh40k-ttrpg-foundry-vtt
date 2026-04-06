@@ -1,18 +1,18 @@
 {
-  "name": "Average",
-  "type": "weaponQuality",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "identifier": "average",
-    "hasLevel": false,
-    "level": null,
-    "effect": "<p>Effect reference: 62</p>",
-    "notes": "",
-    "description": {
-      "value": "<p>62</p>"
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "iIsQGhCIaBsbYEQ3"
+    "name": "Average",
+    "type": "weaponQuality",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "identifier": "average",
+        "hasLevel": false,
+        "level": null,
+        "effect": "<p>Effect reference: 62</p>",
+        "notes": "",
+        "description": {
+            "value": "<p>62</p>"
+        }
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "iIsQGhCIaBsbYEQ3"
 }

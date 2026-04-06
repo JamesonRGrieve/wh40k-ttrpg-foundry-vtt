@@ -1,5 +1,5 @@
-import ItemDataModel from "../abstract/item-data-model.mjs";
-import DescriptionTemplate from "../shared/description-template.mjs";
+import ItemDataModel from '../abstract/item-data-model.mjs';
+import DescriptionTemplate from '../shared/description-template.mjs';
 
 /**
  * Data model for Journal Entry items.
@@ -11,8 +11,8 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
-            time: new fields.StringField({ initial: "" }),
-            place: new fields.StringField({ initial: "" })
+            time: new fields.StringField({ initial: '' }),
+            place: new fields.StringField({ initial: '' }),
         };
     }
 
@@ -32,10 +32,10 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
     get headerLabels() {
         const labels = [];
         if (this.time) {
-            labels.push({ label: this.time, icon: "fa-solid fa-clock" });
+            labels.push({ label: this.time, icon: 'fa-solid fa-clock' });
         }
         if (this.place) {
-            labels.push({ label: this.place, icon: "fa-solid fa-location-dot" });
+            labels.push({ label: this.place, icon: 'fa-solid fa-location-dot' });
         }
         return labels;
     }

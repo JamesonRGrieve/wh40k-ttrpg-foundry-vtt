@@ -4,30 +4,32 @@
 // ============================================
 
 @mixin rt-progress-gradient($gradient) {
-  &::-webkit-progress-value {
-    border-radius: 999px;
-    background: $gradient;
-  }
-  &::-moz-progress-bar {
-    border-radius: 999px;
-    background: $gradient;
-  }
+    &::-webkit-progress-value {
+        border-radius: 999px;
+        background: $gradient;
+    }
+    &::-moz-progress-bar {
+        border-radius: 999px;
+        background: $gradient;
+    }
 }
 
 @mixin rt-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
-  .wh40k-vitals-progress {
-    @include rt-progress-gradient($progress-gradient);
-  }
-  .wh40k-vitals-title {
-    color: $title-color;
-    i { color: $icon-color; }
-  }
+    .wh40k-vitals-progress {
+        @include rt-progress-gradient($progress-gradient);
+    }
+    .wh40k-vitals-title {
+        color: $title-color;
+        i {
+            color: $icon-color;
+        }
+    }
 }
 
 @mixin rt-panel-tint($color, $border-opacity: 0.75, $header-opacity: 0.12) {
-  border-left: 3px solid rgba($color, $border-opacity);
-  
-  .wh40k-panel-header {
-    background: linear-gradient(180deg, rgba($color, $header-opacity), transparent);
-  }
+    border-left: 3px solid rgba($color, $border-opacity);
+
+    .wh40k-panel-header {
+        background: linear-gradient(180deg, rgba($color, $header-opacity), transparent);
+    }
 }

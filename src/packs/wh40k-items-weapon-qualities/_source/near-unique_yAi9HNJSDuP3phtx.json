@@ -1,18 +1,18 @@
 {
-  "name": "Near Unique",
-  "type": "weaponQuality",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "identifier": "near-unique",
-    "hasLevel": false,
-    "level": null,
-    "effect": "<p>Effect reference: 116</p>",
-    "notes": "",
-    "description": {
-      "value": "<p>116</p>"
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "yAi9HNJSDuP3phtx"
+    "name": "Near Unique",
+    "type": "weaponQuality",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "identifier": "near-unique",
+        "hasLevel": false,
+        "level": null,
+        "effect": "<p>Effect reference: 116</p>",
+        "notes": "",
+        "description": {
+            "value": "<p>116</p>"
+        }
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "yAi9HNJSDuP3phtx"
 }

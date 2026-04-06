@@ -4,7 +4,7 @@ export async function updateWeaponModifiers(rollData) {
     rollData.weaponModifiers = [];
 
     let actionItem = rollData.weapon ?? rollData.power;
-    if(!actionItem) return;
+    if (!actionItem) return;
 
     for (const i of actionItem.items) {
         if (i.isWeaponModification && (i.system.equipped || i.system.enabled)) {
@@ -18,7 +18,7 @@ export async function updateWeaponModifiers(rollData) {
 
 export async function calculateWeaponModifiersDamageBonuses(actionData, hit) {
     let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
-    if(!actionItem) return;
+    if (!actionItem) return;
 
     for (const item of actionItem.items) {
         game.rt.log('calculateWeaponModifiersDamageBonuses', item);
@@ -34,7 +34,7 @@ export async function calculateWeaponModifiersDamageBonuses(actionData, hit) {
 
 export async function calculateWeaponModifiersPenetrationBonuses(actionData, hit) {
     let actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
-    if(!actionItem) return;
+    if (!actionItem) return;
 
     for (const item of actionItem.items) {
         game.rt.log('calculateWeaponModifiersPenetrationBonuses', item);
@@ -50,7 +50,7 @@ export async function calculateWeaponModifiersPenetrationBonuses(actionData, hit
 
 export async function calculateWeaponModifiersAttackSpecials(rollData) {
     let actionItem = rollData.weapon ?? rollData.power;
-    if(!actionItem) return;
+    if (!actionItem) return;
 
     for (const item of actionItem.items) {
         game.rt.log('calculateWeaponModifiersAttackSpecials', item);
@@ -71,7 +71,7 @@ export async function calculateWeaponModifiersAttackBonuses(rollData) {
     // Reset Data -- this prevents needing to ensure removal if modifiers change
     rollData.weaponModifiers = {};
     let actionItem = rollData.weapon ?? rollData.power;
-    if(!actionItem) return;
+    if (!actionItem) return;
 
     for (const item of actionItem.items) {
         game.rt.log('calculateWeaponModifiers', item);
