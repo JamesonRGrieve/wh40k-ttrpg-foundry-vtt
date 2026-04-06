@@ -100,25 +100,12 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
      * @returns {Promise<boolean|null>}
      */
     static async confirm({ title, content, defaultYes = true } = {}) {
-        return new Promise((resolve) => {
-            new Dialog({
-                title,
-                content,
-                buttons: {
-                    yes: {
-                        icon: '<i class="fas fa-check"></i>',
-                        label: game.i18n.localize('Yes'),
-                        callback: () => resolve(true),
-                    },
-                    no: {
-                        icon: '<i class="fas fa-times"></i>',
-                        label: game.i18n.localize('No'),
-                        callback: () => resolve(false),
-                    },
-                },
-                default: defaultYes ? 'yes' : 'no',
-                close: () => resolve(null),
-            }).render(true);
+        return foundry.applications.api.DialogV2.confirm({
+            window: { title },
+            content,
+            yes: { default: defaultYes },
+            no: { default: !defaultYes },
+            rejectClose: false,
         });
     }
 
@@ -132,28 +119,14 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
      * @returns {Promise<any>}
      */
     static async prompt({ title, content, label = 'OK', callback } = {}) {
-        return new Promise((resolve) => {
-            new Dialog({
-                title,
-                content,
-                buttons: {
-                    ok: {
-                        icon: '<i class="fas fa-check"></i>',
-                        label,
-                        callback: (html) => {
-                            const result = callback?.(html);
-                            resolve(result);
-                        },
-                    },
-                    cancel: {
-                        icon: '<i class="fas fa-times"></i>',
-                        label: game.i18n.localize('Cancel'),
-                        callback: () => resolve(null),
-                    },
-                },
-                default: 'ok',
-                close: () => resolve(null),
-            }).render(true);
+        return foundry.applications.api.DialogV2.prompt({
+            window: { title },
+            content,
+            ok: {
+                label,
+                callback: (event, button, dialog) => callback?.(dialog),
+            },
+            rejectClose: false,
         });
     }
 }

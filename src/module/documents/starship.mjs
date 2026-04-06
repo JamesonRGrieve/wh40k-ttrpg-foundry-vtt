@@ -153,7 +153,7 @@ export class WH40KStarship extends WH40KBaseActor {
             detectionBonus: this.detectionBonus,
         };
 
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
         await ChatMessage.create({
             user: game.user.id,

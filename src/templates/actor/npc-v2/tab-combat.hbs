@@ -9,9 +9,9 @@
         <div class="wh40k-wounds-icon"><i class="fa-solid fa-heart"></i></div>
         <div class="wh40k-wounds-info">
           <div class="wh40k-wounds-display">
-            <input type="number" name="system.wounds.value" value="{{system.wounds.value}}" min="0" class="wh40k-wounds-current" {{#unless editable}}disabled{{/unless}} />
+            <input type="number" name="system.wounds.value" value="{{source.wounds.value}}" min="0" class="wh40k-wounds-current" {{#unless editable}}disabled{{/unless}} />
             <span class="wh40k-wounds-sep">/</span>
-            <input type="number" name="system.wounds.max" value="{{system.wounds.max}}" min="1" class="wh40k-wounds-max" {{#unless editable}}disabled{{/unless}} />
+            <input type="number" name="system.wounds.max" value="{{source.wounds.max}}" min="1" class="wh40k-wounds-max" {{#unless editable}}disabled{{/unless}} />
           </div>
           <div class="wh40k-wounds-bar">
             <div class="wh40k-wounds-fill" style="width: {{percent system.wounds.value system.wounds.max}}%"></div>
@@ -34,25 +34,25 @@
       <div class="wh40k-movement-cards">
         <div class="wh40k-move-card wh40k-move-card--half" title="Half Move Action">
           <i class="fa-solid fa-shoe-prints"></i>
-          {{#if editable}}<input type="number" name="system.movement.half" value="{{system.movement.half}}" class="wh40k-move-card-input" />
+          {{#if editable}}<input type="number" name="system.movement.half" value="{{source.movement.half}}" class="wh40k-move-card-input" />
           {{else}}<span class="wh40k-move-card-value">{{system.movement.half}}</span>{{/if}}
           <span class="wh40k-move-card-label">Half</span>
         </div>
         <div class="wh40k-move-card wh40k-move-card--full" title="Full Move Action">
           <i class="fa-solid fa-person-walking"></i>
-          {{#if editable}}<input type="number" name="system.movement.full" value="{{system.movement.full}}" class="wh40k-move-card-input" />
+          {{#if editable}}<input type="number" name="system.movement.full" value="{{source.movement.full}}" class="wh40k-move-card-input" />
           {{else}}<span class="wh40k-move-card-value">{{system.movement.full}}</span>{{/if}}
           <span class="wh40k-move-card-label">Full</span>
         </div>
         <div class="wh40k-move-card wh40k-move-card--charge" title="Charge Action">
           <i class="fa-solid fa-person-running"></i>
-          {{#if editable}}<input type="number" name="system.movement.charge" value="{{system.movement.charge}}" class="wh40k-move-card-input" />
+          {{#if editable}}<input type="number" name="system.movement.charge" value="{{source.movement.charge}}" class="wh40k-move-card-input" />
           {{else}}<span class="wh40k-move-card-value">{{system.movement.charge}}</span>{{/if}}
           <span class="wh40k-move-card-label">Charge</span>
         </div>
         <div class="wh40k-move-card wh40k-move-card--run" title="Run Action (Full Action)">
           <i class="fa-solid fa-bolt-lightning"></i>
-          {{#if editable}}<input type="number" name="system.movement.run" value="{{system.movement.run}}" class="wh40k-move-card-input" />
+          {{#if editable}}<input type="number" name="system.movement.run" value="{{source.movement.run}}" class="wh40k-move-card-input" />
           {{else}}<span class="wh40k-move-card-value">{{system.movement.run}}</span>{{/if}}
           <span class="wh40k-move-card-label">Run</span>
         </div>

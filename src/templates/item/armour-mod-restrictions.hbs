@@ -49,7 +49,7 @@
                 <div class="wh40k-field">
                     <label class="wh40k-field-label">{{localize "WH40K.Availability.Label"}}</label>
                     <select name="system.availability" class="wh40k-field-select">
-                        {{selectOptions dh.availabilities selected=system.availability labelAttr="label" blank=""}}
+                        {{selectOptions dh.availabilities selected=source.availability labelAttr="label" blank=""}}
                     </select>
                 </div>
                 
@@ -57,7 +57,7 @@
                     <label class="wh40k-field-label">{{localize "WH40K.Source.Book"}}</label>
                     <input type="text" 
                            name="system.source" 
-                           value="{{system.source}}" 
+                           value="{{source.source}}" 
                            class="wh40k-field-input"
                            placeholder="Core Rulebook, p. 123">
                 </div>

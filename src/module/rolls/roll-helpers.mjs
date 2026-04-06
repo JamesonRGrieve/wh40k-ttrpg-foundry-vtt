@@ -44,7 +44,7 @@ export async function roll1d100() {
 }
 
 export async function sendActionDataToChat(actionData) {
-    const html = await renderTemplate(actionData.template, actionData);
+    const html = await foundry.applications.handlebars.renderTemplate(actionData.template, actionData);
     const chatData = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),

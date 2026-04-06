@@ -253,7 +253,7 @@ export class ReloadActionManager {
             clipMax: weapon.system.clip.max,
         };
 
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/reload-action-chat.hbs', templateData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/reload-action-chat.hbs', templateData);
 
         const chatData = {
             user: game.user.id,

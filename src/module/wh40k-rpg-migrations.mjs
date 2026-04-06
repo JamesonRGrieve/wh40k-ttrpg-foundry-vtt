@@ -351,25 +351,13 @@ export async function checkAndMigrateWorld() {
     }
 
     async function releaseNotes(data) {
-        const html = await renderTemplate('systems/wh40k-rpg/templates/prompt/release-notes-prompt.hbs', data);
-        const dialog = new Dialog(
-            {
-                title: 'Release Notes',
-                content: html,
-                buttons: {
-                    ok: {
-                        icon: "<i class='dh-material'>close</i>",
-                        label: 'Ok',
-                        callback: () => {},
-                    },
-                },
-                default: 'ok',
-                close: () => {},
-            },
-            {
-                width: 300,
-            },
-        );
-        dialog.render(true);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/prompt/release-notes-prompt.hbs', data);
+        foundry.applications.api.DialogV2.prompt({
+            window: { title: 'Release Notes' },
+            content: html,
+            ok: { label: 'Ok' },
+            position: { width: 300 },
+            rejectClose: false,
+        });
     }
 }

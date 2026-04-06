@@ -85,7 +85,7 @@ export class BasicActionManager {
         };
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
-        const html = await renderTemplate(template, templateData);
+        const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
         const chatData = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
@@ -282,7 +282,7 @@ export class BasicActionManager {
      * @returns {Promise<void>}
      */
     async sendItemVocalizeChat(data) {
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
         const chatData = {
             user: game.user.id,
             content: html,

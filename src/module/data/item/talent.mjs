@@ -391,7 +391,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
             timestamp: new Date().toLocaleString(),
         };
 
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/talent-card.hbs', templateData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-card.hbs', templateData);
 
         return ChatMessage.create({
             content: html,
