@@ -79,14 +79,14 @@ export class RollData {
     get name() {
         if (this.nameOverride) return this.nameOverride;
 
-        let actionItem = this.weapon ?? this.power;
+        const actionItem = this.weapon ?? this.power;
         if (actionItem) return actionItem.name;
 
         return '';
     }
 
     get effectString() {
-        let actionItem = this.weapon ?? this.power;
+        const actionItem = this.weapon ?? this.power;
         if (!actionItem) return '';
 
         const str = [];

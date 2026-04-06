@@ -283,7 +283,7 @@ export class BasicActionManager {
      */
     async sendItemVocalizeChat(data) {
         const html = await renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
-        let chatData = {
+        const chatData = {
             user: game.user.id,
             content: html,
             rollMode: game.settings.get('core', 'rollMode'),

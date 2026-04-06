@@ -5,7 +5,7 @@ import { applyQualityModifiersToRollData } from './weapon-quality-effects.mjs';
 
 export async function updateAttackSpecials(rollData) {
     rollData.attackSpecials = [];
-    let actionItem = rollData.weapon ?? rollData.power;
+    const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
     for (const i of actionItem.items) {
         if (i.isAttackSpecial && (i.system.equipped || i.system.enabled)) {
@@ -54,7 +54,7 @@ export async function updateAttackSpecials(rollData) {
 export async function calculateAttackSpecialAttackBonuses(rollData) {
     // Reset Attack Specials
     rollData.specialModifiers = {};
-    let actionItem = rollData.weapon ?? rollData.power;
+    const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
 
     for (const item of actionItem.items) {

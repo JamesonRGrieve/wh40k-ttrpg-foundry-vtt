@@ -57,7 +57,7 @@ export function updateAvailableCombatActions(rollData) {
 
     rollData.actions = {};
     rollData.combatActionInformation = actions;
-    for (let action of actions) {
+    for (const action of actions) {
         rollData.actions[action.name] = action.name;
     }
 

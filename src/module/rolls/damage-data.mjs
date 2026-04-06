@@ -83,7 +83,7 @@ export class Hit {
      * @returns {Promise<void>}
      */
     async _calculateDamage(attackData) {
-        let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
@@ -111,7 +111,7 @@ export class Hit {
                 .filter((term) => term instanceof foundry.dice.terms.Die)
                 .forEach((die) => {
                     if (die.modifiers.includes('kh')) return;
-                    die.modifiers.push('kh' + die.number);
+                    die.modifiers.push(`kh${die.number}`);
                     die.number += 1;
                 });
         }
@@ -260,7 +260,7 @@ export class Hit {
     }
 
     async _calculatePenetration(attackData) {
-        let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
@@ -338,7 +338,7 @@ export class Hit {
     }
 
     async _calculateSpecials(attackData) {
-        let actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 

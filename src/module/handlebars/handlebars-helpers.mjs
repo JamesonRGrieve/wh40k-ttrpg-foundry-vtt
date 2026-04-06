@@ -7,11 +7,11 @@ export function capitalize(text) {
 
 export function toCamelCase(str) {
     return str
-        .replace(/\s(.)/g, function ($1) {
+        .replace(/\s(.)/g, ($1) => {
             return $1.toUpperCase();
         })
         .replace(/\s/g, '')
-        .replace(/^(.)/, function ($1) {
+        .replace(/^(.)/, ($1) => {
             return $1.toLowerCase();
         });
 }
@@ -123,7 +123,7 @@ function getArmourAPForLocation(armour, location) {
 }
 
 export function registerHandlebarsHelpers() {
-    Handlebars.registerHelper('isPsychicAttack', function (power) {
+    Handlebars.registerHelper('isPsychicAttack', (power) => {
         if (power && power.system.subtype) {
             return power.system.subtype.includes('Attack');
         } else {
@@ -131,15 +131,15 @@ export function registerHandlebarsHelpers() {
         }
     });
 
-    Handlebars.registerHelper('dhlog', function (object) {
+    Handlebars.registerHelper('dhlog', (object) => {
         if (object) {
             game.rt.log('hb template', object);
         }
     });
 
     Handlebars.registerHelper('concat', function () {
-        var outStr = '';
-        for (var arg in arguments) {
+        let outStr = '';
+        for (const arg in arguments) {
             if (typeof arguments[arg] != 'object') {
                 outStr += arguments[arg];
             }
@@ -147,13 +147,13 @@ export function registerHandlebarsHelpers() {
         return outStr;
     });
 
-    Handlebars.registerHelper('hideIf', function (check) {
+    Handlebars.registerHelper('hideIf', (check) => {
         if (check) {
             return new Handlebars.SafeString('style="display:none;"');
         }
     });
 
-    Handlebars.registerHelper('hideIfNot', function (check) {
+    Handlebars.registerHelper('hideIfNot', (check) => {
         if (!check) {
             return new Handlebars.SafeString('style="display:none;"');
         }
@@ -164,7 +164,7 @@ export function registerHandlebarsHelpers() {
      * Checks actor flags first, falls back to global CONFIG for compatibility
      * Usage: {{isExpanded 'panel_name' @root.actor}}
      */
-    Handlebars.registerHelper('isExpanded', function (field, actor) {
+    Handlebars.registerHelper('isExpanded', (field, actor) => {
         // Try to get from actor flags first (new system)
         if (actor && actor.flags?.['wh40k-rpg']?.ui?.expanded) {
             return actor.flags['wh40k-rpg'].ui.expanded.includes(field);
@@ -173,30 +173,30 @@ export function registerHandlebarsHelpers() {
         return CONFIG.wh40k.ui.expanded ? CONFIG.wh40k.ui.expanded.includes(field) : false;
     });
 
-    Handlebars.registerHelper('toLowerCase', function (str) {
+    Handlebars.registerHelper('toLowerCase', (str) => {
         return str.toLowerCase();
     });
 
-    Handlebars.registerHelper('removeMarkup', function (text) {
+    Handlebars.registerHelper('removeMarkup', (text) => {
         if (text == null) return '';
         if (typeof text !== 'string') text = String(text);
         const markup = /<(.*?)>/gi;
         return text.replace(markup, '');
     });
 
-    Handlebars.registerHelper('cleanFieldName', function (text) {
+    Handlebars.registerHelper('cleanFieldName', (text) => {
         return text === 'Name' ? 'character_name' : text.toLowerCase().replace(/ /g, '_');
     });
 
-    Handlebars.registerHelper('capitalize', function (text) {
+    Handlebars.registerHelper('capitalize', (text) => {
         return capitalize(text);
     });
 
-    Handlebars.registerHelper('getBioOptions', function (field) {
+    Handlebars.registerHelper('getBioOptions', (field) => {
         return CONFIG.wh40k.bio[field];
     });
 
-    Handlebars.registerHelper('and', function (obj1, obj2) {
+    Handlebars.registerHelper('and', (obj1, obj2) => {
         return obj1 && obj2;
     });
 
@@ -205,7 +205,7 @@ export function registerHandlebarsHelpers() {
      * Usage: {{or value1 value2 "default"}}
      * Commonly used with editor helper: {{editor content=(or system.field "") ...}}
      */
-    Handlebars.registerHelper('or', function (...args) {
+    Handlebars.registerHelper('or', (...args) => {
         // Handlebars appends an options object as the last argument
         // We need to check if the last arg is the options object
         const lastArg = args[args.length - 1];
@@ -221,21 +221,21 @@ export function registerHandlebarsHelpers() {
         return values[values.length - 1] ?? '';
     });
 
-    Handlebars.registerHelper('arrayIncludes', function (field, array) {
+    Handlebars.registerHelper('arrayIncludes', (field, array) => {
         if (!array) return false;
         if (Array.isArray(array)) return array.includes(field);
         if (array instanceof Set) return array.has(field);
         return false;
     });
 
-    Handlebars.registerHelper('includes', function (array, value) {
+    Handlebars.registerHelper('includes', (array, value) => {
         if (!array) return false;
         if (Array.isArray(array)) return array.includes(value);
         if (array instanceof Set) return array.has(value);
         return false;
     });
 
-    Handlebars.registerHelper('any', function (list, prop) {
+    Handlebars.registerHelper('any', (list, prop) => {
         if (!Array.isArray(list) || !prop) return false;
         return list.some((item) => Boolean(item?.[prop]));
     });
@@ -244,7 +244,7 @@ export function registerHandlebarsHelpers() {
      * Count items in a list that have a specific property
      * Usage: {{countType actor.items "isMalignancy"}}
      */
-    Handlebars.registerHelper('countType', function (list, prop) {
+    Handlebars.registerHelper('countType', (list, prop) => {
         if (!Array.isArray(list) || !prop) return 0;
         return list.filter((item) => Boolean(item?.[prop])).length;
     });
@@ -253,7 +253,7 @@ export function registerHandlebarsHelpers() {
      * Convert array or CONFIG object to simple key-value object for selectOptions
      * Handles both arrays ["value1", "value2"] and CONFIG objects {key: {label: "..."}}
      */
-    Handlebars.registerHelper('arrayToObject', function (array) {
+    Handlebars.registerHelper('arrayToObject', (array) => {
         const obj = {};
         if (array == null) return obj;
 
@@ -268,7 +268,7 @@ export function registerHandlebarsHelpers() {
 
         // Handle arrays and iterables
         if (typeof array[Symbol.iterator] === 'function') {
-            for (let a of array) {
+            for (const a of array) {
                 obj[a] = a;
             }
         }
@@ -276,19 +276,19 @@ export function registerHandlebarsHelpers() {
         return obj;
     });
 
-    Handlebars.registerHelper('option', function (option, current, name) {
+    Handlebars.registerHelper('option', (option, current, name) => {
         const selected = current === option ? 'selected="selected"' : '';
         let optionValue;
         if (Number.isInteger(option)) {
             optionValue = option;
         } else {
-            optionValue = '"' + option + '"';
+            optionValue = `"${option}"`;
         }
-        return new Handlebars.SafeString('<option value=' + optionValue + ' ' + selected + '>' + (name ? name : option) + '</option>');
+        return new Handlebars.SafeString(`<option value=${optionValue} ${selected}>${name ? name : option}</option>`);
     });
 
-    Handlebars.registerHelper('getCharacteristicValue', function (name, characteristics) {
-        for (let key of Object.keys(characteristics)) {
+    Handlebars.registerHelper('getCharacteristicValue', (name, characteristics) => {
+        for (const key of Object.keys(characteristics)) {
             if (characteristics[key].short === name) {
                 return characteristics[key].total;
             }
@@ -296,15 +296,15 @@ export function registerHandlebarsHelpers() {
         return 0;
     });
 
-    Handlebars.registerHelper('isError', function (value) {
+    Handlebars.registerHelper('isError', (value) => {
         return value ? 'error' : '';
     });
 
-    Handlebars.registerHelper('isSuccess', function (value) {
+    Handlebars.registerHelper('isSuccess', (value) => {
         return value ? 'success' : '';
     });
 
-    Handlebars.registerHelper('inc', function (value) {
+    Handlebars.registerHelper('inc', (value) => {
         return Number.parseInt(value) + 1;
     });
 
@@ -312,7 +312,7 @@ export function registerHandlebarsHelpers() {
      * Create an array of numbers for iteration
      * Usage: {{#each (array 1 2 3 4 5)}}
      */
-    Handlebars.registerHelper('array', function (...args) {
+    Handlebars.registerHelper('array', (...args) => {
         // Remove the options object that Handlebars adds
         return args.slice(0, -1);
     });
@@ -321,7 +321,7 @@ export function registerHandlebarsHelpers() {
      * Extract a slice of an array
      * Usage: {{#each (slice array 0 3)}}
      */
-    Handlebars.registerHelper('slice', function (array, start, end) {
+    Handlebars.registerHelper('slice', (array, start, end) => {
         if (!Array.isArray(array)) return [];
         const s = Number(start) || 0;
         const e = end !== undefined ? Number(end) : array.length;
@@ -332,7 +332,7 @@ export function registerHandlebarsHelpers() {
      * Create a numeric range for iteration
      * Usage: {{#each (range 1 5)}}
      */
-    Handlebars.registerHelper('range', function (start, end) {
+    Handlebars.registerHelper('range', (start, end) => {
         const out = [];
         const s = Number(start) || 0;
         const e = Number(end) || 0;
@@ -345,7 +345,7 @@ export function registerHandlebarsHelpers() {
      * Repeat a block N times with 1-based index.
      * Usage: {{#times 5}}{{this}}{{/times}}
      */
-    Handlebars.registerHelper('times', function (count, options) {
+    Handlebars.registerHelper('times', (count, options) => {
         const total = Math.max(0, Number(count) || 0);
         let output = '';
         for (let i = 1; i <= total; i++) {
@@ -358,7 +358,7 @@ export function registerHandlebarsHelpers() {
      * Add two numbers
      * Usage: {{add value 1}}
      */
-    Handlebars.registerHelper('add', function (a, b) {
+    Handlebars.registerHelper('add', (a, b) => {
         return (Number(a) || 0) + (Number(b) || 0);
     });
 
@@ -366,7 +366,7 @@ export function registerHandlebarsHelpers() {
      * Compute a percentage for progress bars
      * Usage: {{percent value max}}
      */
-    Handlebars.registerHelper('percent', function (value, max) {
+    Handlebars.registerHelper('percent', (value, max) => {
         const v = Number(value) || 0;
         const m = Number(max) || 0;
         if (m <= 0) return 0;
@@ -377,14 +377,14 @@ export function registerHandlebarsHelpers() {
      * Compute an inverse percentage (full at 0, empty at max).
      * Usage: {{inversePercent value max}}
      */
-    Handlebars.registerHelper('inversePercent', function (value, max) {
+    Handlebars.registerHelper('inversePercent', (value, max) => {
         const v = Number(value) || 0;
         const m = Number(max) || 0;
         if (m <= 0) return 0;
         return Math.min(100, Math.max(0, 100 - (v / m) * 100));
     });
 
-    Handlebars.registerHelper('colorCode', function (positive, negative) {
+    Handlebars.registerHelper('colorCode', (positive, negative) => {
         // Positive Precedence
         if (positive) {
             return 'success';
@@ -394,33 +394,33 @@ export function registerHandlebarsHelpers() {
     });
 
     // Comparison helpers
-    Handlebars.registerHelper('gt', function (a, b) {
+    Handlebars.registerHelper('gt', (a, b) => {
         return a > b;
     });
 
-    Handlebars.registerHelper('lt', function (a, b) {
+    Handlebars.registerHelper('lt', (a, b) => {
         return a < b;
     });
 
-    Handlebars.registerHelper('gte', function (a, b) {
+    Handlebars.registerHelper('gte', (a, b) => {
         return a >= b;
     });
 
-    Handlebars.registerHelper('lte', function (a, b) {
+    Handlebars.registerHelper('lte', (a, b) => {
         return a <= b;
     });
 
-    Handlebars.registerHelper('multiply', function (a, b) {
+    Handlebars.registerHelper('multiply', (a, b) => {
         return (a || 0) * (b || 0);
     });
 
-    Handlebars.registerHelper('divide', function (a, b) {
+    Handlebars.registerHelper('divide', (a, b) => {
         const divisor = Number(b) || 0;
         if (divisor === 0) return 0;
         return (Number(a) || 0) / divisor;
     });
 
-    Handlebars.registerHelper('subtract', function (a, b) {
+    Handlebars.registerHelper('subtract', (a, b) => {
         return (a || 0) - (b || 0);
     });
 
@@ -428,7 +428,7 @@ export function registerHandlebarsHelpers() {
      * Floor a number
      * Usage: {{floor value}}
      */
-    Handlebars.registerHelper('floor', function (value) {
+    Handlebars.registerHelper('floor', (value) => {
         return Math.floor(Number(value) || 0);
     });
 
@@ -436,25 +436,25 @@ export function registerHandlebarsHelpers() {
      * Format a number with a + or - sign
      * Usage: {{signedNumber 5}} → "+5", {{signedNumber -3}} → "-3"
      */
-    Handlebars.registerHelper('signedNumber', function (value) {
+    Handlebars.registerHelper('signedNumber', (value) => {
         const num = Number(value) || 0;
         if (num >= 0) return `+${num}`;
         return `${num}`;
     });
 
-    Handlebars.registerHelper('eq', function (a, b) {
+    Handlebars.registerHelper('eq', (a, b) => {
         return a === b;
     });
 
-    Handlebars.registerHelper('neq', function (a, b) {
+    Handlebars.registerHelper('neq', (a, b) => {
         return a !== b;
     });
 
-    Handlebars.registerHelper('defaultVal', function (value, defaultVal) {
+    Handlebars.registerHelper('defaultVal', (value, defaultVal) => {
         return value || defaultVal;
     });
 
-    Handlebars.registerHelper('rateOfFireDisplay', function (rateOfFire) {
+    Handlebars.registerHelper('rateOfFireDisplay', (rateOfFire) => {
         if (!rateOfFire) return '';
         const single = rateOfFire.single ?? '-';
         const semi = rateOfFire.semi ?? '-';
@@ -462,7 +462,7 @@ export function registerHandlebarsHelpers() {
         return `${single}/${semi}/${full}`;
     });
 
-    Handlebars.registerHelper('specialDisplay', function (special) {
+    Handlebars.registerHelper('specialDisplay', (special) => {
         if (!special) return '';
         if (Array.isArray(special)) {
             return special.filter(Boolean).join(', ');
@@ -475,7 +475,7 @@ export function registerHandlebarsHelpers() {
         return special;
     });
 
-    Handlebars.registerHelper('json', function (value) {
+    Handlebars.registerHelper('json', (value) => {
         try {
             return JSON.stringify(value ?? {}, null, 2);
         } catch (error) {
@@ -483,12 +483,12 @@ export function registerHandlebarsHelpers() {
         }
     });
 
-    Handlebars.registerHelper('armourDisplay', function (armour) {
+    Handlebars.registerHelper('armourDisplay', (armour) => {
         const getValue = (location) => getArmourAPForLocation(armour, location);
         const first = getValue('body');
         const same = ARMOUR_LOCATIONS.every((location) => getValue(location) === first);
         if (same) {
-            return first + ' ALL';
+            return `${first} ALL`;
         }
 
         const locations_array = [];
@@ -500,10 +500,8 @@ export function registerHandlebarsHelpers() {
 
         return locations_array
             .map((item) => {
-                return (
-                    getValue(item) +
-                    ' ' +
-                    (item.toLowerCase() === 'head'
+                return `${getValue(item)} ${
+                    item.toLowerCase() === 'head'
                         ? 'H'
                         : item.toLowerCase() === 'leftarm'
                         ? 'LA'
@@ -515,25 +513,25 @@ export function registerHandlebarsHelpers() {
                         ? 'LL'
                         : item.toLowerCase() === 'rightleg'
                         ? 'RL'
-                        : '')
-                );
+                        : ''
+                }`;
             })
             .filter((item) => item !== '')
             .join(', ');
     });
 
-    Handlebars.registerHelper('armourLocation', function (armour, location) {
+    Handlebars.registerHelper('armourLocation', (armour, location) => {
         return getArmourAPForLocation(armour, location);
     });
 
-    Handlebars.registerHelper('skillIcon', function (skillKey) {
+    Handlebars.registerHelper('skillIcon', (skillKey) => {
         const config = CONFIG?.rt?.getSkillIcon ? CONFIG.wh40k : WH40K;
         const icon = config?.getSkillIcon?.(skillKey) || 'modules/game-icons-net/blacktransparent/skills.svg';
         if (foundry?.utils?.getRoute) return foundry.utils.getRoute(icon);
         return icon;
     });
 
-    Handlebars.registerHelper('damageTypeLong', function (damageType) {
+    Handlebars.registerHelper('damageTypeLong', (damageType) => {
         damageType = (damageType || 'i').toLowerCase();
         switch (damageType) {
             case 'e':
@@ -553,7 +551,7 @@ export function registerHandlebarsHelpers() {
      * Get corruption degree from corruption points (0-100)
      * PURE (0), TAINTED (1-30) +0, SOILED (31-60) -10, DEBASED (61-90) -20, PROFANE (91-99) -30, DAMNED (100)
      */
-    Handlebars.registerHelper('corruptionDegree', function (corruption) {
+    Handlebars.registerHelper('corruptionDegree', (corruption) => {
         const points = Number(corruption) || 0;
         if (points === 0) return 'PURE';
         if (points <= 30) return 'TAINTED';
@@ -566,7 +564,7 @@ export function registerHandlebarsHelpers() {
     /**
      * Get corruption modifier for checks
      */
-    Handlebars.registerHelper('corruptionModifier', function (corruption) {
+    Handlebars.registerHelper('corruptionModifier', (corruption) => {
         const points = Number(corruption) || 0;
         if (points === 0) return '+0';
         if (points <= 30) return '+0';
@@ -580,7 +578,7 @@ export function registerHandlebarsHelpers() {
      * Get insanity degree from insanity points (0-100)
      * STABLE (0-9), UNSETTLED (10-39) +10, DISTURBED (40-59) +0, UNHINGED (60-79) -10, DERANGED (80-99) -20, TERMINALLY INSANE (100)
      */
-    Handlebars.registerHelper('insanityDegree', function (insanity) {
+    Handlebars.registerHelper('insanityDegree', (insanity) => {
         const points = Number(insanity) || 0;
         if (points <= 9) return 'STABLE';
         if (points <= 39) return 'UNSETTLED';
@@ -593,7 +591,7 @@ export function registerHandlebarsHelpers() {
     /**
      * Get insanity modifier for checks
      */
-    Handlebars.registerHelper('insanityModifier', function (insanity) {
+    Handlebars.registerHelper('insanityModifier', (insanity) => {
         const points = Number(insanity) || 0;
         if (points <= 9) return '+0';
         if (points <= 39) return '+10';
@@ -606,14 +604,14 @@ export function registerHandlebarsHelpers() {
     /**
      * Clamp critical damage to max 10
      */
-    Handlebars.registerHelper('clampCritical', function (value) {
+    Handlebars.registerHelper('clampCritical', (value) => {
         return Math.min(Math.max(Number(value) || 0, 0), 10);
     });
 
     /**
      * Return the smaller of two values.
      */
-    Handlebars.registerHelper('min', function (a, b) {
+    Handlebars.registerHelper('min', (a, b) => {
         const left = Number(a);
         const right = Number(b);
         if (Number.isNaN(left) || Number.isNaN(right)) return '';
@@ -623,7 +621,7 @@ export function registerHandlebarsHelpers() {
     /**
      * Get CSS class for corruption degree
      */
-    Handlebars.registerHelper('corruptionDegreeClass', function (corruption) {
+    Handlebars.registerHelper('corruptionDegreeClass', (corruption) => {
         const points = Number(corruption) || 0;
         if (points === 0) return 'wh40k-degree-pure';
         if (points <= 30) return 'wh40k-degree-tainted';
@@ -636,7 +634,7 @@ export function registerHandlebarsHelpers() {
     /**
      * Get CSS class for insanity degree
      */
-    Handlebars.registerHelper('insanityDegreeClass', function (insanity) {
+    Handlebars.registerHelper('insanityDegreeClass', (insanity) => {
         const points = Number(insanity) || 0;
         if (points <= 9) return 'wh40k-degree-stable';
         if (points <= 39) return 'wh40k-degree-unsettled';
@@ -650,7 +648,7 @@ export function registerHandlebarsHelpers() {
      * Join an array with a separator
      * Usage: {{join myArray ", "}}
      */
-    Handlebars.registerHelper('join', function (array, separator) {
+    Handlebars.registerHelper('join', (array, separator) => {
         if (!array) return '';
         if (!Array.isArray(array)) return String(array);
         return array.filter(Boolean).join(separator || ', ');
@@ -662,7 +660,7 @@ export function registerHandlebarsHelpers() {
      * @param {string} category - Talent category
      * @returns {string} Font Awesome icon class
      */
-    Handlebars.registerHelper('talentIcon', function (category) {
+    Handlebars.registerHelper('talentIcon', (category) => {
         const icons = {
             combat: 'fa-sword',
             social: 'fa-users',
@@ -685,7 +683,7 @@ export function registerHandlebarsHelpers() {
      * @param {number} tier - Talent tier (0-3)
      * @returns {string} CSS class name
      */
-    Handlebars.registerHelper('tierColor', function (tier) {
+    Handlebars.registerHelper('tierColor', (tier) => {
         const colors = {
             1: 'tier-bronze',
             2: 'tier-silver',
@@ -701,7 +699,7 @@ export function registerHandlebarsHelpers() {
      * @param {Object} prereqs - Prerequisites object
      * @returns {string} Formatted string
      */
-    Handlebars.registerHelper('formatPrerequisites', function (prereqs) {
+    Handlebars.registerHelper('formatPrerequisites', (prereqs) => {
         if (!prereqs) return '';
         if (prereqs.text) return prereqs.text;
 
@@ -730,7 +728,7 @@ export function registerHandlebarsHelpers() {
      * @param {string} category  Trait category
      * @returns {string} Font Awesome icon class
      */
-    Handlebars.registerHelper('traitIcon', function (category) {
+    Handlebars.registerHelper('traitIcon', (category) => {
         const icons = {
             creature: 'fa-paw',
             character: 'fa-user-shield',
@@ -747,7 +745,7 @@ export function registerHandlebarsHelpers() {
      * @param {string} category  Trait category
      * @returns {string} CSS class
      */
-    Handlebars.registerHelper('traitCategoryColor', function (category) {
+    Handlebars.registerHelper('traitCategoryColor', (category) => {
         const colors = {
             creature: 'trait-creature',
             character: 'trait-character',
@@ -765,7 +763,7 @@ export function registerHandlebarsHelpers() {
      * @param {number} level  Trait level
      * @returns {string} Formatted name
      */
-    Handlebars.registerHelper('formatTraitName', function (name, level) {
+    Handlebars.registerHelper('formatTraitName', (name, level) => {
         if (level && level > 0) {
             return `${name} (${level})`;
         }
@@ -777,7 +775,7 @@ export function registerHandlebarsHelpers() {
      * @param {Set<string>} specialSet    Set of quality identifiers
      * @returns {object[]}                Array of quality definition objects
      */
-    Handlebars.registerHelper('specialQualities', function (specialSet) {
+    Handlebars.registerHelper('specialQualities', (specialSet) => {
         if (!specialSet) return [];
 
         // Convert to array if it's a Set
@@ -839,7 +837,7 @@ export function registerHandlebarsHelpers() {
      * @param {object} weaponSystem    Weapon system data
      * @returns {object[]}             Array of quality objects
      */
-    Handlebars.registerHelper('craftsmanshipQualities', function (weaponSystem) {
+    Handlebars.registerHelper('craftsmanshipQualities', (weaponSystem) => {
         const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
             console.warn('RT | CONFIG.wh40k.weaponQualities not available');
@@ -910,7 +908,7 @@ export function registerHandlebarsHelpers() {
      * @param {object} weaponSystem    Weapon system data
      * @returns {boolean}
      */
-    Handlebars.registerHelper('hasCraftsmanshipQualities', function (weaponSystem) {
+    Handlebars.registerHelper('hasCraftsmanshipQualities', (weaponSystem) => {
         const craft = weaponSystem.craftsmanship;
         const isMelee = weaponSystem.melee;
 
@@ -924,7 +922,7 @@ export function registerHandlebarsHelpers() {
      * @param {object[]} items    Array of embedded items
      * @returns {boolean}
      */
-    Handlebars.registerHelper('hasEmbeddedQualities', function (items) {
+    Handlebars.registerHelper('hasEmbeddedQualities', (items) => {
         if (!items || !items.length) return false;
         return items.some((item) => item.type === 'attackSpecial');
     });
@@ -936,7 +934,7 @@ export function registerHandlebarsHelpers() {
      * @param {*} value                        Value to look for
      * @returns {boolean}
      */
-    Handlebars.registerHelper('has', function (collection, value) {
+    Handlebars.registerHelper('has', (collection, value) => {
         if (collection instanceof Set) return collection.has(value);
         if (Array.isArray(collection)) return collection.includes(value);
         if (typeof collection === 'object' && collection !== null) {
@@ -950,7 +948,7 @@ export function registerHandlebarsHelpers() {
      * @param {string} identifier    Quality identifier
      * @returns {object}
      */
-    Handlebars.registerHelper('qualityLookup', function (identifier) {
+    Handlebars.registerHelper('qualityLookup', (identifier) => {
         const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
             console.warn('RT | CONFIG.wh40k.weaponQualities not available');
@@ -1021,7 +1019,7 @@ export function truncate(str, maxLength = 100) {
     // Strip HTML tags for text length calculation
     const plainText = str.replace(/<[^>]*>/g, '');
     if (plainText.length <= maxLength) return str;
-    return plainText.substring(0, maxLength).trim() + '…';
+    return `${plainText.substring(0, maxLength).trim()}…`;
 }
 
 /**
@@ -1034,5 +1032,5 @@ export function select(selected, options) {
 
     // Replace selected attribute in options
     const html = options.fn(this);
-    return html.replace(new RegExp(' value="' + escapedValue + '"'), ' value="' + escapedValue + '" selected="selected"');
+    return html.replace(new RegExp(` value="${escapedValue}"`), ` value="${escapedValue}" selected="selected"`);
 }

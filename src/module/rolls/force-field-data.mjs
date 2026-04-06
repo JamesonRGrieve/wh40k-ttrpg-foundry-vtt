@@ -54,7 +54,7 @@ export class ForceFieldData {
         }
 
         const html = await renderTemplate('systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs', this);
-        let chatData = {
+        const chatData = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,

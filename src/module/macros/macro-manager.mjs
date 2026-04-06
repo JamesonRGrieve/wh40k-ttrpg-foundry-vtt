@@ -31,7 +31,7 @@ function checkMacroCanCreate() {
 }
 
 function checkExistingMacro(name, command) {
-    let existingMacro = game.macros.find((m) => m.name === name && m.command === command);
+    const existingMacro = game.macros.find((m) => m.name === name && m.command === command);
     if (existingMacro) {
         ui.notifications.warn(`Macro already exists`);
         return true;
@@ -43,7 +43,7 @@ function checkExistingMacro(name, command) {
 export async function createItemMacro(data, slot) {
     if (!checkMacroCanCreate()) return;
 
-    let macroName = `${data.actorName}: ${data.data.name}`;
+    const macroName = `${data.actorName}: ${data.data.name}`;
     // Create the macro command
     const command = `game.rt.rollItemMacro("${data.actorId}", "${data.data._id}");`;
     if (checkExistingMacro(macroName, command)) return;
@@ -73,8 +73,8 @@ export async function createSkillMacro(data, slot) {
     if (!checkMacroCanCreate()) return;
 
     const { skill, speciality, name } = data.data;
-    let macroName = `${data.actorName}: ${name}`;
-    game.rt.log('Creating macro with name: ' + macroName);
+    const macroName = `${data.actorName}: ${name}`;
+    game.rt.log(`Creating macro with name: ${macroName}`);
 
     // Setup macro data.
     let command = `game.rt.rollSkillMacro("${data.actorId}", "${skill}");`;

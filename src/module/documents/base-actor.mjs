@@ -85,7 +85,7 @@ export class WH40KBaseActor extends Actor {
 
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
-        let initData = {
+        const initData = {
             'token.bar1': { attribute: 'wounds' },
             'token.bar2': { attribute: 'fate' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
@@ -191,10 +191,10 @@ export class WH40KBaseActor extends Actor {
     }
 
     _computeMovement() {
-        let agility = this.characteristics?.agility;
+        const agility = this.characteristics?.agility;
         // Skip movement calculation if agility is not available (e.g., for starships)
         if (!agility) return;
-        let size = this.size;
+        const size = this.size;
         this.system.movement = {
             half: agility.bonus + size - 4,
             full: (agility.bonus + size - 4) * 2,
@@ -204,7 +204,7 @@ export class WH40KBaseActor extends Actor {
     }
 
     _findCharacteristic(short) {
-        for (let characteristic of Object.values(this.characteristics)) {
+        for (const characteristic of Object.values(this.characteristics)) {
             if (characteristic.short === short) {
                 return characteristic;
             }

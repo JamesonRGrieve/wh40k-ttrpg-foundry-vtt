@@ -41,8 +41,8 @@ export class AssignDamageData {
     }
 
     async finalize() {
-        let totalDamage = Number.parseInt(this.hit.totalDamage);
-        let totalPenetration = Number.parseInt(this.hit.totalPenetration);
+        const totalDamage = Number.parseInt(this.hit.totalDamage);
+        const totalPenetration = Number.parseInt(this.hit.totalPenetration);
 
         // Reduce Armour by Penetration
         let usableArmour = this.armour;
@@ -112,7 +112,7 @@ export class AssignDamageData {
         }
 
         const html = await renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', this);
-        let chatData = {
+        const chatData = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,

@@ -9,7 +9,7 @@ export async function checkAndMigrateWorld() {
         ui.notifications.info('Upgrading the world, please wait...');
 
         // Update Actors
-        for (let actor of game.actors.contents) {
+        for (const actor of game.actors.contents) {
             try {
                 await migrateActorData(actor, currentVersion);
             } catch (e) {
@@ -18,7 +18,7 @@ export async function checkAndMigrateWorld() {
         }
 
         // Update Items
-        for (let item of game.items.contents) {
+        for (const item of game.items.contents) {
             try {
                 await migrateItemData(item, currentVersion);
             } catch (e) {
@@ -42,7 +42,7 @@ export async function checkAndMigrateWorld() {
             // Otherwise, issues will occur when trying to create items from the compendium.
             const compendiums = game.packs.filter((p) => p.metadata.packageName === SYSTEM_ID);
 
-            for (let compendium of compendiums) {
+            for (const compendium of compendiums) {
                 await compendium.configure({
                     ownership: {
                         PLAYER: 'OWNER',
@@ -352,7 +352,7 @@ export async function checkAndMigrateWorld() {
 
     async function releaseNotes(data) {
         const html = await renderTemplate('systems/wh40k-rpg/templates/prompt/release-notes-prompt.hbs', data);
-        let dialog = new Dialog(
+        const dialog = new Dialog(
             {
                 title: 'Release Notes',
                 content: html,

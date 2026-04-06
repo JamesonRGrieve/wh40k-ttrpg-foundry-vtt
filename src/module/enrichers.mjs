@@ -191,7 +191,7 @@ async function enrichSkill(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichModifier(match, options) {
-    let { config, label } = match.groups;
+    const { config, label } = match.groups;
     const parts = config.trim().split(/\s+/);
 
     if (parts.length < 2) {
