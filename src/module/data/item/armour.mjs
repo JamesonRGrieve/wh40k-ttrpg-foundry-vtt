@@ -698,10 +698,10 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
-     * Get max armour points across all locations.
+     * Get max base armour points across all locations (before modifications).
      * @type {number}
      */
-    get maxAP() {
+    get maxBaseAP() {
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         return Math.max(...locations.map((loc) => this.getAPForLocation(loc)));
     }

@@ -17,7 +17,7 @@
  * @returns {*} Extended class with stat breakdown support
  */
 export default function StatBreakdownMixin(Base) {
-    return class StatBreakdownMixin extends Base {
+    return class StatBreakdown extends Base {
         /**
          * Currently open breakdown popover
          * @type {HTMLElement|null}

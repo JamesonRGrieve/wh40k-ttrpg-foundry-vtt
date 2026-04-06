@@ -423,7 +423,7 @@ export class GrantsManager {
      */
     static _sanitizeKey(key) {
         // Replace dots and special characters with underscores
-        return key.replace(/[.\/\\]/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+        return key.replace(/[./\\]/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
     }
 
     /* -------------------------------------------- */

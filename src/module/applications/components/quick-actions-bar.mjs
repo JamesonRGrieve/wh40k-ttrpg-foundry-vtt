@@ -32,7 +32,7 @@ export default class QuickActionsBar {
                 );
                 break;
 
-            case 'armour':
+            case 'armour': {
                 const isEquipped = item.system.equipped;
                 actions.push(
                     this.#createAction(
@@ -44,6 +44,7 @@ export default class QuickActionsBar {
                     ),
                 );
                 break;
+            }
 
             case 'talent':
                 if (item.system.isRollable) {

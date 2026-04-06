@@ -1938,19 +1938,20 @@ export default class AcolyteSheet extends BaseActorSheet {
             case 'avoid':
                 message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>avoid death</strong>!`;
                 break;
-            case 'burn':
-                const confirm = await ConfirmationDialog.confirm({
+            case 'burn': {
+                const confirmBurn = await ConfirmationDialog.confirm({
                     title: 'Burn Fate Point?',
                     content: 'Are you sure you want to <strong>permanently burn</strong> a Fate Point?',
                     confirmLabel: 'Burn',
                     cancelLabel: 'Cancel',
                 });
-                if (!confirm) return;
+                if (!confirmBurn) return;
                 message = `<strong>${this.actor.name}</strong> <strong style="color: #b63a2b;">BURNS</strong> a Fate Point!`;
                 await this.actor.update({
                     'system.fate.max': Math.max(0, (this.actor.system.fate?.max || 0) - 1),
                 });
                 break;
+            }
             default:
                 return;
         }
@@ -2085,8 +2086,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             let count = 0;
 
             switch (action) {
-                case 'equip-armour':
-                    // Equip all armour items
+                case 'equip-armour': {
                     const armourItems = items.filter((i) => i.type === 'armour' || i.isArmour);
                     for (const item of armourItems) {
                         if (!item.system.equipped) {
@@ -2098,9 +2098,9 @@ export default class AcolyteSheet extends BaseActorSheet {
                         duration: 3000,
                     });
                     break;
+                }
 
-                case 'unequip-all':
-                    // Unequip all equipped items
+                case 'unequip-all': {
                     const equippedItems = items.filter((i) => i.system?.equipped === true);
                     for (const item of equippedItems) {
                         await item.update({ 'system.equipped': false });
@@ -2110,9 +2110,9 @@ export default class AcolyteSheet extends BaseActorSheet {
                         duration: 3000,
                     });
                     break;
+                }
 
-                case 'stow-gear':
-                    // Stow all gear items to backpack
+                case 'stow-gear': {
                     const gearItems = items.filter((i) => (i.type === 'gear' || i.isGear) && !i.system.inBackpack);
                     for (const item of gearItems) {
                         await item.update({
@@ -2125,6 +2125,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                         duration: 3000,
                     });
                     break;
+                }
 
                 default:
                     this._notify('warning', `Unknown bulk action: ${action}`, {

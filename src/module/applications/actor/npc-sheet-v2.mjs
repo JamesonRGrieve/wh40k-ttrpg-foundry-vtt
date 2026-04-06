@@ -825,7 +825,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
                         label: 'Add Skill',
                         icon: 'fa-solid fa-plus',
                         default: true,
-                        callback: async (event, button, dialog) => {
+                        callback: async (event, button, _dialog) => {
                             const form = button.form;
                             const skill = form.querySelector('[name="skill"]').value;
                             const level = form.querySelector('[name="level"]').value;
@@ -1168,8 +1168,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #calculateDifficulty(event, target) {
         event.preventDefault();
-        const { DifficultyCalculatorDialog } = game.rt.applications;
-        await DifficultyCalculatorDialog.show(this.actor);
+        const { DifficultyCalculatorDialog: DiffCalcDialog } = game.rt.applications;
+        await DiffCalcDialog.show(this.actor);
     }
 
     /* -------------------------------------------- */
@@ -1297,7 +1297,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
                     action: 'add',
                     label: 'Add',
                     default: true,
-                    callback: async (event, button, dialog) => {
+                    callback: async (event, button, _dialog) => {
                         const form = button.form;
                         const tag = form.querySelector('[name="tag"]').value.trim();
                         if (tag) {

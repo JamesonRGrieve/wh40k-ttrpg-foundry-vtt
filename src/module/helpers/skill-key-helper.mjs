@@ -299,7 +299,7 @@ export class SkillKeyHelper {
      */
     static validateKey(key, actor) {
         if (!actor?.system?.skills) return false;
-        return actor.system.skills.hasOwnProperty(key);
+        return Object.prototype.hasOwnProperty.call(actor.system.skills, key);
     }
 
     /**
