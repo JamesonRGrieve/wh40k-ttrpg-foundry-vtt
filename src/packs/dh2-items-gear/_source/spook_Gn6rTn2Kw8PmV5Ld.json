@@ -1,0 +1,20 @@
+{
+  "name": "Spook",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0,
+    "availability": "very rare",
+    "quantity": 1,
+    "cost": { "value": 200, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>An extremely rare and dangerous drug that temporarily grants or amplifies psychic abilities. A non-psyker who takes Spook gains a Psy Rating of 1 for 1d5 hours and can attempt to use a single randomly determined psychic power. A psyker gains +3 to their Psy Rating but risks Perils of the Warp. Wildly illegal.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Gn6rTn2Kw8PmV5Ld"
+}

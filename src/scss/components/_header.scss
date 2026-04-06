@@ -134,3 +134,14 @@
         height: 100% !important;
     }
 }
+
+/* Edit/Play mode toggle in window header */
+.wh40k-rpg .window-header slide-toggle.mode-slider {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 8px;
+    cursor: pointer;
+    width: 36px;
+    height: 18px;
+    flex-shrink: 0;
+}

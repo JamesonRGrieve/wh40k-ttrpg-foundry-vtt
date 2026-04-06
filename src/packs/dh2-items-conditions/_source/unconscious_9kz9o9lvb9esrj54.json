@@ -1,0 +1,24 @@
+{
+  "name": "Unconscious",
+  "type": "condition",
+  "img": "icons/svg/unconscious.svg",
+  "system": {
+    "identifier": "unconscious",
+    "nature": "harmful",
+    "effect": "<p>The character is completely unaware of their surroundings and unable to take any actions. They count as Helpless.</p>",
+    "removal": "<p>Depends on the source. May be roused by an ally spending a Full Action, by taking damage, or by recovering from the condition that caused unconsciousness (e.g., removing Fatigue levels).</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": { "value": 0, "units": "permanent" },
+    "description": {
+      "value": "<p>The character is completely unaware of their surroundings and unable to act. An Unconscious character counts as Helpless: opponents automatically hit them with melee attacks, and they can be targeted with a Coup de Grace. The character drops anything they are holding and falls Prone. They cannot perceive their environment in any way.</p>",
+      "source": { "book": "DH2e Core", "page": "", "custom": "" }
+    },
+    "modifiers": { "characteristics": {}, "skills": {}, "combat": {} },
+    "notes": "Also applies the Helpless and Prone conditions."
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "9kz9o9lvb9esrj54"
+}

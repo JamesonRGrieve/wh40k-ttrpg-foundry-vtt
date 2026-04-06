@@ -59,6 +59,11 @@ export default class CharacterData extends CreatureTemplate {
                 trialsAndTravails: new StringField({ required: false, blank: true }),
                 motivation: new StringField({ required: false, blank: true }),
                 career: new StringField({ required: false, blank: true }),
+                // DH2e-specific fields
+                background: new StringField({ required: false, blank: true }),
+                role: new StringField({ required: false, blank: true }),
+                elite: new StringField({ required: false, blank: true }),
+                divination: new StringField({ required: false, blank: true }),
             }),
 
             // ===== EXPERIENCE =====
@@ -262,14 +267,14 @@ export default class CharacterData extends CreatureTemplate {
         // Store origin path selections
         this.backgroundEffects.originPath = stepMap;
 
-        // Update the originPath system data with the names
+        // Update the originPath system data with the names (only if origin builder items exist)
         if (this.originPath) {
-            this.originPath.homeWorld = stepMap.homeWorld?.name || '';
-            this.originPath.birthright = stepMap.birthright?.name || '';
-            this.originPath.lureOfTheVoid = stepMap.lureOfTheVoid?.name || '';
-            this.originPath.trialsAndTravails = stepMap.trialsAndTravails?.name || '';
-            this.originPath.motivation = stepMap.motivation?.name || '';
-            this.originPath.career = stepMap.career?.name || '';
+            if (stepMap.homeWorld?.name) this.originPath.homeWorld = stepMap.homeWorld.name;
+            if (stepMap.birthright?.name) this.originPath.birthright = stepMap.birthright.name;
+            if (stepMap.lureOfTheVoid?.name) this.originPath.lureOfTheVoid = stepMap.lureOfTheVoid.name;
+            if (stepMap.trialsAndTravails?.name) this.originPath.trialsAndTravails = stepMap.trialsAndTravails.name;
+            if (stepMap.motivation?.name) this.originPath.motivation = stepMap.motivation.name;
+            if (stepMap.career?.name) this.originPath.career = stepMap.career.name;
         }
     }
 

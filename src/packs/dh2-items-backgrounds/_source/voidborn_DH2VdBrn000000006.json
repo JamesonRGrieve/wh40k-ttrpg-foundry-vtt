@@ -1,0 +1,99 @@
+{
+  "name": "Voidborn",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "voidborn",
+    "step": "homeworld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Voidborn</h2><p>Voidborn characters were raised aboard the vast vessels that ply the spaces between stars — warships, merchant haulers, space stations, and orbital platforms. Life in the void is shaped by the hum of engines, the recycled air, and the ever-present knowledge that only a thin hull separates you from the killing emptiness of space. Voidborn tend to be pale, gaunt, and somewhat otherworldly, possessing sharp minds and strong wills but lacking the raw physical strength of those raised under a planet's gravity.</p><h3>Homeworld Bonus</h3><p>+Intelligence, +Willpower, –Strength</p><h3>Homeworld Aptitude</h3><p>Intelligence</p><h3>Wounds</h3><p>7+1d5</p><h3>Fate Threshold</h3><p>3 (Emperor's Blessing 5+)</p><h3>Starting Skills</h3><p>Navigate (Stellar) or Linguistics (choose one)</p><h3>Starting Talent</h3><p>Choose one: Weapon Training (choice)</p><h3>Homeworld Trait</h3><p><strong>Child of the Dark:</strong> A voidborn character gains a +30 bonus to any Test to resist the effects of the Warp or Warp-related phenomena. Additionally, they are accustomed to low-gravity and zero-gravity environments and suffer no penalties for operating in such conditions.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Homeworld",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "7+1d5",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 3,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Intelligence"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Child of the Dark",
+          "description": "A voidborn character gains a +30 bonus to any Test to resist the effects of the Warp or Warp-related phenomena. Additionally, they are accustomed to low-gravity and zero-gravity environments and suffer no penalties for operating in such conditions."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Navigate",
+              "specialization": "Stellar"
+            },
+            {
+              "name": "Linguistics",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Weapon Training (choice)",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "intelligence": 5,
+        "willpower": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "name": "Strength",
+          "value": -5
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Emperor's Blessing: On a roll of 5+ on 1d10, the character begins with an extra Fate Point.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2VdBrn000000006"
+}

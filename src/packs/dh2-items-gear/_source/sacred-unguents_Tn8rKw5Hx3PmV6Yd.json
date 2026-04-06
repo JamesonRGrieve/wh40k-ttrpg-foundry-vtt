@@ -1,0 +1,20 @@
+{
+  "name": "Sacred Unguents",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0.5,
+    "availability": "scarce",
+    "quantity": 1,
+    "cost": { "value": 50, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>Blessed oils and ritual lubricants consecrated by the Adeptus Mechanicus. Used in the maintenance and repair of Imperial technology. When applied as part of a Tech-Use test to repair a weapon or device, grants +10 bonus. Consumed on use; each dose is sufficient for one application.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tn8rKw5Hx3PmV6Yd"
+}

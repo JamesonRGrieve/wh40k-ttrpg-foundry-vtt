@@ -1,0 +1,21 @@
+{
+  "name": "Trade",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "intelligence",
+    "descriptor": "Trade represents practical knowledge of a specific craft, trade, or profession. Each specialisation is a separate skill covering a distinct vocation.",
+    "uses": "Uses: Performing the work of a specific trade or craft, creating items related to the trade, appraising work in the trade.\nTrade tests are used whenever a character needs to apply professional knowledge or craft skill. Extended Tests may be required for complex projects. The quality of results depends on Degrees of Success and available materials and tools.\nSpecialisations: Agri, Archaeologist, Armourer, Chymist, Cryptographer, Cook, Explorator, Linguist, Loremancer, Morticator, Performancer, Shipwright, Soothsayer, Technomat, Voidfarer. Each specialisation must be taken separately as a distinct skill.",
+    "useTime": "Extended",
+    "description": {
+      "value": "<p>Trade represents practical knowledge of a specific craft, trade, or profession. Each specialisation is a separate skill covering a distinct vocation.</p>\n<p><strong>Specialisations:</strong> Agri, Archaeologist, Armourer, Chymist, Cryptographer, Cook, Explorator, Linguist, Loremancer, Morticator, Performancer, Shipwright, Soothsayer, Technomat, Voidfarer</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": ["Intelligence", "General"],
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Sm3vLq5rAh9bCk7O"
+}

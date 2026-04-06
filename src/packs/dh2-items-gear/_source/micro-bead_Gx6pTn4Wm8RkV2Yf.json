@@ -1,0 +1,20 @@
+{
+  "name": "Micro-Bead",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0,
+    "availability": "average",
+    "quantity": 1,
+    "cost": { "value": 50, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>A tiny, short-range vox-communicator worn in the ear. Allows hands-free communication with other micro-bead users within approximately 1km in open terrain. Range is significantly reduced in dense structures or underground. Standard issue for Inquisitorial warbands.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Gx6pTn4Wm8RkV2Yf"
+}

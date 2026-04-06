@@ -1,0 +1,20 @@
+{
+  "name": "Chrono",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0,
+    "availability": "plentiful",
+    "quantity": 1,
+    "cost": { "value": 5, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>A simple timekeeping device, worn on the wrist or carried on a chain. Keeps accurate time to local planetary standards. Some models include basic alarm and timer functions.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qw5xFm8Np3RkL7Vc"
+}

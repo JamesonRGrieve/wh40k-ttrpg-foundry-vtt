@@ -1,0 +1,21 @@
+{
+  "name": "Dodge",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "agility",
+    "descriptor": "Dodge is the ability to evade blows, shots, and other attacks through quick reflexes and spatial awareness.",
+    "uses": "Uses: Evading melee and ranged attacks, avoiding area effects, diving for cover.\nDodge is a Reaction and can be used once per Round without penalty. Additional Dodge attempts in the same Round suffer a cumulative -20 penalty. A successful Dodge negates one hit; extra Degrees of Success negate additional hits from the same attack.",
+    "useTime": "Reaction",
+    "description": {
+      "value": "<p>Dodge is the ability to evade blows, shots, and other attacks through quick reflexes and spatial awareness.</p>"
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": ["Agility", "Defence"],
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ys1bRw3xGn7hLq5U"
+}

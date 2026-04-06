@@ -1,0 +1,24 @@
+{
+    "name": "Flame Breath",
+    "type": "psychicPower",
+    "img": "icons/svg/eye.svg",
+    "system": {
+        "discipline": "Pyromancy",
+        "prerequisites": "Psy Rating 4",
+        "focusPower": "Half Action",
+        "action": "Half Action",
+        "range": "Self (cone)",
+        "opposed": "No",
+        "sustained": "No",
+        "effect": "The psyker exhales a cone of warpfire, functioning like a flamer weapon. All creatures in a 30-degree arc out to Psy Rating x 3 metres suffer 1d10 + Psy Rating Energy damage with the Flame and Spray qualities.",
+        "source": "DH2e Core",
+        "description": {
+            "value": "<p>The psyker opens his mouth and projects a torrent of psychic flame in a cone before him. This functions like a weapon with the Flame and Spray qualities, affecting all targets in a 30-degree arc extending Psy Rating x 3 metres. Targets suffer 1d10 + Psy Rating Energy damage with the Flame quality.</p>"
+        },
+        "focusTime": "Half Action",
+        "threshold": 14
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "Qd6yNrW3xTmK8pFb"
+}

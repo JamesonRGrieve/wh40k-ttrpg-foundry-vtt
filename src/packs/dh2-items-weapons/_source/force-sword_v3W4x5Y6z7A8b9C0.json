@@ -1,0 +1,64 @@
+{
+  "name": "Force Sword",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "force-sword",
+    "class": "melee",
+    "type": "rending",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 10,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "rending",
+      "bonus": 2,
+      "penetration": 2
+    },
+    "special": [
+      "balanced",
+      "force"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 3,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A psychically-attuned blade that channels the wielder's warp powers. In the hands of a psyker, it can amplify psychic energy to devastating effect, slaying foes outright. Usable only by psykers.</p>"
+    },
+    "modifications": [],
+    "notes": "Requires Psy Rating to use Force quality.",
+    "source": "DH2e Core",
+    "requiredTraining": "Psy Rating"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "v3W4x5Y6z7A8b9C0"
+}

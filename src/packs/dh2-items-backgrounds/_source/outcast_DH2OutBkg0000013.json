@@ -1,0 +1,107 @@
+{
+  "name": "Outcast",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "outcast",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Outcast</h2><p>Outcasts are those who have fallen through the cracks of Imperial society — criminals, drifters, scavengers, heretics, and those who simply do not fit into the rigid hierarchies of the Imperium. They survive on their wits, their cunning, and their willingness to do whatever is necessary. Though they lack the institutional backing of the Adepta, their street-level knowledge and flexible morality make them invaluable for the kind of dirty work the Inquisition often requires.</p><h3>Background Aptitudes</h3><p>Fieldcraft, Social</p><h3>Starting Skills</h3><p>Common Lore (Underworld), Deceive, Stealth or Sleight of Hand</p><h3>Starting Talent</h3><p>Weapon Training (Chain) or Weapon Training (Las)</p><h3>Background Bonus</h3><p><strong>Never Part of the Crowd:</strong> An Outcast character gains a +10 bonus to any Test to resist or avoid being detained, captured, or tracked. They can also more easily find black market goods, reducing the Availability of illegal items by one step.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Common Lore",
+          "specialization": "Underworld",
+          "level": "trained"
+        },
+        {
+          "name": "Deceive",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Fieldcraft",
+        "Social"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Never Part of the Crowd",
+          "description": "An Outcast character gains a +10 bonus to any Test to resist or avoid being detained, captured, or tracked. They can also more easily find black market goods, reducing the Availability of illegal items by one step."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Stealth",
+              "specialization": ""
+            },
+            {
+              "name": "Sleight of Hand",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Weapon Training",
+              "specialization": "Chain"
+            },
+            {
+              "name": "Weapon Training",
+              "specialization": "Las"
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2OutBkg0000013"
+}

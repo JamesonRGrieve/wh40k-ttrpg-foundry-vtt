@@ -1,0 +1,107 @@
+{
+  "name": "Adeptus Astra Telepathica",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "adeptus-astra-telepathica",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Adeptus Astra Telepathica</h2><p>The Adeptus Astra Telepathica is the Imperial institution responsible for the training, sanctioning, and deployment of psykers. Those who survive the soul-binding process or the rigours of the Scholastica Psykana emerge as sanctioned psykers — individuals with the ability to channel the power of the Warp under controlled conditions. They are feared, mistrusted, and indispensable in equal measure.</p><h3>Background Aptitudes</h3><p>Defence, Psyker</p><h3>Starting Skills</h3><p>Awareness, Common Lore (Adeptus Astra Telepathica), Psyniscience or Scrutiny</p><h3>Starting Talent</h3><p>Weapon Training (Las) or Weapon Training (Solid Projectile)</p><h3>Background Bonus</h3><p><strong>The Constant Threat:</strong> An Astra Telepathica character must be a Psyker. They gain the Psyker elite advance and start with a Psy Rating of 1. Additionally, they gain a +10 bonus to any Test to resist Psychic Powers directed against them.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background. Must be a Psyker.",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Awareness",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore",
+          "specialization": "Adeptus Astra Telepathica",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Defence",
+        "Psyker"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "The Constant Threat",
+          "description": "An Astra Telepathica character must be a Psyker. They gain the Psyker elite advance and start with a Psy Rating of 1. Additionally, they gain a +10 bonus to any Test to resist Psychic Powers directed against them."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Psyniscience",
+              "specialization": ""
+            },
+            {
+              "name": "Scrutiny",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Weapon Training",
+              "specialization": "Las"
+            },
+            {
+              "name": "Weapon Training",
+              "specialization": "Solid Projectile"
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Must be a Psyker. Gains Psy Rating 1.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2AATBkg0000009"
+}

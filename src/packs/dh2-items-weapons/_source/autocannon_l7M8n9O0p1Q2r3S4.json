@@ -1,0 +1,64 @@
+{
+  "name": "Autocannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "autocannon",
+    "class": "heavy",
+    "type": "impact",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "3d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 6
+    },
+    "special": [
+      "ogryn-proof",
+      "reliable"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": "shell"
+    },
+    "reload": "2Full",
+    "weight": 40,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A large-calibre automatic cannon that fires high-velocity explosive shells. Mounted on tripods, vehicles, and fortifications, the autocannon is an effective weapon against both infantry and light vehicles.</p>"
+    },
+    "modifications": [],
+    "notes": "Requires Bracing or mounting to fire.",
+    "source": "DH2e Core",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l7M8n9O0p1Q2r3S4"
+}

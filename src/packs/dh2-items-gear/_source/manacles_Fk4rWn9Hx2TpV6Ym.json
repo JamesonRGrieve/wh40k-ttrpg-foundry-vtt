@@ -1,0 +1,20 @@
+{
+  "name": "Manacles",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 1,
+    "availability": "common",
+    "quantity": 1,
+    "cost": { "value": 15, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>Heavy Imperial-standard restraints, typically made of reinforced steel. Require a Challenging (+0) Strength test or a Hard (-20) Security test to escape. Good-quality manacles increase the difficulty by one step.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Fk4rWn9Hx2TpV6Ym"
+}

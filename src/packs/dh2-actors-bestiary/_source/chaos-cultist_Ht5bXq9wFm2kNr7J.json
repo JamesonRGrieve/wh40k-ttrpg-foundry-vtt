@@ -1,0 +1,73 @@
+{
+  "name": "Chaos Cultist",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "30",
+      "bs": "25",
+      "s": "30",
+      "t": "30",
+      "ag": "30",
+      "int": "25",
+      "per": "25",
+      "wp": "30",
+      "fel": "20"
+    },
+    "wounds": "10",
+    "armourPoints": "Tattered robes 1 body",
+    "move": "3/6/9/18",
+    "size": "Average",
+    "weapons": [
+      {
+        "name": "Autogun",
+        "range": "100m",
+        "rof": "S/3/10",
+        "damage": "1d10+3 I",
+        "pen": "0",
+        "clip": "30",
+        "reload": "Full",
+        "qualities": null
+      },
+      {
+        "name": "Knife",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d5+3 R",
+        "pen": "0",
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Gear/\nOther",
+        "range": "Tattered robes, Chaos icon (concealed), 2 autogun clips (spare), knife, unholy texts or prayer strips.",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Talents/\nTraits",
+        "range": "Die Hard, Resistance (Fear), Weapon Training (Solid Projectile, Low-Tech). 10% chance of 1 minor mutation (GM choice).",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: Intimidate\nT: | Ag: Dodge\nInt: Common Lore (one Chaos god or Chaos Undivided), Forbidden Lore (Heresy)\nPer: Awareness\nWP:\nFel: Deceive",
+    "training": "Basic(SP), Melee(Low-Tech)",
+    "description": {
+      "value": "<p>Chaos Cultists are the mortal servants of the Ruinous Powers. They are found in every corner of the Imperium — outwardly loyal citizens who secretly worship the Dark Gods. They range from deluded fools to cunning fanatics.</p><p><b>Tactics:</b> Cultists fight with fanatical zeal, rarely breaking even under heavy casualties. They attack in mobs of 6-20, using human-wave tactics. Their morale is bolstered by religious fervour and the presence of cult leaders. Some may carry improvised explosives for suicide attacks. They are more dangerous than gangers because they do not retreat.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Ht5bXq9wFm2kNr7J"
+}

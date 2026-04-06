@@ -1,0 +1,75 @@
+{
+  "_id": "xo1xn4cmhyyhxqeq",
+  "name": "Impact Critical - Body",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_impact_body",
+    "damageType": "impact",
+    "bodyPart": "body",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>A solid blow to the torso steals the breath from the target's lungs. He can only take a Half Action on his next turn.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The impact punches the air from the target's body. He suffers 1 level of Fatigue and is knocked Prone.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The blow breaks a rib with a resounding crack. The target is Stunned for 1 round and knocked Prone.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The crushing blow shatters one or more ribs. The target suffers [[1d5]] levels of Fatigue and must make a Challenging (+0) Agility test or be knocked Prone. He is Stunned for 1 round.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>A heavy blow to the chest pulverises the target's innards. He is Stunned for 2 rounds, suffers Blood Loss, and must make a Challenging (+0) Toughness test or suffer [[1d5]] levels of Fatigue. Permanently reduce his Toughness characteristic by 1.</p>",
+        "permanent": true
+      },
+      "6": {
+        "text": "<p>The attack sends the target sprawling. He suffers [[1d5]] levels of Fatigue, is flung [[1d5]] metres from the attacker, and falls Prone. He is Stunned for 2 rounds and suffers Blood Loss. Permanently reduce his Toughness characteristic by [[1d5]].</p>",
+        "permanent": true
+      },
+      "7": {
+        "text": "<p>With a sickening crunch, [[1d5]] of the target's ribs shatter. He suffers Blood Loss and [[1d10]] levels of Fatigue. Permanently reduce his Toughness characteristic by [[1d5]]. Until he receives medical attention, at the end of each round in which this character took an action, roll [[1d10]]. On a result of 1 or 2, he dies instantly as a shattered rib pierces a vital organ.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The blow ruptures several of the target's internal organs, knocking him to the ground in wretched agony. He suffers Blood Loss and [[1d10]] levels of Fatigue. Permanently reduce his Toughness characteristic by [[1d10]]. He must make a Hard (–20) Toughness test or die.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The target jerks backwards from the terrible force of the blow, throwing back his head and vomiting blood before collapsing dead on the ground.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The target is smashed apart by the tremendous blow, ribcage cracking open and organs pulverised. He is slain instantly. His lifeless form is hurled [[1d10]] metres from the attacker. Any character in the corpse's path must make a Challenging (+0) Agility test or be knocked Prone.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "",
+      "chat": "",
+      "summary": "Impact Body injury"
+    },
+    "source": {
+      "book": "Dark Heresy 2nd Edition Core Rulebook",
+      "page": "236-239",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "dh2e": {
+      "generated": false,
+      "consolidated": true,
+      "version": "1.0"
+    }
+  }
+}

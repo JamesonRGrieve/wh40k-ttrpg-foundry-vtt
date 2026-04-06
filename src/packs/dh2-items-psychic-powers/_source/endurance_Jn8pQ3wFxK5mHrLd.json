@@ -1,0 +1,24 @@
+{
+    "name": "Endurance",
+    "type": "psychicPower",
+    "img": "icons/svg/eye.svg",
+    "system": {
+        "discipline": "Biomancy",
+        "prerequisites": "Psy Rating 4",
+        "focusPower": "Half Action",
+        "action": "Half Action",
+        "range": "Self",
+        "opposed": "No",
+        "sustained": "Free Action",
+        "effect": "The psyker floods his body with empyric energy, bolstering his physical form beyond mortal limits. The psyker ignores the effects of Critical Damage (but not the damage itself) for the duration of the power, and gains the True Grit talent.",
+        "source": "DH2e Core",
+        "description": {
+            "value": "<p>The psyker channels warp energy through his own body, fortifying his physical form against even the most grievous injuries. While sustained, the psyker ignores the effects of Critical Damage and gains the True Grit talent. If the power ends while the psyker has Critical Damage, the effects apply immediately.</p>"
+        },
+        "focusTime": "Half Action",
+        "threshold": 12
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "Jn8pQ3wFxK5mHrLd"
+}

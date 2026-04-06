@@ -1,0 +1,20 @@
+{
+  "name": "Backpack",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 1,
+    "availability": "plentiful",
+    "quantity": 1,
+    "cost": { "value": 10, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>A sturdy Imperial-standard carrying pack with multiple compartments and attachment points. Increases the amount of gear a character can comfortably carry. Essential for any extended operation away from base.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tp2rKn7Hw4PmV9Xf"
+}

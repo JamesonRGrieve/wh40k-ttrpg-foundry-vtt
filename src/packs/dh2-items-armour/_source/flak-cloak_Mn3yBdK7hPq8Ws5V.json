@@ -1,0 +1,37 @@
+{
+  "name": "Flak Cloak",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "flak",
+    "weight": 4,
+    "availability": "average",
+    "notes": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>A heavy cloak woven with flak-weave fibres. Drapes over the body, arms, and legs, offering protection while remaining relatively unobtrusive.</p>"
+    },
+    "modificationSlots": 0,
+    "coverage": [
+      "body",
+      "leftArm",
+      "rightArm",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": 0,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Mn3yBdK7hPq8Ws5V"
+}

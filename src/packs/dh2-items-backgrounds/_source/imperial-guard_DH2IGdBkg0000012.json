@@ -1,0 +1,107 @@
+{
+  "name": "Imperial Guard",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "imperial-guard",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Imperial Guard</h2><p>The Imperial Guard, known formally as the Astra Militarum, is the largest military force in the galaxy — an army of billions raised from countless worlds to fight the Imperium's endless wars. Those who have served in the Guard have known the horrors of the battlefield, the discipline of military life, and the comradeship that comes from fighting alongside fellow soldiers against impossible odds. They bring combat experience, physical toughness, and an unbreakable spirit to any warband.</p><h3>Background Aptitudes</h3><p>Fieldcraft, Offence</p><h3>Starting Skills</h3><p>Athletics, Command or Intimidate, Common Lore (Imperial Guard)</p><h3>Starting Talent</h3><p>Weapon Training (Las) or Weapon Training (Low-Tech)</p><h3>Background Bonus</h3><p><strong>Hammer of the Emperor:</strong> An Imperial Guard character counts as having the Peer (Imperial Guard) Talent. When fighting alongside allies, they may grant a +10 bonus to one ally's next attack by spending a Half Action to provide covering fire or tactical direction.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Athletics",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore",
+          "specialization": "Imperial Guard",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Fieldcraft",
+        "Offence"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Hammer of the Emperor",
+          "description": "An Imperial Guard character counts as having the Peer (Imperial Guard) Talent. When fighting alongside allies, they may grant a +10 bonus to one ally's next attack by spending a Half Action to provide covering fire or tactical direction."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Command",
+              "specialization": ""
+            },
+            {
+              "name": "Intimidate",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Weapon Training",
+              "specialization": "Las"
+            },
+            {
+              "name": "Weapon Training",
+              "specialization": "Low-Tech"
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2IGdBkg0000012"
+}

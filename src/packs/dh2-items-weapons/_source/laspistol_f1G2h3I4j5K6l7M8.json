@@ -1,0 +1,63 @@
+{
+  "name": "Laspistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "laspistol",
+    "class": "pistol",
+    "type": "energy",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 2,
+      "penetration": 0
+    },
+    "special": [
+      "reliable"
+    ],
+    "clip": {
+      "max": 30,
+      "value": 30,
+      "type": "charge-pack"
+    },
+    "reload": "Half",
+    "weight": 1.5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>The standard sidearm of the Imperial Guard and a ubiquitous weapon throughout the Imperium. Reliable, easy to maintain, and rechargeable, the laspistol is the benchmark by which other pistols are measured.</p>"
+    },
+    "modifications": [],
+    "notes": "",
+    "source": "DH2e Core",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "f1G2h3I4j5K6l7M8"
+}

@@ -1,0 +1,90 @@
+{
+  "name": "Chirurgeon",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "chirurgeon",
+    "step": "role",
+    "stepIndex": 3,
+    "description": {
+      "value": "<h2>Chirurgeon</h2><p>The Chirurgeon is a healer and physician, trained in the medical arts necessary to keep a warband alive and functioning in the face of the Imperium's countless horrors. Whether they learned their craft in a scholam, on the battlefield, or through forbidden experimentation, the Chirurgeon combines medical knowledge with physical resilience and an intimate understanding of the human body — both how to heal it and how to harm it.</p><h3>Role Aptitudes</h3><p>Fieldcraft, Intelligence, Knowledge, Strength, Toughness</p><h3>Role Talent</h3><p>Resistance (Poisons) or Takedown</p><h3>Role Skill</h3><p>Medicae</p><h3>Role Bonus</h3><p><strong>Dedicated Healer:</strong> In addition to the normal uses of Fate Points, when a Chirurgeon character fails a Medicae Test, they may spend a Fate Point to automatically succeed instead with the same number of Degrees of Success as Degrees of Failure on the original Test.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Role",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Medicae",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Fieldcraft",
+        "Intelligence",
+        "Knowledge",
+        "Strength",
+        "Toughness"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Dedicated Healer",
+          "description": "In addition to the normal uses of Fate Points, when a Chirurgeon character fails a Medicae Test, they may spend a Fate Point to automatically succeed instead with the same number of Degrees of Success as Degrees of Failure on the original Test."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Role Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Resistance",
+              "specialization": "Poisons"
+            },
+            {
+              "name": "Takedown",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2ChrRle0000015"
+}

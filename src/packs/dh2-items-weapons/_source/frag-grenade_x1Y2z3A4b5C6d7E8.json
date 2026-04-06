@@ -1,0 +1,63 @@
+{
+  "name": "Frag Grenade",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "frag-grenade",
+    "class": "thrown",
+    "type": "explosive",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "thrown",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 36,
+        "units": "m",
+        "special": "SBx3"
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "blast-3"
+    ],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 0.5,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A standard Imperial fragmentation grenade that showers an area with lethal shrapnel on detonation. Standard issue for Imperial Guard infantry.</p>"
+    },
+    "modifications": [],
+    "notes": "Range equals SBx3 metres. Single use.",
+    "source": "DH2e Core",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x1Y2z3A4b5C6d7E8"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Size (Hulking)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>Hulking creatures are larger than humans, such as Ogryns or Space Marines in Terminator armour. They have a +10 modifier to hit and suffer –10 to Stealth tests. They gain +1 Wound.</p>"
+    },
+    "benefit": "<p>Modifier: +10 to hit this creature, –10 to its Stealth. +1 Wound.</p>",
+    "level": 5,
+    "notes": "",
+    "identifier": "sizeHulking",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ru4tG9WJj1YjUq3F"
+}

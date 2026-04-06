@@ -1,0 +1,63 @@
+{
+  "name": "Grox",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "35",
+      "bs": "-",
+      "s": "45",
+      "t": "45",
+      "ag": "15",
+      "int": "5",
+      "per": "20",
+      "wp": "20",
+      "fel": "-"
+    },
+    "wounds": "20",
+    "armourPoints": "Natural Armour 3 all",
+    "move": "3/6/9/18",
+    "size": "Hulking (+10)",
+    "weapons": [
+      {
+        "name": "Horns/Bite",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d10+4 R",
+        "pen": "0",
+        "clip": null,
+        "reload": null,
+        "qualities": "Natural Weapon"
+      },
+      {
+        "name": "Trample",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d10+4 I",
+        "pen": "0",
+        "clip": null,
+        "reload": null,
+        "qualities": "Natural Weapon"
+      },
+      {
+        "name": "Talents/\nTraits",
+        "range": "Brutal Charge (2), Natural Armour (3), Natural Weapons, Size (Hulking), Stampede, Sturdy",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: | T: | Ag:\nInt:\nPer: Awareness\nWP:\nFel:",
+    "training": "",
+    "description": {
+      "value": "<p>Grox are large, aggressive, reptilian herd beasts found across the Imperium. Bred primarily for food, they are notoriously bad-tempered and dangerous. A charging grox can crush a man in carapace armour.</p><p><b>Tactics:</b> Grox are not intelligent. They charge the nearest threat and attack with horns and trampling hooves. A startled herd stampedes, crushing everything in its path. They are territorial and will attack anyone entering their pen without hesitation.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Jw4rNp7tHk2cBm9X"
+}

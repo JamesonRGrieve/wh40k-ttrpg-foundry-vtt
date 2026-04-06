@@ -1,0 +1,24 @@
+{
+  "name": "Crippled",
+  "type": "condition",
+  "img": "icons/svg/bones.svg",
+  "system": {
+    "identifier": "crippled",
+    "nature": "harmful",
+    "effect": "<p>The affected limb is severely damaged and cannot be used. If a leg, the character's movement is halved and they cannot Run or Charge. If an arm, they cannot use that arm for any purpose.</p>",
+    "removal": "<p>Requires extended medical care or bionic replacement. A Crippled limb cannot be healed by first aid alone.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": { "value": 0, "units": "permanent" },
+    "description": {
+      "value": "<p>One of the character's limbs has been severely damaged and is rendered useless. A Crippled arm cannot hold items or be used for tests requiring two hands. A Crippled leg halves the character's movement rate and prevents Running or Charging. This condition persists until the limb is properly treated through extended medical care or replaced with a bionic.</p>",
+      "source": { "book": "DH2e Core", "page": "", "custom": "" }
+    },
+    "modifiers": { "characteristics": {}, "skills": {}, "combat": {} },
+    "notes": "Specify which limb is Crippled when applying this condition."
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vq7n0c8mbqqsr8xo"
+}

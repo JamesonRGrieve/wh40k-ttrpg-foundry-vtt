@@ -1,0 +1,49 @@
+{
+  "name": "Clues from the Crowds",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "cluesFromTheCrowds",
+    "category": "investigation",
+    "source": "DH2e Core",
+    "description": "<p>The character is skilled at picking up on the gossip and rumours of crowds, able to sift through the chaff for useful information.</p>",
+    "tier": 1,
+    "benefit": "<p>Once per day, the character may re-roll a failed Inquiry test if they are in a populated area. The character may choose to use either result.</p>",
+    "aptitudes": ["Fellowship", "Social"],
+    "prerequisites": {
+      "text": "Fellowship 30",
+      "characteristics": { "fellowship": 30 },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Once per day re-roll a failed Inquiry test in a crowd.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": { "attack": 0, "damage": 0, "penetration": 0, "defense": 0, "initiative": 0, "speed": 0 },
+      "resources": { "wounds": 0, "fate": 0, "insanity": 0, "corruption": 0 },
+      "other": [],
+      "situational": { "characteristics": [], "skills": [], "combat": [] }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000004"
+}

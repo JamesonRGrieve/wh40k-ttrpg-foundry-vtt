@@ -1,0 +1,37 @@
+{
+  "name": "Flak Coat",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "flak",
+    "weight": 5,
+    "availability": "scarce",
+    "notes": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>A long coat lined with flak-weave material, covering the torso, arms, and legs. Popular among hive gangers and mercenaries.</p>"
+    },
+    "modificationSlots": 0,
+    "coverage": [
+      "body",
+      "leftArm",
+      "rightArm",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": 0,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Zw8vLpS5fXc1Tj7R"
+}

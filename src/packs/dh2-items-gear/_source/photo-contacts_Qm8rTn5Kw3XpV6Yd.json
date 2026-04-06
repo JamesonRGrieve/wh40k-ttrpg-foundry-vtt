@@ -1,0 +1,20 @@
+{
+  "name": "Photo-Contacts",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0,
+    "availability": "rare",
+    "quantity": 1,
+    "cost": { "value": 150, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>Thin optical lenses worn directly over the eyes that automatically darken in response to bright light. Protects the wearer from the effects of flash grenades and similar sudden light-based attacks, granting immunity to the Photon Flash effect.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qm8rTn5Kw3XpV6Yd"
+}
