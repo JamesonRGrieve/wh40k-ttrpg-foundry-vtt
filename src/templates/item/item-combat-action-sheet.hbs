@@ -2,33 +2,33 @@
   Rogue Trader Combat Action Item Sheet
   Sheet for combat action configuration
 --}}
-<div class="rt-combat-action-sheet">
+<div class="wh40k-combat-action-sheet">
   <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Combat action identity
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="rt-item-header">
-      <div class="rt-item-header__image" data-action="editImage" data-edit="img">
+    <header class="wh40k-item-header">
+      <div class="wh40k-item-header__image" data-action="editImage" data-edit="img">
         <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="rt-item-header__overlay">
+        <div class="wh40k-item-header__overlay">
           <i class="fas fa-edit"></i>
         </div>
       </div>
       
-      <div class="rt-item-header__info">
-        <input type="text" class="rt-item-header__name" name="name" value="{{item.name}}" placeholder="Action Name" />
+      <div class="wh40k-item-header__info">
+        <input type="text" class="wh40k-item-header__name" name="name" value="{{item.name}}" placeholder="Action Name" />
         
-        <div class="rt-item-header__meta">
+        <div class="wh40k-item-header__meta">
           {{!-- Action Type Badge --}}
-          <span class="rt-badge rt-badge--action-type">
+          <span class="wh40k-badge wh40k-badge--action-type">
             <i class="fas fa-clock"></i>
             {{item.system.actionTypeLabel}}
           </span>
           
           {{!-- Attack Modifier Badge --}}
           {{#if (ne item.system.attackModifier 0)}}
-          <span class="rt-badge {{#if (gt item.system.attackModifier 0)}}rt-badge--positive{{else}}rt-badge--negative{{/if}}">
+          <span class="wh40k-badge {{#if (gt item.system.attackModifier 0)}}wh40k-badge--positive{{else}}wh40k-badge--negative{{/if}}">
             <i class="fas fa-crosshairs"></i>
             Attack {{item.system.attackModifierLabel}}
           </span>
@@ -40,17 +40,17 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          PROPERTIES PANEL
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-item-body">
-      <div class="rt-panel">
-        <div class="rt-panel-header">
-          <span class="rt-panel-title"><i class="fas fa-cog"></i> Properties</span>
+    <div class="wh40k-item-body">
+      <div class="wh40k-panel">
+        <div class="wh40k-panel-header">
+          <span class="wh40k-panel-title"><i class="fas fa-cog"></i> Properties</span>
         </div>
-        <div class="rt-panel-body">
-          <div class="rt-form-grid">
+        <div class="wh40k-panel-body">
+          <div class="wh40k-form-grid">
             {{!-- Action Type --}}
-            <div class="rt-form-field">
-              <label class="rt-label">Action Type</label>
-              <select name="system.actionType" class="rt-select">
+            <div class="wh40k-form-field">
+              <label class="wh40k-label">Action Type</label>
+              <select name="system.actionType" class="wh40k-select">
                 {{#select item.system.actionType}}
                 <option value="Half">Half Action</option>
                 <option value="Full">Full Action</option>
@@ -62,43 +62,43 @@
             </div>
             
             {{!-- Attack Modifier --}}
-            <div class="rt-form-field">
-              <label class="rt-label">Attack Modifier</label>
+            <div class="wh40k-form-field">
+              <label class="wh40k-label">Attack Modifier</label>
               <input type="number" name="system.attackModifier" value="{{item.system.attackModifier}}" 
-                     class="rt-input" placeholder="0" step="5" />
+                     class="wh40k-input" placeholder="0" step="5" />
             </div>
           </div>
           
           {{!-- Subtypes --}}
-          <div class="rt-form-field rt-form-field--full">
-            <label class="rt-label">Action Subtypes</label>
-            <div class="rt-checkbox-group">
-              <label class="rt-checkbox-label">
+          <div class="wh40k-form-field wh40k-form-field--full">
+            <label class="wh40k-label">Action Subtypes</label>
+            <div class="wh40k-checkbox-group">
+              <label class="wh40k-checkbox-label">
                 <input type="checkbox" name="system.subtypes" value="Attack" 
                        {{#if (includes item.system.subtypesList "Attack")}}checked{{/if}} />
                 Attack
               </label>
-              <label class="rt-checkbox-label">
+              <label class="wh40k-checkbox-label">
                 <input type="checkbox" name="system.subtypes" value="Movement" 
                        {{#if (includes item.system.subtypesList "Movement")}}checked{{/if}} />
                 Movement
               </label>
-              <label class="rt-checkbox-label">
+              <label class="wh40k-checkbox-label">
                 <input type="checkbox" name="system.subtypes" value="Concentration" 
                        {{#if (includes item.system.subtypesList "Concentration")}}checked{{/if}} />
                 Concentration
               </label>
-              <label class="rt-checkbox-label">
+              <label class="wh40k-checkbox-label">
                 <input type="checkbox" name="system.subtypes" value="Miscellaneous" 
                        {{#if (includes item.system.subtypesList "Miscellaneous")}}checked{{/if}} />
                 Miscellaneous
               </label>
-              <label class="rt-checkbox-label">
+              <label class="wh40k-checkbox-label">
                 <input type="checkbox" name="system.subtypes" value="Melee" 
                        {{#if (includes item.system.subtypesList "Melee")}}checked{{/if}} />
                 Melee
               </label>
-              <label class="rt-checkbox-label">
+              <label class="wh40k-checkbox-label">
                 <input type="checkbox" name="system.subtypes" value="Ranged" 
                        {{#if (includes item.system.subtypesList "Ranged")}}checked{{/if}} />
                 Ranged
@@ -111,24 +111,24 @@
       {{!-- ═══════════════════════════════════════════════════════════════════
            DESCRIPTION PANEL
       ═══════════════════════════════════════════════════════════════════ --}}
-      <div class="rt-panel">
-        <div class="rt-panel-header">
-          <span class="rt-panel-title"><i class="fas fa-book"></i> Description</span>
+      <div class="wh40k-panel">
+        <div class="wh40k-panel-header">
+          <span class="wh40k-panel-title"><i class="fas fa-book"></i> Description</span>
         </div>
-        <div class="rt-panel-body">
-          <div class="rt-form-field rt-form-field--full">
-            <label class="rt-label">Full Description</label>
+        <div class="wh40k-panel-body">
+          <div class="wh40k-form-field wh40k-form-field--full">
+            <label class="wh40k-label">Full Description</label>
             {{#if inEditMode}}
               {{editor system.description.value target="system.description.value" button=true editable=editable}}
             {{else}}
-              <div class="rt-description-content">{{{system.description.value}}}</div>
+              <div class="wh40k-description-content">{{{system.description.value}}}</div>
             {{/if}}
           </div>
           
-          <div class="rt-form-field rt-form-field--full">
-            <label class="rt-label">Summary (for cards/tooltips)</label>
+          <div class="wh40k-form-field wh40k-form-field--full">
+            <label class="wh40k-label">Summary (for cards/tooltips)</label>
             <input type="text" name="system.description.summary" value="{{item.system.description.summary}}" 
-                   class="rt-input" placeholder="Brief action summary" />
+                   class="wh40k-input" placeholder="Brief action summary" />
           </div>
         </div>
       </div>
@@ -136,21 +136,21 @@
       {{!-- ═══════════════════════════════════════════════════════════════════
            SOURCE REFERENCE
       ═══════════════════════════════════════════════════════════════════ --}}
-      <div class="rt-panel">
-        <div class="rt-panel-header">
-          <span class="rt-panel-title"><i class="fas fa-bookmark"></i> Source</span>
+      <div class="wh40k-panel">
+        <div class="wh40k-panel-header">
+          <span class="wh40k-panel-title"><i class="fas fa-bookmark"></i> Source</span>
         </div>
-        <div class="rt-panel-body">
-          <div class="rt-form-grid">
-            <div class="rt-form-field">
-              <label class="rt-label">Book</label>
+        <div class="wh40k-panel-body">
+          <div class="wh40k-form-grid">
+            <div class="wh40k-form-field">
+              <label class="wh40k-label">Book</label>
               <input type="text" name="system.source.book" value="{{system.source.book}}" 
-                     class="rt-input" placeholder="e.g. Core Rulebook" />
+                     class="wh40k-input" placeholder="e.g. Core Rulebook" />
             </div>
-            <div class="rt-form-field">
-              <label class="rt-label">Page</label>
+            <div class="wh40k-form-field">
+              <label class="wh40k-label">Page</label>
               <input type="text" name="system.source.page" value="{{system.source.page}}" 
-                     class="rt-input" placeholder="e.g. 232" />
+                     class="wh40k-input" placeholder="e.g. 232" />
             </div>
           </div>
         </div>

@@ -47,7 +47,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/talent-sheet-v2.hbs',
-            scrollable: ['.rt-talent-content'],
+            scrollable: ['.wh40k-talent-content'],
         },
     };
 
@@ -704,7 +704,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @protected
      */
     _setupTalentTabs() {
-        const tabs = this.element.querySelectorAll('.rt-talent-tabs .rt-talent-tab');
+        const tabs = this.element.querySelectorAll('.wh40k-talent-tabs .wh40k-talent-tab');
         const switchTab = (tabName) => {
             if (!tabName) return;
 
@@ -712,7 +712,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
             tabs.forEach((t) => t.classList.toggle('active', t.dataset.tab === tabName));
 
             // Show/hide panels
-            const panels = this.element.querySelectorAll('.rt-talent-panel');
+            const panels = this.element.querySelectorAll('.wh40k-talent-panel');
             panels.forEach((panel) => {
                 panel.classList.toggle('active', panel.dataset.tab === tabName);
             });
@@ -730,7 +730,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
         });
 
         // Effects banner link click
-        const bannerLink = this.element.querySelector('.rt-effects-banner__link');
+        const bannerLink = this.element.querySelector('.wh40k-effects-banner__link');
         if (bannerLink) {
             bannerLink.addEventListener('click', (event) => {
                 event.preventDefault();

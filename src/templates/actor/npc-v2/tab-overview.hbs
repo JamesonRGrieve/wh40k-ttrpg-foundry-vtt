@@ -1,43 +1,43 @@
 {{!-- NPC V2 Interaction Tab - Characteristics, Skills, Roleplay, GM Notes --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
-  <div class="rt-interaction-tab">
+  <div class="wh40k-interaction-tab">
     
     {{!-- 2-COLUMN GRID: Left = Chars + Roleplay, Right = Skills --}}
-    <div class="rt-interaction-grid">
+    <div class="wh40k-interaction-grid">
       
       {{!-- LEFT COLUMN: Characteristics --}}
-      <div class="rt-panel rt-panel--chars rt-grid-char-dial">
-        <div class="rt-panel-header">
+      <div class="wh40k-panel wh40k-panel--chars wh40k-grid-char-dial">
+        <div class="wh40k-panel-header">
           <i class="fa-solid fa-dice-d20"></i>
           <span>{{localize "WH40K.Characteristics"}}</span>
           {{#if editable}}
-          <button class="rt-header-btn rt-toggle-edit" type="button" data-action="toggleEditSection" data-target="char-edit" title="Toggle Edit Mode">
+          <button class="wh40k-header-btn wh40k-toggle-edit" type="button" data-action="toggleEditSection" data-target="char-edit" title="Toggle Edit Mode">
             <i class="fa-solid fa-pen-to-square"></i>
           </button>
           {{/if}}
         </div>
-        <div class="rt-panel-body">
+        <div class="wh40k-panel-body">
           {{!-- Rollable 3×3 Grid --}}
-          <div class="rt-char-dial">
+          <div class="wh40k-char-dial">
             {{#each characteristicsArray}}
-            <div class="rt-char-cell rollable"
+            <div class="wh40k-char-cell rollable"
                  data-action="rollCharacteristic"
                  data-characteristic="{{key}}"
                  title="Roll {{label}} ({{total}})">
-              <span class="rt-char-label">{{short}}</span>
-              <span class="rt-char-bonus">
+              <span class="wh40k-char-label">{{short}}</span>
+              <span class="wh40k-char-bonus">
                 {{bonus}}
-                {{#if hasUnnatural}}<i class="fa-solid fa-bolt rt-unnatural" title="Unnatural ×{{unnatural}}"></i>{{/if}}
+                {{#if hasUnnatural}}<i class="fa-solid fa-bolt wh40k-unnatural" title="Unnatural ×{{unnatural}}"></i>{{/if}}
               </span>
-              <span class="rt-char-total">({{total}})</span>
+              <span class="wh40k-char-total">({{total}})</span>
             </div>
             {{/each}}
           </div>
 
           {{!-- Inline Edit Table (EDIT mode only) --}}
           {{#if editable}}
-          <div class="rt-char-edit-section" data-section-id="char-edit" hidden>
-            <table class="rt-char-edit-table">
+          <div class="wh40k-char-edit-section" data-section-id="char-edit" hidden>
+            <table class="wh40k-char-edit-table">
               <thead>
                 <tr>
                   <th>Char</th>
@@ -50,9 +50,9 @@
                 {{#each characteristicsArray}}
                 <tr>
                   <td><strong>{{short}}</strong></td>
-                  <td><input type="number" name="system.characteristics.{{key}}.base" value="{{base}}" class="rt-char-input" /></td>
-                  <td><input type="number" name="system.characteristics.{{key}}.modifier" value="{{modifier}}" class="rt-char-input" /></td>
-                  <td><input type="number" name="system.characteristics.{{key}}.unnatural" value="{{unnatural}}" min="0" class="rt-char-input" /></td>
+                  <td><input type="number" name="system.characteristics.{{key}}.base" value="{{base}}" class="wh40k-char-input" /></td>
+                  <td><input type="number" name="system.characteristics.{{key}}.modifier" value="{{modifier}}" class="wh40k-char-input" /></td>
+                  <td><input type="number" name="system.characteristics.{{key}}.unnatural" value="{{unnatural}}" min="0" class="wh40k-char-input" /></td>
                 </tr>
                 {{/each}}
               </tbody>
@@ -63,43 +63,43 @@
       </div>
 
       {{!-- RIGHT COLUMN: Skills Table --}}
-      <div class="rt-panel rt-panel--skills rt-grid-skills">
-        <div class="rt-panel-header">
+      <div class="wh40k-panel wh40k-panel--skills wh40k-grid-skills">
+        <div class="wh40k-panel-header">
           <i class="fa-solid fa-book"></i>
           <span>Skills</span>
-          <span class="rt-count-badge">{{trainedSkillCount}} trained</span>
+          <span class="wh40k-count-badge">{{trainedSkillCount}} trained</span>
         </div>
-        <div class="rt-panel-body">
-          <div class="rt-skills-table">
+        <div class="wh40k-panel-body">
+          <div class="wh40k-skills-table">
             {{#each basicSkillsList}}
-            <div class="rt-skill-row {{#if isTrained}}trained{{else}}untrained{{/if}}">
+            <div class="wh40k-skill-row {{#if isTrained}}trained{{else}}untrained{{/if}}">
               {{!-- Proficiency Cycle (EDIT mode) --}}
               {{#if ../editable}}
               <button type="button"
-                      class="rt-skill-cycle rt-skill-cycle--{{levelClass}}"
+                      class="wh40k-skill-cycle wh40k-skill-cycle--{{levelClass}}"
                       data-action="cycleSkillLevel"
                       data-skill="{{key}}"
                       title="{{levelTooltip}}">
-                {{#if plus20}}<span class="rt-cycle-pip rt-cycle-pip--plus20">⬤⬤</span>
-                {{else if plus10}}<span class="rt-cycle-pip rt-cycle-pip--plus10">⬤+</span>
-                {{else if isTrained}}<span class="rt-cycle-pip rt-cycle-pip--trained">⬤</span>
-                {{else}}<span class="rt-cycle-pip rt-cycle-pip--untrained">○</span>
+                {{#if plus20}}<span class="wh40k-cycle-pip wh40k-cycle-pip--plus20">⬤⬤</span>
+                {{else if plus10}}<span class="wh40k-cycle-pip wh40k-cycle-pip--plus10">⬤+</span>
+                {{else if isTrained}}<span class="wh40k-cycle-pip wh40k-cycle-pip--trained">⬤</span>
+                {{else}}<span class="wh40k-cycle-pip wh40k-cycle-pip--untrained">○</span>
                 {{/if}}
               </button>
               {{/if}}
               {{!-- Roll Button --}}
-              <button type="button" class="rt-skill-roll rollable" data-action="rollSkill" data-skill="{{key}}" title="Roll {{name}} ({{target}})">
+              <button type="button" class="wh40k-skill-roll rollable" data-action="rollSkill" data-skill="{{key}}" title="Roll {{name}} ({{target}})">
                 <i class="fa-solid fa-dice-d20"></i>
               </button>
               {{!-- Skill Name + Level Badge --}}
-              <span class="rt-skill-name">
+              <span class="wh40k-skill-name">
                 {{name}}
-                {{#if plus20}}<span class="rt-skill-badge rt-skill-badge--plus20" title="+20">+20</span>
-                {{else if plus10}}<span class="rt-skill-badge rt-skill-badge--plus10" title="+10">+10</span>
+                {{#if plus20}}<span class="wh40k-skill-badge wh40k-skill-badge--plus20" title="+20">+20</span>
+                {{else if plus10}}<span class="wh40k-skill-badge wh40k-skill-badge--plus10" title="+10">+10</span>
                 {{/if}}
               </span>
-              <span class="rt-skill-char">({{char}})</span>
-              <span class="rt-skill-target">{{target}}</span>
+              <span class="wh40k-skill-char">({{char}})</span>
+              <span class="wh40k-skill-target">{{target}}</span>
             </div>
             {{/each}}
           </div>
@@ -107,26 +107,26 @@
       </div>
 
       {{!-- LEFT COLUMN BOTTOM: Roleplay Personality --}}
-      <div class="rt-panel rt-panel--personality rt-grid-roleplay">
-        <div class="rt-panel-header">
+      <div class="wh40k-panel wh40k-panel--personality wh40k-grid-roleplay">
+        <div class="wh40k-panel-header">
           <i class="fa-solid fa-theater-masks"></i>
           <span>Personality</span>
         </div>
-        <div class="rt-panel-body">
-          <div class="rt-personality-grid">
-            <div class="rt-personality-field">
+        <div class="wh40k-panel-body">
+          <div class="wh40k-personality-grid">
+            <div class="wh40k-personality-field">
               <label><i class="fa-solid fa-face-smile"></i> Demeanor</label>
               <input type="text" name="system.personality.demeanor" value="{{system.personality.demeanor}}" placeholder="e.g., Gruff, Cheerful" {{#unless editable}}disabled{{/unless}} />
             </div>
-            <div class="rt-personality-field">
+            <div class="wh40k-personality-field">
               <label><i class="fa-solid fa-bullseye"></i> Goals</label>
               <input type="text" name="system.personality.goals" value="{{system.personality.goals}}" placeholder="What do they want?" {{#unless editable}}disabled{{/unless}} />
             </div>
-            <div class="rt-personality-field">
+            <div class="wh40k-personality-field">
               <label><i class="fa-solid fa-ghost"></i> Fears</label>
               <input type="text" name="system.personality.fears" value="{{system.personality.fears}}" placeholder="What do they fear?" {{#unless editable}}disabled{{/unless}} />
             </div>
-            <div class="rt-personality-field">
+            <div class="wh40k-personality-field">
               <label><i class="fa-solid fa-bolt"></i> Quirks</label>
               <input type="text" name="system.personality.quirks" value="{{system.personality.quirks}}" placeholder="Memorable traits" {{#unless editable}}disabled{{/unless}} />
             </div>
@@ -135,35 +135,35 @@
       </div>
 
       {{!-- Talents & Traits Quick View --}}
-      <div class="rt-panel rt-panel--talents rt-grid-talents">
-        <div class="rt-panel-header">
+      <div class="wh40k-panel wh40k-panel--talents wh40k-grid-talents">
+        <div class="wh40k-panel-header">
           <i class="fa-solid fa-stars"></i>
           <span>Talents & Traits</span>
-          <span class="rt-count-badge">{{talents.length}}</span>
+          <span class="wh40k-count-badge">{{talents.length}}</span>
         </div>
-        <div class="rt-panel-body">
+        <div class="wh40k-panel-body">
           {{#if talents.length}}
-          <div class="rt-talent-chips-compact">
+          <div class="wh40k-talent-chips-compact">
             {{#each talents}}
-            <div class="rt-talent-chip-mini" data-item-id="{{id}}" title="{{name}}">
-              <img src="{{img}}" class="rt-talent-img-mini" alt="" />
-              <span class="rt-talent-name-mini">{{name}}</span>
+            <div class="wh40k-talent-chip-mini" data-item-id="{{id}}" title="{{name}}">
+              <img src="{{img}}" class="wh40k-talent-img-mini" alt="" />
+              <span class="wh40k-talent-name-mini">{{name}}</span>
             </div>
             {{/each}}
           </div>
           {{else}}
-          <div class="rt-empty-state rt-empty-state--inline rt-empty-state--compact">
+          <div class="wh40k-empty-state wh40k-empty-state--inline wh40k-empty-state--compact">
             <i class="fa-regular fa-stars"></i>
             <span>No talents</span>
           </div>
           {{/if}}
 
           {{#if traits.length}}
-          <div class="rt-trait-chips-compact">
+          <div class="wh40k-trait-chips-compact">
             {{#each traits}}
-            <div class="rt-trait-chip-mini" data-item-id="{{id}}" title="{{name}}">
-              <img src="{{img}}" class="rt-trait-img-mini" alt="" />
-              <span class="rt-trait-name-mini">{{name}}</span>
+            <div class="wh40k-trait-chip-mini" data-item-id="{{id}}" title="{{name}}">
+              <img src="{{img}}" class="wh40k-trait-img-mini" alt="" />
+              <span class="wh40k-trait-name-mini">{{name}}</span>
             </div>
             {{/each}}
           </div>
@@ -175,65 +175,65 @@
 
     {{!-- GM NOTES (collapsible, GM-only) --}}
     {{#if isGM}}
-    <div class="rt-panel rt-panel--notes">
-      <div class="rt-panel-header">
+    <div class="wh40k-panel wh40k-panel--notes">
+      <div class="wh40k-panel-header">
         <i class="fa-solid fa-sticky-note"></i>
         <span>GM Notes</span>
-        <span class="rt-gm-badge"><i class="fa-solid fa-lock"></i></span>
+        <span class="wh40k-gm-badge"><i class="fa-solid fa-lock"></i></span>
       </div>
-      <div class="rt-panel-body">
-        <div class="rt-notes-grid">
-          <div class="rt-note-field rt-note-field--editable">
+      <div class="wh40k-panel-body">
+        <div class="wh40k-notes-grid">
+          <div class="wh40k-note-field wh40k-note-field--editable">
             <label>
               <i class="fa-solid fa-note-sticky"></i>
               Quick Notes
             </label>
             {{#if editable}}
-            <div class="rt-editor-mini">
+            <div class="wh40k-editor-mini">
               {{editor system.quickNotes target="system.quickNotes" button=true editable=editable engine="prosemirror"}}
             </div>
             {{else}}
-            <div class="rt-note-display">{{{system.quickNotes}}}</div>
+            <div class="wh40k-note-display">{{{system.quickNotes}}}</div>
             {{/if}}
           </div>
-          <div class="rt-note-field rt-note-field--editable">
+          <div class="wh40k-note-field wh40k-note-field--editable">
             <label>
               <i class="fa-solid fa-chess"></i>
               Tactics
             </label>
             {{#if editable}}
-            <div class="rt-editor-mini">
+            <div class="wh40k-editor-mini">
               {{editor system.tactics target="system.tactics" button=true editable=editable engine="prosemirror"}}
             </div>
             {{else}}
-            <div class="rt-note-display">{{{system.tactics}}}</div>
+            <div class="wh40k-note-display">{{{system.tactics}}}</div>
             {{/if}}
           </div>
         </div>
-        <div class="rt-meta-fields">
-          <div class="rt-meta-field">
+        <div class="wh40k-meta-fields">
+          <div class="wh40k-meta-field">
             <i class="fa-solid fa-flag"></i>
             <input type="text" name="system.faction" value="{{system.faction}}" placeholder="Faction" {{#unless editable}}disabled{{/unless}} />
           </div>
-          <div class="rt-meta-field">
+          <div class="wh40k-meta-field">
             <i class="fa-solid fa-book-open"></i>
             <input type="text" name="system.source" value="{{system.source}}" placeholder="Source (e.g. Core p.123)" {{#unless editable}}disabled{{/unless}} />
           </div>
         </div>
         {{!-- Tags --}}
-        <div class="rt-tags-row">
+        <div class="wh40k-tags-row">
           {{#each tags}}
-          <span class="rt-tag">
+          <span class="wh40k-tag">
             {{this}}
             {{#if ../editable}}
-            <button type="button" class="rt-tag-remove" data-action="removeTag" data-tag="{{this}}">×</button>
+            <button type="button" class="wh40k-tag-remove" data-action="removeTag" data-tag="{{this}}">×</button>
             {{/if}}
           </span>
           {{else}}
-          <span class="rt-tags-empty">No tags</span>
+          <span class="wh40k-tags-empty">No tags</span>
           {{/each}}
           {{#if editable}}
-          <button type="button" class="rt-tag-add" data-action="addTag" title="Add Tag">
+          <button type="button" class="wh40k-tag-add" data-action="addTag" title="Add Tag">
             <i class="fa-solid fa-plus"></i>
           </button>
           {{/if}}

@@ -77,7 +77,7 @@ export function ItemPreviewMixin(Base) {
 
             // Create preview element
             const preview = document.createElement('div');
-            preview.classList.add('wh40k-item-preview', `rt-item-preview--${item.type}`);
+            preview.classList.add('wh40k-item-preview', `wh40k-item-preview--${item.type}`);
             preview.dataset.previewId = item.id;
             preview.innerHTML = previewHTML;
 
@@ -167,7 +167,7 @@ export function ItemPreviewMixin(Base) {
                     </div>
                     <div class="wh40k-item-preview-actions">
                         ${actionsHTML}
-                        <button type="button" class="wh40k-quick-action rt-quick-action--secondary" data-action="closeItemPreview" title="Collapse">
+                        <button type="button" class="wh40k-quick-action wh40k-quick-action--secondary" data-action="closeItemPreview" title="Collapse">
                             <i class="fa-solid fa-chevron-up"></i>
                         </button>
                     </div>
@@ -336,7 +336,7 @@ export function ItemPreviewMixin(Base) {
 
             let content = `
                 <div class="wh40k-condition-preview-meta">
-                    ${system.nature ? `<span class="wh40k-badge rt-badge--${system.nature}">${system.nature}</span>` : ''}
+                    ${system.nature ? `<span class="wh40k-badge wh40k-badge--${system.nature}">${system.nature}</span>` : ''}
                     ${system.duration ? `<span class="wh40k-badge">Duration: ${system.duration}</span>` : ''}
                     ${system.stacks > 1 ? `<span class="wh40k-badge">×${system.stacks}</span>` : ''}
                 </div>

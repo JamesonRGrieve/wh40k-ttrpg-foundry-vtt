@@ -37,7 +37,7 @@
         justify-content: space-between;
 
         .wh40k-specialist-add-btn {
-            @include rt-icon-button(26px, $wh40k-accent-talents, 0.8rem);
+            @include wh40k-icon-button(26px, $wh40k-accent-talents, 0.8rem);
             margin-left: auto;
         }
     }

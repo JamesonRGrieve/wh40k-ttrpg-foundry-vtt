@@ -8,15 +8,15 @@
 // ============================================
 
 .wh40k-talent-sheet {
-    --talent-color: var(--rt-talents-primary, #a07818);
-    --talent-bg: var(--rt-talents-bg, rgba(160, 120, 24, 0.1));
-    --talent-border: var(--rt-talents-border, rgba(160, 120, 24, 0.3));
+    --talent-color: var(--wh40k-talents-primary, #a07818);
+    --talent-bg: var(--wh40k-talents-bg, rgba(160, 120, 24, 0.1));
+    --talent-border: var(--wh40k-talents-border, rgba(160, 120, 24, 0.3));
 
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--rt-sheet-bg);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-sheet-bg);
+    color: var(--wh40k-text-dark);
     font-family: 'Roboto', sans-serif;
     font-size: 0.9rem;
     overflow: hidden;
@@ -48,7 +48,7 @@
         width: 64px;
         height: 64px;
         flex-shrink: 0;
-        border: 2px solid var(--rt-bronze);
+        border: 2px solid var(--wh40k-bronze);
         border-radius: 6px;
         overflow: hidden;
         cursor: pointer;
@@ -62,7 +62,7 @@
 
         &:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px var(--rt-shadow-medium);
+            box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
             .wh40k-talent-header__image-overlay {
                 opacity: 1;
@@ -101,12 +101,12 @@
         font-family: 'Cinzel', serif;
         font-size: 1.3rem;
         font-weight: 600;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         transition: border-color 0.2s ease;
 
         &:hover,
         &:focus {
-            border-bottom-color: var(--rt-gold);
+            border-bottom-color: var(--wh40k-gold);
             outline: none;
         }
     }
@@ -129,8 +129,8 @@
     flex-wrap: wrap;
     gap: 2px;
     padding: 8px;
-    background: var(--rt-panel-bg-solid);
-    border-bottom: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
     flex-shrink: 0;
 }
 
@@ -141,13 +141,13 @@
     flex: 1;
     min-width: 60px;
     padding: 8px 6px;
-    background: var(--rt-panel-bg);
+    background: var(--wh40k-panel-bg);
     border-radius: 4px;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
 
     &__icon {
         font-size: 1rem;
-        color: var(--rt-bronze);
+        color: var(--wh40k-bronze);
         margin-bottom: 4px;
     }
 
@@ -163,14 +163,14 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 
     &__value {
         font-family: 'Cinzel', serif;
         font-size: 1rem;
         font-weight: 700;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
     }
 
     // Tier stat
@@ -186,7 +186,7 @@
     // XP cost stat
     &--cost {
         .wh40k-talent-stat__icon {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 }
@@ -203,9 +203,9 @@
     border-radius: 4px;
     font-size: 0.7rem;
     font-weight: 600;
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
+    color: var(--wh40k-text-dark);
 
     i {
         font-size: 0.75rem;
@@ -244,7 +244,7 @@
     &--cost {
         background: rgba(201, 162, 39, 0.1);
         border-color: rgba(201, 162, 39, 0.3);
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
     }
 
     &--passive {
@@ -261,7 +261,7 @@
 }
 
 // ============================================
-// CONTENT BODY (legacy - use rt-talent-content from _item-tabs.scss)
+// CONTENT BODY (legacy - use wh40k-talent-content from _item-tabs.scss)
 // ============================================
 
 .wh40k-talent-body {
@@ -276,8 +276,8 @@
 // ============================================
 
 .wh40k-talent-section {
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 6px;
     margin-bottom: 12px;
     overflow: hidden;
@@ -287,12 +287,12 @@
         align-items: center;
         gap: 8px;
         padding: 10px 12px;
-        background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
-        border-bottom: 1px solid var(--rt-border-color-light);
+        background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
 
         i {
             font-size: 0.9rem;
-            color: var(--rt-bronze);
+            color: var(--wh40k-bronze);
         }
 
         h3 {
@@ -301,7 +301,7 @@
             font-family: 'Cinzel', serif;
             font-size: 0.95rem;
             font-weight: 600;
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
         }
     }
 
@@ -322,7 +322,7 @@
     font-family: 'Cinzel', serif;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 
     i {
         color: var(--talent-color);
@@ -356,14 +356,14 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 
     .wh40k-field-hint {
         font-size: 0.7rem;
         font-weight: 400;
         text-transform: none;
         letter-spacing: 0;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         opacity: 0.7;
         font-style: italic;
     }
@@ -375,7 +375,7 @@
     gap: 6px;
     font-size: 0.85rem;
     font-weight: 500;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     cursor: pointer;
 
     input[type='checkbox'] {
@@ -388,27 +388,27 @@
 .wh40k-property-textarea {
     width: 100%;
     padding: 6px 10px;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     font-family: 'Roboto', sans-serif;
     font-size: 0.85rem;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     transition: all 0.2s ease;
 
     &:hover {
-        border-color: var(--rt-border-color);
+        border-color: var(--wh40k-border-color);
     }
 
     &:focus {
         outline: none;
-        border-color: var(--rt-gold);
-        background: var(--rt-panel-bg);
+        border-color: var(--wh40k-gold);
+        background: var(--wh40k-panel-bg);
         box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.1);
     }
 
     &::placeholder {
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         opacity: 0.5;
     }
 }
@@ -447,15 +447,15 @@
 
 .wh40k-prerequisites-display {
     padding: 12px;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
 }
 
 .wh40k-prereq-label {
     margin: 0;
     font-size: 0.85rem;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     line-height: 1.5;
 }
 
@@ -470,8 +470,8 @@
 }
 
 .wh40k-modifier-group {
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     padding: 10px;
 }
@@ -483,7 +483,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-modifier-list {
@@ -497,13 +497,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 4px 8px;
-    background: var(--rt-panel-bg);
+    background: var(--wh40k-panel-bg);
     border-radius: 3px;
 }
 
 .wh40k-modifier-name {
     font-size: 0.8rem;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     text-transform: capitalize;
 }
 
@@ -532,7 +532,7 @@
     justify-content: center;
     padding: 40px 20px;
     text-align: center;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 
     i {
         font-size: 2.5rem;
@@ -557,7 +557,7 @@
 
 .wh40k-field-hint {
     font-size: 0.75rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     font-style: italic;
 
     i {
@@ -571,7 +571,7 @@
 // ============================================
 
 .wh40k-editor-container {
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     overflow: hidden;
 
@@ -585,8 +585,8 @@
 // ============================================
 
 .wh40k-grants-display {
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 6px;
     padding: 12px;
 }
@@ -606,16 +606,16 @@
     margin: 0 0 10px 0;
     padding: 6px 10px;
     background: linear-gradient(90deg, rgba(201, 162, 39, 0.1) 0%, transparent 100%);
-    border-left: 3px solid var(--rt-gold);
+    border-left: 3px solid var(--wh40k-gold);
     font-family: 'Cinzel', serif;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 
     i {
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
         font-size: 0.8rem;
     }
 }
@@ -634,39 +634,39 @@
     align-items: center;
     gap: 8px;
     padding: 6px 10px;
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     font-size: 0.85rem;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 
     i {
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
         font-size: 0.7rem;
     }
 }
 
 .wh40k-grants-name {
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 }
 
 .wh40k-grants-specialization {
     font-style: italic;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-grants-level {
     margin-left: auto;
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--rt-bronze);
+    color: var(--wh40k-bronze);
 }
 
 .wh40k-grants-special {
     padding: 10px;
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     margin-bottom: 10px;
 
@@ -680,13 +680,13 @@
     font-family: 'Cinzel', serif;
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 }
 
 .wh40k-grants-special-description {
     font-size: 0.85rem;
     line-height: 1.5;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 
     p {
         margin: 0 0 8px 0;

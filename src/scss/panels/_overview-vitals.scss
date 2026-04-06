@@ -29,13 +29,13 @@
 }
 
 .wh40k-fate-panel-v2 {
-    border-left: 3px solid var(--rt-fate-border);
+    border-left: 3px solid var(--wh40k-fate-border);
 
     .wh40k-panel-header {
-        background: linear-gradient(90deg, var(--rt-fate-bg) 0%, transparent 100%);
+        background: linear-gradient(90deg, var(--wh40k-fate-bg) 0%, transparent 100%);
 
         .wh40k-panel-title i {
-            color: var(--rt-fate-secondary);
+            color: var(--wh40k-fate-secondary);
         }
     }
 }
@@ -98,7 +98,7 @@
     display: flex;
     align-items: baseline;
     gap: 4px;
-    font-family: var(--rt-font-display, 'Modesto Condensed', serif);
+    font-family: var(--wh40k-font-display, 'Modesto Condensed', serif);
 
     .wh40k-vital-current {
         font-size: 1.6rem;
@@ -141,7 +141,7 @@
     background: rgba($wh40k-accent-gold, 0.1);
     border: 1px solid rgba($wh40k-accent-gold, 0.2);
     border-radius: 3px;
-    font-size: var(--rt-text-micro, 0.65rem);
+    font-size: var(--wh40k-text-micro, 0.65rem);
     color: var(--color-text-tertiary);
     margin-top: $wh40k-space-xs;
 

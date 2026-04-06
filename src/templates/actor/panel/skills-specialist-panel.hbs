@@ -1,43 +1,43 @@
 {{!-- Specialist Skills Panel - Only shows skills that have entries --}}
-<div class="rt-panel rt-specialist-panel">
-    <div class="rt-panel-header">
-        <span class="rt-panel-title"><i class="fas fa-graduation-cap"></i> Specialist Skills</span>
-        <button type="button" class="rt-specialist-add-btn" data-action="openAddSpecialistDialog" title="Add Specialist Skill">
+<div class="wh40k-panel wh40k-specialist-panel">
+    <div class="wh40k-panel-header">
+        <span class="wh40k-panel-title"><i class="fas fa-graduation-cap"></i> Specialist Skills</span>
+        <button type="button" class="wh40k-specialist-add-btn" data-action="openAddSpecialistDialog" title="Add Specialist Skill">
             <i class="fas fa-plus"></i>
         </button>
     </div>
-    <div class="rt-panel-body">
+    <div class="wh40k-panel-body">
         {{#if skillLists.hasSpecialistEntries}}
             {{#each skillLists.specialist as |entry|}}
                 {{#if entry.[1].entries.length}}
-                <div class="rt-specialist-group{{#if entry.[1].advanced}} rt-specialist-group--advanced{{/if}}" data-skill="{{entry.[0]}}">
+                <div class="wh40k-specialist-group{{#if entry.[1].advanced}} wh40k-specialist-group--advanced{{/if}}" data-skill="{{entry.[0]}}">
                     <!-- Group Header -->
-                    <div class="rt-specialist-header">
-                        <span class="rt-specialist-name">{{entry.[1].label}}</span>
-                        <span class="rt-specialist-char">({{entry.[1].charShort}})</span>
+                    <div class="wh40k-specialist-header">
+                        <span class="wh40k-specialist-name">{{entry.[1].label}}</span>
+                        <span class="wh40k-specialist-char">({{entry.[1].charShort}})</span>
                     </div>
                     
                     <!-- Entries -->
-                    <div class="rt-specialist-entries">
+                    <div class="wh40k-specialist-entries">
                         {{#each entry.[1].entries as |spec|}}
-                        <div class="rt-specialist-entry" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">
-                            <div class="rt-spec-info">
-                                <span class="rt-spec-name">{{spec.name}}</span>
-                                <button type="button" class="rt-spec-roll" 
+                        <div class="wh40k-specialist-entry" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">
+                            <div class="wh40k-spec-info">
+                                <span class="wh40k-spec-name">{{spec.name}}</span>
+                                <button type="button" class="wh40k-spec-roll" 
                                         data-action="roll" data-roll-type="skill"
                                         data-roll-target="{{spec.skillKey}}" 
                                         data-specialty="{{spec.entryIndex}}" 
                                         title="Roll {{spec.name}}">
                                     <i class="fas fa-dice-d20"></i>
                                 </button>
-                                <button type="button" class="rt-spec-favorite {{#if spec.isFavorite}}active{{/if}}" 
+                                <button type="button" class="wh40k-spec-favorite {{#if spec.isFavorite}}active{{/if}}" 
                                         data-action="toggleFavoriteSpecialistSkill" 
                                         data-skill="{{spec.skillKey}}"
                                         data-index="{{spec.entryIndex}}"
                                         title="{{#if spec.isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                                     <i class="{{#if spec.isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
                                 </button>
-                                <button type="button" class="rt-spec-delete" 
+                                <button type="button" class="wh40k-spec-delete" 
                                         data-action="deleteSpecialization"
                                         data-skill="{{spec.skillKey}}" 
                                         data-index="{{spec.entryIndex}}" 
@@ -45,12 +45,12 @@
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
-                            <div class="rt-spec-training rt-training-display">
-                                <span class="rt-train-indicator {{#if (gte spec.trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
-                                <span class="rt-train-indicator {{#if (gte spec.trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
-                                <span class="rt-train-indicator {{#if (gte spec.trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
+                            <div class="wh40k-spec-training wh40k-training-display">
+                                <span class="wh40k-train-indicator {{#if (gte spec.trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
+                                <span class="wh40k-train-indicator {{#if (gte spec.trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
+                                <span class="wh40k-train-indicator {{#if (gte spec.trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
                             </div>
-                            <div class="rt-spec-total" title="{{spec.breakdown}}">
+                            <div class="wh40k-spec-total" title="{{spec.breakdown}}">
                                 <span>{{spec.current}}</span>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                 {{/if}}
             {{/each}}
         {{else}}
-            <div class="rt-specialist-empty">
+            <div class="wh40k-specialist-empty">
                 <i class="fas fa-graduation-cap"></i>
                 <p>No specialist skills yet</p>
                 <span>Click the <i class="fas fa-plus"></i> button above to add your first specialization</span>

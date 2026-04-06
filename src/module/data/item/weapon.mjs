@@ -661,7 +661,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get classLabel() {
-        return game.i18n.localize(`RT.WeaponClass.${this.class.capitalize()}`);
+        return game.i18n.localize(`WH40K.WeaponClass.${this.class.capitalize()}`);
     }
 
     /**
@@ -670,7 +670,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get typeLabel() {
         return game.i18n.localize(
-            `RT.WeaponType.${this.type
+            `WH40K.WeaponType.${this.type
                 .split('-')
                 .map((s) => s.capitalize())
                 .join('')}`,

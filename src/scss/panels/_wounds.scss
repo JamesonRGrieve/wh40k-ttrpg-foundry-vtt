@@ -4,7 +4,7 @@
 // Complete overhaul with pip system, interactive controls, and visual feedback
 
 .wh40k-wounds-panel-v2 {
-    // Base panel styling inherits from rt-panel
+    // Base panel styling inherits from wh40k-panel
 
     // ============================================
     // Main Display Area
@@ -32,25 +32,25 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--rt-btn-bg);
-        border: 2px solid var(--rt-wounds-border);
+        background: var(--wh40k-btn-bg);
+        border: 2px solid var(--wh40k-wounds-border);
         border-radius: 8px;
         font-size: 1.1rem;
         font-weight: 700;
         cursor: pointer;
         transition: all 0.15s ease;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
 
         &:hover {
-            background: var(--rt-btn-bg-hover);
-            border-color: var(--rt-wounds-primary);
+            background: var(--wh40k-btn-bg-hover);
+            border-color: var(--wh40k-wounds-primary);
             transform: scale(1.08);
-            box-shadow: 0 2px 6px var(--rt-shadow-soft);
+            box-shadow: 0 2px 6px var(--wh40k-shadow-soft);
         }
 
         &:active {
             transform: scale(0.95);
-            box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+            box-shadow: inset 0 2px 4px var(--wh40k-shadow-medium);
         }
 
         i {
@@ -59,18 +59,18 @@
     }
 
     .wh40k-wounds-minus {
-        color: var(--rt-wounds-secondary);
+        color: var(--wh40k-wounds-secondary);
         &:hover {
-            border-color: var(--rt-wounds-secondary);
-            background: var(--rt-wounds-bg);
+            border-color: var(--wh40k-wounds-secondary);
+            background: var(--wh40k-wounds-bg);
         }
     }
 
     .wh40k-wounds-plus {
-        color: var(--rt-success-primary);
+        color: var(--wh40k-success-primary);
         &:hover {
-            border-color: var(--rt-success-primary);
-            background: var(--rt-success-bg);
+            border-color: var(--wh40k-success-primary);
+            background: var(--wh40k-success-bg);
         }
     }
 
@@ -85,20 +85,20 @@
     .wh40k-wounds-current {
         font-size: 2.5rem;
         font-weight: 700;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         line-height: 1;
         transition: all 0.3s ease;
     }
 
     .wh40k-wounds-sep {
         font-size: 1.5rem;
-        color: var(--rt-text-subtle);
+        color: var(--wh40k-text-subtle);
         font-weight: 400;
     }
 
     .wh40k-wounds-max {
         font-size: 1.3rem;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         font-weight: 600;
     }
 
@@ -115,11 +115,11 @@
     .wh40k-wounds-bar {
         flex: 1;
         height: 12px;
-        background: var(--rt-border-accent);
+        background: var(--wh40k-border-accent);
         border-radius: 6px;
         overflow: visible; // Changed to visible for threshold markers
         position: relative;
-        box-shadow: inset 0 1px 3px var(--rt-shadow-soft);
+        box-shadow: inset 0 1px 3px var(--wh40k-shadow-soft);
     }
 
     // Threshold Markers
@@ -136,7 +136,7 @@
         .wh40k-threshold-line {
             width: 2px;
             height: 100%;
-            background: var(--rt-border-accent);
+            background: var(--wh40k-border-accent);
             border-radius: 1px;
         }
 
@@ -145,11 +145,11 @@
             top: -18px;
             font-size: 9px;
             font-weight: 600;
-            color: var(--rt-text-muted);
-            background: var(--rt-panel-bg-solid);
+            color: var(--wh40k-text-muted);
+            background: var(--wh40k-panel-bg-solid);
             padding: 1px 3px;
             border-radius: 2px;
-            border: 1px solid var(--rt-border-color-light);
+            border: 1px solid var(--wh40k-border-color-light);
         }
     }
 
@@ -179,7 +179,7 @@
     .wh40k-wounds-percent {
         font-size: 0.8rem;
         font-weight: 700;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         min-width: 36px;
         text-align: right;
         font-family: 'Modesto Condensed', serif;
@@ -207,15 +207,15 @@
     }
 
     .wh40k-alert-critical {
-        background: var(--rt-wounds-bg);
-        color: var(--rt-wounds-primary);
-        border: 2px solid var(--rt-wounds-border);
+        background: var(--wh40k-wounds-bg);
+        color: var(--wh40k-wounds-primary);
+        border: 2px solid var(--wh40k-wounds-border);
         animation: pulse-red 2s ease-in-out infinite;
     }
 
     .wh40k-alert-warning {
-        background: var(--rt-warning-bg);
-        color: var(--rt-warning-primary);
+        background: var(--wh40k-warning-bg);
+        color: var(--wh40k-warning-primary);
         border: 2px solid rgba(196, 135, 29, 0.5);
     }
 
@@ -233,19 +233,19 @@
     // Panel state modifiers
     &.wh40k-wounds-critical {
         .wh40k-panel-header {
-            background: var(--rt-wounds-bg);
-            border-bottom: 2px solid var(--rt-wounds-secondary);
+            background: var(--wh40k-wounds-bg);
+            border-bottom: 2px solid var(--wh40k-wounds-secondary);
         }
 
         .wh40k-wounds-current {
-            color: var(--rt-wounds-secondary);
+            color: var(--wh40k-wounds-secondary);
             animation: pulse-scale 1.5s ease-in-out infinite;
         }
     }
 
     &.wh40k-wounds-warning {
         .wh40k-panel-header {
-            background: var(--rt-warning-bg);
+            background: var(--wh40k-warning-bg);
         }
     }
 
@@ -266,8 +266,8 @@
     .wh40k-wounds-critical-section {
         margin-top: $wh40k-space-md;
         padding: $wh40k-space-sm;
-        background: var(--rt-wounds-bg);
-        border: 1px solid var(--rt-wounds-border);
+        background: var(--wh40k-wounds-bg);
+        border: 1px solid var(--wh40k-wounds-border);
         border-radius: 8px;
     }
 
@@ -283,7 +283,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-wounds-primary);
+        color: var(--wh40k-wounds-primary);
         display: flex;
         align-items: center;
         gap: 6px;
@@ -296,7 +296,7 @@
     .wh40k-critical-value {
         font-size: 0.85rem;
         font-weight: 700;
-        color: var(--rt-wounds-secondary);
+        color: var(--wh40k-wounds-secondary);
         font-family: 'Modesto Condensed', serif;
     }
 
@@ -311,9 +311,9 @@
         width: 28px;
         height: 28px;
         padding: 0;
-        border: 2px solid var(--rt-border-color-light);
+        border: 2px solid var(--wh40k-border-color-light);
         border-radius: 50%;
-        background: var(--rt-btn-bg);
+        background: var(--wh40k-btn-bg);
         cursor: pointer;
         transition: all 0.2s ease;
         display: flex;
@@ -322,9 +322,9 @@
         position: relative;
 
         &:hover {
-            border-color: var(--rt-wounds-border);
+            border-color: var(--wh40k-wounds-border);
             transform: scale(1.12);
-            box-shadow: 0 2px 6px var(--rt-shadow-medium);
+            box-shadow: 0 2px 6px var(--wh40k-shadow-medium);
         }
 
         &:active {
@@ -336,16 +336,16 @@
         width: 16px;
         height: 16px;
         border-radius: 50%;
-        background: var(--rt-border-accent);
+        background: var(--wh40k-border-accent);
         transition: all 0.2s ease;
     }
 
     .wh40k-crit-pip--filled {
-        border-color: var(--rt-wounds-secondary);
-        background: var(--rt-wounds-bg);
+        border-color: var(--wh40k-wounds-secondary);
+        background: var(--wh40k-wounds-bg);
 
         .wh40k-pip-inner {
-            background: radial-gradient(circle, #d85545, var(--rt-wounds-secondary));
+            background: radial-gradient(circle, #d85545, var(--wh40k-wounds-secondary));
             box-shadow: 0 0 8px rgba(182, 58, 43, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
@@ -360,8 +360,8 @@
 
     .wh40k-wounds-edit-section {
         padding: $wh40k-space-md;
-        background: var(--rt-panel-bg-translucent);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-panel-bg-translucent);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: 8px;
         margin-bottom: $wh40k-space-sm;
 
@@ -375,7 +375,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
         margin-bottom: $wh40k-space-sm;
         display: flex;
         align-items: center;
@@ -404,32 +404,32 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 
     .wh40k-edit-input {
         width: 100%;
         height: 40px;
         padding: 0 $wh40k-space-sm;
-        border: 2px solid var(--rt-border-color-light);
+        border: 2px solid var(--wh40k-border-color-light);
         border-radius: 6px;
-        background: var(--rt-input-bg);
+        background: var(--wh40k-input-bg);
         font-size: 1.1rem;
         font-weight: 700;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         text-align: center;
         font-family: 'Modesto Condensed', serif;
         transition: all 0.15s ease;
 
         &:focus {
             outline: none;
-            border-color: var(--rt-border-color-strong);
-            background: var(--rt-input-bg-focus);
-            box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+            border-color: var(--wh40k-border-color-strong);
+            background: var(--wh40k-input-bg-focus);
+            box-shadow: 0 0 0 3px var(--wh40k-shadow-soft);
         }
 
         &:hover {
-            border-color: var(--rt-border-color);
+            border-color: var(--wh40k-border-color);
         }
     }
 
@@ -452,20 +452,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--rt-input-bg);
-        border: 2px solid var(--rt-border-color-light);
+        background: var(--wh40k-input-bg);
+        border: 2px solid var(--wh40k-border-color-light);
         border-radius: 6px;
         cursor: pointer;
         transition: all 0.15s ease;
 
         i {
             font-size: 0.75rem;
-            color: var(--rt-text-medium);
+            color: var(--wh40k-text-medium);
         }
 
         &:hover {
-            background: var(--rt-input-bg-focus);
-            border-color: var(--rt-border-color);
+            background: var(--wh40k-input-bg-focus);
+            border-color: var(--wh40k-border-color);
             transform: scale(1.05);
         }
 
@@ -478,21 +478,21 @@
         width: 70px;
         height: 36px;
         padding: 0 $wh40k-space-sm;
-        border: 2px solid var(--rt-border-color-light);
+        border: 2px solid var(--wh40k-border-color-light);
         border-radius: 6px;
-        background: var(--rt-input-bg);
+        background: var(--wh40k-input-bg);
         font-size: 1.2rem;
         font-weight: 700;
-        color: var(--rt-wounds-secondary);
+        color: var(--wh40k-wounds-secondary);
         text-align: center;
         font-family: 'Modesto Condensed', serif;
         transition: all 0.15s ease;
 
         &:focus {
             outline: none;
-            border-color: var(--rt-wounds-secondary);
-            background: var(--rt-input-bg-focus);
-            box-shadow: 0 0 0 3px var(--rt-wounds-bg);
+            border-color: var(--wh40k-wounds-secondary);
+            background: var(--wh40k-input-bg-focus);
+            box-shadow: 0 0 0 3px var(--wh40k-wounds-bg);
         }
     }
 
@@ -501,7 +501,7 @@
         .wh40k-pip-inner {
             font-size: 0.65rem;
             font-weight: 700;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
             background: none;
             width: auto;
             height: auto;
@@ -509,7 +509,7 @@
 
         .wh40k-crit-pip--filled .wh40k-pip-inner {
             color: #fff;
-            background: radial-gradient(circle, #d85545, var(--rt-wounds-secondary));
+            background: radial-gradient(circle, #d85545, var(--wh40k-wounds-secondary));
         }
     }
 
@@ -524,7 +524,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--rt-success-bg);
+        background: var(--wh40k-success-bg);
         border: 1px solid rgba(74, 143, 92, 0.4);
         border-radius: 4px;
         cursor: pointer;
@@ -532,12 +532,12 @@
 
         i {
             font-size: 0.7rem;
-            color: var(--rt-success-secondary);
+            color: var(--wh40k-success-secondary);
         }
 
         &:hover {
             background: rgba(74, 143, 92, 0.25);
-            border-color: var(--rt-success-primary);
+            border-color: var(--wh40k-success-primary);
             transform: scale(1.05);
         }
     }
@@ -553,14 +553,14 @@
         align-items: center;
         gap: $wh40k-space-xs;
         padding: $wh40k-space-xs $wh40k-space-sm;
-        background: var(--rt-panel-bg);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-panel-bg);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: 6px;
         transition: all 0.15s ease;
 
         &:hover {
-            background: var(--rt-panel-bg-solid);
-            border-color: var(--rt-border-color);
+            background: var(--wh40k-panel-bg-solid);
+            border-color: var(--wh40k-border-color);
         }
     }
 
@@ -572,7 +572,7 @@
         text-align: left;
         font-size: 0.85rem;
         font-weight: 600;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -581,11 +581,11 @@
 
         i {
             font-size: 0.85em;
-            color: var(--rt-wounds-secondary);
+            color: var(--wh40k-wounds-secondary);
         }
 
         &:hover {
-            color: var(--rt-wounds-secondary);
+            color: var(--wh40k-wounds-secondary);
         }
     }
 
@@ -596,20 +596,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--rt-wounds-bg);
-        border: 1px solid var(--rt-wounds-border);
+        background: var(--wh40k-wounds-bg);
+        border: 1px solid var(--wh40k-wounds-border);
         border-radius: 4px;
         cursor: pointer;
         transition: all 0.15s ease;
 
         i {
             font-size: 0.7rem;
-            color: var(--rt-wounds-secondary);
+            color: var(--wh40k-wounds-secondary);
         }
 
         &:hover {
             background: rgba(182, 58, 43, 0.2);
-            border-color: var(--rt-wounds-secondary);
+            border-color: var(--wh40k-wounds-secondary);
             transform: scale(1.05);
         }
     }
@@ -620,19 +620,19 @@
         align-items: center;
         gap: $wh40k-space-xs;
         padding: $wh40k-space-md;
-        background: var(--rt-panel-bg-translucent);
-        border: 1px dashed var(--rt-border-color-light);
+        background: var(--wh40k-panel-bg-translucent);
+        border: 1px dashed var(--wh40k-border-color-light);
         border-radius: 6px;
 
         i {
             font-size: 1.8rem;
-            color: var(--rt-success-secondary);
+            color: var(--wh40k-success-secondary);
             opacity: 0.5;
         }
 
         span {
             font-size: 0.75rem;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
             font-style: italic;
         }
     }

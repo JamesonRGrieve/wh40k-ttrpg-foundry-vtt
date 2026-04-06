@@ -1,12 +1,12 @@
-<form class="rt-item-sheet rt-item-sheet--storage" autocomplete="off">
+<form class="wh40k-item-sheet wh40k-item-sheet--storage" autocomplete="off">
     {{! Header }}
-    <header class="rt-item-sheet__header">
-        <div class="rt-item-sheet__portrait">
-            <img class="rt-item-sheet__portrait-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+    <header class="wh40k-item-sheet__header">
+        <div class="wh40k-item-sheet__portrait">
+            <img class="wh40k-item-sheet__portrait-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
         </div>
-        <div class="rt-item-sheet__header-info">
-            <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Storage Location Name" />
-            <div class="rt-item-sheet__type-badge">
+        <div class="wh40k-item-sheet__header-info">
+            <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Storage Location Name" />
+            <div class="wh40k-item-sheet__type-badge">
                 <span class="material-icons">inventory_2</span>
                 <span>Storage Location</span>
             </div>
@@ -14,45 +14,45 @@
     </header>
 
     {{! Tab Navigation }}
-    <nav class="rt-item-sheet__tabs" data-group="primary">
-        <a class="rt-item-sheet__tab item" data-tab="items" data-group="primary">
+    <nav class="wh40k-item-sheet__tabs" data-group="primary">
+        <a class="wh40k-item-sheet__tab item" data-tab="items" data-group="primary">
             <span class="material-icons">category</span>
             Contents
         </a>
-        <a class="rt-item-sheet__tab item" data-tab="description" data-group="primary">
+        <a class="wh40k-item-sheet__tab item" data-tab="description" data-group="primary">
             <span class="material-icons">description</span>
             Description
         </a>
     </nav>
 
     {{! Items Tab }}
-    <section class="rt-item-sheet__body tab" data-group="primary" data-tab="items">
-        <div class="rt-item-sheet__panel">
-            <h2 class="rt-item-sheet__panel-title">
+    <section class="wh40k-item-sheet__body tab" data-group="primary" data-tab="items">
+        <div class="wh40k-item-sheet__panel">
+            <h2 class="wh40k-item-sheet__panel-title">
                 <span class="material-icons">inventory</span>
                 Stored Items
-                <span class="rt-item-sheet__panel-count">{{item.items.length}}</span>
+                <span class="wh40k-item-sheet__panel-count">{{item.items.length}}</span>
             </h2>
 
             {{#if item.items.length}}
-                <div class="rt-item-sheet__storage-list">
+                <div class="wh40k-item-sheet__storage-list">
                     {{#each item.items as |embedded|}}
-                        <div class="rt-item-sheet__storage-item item-drag" data-item-id="{{embedded.id}}" data-item-type="{{embedded.type}}">
-                            <button type="button" class="rt-item-sheet__storage-edit item-edit" data-item-id="{{embedded.id}}" title="Edit Item">
+                        <div class="wh40k-item-sheet__storage-item item-drag" data-item-id="{{embedded.id}}" data-item-type="{{embedded.type}}">
+                            <button type="button" class="wh40k-item-sheet__storage-edit item-edit" data-item-id="{{embedded.id}}" title="Edit Item">
                                 <span class="material-icons">settings</span>
                             </button>
-                            <div class="rt-item-sheet__storage-info">
-                                <span class="rt-item-sheet__storage-name">{{embedded.name}}</span>
-                                <span class="rt-item-sheet__storage-type">{{capitalize embedded.type}}</span>
+                            <div class="wh40k-item-sheet__storage-info">
+                                <span class="wh40k-item-sheet__storage-name">{{embedded.name}}</span>
+                                <span class="wh40k-item-sheet__storage-type">{{capitalize embedded.type}}</span>
                             </div>
-                            <button type="button" class="rt-item-sheet__storage-delete item-delete" data-item-id="{{embedded.id}}" title="Remove Item">
+                            <button type="button" class="wh40k-item-sheet__storage-delete item-delete" data-item-id="{{embedded.id}}" title="Remove Item">
                                 <span class="material-icons">delete</span>
                             </button>
                         </div>
                     {{/each}}
                 </div>
             {{else}}
-                <div class="rt-item-sheet__empty">
+                <div class="wh40k-item-sheet__empty">
                     <span class="material-icons">inbox</span>
                     <p>No items stored. Drag items here to store them.</p>
                 </div>
@@ -61,15 +61,15 @@
     </section>
 
     {{! Description Tab }}
-    <section class="rt-item-sheet__body tab" data-group="primary" data-tab="description">
-        <div class="rt-item-sheet__panel rt-item-sheet__panel--description">
-            <h2 class="rt-item-sheet__panel-title">
+    <section class="wh40k-item-sheet__body tab" data-group="primary" data-tab="description">
+        <div class="wh40k-item-sheet__panel wh40k-item-sheet__panel--description">
+            <h2 class="wh40k-item-sheet__panel-title">
                 <span class="material-icons">description</span>
                 Description
             </h2>
-            <div class="rt-item-sheet__field rt-item-sheet__field--full">
+            <div class="wh40k-item-sheet__field wh40k-item-sheet__field--full">
                 <textarea
-                    class="rt-item-sheet__textarea rt-item-sheet__textarea--large"
+                    class="wh40k-item-sheet__textarea wh40k-item-sheet__textarea--large"
                     name="system.description"
                     placeholder="Describe this storage location..."
                 >{{item.system.description}}</textarea>

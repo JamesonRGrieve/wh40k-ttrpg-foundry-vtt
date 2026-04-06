@@ -4,8 +4,8 @@
 
 .wh40k-item-sheet .wh40k-tabs {
     display: flex;
-    border-bottom: 2px solid var(--rt-border-color);
-    background: var(--rt-panel-bg-translucent);
+    border-bottom: 2px solid var(--wh40k-border-color);
+    background: var(--wh40k-panel-bg-translucent);
     flex-shrink: 0;
 }
 
@@ -15,7 +15,7 @@
     font-size: $wh40k-font-size-sm;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     background: transparent;
     border: none;
     border-bottom: 2px solid transparent;
@@ -29,13 +29,13 @@
     }
 
     &:hover {
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
         background: rgba(212, 175, 55, 0.08);
     }
 
     &.active {
-        color: var(--rt-gold);
-        border-bottom-color: var(--rt-gold);
+        color: var(--wh40k-gold);
+        border-bottom-color: var(--wh40k-gold);
         background: rgba(212, 175, 55, 0.12);
     }
 }
@@ -66,8 +66,8 @@
 // ============================================
 
 .wh40k-item-sheet .wh40k-panel {
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-lg;
     margin-bottom: $wh40k-space-md;
     overflow: hidden;
@@ -79,12 +79,12 @@
     justify-content: space-between;
     padding: $wh40k-space-sm $wh40k-space-md;
     background: linear-gradient(90deg, rgba(212, 175, 55, 0.15) 0%, transparent 100%);
-    border-bottom: 1px solid var(--rt-border-color-light);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
 
     h3 {
         font-family: $wh40k-font-display;
         font-size: $wh40k-font-size-md;
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
         margin: 0;
         text-transform: uppercase;
         letter-spacing: 0.05em;

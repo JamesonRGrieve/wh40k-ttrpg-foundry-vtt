@@ -70,7 +70,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @type {string}
      */
     get categoryLabel() {
-        return game.i18n.localize(`RT.GearCategory.${this.category.capitalize()}`);
+        return game.i18n.localize(`WH40K.GearCategory.${this.category.capitalize()}`);
     }
 
     /**

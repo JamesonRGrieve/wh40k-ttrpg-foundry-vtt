@@ -43,8 +43,8 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         },
         tabs: [
             {
-                navSelector: '.rt-tabs',
-                contentSelector: '.rt-tab-content',
+                navSelector: '.wh40k-tabs',
+                contentSelector: '.wh40k-tab-content',
                 initial: 'description',
             },
         ],
@@ -67,7 +67,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-sheet-modern.hbs',
-            scrollable: ['.rt-tab-content'],
+            scrollable: ['.wh40k-tab-content'],
         },
     };
 

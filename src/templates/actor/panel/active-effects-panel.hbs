@@ -1,40 +1,40 @@
 {{!-- Active Effects Panel - Card/Row Structure --}}
-<div class="rt-panel rt-effects-panel">
-    <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
+<div class="wh40k-panel wh40k-effects-panel">
+    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
          data-toggle="effects_details"
          title="Click to {{#if (isExpanded 'effects_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="rt-panel-title">
+        <span class="wh40k-panel-title">
             <i class="fas fa-sparkles"></i> Active Effects
             {{#if effects.length}}
-                <span class="rt-badge">{{effects.length}}</span>
+                <span class="wh40k-badge">{{effects.length}}</span>
             {{/if}}
         </span>
-        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'effects_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
+        <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'effects_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
     </div>
 
-    <div class="rt-panel-body">
+    <div class="wh40k-panel-body">
         
         {{#if effects.length}}
-            <div class="rt-effects-list">
+            <div class="wh40k-effects-list">
                 {{#each effects as |effect|}}
-                    <div class="rt-effect-card {{#if effect.disabled}}rt-effect-disabled{{/if}}" data-effect-id="{{effect.id}}">
+                    <div class="wh40k-effect-card {{#if effect.disabled}}wh40k-effect-disabled{{/if}}" data-effect-id="{{effect.id}}">
                         
                         {{!-- Effect Header --}}
-                        <div class="rt-effect-card-header">
-                            <img src="{{effect.icon}}" class="rt-effect-icon" alt="{{effect.label}}" />
+                        <div class="wh40k-effect-card-header">
+                            <img src="{{effect.icon}}" class="wh40k-effect-icon" alt="{{effect.label}}" />
                             
-                            <div class="rt-effect-info">
-                                <div class="rt-effect-name">{{effect.label}}</div>
+                            <div class="wh40k-effect-info">
+                                <div class="wh40k-effect-name">{{effect.label}}</div>
                                 {{#if effect.sourceName}}
-                                    <div class="rt-effect-source">
+                                    <div class="wh40k-effect-source">
                                         <i class="fas fa-link"></i> {{effect.sourceName}}
                                     </div>
                                 {{/if}}
                             </div>
                             
-                            <div class="rt-effect-controls">
+                            <div class="wh40k-effect-controls">
                                 <button type="button" 
-                                        class="rt-effect-btn rt-effect-toggle" 
+                                        class="wh40k-effect-btn wh40k-effect-toggle" 
                                         data-action="effectToggle"
                                         data-effect-id="{{effect.id}}"
                                         title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}} Effect">
@@ -42,7 +42,7 @@
                                 </button>
                                 
                                 <button type="button" 
-                                        class="rt-effect-btn rt-effect-edit" 
+                                        class="wh40k-effect-btn wh40k-effect-edit" 
                                         data-action="effectEdit"
                                         data-effect-id="{{effect.id}}"
                                         title="Edit Effect">
@@ -50,7 +50,7 @@
                                 </button>
                                 
                                 <button type="button" 
-                                        class="rt-effect-btn rt-effect-delete" 
+                                        class="wh40k-effect-btn wh40k-effect-delete" 
                                         data-action="effectDelete"
                                         data-effect-id="{{effect.id}}"
                                         title="Delete Effect">
@@ -62,12 +62,12 @@
                         {{!-- Effect Changes (if expanded) --}}
                         {{#if (isExpanded 'effects_details' ../actor)}}
                             {{#if effect.changes.length}}
-                                <div class="rt-effect-changes">
+                                <div class="wh40k-effect-changes">
                                     {{#each effect.changes as |change|}}
-                                        <div class="rt-effect-change">
-                                            <span class="rt-change-key">{{change.key}}</span>
-                                            <span class="rt-change-mode">{{lookup ../changeModeLookup change.mode}}</span>
-                                            <span class="rt-change-value">{{change.value}}</span>
+                                        <div class="wh40k-effect-change">
+                                            <span class="wh40k-change-key">{{change.key}}</span>
+                                            <span class="wh40k-change-mode">{{lookup ../changeModeLookup change.mode}}</span>
+                                            <span class="wh40k-change-value">{{change.value}}</span>
                                         </div>
                                     {{/each}}
                                 </div>
@@ -78,9 +78,9 @@
             </div>
         {{/if}}
         
-        <div class="rt-dropzone effect-create" data-action="effectCreate">
-            <i class="fas fa-sparkles rt-dropzone-icon"></i>
-            <span class="rt-dropzone-text">Drop effects here or click to create</span>
+        <div class="wh40k-dropzone effect-create" data-action="effectCreate">
+            <i class="fas fa-sparkles wh40k-dropzone-icon"></i>
+            <span class="wh40k-dropzone-text">Drop effects here or click to create</span>
         </div>
     </div>
 </div>

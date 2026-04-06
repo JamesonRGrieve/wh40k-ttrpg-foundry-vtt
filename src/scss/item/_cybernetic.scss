@@ -17,8 +17,8 @@ $cyber-success: #2ecc71;
     flex-direction: column;
     height: 100%;
     min-height: 0; // Critical for flex scrolling
-    background: var(--rt-bg-dark, #1a1a1a);
-    color: var(--rt-text-primary, #e8e6e3);
+    background: var(--wh40k-bg-dark, #1a1a1a);
+    color: var(--wh40k-text-primary, #e8e6e3);
 
     form {
         display: flex;
@@ -86,7 +86,7 @@ $cyber-success: #2ecc71;
     }
 
     &__name {
-        font-family: var(--rt-font-heading, 'Modesto Condensed');
+        font-family: var(--wh40k-font-heading, 'Modesto Condensed');
         font-size: 1.5rem;
         font-weight: 700;
         color: $cyber-primary;
@@ -471,7 +471,7 @@ $cyber-success: #2ecc71;
         color: $cyber-primary;
         font-size: 1.25rem;
         font-weight: 700;
-        font-family: var(--rt-font-mono, 'Courier New');
+        font-family: var(--wh40k-font-mono, 'Courier New');
         text-align: center;
 
         &:focus {
@@ -601,7 +601,7 @@ $cyber-success: #2ecc71;
     &__value {
         font-size: 1rem;
         font-weight: 700;
-        font-family: var(--rt-font-mono, 'Courier New');
+        font-family: var(--wh40k-font-mono, 'Courier New');
         padding: 0.25rem 0.5rem;
         border-radius: 3px;
 

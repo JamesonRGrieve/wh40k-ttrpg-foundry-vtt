@@ -282,14 +282,14 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     _onCreate(data, options, user) {
-        game.rt.log('Determining nested items for', this);
+        game.wh40k.log('Determining nested items for', this);
         this._determineNestedItems();
         return super._onCreate(data, options, user);
     }
 
     async prepareData() {
         super.prepareData();
-        game.rt.log('Item prepare data', this);
+        game.wh40k.log('Item prepare data', this);
 
         this.convertNestedToItems();
 
@@ -321,10 +321,10 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Check for specials
         if (this.system.special) {
-            game.rt.log(`Performing first time nested item configuration for item: ${this.name} with specials: `, this.system.special);
+            game.wh40k.log(`Performing first time nested item configuration for item: ${this.name} with specials: `, this.system.special);
             if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', this.system.special);
             if (this.isAmmunition) await this._updateSpecialsFromPack('wh40k-rpg.ammo', this.system.special);
-            game.rt.log(`Special migrated for item: ${this.name}`, this.system.special);
+            game.wh40k.log(`Special migrated for item: ${this.name}`, this.system.special);
             this.system.special = undefined;
 
             await this.convertNestedToItems();
@@ -441,7 +441,7 @@ export class WH40KItem extends WH40KItemContainer {
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            // Set flags for ChatMessageRT enrichment
+            // Set flags for ChatMessageWH40K enrichment
             flags: {
                 'wh40k-rpg': {
                     itemCard: true,
@@ -712,7 +712,7 @@ export class WH40KItem extends WH40KItemContainer {
         // Collect skills to add
         if (modifiers.skills && Array.isArray(modifiers.skills)) {
             for (const skillName of modifiers.skills) {
-                const skillPack = game.packs.get('wh40k-rpg.rt-items-skills');
+                const skillPack = game.packs.get('wh40k-rpg.wh40k-items-skills');
                 if (skillPack) {
                     const index = await skillPack.getIndex({ fields: ['name'] });
                     const skillEntry = index.find((s) => s.name.toLowerCase() === skillName.toLowerCase());
@@ -727,7 +727,7 @@ export class WH40KItem extends WH40KItemContainer {
         // Collect talents to add
         if (modifiers.talents && Array.isArray(modifiers.talents)) {
             for (const talentName of modifiers.talents) {
-                const talentPack = game.packs.get('wh40k-rpg.rt-items-talents');
+                const talentPack = game.packs.get('wh40k-rpg.wh40k-items-talents');
                 if (talentPack) {
                     const index = await talentPack.getIndex({ fields: ['name'] });
                     const talentEntry = index.find((t) => t.name.toLowerCase() === talentName.toLowerCase());

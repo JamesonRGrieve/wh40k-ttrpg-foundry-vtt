@@ -27,7 +27,7 @@ export default class GearSheet extends BaseItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-gear-sheet-v2.hbs',
-            scrollable: ['.rt-tab-content'],
+            scrollable: ['.wh40k-tab-content'],
         },
     };
 

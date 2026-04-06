@@ -15,17 +15,17 @@
     - dataset: object of data attributes (optional)
 --}}
 
-<div class="rt-stat-bar">
+<div class="wh40k-stat-bar">
   {{#each stats}}
-  <div class="rt-stat-pill {{#if this.modifier}}rt-stat-pill--{{this.modifier}}{{/if}} {{#if this.rollable}}rt-stat-pill--rollable{{/if}}"
+  <div class="wh40k-stat-pill {{#if this.modifier}}wh40k-stat-pill--{{this.modifier}}{{/if}} {{#if this.rollable}}wh40k-stat-pill--rollable{{/if}}"
        {{#if this.action}}data-action="{{this.action}}"{{/if}}
        {{#if this.dataset}}{{#each this.dataset as |value key|}}data-{{key}}="{{value}}"{{/each}}{{/if}}>
     {{#if this.icon}}
-    <i class="{{this.icon}} rt-stat-pill__icon"></i>
+    <i class="{{this.icon}} wh40k-stat-pill__icon"></i>
     {{/if}}
-    <span class="rt-stat-pill__value">{{this.value}}</span>
+    <span class="wh40k-stat-pill__value">{{this.value}}</span>
     {{#if this.label}}
-    <span class="rt-stat-pill__label">{{this.label}}</span>
+    <span class="wh40k-stat-pill__label">{{this.label}}</span>
     {{/if}}
   </div>
   {{/each}}

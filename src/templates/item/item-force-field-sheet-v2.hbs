@@ -2,35 +2,35 @@
   Rogue Trader Force Field Item Sheet - V2 Complete Redesign
   Matches weapon sheet pattern with modern ApplicationV2 structure
 --}}
-<div class="rt-forcefield-sheet">
+<div class="wh40k-forcefield-sheet">
   <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact force field identity with status
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="rt-forcefield-header">
-      <div class="rt-forcefield-header__image" data-action="editImage" data-edit="img">
+    <header class="wh40k-forcefield-header">
+      <div class="wh40k-forcefield-header__image" data-action="editImage" data-edit="img">
         <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="rt-forcefield-header__image-overlay">
+        <div class="wh40k-forcefield-header__image-overlay">
           <i class="fas fa-edit"></i>
         </div>
       </div>
       
-      <div class="rt-forcefield-header__info">
-        <input type="text" class="rt-forcefield-header__name" name="name" value="{{item.name}}" placeholder="Force Field Name" />
+      <div class="wh40k-forcefield-header__info">
+        <input type="text" class="wh40k-forcefield-header__name" name="name" value="{{item.name}}" placeholder="Force Field Name" />
         
-        <div class="rt-forcefield-header__meta">
-          <span class="rt-forcefield-badge rt-forcefield-badge--status {{#if system.overloaded}}rt-forcefield-badge--overloaded{{else if system.activated}}rt-forcefield-badge--active{{else}}rt-forcefield-badge--inactive{{/if}}" 
+        <div class="wh40k-forcefield-header__meta">
+          <span class="wh40k-forcefield-badge wh40k-forcefield-badge--status {{#if system.overloaded}}wh40k-forcefield-badge--overloaded{{else if system.activated}}wh40k-forcefield-badge--active{{else}}wh40k-forcefield-badge--inactive{{/if}}" 
                 title="Status">
             <i class="fas {{#if system.overloaded}}fa-exclamation-triangle{{else if system.activated}}fa-shield{{else}}fa-shield-slash{{/if}}"></i>
             {{system.statusLabel}}
           </span>
-          <span class="rt-forcefield-badge rt-forcefield-badge--protection" title="Protection Rating">
+          <span class="wh40k-forcefield-badge wh40k-forcefield-badge--protection" title="Protection Rating">
             <i class="fas fa-percent"></i>
             {{system.protectionRating}}%
           </span>
           {{#if (ne system.craftsmanship "common")}}
-          <span class="rt-forcefield-badge rt-forcefield-badge--craft rt-forcefield-badge--{{system.craftsmanship}}" title="Craftsmanship">
+          <span class="wh40k-forcefield-badge wh40k-forcefield-badge--craft wh40k-forcefield-badge--{{system.craftsmanship}}" title="Craftsmanship">
             <i class="fas fa-hammer"></i>
             {{system.craftsmanshipLabel}}
           </span>
@@ -38,13 +38,13 @@
         </div>
       </div>
       
-      <div class="rt-forcefield-header__equipped">
-        <label class="rt-toggle-equipped" title="Toggle Equipped">
+      <div class="wh40k-forcefield-header__equipped">
+        <label class="wh40k-toggle-equipped" title="Toggle Equipped">
           <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
-          <span class="rt-toggle-equipped__indicator">
+          <span class="wh40k-toggle-equipped__indicator">
             <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
           </span>
-          <span class="rt-toggle-equipped__label">{{#if system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
+          <span class="wh40k-toggle-equipped__label">{{#if system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
         </label>
       </div>
     </header>
@@ -52,34 +52,34 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          STAT BAR: Key force field statistics
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-forcefield-stats">
-      <div class="rt-forcefield-stat rt-forcefield-stat--rating">
-        <div class="rt-forcefield-stat__icon">
+    <div class="wh40k-forcefield-stats">
+      <div class="wh40k-forcefield-stat wh40k-forcefield-stat--rating">
+        <div class="wh40k-forcefield-stat__icon">
           <i class="fas fa-shield-alt"></i>
         </div>
-        <div class="rt-forcefield-stat__content">
-          <span class="rt-forcefield-stat__label">Rating</span>
-          <span class="rt-forcefield-stat__value">{{system.protectionRating}}</span>
+        <div class="wh40k-forcefield-stat__content">
+          <span class="wh40k-forcefield-stat__label">Rating</span>
+          <span class="wh40k-forcefield-stat__value">{{system.protectionRating}}</span>
         </div>
       </div>
       
-      <div class="rt-forcefield-stat rt-forcefield-stat--overload">
-        <div class="rt-forcefield-stat__icon">
+      <div class="wh40k-forcefield-stat wh40k-forcefield-stat--overload">
+        <div class="wh40k-forcefield-stat__icon">
           <i class="fas fa-bolt"></i>
         </div>
-        <div class="rt-forcefield-stat__content">
-          <span class="rt-forcefield-stat__label">Overload</span>
-          <span class="rt-forcefield-stat__value">{{system.overloadThreshold}}+</span>
+        <div class="wh40k-forcefield-stat__content">
+          <span class="wh40k-forcefield-stat__label">Overload</span>
+          <span class="wh40k-forcefield-stat__value">{{system.overloadThreshold}}+</span>
         </div>
       </div>
       
-      <div class="rt-forcefield-stat rt-forcefield-stat--weight">
-        <div class="rt-forcefield-stat__icon">
+      <div class="wh40k-forcefield-stat wh40k-forcefield-stat--weight">
+        <div class="wh40k-forcefield-stat__icon">
           <i class="fas fa-weight-hanging"></i>
         </div>
-        <div class="rt-forcefield-stat__content">
-          <span class="rt-forcefield-stat__label">Weight</span>
-          <span class="rt-forcefield-stat__value">{{system.weight}}kg</span>
+        <div class="wh40k-forcefield-stat__content">
+          <span class="wh40k-forcefield-stat__label">Weight</span>
+          <span class="wh40k-forcefield-stat__value">{{system.weight}}kg</span>
         </div>
       </div>
     </div>
@@ -87,16 +87,16 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-tabs rt-tabs--force-field rt-forcefield-tabs" data-group="primary">
-      <button type="button" class="rt-tab rt-forcefield-tab active" data-tab="stats" data-group="primary">
+    <nav class="wh40k-tabs wh40k-tabs--force-field wh40k-forcefield-tabs" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-forcefield-tab active" data-tab="stats" data-group="primary">
         <i class="fas fa-chart-bar"></i>
         <span>Stats</span>
       </button>
-      <button type="button" class="rt-tab rt-forcefield-tab" data-tab="description" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-forcefield-tab" data-tab="description" data-group="primary">
         <i class="fas fa-scroll"></i>
         <span>Info</span>
       </button>
-      <button type="button" class="rt-tab rt-forcefield-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-forcefield-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
@@ -105,36 +105,36 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="rt-forcefield-content rt-tab-content rt-tab-content--force-field">
+    <section class="wh40k-forcefield-content wh40k-tab-content wh40k-tab-content--force-field">
       
       {{!-- STATS TAB --}}
-      <div class="rt-forcefield-panel tab active" data-tab="stats" data-group="primary">
+      <div class="wh40k-forcefield-panel tab active" data-tab="stats" data-group="primary">
       
       {{!-- Status Controls --}}
-      <div class="rt-forcefield-section">
-        <div class="rt-forcefield-section__header">
+      <div class="wh40k-forcefield-section">
+        <div class="wh40k-forcefield-section__header">
           <i class="fas fa-toggle-on"></i>
           <h3>Status Controls</h3>
         </div>
-        <div class="rt-forcefield-section__body">
-          <div class="rt-forcefield-toggles">
-            <label class="rt-checkbox rt-checkbox--large">
+        <div class="wh40k-forcefield-section__body">
+          <div class="wh40k-forcefield-toggles">
+            <label class="wh40k-checkbox wh40k-checkbox--large">
               <input type="checkbox" name="system.activated" {{checked system.activated}} />
-              <span class="rt-checkbox__indicator">
+              <span class="wh40k-checkbox__indicator">
                 <i class="fas fa-shield"></i>
               </span>
-              <span class="rt-checkbox__label">
+              <span class="wh40k-checkbox__label">
                 <strong>Activated</strong>
                 <small>Force field is currently active and providing protection</small>
               </span>
             </label>
             
-            <label class="rt-checkbox rt-checkbox--large rt-checkbox--danger">
+            <label class="wh40k-checkbox wh40k-checkbox--large wh40k-checkbox--danger">
               <input type="checkbox" name="system.overloaded" {{checked system.overloaded}} />
-              <span class="rt-checkbox__indicator">
+              <span class="wh40k-checkbox__indicator">
                 <i class="fas fa-exclamation-triangle"></i>
               </span>
-              <span class="rt-checkbox__label">
+              <span class="wh40k-checkbox__label">
                 <strong>Overloaded</strong>
                 <small>Force field has overloaded and is temporarily disabled</small>
               </span>
@@ -144,37 +144,37 @@
       </div>
 
       {{!-- Protection Settings --}}
-      <div class="rt-forcefield-section">
-        <div class="rt-forcefield-section__header">
+      <div class="wh40k-forcefield-section">
+        <div class="wh40k-forcefield-section__header">
           <i class="fas fa-shield-halved"></i>
           <h3>Protection Settings</h3>
         </div>
-        <div class="rt-forcefield-section__body">
-          <div class="rt-field-row">
-            <div class="rt-field">
+        <div class="wh40k-forcefield-section__body">
+          <div class="wh40k-field-row">
+            <div class="wh40k-field">
               <label>
                 Protection Rating
                 <small>Roll equal to or under this to be protected</small>
               </label>
-              <div class="rt-field-with-unit">
+              <div class="wh40k-field-with-unit">
                 <input type="number" name="system.protectionRating" value="{{system.protectionRating}}" 
                        data-dtype="Number" min="0" max="100" />
-                <span class="rt-field-unit">%</span>
+                <span class="wh40k-field-unit">%</span>
               </div>
             </div>
-            <div class="rt-field">
+            <div class="wh40k-field">
               <label>
                 Overload Threshold
                 <small>Roll this or higher on hit to overload</small>
               </label>
-              <div class="rt-field-with-unit">
+              <div class="wh40k-field-with-unit">
                 <input type="number" name="system.overloadThreshold" value="{{system.overloadThreshold}}" 
                        data-dtype="Number" min="0" max="100" />
-                <span class="rt-field-unit">+</span>
+                <span class="wh40k-field-unit">+</span>
               </div>
             </div>
           </div>
-          <div class="rt-field">
+          <div class="wh40k-field">
             <label>
               Overload Duration
               <small>How long does the field stay disabled?</small>
@@ -186,26 +186,26 @@
       </div>
 
       {{!-- Physical Properties --}}
-      <div class="rt-forcefield-section">
-        <div class="rt-forcefield-section__header">
+      <div class="wh40k-forcefield-section">
+        <div class="wh40k-forcefield-section__header">
           <i class="fas fa-cog"></i>
           <h3>Physical Properties</h3>
         </div>
-        <div class="rt-forcefield-section__body">
-          <div class="rt-field-row">
-            <div class="rt-field">
+        <div class="wh40k-forcefield-section__body">
+          <div class="wh40k-field-row">
+            <div class="wh40k-field">
               <label>Weight (kg)</label>
               <input type="number" name="system.weight" value="{{system.weight}}" 
                      data-dtype="Number" min="0" step="0.1" />
             </div>
-            <div class="rt-field">
+            <div class="wh40k-field">
               <label>Cost (Thrones)</label>
               <input type="number" name="system.cost.value" value="{{system.cost.value}}" 
                      data-dtype="Number" min="0" />
             </div>
           </div>
-          <div class="rt-field-row">
-            <div class="rt-field">
+          <div class="wh40k-field-row">
+            <div class="wh40k-field">
               <label>Availability</label>
               <select name="system.availability">
                 <option value="ubiquitous" {{#if (eq system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
@@ -221,7 +221,7 @@
                 <option value="unique" {{#if (eq system.availability "unique")}}selected{{/if}}>Unique</option>
               </select>
             </div>
-            <div class="rt-field">
+            <div class="wh40k-field">
               <label>Craftsmanship</label>
               <select name="system.craftsmanship">
                 <option value="poor" {{#if (eq system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
@@ -237,56 +237,56 @@
       </div>
 
       {{!-- DESCRIPTION TAB --}}
-      <div class="rt-forcefield-panel tab" data-tab="description" data-group="primary">
+      <div class="wh40k-forcefield-panel tab" data-tab="description" data-group="primary">
 
       {{!-- Effect --}}
-      <div class="rt-forcefield-section">
-        <div class="rt-forcefield-section__header">
+      <div class="wh40k-forcefield-section">
+        <div class="wh40k-forcefield-section__header">
           <i class="fas fa-bolt"></i>
           <h3>Effect</h3>
         </div>
-        <div class="rt-forcefield-section__body rt-forcefield-section__body--editor">
+        <div class="wh40k-forcefield-section__body wh40k-forcefield-section__body--editor">
           {{#if inEditMode}}
           {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
           {{else}}
-          <div class="rt-description-content">{{{system.effect}}}</div>
+          <div class="wh40k-description-content">{{{system.effect}}}</div>
           {{/if}}
         </div>
       </div>
 
       {{!-- Description --}}
-      <div class="rt-forcefield-section">
-        <div class="rt-forcefield-section__header">
+      <div class="wh40k-forcefield-section">
+        <div class="wh40k-forcefield-section__header">
           <i class="fas fa-book"></i>
           <h3>Description</h3>
         </div>
-        <div class="rt-forcefield-section__body rt-forcefield-section__body--editor">
+        <div class="wh40k-forcefield-section__body wh40k-forcefield-section__body--editor">
           {{#if inEditMode}}
           {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
           {{else}}
-          <div class="rt-description-content">{{{system.description.value}}}</div>
+          <div class="wh40k-description-content">{{{system.description.value}}}</div>
           {{/if}}
         </div>
       </div>
 
       {{!-- Notes --}}
-      <div class="rt-forcefield-section">
-        <div class="rt-forcefield-section__header">
+      <div class="wh40k-forcefield-section">
+        <div class="wh40k-forcefield-section__header">
           <i class="fas fa-sticky-note"></i>
           <h3>Notes</h3>
         </div>
-        <div class="rt-forcefield-section__body">
+        <div class="wh40k-forcefield-section__body">
           <textarea name="system.notes" rows="4" placeholder="GM notes, special rules, etc.">{{system.notes}}</textarea>
         </div>
       </div>
 
       {{!-- Source --}}
-      <div class="rt-forcefield-section">
-        <div class="rt-forcefield-section__header">
+      <div class="wh40k-forcefield-section">
+        <div class="wh40k-forcefield-section__header">
           <i class="fas fa-book-open"></i>
           <h3>Source</h3>
         </div>
-        <div class="rt-forcefield-section__body">
+        <div class="wh40k-forcefield-section__body">
           <input type="text" name="system.source" value="{{system.source}}" 
                  placeholder="Rogue Trader Core Rulebook, pg. 123" />
         </div>
@@ -295,7 +295,7 @@
       </div>
 
       {{!-- EFFECTS TAB --}}
-      <div class="rt-forcefield-panel tab" data-tab="effects" data-group="primary">
+      <div class="wh40k-forcefield-panel tab" data-tab="effects" data-group="primary">
         {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
       </div>
 

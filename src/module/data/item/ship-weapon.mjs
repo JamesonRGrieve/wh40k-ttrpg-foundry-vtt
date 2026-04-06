@@ -203,7 +203,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      */
     get weaponTypeLabel() {
         return game.i18n.localize(
-            `RT.ShipWeapon.${this.weaponType
+            `WH40K.ShipWeapon.${this.weaponType
                 .split('-')
                 .map((s) => s.capitalize())
                 .join('')}`,
@@ -215,7 +215,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get locationLabel() {
-        return game.i18n.localize(`RT.ShipLocation.${this.location.capitalize()}`);
+        return game.i18n.localize(`WH40K.ShipLocation.${this.location.capitalize()}`);
     }
 
     /**

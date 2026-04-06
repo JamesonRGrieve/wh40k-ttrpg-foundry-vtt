@@ -103,7 +103,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      */
     get categoryLabel() {
         if (!this.category) return game.i18n.localize('WH40K.TraitCategory.General');
-        const key = `RT.TraitCategory.${this.category.capitalize()}`;
+        const key = `WH40K.TraitCategory.${this.category.capitalize()}`;
         const localized = game.i18n.localize(key);
         return localized === key ? this.category : localized;
     }

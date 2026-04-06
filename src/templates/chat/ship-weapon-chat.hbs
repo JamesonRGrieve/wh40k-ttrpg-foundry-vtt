@@ -1,53 +1,53 @@
 {{! Rogue Trader Ship Weapon Fire Card - Modern Design }}
-<div class="rt-chat">
-    <div class="rt-item-card rt-item-card--weapon">
+<div class="wh40k-chat">
+    <div class="wh40k-item-card wh40k-item-card--weapon">
         {{! Header }}
-        <div class="rt-item-card__header">
-            <img class="rt-item-card__image" src="{{weapon.img}}" alt="{{weapon.name}}" />
-            <div class="rt-item-card__title-group">
-                <h2 class="rt-item-card__name">{{weapon.name}}</h2>
-                <span class="rt-item-card__type">{{weapon.system.weaponType}} • {{weapon.system.location}}</span>
+        <div class="wh40k-item-card__header">
+            <img class="wh40k-item-card__image" src="{{weapon.img}}" alt="{{weapon.name}}" />
+            <div class="wh40k-item-card__title-group">
+                <h2 class="wh40k-item-card__name">{{weapon.name}}</h2>
+                <span class="wh40k-item-card__type">{{weapon.system.weaponType}} • {{weapon.system.location}}</span>
             </div>
         </div>
 
         {{! Body }}
-        <div class="rt-item-card__body">
-            <div class="rt-item-card__stats">
-                <div class="rt-item-card__stat">
-                    <span class="rt-item-card__stat-name">Strength</span>
-                    <span class="rt-item-card__stat-value">{{weapon.system.strength}}</span>
+        <div class="wh40k-item-card__body">
+            <div class="wh40k-item-card__stats">
+                <div class="wh40k-item-card__stat">
+                    <span class="wh40k-item-card__stat-name">Strength</span>
+                    <span class="wh40k-item-card__stat-value">{{weapon.system.strength}}</span>
                 </div>
-                <div class="rt-item-card__stat">
-                    <span class="rt-item-card__stat-name">Damage</span>
-                    <span class="rt-item-card__stat-value">{{weapon.system.damage}}</span>
+                <div class="wh40k-item-card__stat">
+                    <span class="wh40k-item-card__stat-name">Damage</span>
+                    <span class="wh40k-item-card__stat-value">{{weapon.system.damage}}</span>
                 </div>
-                <div class="rt-item-card__stat">
-                    <span class="rt-item-card__stat-name">Crit Rating</span>
-                    <span class="rt-item-card__stat-value">{{weapon.system.critRating}}</span>
+                <div class="wh40k-item-card__stat">
+                    <span class="wh40k-item-card__stat-name">Crit Rating</span>
+                    <span class="wh40k-item-card__stat-value">{{weapon.system.critRating}}</span>
                 </div>
-                <div class="rt-item-card__stat">
-                    <span class="rt-item-card__stat-name">Range</span>
-                    <span class="rt-item-card__stat-value">{{weapon.system.range}}</span>
+                <div class="wh40k-item-card__stat">
+                    <span class="wh40k-item-card__stat-name">Range</span>
+                    <span class="wh40k-item-card__stat-value">{{weapon.system.range}}</span>
                 </div>
             </div>
 
             {{#if weapon.system.special}}
-                <div class="rt-item-card__field">
-                    <span class="rt-item-card__label">Special</span>
-                    <span class="rt-item-card__value">{{weapon.system.special}}</span>
+                <div class="wh40k-item-card__field">
+                    <span class="wh40k-item-card__label">Special</span>
+                    <span class="wh40k-item-card__value">{{weapon.system.special}}</span>
                 </div>
             {{/if}}
         </div>
 
         {{! Actions }}
-        <div class="rt-item-card__actions">
-            <button class="rt-item-card__btn rt-item-card__btn--attack rt-ship-attack-roll" data-weapon-id="{{weapon._id}}" data-crew-rating="{{crewRating}}">
+        <div class="wh40k-item-card__actions">
+            <button class="wh40k-item-card__btn wh40k-item-card__btn--attack wh40k-ship-attack-roll" data-weapon-id="{{weapon._id}}" data-crew-rating="{{crewRating}}">
                 <span class="material-icons">casino</span>
                 Hit (Crew:
                 {{crewRating}})
             </button>
             <button
-                class="rt-item-card__btn rt-item-card__btn--damage rt-ship-damage-roll"
+                class="wh40k-item-card__btn wh40k-item-card__btn--damage wh40k-ship-damage-roll"
                 data-damage="{{weapon.system.damage}}"
                 data-strength="{{weapon.system.strength}}"
             >

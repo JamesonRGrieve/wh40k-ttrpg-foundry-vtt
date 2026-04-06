@@ -5,10 +5,10 @@
 .wh40k-empty-state {
     text-align: center;
     padding: $wh40k-space-xl;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     font-style: italic;
-    background: var(--rt-panel-bg);
-    border: 1px dashed var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px dashed var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-md;
 }
 
@@ -29,9 +29,9 @@
     }
 
     &--muted {
-        background: var(--rt-input-bg);
-        border-color: var(--rt-border-color-light);
-        color: var(--rt-text-muted);
+        background: var(--wh40k-input-bg);
+        border-color: var(--wh40k-border-color-light);
+        color: var(--wh40k-text-muted);
     }
 
     &--psychic {
@@ -52,20 +52,20 @@
 
 .wh40k-stat-badge {
     &--primary {
-        background: linear-gradient(135deg, var(--rt-gold-dark) 0%, rgba(212, 175, 55, 0.3) 100%);
-        border-color: var(--rt-gold);
+        background: linear-gradient(135deg, var(--wh40k-gold-dark) 0%, rgba(212, 175, 55, 0.3) 100%);
+        border-color: var(--wh40k-gold);
 
         .wh40k-stat-badge__value {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 
     &--gold {
-        background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
-        border-color: var(--rt-gold-light);
+        background: linear-gradient(135deg, var(--wh40k-gold-dark) 0%, var(--wh40k-gold) 100%);
+        border-color: var(--wh40k-gold-light);
 
         .wh40k-stat-badge__value {
-            color: var(--rt-sheet-bg);
+            color: var(--wh40k-sheet-bg);
             font-weight: 700;
         }
     }
@@ -101,10 +101,10 @@
     width: 100%;
     min-height: 100px;
     padding: $wh40k-space-md;
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-input-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-md;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     font-family: $wh40k-font-body;
     font-size: $wh40k-font-size-base;
     line-height: 1.6;
@@ -113,12 +113,12 @@
 
     &:focus {
         outline: none;
-        background: var(--rt-input-bg-focus);
-        border-color: var(--rt-gold);
-        box-shadow: var(--rt-gold-glow);
+        background: var(--wh40k-input-bg-focus);
+        border-color: var(--wh40k-gold);
+        box-shadow: var(--wh40k-gold-glow);
     }
 
     &::placeholder {
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 }

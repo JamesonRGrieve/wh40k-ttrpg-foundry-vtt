@@ -101,7 +101,7 @@ export class GrantsManager {
 
         // Idempotency check - skip if already applied (unless forced)
         if (!options.force && !options.dryRun && this.hasAppliedGrants(actor, sourceKey)) {
-            game.rt?.log(`GrantsManager: Grants from ${item.name} already applied, skipping`);
+            game.wh40k?.log(`GrantsManager: Grants from ${item.name} already applied, skipping`);
             const existingState = this.loadAppliedState(actor, sourceKey);
             result.appliedState = existingState?.grants || {};
             result.skipped = true;
@@ -122,7 +122,7 @@ export class GrantsManager {
             return result;
         }
 
-        game.rt?.log(`GrantsManager: Applying ${grants.length} grants from ${item.name}`);
+        game.wh40k?.log(`GrantsManager: Applying ${grants.length} grants from ${item.name}`);
 
         // Apply each grant
         for (const grantConfig of grants) {
@@ -289,7 +289,7 @@ export class GrantsManager {
 
         // Reverse existing grants if requested
         if (options.reverseExisting) {
-            game.rt?.log(`GrantsManager: Reversing existing grants before batch apply`);
+            game.wh40k?.log(`GrantsManager: Reversing existing grants before batch apply`);
             const reverseResult = await this.reverseAllAppliedGrants(actor);
             result.reversed = reverseResult.reversed;
             result.notifications.push(...reverseResult.notifications);
@@ -360,7 +360,7 @@ export class GrantsManager {
         const safeKey = this._sanitizeKey(sourceKey);
 
         await actor.setFlag('wh40k-rpg', `${this.FLAG_KEY}.${safeKey}`, flagData);
-        game.rt?.log(`GrantsManager: Saved applied state for ${sourceKey}`);
+        game.wh40k?.log(`GrantsManager: Saved applied state for ${sourceKey}`);
     }
 
     /**
@@ -396,10 +396,10 @@ export class GrantsManager {
         if (sourceKey) {
             const safeKey = this._sanitizeKey(sourceKey);
             await actor.unsetFlag('wh40k-rpg', `${this.FLAG_KEY}.${safeKey}`);
-            game.rt?.log(`GrantsManager: Cleared applied state for ${sourceKey}`);
+            game.wh40k?.log(`GrantsManager: Cleared applied state for ${sourceKey}`);
         } else {
             await actor.unsetFlag('wh40k-rpg', this.FLAG_KEY);
-            game.rt?.log(`GrantsManager: Cleared all applied grant state`);
+            game.wh40k?.log(`GrantsManager: Cleared all applied grant state`);
         }
     }
 
@@ -457,7 +457,7 @@ export class GrantsManager {
             return result;
         }
 
-        game.rt?.log(`GrantsManager: Reversing grants from ${appliedData.sourceName || sourceKey}`);
+        game.wh40k?.log(`GrantsManager: Reversing grants from ${appliedData.sourceName || sourceKey}`);
 
         // Reverse each grant in reverse order
         const grantIds = Object.keys(appliedData.grants || {}).reverse();
@@ -509,7 +509,7 @@ export class GrantsManager {
             return result;
         }
 
-        game.rt?.log(`GrantsManager: Reversing all applied grants (${Object.keys(allApplied).length} sources)`);
+        game.wh40k?.log(`GrantsManager: Reversing all applied grants (${Object.keys(allApplied).length} sources)`);
 
         // Reverse each source in reverse order (most recent first)
         const sourceKeys = Object.keys(allApplied).reverse();
@@ -894,7 +894,7 @@ export class GrantsManager {
             // Check if the granted item has its own grants
             const grants = this._extractGrants(item);
             if (grants.length > 0) {
-                game.rt?.log(`GrantsManager: Processing nested grants from ${item.name}`);
+                game.wh40k?.log(`GrantsManager: Processing nested grants from ${item.name}`);
                 await this.applyItemGrants(item, actor, options);
             }
         }

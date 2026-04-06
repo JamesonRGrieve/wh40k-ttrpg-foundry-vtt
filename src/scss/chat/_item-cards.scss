@@ -10,20 +10,20 @@
 
 .wh40k-item-card {
     // Local vars inherit from global theme vars
-    --rt-item-bg: var(--rt-panel-bg-solid);
-    --rt-item-border: var(--rt-bronze);
-    --rt-item-text: var(--rt-text-dark);
-    --rt-item-muted: var(--rt-text-muted);
-    --rt-item-accent: var(--rt-bronze-dark);
+    --wh40k-item-bg: var(--wh40k-panel-bg-solid);
+    --wh40k-item-border: var(--wh40k-bronze);
+    --wh40k-item-text: var(--wh40k-text-dark);
+    --wh40k-item-muted: var(--wh40k-text-muted);
+    --wh40k-item-accent: var(--wh40k-bronze-dark);
 
     position: relative;
-    background: var(--rt-item-bg);
-    border: 2px solid var(--rt-item-border);
+    background: var(--wh40k-item-bg);
+    border: 2px solid var(--wh40k-item-border);
     border-radius: 4px;
     overflow: hidden;
     font-family: 'Roboto', sans-serif;
-    color: var(--rt-item-text);
-    box-shadow: 0 4px 12px var(--rt-shadow-medium);
+    color: var(--wh40k-item-text);
+    box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
     // Parchment texture overlay
     &::before {
@@ -44,18 +44,18 @@
     align-items: center;
     gap: 12px;
     padding: 12px;
-    background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
-    border-bottom: 1px solid var(--rt-border-color);
+    background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
+    border-bottom: 1px solid var(--wh40k-border-color);
 }
 
 .wh40k-item-card__image {
     width: 48px;
     height: 48px;
-    border: 2px solid var(--rt-item-border);
+    border: 2px solid var(--wh40k-item-border);
     border-radius: 4px;
     object-fit: cover;
     flex-shrink: 0;
-    box-shadow: 0 2px 6px var(--rt-shadow-medium);
+    box-shadow: 0 2px 6px var(--wh40k-shadow-medium);
 }
 
 .wh40k-item-card__title-group {
@@ -67,15 +67,15 @@
     font-family: 'Cinzel', serif;
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--rt-item-border);
+    color: var(--wh40k-item-border);
     margin: 0;
     line-height: 1.2;
-    text-shadow: 0 1px 0 var(--rt-text-shadow);
+    text-shadow: 0 1px 0 var(--wh40k-text-shadow);
 }
 
 .wh40k-item-card__type {
     font-size: 0.75rem;
-    color: var(--rt-item-muted);
+    color: var(--wh40k-item-muted);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-top: 2px;
@@ -95,7 +95,7 @@
 
 .wh40k-item-card__divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--rt-border-color) 20%, var(--rt-border-color) 80%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, var(--wh40k-border-color) 20%, var(--wh40k-border-color) 80%, transparent 100%);
     margin: 10px 0;
 
     &--ornate {
@@ -109,7 +109,7 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            color: var(--rt-item-border);
+            color: var(--wh40k-item-border);
             font-size: 8px;
             opacity: 0.6;
         }
@@ -124,10 +124,10 @@
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                var(--rt-border-color) 30%,
+                var(--wh40k-border-color) 30%,
                 transparent 48%,
                 transparent 52%,
-                var(--rt-border-color) 70%,
+                var(--wh40k-border-color) 70%,
                 transparent 100%
             );
         }
@@ -148,7 +148,7 @@
 
 .wh40k-item-card__label {
     font-weight: 600;
-    color: var(--rt-item-border);
+    color: var(--wh40k-item-border);
     flex-shrink: 0;
 
     &::after {
@@ -157,7 +157,7 @@
 }
 
 .wh40k-item-card__value {
-    color: var(--rt-item-text);
+    color: var(--wh40k-item-text);
 }
 
 // ============================================
@@ -170,9 +170,9 @@
     gap: 8px;
     padding: 10px;
     margin: 8px 0;
-    background: var(--rt-panel-bg-translucent);
+    background: var(--wh40k-panel-bg-translucent);
     border-radius: 4px;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-item-card__stat {
@@ -188,7 +188,7 @@
 
 .wh40k-item-card__stat-name {
     font-weight: 600;
-    color: var(--rt-item-border);
+    color: var(--wh40k-item-border);
 
     &::after {
         content: ':';
@@ -196,7 +196,7 @@
 }
 
 .wh40k-item-card__stat-value {
-    color: var(--rt-item-text);
+    color: var(--wh40k-item-text);
 }
 
 // ============================================
@@ -206,27 +206,27 @@
 .wh40k-item-card__section {
     margin: 10px 0;
     padding: 10px;
-    background: var(--rt-panel-bg);
+    background: var(--wh40k-panel-bg);
     border-radius: 4px;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-item-card__section-title {
     font-family: 'Cinzel', serif;
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--rt-item-border);
+    color: var(--wh40k-item-border);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin: 0 0 6px 0;
     padding-bottom: 4px;
-    border-bottom: 1px solid var(--rt-border-color-light);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-item-card__description {
     font-size: 0.9rem;
     line-height: 1.5;
-    color: var(--rt-item-text);
+    color: var(--wh40k-item-text);
 
     p {
         margin: 0 0 8px 0;
@@ -243,14 +243,14 @@
 
 .wh40k-item-card__footer {
     padding: 8px 12px;
-    border-top: 1px solid var(--rt-border-color-light);
+    border-top: 1px solid var(--wh40k-border-color-light);
     text-align: right;
 }
 
 .wh40k-item-card__source {
     font-size: 0.75rem;
     font-style: italic;
-    color: var(--rt-item-muted);
+    color: var(--wh40k-item-muted);
 }
 
 // ============================================
@@ -261,8 +261,8 @@
     display: flex;
     gap: 8px;
     padding: 10px 12px;
-    background: var(--rt-panel-bg-translucent);
-    border-top: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border-top: 1px solid var(--wh40k-border-color-light);
     justify-content: center;
 }
 
@@ -271,10 +271,10 @@
     align-items: center;
     gap: 6px;
     padding: 8px 16px;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-item-border);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-item-border);
     border-radius: 4px;
-    color: var(--rt-item-border);
+    color: var(--wh40k-item-border);
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -287,51 +287,51 @@
     }
 
     &:hover {
-        background: var(--rt-btn-bg-hover);
-        box-shadow: 0 2px 8px var(--rt-shadow-medium);
+        background: var(--wh40k-btn-bg-hover);
+        box-shadow: 0 2px 8px var(--wh40k-shadow-medium);
         transform: translateY(-1px);
     }
 
     &--attack {
-        background: linear-gradient(135deg, var(--rt-red) 0%, var(--rt-red-dark) 100%);
-        border-color: var(--rt-red-dark);
+        background: linear-gradient(135deg, var(--wh40k-red) 0%, var(--wh40k-red-dark) 100%);
+        border-color: var(--wh40k-red-dark);
         color: #fff;
 
         &:hover {
-            background: linear-gradient(135deg, var(--rt-red-bright) 0%, var(--rt-red) 100%);
+            background: linear-gradient(135deg, var(--wh40k-red-bright) 0%, var(--wh40k-red) 100%);
             box-shadow: 0 2px 8px rgba(139, 0, 0, 0.4);
         }
     }
 
     &--damage {
-        background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-dark) 100%);
-        border-color: var(--rt-gold-dark);
+        background: linear-gradient(135deg, var(--wh40k-gold) 0%, var(--wh40k-gold-dark) 100%);
+        border-color: var(--wh40k-gold-dark);
         color: #fff;
 
         &:hover {
-            background: linear-gradient(135deg, var(--rt-gold-bright) 0%, var(--rt-gold) 100%);
+            background: linear-gradient(135deg, var(--wh40k-gold-bright) 0%, var(--wh40k-gold) 100%);
             box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
         }
     }
 
     &--roll {
-        background: linear-gradient(135deg, var(--rt-skills-primary) 0%, var(--rt-skills-secondary) 100%);
-        border-color: var(--rt-skills-primary);
+        background: linear-gradient(135deg, var(--wh40k-skills-primary) 0%, var(--wh40k-skills-secondary) 100%);
+        border-color: var(--wh40k-skills-primary);
         color: #fff;
 
         &:hover {
-            background: linear-gradient(135deg, var(--rt-skills-secondary) 0%, var(--rt-skills-primary) 100%);
+            background: linear-gradient(135deg, var(--wh40k-skills-secondary) 0%, var(--wh40k-skills-primary) 100%);
             box-shadow: 0 2px 8px rgba(42, 122, 154, 0.4);
         }
     }
 
     &--use {
-        background: linear-gradient(135deg, var(--rt-powers-primary) 0%, var(--rt-powers-secondary) 100%);
-        border-color: var(--rt-powers-primary);
+        background: linear-gradient(135deg, var(--wh40k-powers-primary) 0%, var(--wh40k-powers-secondary) 100%);
+        border-color: var(--wh40k-powers-primary);
         color: #fff;
 
         &:hover {
-            background: linear-gradient(135deg, var(--rt-powers-secondary) 0%, var(--rt-powers-primary) 100%);
+            background: linear-gradient(135deg, var(--wh40k-powers-secondary) 0%, var(--wh40k-powers-primary) 100%);
             box-shadow: 0 2px 8px rgba(106, 32, 144, 0.4);
         }
     }
@@ -351,40 +351,40 @@
 // Weapon Card
 .wh40k-item-card--weapon {
     .wh40k-item-card__header {
-        background: linear-gradient(135deg, var(--rt-wounds-bg) 0%, transparent 100%);
-        border-bottom-color: var(--rt-wounds-border);
+        background: linear-gradient(135deg, var(--wh40k-wounds-bg) 0%, transparent 100%);
+        border-bottom-color: var(--wh40k-wounds-border);
     }
 }
 
 // Armour Card
 .wh40k-item-card--armour {
     .wh40k-item-card__header {
-        background: linear-gradient(135deg, var(--rt-skills-bg) 0%, transparent 100%);
-        border-bottom-color: var(--rt-skills-border);
+        background: linear-gradient(135deg, var(--wh40k-skills-bg) 0%, transparent 100%);
+        border-bottom-color: var(--wh40k-skills-border);
     }
 }
 
 // Talent Card
 .wh40k-item-card--talent {
     .wh40k-item-card__header {
-        background: linear-gradient(135deg, var(--rt-talents-bg) 0%, transparent 100%);
-        border-bottom-color: var(--rt-talents-border);
+        background: linear-gradient(135deg, var(--wh40k-talents-bg) 0%, transparent 100%);
+        border-bottom-color: var(--wh40k-talents-border);
     }
 }
 
 // Psychic Power Card
 .wh40k-item-card--power {
     .wh40k-item-card__header {
-        background: linear-gradient(135deg, var(--rt-powers-bg) 0%, transparent 100%);
-        border-bottom-color: var(--rt-powers-border);
+        background: linear-gradient(135deg, var(--wh40k-powers-bg) 0%, transparent 100%);
+        border-bottom-color: var(--wh40k-powers-border);
     }
 }
 
 // Ship Component Card
 .wh40k-item-card--component {
     .wh40k-item-card__header {
-        background: linear-gradient(135deg, var(--rt-equipment-bg) 0%, transparent 100%);
-        border-bottom-color: var(--rt-equipment-border);
+        background: linear-gradient(135deg, var(--wh40k-equipment-bg) 0%, transparent 100%);
+        border-bottom-color: var(--wh40k-equipment-border);
     }
 }
 
@@ -397,7 +397,7 @@
     flex-wrap: wrap;
     gap: 6px;
     padding: 8px 12px;
-    border-top: 1px solid var(--rt-border-color-light);
+    border-top: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-item-card__property-tag {
@@ -407,10 +407,10 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 3px;
-    color: var(--rt-item-border);
+    color: var(--wh40k-item-border);
 }
 
 // ============================================
@@ -427,11 +427,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--rt-accent-overlay), transparent);
+    background: linear-gradient(135deg, var(--wh40k-accent-overlay), transparent);
 
     i {
         font-size: 1.5rem;
-        color: var(--rt-item-border);
+        color: var(--wh40k-item-border);
         opacity: 0.6;
     }
 }
@@ -446,13 +446,13 @@
 
 .wh40k-item-card__actor {
     font-size: 0.7rem;
-    color: var(--rt-item-muted);
+    color: var(--wh40k-item-muted);
     font-weight: 600;
 }
 
 .wh40k-item-card__separator {
     font-size: 0.7rem;
-    color: var(--rt-border-color);
+    color: var(--wh40k-border-color);
 }
 
 // Quick stats row
@@ -468,9 +468,9 @@
     flex-direction: column;
     gap: 2px;
     padding: 6px 10px;
-    background: var(--rt-accent-overlay);
+    background: var(--wh40k-accent-overlay);
     border-radius: $wh40k-radius-sm;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-quick-stat__label {
@@ -478,13 +478,13 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--rt-item-muted);
+    color: var(--wh40k-item-muted);
 }
 
 .wh40k-quick-stat__value {
     font-size: 0.9rem;
     font-weight: 700;
-    color: var(--rt-item-border);
+    color: var(--wh40k-item-border);
     font-family: $wh40k-font-alt;
 }
 
@@ -499,7 +499,7 @@
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.12), rgba($wh40k-accent-gold, 0.06));
     border: 1px solid rgba($wh40k-accent-gold, 0.3);
     border-radius: $wh40k-radius-sm;
-    color: var(--rt-item-border);
+    color: var(--wh40k-item-border);
 
     i {
         font-size: 0.75rem;
@@ -568,7 +568,7 @@
 }
 
 .wh40k-requirements__text {
-    color: var(--rt-text-secondary);
+    color: var(--wh40k-text-secondary);
 }
 
 // Footer with icon
@@ -580,7 +580,7 @@
 
     i {
         font-size: 0.7rem;
-        color: var(--rt-item-muted);
+        color: var(--wh40k-item-muted);
     }
 }
 
@@ -588,12 +588,12 @@
 .wh40k-item-card__btn--sheet {
     flex: 1;
     justify-content: center;
-    background: linear-gradient(135deg, var(--rt-item-border), var(--rt-item-accent));
-    border-color: var(--rt-item-border);
+    background: linear-gradient(135deg, var(--wh40k-item-border), var(--wh40k-item-accent));
+    border-color: var(--wh40k-item-border);
     color: #fff;
 
     &:hover {
-        background: linear-gradient(135deg, var(--rt-item-accent), var(--rt-item-border));
+        background: linear-gradient(135deg, var(--wh40k-item-accent), var(--wh40k-item-border));
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
@@ -604,18 +604,18 @@
 // ============================================
 
 .wh40k-movement-card {
-    --rt-movement-bg: var(--rt-panel-bg-solid);
-    --rt-movement-border: var(--rt-gold);
-    --rt-movement-text: var(--rt-text-dark);
+    --wh40k-movement-bg: var(--wh40k-panel-bg-solid);
+    --wh40k-movement-border: var(--wh40k-gold);
+    --wh40k-movement-text: var(--wh40k-text-dark);
 
     position: relative;
-    background: var(--rt-movement-bg);
-    border: 2px solid var(--rt-movement-border);
+    background: var(--wh40k-movement-bg);
+    border: 2px solid var(--wh40k-movement-border);
     border-radius: 4px;
     overflow: hidden;
     font-family: 'Roboto', sans-serif;
-    color: var(--rt-movement-text);
-    box-shadow: 0 4px 12px var(--rt-shadow-medium);
+    color: var(--wh40k-movement-text);
+    box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
     .wh40k-card-header {
         display: flex;
@@ -623,7 +623,7 @@
         gap: 12px;
         padding: 12px;
         background: linear-gradient(135deg, rgba(138, 122, 106, 0.15) 0%, transparent 100%);
-        border-bottom: 1px solid var(--rt-border-color);
+        border-bottom: 1px solid var(--wh40k-border-color);
     }
 
     .wh40k-card-icon-wrapper {
@@ -652,14 +652,14 @@
         font-family: 'Cinzel', serif;
         font-size: 1.1rem;
         font-weight: 600;
-        color: var(--rt-gold-dark);
+        color: var(--wh40k-gold-dark);
         margin: 0 0 4px 0;
         line-height: 1.2;
     }
 
     .wh40k-card-subtitle {
         font-size: 0.75rem;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
@@ -686,13 +686,13 @@
             font-size: 2rem;
             font-weight: 700;
             line-height: 1;
-            color: var(--rt-gold-dark);
+            color: var(--wh40k-gold-dark);
         }
 
         .wh40k-movement-unit {
             font-size: 0.85rem;
             font-weight: 600;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
             text-transform: lowercase;
         }
     }
@@ -720,7 +720,7 @@
         border-radius: 4px;
         font-size: 0.8rem;
         line-height: 1.5;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
     }
 
     // Movement type specific styling

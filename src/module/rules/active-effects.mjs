@@ -80,7 +80,7 @@ export async function createEffect(actor, effectData, options = {}) {
  * @returns {Promise<ActiveEffect>}
  */
 export async function createCharacteristicEffect(actor, characteristic, value, options = {}) {
-    const charLabel = game.i18n.localize(`RT.Characteristic.${characteristic.capitalize()}`);
+    const charLabel = game.i18n.localize(`WH40K.Characteristic.${characteristic.capitalize()}`);
     const name = options.name ?? `${charLabel} ${value > 0 ? '+' : ''}${value}`;
 
     return await createEffect(actor, {
@@ -108,7 +108,7 @@ export async function createCharacteristicEffect(actor, characteristic, value, o
  * @returns {Promise<ActiveEffect>}
  */
 export async function createSkillEffect(actor, skill, value, options = {}) {
-    const skillLabel = game.i18n.localize(`RT.Skill.${skill}`);
+    const skillLabel = game.i18n.localize(`WH40K.Skill.${skill}`);
     const name = options.name ?? `${skillLabel} ${value > 0 ? '+' : ''}${value}`;
 
     return await createEffect(actor, {
@@ -136,7 +136,7 @@ export async function createSkillEffect(actor, skill, value, options = {}) {
  * @returns {Promise<ActiveEffect>}
  */
 export async function createCombatEffect(actor, type, value, options = {}) {
-    const typeLabel = game.i18n.localize(`RT.Combat.${type.capitalize()}`);
+    const typeLabel = game.i18n.localize(`WH40K.Combat.${type.capitalize()}`);
     const name = options.name ?? `${typeLabel} ${value > 0 ? '+' : ''}${value}`;
 
     return await createEffect(actor, {

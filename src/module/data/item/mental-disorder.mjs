@@ -48,7 +48,7 @@ export default class MentalDisorderData extends ItemDataModel.mixin(DescriptionT
      * @type {string}
      */
     get severityLabel() {
-        return game.i18n.localize(`RT.MentalDisorder.${this.severity.capitalize()}`);
+        return game.i18n.localize(`WH40K.MentalDisorder.${this.severity.capitalize()}`);
     }
 
     /* -------------------------------------------- */

@@ -1,10 +1,10 @@
 /**
- * BasicRollRT - Extended Roll class for WH40K RPG VTT
+ * BasicRollWH40K - Extended Roll class for WH40K RPG VTT
  * Implements three-stage roll workflow: Configure → Evaluate → Post
  * Similar to dnd5e's modern roll architecture
  * @extends Roll
  */
-export default class BasicRollRT extends Roll {
+export default class BasicRollWH40K extends Roll {
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -106,7 +106,7 @@ export default class BasicRollRT extends Roll {
     /**
      * Stage 2: Construct and evaluate the roll
      * @param {Object} config - Final configuration
-     * @returns {Promise<BasicRollRT>} The evaluated roll
+     * @returns {Promise<BasicRollWH40K>} The evaluated roll
      */
     static async buildEvaluate(config) {
         // Construct roll formula
@@ -133,7 +133,7 @@ export default class BasicRollRT extends Roll {
 
     /**
      * Stage 3: Post the roll to chat
-     * @param {BasicRollRT} roll - The evaluated roll
+     * @param {BasicRollWH40K} roll - The evaluated roll
      * @returns {Promise<ChatMessage>} The created chat message
      */
     static async buildPost(roll) {
@@ -157,7 +157,7 @@ export default class BasicRollRT extends Roll {
 
     /**
      * Prepare chat message data for the roll
-     * @param {BasicRollRT} roll - The evaluated roll
+     * @param {BasicRollWH40K} roll - The evaluated roll
      * @param {Object} config - Roll configuration
      * @returns {Promise<Object>} Chat message data
      * @protected
@@ -188,7 +188,7 @@ export default class BasicRollRT extends Roll {
 
     /**
      * Prepare template data for rendering the chat message
-     * @param {BasicRollRT} roll - The evaluated roll
+     * @param {BasicRollWH40K} roll - The evaluated roll
      * @param {Object} config - Roll configuration
      * @returns {Promise<Object>} Template data
      * @protected
@@ -242,7 +242,7 @@ export default class BasicRollRT extends Roll {
     /**
      * Roll without posting to chat
      * @param {Object} config - Roll configuration
-     * @returns {Promise<BasicRollRT>} The evaluated roll
+     * @returns {Promise<BasicRollWH40K>} The evaluated roll
      */
     static async evaluate(config = {}) {
         const configured = await this.buildConfigure(config);
@@ -268,7 +268,7 @@ export default class BasicRollRT extends Roll {
     /**
      * Recreate a roll from serialized data
      * @param {Object} data - Serialized roll data
-     * @returns {BasicRollRT}
+     * @returns {BasicRollWH40K}
      * @override
      */
     static fromData(data) {

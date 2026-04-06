@@ -1,24 +1,24 @@
 import { SYSTEM_ID } from '../constants.mjs';
 
 /**
- * Extend the base TokenDocument class to implement RT movement actions.
+ * Extend the base TokenDocument class to implement WH40K movement actions.
  * Integrates character movement types (Half/Full/Charge/Run) with
  * Foundry V13's CONFIG.Token.movement.actions system.
  */
-export class TokenDocumentRT extends TokenDocument {
+export class TokenDocumentWH40K extends TokenDocument {
     /* -------------------------------------------- */
     /*  Movement                                    */
     /* -------------------------------------------- */
 
     /**
-     * Register RT movement actions in CONFIG.Token.movement.actions.
+     * Register WH40K movement actions in CONFIG.Token.movement.actions.
      * Creates new action entries for Half/Full/Charge/Run and configures
      * their cost functions and animation options.
      * Called during system init after CONFIG.wh40k is set.
      */
     static registerMovementActions() {
         for (const [type, config] of Object.entries(CONFIG.wh40k.movementTypes)) {
-            // Create the action entry if it doesn't already exist (RT-specific actions)
+            // Create the action entry if it doesn't already exist (WH40K-specific actions)
             CONFIG.Token.movement.actions[type] ??= {
                 label: config.label,
                 icon: config.icon,
@@ -51,7 +51,7 @@ export class TokenDocumentRT extends TokenDocument {
      * Return the movement action cost function for a specific movement type.
      * The cost function tracks distance against the actor's movement budget.
      * @param {string} type - Movement type key (half, full, charge, run)
-     * @param {TokenDocumentRT} token - The token document
+     * @param {TokenDocumentWH40K} token - The token document
      * @param {object} [options] - Additional options
      * @returns {Function} Cost function (cost, from, to, distance, segment) => number
      */
@@ -110,7 +110,7 @@ export class TokenDocumentRT extends TokenDocument {
             btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 this.#setMovementAction(token, type);
-                container.querySelectorAll('.rt-token-movement__btn').forEach((b) => b.classList.remove('active'));
+                container.querySelectorAll('.wh40k-token-movement__btn').forEach((b) => b.classList.remove('active'));
                 btn.classList.add('active');
             });
 

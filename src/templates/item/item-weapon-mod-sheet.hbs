@@ -1,12 +1,12 @@
-<form class="rt-item-sheet rt-item-sheet--weapon-mod" autocomplete="off">
+<form class="wh40k-item-sheet wh40k-item-sheet--weapon-mod" autocomplete="off">
     {{! Header }}
-    <header class="rt-item-sheet__header">
-        <div class="rt-item-sheet__portrait">
-            <img class="rt-item-sheet__portrait-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+    <header class="wh40k-item-sheet__header">
+        <div class="wh40k-item-sheet__portrait">
+            <img class="wh40k-item-sheet__portrait-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
         </div>
-        <div class="rt-item-sheet__header-info">
-            <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Modification Name" />
-            <div class="rt-item-sheet__type-badge">
+        <div class="wh40k-item-sheet__header-info">
+            <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Modification Name" />
+            <div class="wh40k-item-sheet__type-badge">
                 <span class="material-icons">build</span>
                 <span>Weapon Modification</span>
             </div>
@@ -14,54 +14,54 @@
     </header>
 
     {{! Properties Panel }}
-    <section class="rt-item-sheet__panel">
-        <h2 class="rt-item-sheet__panel-title">
+    <section class="wh40k-item-sheet__panel">
+        <h2 class="wh40k-item-sheet__panel-title">
             <span class="material-icons">tune</span>
             Properties
         </h2>
-        <div class="rt-item-sheet__grid rt-item-sheet__grid--3col">
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Weight</label>
-                <input class="rt-item-sheet__input" name="system.weight" type="number" data-dtype="Number" value="{{item.system.weight}}" />
+        <div class="wh40k-item-sheet__grid wh40k-item-sheet__grid--3col">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Weight</label>
+                <input class="wh40k-item-sheet__input" name="system.weight" type="number" data-dtype="Number" value="{{item.system.weight}}" />
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Availability</label>
-                <select class="rt-item-sheet__select" name="system.availability">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Availability</label>
+                <select class="wh40k-item-sheet__select" name="system.availability">
                     {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
                 </select>
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Craftsmanship</label>
-                <select class="rt-item-sheet__select" name="system.craftsmanship">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Craftsmanship</label>
+                <select class="wh40k-item-sheet__select" name="system.craftsmanship">
                     {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
                 </select>
             </div>
         </div>
-        <div class="rt-item-sheet__grid rt-item-sheet__grid--2col">
-            <div class="rt-item-sheet__field rt-item-sheet__field--checkbox">
+        <div class="wh40k-item-sheet__grid wh40k-item-sheet__grid--2col">
+            <div class="wh40k-item-sheet__field wh40k-item-sheet__field--checkbox">
                 <input type="checkbox" name="system.equipped" data-dtype="Boolean" {{checked item.system.equipped}} />
-                <label class="rt-item-sheet__label">Installed</label>
+                <label class="wh40k-item-sheet__label">Installed</label>
             </div>
-            <div class="rt-item-sheet__field rt-item-sheet__field--checkbox">
+            <div class="wh40k-item-sheet__field wh40k-item-sheet__field--checkbox">
                 <input type="checkbox" name="system.backpack.inBackpack" data-dtype="Boolean" {{checked item.system.backpack.inBackpack}} />
-                <label class="rt-item-sheet__label">In Backpack</label>
+                <label class="wh40k-item-sheet__label">In Backpack</label>
             </div>
         </div>
-        <div class="rt-item-sheet__field">
-            <label class="rt-item-sheet__label">Source</label>
-            <input class="rt-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" placeholder="Rulebook reference" />
+        <div class="wh40k-item-sheet__field">
+            <label class="wh40k-item-sheet__label">Source</label>
+            <input class="wh40k-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" placeholder="Rulebook reference" />
         </div>
     </section>
 
     {{! Description Panel }}
-    <section class="rt-item-sheet__panel rt-item-sheet__panel--description">
-        <h2 class="rt-item-sheet__panel-title">
+    <section class="wh40k-item-sheet__panel wh40k-item-sheet__panel--description">
+        <h2 class="wh40k-item-sheet__panel-title">
             <span class="material-icons">description</span>
             Description
         </h2>
-        <div class="rt-item-sheet__field rt-item-sheet__field--full">
+        <div class="wh40k-item-sheet__field wh40k-item-sheet__field--full">
             <textarea
-                class="rt-item-sheet__textarea"
+                class="wh40k-item-sheet__textarea"
                 name="system.description"
                 placeholder="Describe the modification's effects..."
             >{{item.system.description}}</textarea>

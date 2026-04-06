@@ -1,6 +1,6 @@
 {{!-- Talent-Base Item Sheet Template --}}
 {{!-- Base template for items that provide modifiers (talents, traits, conditions, injuries) --}}
-<div class="rt-item-sheet rt-talent-sheet rt-{{item.type}}-sheet">
+<div class="wh40k-item-sheet wh40k-talent-sheet wh40k-{{item.type}}-sheet">
   <form autocomplete="off">
     
     {{!-- HEADER: Image + Name + Type Badge --}}
@@ -12,26 +12,26 @@
     {{/if}}
     
     {{!-- TAB NAVIGATION --}}
-    <nav class="rt-item-tabs" data-group="primary">
-      <button type="button" class="rt-item-tab active" data-tab="details" data-group="primary">
+    <nav class="wh40k-item-tabs" data-group="primary">
+      <button type="button" class="wh40k-item-tab active" data-tab="details" data-group="primary">
         <i class="fas fa-info-circle"></i>
         <span>Details</span>
       </button>
-      <button type="button" class="rt-item-tab" data-tab="modifiers" data-group="primary">
+      <button type="button" class="wh40k-item-tab" data-tab="modifiers" data-group="primary">
         <i class="fas fa-sliders-h"></i>
         <span>Modifiers</span>
       </button>
-      <button type="button" class="rt-item-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="wh40k-item-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
     </nav>
     
     {{!-- TAB CONTENT --}}
-    <section class="rt-item-content">
+    <section class="wh40k-item-content">
       
       {{!-- DETAILS TAB --}}
-      <div class="rt-item-panel active" data-tab="details" data-group="primary">
+      <div class="wh40k-item-panel active" data-tab="details" data-group="primary">
         {{!-- Type-specific content injected here via partial --}}
         {{> @partial-block}}
         
@@ -43,12 +43,12 @@
       </div>
       
       {{!-- MODIFIERS TAB --}}
-      <div class="rt-item-panel" data-tab="modifiers" data-group="primary">
+      <div class="wh40k-item-panel" data-tab="modifiers" data-group="primary">
         {{> systems/wh40k-rpg/templates/item/panel/modifiers-panel.hbs}}
       </div>
       
       {{!-- EFFECTS TAB --}}
-      <div class="rt-item-panel" data-tab="effects" data-group="primary">
+      <div class="wh40k-item-panel" data-tab="effects" data-group="primary">
         {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
       </div>
       

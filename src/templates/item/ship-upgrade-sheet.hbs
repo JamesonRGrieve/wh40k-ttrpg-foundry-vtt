@@ -1,14 +1,14 @@
-<div class="rt-item-sheet ship-upgrade">
+<div class="wh40k-item-sheet ship-upgrade">
     <form autocomplete="off">
         <!-- Item Header -->
-        <header class="rt-item-header">
-            <div class="rt-item-image" data-action="editImage">
+        <header class="wh40k-item-header">
+            <div class="wh40k-item-image" data-action="editImage">
                 <img src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" />
             </div>
             
-            <div class="rt-item-title">
-                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Upgrade Name" />
-                <div class="rt-item-title__type">
+            <div class="wh40k-item-title">
+                <input type="text" class="wh40k-item-title__name" name="name" value="{{item.name}}" placeholder="Upgrade Name" />
+                <div class="wh40k-item-title__type">
                     <i class="fas fa-level-up-alt"></i>
                     <span>{{localize "WH40K.ShipUpgrade"}}</span>
                 </div>
@@ -16,25 +16,25 @@
         </header>
 
         <!-- Tab Navigation -->
-        <nav class="rt-tabs" data-group="primary">
-            <a class="rt-tab active" data-tab="details" data-group="primary">
+        <nav class="wh40k-tabs" data-group="primary">
+            <a class="wh40k-tab active" data-tab="details" data-group="primary">
                 <i class="fas fa-info-circle"></i> {{localize "WH40K.Item.Tabs.Details"}}
             </a>
-            <a class="rt-tab" data-tab="effects" data-group="primary">
+            <a class="wh40k-tab" data-tab="effects" data-group="primary">
                 <i class="fas fa-magic"></i> {{localize "WH40K.Item.Tabs.Effects"}}
             </a>
         </nav>
 
         <!-- Tab Content -->
-        <section class="rt-tab-content">
+        <section class="wh40k-tab-content">
             <!-- Details Tab -->
             <div class="tab active" data-tab="details" data-group="primary">
                 <!-- Basic Properties -->
-                <div class="rt-panel">
-                    <div class="rt-panel__header">
+                <div class="wh40k-panel">
+                    <div class="wh40k-panel__header">
                         <h3><i class="fas fa-level-up-alt"></i> Upgrade Properties</h3>
                     </div>
-                    <div class="rt-panel__content">
+                    <div class="wh40k-panel__content">
                         <div class="form-group">
                             <label>{{localize "WH40K.Availability"}}</label>
                             <select name="system.availability">
@@ -45,11 +45,11 @@
                 </div>
 
                 <!-- Resource Requirements -->
-                <div class="rt-panel">
-                    <div class="rt-panel__header">
+                <div class="wh40k-panel">
+                    <div class="wh40k-panel__header">
                         <h3><i class="fas fa-battery-half"></i> Resource Requirements</h3>
                     </div>
-                    <div class="rt-panel__content">
+                    <div class="wh40k-panel__content">
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Power</label>
@@ -69,11 +69,11 @@
                 </div>
 
                 <!-- Stat Modifiers -->
-                <div class="rt-panel">
-                    <div class="rt-panel__header">
+                <div class="wh40k-panel">
+                    <div class="wh40k-panel__header">
                         <h3><i class="fas fa-chart-line"></i> Stat Modifiers</h3>
                     </div>
-                    <div class="rt-panel__content">
+                    <div class="wh40k-panel__content">
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Speed</label>
@@ -122,39 +122,39 @@
                 </div>
 
                 <!-- Effect -->
-                <div class="rt-panel">
-                    <div class="rt-panel__header">
+                <div class="wh40k-panel">
+                    <div class="wh40k-panel__header">
                         <h3><i class="fas fa-magic"></i> Effect</h3>
                     </div>
-                    <div class="rt-panel__content">
+                    <div class="wh40k-panel__content">
                         {{#if inEditMode}}
                           {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
                         {{else}}
-                          <div class="rt-description-content">{{{system.effect}}}</div>
+                          <div class="wh40k-description-content">{{{system.effect}}}</div>
                         {{/if}}
                     </div>
                 </div>
 
                 <!-- Notes -->
-                <div class="rt-panel">
-                    <div class="rt-panel__header">
+                <div class="wh40k-panel">
+                    <div class="wh40k-panel__header">
                         <h3><i class="fas fa-sticky-note"></i> Notes</h3>
                     </div>
-                    <div class="rt-panel__content">
+                    <div class="wh40k-panel__content">
                         <textarea name="system.notes" rows="3">{{system.notes}}</textarea>
                     </div>
                 </div>
                 
                 <!-- Description -->
-                <div class="rt-panel">
-                    <div class="rt-panel__header">
+                <div class="wh40k-panel">
+                    <div class="wh40k-panel__header">
                         <h3><i class="fas fa-scroll"></i> Description</h3>
                     </div>
-                    <div class="rt-panel__content">
+                    <div class="wh40k-panel__content">
                         {{#if inEditMode}}
                           {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
                         {{else}}
-                          <div class="rt-description-content">{{{system.description.value}}}</div>
+                          <div class="wh40k-description-content">{{{system.description.value}}}</div>
                         {{/if}}
                     </div>
                 </div>

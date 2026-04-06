@@ -9,48 +9,48 @@
 
 :root {
     // Translucent backgrounds
-    --rt-item-panel-bg: rgba(20, 20, 30, 0.85);
-    --rt-item-panel-border: rgba(100, 100, 120, 0.3);
-    --rt-item-panel-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --wh40k-item-panel-bg: rgba(20, 20, 30, 0.85);
+    --wh40k-item-panel-border: rgba(100, 100, 120, 0.3);
+    --wh40k-item-panel-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
     // Stat colors
-    --rt-stat-positive: #4ade80;
-    --rt-stat-negative: #f87171;
-    --rt-stat-neutral: #94a3b8;
+    --wh40k-stat-positive: #4ade80;
+    --wh40k-stat-negative: #f87171;
+    --wh40k-stat-neutral: #94a3b8;
 
     // Item type accent colors
-    --rt-weapon-accent: #ef4444;
-    --rt-armour-accent: #3b82f6;
-    --rt-gear-accent: #f59e0b;
-    --rt-talent-accent: #a855f7;
-    --rt-trait-accent: #ec4899;
-    --rt-condition-beneficial: #22c55e;
-    --rt-condition-harmful: #ef4444;
-    --rt-condition-neutral: #94a3b8;
-    --rt-skill-accent: #06b6d4;
-    --rt-cybernetic-accent: #64748b;
-    --rt-force-field-accent: #8b5cf6;
+    --wh40k-weapon-accent: #ef4444;
+    --wh40k-armour-accent: #3b82f6;
+    --wh40k-gear-accent: #f59e0b;
+    --wh40k-talent-accent: #a855f7;
+    --wh40k-trait-accent: #ec4899;
+    --wh40k-condition-beneficial: #22c55e;
+    --wh40k-condition-harmful: #ef4444;
+    --wh40k-condition-neutral: #94a3b8;
+    --wh40k-skill-accent: #06b6d4;
+    --wh40k-cybernetic-accent: #64748b;
+    --wh40k-force-field-accent: #8b5cf6;
 
     // Spacing
-    --rt-item-spacing-xs: 4px;
-    --rt-item-spacing-sm: 8px;
-    --rt-item-spacing-md: 12px;
-    --rt-item-spacing-lg: 16px;
-    --rt-item-spacing-xl: 24px;
+    --wh40k-item-spacing-xs: 4px;
+    --wh40k-item-spacing-sm: 8px;
+    --wh40k-item-spacing-md: 12px;
+    --wh40k-item-spacing-lg: 16px;
+    --wh40k-item-spacing-xl: 24px;
 
     // Border radius
-    --rt-item-radius-sm: 4px;
-    --rt-item-radius-md: 6px;
-    --rt-item-radius-lg: 8px;
-    --rt-item-radius-pill: 9999px;
+    --wh40k-item-radius-sm: 4px;
+    --wh40k-item-radius-md: 6px;
+    --wh40k-item-radius-lg: 8px;
+    --wh40k-item-radius-pill: 9999px;
 
     // Typography
-    --rt-item-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    --rt-item-font-size-xs: 0.75rem;
-    --rt-item-font-size-sm: 0.875rem;
-    --rt-item-font-size-base: 1rem;
-    --rt-item-font-size-lg: 1.125rem;
-    --rt-item-font-size-xl: 1.25rem;
+    --wh40k-item-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --wh40k-item-font-size-xs: 0.75rem;
+    --wh40k-item-font-size-sm: 0.875rem;
+    --wh40k-item-font-size-base: 1rem;
+    --wh40k-item-font-size-lg: 1.125rem;
+    --wh40k-item-font-size-xl: 1.25rem;
 }
 
 // ────────────────────────────────────────────
@@ -58,8 +58,8 @@
 // ────────────────────────────────────────────
 
 .wh40k-item-sheet {
-    font-family: var(--rt-item-font-family);
-    font-size: var(--rt-item-font-size-base);
+    font-family: var(--wh40k-item-font-family);
+    font-size: var(--wh40k-item-font-size-base);
     color: var(--color-text-primary, #e2e8f0);
     background: var(--color-background-primary, #1e293b);
 
@@ -117,15 +117,15 @@
 .wh40k-armour-section,
 .wh40k-weapon-section,
 .wh40k-talent-section {
-    margin-bottom: var(--rt-item-spacing-md);
+    margin-bottom: var(--wh40k-item-spacing-md);
 
     &__header {
         display: flex;
         align-items: center;
-        gap: var(--rt-item-spacing-sm);
-        padding: var(--rt-item-spacing-sm) var(--rt-item-spacing-md);
-        background: var(--rt-item-panel-bg);
-        border-bottom: 1px solid var(--rt-item-panel-border);
+        gap: var(--wh40k-item-spacing-sm);
+        padding: var(--wh40k-item-spacing-sm) var(--wh40k-item-spacing-md);
+        background: var(--wh40k-item-panel-bg);
+        border-bottom: 1px solid var(--wh40k-item-panel-border);
 
         i {
             opacity: 0.7;
@@ -133,7 +133,7 @@
 
         h3 {
             margin: 0;
-            font-size: var(--rt-item-font-size-base);
+            font-size: var(--wh40k-item-font-size-base);
             font-weight: 600;
             flex: 1;
         }
@@ -145,17 +145,17 @@
         justify-content: center;
         padding: 2px 8px;
         background: rgba(100, 100, 120, 0.3);
-        border-radius: var(--rt-item-radius-pill);
-        font-size: var(--rt-item-font-size-xs);
+        border-radius: var(--wh40k-item-radius-pill);
+        font-size: var(--wh40k-item-font-size-xs);
         font-weight: 600;
     }
 
     &__body {
-        padding: var(--rt-item-spacing-md);
+        padding: var(--wh40k-item-spacing-md);
         background: rgba(0, 0, 0, 0.1);
 
         &--editor {
-            padding: var(--rt-item-spacing-sm);
+            padding: var(--wh40k-item-spacing-sm);
         }
     }
 }
@@ -166,7 +166,7 @@
 
 .wh40k-field-grid {
     display: grid;
-    gap: var(--rt-item-spacing-md);
+    gap: var(--wh40k-item-spacing-md);
 
     &--2col {
         grid-template-columns: repeat(2, 1fr);
@@ -193,10 +193,10 @@
 .wh40k-field {
     display: flex;
     flex-direction: column;
-    gap: var(--rt-item-spacing-xs);
+    gap: var(--wh40k-item-spacing-xs);
 
     label {
-        font-size: var(--rt-item-font-size-sm);
+        font-size: var(--wh40k-item-font-size-sm);
         font-weight: 500;
         color: var(--color-text-secondary, #cbd5e1);
 
@@ -212,11 +212,11 @@
     textarea {
         padding: 6px 10px;
         background: rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--rt-item-panel-border);
-        border-radius: var(--rt-item-radius-sm);
+        border: 1px solid var(--wh40k-item-panel-border);
+        border-radius: var(--wh40k-item-radius-sm);
         color: var(--color-text-primary, #e2e8f0);
         font-family: inherit;
-        font-size: var(--rt-item-font-size-sm);
+        font-size: var(--wh40k-item-font-size-sm);
         transition: border-color 0.2s, background 0.2s;
 
         &:focus {

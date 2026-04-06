@@ -5,5 +5,5 @@ export { WH40KNPCV2 } from './npc-v2.mjs';
 export { WH40KVehicle } from './vehicle.mjs';
 export { WH40KStarship } from './starship.mjs';
 export { WH40KActiveEffect } from './active-effect.mjs';
-export { ChatMessageRT } from './chat-message.mjs';
-export { TokenDocumentRT } from './token.mjs';
+export { ChatMessageWH40K } from './chat-message.mjs';
+export { TokenDocumentWH40K } from './token.mjs';

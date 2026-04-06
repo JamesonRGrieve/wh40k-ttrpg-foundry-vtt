@@ -75,7 +75,7 @@ export class WH40KVehicle extends WH40KBaseActor {
             return;
         }
 
-        game.rt.log(`Vehicle ${this.name} is rolling ${item.name} for character ${character.name}`);
+        game.wh40k.log(`Vehicle ${this.name} is rolling ${item.name} for character ${character.name}`);
         switch (item.type) {
             case 'weapon':
                 await DHTargetedActionManager.performWeaponAttack(character, null, item);

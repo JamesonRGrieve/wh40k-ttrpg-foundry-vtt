@@ -44,10 +44,10 @@
     .wh40k-vehicle-v2-header {
         display: grid;
         grid-template-columns: auto 1fr auto;
-        gap: var(--rt-space-md, 1rem);
-        padding: var(--rt-space-md, 1rem);
-        background: var(--rt-panel-bg, rgba(30, 30, 30, 0.9));
-        border-bottom: 2px solid var(--rt-gold, #d4af37);
+        gap: var(--wh40k-space-md, 1rem);
+        padding: var(--wh40k-space-md, 1rem);
+        background: var(--wh40k-panel-bg, rgba(30, 30, 30, 0.9));
+        border-bottom: 2px solid var(--wh40k-gold, #d4af37);
 
         .wh40k-header__info {
             display: contents;
@@ -58,7 +58,7 @@
     .wh40k-portrait-container {
         width: 100px;
         height: 100px;
-        border: 2px solid var(--rt-border-color, #444);
+        border: 2px solid var(--wh40k-border-color, #444);
         border-radius: 4px;
         overflow: hidden;
 
@@ -79,7 +79,7 @@
     .wh40k-vehicle-v2-identity {
         display: flex;
         flex-direction: column;
-        gap: var(--rt-space-sm, 0.5rem);
+        gap: var(--wh40k-space-sm, 0.5rem);
     }
 
     .wh40k-vehicle-v2-name-input {
@@ -88,20 +88,20 @@
         background: transparent;
         border: none;
         border-bottom: 1px solid transparent;
-        color: var(--rt-text-dark, #f0f0f0);
+        color: var(--wh40k-text-dark, #f0f0f0);
         padding: 0.25rem;
         width: 100%;
 
         &:hover,
         &:focus {
-            border-bottom-color: var(--rt-gold, #d4af37);
+            border-bottom-color: var(--wh40k-gold, #d4af37);
             outline: none;
         }
     }
 
     .wh40k-vehicle-v2-meta-row {
         display: flex;
-        gap: var(--rt-space-md, 1rem);
+        gap: var(--wh40k-space-md, 1rem);
         flex-wrap: wrap;
     }
 
@@ -113,21 +113,21 @@
         label {
             font-size: 0.7rem;
             text-transform: uppercase;
-            color: var(--rt-text-muted, #888);
+            color: var(--wh40k-text-muted, #888);
         }
 
         input,
         select,
         textarea {
-            background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-            border: 1px solid var(--rt-border-color, #444);
-            color: var(--rt-text-dark, #f0f0f0);
+            background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+            border: 1px solid var(--wh40k-border-color, #444);
+            color: var(--wh40k-text-dark, #f0f0f0);
             padding: 0.25rem 0.5rem;
             border-radius: 3px;
             font-size: 0.85rem;
 
             &:focus {
-                border-color: var(--rt-gold, #d4af37);
+                border-color: var(--wh40k-gold, #d4af37);
                 outline: none;
             }
         }
@@ -142,7 +142,7 @@
     .wh40k-vehicle-v2-quick-stats {
         display: flex;
         flex-direction: column;
-        gap: var(--rt-space-sm, 0.5rem);
+        gap: var(--wh40k-space-sm, 0.5rem);
     }
 
     .wh40k-vehicle-v2-stat-box {
@@ -150,8 +150,8 @@
         flex-direction: column;
         align-items: center;
         padding: 0.5rem;
-        background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-        border: 1px solid var(--rt-border-color, #444);
+        background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+        border: 1px solid var(--wh40k-border-color, #444);
         border-radius: 4px;
         min-width: 70px;
     }
@@ -159,7 +159,7 @@
     .wh40k-vehicle-v2-stat-label {
         font-size: 0.65rem;
         text-transform: uppercase;
-        color: var(--rt-text-muted, #888);
+        color: var(--wh40k-text-muted, #888);
     }
 
     .wh40k-vehicle-v2-stat-input {
@@ -169,10 +169,10 @@
         font-weight: bold;
         background: transparent;
         border: none;
-        color: var(--rt-text-dark, #f0f0f0);
+        color: var(--wh40k-text-dark, #f0f0f0);
 
         &:focus {
-            outline: 1px solid var(--rt-gold, #d4af37);
+            outline: 1px solid var(--wh40k-gold, #d4af37);
         }
     }
 
@@ -184,29 +184,29 @@
 
     .wh40k-vehicle-v2-stat-separator {
         font-size: 1rem;
-        color: var(--rt-text-muted, #888);
+        color: var(--wh40k-text-muted, #888);
     }
 
     // === PANELS ===
     .wh40k-vehicle-v2-panel {
-        background: var(--rt-panel-bg, rgba(40, 35, 30, 0.7));
-        border: 1px solid var(--rt-border-color, #444);
+        background: var(--wh40k-panel-bg, rgba(40, 35, 30, 0.7));
+        border: 1px solid var(--wh40k-border-color, #444);
         border-radius: 6px;
-        padding: var(--rt-space-md, 1rem);
-        margin-bottom: var(--rt-space-md, 1rem);
+        padding: var(--wh40k-space-md, 1rem);
+        margin-bottom: var(--wh40k-space-md, 1rem);
     }
 
     .wh40k-vehicle-v2-panel-title {
         font-size: 1.1rem;
         font-weight: bold;
-        color: var(--rt-gold, #d4af37);
-        margin-bottom: var(--rt-space-sm, 0.5rem);
+        color: var(--wh40k-gold, #d4af37);
+        margin-bottom: var(--wh40k-space-sm, 0.5rem);
         display: flex;
         align-items: center;
         gap: 0.5rem;
 
         i {
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
         }
     }
 
@@ -215,27 +215,27 @@
         display: flex;
         gap: 0.25rem;
         padding: 0.5rem;
-        background: var(--rt-panel-bg, rgba(40, 35, 30, 0.7));
-        border-bottom: 1px solid var(--rt-border-color, #444);
+        background: var(--wh40k-panel-bg, rgba(40, 35, 30, 0.7));
+        border-bottom: 1px solid var(--wh40k-border-color, #444);
 
         .wh40k-tab-btn {
             padding: 0.5rem 1rem;
             background: transparent;
             border: 1px solid transparent;
-            color: var(--rt-text-muted, #888);
+            color: var(--wh40k-text-muted, #888);
             cursor: pointer;
             transition: all 0.2s;
             text-decoration: none;
 
             &:hover {
-                color: var(--rt-gold, #d4af37);
-                border-color: var(--rt-border-color, #444);
+                color: var(--wh40k-gold, #d4af37);
+                border-color: var(--wh40k-border-color, #444);
             }
 
             &.active {
-                color: var(--rt-text-dark, #f0f0f0);
-                background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-                border-color: var(--rt-gold, #d4af37);
+                color: var(--wh40k-text-dark, #f0f0f0);
+                background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+                border-color: var(--wh40k-gold, #d4af37);
             }
         }
     }
@@ -253,7 +253,7 @@
     .wh40k-vehicle-v2-stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: var(--rt-space-md, 1rem);
+        gap: var(--wh40k-space-md, 1rem);
     }
 
     .wh40k-vehicle-v2-stat-item {
@@ -263,19 +263,19 @@
 
         label {
             font-size: 0.8rem;
-            color: var(--rt-text-muted, #888);
+            color: var(--wh40k-text-muted, #888);
             text-transform: uppercase;
         }
 
         input {
-            background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-            border: 1px solid var(--rt-border-color, #444);
-            color: var(--rt-text-dark, #f0f0f0);
+            background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+            border: 1px solid var(--wh40k-border-color, #444);
+            color: var(--wh40k-text-dark, #f0f0f0);
             padding: 0.5rem;
             border-radius: 3px;
 
             &:focus {
-                border-color: var(--rt-gold, #d4af37);
+                border-color: var(--wh40k-gold, #d4af37);
                 outline: none;
             }
         }
@@ -288,10 +288,10 @@
     .wh40k-vehicle-v2-stat-value {
         font-size: 1.2rem;
         font-weight: bold;
-        color: var(--rt-text-dark, #f0f0f0);
+        color: var(--wh40k-text-dark, #f0f0f0);
         padding: 0.5rem;
-        background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-        border: 1px solid var(--rt-border-color, #444);
+        background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+        border: 1px solid var(--wh40k-border-color, #444);
         border-radius: 3px;
         text-align: center;
     }
@@ -308,13 +308,13 @@
         justify-content: space-between;
         align-items: center;
         padding: 0.75rem;
-        background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-        border: 1px solid var(--rt-border-color, #444);
+        background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+        border: 1px solid var(--wh40k-border-color, #444);
         border-radius: 3px;
         transition: all 0.2s;
 
         &:hover {
-            border-color: var(--rt-gold, #d4af37);
+            border-color: var(--wh40k-gold, #d4af37);
         }
     }
 
@@ -323,7 +323,7 @@
         cursor: pointer;
 
         &:hover {
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
         }
     }
 
@@ -331,14 +331,14 @@
         display: flex;
         gap: 1rem;
         font-size: 0.85rem;
-        color: var(--rt-text-muted, #888);
+        color: var(--wh40k-text-muted, #888);
     }
 
     // === CREW ===
     .wh40k-vehicle-v2-crew-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: var(--rt-space-md, 1rem);
+        gap: var(--wh40k-space-md, 1rem);
     }
 
     .wh40k-vehicle-v2-crew-item {
@@ -348,7 +348,7 @@
 
         label {
             font-size: 0.8rem;
-            color: var(--rt-text-muted, #888);
+            color: var(--wh40k-text-muted, #888);
             text-transform: uppercase;
         }
 
@@ -364,14 +364,14 @@
 
         button {
             padding: 0.25rem 0.5rem;
-            background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-            border: 1px solid var(--rt-border-color, #444);
-            color: var(--rt-text-dark, #f0f0f0);
+            background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+            border: 1px solid var(--wh40k-border-color, #444);
+            color: var(--wh40k-text-dark, #f0f0f0);
             cursor: pointer;
             border-radius: 3px;
 
             &:hover {
-                border-color: var(--rt-gold, #d4af37);
+                border-color: var(--wh40k-gold, #d4af37);
             }
         }
 
@@ -390,8 +390,8 @@
 
     .wh40k-vehicle-v2-component-item {
         padding: 0.75rem;
-        background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-        border: 1px solid var(--rt-border-color, #444);
+        background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+        border: 1px solid var(--wh40k-border-color, #444);
         border-radius: 3px;
     }
 
@@ -409,7 +409,7 @@
 
     .wh40k-vehicle-v2-component-desc {
         font-size: 0.85rem;
-        color: var(--rt-text-muted, #888);
+        color: var(--wh40k-text-muted, #888);
         margin-top: 0.5rem;
     }
 
@@ -422,18 +422,18 @@
 
     .wh40k-vehicle-v2-trait-item {
         padding: 0.75rem;
-        background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-        border: 1px solid var(--rt-border-color, #444);
+        background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+        border: 1px solid var(--wh40k-border-color, #444);
         border-radius: 3px;
 
         strong {
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
         }
 
         p {
             margin-top: 0.5rem;
             font-size: 0.85rem;
-            color: var(--rt-text-muted, #888);
+            color: var(--wh40k-text-muted, #888);
         }
     }
 
@@ -441,7 +441,7 @@
     .wh40k-vehicle-v2-empty {
         padding: 2rem;
         text-align: center;
-        color: var(--rt-text-muted, #888);
+        color: var(--wh40k-text-muted, #888);
         font-style: italic;
     }
 
@@ -449,12 +449,12 @@
     .editor-content {
         min-height: 100px;
         padding: 0.75rem;
-        background: var(--rt-input-bg, rgba(0, 0, 0, 0.3));
-        border: 1px solid var(--rt-border-color, #444);
+        background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
+        border: 1px solid var(--wh40k-border-color, #444);
         border-radius: 3px;
 
         &:hover {
-            border-color: var(--rt-gold, #d4af37);
+            border-color: var(--wh40k-gold, #d4af37);
         }
     }
 }

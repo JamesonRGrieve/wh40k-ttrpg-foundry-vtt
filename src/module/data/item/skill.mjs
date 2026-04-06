@@ -85,7 +85,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      */
     get characteristicLabel() {
         if (!this.characteristic) return '';
-        const key = `RT.Characteristic.${this.characteristic.capitalize()}`;
+        const key = `WH40K.Characteristic.${this.characteristic.capitalize()}`;
         const localized = game.i18n.localize(key);
         return localized === key ? this.characteristic : localized;
     }
@@ -114,7 +114,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * @type {string}
      */
     get skillTypeLabel() {
-        return game.i18n.localize(`RT.SkillType.${this.skillType.capitalize()}`);
+        return game.i18n.localize(`WH40K.SkillType.${this.skillType.capitalize()}`);
     }
 
     /**

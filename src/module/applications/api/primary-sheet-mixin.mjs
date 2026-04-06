@@ -8,17 +8,17 @@ import DragDropMixin from './drag-drop-api-mixin.mjs';
 /**
  * Adds V2 sheet functionality shared between primary document sheets (Actors & Items).
  * @param {typeof DocumentSheet} Base  The base class being mixed.
- * @returns {typeof PrimarySheetRT}
+ * @returns {typeof PrimarySheetWH40K}
  * @mixin
  */
 export default function PrimarySheetMixin(Base) {
-    return class PrimarySheetRT extends DragDropMixin(Base) {
+    return class PrimarySheetWH40K extends DragDropMixin(Base) {
         /** @override */
         static DEFAULT_OPTIONS = {
             actions: {
-                editDocument: PrimarySheetRT.#showDocument,
-                deleteDocument: PrimarySheetRT.#deleteDocument,
-                showDocument: PrimarySheetRT.#showDocument,
+                editDocument: PrimarySheetWH40K.#showDocument,
+                deleteDocument: PrimarySheetWH40K.#deleteDocument,
+                showDocument: PrimarySheetWH40K.#showDocument,
             },
         };
 
@@ -55,7 +55,7 @@ export default function PrimarySheetMixin(Base) {
 
         /**
          * The mode the sheet is currently in.
-         * @type {PrimarySheetRT.MODES|null}
+         * @type {PrimarySheetWH40K.MODES|null}
          * @protected
          */
         _mode = null;
@@ -254,7 +254,7 @@ export default function PrimarySheetMixin(Base) {
             nav.querySelectorAll('[data-tab]').forEach((link) => {
                 const isActive = link.dataset.tab === tab;
                 link.classList.toggle('active', isActive);
-                link.closest('.rt-navigation__item, .rt-nav-item')?.classList.toggle('active', isActive);
+                link.closest('.wh40k-navigation__item, .wh40k-nav-item')?.classList.toggle('active', isActive);
             });
 
             // Update content tab visibility
@@ -278,7 +278,7 @@ export default function PrimarySheetMixin(Base) {
         animateStatChange(element, type = 'changed') {
             if (!element) return;
 
-            const animClass = `rt-stat-${type}`;
+            const animClass = `wh40k-stat-${type}`;
 
             // Remove any existing animation classes
             element.classList.remove('wh40k-stat-increase', 'wh40k-stat-decrease', 'wh40k-stat-changed', 'wh40k-stat-critical', 'wh40k-stat-success');
@@ -344,7 +344,7 @@ export default function PrimarySheetMixin(Base) {
 
         /**
          * Handle removing a document.
-         * @this {PrimarySheetRT}
+         * @this {PrimarySheetWH40K}
          * @param {Event} event         Triggering click event.
          * @param {HTMLElement} target  Button that was clicked.
          */
@@ -375,7 +375,7 @@ export default function PrimarySheetMixin(Base) {
         async _onChangeSheetMode(event) {
             const { MODES } = this.constructor;
             const toggle = event.currentTarget;
-            const label = game.i18n.localize(`RT.SheetMode${toggle.checked ? 'Play' : 'Edit'}`);
+            const label = game.i18n.localize(`WH40K.SheetMode${toggle.checked ? 'Play' : 'Edit'}`);
             toggle.dataset.tooltip = label;
             toggle.setAttribute('aria-label', label);
             this._mode = toggle.checked ? MODES.EDIT : MODES.PLAY;
@@ -395,7 +395,7 @@ export default function PrimarySheetMixin(Base) {
 
         /**
          * Handle opening a document sheet.
-         * @this {PrimarySheetRT}
+         * @this {PrimarySheetWH40K}
          * @param {Event} event         Triggering click event.
          * @param {HTMLElement} target  Button that was clicked.
          */

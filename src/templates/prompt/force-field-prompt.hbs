@@ -1,44 +1,44 @@
 {{! Rogue Trader Force Field Prompt - Modern Design }}
 <div class="dialog-content">
-    <form class="rt-prompt" autocomplete="off">
+    <form class="wh40k-prompt" autocomplete="off">
         {{! Character & Field Info }}
-        <div class="rt-prompt__panel">
-            <div class="rt-prompt__header">
-                <img class="rt-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
-                <div class="rt-prompt__title-group">
-                    <h2 class="rt-prompt__title">Force Field</h2>
-                    <div class="rt-prompt__subtitle">{{this.forceField.name}}</div>
+        <div class="wh40k-prompt__panel">
+            <div class="wh40k-prompt__header">
+                <img class="wh40k-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                <div class="wh40k-prompt__title-group">
+                    <h2 class="wh40k-prompt__title">Force Field</h2>
+                    <div class="wh40k-prompt__subtitle">{{this.forceField.name}}</div>
                 </div>
             </div>
 
-            <div class="rt-prompt__field">
-                <span class="rt-prompt__label">Character</span>
-                <span class="rt-prompt__value">{{this.actor.name}}</span>
+            <div class="wh40k-prompt__field">
+                <span class="wh40k-prompt__label">Character</span>
+                <span class="wh40k-prompt__value">{{this.actor.name}}</span>
             </div>
-            <div class="rt-prompt__field">
-                <span class="rt-prompt__label">Quality</span>
-                <span class="rt-prompt__value">{{this.forceField.system.protectionRating}}</span>
+            <div class="wh40k-prompt__field">
+                <span class="wh40k-prompt__label">Quality</span>
+                <span class="wh40k-prompt__value">{{this.forceField.system.protectionRating}}</span>
             </div>
-            <div class="rt-prompt__field">
-                <span class="rt-prompt__label">Activated</span>
-                <span class="rt-prompt__value">{{this.forceField.system.activated}}</span>
+            <div class="wh40k-prompt__field">
+                <span class="wh40k-prompt__label">Activated</span>
+                <span class="wh40k-prompt__value">{{this.forceField.system.activated}}</span>
             </div>
-            <div class="rt-prompt__field">
-                <span class="rt-prompt__label">Overloaded</span>
-                <span class="rt-prompt__value">{{this.forceField.system.overloaded}}</span>
+            <div class="wh40k-prompt__field">
+                <span class="wh40k-prompt__label">Overloaded</span>
+                <span class="wh40k-prompt__value">{{this.forceField.system.overloaded}}</span>
             </div>
         </div>
 
         {{! Protection Settings }}
-        <div class="rt-prompt__panel">
-            <h3 class="rt-prompt__section-title">Protection</h3>
-            <div class="rt-prompt__field">
-                <span class="rt-prompt__label">Rating</span>
-                <input class="rt-prompt__input" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
+        <div class="wh40k-prompt__panel">
+            <h3 class="wh40k-prompt__section-title">Protection</h3>
+            <div class="wh40k-prompt__field">
+                <span class="wh40k-prompt__label">Rating</span>
+                <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
             </div>
-            <div class="rt-prompt__field">
-                <span class="rt-prompt__label">Overload</span>
-                <input class="rt-prompt__input" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
+            <div class="wh40k-prompt__field">
+                <span class="wh40k-prompt__label">Overload</span>
+                <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
             </div>
         </div>
     </form>

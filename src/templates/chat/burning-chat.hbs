@@ -1,49 +1,49 @@
 {{! Rogue Trader Burning Card - Modern Design }}
-<div class="rt-chat">
-    <div class="rt-roll-card">
+<div class="wh40k-chat">
+    <div class="wh40k-roll-card">
         {{! Header }}
-        <div class="rt-roll-card__header">
-            <div class="rt-roll-card__actor">{{actor.name}}</div>
-            <h2 class="rt-roll-card__title">On Fire!</h2>
-            <div class="rt-roll-card__subtitle">Critical Condition</div>
+        <div class="wh40k-roll-card__header">
+            <div class="wh40k-roll-card__actor">{{actor.name}}</div>
+            <h2 class="wh40k-roll-card__title">On Fire!</h2>
+            <div class="wh40k-roll-card__subtitle">Critical Condition</div>
         </div>
 
         {{! Body }}
-        <div class="rt-roll-card__body">
-            <div class="rt-roll-card__damage">
-                <div class="rt-roll-card__damage-header">
-                    <span class="rt-roll-card__damage-title">Fire Damage</span>
+        <div class="wh40k-roll-card__body">
+            <div class="wh40k-roll-card__damage">
+                <div class="wh40k-roll-card__damage-header">
+                    <span class="wh40k-roll-card__damage-title">Fire Damage</span>
                 </div>
-                <div class="rt-roll-card__damage-value">{{damage}}</div>
-                <div class="rt-roll-card__damage-type">Energy (ignores Armour)</div>
+                <div class="wh40k-roll-card__damage-value">{{damage}}</div>
+                <div class="wh40k-roll-card__damage-type">Energy (ignores Armour)</div>
             </div>
 
-            <div class="rt-roll-card__notice">
-                <span class="rt-roll-card__notice-label">Fatigue</span>
-                <span class="rt-roll-card__notice-value">+1</span>
+            <div class="wh40k-roll-card__notice">
+                <span class="wh40k-roll-card__notice-label">Fatigue</span>
+                <span class="wh40k-roll-card__notice-value">+1</span>
             </div>
 
             {{#if success}}
-                <div class="rt-roll-card__result rt-roll-card__result--success">
-                    <div class="rt-roll-card__result-label">WP Success</div>
-                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                <div class="wh40k-roll-card__result wh40k-roll-card__result--success">
+                    <div class="wh40k-roll-card__result-label">WP Success</div>
+                    <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
                 </div>
-                <div class="rt-roll-card__text">
+                <div class="wh40k-roll-card__text">
                     <p>You may take actions as normal despite the flames.</p>
                 </div>
             {{else}}
-                <div class="rt-roll-card__result rt-roll-card__result--failure">
-                    <div class="rt-roll-card__result-label">WP Failed</div>
-                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                <div class="wh40k-roll-card__result wh40k-roll-card__result--failure">
+                    <div class="wh40k-roll-card__result-label">WP Failed</div>
+                    <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
                 </div>
-                <div class="rt-roll-card__text">
+                <div class="wh40k-roll-card__text">
                     <p>You can only flail in agony and scream!</p>
                 </div>
             {{/if}}
 
-            <div class="rt-roll-card__controls">
+            <div class="wh40k-roll-card__controls">
                 <button
-                    class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__apply-damage"
+                    class="wh40k-roll-card__btn wh40k-roll-card__btn--damage roll-control__apply-damage"
                     data-type="Energy"
                     data-ignore-armour="true"
                     data-uuid="{{actor.uuid}}"

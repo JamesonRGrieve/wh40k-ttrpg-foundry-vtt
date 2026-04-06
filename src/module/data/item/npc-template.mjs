@@ -216,7 +216,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @type {string}
      */
     get categoryLabel() {
-        return game.i18n.localize(`RT.NPC.Template.Category.${this.category.titleCase()}`);
+        return game.i18n.localize(`WH40K.NPC.Template.Category.${this.category.titleCase()}`);
     }
 
     /**
@@ -224,7 +224,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @type {string}
      */
     get roleLabel() {
-        return game.i18n.localize(`RT.NPCRole.${this.role.titleCase()}`);
+        return game.i18n.localize(`WH40K.NPCRole.${this.role.titleCase()}`);
     }
 
     /**
@@ -232,7 +232,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @type {string}
      */
     get typeLabel() {
-        return game.i18n.localize(`RT.NPCType.${this.type.titleCase()}`);
+        return game.i18n.localize(`WH40K.NPCType.${this.type.titleCase()}`);
     }
 
     /**
@@ -340,7 +340,7 @@ export default class NPCTemplateData extends ItemDataModel {
             };
         } else {
             // Use ThreatCalculator for preset weapons
-            const ThreatCalculator = game.rt?.ThreatCalculator;
+            const ThreatCalculator = game.wh40k?.ThreatCalculator;
             if (ThreatCalculator) {
                 weapons = ThreatCalculator.generateWeapons(this.equipmentPreset, targetThreat);
             } else {

@@ -21,31 +21,31 @@
         }
 
         &::-webkit-scrollbar-track {
-            background: var(--rt-panel-bg);
+            background: var(--wh40k-panel-bg);
             border-radius: $wh40k-radius-sm;
         }
 
         &::-webkit-scrollbar-thumb {
-            background: var(--rt-border-color);
+            background: var(--wh40k-border-color);
             border-radius: $wh40k-radius-sm;
 
             &:hover {
-                background: var(--rt-gold-dark);
+                background: var(--wh40k-gold-dark);
             }
         }
     }
 
     // Panel styling for modern look
     .wh40k-panel {
-        background: var(--rt-panel-bg);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-panel-bg);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: $wh40k-radius-md;
         box-shadow: $wh40k-shadow-sm;
         overflow: hidden;
         transition: border-color $wh40k-transition-fast;
 
         &:hover {
-            border-color: var(--rt-border-color);
+            border-color: var(--wh40k-border-color);
         }
     }
 
@@ -55,7 +55,7 @@
         gap: $wh40k-space-sm;
         padding: $wh40k-space-sm $wh40k-space-md;
         background: linear-gradient(180deg, rgba($wh40k-color-gold, 0.12) 0%, rgba($wh40k-color-gold, 0.04) 100%);
-        border-bottom: 1px solid var(--rt-border-color-light);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
     }
 
     .wh40k-panel-title {
@@ -64,7 +64,7 @@
         gap: $wh40k-space-xs;
         font-family: $wh40k-font-heading;
         font-size: $wh40k-font-size-base;
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
         text-transform: uppercase;
         letter-spacing: 0.05em;
 
@@ -76,7 +76,7 @@
 
     .wh40k-panel-body {
         padding: $wh40k-space-md;
-        background: var(--rt-panel-body-bg);
+        background: var(--wh40k-panel-body-bg);
     }
 
     // Field styling
@@ -87,7 +87,7 @@
 
         label {
             font-size: $wh40k-font-size-sm;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-weight: 500;
@@ -96,10 +96,10 @@
         input,
         select,
         textarea {
-            background: var(--rt-input-bg);
-            border: 1px solid var(--rt-border-color-light);
+            background: var(--wh40k-input-bg);
+            border: 1px solid var(--wh40k-border-color-light);
             border-radius: $wh40k-radius-sm;
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
             font-family: $wh40k-font-ui;
             font-size: $wh40k-font-size-sm;
             padding: $wh40k-space-xs $wh40k-space-sm;
@@ -107,12 +107,12 @@
 
             &:focus {
                 outline: none;
-                border-color: var(--rt-gold);
-                background: var(--rt-input-bg-focus);
+                border-color: var(--wh40k-gold);
+                background: var(--wh40k-input-bg-focus);
             }
 
             &::placeholder {
-                color: var(--rt-text-subtle);
+                color: var(--wh40k-text-subtle);
             }
         }
 
@@ -136,7 +136,7 @@
 
             input[type='checkbox'] {
                 margin: 0;
-                accent-color: var(--rt-gold);
+                accent-color: var(--wh40k-gold);
                 cursor: pointer;
             }
         }
@@ -157,7 +157,7 @@
 
     .wh40k-field-hint {
         font-size: $wh40k-font-size-xs;
-        color: var(--rt-text-subtle);
+        color: var(--wh40k-text-subtle);
         font-style: italic;
         margin-top: $wh40k-space-xs;
     }
@@ -173,12 +173,12 @@
         h4 {
             font-family: $wh40k-font-heading;
             font-size: $wh40k-font-size-sm;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin: 0 0 $wh40k-space-sm 0;
             padding-bottom: $wh40k-space-xs;
-            border-bottom: 1px solid var(--rt-border-color-light);
+            border-bottom: 1px solid var(--wh40k-border-color-light);
         }
     }
 
@@ -187,7 +187,7 @@
         justify-content: space-between;
         align-items: center;
         padding: $wh40k-space-xs $wh40k-space-sm;
-        background: var(--rt-input-bg);
+        background: var(--wh40k-input-bg);
         border-radius: $wh40k-radius-sm;
 
         &:not(:last-child) {
@@ -197,7 +197,7 @@
 
     .wh40k-modifier-name {
         font-size: $wh40k-font-size-sm;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         text-transform: capitalize;
     }
 
@@ -205,7 +205,7 @@
         font-family: $wh40k-font-display;
         font-size: $wh40k-font-size-base;
         font-weight: 600;
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
     }
 
     // Badge styling for category
@@ -231,20 +231,20 @@
 
     // ProseMirror editor styling
     .editor {
-        background: var(--rt-input-bg);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-input-bg);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: $wh40k-radius-sm;
         min-height: 120px;
 
         &:focus-within {
-            border-color: var(--rt-gold);
-            background: var(--rt-input-bg-focus);
+            border-color: var(--wh40k-gold);
+            background: var(--wh40k-input-bg-focus);
         }
     }
 
     .editor-content {
         padding: $wh40k-space-sm;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         font-family: $wh40k-font-ui;
         font-size: $wh40k-font-size-sm;
         line-height: 1.5;
@@ -300,17 +300,17 @@
 
 // Inline meta controls in header
 .wh40k-meta-select {
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-input-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-sm;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     font-size: $wh40k-font-size-xs;
     padding: 2px 4px;
     cursor: pointer;
 
     &:focus {
         outline: none;
-        border-color: var(--rt-gold);
+        border-color: var(--wh40k-gold);
     }
 }
 
@@ -318,8 +318,8 @@
     display: inline-flex;
     align-items: center;
     gap: 2px;
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-input-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-sm;
     padding: 0 4px;
 
@@ -327,7 +327,7 @@
         width: 40px;
         background: transparent;
         border: none;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         font-size: $wh40k-font-size-xs;
         text-align: center;
 
@@ -338,7 +338,7 @@
 
     span {
         font-size: $wh40k-font-size-xs;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 }
 
@@ -347,12 +347,12 @@
     align-items: center;
     gap: 3px;
     font-size: $wh40k-font-size-xs;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
 
     input[type='checkbox'] {
         margin: 0;
-        accent-color: var(--rt-gold);
+        accent-color: var(--wh40k-gold);
     }
 }
 
@@ -367,7 +367,7 @@
     border-radius: $wh40k-radius-sm;
 
     i {
-        color: var(--rt-red);
+        color: var(--wh40k-red);
         font-size: $wh40k-font-size-sm;
     }
 
@@ -375,11 +375,11 @@
         flex: 1;
         background: transparent;
         border: none;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         font-size: $wh40k-font-size-sm;
 
         &::placeholder {
-            color: var(--rt-text-subtle);
+            color: var(--wh40k-text-subtle);
         }
 
         &:focus {
@@ -402,28 +402,28 @@
 
     label {
         font-size: $wh40k-font-size-xs;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
 
         i {
             margin-right: 4px;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 
     input {
-        background: var(--rt-input-bg);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-input-bg);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: $wh40k-radius-sm;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         font-size: $wh40k-font-size-sm;
         padding: $wh40k-space-xs $wh40k-space-sm;
 
         &:focus {
             outline: none;
-            border-color: var(--rt-gold);
-            background: var(--rt-input-bg-focus);
+            border-color: var(--wh40k-gold);
+            background: var(--wh40k-input-bg-focus);
         }
     }
 
@@ -440,16 +440,16 @@
 
     label {
         font-size: $wh40k-font-size-xs;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
 
     textarea {
-        background: var(--rt-input-bg);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-input-bg);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: $wh40k-radius-sm;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         font-size: $wh40k-font-size-sm;
         padding: $wh40k-space-sm;
         resize: vertical;
@@ -457,8 +457,8 @@
 
         &:focus {
             outline: none;
-            border-color: var(--rt-gold);
-            background: var(--rt-input-bg-focus);
+            border-color: var(--wh40k-gold);
+            background: var(--wh40k-input-bg-focus);
         }
     }
 }
@@ -468,33 +468,33 @@
     display: flex;
     justify-content: flex-end;
     padding-top: $wh40k-space-xs;
-    border-top: 1px solid var(--rt-border-color-light);
+    border-top: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-source-input {
     background: transparent;
     border: none;
-    color: var(--rt-text-subtle);
+    color: var(--wh40k-text-subtle);
     font-size: $wh40k-font-size-xs;
     font-style: italic;
     text-align: right;
 
     &::placeholder {
-        color: var(--rt-text-subtle);
+        color: var(--wh40k-text-subtle);
     }
 
     &:focus {
         outline: none;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
     }
 }
 
 // Meta text inputs (replaces dropdowns)
 .wh40k-meta-text {
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-input-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-sm;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     font-family: $wh40k-font-ui;
     font-size: $wh40k-font-size-xs;
     padding: 2px 6px;
@@ -502,7 +502,7 @@
 
     &:focus {
         outline: none;
-        border-color: var(--rt-gold);
+        border-color: var(--wh40k-gold);
     }
 
     &--tiny {
@@ -526,23 +526,23 @@
 
     label {
         font-size: $wh40k-font-size-xs;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         flex-shrink: 0;
 
         i {
             margin-right: 4px;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 }
 
 .wh40k-prose {
-    background: var(--rt-panel-body-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-body-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-sm;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     font-family: $wh40k-font-ui;
     font-size: $wh40k-font-size-sm;
     padding: $wh40k-space-sm;
@@ -554,13 +554,13 @@
     flex: 1 1 auto;
 
     &:hover {
-        border-color: var(--rt-gold);
-        background: var(--rt-input-bg-focus);
+        border-color: var(--wh40k-gold);
+        background: var(--wh40k-input-bg-focus);
     }
 
     &:empty::before {
         content: 'Click to edit...';
-        color: var(--rt-text-subtle);
+        color: var(--wh40k-text-subtle);
         font-style: italic;
     }
 

@@ -35,17 +35,17 @@ export function clearSkillUuidCache() {
  * @example
  * // Standard skill
  * const awarenessUuid = await findSkillUuid("Awareness");
- * // Returns: "Compendium.wh40k-rpg.rt-items-skills.xxx"
+ * // Returns: "Compendium.wh40k-rpg.wh40k-items-skills.xxx"
  *
  * @example
  * // Specialist skill with inline specialization
  * const loreUuid = await findSkillUuid("Common Lore (Imperium)");
- * // Returns: "Compendium.wh40k-rpg.rt-items-skills.yyy"
+ * // Returns: "Compendium.wh40k-rpg.wh40k-items-skills.yyy"
  *
  * @example
  * // Specialist skill with separate specialization parameter
  * const loreUuid = await findSkillUuid("Common Lore", "Imperium");
- * // Returns: "Compendium.wh40k-rpg.rt-items-skills.yyy"
+ * // Returns: "Compendium.wh40k-rpg.wh40k-items-skills.yyy"
  */
 export async function findSkillUuid(skillName, specialization = null) {
     if (!skillName) return null;

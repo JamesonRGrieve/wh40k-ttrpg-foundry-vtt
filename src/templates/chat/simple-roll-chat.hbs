@@ -1,64 +1,64 @@
 {{!-- Rogue Trader Roll Card - Modern Design --}}
 {{#with rollData}}
-<div class="rt-chat">
-    <div class="rt-roll-card">
+<div class="wh40k-chat">
+    <div class="wh40k-roll-card">
         {{!-- Header --}}
-        <div class="rt-roll-card__header">
-            <div class="rt-roll-card__actor">{{sheetName}}</div>
-            <h2 class="rt-roll-card__title">{{name}}</h2>
-            {{#if type}}<div class="rt-roll-card__subtitle">{{type}} • {{lookup difficulties difficulty}}</div>{{/if}}
+        <div class="wh40k-roll-card__header">
+            <div class="wh40k-roll-card__actor">{{sheetName}}</div>
+            <h2 class="wh40k-roll-card__title">{{name}}</h2>
+            {{#if type}}<div class="wh40k-roll-card__subtitle">{{type}} • {{lookup difficulties difficulty}}</div>{{/if}}
             {{#if isManualRoll}}
-                <div class="rt-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
+                <div class="wh40k-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
             {{/if}}
         </div>
         
         {{!-- Body --}}
-        <div class="rt-roll-card__body">
+        <div class="wh40k-roll-card__body">
             {{!-- Modifiers Breakdown --}}
-            <div class="rt-roll-card__row">
-                <span class="rt-roll-card__label">Base</span>
-                <span class="rt-roll-card__value">{{baseTarget}}</span>
+            <div class="wh40k-roll-card__row">
+                <span class="wh40k-roll-card__label">Base</span>
+                <span class="wh40k-roll-card__value">{{baseTarget}}</span>
             </div>
             
             {{#each activeModifiers}}
-                <div class="rt-roll-card__row rt-roll-card__row--modifier">
-                    <span class="rt-roll-card__label">{{@key}}</span>
-                    <span class="rt-roll-card__value {{#if (gt this 0)}}rt-roll-card__value--positive{{else if (lt this 0)}}rt-roll-card__value--negative{{/if}}">
+                <div class="wh40k-roll-card__row wh40k-roll-card__row--modifier">
+                    <span class="wh40k-roll-card__label">{{@key}}</span>
+                    <span class="wh40k-roll-card__value {{#if (gt this 0)}}wh40k-roll-card__value--positive{{else if (lt this 0)}}wh40k-roll-card__value--negative{{/if}}">
                         {{#if (gt this 0)}}+{{/if}}{{this}}
                     </span>
                 </div>
             {{/each}}
             
             {{!-- Target Number --}}
-            <div class="rt-roll-card__target">
-                <span class="rt-roll-card__label">Target</span>
-                <span class="rt-roll-card__value">{{modifiedTarget}}</span>
+            <div class="wh40k-roll-card__target">
+                <span class="wh40k-roll-card__label">Target</span>
+                <span class="wh40k-roll-card__value">{{modifiedTarget}}</span>
             </div>
             
             {{!-- Target-only display (no roll entered) --}}
             {{#if isTargetOnly}}
-                <div class="rt-roll-card__target-only">
+                <div class="wh40k-roll-card__target-only">
                     Target posted - awaiting physical dice roll
                 </div>
             {{else}}
             {{!-- Result Display --}}
             {{#if success}}
-                <div class="rt-roll-card__result rt-roll-card__result--success">
-                    <div class="rt-roll-card__result-label">Success</div>
-                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                <div class="wh40k-roll-card__result wh40k-roll-card__result--success">
+                    <div class="wh40k-roll-card__result-label">Success</div>
+                    <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
                 </div>
-                <div class="rt-roll-card__degrees rt-roll-card__degrees--success">
-                    <span class="rt-roll-card__degrees-count">{{dos}}</span>
-                    <span class="rt-roll-card__degrees-label">Degrees of Success</span>
+                <div class="wh40k-roll-card__degrees wh40k-roll-card__degrees--success">
+                    <span class="wh40k-roll-card__degrees-count">{{dos}}</span>
+                    <span class="wh40k-roll-card__degrees-label">Degrees of Success</span>
                 </div>
             {{else}}
-                <div class="rt-roll-card__result rt-roll-card__result--failure">
-                    <div class="rt-roll-card__result-label">Failure</div>
-                    <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                <div class="wh40k-roll-card__result wh40k-roll-card__result--failure">
+                    <div class="wh40k-roll-card__result-label">Failure</div>
+                    <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
                 </div>
-                <div class="rt-roll-card__degrees rt-roll-card__degrees--failure">
-                    <span class="rt-roll-card__degrees-count">{{dof}}</span>
-                    <span class="rt-roll-card__degrees-label">Degrees of Failure</span>
+                <div class="wh40k-roll-card__degrees wh40k-roll-card__degrees--failure">
+                    <span class="wh40k-roll-card__degrees-count">{{dof}}</span>
+                    <span class="wh40k-roll-card__degrees-label">Degrees of Failure</span>
                 </div>
             {{/if}}
         </div>
@@ -67,7 +67,7 @@
 
         {{!-- Hidden dice data for Foundry --}}
         {{#unless isManualRoll}}
-        <div class="rt-roll-card__dice">
+        <div class="wh40k-roll-card__dice">
             <div class="dice-roll-render">{{{render}}}</div>
         </div>
         {{/unless}}

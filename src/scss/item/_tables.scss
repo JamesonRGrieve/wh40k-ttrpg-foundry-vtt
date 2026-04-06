@@ -2,7 +2,7 @@
 // Animations
 // ============================================
 
-@keyframes rt-pulse {
+@keyframes wh40k-pulse {
     0%,
     100% {
         opacity: 1;
@@ -12,22 +12,22 @@
     }
 }
 
-@keyframes rt-glow {
+@keyframes wh40k-glow {
     0%,
     100% {
-        box-shadow: 0 0 5px var(--rt-gold-glow);
+        box-shadow: 0 0 5px var(--wh40k-gold-glow);
     }
     50% {
-        box-shadow: 0 0 20px var(--rt-gold-glow);
+        box-shadow: 0 0 20px var(--wh40k-gold-glow);
     }
 }
 
 .wh40k-animate-pulse {
-    animation: rt-pulse 2s infinite ease-in-out;
+    animation: wh40k-pulse 2s infinite ease-in-out;
 }
 
 .wh40k-animate-glow {
-    animation: rt-glow 2s infinite ease-in-out;
+    animation: wh40k-glow 2s infinite ease-in-out;
 }
 
 // ============================================
@@ -39,12 +39,12 @@
     align-items: center;
     padding: 2px $wh40k-space-sm;
     margin-left: $wh40k-space-sm;
-    background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
+    background: linear-gradient(135deg, var(--wh40k-gold-dark) 0%, var(--wh40k-gold) 100%);
     border-radius: $wh40k-radius-sm;
     font-family: $wh40k-font-ui;
     font-size: $wh40k-font-size-xs;
     font-weight: 600;
-    color: var(--rt-sheet-bg);
+    color: var(--wh40k-sheet-bg);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -58,15 +58,15 @@
     justify-content: space-between;
     align-items: center;
     padding: $wh40k-space-sm $wh40k-space-md;
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-md;
     margin-bottom: $wh40k-space-sm;
     transition: all $wh40k-transition-fast;
 
     &:hover {
-        background: var(--rt-input-bg);
-        border-color: var(--rt-gold-dark);
+        background: var(--wh40k-input-bg);
+        border-color: var(--wh40k-gold-dark);
     }
 
     &__info {
@@ -75,13 +75,13 @@
         gap: $wh40k-space-sm;
 
         strong {
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
         }
     }
 
     &__detail {
         font-size: $wh40k-font-size-sm;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         margin-left: $wh40k-space-sm;
     }
 }

@@ -1,12 +1,12 @@
-import BasicRollRT from './basic-roll.mjs';
+import BasicRollWH40K from './basic-roll.mjs';
 import RollConfigurationDialog from '../applications/dialogs/roll-configuration-dialog.mjs';
 
 /**
  * D100Roll - Specialized roll class for d100 skill/characteristic tests
  * Handles success/failure calculation, degrees, and critical results
- * @extends BasicRollRT
+ * @extends BasicRollWH40K
  */
-export default class D100Roll extends BasicRollRT {
+export default class D100Roll extends BasicRollWH40K {
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */

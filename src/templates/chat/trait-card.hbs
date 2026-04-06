@@ -1,25 +1,25 @@
 {{! Rich chat card for trait vocalization }}
-<div class="rt-chat-card rt-chat-card--trait {{traitCategoryColor category}}">
+<div class="wh40k-chat-card wh40k-chat-card--trait {{traitCategoryColor category}}">
     {{! Header }}
-    <header class="rt-card-header rt-card-header--trait">
-        <div class="rt-card-icon-wrapper">
-            <i class="fas {{traitIcon category}} rt-card-icon"></i>
+    <header class="wh40k-card-header wh40k-card-header--trait">
+        <div class="wh40k-card-icon-wrapper">
+            <i class="fas {{traitIcon category}} wh40k-card-icon"></i>
         </div>
-        <div class="rt-card-title-group">
-            <h3 class="rt-card-title">{{trait.name}}</h3>
-            <div class="rt-card-badges">
-                <span class="rt-badge rt-badge--category {{traitCategoryColor category}}">
+        <div class="wh40k-card-title-group">
+            <h3 class="wh40k-card-title">{{trait.name}}</h3>
+            <div class="wh40k-card-badges">
+                <span class="wh40k-badge wh40k-badge--category {{traitCategoryColor category}}">
                     <i class="fas {{traitIcon category}}"></i>
                     {{categoryLabel}}
                 </span>
                 {{#if hasLevel}}
-                    <span class="rt-badge rt-badge--level">
+                    <span class="wh40k-badge wh40k-badge--level">
                         Level
                         {{level}}
                     </span>
                 {{/if}}
                 {{#if isVariable}}
-                    <span class="rt-badge rt-badge--variable">
+                    <span class="wh40k-badge wh40k-badge--variable">
                         <i class="fas fa-adjust"></i>
                         Variable
                     </span>
@@ -30,40 +30,40 @@
 
     {{! Requirements Section }}
     {{#if requirements}}
-        <section class="rt-card-section rt-card-section--requirements">
-            <h4 class="rt-card-section-title">
+        <section class="wh40k-card-section wh40k-card-section--requirements">
+            <h4 class="wh40k-card-section-title">
                 <i class="fas fa-lock"></i>
                 Requirements
             </h4>
-            <p class="rt-card-section-content">{{requirements}}</p>
+            <p class="wh40k-card-section-content">{{requirements}}</p>
         </section>
     {{/if}}
 
     {{! Benefit/Effect Section }}
-    <section class="rt-card-section rt-card-section--benefit">
-        <h4 class="rt-card-section-title">
+    <section class="wh40k-card-section wh40k-card-section--benefit">
+        <h4 class="wh40k-card-section-title">
             <i class="fas fa-sparkles"></i>
             Effect
         </h4>
-        <div class="rt-card-section-content rt-prose">
+        <div class="wh40k-card-section-content wh40k-prose">
             {{{benefit}}}
         </div>
     </section>
 
     {{! Notes Section }}
     {{#if notes}}
-        <section class="rt-card-section rt-card-section--notes">
-            <h4 class="rt-card-section-title">
+        <section class="wh40k-card-section wh40k-card-section--notes">
+            <h4 class="wh40k-card-section-title">
                 <i class="fas fa-sticky-note"></i>
                 Notes
             </h4>
-            <p class="rt-card-section-content">{{notes}}</p>
+            <p class="wh40k-card-section-content">{{notes}}</p>
         </section>
     {{/if}}
 
     {{! Footer }}
-    <footer class="rt-card-footer">
-        <span class="rt-card-timestamp">
+    <footer class="wh40k-card-footer">
+        <span class="wh40k-card-timestamp">
             <i class="fas fa-clock"></i>
             {{timestamp}}
         </span>

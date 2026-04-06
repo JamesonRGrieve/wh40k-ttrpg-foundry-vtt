@@ -1,33 +1,33 @@
 {{!-- Traits Panel - Compact Table View with Grouping --}}
-<div class="rt-panel rt-panel-traits-table">
-    <div class="rt-panel-header">
-        <span class="rt-panel-title">
+<div class="wh40k-panel wh40k-panel-traits-table">
+    <div class="wh40k-panel-header">
+        <span class="wh40k-panel-title">
             <i class="fas fa-shield-alt"></i> Traits
         </span>
     </div>
     
-    <div class="rt-panel-body">
+    <div class="wh40k-panel-body">
         {{!-- Grouped Trait Table --}}
         {{#if traits.length}}
-        <div class="rt-traits-grouped">
+        <div class="wh40k-traits-grouped">
             {{#each groupedByCategory as |group|}}
-            <div class="rt-trait-group">
-                <div class="rt-group-header {{traitCategoryColor group.category}}">
+            <div class="wh40k-trait-group">
+                <div class="wh40k-group-header {{traitCategoryColor group.category}}">
                     <i class="fas {{traitIcon group.category}}"></i>
-                    <span class="rt-group-title">{{group.categoryLabel}}</span>
-                    <span class="rt-count-badge">{{group.traits.length}}</span>
+                    <span class="wh40k-group-title">{{group.categoryLabel}}</span>
+                    <span class="wh40k-count-badge">{{group.traits.length}}</span>
                 </div>
                 
-                <div class="rt-traits-table" data-category="{{group.category}}">
+                <div class="wh40k-traits-table" data-category="{{group.category}}">
                     {{#each group.traits as |trait|}}
-                    <div class="rt-trait-row item-drag" 
+                    <div class="wh40k-trait-row item-drag" 
                          data-item-id="{{trait.id}}" 
                          draggable="true">
-                        <i class="fas {{trait.categoryIcon}} rt-row-icon-inline"></i>
+                        <i class="fas {{trait.categoryIcon}} wh40k-row-icon-inline"></i>
                         
-                        <div class="rt-row-main">
+                        <div class="wh40k-row-main">
                             <button type="button" 
-                                  class="rt-row-name" 
+                                  class="wh40k-row-name" 
                                   data-action="itemEdit" 
                                   data-item-id="{{trait.id}}" 
                                   title="Click to open item sheet">
@@ -35,8 +35,8 @@
                             </button>
                             
                             {{#if trait.system.requirements}}
-                            <div class="rt-row-meta">
-                                <span class="rt-meta-item">
+                            <div class="wh40k-row-meta">
+                                <span class="wh40k-meta-item">
                                     <i class="fas fa-lock"></i> {{trait.system.requirements}}
                                 </span>
                             </div>
@@ -45,18 +45,18 @@
                         
                         {{!-- Level Stepper for variable traits --}}
                         {{#if trait.hasLevel}}
-                        <div class="rt-level-stepper">
+                        <div class="wh40k-level-stepper">
                             <button type="button" 
-                                    class="rt-stepper-btn" 
+                                    class="wh40k-stepper-btn" 
                                     data-action="adjustTraitLevel" 
                                     data-item-id="{{trait.id}}" 
                                     data-delta="-1"
                                     title="Decrease Level">
                                 <i class="fas fa-minus"></i>
                             </button>
-                            <span class="rt-level-display">{{trait.system.level}}</span>
+                            <span class="wh40k-level-display">{{trait.system.level}}</span>
                             <button type="button" 
-                                    class="rt-stepper-btn" 
+                                    class="wh40k-stepper-btn" 
                                     data-action="adjustTraitLevel" 
                                     data-item-id="{{trait.id}}" 
                                     data-delta="1"
@@ -66,16 +66,16 @@
                         </div>
                         {{/if}}
                         
-                        <div class="rt-row-actions">
+                        <div class="wh40k-row-actions">
                             <button type="button" 
-                                    class="rt-action-btn" 
+                                    class="wh40k-action-btn" 
                                     data-action="itemVocalize" 
                                     data-item-id="{{trait.id}}" 
                                     title="Send to Chat">
                                 <i class="fas fa-comment"></i>
                             </button>
                             <button type="button" 
-                                    class="rt-action-btn rt-btn-danger" 
+                                    class="wh40k-action-btn wh40k-btn-danger" 
                                     data-action="itemDelete" 
                                     data-item-id="{{trait.id}}" 
                                     title="Delete">
@@ -91,9 +91,9 @@
         {{/if}}
         
         {{!-- Dropzone --}}
-        <div class="rt-dropzone {{#if traits.length}}rt-dropzone--compact{{/if}}" data-action="itemCreate" data-type="trait">
-            <i class="fas fa-shield-alt rt-dropzone-icon"></i>
-            <span class="rt-dropzone-text">{{#if traits.length}}Drop to add{{else}}Drop Trait or Click to Create{{/if}}</span>
+        <div class="wh40k-dropzone {{#if traits.length}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="trait">
+            <i class="fas fa-shield-alt wh40k-dropzone-icon"></i>
+            <span class="wh40k-dropzone-text">{{#if traits.length}}Drop to add{{else}}Drop Trait or Click to Create{{/if}}</span>
         </div>
     </div>
 </div>

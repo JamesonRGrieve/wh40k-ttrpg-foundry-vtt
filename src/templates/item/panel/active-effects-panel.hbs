@@ -1,13 +1,13 @@
 {{!-- Active Effects Panel
      List and manage active effects attached to this item
 --}}
-<div class="rt-effects-panel">
-  <header class="rt-panel-header">
+<div class="wh40k-effects-panel">
+  <header class="wh40k-panel-header">
     <i class="fas fa-magic"></i>
     <span>{{localize "WH40K.Effects.Label"}}</span>
     {{#unless item.isEmbedded}}
     <button type="button" 
-            class="rt-btn-icon rt-btn-add" 
+            class="wh40k-btn-icon wh40k-btn-add" 
             data-action="createEffect" 
             title="{{localize 'WH40K.Effects.Create'}}">
       <i class="fas fa-plus"></i>
@@ -15,19 +15,19 @@
     {{/unless}}
   </header>
 
-  <div class="rt-panel-body">
+  <div class="wh40k-panel-body">
     {{#if effects.length}}
-    <div class="rt-effects-list">
+    <div class="wh40k-effects-list">
       {{#each effects as |effect|}}
-      <div class="rt-effect-item {{#if effect.disabled}}rt-effect-item--disabled{{/if}}">
-        <div class="rt-effect-item__icon">
+      <div class="wh40k-effect-item {{#if effect.disabled}}wh40k-effect-item--disabled{{/if}}">
+        <div class="wh40k-effect-item__icon">
           <i class="fas {{#if effect.disabled}}fa-circle-xmark{{else}}fa-circle-check{{/if}}"></i>
         </div>
         
-        <div class="rt-effect-item__info">
-          <span class="rt-effect-item__name">{{effect.label}}</span>
+        <div class="wh40k-effect-item__info">
+          <span class="wh40k-effect-item__name">{{effect.label}}</span>
           {{#if effect.duration}}
-          <span class="rt-effect-item__duration">
+          <span class="wh40k-effect-item__duration">
             <i class="fas fa-clock"></i>
             {{effect.duration.label}}
           </span>
@@ -35,9 +35,9 @@
         </div>
         
         {{#unless @root.item.isEmbedded}}
-        <div class="rt-effect-item__controls">
+        <div class="wh40k-effect-item__controls">
           <button type="button" 
-                  class="rt-btn-icon" 
+                  class="wh40k-btn-icon" 
                   data-action="editEffect" 
                   data-effect-id="{{effect.id}}" 
                   title="{{localize 'WH40K.Effects.Edit'}}">
@@ -46,7 +46,7 @@
           
           {{#if effect.disabled}}
           <button type="button" 
-                  class="rt-btn-icon" 
+                  class="wh40k-btn-icon" 
                   data-action="enableEffect" 
                   data-effect-id="{{effect.id}}" 
                   title="{{localize 'WH40K.Effects.Enable'}}">
@@ -54,7 +54,7 @@
           </button>
           {{else}}
           <button type="button" 
-                  class="rt-btn-icon" 
+                  class="wh40k-btn-icon" 
                   data-action="disableEffect" 
                   data-effect-id="{{effect.id}}" 
                   title="{{localize 'WH40K.Effects.Disable'}}">
@@ -63,7 +63,7 @@
           {{/if}}
           
           <button type="button" 
-                  class="rt-btn-icon rt-btn-icon--danger" 
+                  class="wh40k-btn-icon wh40k-btn-icon--danger" 
                   data-action="deleteEffect" 
                   data-effect-id="{{effect.id}}" 
                   title="{{localize 'WH40K.Effects.Delete'}}">
@@ -75,12 +75,12 @@
       {{/each}}
     </div>
     {{else}}
-    <div class="rt-empty-state">
+    <div class="wh40k-empty-state">
       <i class="fas fa-magic"></i>
       <p>{{localize "WH40K.Effects.None"}}</p>
       {{#unless item.isEmbedded}}
       <button type="button" 
-              class="rt-btn-secondary" 
+              class="wh40k-btn-secondary" 
               data-action="createEffect">
         <i class="fas fa-plus"></i>
         {{localize "WH40K.Effects.CreateFirst"}}

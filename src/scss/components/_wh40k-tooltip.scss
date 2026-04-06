@@ -11,11 +11,11 @@
     max-width: 350px;
     padding: 0;
     background: linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(30, 30, 30, 0.98) 100%);
-    border: 2px solid var(--rt-bronze, #cd7f32);
+    border: 2px solid var(--wh40k-bronze, #cd7f32);
     border-radius: 4px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(212, 175, 55, 0.2);
-    color: var(--rt-bone, #e8dcc8);
-    font-family: var(--rt-font-body, 'Garamond', serif);
+    color: var(--wh40k-bone, #e8dcc8);
+    font-family: var(--wh40k-font-body, 'Garamond', serif);
     font-size: 0.9rem;
 
     // Parchment texture overlay
@@ -43,10 +43,10 @@
 
         .wh40k-tooltip__title {
             margin: 0;
-            font-family: var(--rt-font-header, 'Caslon Antique', serif);
+            font-family: var(--wh40k-font-header, 'Caslon Antique', serif);
             font-size: 1.1rem;
             font-weight: bold;
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
             text-transform: uppercase;
             letter-spacing: 1px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
@@ -89,11 +89,11 @@
 
             .wh40k-tooltip__value {
                 font-weight: 600;
-                color: var(--rt-bone, #e8dcc8);
+                color: var(--wh40k-bone, #e8dcc8);
 
                 &.wh40k-tooltip__value--bonus {
                     font-size: 1.2rem;
-                    color: var(--rt-gold, #d4af37);
+                    color: var(--wh40k-gold, #d4af37);
                 }
             }
         }
@@ -106,7 +106,7 @@
         .wh40k-tooltip__sources-title {
             font-size: 0.85rem;
             font-weight: bold;
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -128,7 +128,7 @@
 
             .wh40k-tooltip__source-value {
                 font-weight: bold;
-                color: var(--rt-gold, #d4af37);
+                color: var(--wh40k-gold, #d4af37);
             }
         }
     }
@@ -149,7 +149,7 @@
         .wh40k-tooltip__value {
             font-size: 1.3rem;
             font-weight: bold;
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
             text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
         }
 
@@ -167,7 +167,7 @@
         .wh40k-tooltip__training-title {
             font-size: 0.85rem;
             font-weight: bold;
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -212,7 +212,7 @@
         .wh40k-tooltip__equipped-title {
             font-size: 0.85rem;
             font-weight: bold;
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -243,7 +243,7 @@
 
             .ap {
                 font-weight: bold;
-                color: var(--rt-gold, #d4af37);
+                color: var(--wh40k-gold, #d4af37);
             }
         }
     }
@@ -255,7 +255,7 @@
         .wh40k-tooltip__qualities-title {
             font-size: 0.85rem;
             font-weight: bold;
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -284,7 +284,7 @@
         background: rgba(205, 127, 50, 0.2);
         border-top: 1px solid rgba(212, 175, 55, 0.3);
         font-size: 0.85rem;
-        color: var(--rt-gold, #d4af37);
+        color: var(--wh40k-gold, #d4af37);
         font-style: italic;
 
         i {
@@ -404,7 +404,7 @@
         color: rgba(240, 232, 220, 0.85);
 
         i {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 
@@ -421,13 +421,13 @@
 
         i {
             font-size: 0.8rem;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 }
 
 /* Hover state for elements with tooltips */
-[data-rt-tooltip] {
+[data-wh40k-tooltip] {
     cursor: help;
     position: relative;
 

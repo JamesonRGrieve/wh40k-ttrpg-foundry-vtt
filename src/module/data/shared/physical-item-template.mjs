@@ -124,7 +124,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @type {string}
      */
     get availabilityLabel() {
-        return game.i18n.localize(`RT.Availability.${this.availability.capitalize()}`);
+        return game.i18n.localize(`WH40K.Availability.${this.availability.capitalize()}`);
     }
 
     /* -------------------------------------------- */
@@ -134,7 +134,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @type {string}
      */
     get craftsmanshipLabel() {
-        return game.i18n.localize(`RT.Craftsmanship.${this.craftsmanship.capitalize()}`);
+        return game.i18n.localize(`WH40K.Craftsmanship.${this.craftsmanship.capitalize()}`);
     }
 
     /* -------------------------------------------- */

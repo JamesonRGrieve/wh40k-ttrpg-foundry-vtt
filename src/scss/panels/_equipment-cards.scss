@@ -17,18 +17,18 @@
     align-items: center;
     gap: $wh40k-space-sm;
     padding: $wh40k-space-xs $wh40k-space-sm;
-    background: var(--rt-panel-bg-solid);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     transition: all 0.2s ease;
     cursor: grab;
     min-height: 36px;
 
     &:hover {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-border-color);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-border-color);
         transform: translateX(2px);
-        box-shadow: -2px 0 0 var(--rt-gold);
+        box-shadow: -2px 0 0 var(--wh40k-gold);
     }
 
     &:active {
@@ -38,28 +38,28 @@
 
 // Row State Variants
 .wh40k-equip-equipped {
-    border-left: 3px solid var(--rt-success-primary);
-    background: var(--rt-success-bg);
+    border-left: 3px solid var(--wh40k-success-primary);
+    background: var(--wh40k-success-bg);
 }
 
 .wh40k-equip-active {
-    border-left: 3px solid var(--rt-fate-primary);
-    background: var(--rt-fate-bg);
+    border-left: 3px solid var(--wh40k-fate-primary);
+    background: var(--wh40k-fate-bg);
 
     .wh40k-equip-icon {
-        box-shadow: 0 0 8px var(--rt-fate-primary);
+        box-shadow: 0 0 8px var(--wh40k-fate-primary);
     }
 }
 
 .wh40k-equip-overloaded {
-    border-left: 3px solid var(--rt-danger-primary);
-    background: var(--rt-danger-bg);
+    border-left: 3px solid var(--wh40k-danger-primary);
+    background: var(--wh40k-danger-bg);
     opacity: 0.8;
 }
 
 .wh40k-equip-stowed {
     opacity: 0.65;
-    border-left: 3px solid var(--rt-text-subtle);
+    border-left: 3px solid var(--wh40k-text-subtle);
 }
 
 // Icon (Small)
@@ -68,7 +68,7 @@
     height: 28px;
     border-radius: 4px;
     object-fit: cover;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
     flex-shrink: 0;
 }
 
@@ -79,7 +79,7 @@
     text-align: left;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     background: none;
     border: none;
     padding: 0;
@@ -90,14 +90,14 @@
     transition: color 0.2s ease;
 
     &:hover {
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
     }
 }
 
 // Meta Info (Type, Location, etc.)
 .wh40k-equip-meta {
     font-size: 0.7rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.03em;
     flex-shrink: 0;
@@ -107,7 +107,7 @@
 .wh40k-equip-status {
     font-size: 0.7rem;
     font-weight: 600;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     display: flex;
     align-items: center;
     gap: 4px;
@@ -118,32 +118,32 @@
     }
 
     .wh40k-status-active {
-        color: var(--rt-fate-primary);
+        color: var(--wh40k-fate-primary);
     }
 
     .wh40k-status-danger {
-        color: var(--rt-danger-primary);
+        color: var(--wh40k-danger-primary);
     }
 
     .wh40k-status-offline {
-        color: var(--rt-text-subtle);
+        color: var(--wh40k-text-subtle);
     }
 }
 
 // Stat Display (AP, Weight, etc.)
 .wh40k-equip-stat {
     font-size: 0.75rem;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     flex-shrink: 0;
 
     .wh40k-stat-l {
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         font-weight: 500;
         margin-right: 2px;
     }
 
     strong {
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
         font-weight: 700;
     }
 }
@@ -164,21 +164,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 3px;
     cursor: pointer;
     transition: all 0.15s ease;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 
     i {
         font-size: 0.75rem;
     }
 
     &:hover {
-        background: var(--rt-btn-bg-hover);
-        border-color: var(--rt-border-color);
-        color: var(--rt-text-dark);
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--wh40k-border-color);
+        color: var(--wh40k-text-dark);
         transform: translateY(-1px);
     }
 
@@ -190,25 +190,25 @@
 // Toggle Button (Equip/Activate)
 .wh40k-equip-toggle {
     .fa-check-circle {
-        color: var(--rt-success-primary);
+        color: var(--wh40k-success-primary);
     }
 
     .fa-bolt {
-        color: var(--rt-fate-primary);
+        color: var(--wh40k-fate-primary);
     }
 
     .fa-power-off {
-        color: var(--rt-text-subtle);
+        color: var(--wh40k-text-subtle);
     }
 }
 
 // Danger Button
 .wh40k-equip-danger {
-    color: var(--rt-danger-primary);
+    color: var(--wh40k-danger-primary);
 
     &:hover {
-        background: var(--rt-danger-bg);
-        border-color: var(--rt-danger-primary);
+        background: var(--wh40k-danger-bg);
+        border-color: var(--wh40k-danger-primary);
     }
 }
 
@@ -220,25 +220,25 @@
     align-items: center;
     justify-content: center;
     gap: $wh40k-space-xs;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px dashed var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px dashed var(--wh40k-border-color-light);
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     font-size: 0.8rem;
     font-weight: 600;
 
     i {
         font-size: 0.9em;
-        color: var(--rt-success-primary);
+        color: var(--wh40k-success-primary);
     }
 
     &:hover {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-border-color);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-border-color);
         border-style: solid;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
     }
 }
 
@@ -273,17 +273,17 @@
 
 // Equipment Card
 .wh40k-equipment-card {
-    background: var(--rt-panel-bg-solid);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 8px;
     padding: $wh40k-space-sm;
     transition: all 0.2s ease;
     cursor: grab;
 
     &:hover {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-border-color);
-        box-shadow: 0 2px 8px var(--rt-shadow-medium);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-border-color);
+        box-shadow: 0 2px 8px var(--wh40k-shadow-medium);
         transform: translateY(-1px);
     }
 
@@ -294,43 +294,43 @@
 
 // Card States
 .wh40k-card-equipped {
-    border-left: 4px solid var(--rt-success-primary);
-    background: var(--rt-success-bg);
+    border-left: 4px solid var(--wh40k-success-primary);
+    background: var(--wh40k-success-bg);
 
     &:hover {
-        background: var(--rt-success-bg);
+        background: var(--wh40k-success-bg);
         opacity: 0.95;
     }
 }
 
 .wh40k-card-active {
-    border-left: 4px solid var(--rt-fate-primary);
-    background: var(--rt-fate-bg);
+    border-left: 4px solid var(--wh40k-fate-primary);
+    background: var(--wh40k-fate-bg);
 
     &:hover {
-        background: var(--rt-fate-bg);
+        background: var(--wh40k-fate-bg);
         opacity: 0.95;
     }
 
     .wh40k-card-icon {
-        box-shadow: 0 0 8px var(--rt-fate-primary);
+        box-shadow: 0 0 8px var(--wh40k-fate-primary);
     }
 }
 
 .wh40k-card-overloaded {
-    border-left: 4px solid var(--rt-danger-primary);
-    background: var(--rt-danger-bg);
+    border-left: 4px solid var(--wh40k-danger-primary);
+    background: var(--wh40k-danger-bg);
     opacity: 0.7;
 
     &:hover {
-        background: var(--rt-danger-bg);
+        background: var(--wh40k-danger-bg);
         opacity: 0.85;
     }
 }
 
 .wh40k-card-stowed {
     opacity: 0.7;
-    border-left: 4px solid var(--rt-text-muted);
+    border-left: 4px solid var(--wh40k-text-muted);
 
     &:hover {
         opacity: 0.85;
@@ -350,7 +350,7 @@
     height: 40px;
     border-radius: 6px;
     object-fit: cover;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
     flex-shrink: 0;
 }
 
@@ -365,20 +365,20 @@
 .wh40k-card-name {
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
     &:hover {
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
     }
 }
 
 .wh40k-card-meta {
     font-size: 0.7rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     display: flex;
     align-items: center;
     gap: 4px;
@@ -396,12 +396,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
@@ -426,8 +426,8 @@
     }
 
     &:hover {
-        background: var(--rt-btn-bg-hover);
-        border-color: var(--rt-border-color-strong);
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--wh40k-border-color-strong);
         transform: scale(1.05);
     }
 
@@ -438,13 +438,13 @@
 
     &.wh40k-action-equip {
         .fa-check-circle {
-            color: var(--rt-success-primary);
+            color: var(--wh40k-success-primary);
         }
     }
 
     &.wh40k-action-activate {
         .fa-bolt {
-            color: var(--rt-fate-primary);
+            color: var(--wh40k-fate-primary);
         }
     }
 
@@ -466,8 +466,8 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    background: var(--rt-panel-bg-translucent);
-    color: var(--rt-text-muted);
+    background: var(--wh40k-panel-bg-translucent);
+    color: var(--wh40k-text-muted);
 
     i {
         font-size: 0.9em;
@@ -475,23 +475,23 @@
 }
 
 .wh40k-status-active {
-    background: var(--rt-fate-bg);
-    color: var(--rt-fate-primary);
+    background: var(--wh40k-fate-bg);
+    color: var(--wh40k-fate-primary);
 }
 
 .wh40k-status-overloaded {
-    background: var(--rt-danger-bg);
-    color: var(--rt-danger-primary);
+    background: var(--wh40k-danger-bg);
+    color: var(--wh40k-danger-primary);
 }
 
 // Card Description
 .wh40k-card-description {
     font-size: 0.75rem;
-    color: var(--rt-text-medium);
+    color: var(--wh40k-text-medium);
     line-height: 1.4;
     margin-bottom: $wh40k-space-xs;
     padding: $wh40k-space-xs;
-    background: var(--rt-panel-bg-translucent);
+    background: var(--wh40k-panel-bg-translucent);
     border-radius: 4px;
     font-style: italic;
 }
@@ -509,40 +509,40 @@
     align-items: center;
     gap: 4px;
     padding: 4px 8px;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     font-size: 0.7rem;
 }
 
 .wh40k-stat-label {
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 0.05em;
 }
 
 .wh40k-stat-value {
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     font-weight: 700;
 }
 
 // Special stat badges
 .wh40k-badge-ap {
-    border-color: var(--rt-danger-border);
-    background: var(--rt-danger-bg);
+    border-color: var(--wh40k-danger-border);
+    background: var(--wh40k-danger-bg);
 
     .wh40k-stat-value {
-        color: var(--rt-danger-primary);
+        color: var(--wh40k-danger-primary);
     }
 }
 
 .wh40k-badge-rating {
-    border-color: var(--rt-fate-border);
-    background: var(--rt-fate-bg);
+    border-color: var(--wh40k-fate-border);
+    background: var(--wh40k-fate-bg);
 
     .wh40k-stat-value {
-        color: var(--rt-fate-primary);
+        color: var(--wh40k-fate-primary);
     }
 }
 
@@ -551,7 +551,7 @@
     display: flex;
     gap: 4px;
     padding-top: $wh40k-space-xs;
-    border-top: 1px solid var(--rt-border-color-light);
+    border-top: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-card-btn {
@@ -561,12 +561,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    color: var(--rt-text-medium);
+    color: var(--wh40k-text-medium);
     font-size: 0.85rem;
     position: relative;
     overflow: hidden;
@@ -601,8 +601,8 @@
     }
 
     &:hover {
-        background: var(--rt-btn-bg-hover);
-        border-color: var(--rt-border-color);
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--wh40k-border-color);
         transform: translateY(-1px);
     }
 
@@ -612,11 +612,11 @@
 }
 
 .wh40k-btn-danger {
-    color: var(--rt-danger-primary);
+    color: var(--wh40k-danger-primary);
 
     &:hover {
-        background: var(--rt-danger-bg);
-        border-color: var(--rt-danger-primary);
+        background: var(--wh40k-danger-bg);
+        border-color: var(--wh40k-danger-primary);
     }
 }
 
@@ -628,25 +628,25 @@
     align-items: center;
     justify-content: center;
     gap: $wh40k-space-xs;
-    background: var(--rt-panel-bg-translucent);
-    border: 2px dashed var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 2px dashed var(--wh40k-border-color-light);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     font-size: 0.85rem;
     font-weight: 600;
 
     &:hover {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-border-color);
-        color: var(--rt-text-dark);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-border-color);
+        color: var(--wh40k-text-dark);
         transform: translateY(-1px);
     }
 
     i {
         font-size: 1.1em;
-        color: var(--rt-success-primary);
+        color: var(--wh40k-success-primary);
     }
 }
 
@@ -660,7 +660,7 @@
 }
 
 .wh40k-equipment-list.drag-over {
-    background: var(--rt-accent-overlay);
+    background: var(--wh40k-accent-overlay);
     border-radius: 8px;
 }
 

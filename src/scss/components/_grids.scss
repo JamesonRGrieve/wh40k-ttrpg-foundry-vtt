@@ -31,7 +31,7 @@ $grid-tables: (
     attackprompt: 2rem 1fr 3rem,
 );
 
-// Shared grid styles for both dh-* (legacy) and rt-* (new) prefixes
+// Shared grid styles for both dh-* (legacy) and wh40k-* (new) prefixes
 @mixin grid-field-styles {
     &-field,
     &-textarea {
@@ -84,7 +84,7 @@ $grid-tables: (
         grid-column: 1 / -1;
     }
 
-    // Generate rt-*table classes for each table type
+    // Generate wh40k-*table classes for each table type
     @each $table, $layout in $grid-tables {
         &-#{$table}table {
             &--no-border {
@@ -130,8 +130,8 @@ $grid-tables: (
             }
         }
 
-        // Note: rt-table--no-border and rt-table--border inherit styles
-        // from the generated rt-*table classes above via the @each loop
+        // Note: wh40k-table--no-border and wh40k-table--border inherit styles
+        // from the generated wh40k-*table classes above via the @each loop
     }
 
     &-controls {

@@ -1,133 +1,133 @@
 {{! Difficulty Calculator Dialog Template }}
-<form class="rt-difficulty-calculator">
+<form class="wh40k-difficulty-calculator">
     {{! NPC Info }}
-    <section class="rt-panel rt-panel--npc-info">
-        <header class="rt-panel-header">
-            <img src="{{npc.img}}" alt="{{npc.name}}" class="rt-token-image" />
-            <div class="rt-panel-header-text">
+    <section class="wh40k-panel wh40k-panel--npc-info">
+        <header class="wh40k-panel-header">
+            <img src="{{npc.img}}" alt="{{npc.name}}" class="wh40k-token-image" />
+            <div class="wh40k-panel-header-text">
                 <h3>{{npc.name}}</h3>
-                <div class="rt-subtitle">
+                <div class="wh40k-subtitle">
                     Threat
                     {{npc.threatLevel}}
                     •
                     {{npc.type}}
-                    {{#if npc.isHorde}}<span class="rt-badge rt-badge--horde">Horde</span>{{/if}}
+                    {{#if npc.isHorde}}<span class="wh40k-badge wh40k-badge--horde">Horde</span>{{/if}}
                 </div>
             </div>
         </header>
     </section>
 
     {{! Quantity Input }}
-    <section class="rt-panel rt-panel--quantity">
-        <label class="rt-form-group">
-            <span class="rt-label">Number of Enemies</span>
-            <input type="number" name="quantity" value="{{quantity}}" min="1" class="rt-input" data-tooltip="How many of this NPC are in the encounter?" />
+    <section class="wh40k-panel wh40k-panel--quantity">
+        <label class="wh40k-form-group">
+            <span class="wh40k-label">Number of Enemies</span>
+            <input type="number" name="quantity" value="{{quantity}}" min="1" class="wh40k-input" data-tooltip="How many of this NPC are in the encounter?" />
         </label>
     </section>
 
     {{! Party Composition }}
-    <section class="rt-panel rt-panel--party">
-        <header class="rt-panel-header">
+    <section class="wh40k-panel wh40k-panel--party">
+        <header class="wh40k-panel-header">
             <i class="fa-solid fa-users"></i>
             <h4>Party Composition</h4>
         </header>
-        <div class="rt-panel-body">
+        <div class="wh40k-panel-body">
             {{#if partyMembers}}
-                <ul class="rt-party-list">
+                <ul class="wh40k-party-list">
                     {{#each partyMembers}}
-                        <li class="rt-party-member">
-                            <img src="{{this.img}}" alt="{{this.name}}" class="rt-avatar" />
-                            <span class="rt-party-member-name">{{this.name}}</span>
-                            <span class="rt-party-member-rank">Rank {{this.rank}}</span>
+                        <li class="wh40k-party-member">
+                            <img src="{{this.img}}" alt="{{this.name}}" class="wh40k-avatar" />
+                            <span class="wh40k-party-member-name">{{this.name}}</span>
+                            <span class="wh40k-party-member-rank">Rank {{this.rank}}</span>
                         </li>
                     {{/each}}
                 </ul>
             {{else}}
-                <p class="rt-empty-message">No active party members found.</p>
+                <p class="wh40k-empty-message">No active party members found.</p>
             {{/if}}
 
-            <div class="rt-stats-grid">
-                <div class="rt-stat-box">
-                    <span class="rt-stat-label">Party Size</span>
-                    <span class="rt-stat-value">{{partySize}}</span>
+            <div class="wh40k-stats-grid">
+                <div class="wh40k-stat-box">
+                    <span class="wh40k-stat-label">Party Size</span>
+                    <span class="wh40k-stat-value">{{partySize}}</span>
                 </div>
-                <div class="rt-stat-box">
-                    <span class="rt-stat-label">Avg. Rank</span>
-                    <span class="rt-stat-value">{{partyLevel}}</span>
+                <div class="wh40k-stat-box">
+                    <span class="wh40k-stat-label">Avg. Rank</span>
+                    <span class="wh40k-stat-value">{{partyLevel}}</span>
                 </div>
-                <div class="rt-stat-box">
-                    <span class="rt-stat-label">Party Threat</span>
-                    <span class="rt-stat-value">{{partyThreat}}</span>
+                <div class="wh40k-stat-box">
+                    <span class="wh40k-stat-label">Party Threat</span>
+                    <span class="wh40k-stat-value">{{partyThreat}}</span>
                 </div>
             </div>
         </div>
     </section>
 
     {{! Threat Analysis }}
-    <section class="rt-panel rt-panel--threat-analysis">
-        <header class="rt-panel-header">
+    <section class="wh40k-panel wh40k-panel--threat-analysis">
+        <header class="wh40k-panel-header">
             <i class="fa-solid fa-chart-line"></i>
             <h4>Threat Analysis</h4>
         </header>
-        <div class="rt-panel-body">
-            <div class="rt-threat-comparison">
-                <div class="rt-threat-bar">
-                    <div class="rt-threat-bar-label">NPC Threat</div>
-                    <div class="rt-threat-bar-visual">
-                        <div class="rt-threat-bar-fill" style="width: {{multiply threatRatio 100}}%; background-color: {{difficulty.color}};"></div>
+        <div class="wh40k-panel-body">
+            <div class="wh40k-threat-comparison">
+                <div class="wh40k-threat-bar">
+                    <div class="wh40k-threat-bar-label">NPC Threat</div>
+                    <div class="wh40k-threat-bar-visual">
+                        <div class="wh40k-threat-bar-fill" style="width: {{multiply threatRatio 100}}%; background-color: {{difficulty.color}};"></div>
                     </div>
-                    <div class="rt-threat-bar-value">{{totalThreat}}</div>
+                    <div class="wh40k-threat-bar-value">{{totalThreat}}</div>
                 </div>
 
-                <div class="rt-threat-ratio">
-                    <span class="rt-ratio-value" style="color: {{difficulty.color}};">
+                <div class="wh40k-threat-ratio">
+                    <span class="wh40k-ratio-value" style="color: {{difficulty.color}};">
                         {{threatRatio}}×
                     </span>
-                    <span class="rt-ratio-label">Threat Ratio</span>
+                    <span class="wh40k-ratio-label">Threat Ratio</span>
                 </div>
             </div>
 
             {{! Difficulty Rating }}
-            <div class="rt-difficulty-result" style="border-color: {{difficulty.color}};">
-                <div class="rt-difficulty-badge" style="background-color: {{difficulty.color}};">
+            <div class="wh40k-difficulty-result" style="border-color: {{difficulty.color}};">
+                <div class="wh40k-difficulty-badge" style="background-color: {{difficulty.color}};">
                     {{difficulty.label}}
                 </div>
-                <p class="rt-difficulty-description">{{difficulty.description}}</p>
+                <p class="wh40k-difficulty-description">{{difficulty.description}}</p>
             </div>
 
             {{! Difficulty Scale Reference }}
-            <div class="rt-difficulty-scale">
+            <div class="wh40k-difficulty-scale">
                 <h5>Difficulty Scale</h5>
-                <ul class="rt-scale-list">
-                    <li class="rt-scale-item">
-                        <span class="rt-scale-dot" style="background-color: #4caf50;"></span>
-                        <span class="rt-scale-label">Trivial</span>
-                        <span class="rt-scale-range">&lt; 0.25×</span>
+                <ul class="wh40k-scale-list">
+                    <li class="wh40k-scale-item">
+                        <span class="wh40k-scale-dot" style="background-color: #4caf50;"></span>
+                        <span class="wh40k-scale-label">Trivial</span>
+                        <span class="wh40k-scale-range">&lt; 0.25×</span>
                     </li>
-                    <li class="rt-scale-item">
-                        <span class="rt-scale-dot" style="background-color: #8bc34a;"></span>
-                        <span class="rt-scale-label">Easy</span>
-                        <span class="rt-scale-range">0.25-0.50×</span>
+                    <li class="wh40k-scale-item">
+                        <span class="wh40k-scale-dot" style="background-color: #8bc34a;"></span>
+                        <span class="wh40k-scale-label">Easy</span>
+                        <span class="wh40k-scale-range">0.25-0.50×</span>
                     </li>
-                    <li class="rt-scale-item">
-                        <span class="rt-scale-dot" style="background-color: #ff9800;"></span>
-                        <span class="rt-scale-label">Moderate</span>
-                        <span class="rt-scale-range">0.50-0.75×</span>
+                    <li class="wh40k-scale-item">
+                        <span class="wh40k-scale-dot" style="background-color: #ff9800;"></span>
+                        <span class="wh40k-scale-label">Moderate</span>
+                        <span class="wh40k-scale-range">0.50-0.75×</span>
                     </li>
-                    <li class="rt-scale-item">
-                        <span class="rt-scale-dot" style="background-color: #ff5722;"></span>
-                        <span class="rt-scale-label">Dangerous</span>
-                        <span class="rt-scale-range">0.75-1.00×</span>
+                    <li class="wh40k-scale-item">
+                        <span class="wh40k-scale-dot" style="background-color: #ff5722;"></span>
+                        <span class="wh40k-scale-label">Dangerous</span>
+                        <span class="wh40k-scale-range">0.75-1.00×</span>
                     </li>
-                    <li class="rt-scale-item">
-                        <span class="rt-scale-dot" style="background-color: #f44336;"></span>
-                        <span class="rt-scale-label">Deadly</span>
-                        <span class="rt-scale-range">1.00-1.50×</span>
+                    <li class="wh40k-scale-item">
+                        <span class="wh40k-scale-dot" style="background-color: #f44336;"></span>
+                        <span class="wh40k-scale-label">Deadly</span>
+                        <span class="wh40k-scale-range">1.00-1.50×</span>
                     </li>
-                    <li class="rt-scale-item">
-                        <span class="rt-scale-dot" style="background-color: #9c27b0;"></span>
-                        <span class="rt-scale-label">Apocalyptic</span>
-                        <span class="rt-scale-range">&gt; 1.50×</span>
+                    <li class="wh40k-scale-item">
+                        <span class="wh40k-scale-dot" style="background-color: #9c27b0;"></span>
+                        <span class="wh40k-scale-label">Apocalyptic</span>
+                        <span class="wh40k-scale-range">&gt; 1.50×</span>
                     </li>
                 </ul>
             </div>

@@ -5,8 +5,8 @@
 // Theme-adaptive styles using CSS custom properties
 
 .wh40k-rpg.sheet.actor .window-content {
-    background: var(--rt-sheet-bg) !important;
-    background-color: var(--rt-sheet-bg-alt) !important;
+    background: var(--wh40k-sheet-bg) !important;
+    background-color: var(--wh40k-sheet-bg-alt) !important;
     // ApplicationV2: ensure window-content uses flex to allow child scrolling
     display: flex;
     flex-direction: column;
@@ -15,7 +15,7 @@
 
 .wh40k-sheet {
     font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
-    background: var(--rt-sheet-bg) !important;
+    background: var(--wh40k-sheet-bg) !important;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -25,10 +25,10 @@
     overflow: hidden;
 
     .wh40k-panel {
-        background: var(--rt-panel-bg);
-        border: 1px solid var(--rt-border-color);
+        background: var(--wh40k-panel-bg);
+        border: 1px solid var(--wh40k-border-color);
         border-radius: 10px;
-        box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 2px 6px var(--rt-shadow-soft);
+        box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 2px 6px var(--wh40k-shadow-soft);
         position: relative;
         overflow: visible;
     }
@@ -39,7 +39,7 @@
         gap: 8px;
         padding: 8px 12px;
         background: transparent;
-        border-bottom: 1px solid var(--rt-border-color);
+        border-bottom: 1px solid var(--wh40k-border-color);
     }
 
     .wh40k-panel-title {
@@ -47,16 +47,16 @@
         font-family: 'Modesto Condensed', serif;
         font-size: 1rem;
         font-weight: 600;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
         letter-spacing: 0.02em;
     }
 
     .wh40k-panel-title i {
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
     }
 
     .wh40k-panel-body {
-        background: var(--rt-panel-body-bg);
+        background: var(--wh40k-panel-body-bg);
         padding: 10px 12px;
         overflow: visible;
     }
@@ -67,7 +67,7 @@
     }
 
     .wh40k-wrapper .wh40k-sheet {
-        background: var(--rt-sheet-bg) !important;
+        background: var(--wh40k-sheet-bg) !important;
         position: relative;
         overflow: hidden;
     }
@@ -80,7 +80,7 @@
     .wh40k-panel-details {
         margin-top: 10px;
         padding-top: 10px;
-        border-top: 1px dashed var(--rt-border-color-light);
+        border-top: 1px dashed var(--wh40k-border-color-light);
         display: grid;
         gap: 10px;
         overflow: hidden;
@@ -103,8 +103,8 @@
         width: 24px;
         height: 24px;
         border-radius: 6px;
-        border: 1px solid var(--rt-border-color);
-        background: var(--rt-btn-bg);
+        border: 1px solid var(--wh40k-border-color);
+        background: var(--wh40k-btn-bg);
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -113,7 +113,7 @@
 
     .wh40k-panel-toggle-icon {
         font-size: 0.7em;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
         transition: transform 0.15s ease;
     }
 
@@ -169,25 +169,25 @@
     $wh40k-panel-movement: rgb(42, 122, 154);
 
     .wh40k-wounds-panel {
-        @include rt-panel-tint($wh40k-panel-wounds);
+        @include wh40k-panel-tint($wh40k-panel-wounds);
     }
     .wh40k-fatigue-panel {
-        @include rt-panel-tint($wh40k-panel-fatigue);
+        @include wh40k-panel-tint($wh40k-panel-fatigue);
     }
     .wh40k-fate-panel {
-        @include rt-panel-tint($wh40k-panel-fate);
+        @include wh40k-panel-tint($wh40k-panel-fate);
     }
     .wh40k-panel-corruption {
-        @include rt-panel-tint($wh40k-panel-corruption, 0.8, 0.14);
+        @include wh40k-panel-tint($wh40k-panel-corruption, 0.8, 0.14);
     }
     .wh40k-panel-insanity {
-        @include rt-panel-tint($wh40k-panel-insanity, 0.75, 0.14);
+        @include wh40k-panel-tint($wh40k-panel-insanity, 0.75, 0.14);
     }
     .wh40k-panel-movement {
-        @include rt-panel-tint($wh40k-panel-movement);
+        @include wh40k-panel-tint($wh40k-panel-movement);
     }
     .wh40k-panel-bonuses {
-        @include rt-panel-tint($wh40k-panel-fatigue, 0.65, 0.1);
+        @include wh40k-panel-tint($wh40k-panel-fatigue, 0.65, 0.1);
     }
 
     .wh40k-effects-panel {
@@ -199,15 +199,15 @@
     }
 
     .wh40k-panel > :is(.wh40k-vitals-body, .wh40k-effects-list, .wh40k-ability-list, .wh40k-specialist-entries, .wh40k-table--border) {
-        background: var(--rt-panel-bg-translucent);
+        background: var(--wh40k-panel-bg-translucent);
         padding: 10px 12px;
     }
 
     .wh40k-specialist-group {
-        background: var(--rt-panel-bg-solid);
-        border: 1px solid var(--rt-border-accent);
+        background: var(--wh40k-panel-bg-solid);
+        border: 1px solid var(--wh40k-border-accent);
         border-radius: 8px;
-        box-shadow: 0 3px 10px var(--rt-shadow-soft);
+        box-shadow: 0 3px 10px var(--wh40k-shadow-soft);
         position: relative;
         overflow: hidden;
 
@@ -215,9 +215,9 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: var(--rt-accent-overlay);
-            border-top: 2px solid var(--rt-accent-border);
-            border-bottom: 2px solid var(--rt-accent-border);
+            background: var(--wh40k-accent-overlay);
+            border-top: 2px solid var(--wh40k-accent-border);
+            border-bottom: 2px solid var(--wh40k-accent-border);
             pointer-events: none;
             z-index: 0;
         }
@@ -236,7 +236,7 @@
     }
 }
 
-// Character Header - Support both dh- and rt- prefixes
+// Character Header - Support both dh- and wh40k- prefixes
 .wh40k-character-header {
     grid-column: span 6;
     position: relative;
@@ -287,8 +287,8 @@
     height: 80px;
     border-radius: 6px;
     overflow: hidden;
-    border: 2px solid var(--rt-border-color);
-    box-shadow: 0 2px 8px var(--rt-shadow-medium);
+    border: 2px solid var(--wh40k-border-color);
+    box-shadow: 0 2px 8px var(--wh40k-shadow-medium);
 }
 
 .wh40k-header__logo-image {
@@ -326,19 +326,19 @@
 }
 
 .wh40k-header-bio-input {
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 6px;
     padding: 6px 8px;
-    background: var(--rt-input-bg);
+    background: var(--wh40k-input-bg);
     resize: vertical;
     font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
     font-size: 0.9em;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 
     &:focus {
         outline: none;
-        border-color: var(--rt-border-color);
-        box-shadow: 0 0 0 2px var(--rt-shadow-soft);
+        border-color: var(--wh40k-border-color);
+        box-shadow: 0 0 0 2px var(--wh40k-shadow-soft);
     }
 }
 
@@ -373,7 +373,7 @@
     height: 60px;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(218, 165, 32, 0.1) 100%);
-    border: 2px solid var(--rt-fate-primary, #d4af37);
+    border: 2px solid var(--wh40k-fate-primary, #d4af37);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
     cursor: help;
@@ -381,7 +381,7 @@
     i {
         position: absolute;
         font-size: 2.5rem;
-        color: var(--rt-fate-primary, #d4af37);
+        color: var(--wh40k-fate-primary, #d4af37);
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         transition: all 0.3s ease;
         opacity: 0.9;
@@ -392,7 +392,7 @@
         z-index: 1;
         font-size: 1rem;
         font-weight: 700;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
     }
 
@@ -405,17 +405,17 @@
 // Cracked seal state (60+ corruption)
 .wh40k-purity-seal-pip.wh40k-seal-cracked {
     background: linear-gradient(135deg, rgba(255, 140, 0, 0.2) 0%, rgba(184, 134, 11, 0.15) 100%);
-    border-color: var(--rt-fatigue-primary, #ff8c00);
+    border-color: var(--wh40k-fatigue-primary, #ff8c00);
     box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3), inset 0 1px 2px rgba(0, 0, 0, 0.1);
 
     i {
-        color: var(--rt-fatigue-primary, #ff8c00);
+        color: var(--wh40k-fatigue-primary, #ff8c00);
         filter: drop-shadow(0 2px 6px rgba(255, 140, 0, 0.4)) grayscale(0.2);
         animation: seal-shake-pip 3s ease-in-out infinite;
     }
 
     .wh40k-seal-pip-value {
-        color: var(--rt-corruption-primary, #8b0000);
+        color: var(--wh40k-corruption-primary, #8b0000);
         text-shadow: 0 1px 2px rgba(255, 140, 0, 0.6);
     }
 }
@@ -423,17 +423,17 @@
 // Burning seal state (90+ corruption)
 .wh40k-purity-seal-pip.wh40k-seal-burning {
     background: linear-gradient(135deg, rgba(139, 0, 0, 0.3) 0%, rgba(139, 0, 0, 0.2) 100%);
-    border-color: var(--rt-corruption-primary, #8b0000);
+    border-color: var(--wh40k-corruption-primary, #8b0000);
     box-shadow: 0 2px 12px rgba(139, 0, 0, 0.6), inset 0 1px 2px rgba(255, 0, 0, 0.2);
 
     i {
-        color: var(--rt-corruption-primary, #8b0000);
+        color: var(--wh40k-corruption-primary, #8b0000);
         filter: drop-shadow(0 2px 10px rgba(139, 0, 0, 0.8)) grayscale(0.3);
         animation: seal-burn-pip 1.5s ease-in-out infinite;
     }
 
     .wh40k-seal-pip-value {
-        color: var(--rt-corruption-primary, #8b0000);
+        color: var(--wh40k-corruption-primary, #8b0000);
         text-shadow: 0 0 4px rgba(255, 0, 0, 0.8);
         animation: text-flicker 0.5s ease-in-out infinite;
     }
@@ -493,10 +493,10 @@
     max-width: 620px;
     overflow: visible;
     position: relative;
-    background: var(--rt-hud-bg);
-    border: 1px solid var(--rt-border-color-strong);
+    background: var(--wh40k-hud-bg);
+    border: 1px solid var(--wh40k-border-color-strong);
     border-radius: 8px;
-    box-shadow: inset 0 1px 0 var(--rt-text-shadow), inset 0 -1px 0 var(--rt-shadow-medium), 0 6px 18px var(--rt-shadow-medium);
+    box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), inset 0 -1px 0 var(--wh40k-shadow-medium), 0 6px 18px var(--wh40k-shadow-medium);
     z-index: 1;
 }
 
@@ -522,10 +522,10 @@
     min-width: 0;
     position: relative;
     text-align: center;
-    background: var(--rt-hud-item-bg);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-hud-item-bg);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 6px;
-    box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 2px 6px var(--rt-shadow-soft);
+    box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 2px 6px var(--wh40k-shadow-soft);
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 
     // Advancement progress indicator - border fill based on advance level
@@ -553,18 +553,18 @@
     // Buff state (positive modifier)
     &.wh40k-char-buffed {
         border-color: rgba(74, 222, 128, 0.6);
-        box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 2px 6px var(--rt-shadow-soft), 0 0 8px rgba(74, 222, 128, 0.3);
+        box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 2px 6px var(--wh40k-shadow-soft), 0 0 8px rgba(74, 222, 128, 0.3);
     }
 
     // Debuff state (negative modifier)
     &.wh40k-char-debuffed {
         border-color: rgba(239, 68, 68, 0.6);
-        box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 2px 6px var(--rt-shadow-soft), 0 0 8px rgba(239, 68, 68, 0.3);
+        box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 2px 6px var(--wh40k-shadow-soft), 0 0 8px rgba(239, 68, 68, 0.3);
     }
 
     &:hover {
         transform: translateY(-1px);
-        box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 4px 12px var(--rt-shadow-medium);
+        box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 4px 12px var(--wh40k-shadow-medium);
     }
 }
 
@@ -577,14 +577,14 @@
     letter-spacing: 0.12em;
     font-weight: 700;
     font-size: 0.78em;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     text-align: center;
     width: 100%;
     display: block;
     transition: color 0.15s ease, transform 0.15s ease;
 
     &:hover {
-        color: var(--rt-gold, #d4af37);
+        color: var(--wh40k-gold, #d4af37);
     }
 
     &:active {
@@ -593,12 +593,12 @@
 
     // Rolling animation class - added via JS on click
     &.rolling {
-        animation: rt-char-roll 0.4s ease-out;
+        animation: wh40k-char-roll 0.4s ease-out;
     }
 }
 
 // Rolling animation keyframes
-@keyframes rt-char-roll {
+@keyframes wh40k-char-roll {
     0% {
         transform: scale(1);
     }
@@ -619,37 +619,37 @@
     align-items: center;
     justify-content: center;
     gap: 1px;
-    background: var(--rt-circle-bg);
-    border: 2px solid var(--rt-border-color-strong);
-    box-shadow: inset 0 1px 2px var(--rt-text-shadow), 0 3px 8px var(--rt-shadow-soft);
+    background: var(--wh40k-circle-bg);
+    border: 2px solid var(--wh40k-border-color-strong);
+    box-shadow: inset 0 1px 2px var(--wh40k-text-shadow), 0 3px 8px var(--wh40k-shadow-soft);
 }
 
 .wh40k-char-hud-mod {
     font-size: 1.2em;
     font-weight: 700;
-    color: var(--rt-text-dark);
-    text-shadow: 0 1px 0 var(--rt-text-shadow);
+    color: var(--wh40k-text-dark);
+    text-shadow: 0 1px 0 var(--wh40k-text-shadow);
     transition: color 0.3s ease, text-shadow 0.3s ease;
 
     // Value change animation class - added via JS on update
     &.value-changed {
-        animation: rt-value-flash 0.5s ease-out;
+        animation: wh40k-value-flash 0.5s ease-out;
     }
 }
 
 // Value change flash animation
-@keyframes rt-value-flash {
+@keyframes wh40k-value-flash {
     0% {
-        color: var(--rt-text-dark);
-        text-shadow: 0 1px 0 var(--rt-text-shadow);
+        color: var(--wh40k-text-dark);
+        text-shadow: 0 1px 0 var(--wh40k-text-shadow);
     }
     50% {
-        color: var(--rt-gold, #d4af37);
+        color: var(--wh40k-gold, #d4af37);
         text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
     }
     100% {
-        color: var(--rt-text-dark);
-        text-shadow: 0 1px 0 var(--rt-text-shadow);
+        color: var(--wh40k-text-dark);
+        text-shadow: 0 1px 0 var(--wh40k-text-shadow);
     }
 }
 
@@ -657,25 +657,25 @@
     font-size: 0.65em;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     text-align: center;
     transition: color 0.3s ease;
 
     // Value change animation for total
     &.value-changed {
-        animation: rt-total-flash 0.5s ease-out;
+        animation: wh40k-total-flash 0.5s ease-out;
     }
 }
 
-@keyframes rt-total-flash {
+@keyframes wh40k-total-flash {
     0% {
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
     50% {
-        color: var(--rt-gold, #d4af37);
+        color: var(--wh40k-gold, #d4af37);
     }
     100% {
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 }
 
@@ -683,9 +683,9 @@
     width: 18px;
     height: 18px;
     border-radius: 999px;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-border-color);
-    box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 1px 3px var(--rt-shadow-soft);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-border-color);
+    box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 1px 3px var(--wh40k-shadow-soft);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -697,7 +697,7 @@
 
 .wh40k-char-hud-toggle-icon {
     font-size: 0.7em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     display: inline-block;
     transition: transform 0.15s ease;
 }
@@ -715,10 +715,10 @@
     gap: 6px;
     padding: 8px;
     width: 170px;
-    background: var(--rt-panel-bg-solid);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-panel-bg-solid);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 8px;
-    box-shadow: 0 6px 16px var(--rt-shadow-medium);
+    box-shadow: 0 6px 16px var(--wh40k-shadow-medium);
     z-index: 20;
 
     // Show when expanded
@@ -737,17 +737,17 @@
     font-size: 0.6em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-char-hud-details input,
 .wh40k-char-hud-details select {
     width: 100%;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     padding: 2px 4px;
-    background: var(--rt-input-bg);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-input-bg);
+    color: var(--wh40k-text-dark);
     font-size: 0.8em;
 }
 
@@ -755,7 +755,7 @@
     font-size: 0.55em;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 // Responsive sizing for characteristics HUD

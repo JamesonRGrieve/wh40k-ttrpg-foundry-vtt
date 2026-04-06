@@ -47,13 +47,13 @@ export class WH40KItemContainer extends Item {
 
     async convertNestedToItems() {
         // Convert Nested to Items
-        game.rt.log(`Convert ${this.name} Nested`, this.hasNested());
+        game.wh40k.log(`Convert ${this.name} Nested`, this.hasNested());
         this.items = new foundry.utils.Collection();
         for (const nestedData of this.getNested()) {
             const item = new CONFIG.Item.documentClass(nestedData, { parent: this });
             await this.items.set(nestedData._id, item);
         }
-        game.rt.log(`Item ${this.name} items:`, this.items);
+        game.wh40k.log(`Item ${this.name} items:`, this.items);
     }
 
     static async _onCreateOperation(items, context, user) {
@@ -72,7 +72,7 @@ export class WH40KItemContainer extends Item {
             }
         }
         if (!toCreate.length) return [];
-        game.rt.log(`ItemContainer: ${this.name} _onCreateDocuments`);
+        game.wh40k.log(`ItemContainer: ${this.name} _onCreateDocuments`);
         const cls = getDocumentClass('ActiveEffect');
         return cls.createDocuments(toCreate, context);
     }
@@ -82,7 +82,7 @@ export class WH40KItemContainer extends Item {
     }
 
     hasItemByType(item, type) {
-        game.rt.log('Check for Has Nested Item', item);
+        game.wh40k.log('Check for Has Nested Item', item);
         if (!this.system.container) return false;
         return !!this.items.find((i) => i.name === item && i.type === type && (i.system.equipped || i.system.enabled));
     }
@@ -92,14 +92,14 @@ export class WH40KItemContainer extends Item {
     }
 
     getItemByName(item, type) {
-        game.rt.log('Check for item by name', item);
+        game.wh40k.log('Check for item by name', item);
         if (!this.system.container) return;
         return this.items.find((i) => i.name === item && i.type === type);
     }
 
     async createNestedDocuments(data) {
         if (!Array.isArray(data)) data = [data];
-        game.rt.log(`ItemContainer: ${this.name} createNestedDocuments`, data);
+        game.wh40k.log(`ItemContainer: ${this.name} createNestedDocuments`, data);
         const currentItems = this.getNested();
 
         if (data.length > 0) {
@@ -115,7 +115,7 @@ export class WH40KItemContainer extends Item {
     }
 
     async deleteNestedDocuments(ids = []) {
-        game.rt.log(`ItemContainer: ${this.name} deleteNestedDocuments`, ids);
+        game.wh40k.log(`ItemContainer: ${this.name} deleteNestedDocuments`, ids);
         const containedItems = this.getNested();
         const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
         const deletedItems = this.items.filter((item) => ids.includes(item.id));
@@ -126,19 +126,19 @@ export class WH40KItemContainer extends Item {
     async updateNestedDocuments(data) {
         const contained = this.getNested();
         if (!Array.isArray(data)) data = [data];
-        game.rt.log(`ItemContainer: ${this.name} updateNestedDocuments`, data);
+        game.wh40k.log(`ItemContainer: ${this.name} updateNestedDocuments`, data);
         const updated = [];
         const newContained = contained.map((existing) => {
             const theUpdate = data.find((update) => update._id === existing._id);
             if (theUpdate) {
-                game.rt.log('Found Update object', theUpdate);
+                game.wh40k.log('Found Update object', theUpdate);
                 const newData = foundry.utils.mergeObject(theUpdate, existing, {
                     overwrite: false,
                     insertKeys: true,
                     insertValues: true,
                     inplace: false,
                 });
-                game.rt.log('Merged Update object', newData);
+                game.wh40k.log('Merged Update object', newData);
                 updated.push(newData);
                 return newData;
             }
@@ -154,7 +154,7 @@ export class WH40KItemContainer extends Item {
     prepareEmbeddedDocuments() {
         super.prepareEmbeddedDocuments();
         if (!(this instanceof Item && this.system.container)) return;
-        game.rt.log(`ItemContainer: ${this.name}`, 'prepareEmbeddedDocuments');
+        game.wh40k.log(`ItemContainer: ${this.name}`, 'prepareEmbeddedDocuments');
         const containedItems = this.getNested();
         const oldItems = this.items;
         this.items = new foundry.utils.Collection();

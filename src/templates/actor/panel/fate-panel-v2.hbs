@@ -1,26 +1,26 @@
 {{!-- Redesigned Fate Panel - Compact Golden Stars Only --}}
-<div class="rt-panel rt-fate-panel-v2">
+<div class="wh40k-panel wh40k-fate-panel-v2">
 
     {{!-- Panel Header - Click to expand/collapse --}}
-    <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
+    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
          data-toggle="fate_details"
          title="Click to {{#if (isExpanded 'fate_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="rt-panel-title">
+        <span class="wh40k-panel-title">
             <i class="fas fa-star"></i> Fate
         </span>
-        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'fate_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
+        <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'fate_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
     </div>
 
     {{!-- Panel Body --}}
-    <div class="rt-panel-body">
+    <div class="wh40k-panel-body">
 
         {{!-- Main Display: Star Pips Only --}}
-        <div class="rt-fate-display-compact">
+        <div class="wh40k-fate-display-compact">
 
             {{!-- Stat Breakdown Button --}}
             <button 
                 type="button" 
-                class="rt-stat-breakdown-btn rt-stat-breakdown-btn--compact"
+                class="wh40k-stat-breakdown-btn wh40k-stat-breakdown-btn--compact"
                 data-action="showStatBreakdown"
                 data-stat-key="fate"
                 title="Show fate calculation">
@@ -28,11 +28,11 @@
             </button>
 
             {{!-- Star Pip Display --}}
-            <div class="rt-fate-pips-compact">
+            <div class="wh40k-fate-pips-compact">
                 {{#if (gt system.fate.max 0)}}
                     {{#each (range 1 system.fate.max) as |index|}}
                         <button type="button"
-                                class="rt-fate-star {{#if (lte index ../system.fate.value)}}rt-fate-star--filled{{/if}}"
+                                class="wh40k-fate-star {{#if (lte index ../system.fate.value)}}wh40k-fate-star--filled{{/if}}"
                                 data-action="setFateStar"
                                 data-fate-index="{{index}}"
                                 title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available){{else}} (Spent){{/if}}">
@@ -40,7 +40,7 @@
                         </button>
                     {{/each}}
                 {{else}}
-                    <div class="rt-fate-empty">
+                    <div class="wh40k-fate-empty">
                         <i class="far fa-star"></i>
                         <span>No Fate Points</span>
                     </div>
@@ -50,20 +50,20 @@
         </div>
 
         {{!-- Edit Mode (Expandable) --}}
-        <div class="rt-panel-details fate_details" {{hideIfNot (isExpanded 'fate_details' actor)}}>
+        <div class="wh40k-panel-details fate_details" {{hideIfNot (isExpanded 'fate_details' actor)}}>
 
             {{!-- Quick Edit Section --}}
-            <div class="rt-fate-edit-section">
-                <div class="rt-fate-edit-header">
+            <div class="wh40k-fate-edit-section">
+                <div class="wh40k-fate-edit-header">
                     <i class="fas fa-cog"></i> Edit Fate Points
                 </div>
 
-                <div class="rt-fate-edit-grid">
-                    <label class="rt-edit-field">
-                        <span class="rt-edit-label">Max Fate Points</span>
+                <div class="wh40k-fate-edit-grid">
+                    <label class="wh40k-edit-field">
+                        <span class="wh40k-edit-label">Max Fate Points</span>
                         <input type="number"
                                data-dtype="Number"
-                               class="rt-edit-input"
+                               class="wh40k-edit-input"
                                name="system.fate.max"
                                value="{{system.fate.max}}"
                                min="0"
@@ -71,11 +71,11 @@
                                placeholder="Max" />
                     </label>
 
-                    <label class="rt-edit-field">
-                        <span class="rt-edit-label">Current Fate</span>
+                    <label class="wh40k-edit-field">
+                        <span class="wh40k-edit-label">Current Fate</span>
                         <input type="number"
                                data-dtype="Number"
-                               class="rt-edit-input"
+                               class="wh40k-edit-input"
                                name="system.fate.value"
                                value="{{system.fate.value}}"
                                min="0"
@@ -86,10 +86,10 @@
             </div>
 
             {{!-- About Fate Info Section --}}
-            <div class="rt-fate-edit-section">
-                <div class="rt-fate-info-box">
+            <div class="wh40k-fate-edit-section">
+                <div class="wh40k-fate-info-box">
                     <i class="fas fa-book-open"></i>
-                    <div class="rt-info-content">
+                    <div class="wh40k-info-content">
                         <strong>About Fate Points</strong>
                         <p>Fate Points represent the Emperor's favor and divine protection. They can be spent to alter destiny in critical moments.</p>
                         
@@ -101,7 +101,7 @@
                             <li><strong>Righteous Fury:</strong> Confirm a Righteous Fury result automatically</li>
                         </ul>
                         
-                        <p class="rt-fate-warning"><i class="fas fa-fire"></i> <strong>Burning Fate:</strong> Permanently spending a Fate Point (reducing your maximum) can achieve truly miraculous results, but this should only be done in the direst circumstances.</p>
+                        <p class="wh40k-fate-warning"><i class="fas fa-fire"></i> <strong>Burning Fate:</strong> Permanently spending a Fate Point (reducing your maximum) can achieve truly miraculous results, but this should only be done in the direst circumstances.</p>
                     </div>
                 </div>
             </div>

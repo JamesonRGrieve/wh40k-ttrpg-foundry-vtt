@@ -101,19 +101,19 @@
 
     // Corruption degrees
     &.degree-pure {
-        @include rt-degree-badge-style($wh40k-degree-pure, 15%);
+        @include wh40k-degree-badge-style($wh40k-degree-pure, 15%);
     }
     &.degree-tainted {
-        @include rt-degree-badge-style($wh40k-degree-tainted, 15%);
+        @include wh40k-degree-badge-style($wh40k-degree-tainted, 15%);
     }
     &.degree-soiled {
-        @include rt-degree-badge-style($wh40k-degree-soiled, 10%);
+        @include wh40k-degree-badge-style($wh40k-degree-soiled, 10%);
     }
     &.degree-debased {
-        @include rt-degree-badge-style($wh40k-degree-debased, 10%);
+        @include wh40k-degree-badge-style($wh40k-degree-debased, 10%);
     }
     &.degree-profane {
-        @include rt-degree-badge-style($wh40k-degree-profane, 0);
+        @include wh40k-degree-badge-style($wh40k-degree-profane, 0);
     }
     &.degree-damned {
         background: rgba($wh40k-degree-damned, 0.2);
@@ -123,19 +123,19 @@
 
     // Insanity degrees
     &.degree-stable {
-        @include rt-degree-badge-style($wh40k-degree-stable, 15%);
+        @include wh40k-degree-badge-style($wh40k-degree-stable, 15%);
     }
     &.degree-unsettled {
-        @include rt-degree-badge-style($wh40k-degree-unsettled, 15%);
+        @include wh40k-degree-badge-style($wh40k-degree-unsettled, 15%);
     }
     &.degree-disturbed {
-        @include rt-degree-badge-style($wh40k-degree-disturbed, 10%);
+        @include wh40k-degree-badge-style($wh40k-degree-disturbed, 10%);
     }
     &.degree-unhinged {
-        @include rt-degree-badge-style($wh40k-degree-unhinged, 10%);
+        @include wh40k-degree-badge-style($wh40k-degree-unhinged, 10%);
     }
     &.degree-deranged {
-        @include rt-degree-badge-style($wh40k-degree-deranged, 0);
+        @include wh40k-degree-badge-style($wh40k-degree-deranged, 0);
     }
     &.degree-terminally-insane {
         background: rgba($wh40k-degree-terminally, 0.2);

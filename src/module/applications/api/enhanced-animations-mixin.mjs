@@ -99,7 +99,7 @@ export default function EnhancedAnimationsMixin(Base) {
             });
 
             // Observe wounds bar
-            const woundsBar = this.element.querySelector('.rt-wounds-bar');
+            const woundsBar = this.element.querySelector('.wh40k-wounds-bar');
             if (woundsBar) {
                 this._mutationObserver.observe(woundsBar, { attributes: true });
             }
@@ -179,13 +179,13 @@ export default function EnhancedAnimationsMixin(Base) {
             if (this._shouldSkipAnimation()) return;
 
             // Animate the counter
-            const woundsDisplay = this.element.querySelector('.rt-wounds-current');
+            const woundsDisplay = this.element.querySelector('.wh40k-wounds-current');
             if (woundsDisplay) {
                 this.animateCounter(woundsDisplay, oldValue, newValue);
             }
 
             // Animate the wounds bar
-            const woundsBar = this.element.querySelector('.rt-wounds-bar');
+            const woundsBar = this.element.querySelector('.wh40k-wounds-bar');
             if (woundsBar) {
                 const max = this.document.system.wounds?.max || 1;
                 const oldPercent = (oldValue / max) * 100;
@@ -194,7 +194,7 @@ export default function EnhancedAnimationsMixin(Base) {
             }
 
             // Add visual feedback class
-            const woundsValue = this.element.querySelector('.rt-wounds-value');
+            const woundsValue = this.element.querySelector('.wh40k-wounds-value');
             if (woundsValue) {
                 const animClass = newValue > oldValue ? 'stat-heal' : 'stat-damage';
                 this._flashElement(woundsValue, animClass, 800);
@@ -218,7 +218,7 @@ export default function EnhancedAnimationsMixin(Base) {
          * @protected
          */
         _animateWoundsBar(barElement, fromPercent, toPercent) {
-            const fill = barElement.querySelector('.rt-wounds-bar-fill');
+            const fill = barElement.querySelector('.wh40k-wounds-bar-fill');
             if (!fill) return;
 
             const duration = this._animationConfig.barDuration;
@@ -284,7 +284,7 @@ export default function EnhancedAnimationsMixin(Base) {
             if (this._shouldSkipAnimation()) return;
 
             // Find bonus display - try V1 HUD first, then fallback
-            let bonusElement = this.element.querySelector(`[data-characteristic="${charKey}"] .rt-char-hud-mod`);
+            let bonusElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`);
 
             // Fallback to generic bonus-val class
             if (!bonusElement) {
@@ -297,7 +297,7 @@ export default function EnhancedAnimationsMixin(Base) {
             this.animateCounter(bonusElement, oldBonus, newBonus);
 
             // Pulse effect on the circle container (V1 HUD)
-            const circleContainer = bonusElement.closest('.rt-char-hud-circle');
+            const circleContainer = bonusElement.closest('.wh40k-char-hud-circle');
             if (circleContainer) {
                 circleContainer.classList.remove('value-changed');
                 void circleContainer.offsetWidth; // Force reflow
@@ -357,7 +357,7 @@ export default function EnhancedAnimationsMixin(Base) {
             if (this._shouldSkipAnimation()) return;
 
             const newPercent = parseFloat(barElement.dataset.percent) || 0;
-            const fill = barElement.querySelector('.rt-wounds-bar-fill, .progress-fill');
+            const fill = barElement.querySelector('.wh40k-wounds-bar-fill, .progress-fill');
 
             if (fill) {
                 fill.style.transition = `width ${this._animationConfig.barDuration}ms ease-out`;
@@ -398,7 +398,7 @@ export default function EnhancedAnimationsMixin(Base) {
          */
         _showBriefNotification(element, message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = `rt-brief-notification rt-notification-${type}`;
+            notification.className = `wh40k-brief-notification wh40k-notification-${type}`;
             notification.textContent = message;
 
             // Position near element

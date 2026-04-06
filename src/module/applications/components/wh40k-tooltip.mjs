@@ -1,5 +1,5 @@
 /**
- * @file TooltipsRT - Rich tooltip system for WH40K RPG
+ * @file TooltipsWH40K - Rich tooltip system for WH40K RPG
  * Based on dnd5e's Tooltips5e pattern - uses Foundry's native TooltipManager
  * with MutationObserver to provide rich tooltip content.
  */
@@ -8,7 +8,7 @@
  * A class responsible for orchestrating rich tooltips in the WH40K RPG system.
  * Uses Foundry's native TooltipManager and observes tooltip activation via MutationObserver.
  */
-export class TooltipsRT {
+export class TooltipsWH40K {
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -53,10 +53,10 @@ export class TooltipsRT {
     async initialize() {
         this.#tooltip = document.getElementById('tooltip');
         if (!this.#tooltip) {
-            console.warn('RT Tooltips | Could not find #tooltip element');
+            console.warn('WH40K Tooltips | Could not find #tooltip element');
             return;
         }
-        // console.log('RT Tooltips | Initialized - observing #tooltip element');
+        // console.log('WH40K Tooltips | Initialized - observing #tooltip element');
         this.observe();
 
         // Load skill descriptions from compendium
@@ -69,9 +69,9 @@ export class TooltipsRT {
      */
     async _loadSkillDescriptions() {
         try {
-            const pack = game.packs.get('wh40k-rpg.rt-items-skills');
+            const pack = game.packs.get('wh40k-rpg.wh40k-items-skills');
             if (!pack) {
-                console.warn('RT Tooltips | Could not find skills compendium');
+                console.warn('WH40K Tooltips | Could not find skills compendium');
                 return;
             }
 
@@ -92,9 +92,9 @@ export class TooltipsRT {
                     });
                 }
             }
-            // console.log(`RT Tooltips | Loaded ${this.#skillDescriptions.size} skill descriptions`);
+            // console.log(`WH40K Tooltips | Loaded ${this.#skillDescriptions.size} skill descriptions`);
         } catch (err) {
-            console.warn('RT Tooltips | Failed to load skill descriptions:', err);
+            console.warn('WH40K Tooltips | Failed to load skill descriptions:', err);
         }
     }
 
@@ -140,7 +140,7 @@ export class TooltipsRT {
             if (type === 'attributes' && attributeName === 'class') {
                 const wasActive = oldValue?.includes('active') ?? false;
                 const nowActive = tooltip.classList.contains('active');
-                // console.log('RT Tooltips | Mutation detected', { wasActive, nowActive, oldValue, newClasses: tooltip.className });
+                // console.log('WH40K Tooltips | Mutation detected', { wasActive, nowActive, oldValue, newClasses: tooltip.className });
                 if (nowActive && !wasActive) isActive = true;
             }
         }
@@ -155,15 +155,15 @@ export class TooltipsRT {
     async _onTooltipActivate() {
         const element = game.tooltip.element;
         if (!element) {
-            // console.log('RT Tooltips | Tooltip activated but no element found');
+            // console.log('WH40K Tooltips | Tooltip activated but no element found');
             return;
         }
 
-        // Check for RT rich tooltip data
+        // Check for WH40K rich tooltip data
         const tooltipType = element.dataset.rtTooltip;
         const tooltipDataAttr = element.dataset.rtTooltipData;
 
-        // console.log('RT Tooltips | Tooltip activated', { tooltipType, hasData: !!tooltipDataAttr, element });
+        // console.log('WH40K Tooltips | Tooltip activated', { tooltipType, hasData: !!tooltipDataAttr, element });
 
         if (tooltipType && tooltipDataAttr) {
             try {
@@ -171,13 +171,13 @@ export class TooltipsRT {
                 const content = await this._buildTooltipContent(data, tooltipType);
                 if (content) {
                     this.#tooltip.innerHTML = content;
-                    this.#tooltip.classList.add('wh40k-tooltip', `rt-tooltip--${tooltipType}`);
-                    // console.log('RT Tooltips | Rich tooltip rendered for', tooltipType);
+                    this.#tooltip.classList.add('wh40k-tooltip', `wh40k-tooltip--${tooltipType}`);
+                    // console.log('WH40K Tooltips | Rich tooltip rendered for', tooltipType);
                     // Reposition after content change
                     requestAnimationFrame(() => this._repositionTooltip());
                 }
             } catch (err) {
-                console.warn('RT Tooltips | Failed to parse tooltip data:', err, tooltipDataAttr);
+                console.warn('WH40K Tooltips | Failed to parse tooltip data:', err, tooltipDataAttr);
             }
             return;
         }
@@ -275,7 +275,7 @@ export class TooltipsRT {
 
         if (modifier !== 0) {
             html += `
-                <div class="wh40k-tooltip__line rt-tooltip__line--modifier">
+                <div class="wh40k-tooltip__line wh40k-tooltip__line--modifier">
                     <span class="wh40k-tooltip__label">Modifiers:</span>
                     <span class="wh40k-tooltip__value">${modifier >= 0 ? '+' : ''}${modifier}</span>
                 </div>
@@ -307,7 +307,7 @@ export class TooltipsRT {
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__bonus">
                 <span class="wh40k-tooltip__label">Bonus:</span>
-                <span class="wh40k-tooltip__value rt-tooltip__value--bonus">${bonus}</span>
+                <span class="wh40k-tooltip__value wh40k-tooltip__value--bonus">${bonus}</span>
                 <span class="wh40k-tooltip__bonus-calc">(${Math.floor(total / 10)}${unnatural > 1 ? ` × ${unnatural}` : ''})</span>
             </div>
             <div class="wh40k-tooltip__hint">
@@ -384,7 +384,7 @@ export class TooltipsRT {
         const bonus = dataBonus ?? 0;
 
         // Get skill description from cache
-        const skillInfo = game.rt?.tooltips?.getSkillDescription(name);
+        const skillInfo = game.wh40k?.tooltips?.getSkillDescription(name);
         const descriptor = skillInfo?.descriptor || '';
 
         let html = `
@@ -440,7 +440,7 @@ export class TooltipsRT {
 
         if (bonus !== 0) {
             html += `
-                <div class="wh40k-tooltip__line rt-tooltip__line--modifier">
+                <div class="wh40k-tooltip__line wh40k-tooltip__line--modifier">
                     <span class="wh40k-tooltip__label">Modifiers:</span>
                     <span class="wh40k-tooltip__value">${bonus >= 0 ? '+' : ''}${bonus}</span>
                 </div>
@@ -648,7 +648,7 @@ export class TooltipsRT {
                       .join(' ');
 
         html += `
-                <span class="wh40k-tooltip__badge rt-tooltip__badge--${category}">
+                <span class="wh40k-tooltip__badge wh40k-tooltip__badge--${category}">
                     ${categoryLabel}
                 </span>
             </div>
@@ -750,7 +750,7 @@ export class TooltipsRT {
  * @param {string} key              Characteristic key.
  * @param {object} characteristic   Characteristic data object.
  * @param {object} [modifierSources]  Optional modifier sources.
- * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+ * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
  */
 export function prepareCharacteristicTooltipData(key, characteristic, modifierSources = {}) {
     const sources = modifierSources[key] || [];
@@ -802,7 +802,7 @@ function _charShortToKey(short) {
  * @param {object} skill          Skill data object.
  * @param {object} characteristics  Actor characteristics.
  * @param {string} [actorUuid]    Optional actor UUID for dynamic updates.
- * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+ * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
  */
 export function prepareSkillTooltipData(key, skill, characteristics = {}, actorUuid = null) {
     const charShort = skill.characteristic || skill.char || 'S';
@@ -845,7 +845,7 @@ export function prepareSkillTooltipData(key, skill, characteristics = {}, actorU
  * @param {string} location    Armor location key.
  * @param {object} armorData   Armor data for this location.
  * @param {Array} [equipped]   Equipped armor pieces.
- * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+ * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
  */
 export function prepareArmorTooltipData(location, armorData, equipped = []) {
     const locationLabels = {
@@ -876,7 +876,7 @@ export function prepareArmorTooltipData(location, armorData, equipped = []) {
 /**
  * Prepare tooltip data for a weapon.
  * @param {object} weapon  Weapon item.
- * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+ * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
  */
 export function prepareWeaponTooltipData(weapon) {
     const data = {
@@ -895,7 +895,7 @@ export function prepareWeaponTooltipData(weapon) {
  * Prepare tooltip data for modifier sources.
  * @param {string} title    Tooltip title.
  * @param {Array} sources   Modifier sources array.
- * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+ * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
  */
 export function prepareModifierTooltipData(title, sources) {
     const data = {
@@ -913,7 +913,7 @@ export function prepareModifierTooltipData(title, sources) {
  * Prepare weapon quality tooltip data.
  * @param {string} identifier    Quality identifier (e.g., "tearing", "blast-5")
  * @param {number} [level]       Quality level (if applicable)
- * @returns {string}             JSON string for data-rt-tooltip-data attribute
+ * @returns {string}             JSON string for data-wh40k-tooltip-data attribute
  */
 export function prepareQualityTooltipData(identifier, level = null) {
     const config = CONFIG.WH40K;
@@ -949,4 +949,4 @@ export function prepareQualityTooltipData(identifier, level = null) {
 }
 
 // Legacy export for backwards compatibility
-export { TooltipsRT as WH40KTooltip };
+export { TooltipsWH40K as WH40KTooltip };

@@ -2,11 +2,11 @@
 {{!-- This part renders the Skills tab content --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     {{!-- Skills Panel --}}
-    <div class="rt-panel">
-        <div class="rt-panel-header">
-            <span class="rt-panel-title"><i class="fas fa-book"></i> Skills</span>
+    <div class="wh40k-panel">
+        <div class="wh40k-panel-header">
+            <span class="wh40k-panel-title"><i class="fas fa-book"></i> Skills</span>
         </div>
-        <div class="rt-panel-body">
+        <div class="wh40k-panel-body">
             {{> systems/wh40k-rpg/templates/actor/panel/skills-panel.hbs}}
         </div>
     </div>

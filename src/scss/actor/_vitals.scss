@@ -13,7 +13,7 @@
     justify-content: space-between;
     gap: 8px;
     padding: 10px 12px 6px;
-    border-bottom: 1px solid var(--rt-border-color-light);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-vitals-title {
@@ -21,7 +21,7 @@
     font-size: 0.95em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -33,7 +33,7 @@
     font-size: 0.75em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-vitals-body {
@@ -53,9 +53,9 @@
     width: 28px;
     height: 28px;
     border-radius: 6px;
-    border: 1px solid var(--rt-border-color);
-    background: var(--rt-btn-bg);
-    color: var(--rt-text-medium);
+    border: 1px solid var(--wh40k-border-color);
+    background: var(--wh40k-btn-bg);
+    color: var(--wh40k-text-medium);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -64,16 +64,16 @@
 }
 
 .wh40k-bar-btn:hover {
-    background: var(--rt-btn-bg-hover);
-    border-color: var(--rt-border-color-strong);
+    background: var(--wh40k-btn-bg-hover);
+    border-color: var(--wh40k-border-color-strong);
 }
 
 .wh40k-bar-track {
     position: relative;
     height: 26px;
     border-radius: 999px;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -101,9 +101,9 @@
     z-index: 1;
     font-size: 0.85em;
     font-weight: 700;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     text-align: center;
-    text-shadow: 0 1px 2px var(--rt-text-shadow), 0 -1px 1px var(--rt-text-shadow);
+    text-shadow: 0 1px 2px var(--wh40k-text-shadow), 0 -1px 1px var(--wh40k-text-shadow);
     letter-spacing: 0.02em;
 }
 
@@ -113,15 +113,15 @@
     gap: 2px;
     height: 26px;
     border-radius: 8px;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color);
     overflow: hidden;
     align-items: center;
 }
 
 .wh40k-segment {
     height: 100%;
-    background: var(--rt-panel-bg-translucent);
+    background: var(--wh40k-panel-bg-translucent);
 }
 
 .wh40k-segment--filled {
@@ -136,8 +136,8 @@
     transform: translateY(-50%);
     font-size: 0.85em;
     font-weight: 700;
-    color: var(--rt-text-dark);
-    text-shadow: 0 1px 2px var(--rt-text-shadow), 0 -1px 1px var(--rt-text-shadow);
+    color: var(--wh40k-text-dark);
+    text-shadow: 0 1px 2px var(--wh40k-text-shadow), 0 -1px 1px var(--wh40k-text-shadow);
     pointer-events: none;
 }
 
@@ -150,35 +150,35 @@
 .wh40k-vitals-value {
     font-size: 1.8em;
     font-weight: 700;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 }
 
 .wh40k-vitals-max {
     font-size: 0.95em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-vitals-progress {
     width: 100%;
     height: 10px;
     border-radius: 999px;
-    background: var(--rt-border-accent);
+    background: var(--wh40k-border-accent);
     overflow: hidden;
 
     &::-webkit-progress-bar {
-        background: var(--rt-border-accent);
+        background: var(--wh40k-border-accent);
         border-radius: 999px;
     }
 
     // Default progress gradient (wounds/health)
-    @include rt-progress-gradient(linear-gradient(90deg, rgba(139, 0, 0, 0.85), rgba(200, 70, 40, 0.85)));
+    @include wh40k-progress-gradient(linear-gradient(90deg, rgba(139, 0, 0, 0.85), rgba(200, 70, 40, 0.85)));
 
     &--corruption {
-        @include rt-progress-gradient(linear-gradient(90deg, rgba(20, 90, 80, 0.9), rgba(40, 140, 120, 0.9)));
+        @include wh40k-progress-gradient(linear-gradient(90deg, rgba(20, 90, 80, 0.9), rgba(40, 140, 120, 0.9)));
     }
 
     &--insanity {
-        @include rt-progress-gradient(linear-gradient(90deg, rgba(90, 60, 120, 0.9), rgba(130, 90, 170, 0.9)));
+        @include wh40k-progress-gradient(linear-gradient(90deg, rgba(90, 60, 120, 0.9), rgba(130, 90, 170, 0.9)));
     }
 }
 
@@ -197,13 +197,13 @@
     font-size: 0.65em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-auto-calc-hint {
     font-size: 0.9em;
     font-weight: normal;
-    color: var(--rt-text-subtle);
+    color: var(--wh40k-text-subtle);
     font-style: italic;
     text-transform: none;
     letter-spacing: normal;
@@ -215,23 +215,23 @@
     min-width: 50px;
     height: 36px;
     text-align: center;
-    border: 1px solid var(--rt-border-accent);
+    border: 1px solid var(--wh40k-border-accent);
     border-radius: 6px;
-    background: var(--rt-input-bg);
+    background: var(--wh40k-input-bg);
     font-size: 1.05em;
     font-weight: 700;
-    color: var(--rt-text-dark);
-    box-shadow: inset 0 1px 2px var(--rt-text-shadow);
+    color: var(--wh40k-text-dark);
+    box-shadow: inset 0 1px 2px var(--wh40k-text-shadow);
 
     &:focus {
         outline: none;
-        border-color: var(--rt-border-color);
-        box-shadow: 0 0 0 2px var(--rt-shadow-soft);
+        border-color: var(--wh40k-border-color);
+        box-shadow: 0 0 0 2px var(--wh40k-shadow-soft);
     }
 }
 
 .wh40k-critical-section {
-    border-top: 1px dashed var(--rt-border-color-light);
+    border-top: 1px dashed var(--wh40k-border-color-light);
     padding-top: 8px;
     display: grid;
     gap: 6px;
@@ -247,25 +247,25 @@
     font-size: 0.75em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-critical-meta {
     font-size: 0.7em;
-    color: var(--rt-text-subtle);
+    color: var(--wh40k-text-subtle);
 }
 
 // Panel-specific vitals theming using mixin
 .wh40k-wounds-panel {
-    @include rt-panel-vitals-theme(linear-gradient(90deg, rgba(120, 15, 15, 0.9), rgba(200, 70, 40, 0.9)), #5c1a1a, #b63a2b);
+    @include wh40k-panel-vitals-theme(linear-gradient(90deg, rgba(120, 15, 15, 0.9), rgba(200, 70, 40, 0.9)), #5c1a1a, #b63a2b);
 }
 
 .wh40k-fatigue-panel {
-    @include rt-panel-vitals-theme(linear-gradient(90deg, rgba(180, 120, 20, 0.9), rgba(220, 160, 30, 0.9)), #6b4a12, #c4871d);
+    @include wh40k-panel-vitals-theme(linear-gradient(90deg, rgba(180, 120, 20, 0.9), rgba(220, 160, 30, 0.9)), #6b4a12, #c4871d);
 }
 
 .wh40k-fate-panel {
-    @include rt-panel-vitals-theme(linear-gradient(90deg, rgba(30, 80, 140, 0.9), rgba(60, 140, 200, 0.9)), #1e4f86, #3c8cd0);
+    @include wh40k-panel-vitals-theme(linear-gradient(90deg, rgba(30, 80, 140, 0.9), rgba(60, 140, 200, 0.9)), #1e4f86, #3c8cd0);
 }
 
 .wh40k-tracker-row {
@@ -303,18 +303,18 @@
     justify-content: center;
     width: 24px;
     height: 24px;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
-    color: var(--rt-text-medium);
+    color: var(--wh40k-text-medium);
     transition: all 0.15s ease;
 
     &:hover {
-        background: var(--rt-btn-bg-hover);
-        border-color: var(--rt-border-color);
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--wh40k-border-color);
     }
 
     &:active {
@@ -338,7 +338,7 @@
 
 // Degree Field Styling
 .wh40k-degree-field {
-    background: var(--rt-shadow-soft);
+    background: var(--wh40k-shadow-soft);
     border-radius: 6px;
     padding: 8px;
 }
@@ -359,7 +359,7 @@
 
 .wh40k-degree-mod {
     font-size: 0.85em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 // Critical Damage Bar
@@ -376,7 +376,7 @@
 .wh40k-crit-pip {
     flex: 1;
     height: 12px;
-    background: var(--rt-shadow-soft);
+    background: var(--wh40k-shadow-soft);
     border: 1px solid rgba(139, 0, 0, 0.3);
     border-radius: 2px;
     transition: all 0.2s ease;
@@ -437,7 +437,7 @@
 .wh40k-fatigue-max {
     font-size: 1.2em;
     font-weight: bold;
-    color: var(--rt-text-medium);
+    color: var(--wh40k-text-medium);
 }
 
 .wh40k-fatigue-warning {
@@ -464,7 +464,7 @@
 
 .wh40k-warning-text {
     font-weight: 600;
-    color: var(--rt-text-medium);
+    color: var(--wh40k-text-medium);
 }
 
 .wh40k-fatigue-critical .wh40k-warning-text {
@@ -473,14 +473,14 @@
 
 .wh40k-fatigue-info {
     padding: 10px;
-    background: var(--rt-shadow-soft);
+    background: var(--wh40k-shadow-soft);
     border-radius: 4px;
     margin-top: 10px;
 }
 
 .wh40k-info-header {
     font-weight: 600;
-    color: var(--rt-text-medium);
+    color: var(--wh40k-text-medium);
     margin-bottom: 5px;
     font-size: 0.9em;
     text-transform: uppercase;
@@ -490,7 +490,7 @@
     margin: 0;
     padding-left: 18px;
     font-size: 0.85em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 
     li {
         margin-bottom: 3px;

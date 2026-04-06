@@ -124,25 +124,25 @@
 // ============================================
 
 .wh40k-prompt {
-    --rt-bg-primary: #0d0d12;
-    --rt-bg-secondary: #14141c;
-    --rt-bg-elevated: #1a1a24;
-    --rt-accent-gold: #c9a227;
-    --rt-accent-gold-dim: rgba(201, 162, 39, 0.6);
-    --rt-accent-red: #8b2a2a;
-    --rt-accent-green: #2a8b4a;
-    --rt-accent-blue: #2a5a8b;
-    --rt-accent-purple: #6a2a8b;
-    --rt-text-primary: #e8e4d9;
-    --rt-text-secondary: #9a9a8a;
-    --rt-text-muted: #6a6a6a;
-    --rt-border-subtle: rgba(255, 255, 255, 0.08);
-    --rt-border-accent: rgba(201, 162, 39, 0.3);
-    --rt-glow-gold: rgba(201, 162, 39, 0.2);
+    --wh40k-bg-primary: #0d0d12;
+    --wh40k-bg-secondary: #14141c;
+    --wh40k-bg-elevated: #1a1a24;
+    --wh40k-accent-gold: #c9a227;
+    --wh40k-accent-gold-dim: rgba(201, 162, 39, 0.6);
+    --wh40k-accent-red: #8b2a2a;
+    --wh40k-accent-green: #2a8b4a;
+    --wh40k-accent-blue: #2a5a8b;
+    --wh40k-accent-purple: #6a2a8b;
+    --wh40k-text-primary: #e8e4d9;
+    --wh40k-text-secondary: #9a9a8a;
+    --wh40k-text-muted: #6a6a6a;
+    --wh40k-border-subtle: rgba(255, 255, 255, 0.08);
+    --wh40k-border-accent: rgba(201, 162, 39, 0.3);
+    --wh40k-glow-gold: rgba(201, 162, 39, 0.2);
 
     position: relative;
     font-family: 'Roboto', sans-serif;
-    color: var(--rt-text-primary);
+    color: var(--wh40k-text-primary);
     padding: 20px;
 
     * {
@@ -171,8 +171,8 @@
     position: relative;
     padding: 16px 18px;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--rt-bg-secondary) 0%, var(--rt-bg-primary) 100%);
-    border: 1px solid var(--rt-border-accent);
+    background: linear-gradient(135deg, var(--wh40k-bg-secondary) 0%, var(--wh40k-bg-primary) 100%);
+    border: 1px solid var(--wh40k-border-accent);
     border-radius: 6px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
@@ -184,7 +184,7 @@
         top: 12px;
         bottom: 12px;
         width: 3px;
-        background: linear-gradient(180deg, var(--rt-accent-gold) 0%, var(--rt-accent-gold-dim) 100%);
+        background: linear-gradient(180deg, var(--wh40k-accent-gold) 0%, var(--wh40k-accent-gold-dim) 100%);
         border-radius: 0 2px 2px 0;
     }
 
@@ -203,17 +203,17 @@
     gap: 14px;
     margin-bottom: 16px;
     padding-bottom: 14px;
-    border-bottom: 1px solid var(--rt-border-subtle);
+    border-bottom: 1px solid var(--wh40k-border-subtle);
 }
 
 .wh40k-prompt__icon {
     width: 48px;
     height: 48px;
-    border: 2px solid var(--rt-accent-gold);
+    border: 2px solid var(--wh40k-accent-gold);
     border-radius: 6px;
     object-fit: cover;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 20px var(--rt-glow-gold);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 20px var(--wh40k-glow-gold);
 }
 
 .wh40k-prompt__title-group {
@@ -225,7 +225,7 @@
     font-family: 'Cinzel', serif;
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--rt-accent-gold);
+    color: var(--wh40k-accent-gold);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin: 0;
@@ -237,7 +237,7 @@
 
 .wh40k-prompt__subtitle {
     font-size: 0.9rem;
-    color: var(--rt-text-secondary);
+    color: var(--wh40k-text-secondary);
     margin-top: 4px;
     white-space: nowrap;
     overflow: hidden;
@@ -263,12 +263,12 @@
     font-family: 'Cinzel', serif;
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--rt-accent-gold);
+    color: var(--wh40k-accent-gold);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     margin: 0 0 12px 0;
     padding-bottom: 8px;
-    border-bottom: 1px solid var(--rt-border-subtle);
+    border-bottom: 1px solid var(--wh40k-border-subtle);
 
     &::before {
         content: '◆';
@@ -290,21 +290,21 @@
     min-height: 40px;
 
     &:not(:last-child) {
-        border-bottom: 1px solid var(--rt-border-subtle);
+        border-bottom: 1px solid var(--wh40k-border-subtle);
     }
 }
 
 .wh40k-prompt__label {
     font-size: 0.85rem;
     font-weight: 500;
-    color: var(--rt-text-primary);
+    color: var(--wh40k-text-primary);
     white-space: nowrap;
 }
 
 .wh40k-prompt__value {
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--rt-accent-gold);
+    color: var(--wh40k-accent-gold);
     text-align: right;
     font-variant-numeric: tabular-nums;
 }
@@ -313,9 +313,9 @@
 .wh40k-prompt__input {
     padding: 10px 14px;
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--rt-border-subtle);
+    border: 1px solid var(--wh40k-border-subtle);
     border-radius: 4px;
-    color: var(--rt-text-primary);
+    color: var(--wh40k-text-primary);
     font-size: 0.9rem;
     font-family: inherit;
     font-weight: 500;
@@ -328,8 +328,8 @@
 
     &:focus {
         outline: none;
-        border-color: var(--rt-accent-gold);
-        box-shadow: 0 0 0 3px var(--rt-glow-gold);
+        border-color: var(--wh40k-accent-gold);
+        box-shadow: 0 0 0 3px var(--wh40k-glow-gold);
         background: rgba(0, 0, 0, 0.4);
     }
 
@@ -348,7 +348,7 @@
     &[type='checkbox'] {
         width: 20px;
         height: 20px;
-        accent-color: var(--rt-accent-gold);
+        accent-color: var(--wh40k-accent-gold);
         cursor: pointer;
         margin: 0;
     }
@@ -367,9 +367,9 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9a227' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
-    border: 1px solid var(--rt-border-subtle);
+    border: 1px solid var(--wh40k-border-subtle);
     border-radius: 4px;
-    color: var(--rt-text-primary);
+    color: var(--wh40k-text-primary);
     font-size: 0.9rem;
     font-family: inherit;
     font-weight: 500;
@@ -385,8 +385,8 @@
 
     &:focus {
         outline: none;
-        border-color: var(--rt-accent-gold);
-        box-shadow: 0 0 0 3px var(--rt-glow-gold);
+        border-color: var(--wh40k-accent-gold);
+        box-shadow: 0 0 0 3px var(--wh40k-glow-gold);
     }
 
     // Ensure placeholder option has distinct styling
@@ -396,8 +396,8 @@
     }
 
     option {
-        background: var(--rt-bg-primary);
-        color: var(--rt-text-primary);
+        background: var(--wh40k-bg-primary);
+        color: var(--wh40k-text-primary);
         padding: 8px;
         line-height: 1.6;
     }
@@ -415,7 +415,7 @@
     min-height: 40px;
 
     &:not(:last-child) {
-        border-bottom: 1px solid var(--rt-border-subtle);
+        border-bottom: 1px solid var(--wh40k-border-subtle);
     }
 
     .wh40k-prompt__label {
@@ -445,7 +445,7 @@
     gap: 14px;
     padding: 12px 14px;
     background: rgba(0, 0, 0, 0.25);
-    border: 1px solid var(--rt-border-subtle);
+    border: 1px solid var(--wh40k-border-subtle);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -458,15 +458,15 @@
 
     &--selected {
         background: rgba(201, 162, 39, 0.08);
-        border-color: var(--rt-accent-gold);
-        box-shadow: 0 0 20px var(--rt-glow-gold), inset 0 0 20px rgba(201, 162, 39, 0.05);
+        border-color: var(--wh40k-accent-gold);
+        box-shadow: 0 0 20px var(--wh40k-glow-gold), inset 0 0 20px rgba(201, 162, 39, 0.05);
 
         &:hover {
             background: rgba(201, 162, 39, 0.12);
         }
 
         .wh40k-prompt__weapon-name {
-            color: var(--rt-accent-gold);
+            color: var(--wh40k-accent-gold);
         }
     }
 }
@@ -474,7 +474,7 @@
 .wh40k-prompt__weapon-check {
     width: 20px;
     height: 20px;
-    accent-color: var(--rt-accent-gold);
+    accent-color: var(--wh40k-accent-gold);
     cursor: pointer;
     flex-shrink: 0;
 }
@@ -487,7 +487,7 @@
 .wh40k-prompt__weapon-name {
     font-weight: 600;
     font-size: 0.95rem;
-    color: var(--rt-text-primary);
+    color: var(--wh40k-text-primary);
     margin-bottom: 3px;
     white-space: nowrap;
     overflow: hidden;
@@ -496,7 +496,7 @@
 
 .wh40k-prompt__weapon-details {
     font-size: 0.8rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -505,7 +505,7 @@
 .wh40k-prompt__weapon-img {
     width: 42px;
     height: 42px;
-    border: 1px solid var(--rt-border-subtle);
+    border: 1px solid var(--wh40k-border-subtle);
     border-radius: 4px;
     object-fit: cover;
     flex-shrink: 0;
@@ -524,13 +524,13 @@
     margin: 8px 0;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.15) 100%);
     border-radius: 4px;
-    border-left: 3px solid var(--rt-accent-gold);
+    border-left: 3px solid var(--wh40k-accent-gold);
 }
 
 .wh40k-prompt__range-label {
     font-weight: 600;
     font-size: 0.9rem;
-    color: var(--rt-text-primary);
+    color: var(--wh40k-text-primary);
 }
 
 .wh40k-prompt__range-value {
@@ -549,7 +549,7 @@
     }
 
     &--neutral {
-        color: var(--rt-text-secondary);
+        color: var(--wh40k-text-secondary);
     }
 }
 
@@ -604,7 +604,7 @@
     justify-content: flex-end;
     margin-top: 16px;
     padding-top: 16px;
-    border-top: 1px solid var(--rt-border-subtle);
+    border-top: 1px solid var(--wh40k-border-subtle);
 }
 
 .wh40k-prompt__btn {
@@ -627,7 +627,7 @@
     }
 
     &--primary {
-        background: linear-gradient(135deg, var(--rt-accent-gold) 0%, #8b6914 100%);
+        background: linear-gradient(135deg, var(--wh40k-accent-gold) 0%, #8b6914 100%);
         color: #0a0a0f;
         box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
 
@@ -639,7 +639,7 @@
 
     &--secondary {
         background: rgba(255, 255, 255, 0.05);
-        color: var(--rt-text-primary);
+        color: var(--wh40k-text-primary);
         border: 1px solid rgba(255, 255, 255, 0.15);
 
         &:hover {
@@ -663,7 +663,7 @@
 
 .wh40k-prompt--attack {
     .wh40k-prompt__panel:first-child::before {
-        background: linear-gradient(180deg, var(--rt-accent-red) 0%, rgba(139, 42, 42, 0.6) 100%);
+        background: linear-gradient(180deg, var(--wh40k-accent-red) 0%, rgba(139, 42, 42, 0.6) 100%);
     }
 }
 
@@ -683,7 +683,7 @@
 
 .wh40k-prompt--psychic {
     .wh40k-prompt__panel::before {
-        background: linear-gradient(180deg, var(--rt-accent-purple) 0%, rgba(106, 42, 139, 0.6) 100%);
+        background: linear-gradient(180deg, var(--wh40k-accent-purple) 0%, rgba(106, 42, 139, 0.6) 100%);
     }
 }
 
@@ -729,7 +729,7 @@
     p {
         margin: 0;
         font-size: 0.85rem;
-        color: var(--rt-text-primary);
+        color: var(--wh40k-text-primary);
         line-height: 1.5;
     }
 }
@@ -759,7 +759,7 @@
     p {
         margin: 0;
         font-size: 0.85rem;
-        color: var(--rt-text-primary);
+        color: var(--wh40k-text-primary);
         line-height: 1.5;
     }
 }
@@ -775,14 +775,14 @@
     justify-content: center;
     padding: 14px;
     background: rgba(0, 0, 0, 0.25);
-    border: 1px solid var(--rt-border-subtle);
+    border: 1px solid var(--wh40k-border-subtle);
     border-radius: 6px;
     text-align: center;
 
     &-value {
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--rt-accent-gold);
+        color: var(--wh40k-accent-gold);
         line-height: 1;
         font-variant-numeric: tabular-nums;
     }
@@ -790,7 +790,7 @@
     &-label {
         font-size: 0.7rem;
         font-weight: 600;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.1em;
         margin-top: 6px;
@@ -803,7 +803,7 @@
 
 .wh40k-prompt__divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--rt-border-accent) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, var(--wh40k-border-accent) 50%, transparent 100%);
     margin: 16px 0;
 }
 
@@ -818,14 +818,14 @@
     gap: 12px;
     padding: 16px;
     background: linear-gradient(135deg, rgba(201, 162, 39, 0.1) 0%, rgba(0, 0, 0, 0.2) 100%);
-    border: 1px solid var(--rt-accent-gold);
+    border: 1px solid var(--wh40k-accent-gold);
     border-radius: 8px;
     margin: 12px 0;
 
     &-label {
         font-size: 0.9rem;
         font-weight: 600;
-        color: var(--rt-text-secondary);
+        color: var(--wh40k-text-secondary);
         text-transform: uppercase;
         letter-spacing: 0.1em;
     }
@@ -833,14 +833,14 @@
     &-value {
         font-size: 2rem;
         font-weight: 700;
-        color: var(--rt-accent-gold);
-        text-shadow: 0 0 20px var(--rt-glow-gold);
+        color: var(--wh40k-accent-gold);
+        text-shadow: 0 0 20px var(--wh40k-glow-gold);
         font-variant-numeric: tabular-nums;
     }
 
     &-percent {
         font-size: 1rem;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 }
 
@@ -1423,7 +1423,7 @@
     padding: 16px;
     border-radius: 6px;
     border: 1px solid;
-    animation: rt-xp-preview-fadein 0.3s ease;
+    animation: wh40k-xp-preview-fadein 0.3s ease;
 
     &.wh40k-xp-preview--positive {
         background: linear-gradient(135deg, rgba(42, 139, 74, 0.15) 0%, rgba(42, 139, 74, 0.05) 100%);
@@ -1481,7 +1481,7 @@
     font-variant-numeric: tabular-nums;
 }
 
-@keyframes rt-xp-preview-fadein {
+@keyframes wh40k-xp-preview-fadein {
     from {
         opacity: 0;
         transform: translateY(-10px);

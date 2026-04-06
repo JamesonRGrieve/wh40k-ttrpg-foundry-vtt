@@ -8,7 +8,7 @@
 // ============================================
 // Responsive Column CSS Variable
 // ============================================
-// --rt-columns is set dynamically by ResizeObserver in base-actor-sheet.mjs
+// --wh40k-columns is set dynamically by ResizeObserver in base-actor-sheet.mjs
 // Breakpoints: <700px = 1 col, <900px = 2 cols, >=900px = 3 cols
 
 // ============================================
@@ -22,7 +22,7 @@
 .wh40k-talents-grid {
     display: grid;
     // Use CSS variable with fallback to 2 columns
-    grid-template-columns: repeat(var(--rt-columns, 2), 1fr);
+    grid-template-columns: repeat(var(--wh40k-columns, 2), 1fr);
     gap: $wh40k-space-md;
     width: 100%;
 }

@@ -48,7 +48,7 @@ export default class MutationData extends ItemDataModel.mixin(DescriptionTemplat
      * @type {string}
      */
     get categoryLabel() {
-        return game.i18n.localize(`RT.MutationCategory.${this.category.capitalize()}`);
+        return game.i18n.localize(`WH40K.MutationCategory.${this.category.capitalize()}`);
     }
 
     /* -------------------------------------------- */

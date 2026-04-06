@@ -1,16 +1,16 @@
 /**
- * @file Component exports for RT UI components
+ * @file Component exports for WH40K UI components
  */
 
 export {
-    TooltipsRT,
+    TooltipsWH40K,
     WH40KTooltip,
     prepareCharacteristicTooltipData,
     prepareSkillTooltipData,
     prepareArmorTooltipData,
     prepareWeaponTooltipData,
     prepareModifierTooltipData,
-} from './rt-tooltip.mjs';
+} from './wh40k-tooltip.mjs';
 
 export { ItemPreviewMixin } from './item-preview-card.mjs';
 export { ActiveModifiersMixin } from './active-modifiers-panel.mjs';

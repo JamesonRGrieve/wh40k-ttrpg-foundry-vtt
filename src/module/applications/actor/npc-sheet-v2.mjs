@@ -1168,7 +1168,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #calculateDifficulty(event, target) {
         event.preventDefault();
-        const { DifficultyCalculatorDialog: DiffCalcDialog } = game.rt.applications;
+        const { DifficultyCalculatorDialog: DiffCalcDialog } = game.wh40k.applications;
         await DiffCalcDialog.show(this.actor);
     }
 
@@ -1380,9 +1380,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static #toggleGMTools(event, target) {
         event.preventDefault();
-        const wrapper = target.closest('.rt-gm-tools-wrapper');
+        const wrapper = target.closest('.wh40k-gm-tools-wrapper');
         if (!wrapper) return;
-        const tools = wrapper.querySelector('.rt-gm-tools');
+        const tools = wrapper.querySelector('.wh40k-gm-tools');
         if (!tools) return;
         tools.hidden = !tools.hidden;
         wrapper.classList.toggle('open', !tools.hidden);
@@ -1397,9 +1397,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static #toggleAbilityDesc(event, target) {
         event.preventDefault();
-        const card = target.closest('.rt-ability-card');
+        const card = target.closest('.wh40k-ability-card');
         if (!card) return;
-        const desc = card.querySelector('.rt-ability-desc');
+        const desc = card.querySelector('.wh40k-ability-desc');
         if (!desc) return;
         desc.hidden = !desc.hidden;
         // Rotate chevron

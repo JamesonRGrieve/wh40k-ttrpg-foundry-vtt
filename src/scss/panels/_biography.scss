@@ -164,7 +164,7 @@
     justify-content: space-between;
     margin-bottom: $wh40k-space-sm;
     padding-bottom: $wh40k-space-xs;
-    border-bottom: 1px solid var(--rt-border-color-light);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-section-title {
@@ -184,8 +184,8 @@
 
 .wh40k-add-btn {
     background: transparent;
-    border: 1px solid var(--rt-border-color-light);
-    color: var(--rt-text-muted);
+    border: 1px solid var(--wh40k-border-color-light);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 4px 8px;
     border-radius: 4px;
@@ -193,7 +193,7 @@
     font-size: 0.75rem;
 
     &:hover {
-        background: var(--rt-panel-bg-translucent);
+        background: var(--wh40k-panel-bg-translucent);
         border-color: $wh40k-accent-bio;
         color: $wh40k-accent-bio;
     }
@@ -201,8 +201,8 @@
 
 .wh40k-panel-action-btn {
     background: transparent;
-    border: 1px solid var(--rt-border-color-light);
-    color: var(--rt-text-muted);
+    border: 1px solid var(--wh40k-border-color-light);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 4px 10px;
     border-radius: 4px;
@@ -240,16 +240,16 @@
 
 .wh40k-journal-entry {
     padding: $wh40k-space-sm;
-    background: var(--rt-panel-bg-solid);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border: 1px solid var(--wh40k-border-color-light);
     border-left: 3px solid $wh40k-accent-bio;
     border-radius: 4px;
     transition: all 0.2s ease;
 
     &:hover {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-border-color);
-        box-shadow: 0 1px 3px var(--rt-shadow-soft);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-border-color);
+        box-shadow: 0 1px 3px var(--wh40k-shadow-soft);
     }
 }
 
@@ -263,7 +263,7 @@
     flex: 1;
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     cursor: pointer;
     text-align: left;
     background: transparent;
@@ -278,14 +278,14 @@
 
 .wh40k-entry-meta {
     font-size: 0.7rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     white-space: nowrap;
 }
 
 .wh40k-entry-delete {
     background: transparent;
     border: 1px solid transparent;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 2px 6px;
     border-radius: 3px;
@@ -293,18 +293,18 @@
     font-size: 0.75rem;
 
     &:hover {
-        color: var(--rt-wounds-secondary);
-        background: var(--rt-wounds-bg);
-        border-color: var(--rt-wounds-border);
+        color: var(--wh40k-wounds-secondary);
+        background: var(--wh40k-wounds-bg);
+        border-color: var(--wh40k-wounds-border);
     }
 }
 
 .wh40k-entry-preview {
     margin-top: $wh40k-space-xs;
     padding-top: $wh40k-space-xs;
-    border-top: 1px solid var(--rt-border-color-light);
+    border-top: 1px solid var(--wh40k-border-color-light);
     font-size: 0.8rem;
-    color: var(--rt-text-secondary);
+    color: var(--wh40k-text-secondary);
     font-style: italic;
     line-height: 1.4;
 }

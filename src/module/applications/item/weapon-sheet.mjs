@@ -3,7 +3,7 @@
  */
 
 import ContainerItemSheet from './container-item-sheet.mjs';
-import { prepareQualityTooltipData } from '../components/rt-tooltip.mjs';
+import { prepareQualityTooltipData } from '../components/wh40k-tooltip.mjs';
 import { ReloadActionManager } from '../../actions/reload-action-manager.mjs';
 
 /**
@@ -48,7 +48,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-weapon-sheet-modern.hbs',
-            scrollable: ['.rt-weapon-body'],
+            scrollable: ['.wh40k-weapon-body'],
         },
     };
 
@@ -480,7 +480,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         if (!identifier) return;
 
         // Try to find the quality in the weapon qualities compendium
-        const pack = game.packs.get('wh40k-rpg.rt-items-weapon-qualities');
+        const pack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
         if (!pack) {
             ui.notifications.warn('Weapon qualities compendium not found.');
             return;
@@ -797,7 +797,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      */
     static #toggleFab(event, target) {
         this.#fabExpanded = !this.#fabExpanded;
-        const fab = this.element.querySelector('.rt-fab-container');
+        const fab = this.element.querySelector('.wh40k-fab-container');
         if (fab) {
             fab.classList.toggle('expanded', this.#fabExpanded);
         }
@@ -845,13 +845,13 @@ export default class WeaponSheet extends ContainerItemSheet {
     static #toggleBody(event, target) {
         this.#bodyCollapsed = !this.#bodyCollapsed;
 
-        const body = this.element.querySelector('.rt-weapon-body');
+        const body = this.element.querySelector('.wh40k-weapon-body');
         if (body) {
             body.classList.toggle('collapsed', this.#bodyCollapsed);
         }
 
         // Update toggle icon
-        const icon = target.querySelector('.rt-body-toggle__icon');
+        const icon = target.querySelector('.wh40k-body-toggle__icon');
         if (icon) {
             icon.classList.toggle('fa-chevron-down', !this.#bodyCollapsed);
             icon.classList.toggle('fa-chevron-up', this.#bodyCollapsed);

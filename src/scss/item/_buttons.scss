@@ -8,10 +8,10 @@
     justify-content: center;
     gap: $wh40k-space-xs;
     padding: $wh40k-space-sm $wh40k-space-md;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: $wh40k-radius-md;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     font-family: $wh40k-font-body;
     font-size: $wh40k-font-size-sm;
     cursor: pointer;
@@ -22,29 +22,29 @@
     }
 
     &:hover {
-        background: var(--rt-btn-bg-hover);
-        border-color: var(--rt-gold);
-        color: var(--rt-gold);
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--wh40k-gold);
+        color: var(--wh40k-gold);
         box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
     }
 
     &--primary {
-        background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
-        border-color: var(--rt-gold);
+        background: linear-gradient(135deg, var(--wh40k-gold-dark) 0%, var(--wh40k-gold) 100%);
+        border-color: var(--wh40k-gold);
         color: #1a1a1a;
 
         &:hover {
-            background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-bright) 100%);
+            background: linear-gradient(135deg, var(--wh40k-gold) 0%, var(--wh40k-gold-bright) 100%);
             color: #1a1a1a;
         }
     }
 
     &--danger {
-        border-color: var(--rt-red-dark);
+        border-color: var(--wh40k-red-dark);
 
         &:hover {
-            background: var(--rt-red-dark);
-            border-color: var(--rt-red);
+            background: var(--wh40k-red-dark);
+            border-color: var(--wh40k-red);
             color: #fff;
             box-shadow: 0 0 8px rgba(139, 0, 0, 0.4);
         }
@@ -69,15 +69,15 @@
     td {
         padding: $wh40k-space-sm;
         text-align: left;
-        border-bottom: 1px solid var(--rt-border-color-light);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
     }
 
     th {
         font-size: $wh40k-font-size-xs;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: var(--rt-text-muted);
-        background: var(--rt-panel-bg-translucent);
+        color: var(--wh40k-text-muted);
+        background: var(--wh40k-panel-bg-translucent);
     }
 
     tr {
@@ -89,6 +89,6 @@
     }
 
     td {
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
     }
 }

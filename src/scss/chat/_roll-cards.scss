@@ -12,19 +12,19 @@
 #chat-log .message.flexcol,
 .wh40k-chat {
     // These local vars inherit from global theme vars
-    --rt-card-bg: var(--rt-panel-bg-solid);
-    --rt-card-border: var(--rt-gold);
-    --rt-card-text: var(--rt-text-dark);
-    --rt-card-muted: var(--rt-text-muted);
-    --rt-card-gold: var(--rt-gold);
-    --rt-card-gold-dark: var(--rt-gold-dark);
-    --rt-card-success: var(--rt-success-primary);
-    --rt-card-success-glow: rgba(45, 138, 78, 0.4);
-    --rt-card-fail: var(--rt-danger-primary);
-    --rt-card-fail-glow: rgba(168, 50, 50, 0.4);
+    --wh40k-card-bg: var(--wh40k-panel-bg-solid);
+    --wh40k-card-border: var(--wh40k-gold);
+    --wh40k-card-text: var(--wh40k-text-dark);
+    --wh40k-card-muted: var(--wh40k-text-muted);
+    --wh40k-card-gold: var(--wh40k-gold);
+    --wh40k-card-gold-dark: var(--wh40k-gold-dark);
+    --wh40k-card-success: var(--wh40k-success-primary);
+    --wh40k-card-success-glow: rgba(45, 138, 78, 0.4);
+    --wh40k-card-fail: var(--wh40k-danger-primary);
+    --wh40k-card-fail-glow: rgba(168, 50, 50, 0.4);
 
     font-family: 'Roboto', sans-serif;
-    color: var(--rt-card-text);
+    color: var(--wh40k-card-text);
 
     * {
         box-sizing: border-box;
@@ -42,31 +42,31 @@
     // Dark mode for all messages
     body.theme-dark & {
         .message {
-            background: var(--rt-panel-bg-solid) !important;
-            border-color: var(--rt-border-color) !important;
-            color: var(--rt-text-dark) !important;
+            background: var(--wh40k-panel-bg-solid) !important;
+            border-color: var(--wh40k-border-color) !important;
+            color: var(--wh40k-text-dark) !important;
 
             .message-header {
                 background: rgba(40, 35, 30, 0.8) !important;
-                border-bottom-color: var(--rt-border-color) !important;
-                color: var(--rt-text-dark) !important;
+                border-bottom-color: var(--wh40k-border-color) !important;
+                color: var(--wh40k-text-dark) !important;
 
                 .message-sender {
-                    color: var(--rt-gold) !important;
+                    color: var(--wh40k-gold) !important;
                 }
 
                 .message-metadata {
-                    color: var(--rt-text-muted) !important;
+                    color: var(--wh40k-text-muted) !important;
 
                     .message-timestamp {
-                        color: var(--rt-text-subtle) !important;
+                        color: var(--wh40k-text-subtle) !important;
                     }
                 }
             }
 
             .message-content {
                 background: transparent !important;
-                color: var(--rt-text-dark) !important;
+                color: var(--wh40k-text-dark) !important;
 
                 p,
                 span,
@@ -74,25 +74,25 @@
                 td,
                 th,
                 li {
-                    color: var(--rt-text-dark) !important;
+                    color: var(--wh40k-text-dark) !important;
                 }
 
                 a {
-                    color: var(--rt-gold) !important;
+                    color: var(--wh40k-gold) !important;
 
                     &:hover {
-                        color: var(--rt-gold-bright) !important;
+                        color: var(--wh40k-gold-bright) !important;
                     }
                 }
 
                 strong,
                 b {
-                    color: var(--rt-text-dark) !important;
+                    color: var(--wh40k-text-dark) !important;
                 }
 
                 em,
                 i {
-                    color: var(--rt-text-medium) !important;
+                    color: var(--wh40k-text-medium) !important;
                 }
 
                 // Tables in chat
@@ -100,12 +100,12 @@
                     background: transparent !important;
 
                     th {
-                        background: var(--rt-panel-bg) !important;
-                        border-color: var(--rt-border-color) !important;
+                        background: var(--wh40k-panel-bg) !important;
+                        border-color: var(--wh40k-border-color) !important;
                     }
 
                     td {
-                        border-color: var(--rt-border-color) !important;
+                        border-color: var(--wh40k-border-color) !important;
                     }
                 }
             }
@@ -119,11 +119,11 @@
 
 .wh40k-roll-card {
     position: relative;
-    background: var(--rt-card-bg);
-    border: 2px solid var(--rt-card-border);
+    background: var(--wh40k-card-bg);
+    border: 2px solid var(--wh40k-card-border);
     border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 4px 12px var(--rt-shadow-medium), inset 0 1px 0 var(--rt-accent-overlay);
+    box-shadow: 0 4px 12px var(--wh40k-shadow-medium), inset 0 1px 0 var(--wh40k-accent-overlay);
 
     // Decorative corner accents
     &::before,
@@ -132,7 +132,7 @@
         position: absolute;
         width: 20px;
         height: 20px;
-        border: 2px solid var(--rt-card-gold);
+        border: 2px solid var(--wh40k-card-gold);
         pointer-events: none;
     }
 
@@ -158,12 +158,12 @@
 .wh40k-roll-card__header {
     position: relative;
     padding: 12px 16px;
-    background: linear-gradient(90deg, var(--rt-accent-overlay) 0%, transparent 100%);
-    border-bottom: 1px solid var(--rt-border-color);
+    background: linear-gradient(90deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
+    border-bottom: 1px solid var(--wh40k-border-color);
 
     .wh40k-roll-card__actor {
         font-size: 0.75rem;
-        color: var(--rt-card-muted);
+        color: var(--wh40k-card-muted);
         text-transform: uppercase;
         letter-spacing: 0.1em;
         margin-bottom: 4px;
@@ -173,16 +173,16 @@
         font-family: 'Cinzel', serif;
         font-size: 1.1rem;
         font-weight: 600;
-        color: var(--rt-card-gold);
+        color: var(--wh40k-card-gold);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin: 0;
-        text-shadow: 0 2px 4px var(--rt-shadow-medium);
+        text-shadow: 0 2px 4px var(--wh40k-shadow-medium);
     }
 
     .wh40k-roll-card__subtitle {
         font-size: 0.85rem;
-        color: var(--rt-card-text);
+        color: var(--wh40k-card-text);
         margin-top: 2px;
         opacity: 0.9;
     }
@@ -202,7 +202,7 @@
 
 .wh40k-roll-card__divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--rt-card-gold) 20%, var(--rt-card-gold) 80%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, var(--wh40k-card-gold) 20%, var(--wh40k-card-gold) 80%, transparent 100%);
     margin: 10px 0;
     opacity: 0.5;
 
@@ -217,7 +217,7 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            color: var(--rt-card-gold);
+            color: var(--wh40k-card-gold);
             font-size: 10px;
         }
 
@@ -231,10 +231,10 @@
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                var(--rt-card-gold) 30%,
+                var(--wh40k-card-gold) 30%,
                 transparent 48%,
                 transparent 52%,
-                var(--rt-card-gold) 70%,
+                var(--wh40k-card-gold) 70%,
                 transparent 100%
             );
         }
@@ -254,26 +254,26 @@
 
     &--modifier {
         padding-left: 12px;
-        border-left: 2px solid var(--rt-border-color);
+        border-left: 2px solid var(--wh40k-border-color);
         margin-left: 4px;
     }
 }
 
 .wh40k-roll-card__label {
-    color: var(--rt-card-muted);
+    color: var(--wh40k-card-muted);
     font-weight: 500;
 }
 
 .wh40k-roll-card__value {
     font-weight: 600;
-    color: var(--rt-card-text);
+    color: var(--wh40k-card-text);
 
     &--positive {
-        color: var(--rt-success-secondary);
+        color: var(--wh40k-success-secondary);
     }
 
     &--negative {
-        color: var(--rt-danger-secondary);
+        color: var(--wh40k-danger-secondary);
     }
 }
 
@@ -287,8 +287,8 @@
     align-items: center;
     padding: 8px 12px;
     margin: 8px 0;
-    background: var(--rt-accent-overlay);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-accent-overlay);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 4px;
 
     .wh40k-roll-card__label {
@@ -300,7 +300,7 @@
     .wh40k-roll-card__value {
         font-size: 1.2rem;
         font-weight: 700;
-        color: var(--rt-card-gold);
+        color: var(--wh40k-card-gold);
     }
 }
 
@@ -316,22 +316,22 @@
     border-radius: 4px;
 
     &--success {
-        background: var(--rt-success-bg);
-        border: 2px solid var(--rt-success-primary);
-        box-shadow: 0 0 20px var(--rt-card-success-glow), inset 0 0 30px rgba(45, 138, 78, 0.1);
+        background: var(--wh40k-success-bg);
+        border: 2px solid var(--wh40k-success-primary);
+        box-shadow: 0 0 20px var(--wh40k-card-success-glow), inset 0 0 30px rgba(45, 138, 78, 0.1);
 
         .wh40k-roll-card__result-label {
-            color: var(--rt-success-secondary);
+            color: var(--wh40k-success-secondary);
         }
     }
 
     &--failure {
-        background: var(--rt-danger-bg);
-        border: 2px solid var(--rt-danger-primary);
-        box-shadow: 0 0 20px var(--rt-card-fail-glow), inset 0 0 30px rgba(168, 50, 50, 0.1);
+        background: var(--wh40k-danger-bg);
+        border: 2px solid var(--wh40k-danger-primary);
+        box-shadow: 0 0 20px var(--wh40k-card-fail-glow), inset 0 0 30px rgba(168, 50, 50, 0.1);
 
         .wh40k-roll-card__result-label {
-            color: var(--rt-danger-secondary);
+            color: var(--wh40k-danger-secondary);
         }
     }
 
@@ -342,10 +342,10 @@
 
 @keyframes critical-pulse {
     from {
-        box-shadow: 0 0 20px var(--rt-card-success-glow), inset 0 0 30px rgba(45, 138, 78, 0.1);
+        box-shadow: 0 0 20px var(--wh40k-card-success-glow), inset 0 0 30px rgba(45, 138, 78, 0.1);
     }
     to {
-        box-shadow: 0 0 40px var(--rt-card-success-glow), inset 0 0 50px rgba(45, 138, 78, 0.2);
+        box-shadow: 0 0 40px var(--wh40k-card-success-glow), inset 0 0 50px rgba(45, 138, 78, 0.2);
     }
 }
 
@@ -362,7 +362,7 @@
     font-size: 2.5rem;
     font-weight: 700;
     line-height: 1;
-    text-shadow: 0 2px 8px var(--rt-shadow-medium);
+    text-shadow: 0 2px 8px var(--wh40k-shadow-medium);
 }
 
 // ============================================
@@ -376,7 +376,7 @@
     gap: 8px;
     margin-top: 8px;
     padding: 8px 16px;
-    background: var(--rt-panel-bg-translucent);
+    background: var(--wh40k-panel-bg-translucent);
     border-radius: 4px;
 
     .wh40k-roll-card__degrees-count {
@@ -393,13 +393,13 @@
 
     &--success {
         .wh40k-roll-card__degrees-count {
-            color: var(--rt-success-secondary);
+            color: var(--wh40k-success-secondary);
         }
     }
 
     &--failure {
         .wh40k-roll-card__degrees-count {
-            color: var(--rt-danger-secondary);
+            color: var(--wh40k-danger-secondary);
         }
     }
 }
@@ -414,21 +414,21 @@
     align-items: center;
     padding: 10px 14px;
     margin: 8px 0;
-    background: var(--rt-warning-bg);
-    border-left: 3px solid var(--rt-warning-primary);
+    background: var(--wh40k-warning-bg);
+    border-left: 3px solid var(--wh40k-warning-primary);
     border-radius: 0 4px 4px 0;
 
     .wh40k-roll-card__notice-label {
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-warning-secondary);
+        color: var(--wh40k-warning-secondary);
     }
 
     .wh40k-roll-card__notice-value {
         font-size: 1.1rem;
         font-weight: 700;
-        color: var(--rt-card-text);
+        color: var(--wh40k-card-text);
     }
 }
 
@@ -439,8 +439,8 @@
 .wh40k-roll-card__damage {
     padding: 12px;
     margin: 8px 0;
-    background: var(--rt-wounds-bg);
-    border: 1px solid var(--rt-wounds-border);
+    background: var(--wh40k-wounds-bg);
+    border: 1px solid var(--wh40k-wounds-border);
     border-radius: 4px;
 
     .wh40k-roll-card__damage-header {
@@ -449,12 +449,12 @@
         align-items: center;
         margin-bottom: 8px;
         padding-bottom: 8px;
-        border-bottom: 1px solid var(--rt-wounds-border);
+        border-bottom: 1px solid var(--wh40k-wounds-border);
 
         .wh40k-roll-card__damage-title {
             font-family: 'Cinzel', serif;
             font-size: 0.9rem;
-            color: var(--rt-wounds-secondary);
+            color: var(--wh40k-wounds-secondary);
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
@@ -462,9 +462,9 @@
         .wh40k-roll-card__damage-location {
             font-size: 0.8rem;
             padding: 2px 8px;
-            background: var(--rt-panel-bg-translucent);
+            background: var(--wh40k-panel-bg-translucent);
             border-radius: 3px;
-            color: var(--rt-card-muted);
+            color: var(--wh40k-card-muted);
         }
     }
 
@@ -472,7 +472,7 @@
         text-align: center;
         font-size: 2rem;
         font-weight: 700;
-        color: var(--rt-wounds-secondary);
+        color: var(--wh40k-wounds-secondary);
         text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
     }
 
@@ -481,7 +481,7 @@
         font-size: 0.8rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: var(--rt-card-muted);
+        color: var(--wh40k-card-muted);
         margin-top: 4px;
     }
 }
@@ -493,8 +493,8 @@
 .wh40k-roll-card__hit {
     margin: 12px 0;
     padding: 10px;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 4px;
 
     .wh40k-roll-card__hit-header {
@@ -509,7 +509,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--rt-card-gold);
+            background: var(--wh40k-card-gold);
             color: var(--color-bg-primary);
             font-weight: 700;
             font-size: 0.8rem;
@@ -520,7 +520,7 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--rt-card-text);
+            color: var(--wh40k-card-text);
         }
     }
 }
@@ -532,8 +532,8 @@
 .wh40k-roll-card__fury {
     margin: 8px 0;
     padding: 12px;
-    background: var(--rt-fate-bg);
-    border: 2px solid var(--rt-gold-bright);
+    background: var(--wh40k-fate-bg);
+    border: 2px solid var(--wh40k-gold-bright);
     border-radius: 4px;
     text-align: center;
 
@@ -541,7 +541,7 @@
         font-family: 'Cinzel', serif;
         font-size: 1rem;
         font-weight: 700;
-        color: var(--rt-gold-bright);
+        color: var(--wh40k-gold-bright);
         text-transform: uppercase;
         letter-spacing: 0.15em;
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
@@ -559,27 +559,27 @@
 
         .wh40k-roll-card__fury-label {
             font-size: 0.85rem;
-            color: var(--rt-text-medium);
+            color: var(--wh40k-text-medium);
             font-weight: 600;
         }
 
         .wh40k-roll-card__fury-value {
             font-size: 1.1rem;
             font-weight: 700;
-            color: var(--rt-gold-bright);
+            color: var(--wh40k-gold-bright);
         }
     }
 
     .wh40k-roll-card__fury-effect {
         font-size: 0.85rem;
-        color: var(--rt-card-text);
+        color: var(--wh40k-card-text);
         margin-top: 8px;
         line-height: 1.4;
     }
 
     .wh40k-roll-card__fury-text {
         font-size: 0.85rem;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         margin-top: 6px;
         font-style: italic;
     }
@@ -587,16 +587,16 @@
     // Confirmed RF - dramatic glow animation
     &--confirmed {
         animation: fury-glow 1.5s ease-in-out infinite alternate;
-        border-color: var(--rt-gold-bright);
+        border-color: var(--wh40k-gold-bright);
     }
 
     // Not confirmed - subdued appearance
     &--not-confirmed {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-text-muted);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-text-muted);
 
         .wh40k-roll-card__fury-title {
-            color: var(--rt-text-medium);
+            color: var(--wh40k-text-medium);
             text-shadow: none;
         }
     }
@@ -620,8 +620,8 @@
     gap: 6px;
     padding: 10px 16px;
     margin-top: 8px;
-    background: var(--rt-panel-bg-translucent);
-    border-top: 1px solid var(--rt-border-color);
+    background: var(--wh40k-panel-bg-translucent);
+    border-top: 1px solid var(--wh40k-border-color);
 
     &--stacked {
         flex-direction: column;
@@ -639,7 +639,7 @@
     justify-content: center;
     gap: 6px;
     padding: 6px 16px;
-    color: var(--rt-card-gold);
+    color: var(--wh40k-card-gold);
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -658,10 +658,10 @@
     justify-content: center;
     gap: 6px;
     padding: 8px 12px;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-border-color);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 4px;
-    color: var(--rt-card-gold);
+    color: var(--wh40k-card-gold);
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -675,9 +675,9 @@
     }
 
     &:hover {
-        background: var(--rt-btn-bg-hover);
-        border-color: var(--rt-card-gold);
-        box-shadow: 0 0 12px var(--rt-gold-glow);
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--wh40k-card-gold);
+        box-shadow: 0 0 12px var(--wh40k-gold-glow);
         transform: translateY(-1px);
     }
 
@@ -700,25 +700,25 @@
     }
 
     &--damage {
-        background: var(--rt-wounds-bg);
-        border-color: var(--rt-wounds-border);
-        color: var(--rt-wounds-secondary);
+        background: var(--wh40k-wounds-bg);
+        border-color: var(--wh40k-wounds-border);
+        color: var(--wh40k-wounds-secondary);
 
         &:hover {
             background: rgba(139, 0, 0, 0.2);
-            border-color: var(--rt-wounds-primary);
+            border-color: var(--wh40k-wounds-primary);
             box-shadow: 0 0 12px rgba(139, 0, 0, 0.4);
         }
     }
 
     &--fate {
-        background: var(--rt-powers-bg);
-        border-color: var(--rt-powers-border);
-        color: var(--rt-powers-secondary);
+        background: var(--wh40k-powers-bg);
+        border-color: var(--wh40k-powers-border);
+        color: var(--wh40k-powers-secondary);
 
         &:hover {
             background: rgba(106, 32, 144, 0.2);
-            border-color: var(--rt-powers-primary);
+            border-color: var(--wh40k-powers-primary);
             box-shadow: 0 0 12px rgba(106, 32, 144, 0.4);
         }
     }
@@ -730,7 +730,7 @@
         &:hover {
             transform: none;
             box-shadow: none;
-            background: var(--rt-btn-bg);
+            background: var(--wh40k-btn-bg);
         }
     }
 }
@@ -742,8 +742,8 @@
 .wh40k-roll-card__text {
     padding: 8px 12px;
     margin: 8px 0;
-    background: var(--rt-panel-bg-translucent);
-    border-left: 2px solid var(--rt-card-gold);
+    background: var(--wh40k-panel-bg-translucent);
+    border-left: 2px solid var(--wh40k-card-gold);
     border-radius: 0 4px 4px 0;
     font-size: 0.85rem;
     line-height: 1.5;
@@ -768,12 +768,12 @@
 
     .wh40k-roll-card__effect-name {
         font-weight: 600;
-        color: var(--rt-card-gold);
+        color: var(--wh40k-card-gold);
         flex-shrink: 0;
     }
 
     .wh40k-roll-card__effect-desc {
-        color: var(--rt-card-text);
+        color: var(--wh40k-card-text);
         opacity: 0.9;
     }
 }
@@ -816,15 +816,15 @@
     vertical-align: middle;
 
     &--success {
-        background: var(--rt-success-bg);
-        border: 1px solid var(--rt-success-primary);
-        color: var(--rt-success-secondary);
+        background: var(--wh40k-success-bg);
+        border: 1px solid var(--wh40k-success-primary);
+        color: var(--wh40k-success-secondary);
     }
 
     &--failure {
-        background: var(--rt-danger-bg);
-        border: 1px solid var(--rt-danger-primary);
-        color: var(--rt-danger-secondary);
+        background: var(--wh40k-danger-bg);
+        border: 1px solid var(--wh40k-danger-primary);
+        color: var(--wh40k-danger-secondary);
     }
 }
 
@@ -837,9 +837,9 @@
     height: 28px;
     object-fit: cover;
     border-radius: 50%;
-    border: 2px solid var(--rt-gold);
+    border: 2px solid var(--wh40k-gold);
     margin-right: 8px;
-    box-shadow: 0 2px 4px var(--rt-shadow-medium);
+    box-shadow: 0 2px 4px var(--wh40k-shadow-medium);
 }
 
 // ============================================
@@ -849,41 +849,41 @@
 .wh40k-dice-summary {
     margin-top: 8px;
     padding: 8px;
-    background: var(--rt-panel-bg-translucent);
+    background: var(--wh40k-panel-bg-translucent);
     border-radius: 4px;
     font-size: 0.85rem;
     line-height: 1.5;
 }
 
 .wh40k-dice-target {
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     font-weight: 500;
 }
 
 .wh40k-dice-success {
-    color: var(--rt-success-secondary);
+    color: var(--wh40k-success-secondary);
     font-weight: 600;
 }
 
 .wh40k-dice-failure {
-    color: var(--rt-danger-secondary);
+    color: var(--wh40k-danger-secondary);
     font-weight: 600;
 }
 
 .wh40k-dice-critical {
-    color: var(--rt-gold-bright);
+    color: var(--wh40k-gold-bright);
     font-weight: 700;
     text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
 }
 
 .wh40k-dice-fumble {
-    color: var(--rt-red-bright);
+    color: var(--wh40k-red-bright);
     font-weight: 700;
     text-shadow: 0 0 6px rgba(255, 68, 68, 0.5);
 }
 
 .wh40k-dice-doubles {
-    color: var(--rt-warning-primary);
+    color: var(--wh40k-warning-primary);
     font-weight: 600;
     font-style: italic;
 }
@@ -922,7 +922,7 @@
     border-radius: 4px;
     font-size: 0.8rem;
     font-style: italic;
-    color: var(--rt-card-muted);
+    color: var(--wh40k-card-muted);
 }
 
 // ============================================
@@ -947,7 +947,7 @@
 .wh40k-roll-card__qualities-title {
     font-weight: 600;
     font-size: 0.85rem;
-    color: var(--rt-card-text);
+    color: var(--wh40k-card-text);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }

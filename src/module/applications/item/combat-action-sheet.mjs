@@ -23,7 +23,7 @@ export default class CombatActionSheet extends BaseItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-combat-action-sheet.hbs',
-            scrollable: ['.rt-item-body'],
+            scrollable: ['.wh40k-item-body'],
         },
     };
 }

@@ -101,7 +101,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
      * @type {string}
      */
     get categoryLabel() {
-        return game.i18n.localize(`RT.Modification.Category.${this.category.capitalize()}`);
+        return game.i18n.localize(`WH40K.Modification.Category.${this.category.capitalize()}`);
     }
 
     /**

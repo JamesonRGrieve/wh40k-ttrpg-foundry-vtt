@@ -1,17 +1,17 @@
 {{! Condition Chat Card }}
-<div class="rt-chat-card rt-condition-card rt-condition-card--{{nature}}">
-    <header class="rt-card-header">
-        <img src="{{img}}" alt="{{name}}" class="rt-card-icon" />
-        <div class="rt-card-title-area">
-            <h3 class="rt-card-title">{{name}}</h3>
-            <div class="rt-card-subtitle">{{natureLabel}} Condition</div>
-            <div class="rt-card-badges">
-                <span class="rt-badge rt-badge--{{natureClass}}">
+<div class="wh40k-chat-card wh40k-condition-card wh40k-condition-card--{{nature}}">
+    <header class="wh40k-card-header">
+        <img src="{{img}}" alt="{{name}}" class="wh40k-card-icon" />
+        <div class="wh40k-card-title-area">
+            <h3 class="wh40k-card-title">{{name}}</h3>
+            <div class="wh40k-card-subtitle">{{natureLabel}} Condition</div>
+            <div class="wh40k-card-badges">
+                <span class="wh40k-badge wh40k-badge--{{natureClass}}">
                     <i class="fas {{natureIcon}}"></i>
                     {{natureLabel}}
                 </span>
                 {{#if stackable}}
-                    <span class="rt-badge rt-badge--stacks">
+                    <span class="wh40k-badge wh40k-badge--stacks">
                         <i class="fas fa-layer-group"></i>
                         ×{{stacks}}
                     </span>
@@ -20,14 +20,14 @@
         </div>
     </header>
 
-    <div class="rt-card-body">
-        <div class="rt-condition-meta">
-            <span class="rt-meta-item rt-meta-item--applies">
+    <div class="wh40k-card-body">
+        <div class="wh40k-condition-meta">
+            <span class="wh40k-meta-item wh40k-meta-item--applies">
                 <i class="fas {{appliesToIcon}}"></i>
                 {{appliesToLabel}}
             </span>
             {{#if isTemporary}}
-                <span class="rt-meta-item rt-meta-item--duration">
+                <span class="wh40k-meta-item wh40k-meta-item--duration">
                     <i class="fas fa-clock"></i>
                     {{durationDisplay}}
                 </span>
@@ -35,36 +35,36 @@
         </div>
 
         {{#if effect}}
-            <div class="rt-condition-effect">
+            <div class="wh40k-condition-effect">
                 <h4>Effect</h4>
                 {{{effect}}}
             </div>
         {{/if}}
 
         {{#if removal}}
-            <div class="rt-condition-removal">
+            <div class="wh40k-condition-removal">
                 <h4>Removal</h4>
                 {{{removal}}}
             </div>
         {{/if}}
 
         {{#if notes}}
-            <div class="rt-condition-notes">
+            <div class="wh40k-condition-notes">
                 <strong>Notes:</strong>
                 {{notes}}
             </div>
         {{/if}}
 
         {{#if description}}
-            <div class="rt-condition-description">
+            <div class="wh40k-condition-description">
                 {{{description}}}
             </div>
         {{/if}}
     </div>
 
     {{#if sourceReference}}
-        <footer class="rt-card-footer">
-            <span class="rt-source-ref">
+        <footer class="wh40k-card-footer">
+            <span class="wh40k-source-ref">
                 <i class="fas fa-book"></i>
                 {{sourceReference}}
             </span>

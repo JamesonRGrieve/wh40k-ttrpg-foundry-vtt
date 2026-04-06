@@ -106,7 +106,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @type {string}
      */
     get damageTypeLabel() {
-        return game.i18n.localize(`RT.DamageType.${this.damage.type.capitalize()}`);
+        return game.i18n.localize(`WH40K.DamageType.${this.damage.type.capitalize()}`);
     }
 
     /* -------------------------------------------- */

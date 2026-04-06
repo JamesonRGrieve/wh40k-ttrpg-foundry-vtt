@@ -10,20 +10,20 @@
 
 :root {
     // Header hierarchy (use for consistent sizing)
-    --rt-text-h1: 1.5rem; // Tab headers, major sections
-    --rt-text-h2: 1.25rem; // Panel headers
-    --rt-text-h3: 1.1rem; // Section headers, subsections
-    --rt-text-h4: 0.95rem; // Minor headers
-    --rt-text-body: 0.9rem; // Normal text
-    --rt-text-small: 0.8rem; // Labels, captions
-    --rt-text-tiny: 0.7rem; // Badges, meta info
-    --rt-text-micro: 0.65rem; // Smallest labels
+    --wh40k-text-h1: 1.5rem; // Tab headers, major sections
+    --wh40k-text-h2: 1.25rem; // Panel headers
+    --wh40k-text-h3: 1.1rem; // Section headers, subsections
+    --wh40k-text-h4: 0.95rem; // Minor headers
+    --wh40k-text-body: 0.9rem; // Normal text
+    --wh40k-text-small: 0.8rem; // Labels, captions
+    --wh40k-text-tiny: 0.7rem; // Badges, meta info
+    --wh40k-text-micro: 0.65rem; // Smallest labels
 
     // Font stacks
-    --rt-font-display: 'Modesto Condensed', 'Cinzel', serif;
-    --rt-font-heading: 'Modesto Condensed', 'IM Fell DW Pica', serif;
-    --rt-font-body-alt: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --rt-font-numeric: 'Modesto Condensed', 'Roboto Mono', monospace;
+    --wh40k-font-display: 'Modesto Condensed', 'Cinzel', serif;
+    --wh40k-font-heading: 'Modesto Condensed', 'IM Fell DW Pica', serif;
+    --wh40k-font-body-alt: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --wh40k-font-numeric: 'Modesto Condensed', 'Roboto Mono', monospace;
 }
 
 // ============================================
@@ -34,14 +34,14 @@
 //           .wh40k-control-button, .wh40k-header-btn, .wh40k-add-btn-small, etc.
 
 // Base button reset and shared styles
-%rt-btn-base {
+%wh40k-btn-base {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
     padding: 0;
     margin: 0;
-    background: var(--rt-btn-bg);
+    background: var(--wh40k-btn-bg);
     border: 1px solid var(--color-border-secondary);
     border-radius: $wh40k-radius-md;
     color: var(--color-text-primary);
@@ -54,7 +54,7 @@
     user-select: none;
 
     &:hover:not(:disabled) {
-        background: var(--rt-btn-bg-hover);
+        background: var(--wh40k-btn-bg-hover);
         border-color: var(--color-border-highlight);
     }
 
@@ -68,7 +68,7 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--rt-gold);
+        outline: 2px solid var(--wh40k-gold);
         outline-offset: 1px;
     }
 
@@ -84,10 +84,10 @@
 // PRIMARY BUTTON - Major actions (roll, use, activate)
 // ----------------------------------------
 .wh40k-btn-primary {
-    @extend %rt-btn-base;
+    @extend %wh40k-btn-base;
     padding: 6px 12px;
-    background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-dark) 100%);
-    border: 1px solid var(--rt-gold-dark);
+    background: linear-gradient(135deg, var(--wh40k-gold) 0%, var(--wh40k-gold-dark) 100%);
+    border: 1px solid var(--wh40k-gold-dark);
     color: #fff;
     font-size: $wh40k-font-size-sm;
     text-transform: uppercase;
@@ -95,8 +95,8 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     &:hover:not(:disabled) {
-        background: linear-gradient(135deg, lighten($wh40k-color-gold, 5%) 0%, var(--rt-gold) 100%);
-        border-color: var(--rt-gold);
+        background: linear-gradient(135deg, lighten($wh40k-color-gold, 5%) 0%, var(--wh40k-gold) 100%);
+        border-color: var(--wh40k-gold);
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
@@ -139,7 +139,7 @@
 // CONTROL BUTTON - Stat adjustments (±), toggle, edit
 // ----------------------------------------
 .wh40k-btn-control {
-    @extend %rt-btn-base;
+    @extend %wh40k-btn-base;
     width: 28px;
     height: 28px;
     border-radius: 6px;
@@ -148,7 +148,7 @@
 
     &:hover:not(:disabled) {
         transform: scale(1.08);
-        box-shadow: 0 2px 6px var(--rt-shadow-soft);
+        box-shadow: 0 2px 6px var(--wh40k-shadow-soft);
     }
 
     // Minus/Decrease variant
@@ -157,7 +157,7 @@
 
         &:hover:not(:disabled) {
             border-color: $wh40k-accent-combat;
-            background: var(--rt-wounds-bg);
+            background: var(--wh40k-wounds-bg);
         }
     }
 
@@ -167,7 +167,7 @@
 
         &:hover:not(:disabled) {
             border-color: $wh40k-color-success;
-            background: var(--rt-success-bg);
+            background: var(--wh40k-success-bg);
         }
     }
 
@@ -192,7 +192,7 @@
 // ICON BUTTON - Config, delete, expand, collapse
 // ----------------------------------------
 .wh40k-btn-icon {
-    @extend %rt-btn-base;
+    @extend %wh40k-btn-base;
     width: 22px;
     height: 22px;
     background: transparent;
@@ -211,31 +211,31 @@
 
     // Delete variant
     &--delete {
-        color: var(--rt-wounds-secondary);
+        color: var(--wh40k-wounds-secondary);
 
         &:hover:not(:disabled) {
-            background: var(--rt-wounds-bg);
-            color: var(--rt-wounds-primary);
+            background: var(--wh40k-wounds-bg);
+            color: var(--wh40k-wounds-primary);
         }
     }
 
     // Add variant
     &--add {
-        color: var(--rt-success-secondary);
+        color: var(--wh40k-success-secondary);
 
         &:hover:not(:disabled) {
-            background: var(--rt-success-bg);
-            color: var(--rt-success-primary);
+            background: var(--wh40k-success-bg);
+            color: var(--wh40k-success-primary);
         }
     }
 
     // Gold/accent variant
     &--accent {
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
 
         &:hover:not(:disabled) {
             background: rgba($wh40k-color-gold, 0.15);
-            color: var(--rt-gold-bright);
+            color: var(--wh40k-gold-bright);
         }
     }
 
@@ -257,7 +257,7 @@
 // QUICK ACTION BUTTON - Rest, clear, restore, etc.
 // ----------------------------------------
 .wh40k-btn-quick {
-    @extend %rt-btn-base;
+    @extend %wh40k-btn-base;
     flex: 1;
     padding: 6px 10px;
     font-size: $wh40k-font-size-xs;
@@ -272,51 +272,51 @@
 
     &:hover:not(:disabled) {
         transform: translateY(-1px);
-        box-shadow: 0 3px 8px var(--rt-shadow-medium);
+        box-shadow: 0 3px 8px var(--wh40k-shadow-medium);
     }
 
     // Success variant (rest, heal, restore)
     &--success {
         border-color: rgba(74, 143, 92, 0.4);
-        color: var(--rt-success-primary);
+        color: var(--wh40k-success-primary);
 
         i {
-            color: var(--rt-success-secondary);
+            color: var(--wh40k-success-secondary);
         }
 
         &:hover:not(:disabled) {
-            border-color: var(--rt-success-primary);
-            background: var(--rt-success-bg);
+            border-color: var(--wh40k-success-primary);
+            background: var(--wh40k-success-bg);
         }
     }
 
     // Warning variant (clear, reset)
     &--warning {
-        border-color: var(--rt-fatigue-border);
-        color: var(--rt-fatigue-primary);
+        border-color: var(--wh40k-fatigue-border);
+        color: var(--wh40k-fatigue-primary);
 
         i {
-            color: var(--rt-fatigue-secondary);
+            color: var(--wh40k-fatigue-secondary);
         }
 
         &:hover:not(:disabled) {
-            border-color: var(--rt-fatigue-secondary);
-            background: var(--rt-fatigue-bg);
+            border-color: var(--wh40k-fatigue-secondary);
+            background: var(--wh40k-fatigue-bg);
         }
     }
 
     // Danger variant (delete, remove)
     &--danger {
-        border-color: var(--rt-wounds-border);
-        color: var(--rt-wounds-primary);
+        border-color: var(--wh40k-wounds-border);
+        color: var(--wh40k-wounds-primary);
 
         i {
-            color: var(--rt-wounds-secondary);
+            color: var(--wh40k-wounds-secondary);
         }
 
         &:hover:not(:disabled) {
-            border-color: var(--rt-wounds-secondary);
-            background: var(--rt-wounds-bg);
+            border-color: var(--wh40k-wounds-secondary);
+            background: var(--wh40k-wounds-bg);
         }
     }
 
@@ -333,10 +333,10 @@
 //           .wh40k-xp-input, .wh40k-critical-input, .wh40k-bio-input, etc.
 
 // Base input styles
-%rt-input-base {
+%wh40k-input-base {
     width: 100%;
     padding: 4px 8px;
-    background: var(--rt-input-bg);
+    background: var(--wh40k-input-bg);
     border: 1px solid var(--color-border-secondary);
     border-radius: $wh40k-radius-sm;
     color: var(--color-text-primary);
@@ -350,14 +350,14 @@
 
     &:focus {
         outline: none;
-        border-color: var(--rt-gold);
-        background: var(--rt-input-bg-focus);
+        border-color: var(--wh40k-gold);
+        background: var(--wh40k-input-bg-focus);
         box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
     }
 
     &:disabled,
     &:read-only {
-        background: var(--rt-panel-bg);
+        background: var(--wh40k-panel-bg);
         color: var(--color-text-tertiary);
         cursor: not-allowed;
     }
@@ -372,7 +372,7 @@
 // STANDARD INPUT - Default text/number input
 // ----------------------------------------
 .wh40k-input {
-    @extend %rt-input-base;
+    @extend %wh40k-input-base;
 
     // Compact variant
     &--compact {
@@ -391,13 +391,13 @@
 // NUMERIC INPUT - Numbers with special styling
 // ----------------------------------------
 .wh40k-input-numeric {
-    @extend %rt-input-base;
+    @extend %wh40k-input-base;
     width: auto;
     min-width: 50px;
     max-width: 80px;
     padding: 4px 8px;
     text-align: center;
-    font-family: var(--rt-font-numeric);
+    font-family: var(--wh40k-font-numeric);
     font-weight: 600;
 
     // Styled variant (for vitals/stats)
@@ -409,7 +409,7 @@
         font-weight: 700;
 
         &:focus {
-            box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+            box-shadow: 0 0 0 3px var(--wh40k-shadow-soft);
         }
     }
 
@@ -434,20 +434,20 @@
 // INLINE INPUT - Transparent, underline style
 // ----------------------------------------
 .wh40k-input-inline {
-    @extend %rt-input-base;
+    @extend %wh40k-input-base;
     background: transparent;
     border: none;
-    border-bottom: 1px solid var(--rt-border-color-light);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
     border-radius: 0;
     padding: 2px 4px;
 
     &:hover:not(:disabled):not(:read-only) {
-        border-bottom-color: var(--rt-border-color);
+        border-bottom-color: var(--wh40k-border-color);
     }
 
     &:focus {
-        border-bottom-color: var(--rt-gold);
-        box-shadow: 0 1px 0 var(--rt-gold);
+        border-bottom-color: var(--wh40k-gold);
+        box-shadow: 0 1px 0 var(--wh40k-gold);
         background: transparent;
     }
 
@@ -463,7 +463,7 @@
 // SELECT INPUT - Dropdown styling
 // ----------------------------------------
 .wh40k-select {
-    @extend %rt-input-base;
+    @extend %wh40k-input-base;
     appearance: none;
     cursor: pointer;
     padding-right: 24px;
@@ -480,7 +480,7 @@
 // TEXTAREA - Multi-line input
 // ----------------------------------------
 .wh40k-textarea {
-    @extend %rt-input-base;
+    @extend %wh40k-input-base;
     resize: vertical;
     min-height: 60px;
     line-height: 1.4;
@@ -493,21 +493,21 @@
 // All panel usage should reference this structure
 
 .wh40k-panel {
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: $wh40k-space-md;
-    box-shadow: 0 2px 8px var(--rt-shadow-soft);
+    box-shadow: 0 2px 8px var(--wh40k-shadow-soft);
     position: relative;
 
     &::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: var(--rt-accent-overlay);
-        border-top: 2px solid var(--rt-accent-border);
-        border-bottom: 2px solid var(--rt-accent-border);
+        background: var(--wh40k-accent-overlay);
+        border-top: 2px solid var(--wh40k-accent-border);
+        border-bottom: 2px solid var(--wh40k-accent-border);
         pointer-events: none;
         z-index: 0;
     }
@@ -525,7 +525,7 @@
         --panel-accent: #{$wh40k-color-gold};
     }
     &--fate {
-        --panel-accent: var(--rt-fate-secondary);
+        --panel-accent: var(--wh40k-fate-secondary);
     }
     &--corruption {
         --panel-accent: #2d7a6b;
@@ -571,7 +571,7 @@
     gap: $wh40k-space-sm;
     padding: $wh40k-space-sm $wh40k-space-md;
     background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.15) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
-    border-bottom: 1px solid var(--rt-border-color-light);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
     transition: box-shadow 0.2s ease, background 0.2s ease;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -579,10 +579,10 @@
 
     .wh40k-panel-title {
         flex: 1 1 auto !important;
-        font-family: var(--rt-font-display, 'Modesto Condensed', serif);
-        font-size: var(--rt-text-h3, 1.1rem);
+        font-family: var(--wh40k-font-display, 'Modesto Condensed', serif);
+        font-size: var(--wh40k-text-h3, 1.1rem);
         font-weight: 600;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         letter-spacing: 0.02em;
         white-space: nowrap !important;
         overflow: hidden;
@@ -623,7 +623,7 @@
 
 .wh40k-panel-chevron {
     font-size: 0.75rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     transition: transform 0.2s ease;
     flex-shrink: 0;
     margin-left: auto;
@@ -631,13 +631,13 @@
 
 .wh40k-panel-body {
     padding: $wh40k-space-md;
-    background: var(--rt-panel-body-bg);
+    background: var(--wh40k-panel-body-bg);
 }
 
 .wh40k-panel-details {
     padding: $wh40k-space-sm $wh40k-space-md;
     background: rgba(0, 0, 0, 0.02);
-    border-top: 1px solid var(--rt-border-color-light);
+    border-top: 1px solid var(--wh40k-border-color-light);
 }
 
 // Collapsed state
@@ -662,7 +662,7 @@
     flex-direction: column;
     gap: 6px;
     padding: $wh40k-space-sm;
-    background: var(--rt-panel-bg);
+    background: var(--wh40k-panel-bg);
     border: 1px solid $wh40k-border-light;
     border-radius: 6px;
     transition: all 0.2s ease;
@@ -813,7 +813,7 @@
     gap: $wh40k-space-sm;
     margin: $wh40k-space-sm;
     padding: $wh40k-space-lg;
-    border: 2px dashed var(--rt-border-color-light);
+    border: 2px dashed var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-md;
     background: linear-gradient(
         135deg,
@@ -861,7 +861,7 @@
 
 .wh40k-dropzone-icon {
     font-size: 2rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     transition: color 0.2s ease;
 
     .wh40k-dropzone:hover & {
@@ -871,13 +871,13 @@
 
 .wh40k-dropzone-text {
     font-size: 0.75rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     text-align: center;
 
     .wh40k-dropzone:hover & {
-        color: var(--rt-text-light);
+        color: var(--wh40k-text-light);
     }
 }
 
@@ -938,7 +938,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--rt-text-secondary);
+    color: var(--wh40k-text-secondary);
 }
 
 // ============================================

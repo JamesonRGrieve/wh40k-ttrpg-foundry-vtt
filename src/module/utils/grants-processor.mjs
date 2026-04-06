@@ -84,17 +84,17 @@ export class GrantsProcessor {
         // Check if item has grants
         const grants = item.system?.grants;
         if (!grants) {
-            game.rt?.log(`GrantsProcessor: No grants found on item: ${item.name}`);
+            game.wh40k?.log(`GrantsProcessor: No grants found on item: ${item.name}`);
             return context.result;
         }
 
         // Check if this is a talent with the hasGrants flag
         if (item.type === 'talent' && !item.system?.hasGrants) {
-            game.rt?.log(`GrantsProcessor: Talent ${item.name} has no hasGrants flag`);
+            game.wh40k?.log(`GrantsProcessor: Talent ${item.name} has no hasGrants flag`);
             return context.result;
         }
 
-        game.rt?.log(`GrantsProcessor: Processing grants from ${item.type}: ${item.name} (mode: ${context.mode}, depth: ${context.depth})`);
+        game.wh40k?.log(`GrantsProcessor: Processing grants from ${item.type}: ${item.name} (mode: ${context.mode}, depth: ${context.depth})`);
 
         // Process based on item type
         if (item.type === 'originPath' || item.flags?.rt?.kind === 'origin') {
@@ -324,7 +324,7 @@ export class GrantsProcessor {
                     for (const [char, value] of Object.entries(optionGrants.characteristics)) {
                         if (value !== 0) {
                             context.result.characteristics[char] = (context.result.characteristics[char] || 0) + value;
-                            game.rt?.log(`Origin choice "${choice.label}" grants ${value >= 0 ? '+' : ''}${value} ${char}`);
+                            game.wh40k?.log(`Origin choice "${choice.label}" grants ${value >= 0 ? '+' : ''}${value} ${char}`);
                         }
                     }
                 }
@@ -339,12 +339,12 @@ export class GrantsProcessor {
                 if (optionGrants.corruption) {
                     const corruptionValue = await this._evaluateDiceFormula(optionGrants.corruption);
                     context.result.corruptionBonus += corruptionValue;
-                    game.rt?.log(`Origin choice "${choice.label}" grants ${corruptionValue} corruption`);
+                    game.wh40k?.log(`Origin choice "${choice.label}" grants ${corruptionValue} corruption`);
                 }
                 if (optionGrants.insanity) {
                     const insanityValue = await this._evaluateDiceFormula(optionGrants.insanity);
                     context.result.insanityBonus += insanityValue;
-                    game.rt?.log(`Origin choice "${choice.label}" grants ${insanityValue} insanity`);
+                    game.wh40k?.log(`Origin choice "${choice.label}" grants ${insanityValue} insanity`);
                 }
             }
         }
@@ -497,7 +497,7 @@ export class GrantsProcessor {
         );
 
         if (existing) {
-            game.rt?.log(`Talent ${talentGrant.name} already exists, skipping grant`);
+            game.wh40k?.log(`Talent ${talentGrant.name} already exists, skipping grant`);
             return;
         }
 
@@ -516,7 +516,7 @@ export class GrantsProcessor {
 
         // Fallback: search compendium
         if (!talentItem) {
-            talentItem = await this._findInCompendium('wh40k-rpg.rt-items-talents', talentGrant.name);
+            talentItem = await this._findInCompendium('wh40k-rpg.wh40k-items-talents', talentGrant.name);
         }
 
         if (!talentItem) {
@@ -598,10 +598,10 @@ export class GrantsProcessor {
             // Increase stackable trait level
             const newLevel = (existing.system.level || 1) + (traitGrant.level || 1);
             context.result.skillUpdates[`items.${existing.id}.system.level`] = newLevel;
-            game.rt?.log(`Increased trait ${traitGrant.name} level to ${newLevel}`);
+            game.wh40k?.log(`Increased trait ${traitGrant.name} level to ${newLevel}`);
             return;
         } else if (existing) {
-            game.rt?.log(`Trait ${traitGrant.name} already exists, skipping grant`);
+            game.wh40k?.log(`Trait ${traitGrant.name} already exists, skipping grant`);
             return;
         }
 
@@ -616,7 +616,7 @@ export class GrantsProcessor {
         }
 
         if (!traitItem) {
-            traitItem = await this._findInCompendium('wh40k-rpg.rt-items-traits', traitGrant.name);
+            traitItem = await this._findInCompendium('wh40k-rpg.wh40k-items-traits', traitGrant.name);
         }
 
         if (!traitItem) {
@@ -704,7 +704,7 @@ export class GrantsProcessor {
     static async _processSpecialAbilityGrant(abilityGrant, context) {
         // Special abilities are descriptive text, not items
         // They could be stored as journal entries or just logged
-        game.rt?.log(`Special ability granted: ${abilityGrant.name || abilityGrant}`);
+        game.wh40k?.log(`Special ability granted: ${abilityGrant.name || abilityGrant}`);
 
         if (context.showNotification) {
             context.result.notifications.push(`Special Ability: ${abilityGrant.name || abilityGrant}`);
@@ -766,12 +766,12 @@ export class GrantsProcessor {
         const storedRoll = originItem.system?.rollResults?.wounds;
 
         if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
-            game.rt?.log(`Using stored wounds roll: ${storedRoll.rolled} (${storedRoll.breakdown})`);
+            game.wh40k?.log(`Using stored wounds roll: ${storedRoll.rolled} (${storedRoll.breakdown})`);
             return storedRoll.rolled;
         }
 
         const evaluated = evaluateWoundsFormula(formula, actor);
-        game.rt?.log(`Evaluated wounds formula "${formula}": ${evaluated}`);
+        game.wh40k?.log(`Evaluated wounds formula "${formula}": ${evaluated}`);
         return evaluated;
     }
 
@@ -783,12 +783,12 @@ export class GrantsProcessor {
         const storedRoll = originItem.system?.rollResults?.fate;
 
         if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
-            game.rt?.log(`Using stored fate roll: ${storedRoll.rolled} (${storedRoll.breakdown})`);
+            game.wh40k?.log(`Using stored fate roll: ${storedRoll.rolled} (${storedRoll.breakdown})`);
             return storedRoll.rolled;
         }
 
         const evaluated = evaluateFateFormula(formula);
-        game.rt?.log(`Evaluated fate formula "${formula}": ${evaluated}`);
+        game.wh40k?.log(`Evaluated fate formula "${formula}": ${evaluated}`);
         return evaluated;
     }
 

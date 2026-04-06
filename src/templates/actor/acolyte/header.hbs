@@ -1,47 +1,47 @@
 {{!-- Acolyte Sheet Header Part --}}
 {{!-- Two-column layout: Left (portrait + bio) | Right (characteristics HUD V1 Enhanced) --}}
-<div class="rt-header rt-grid-col-6 rt-panel rt-character-header">
-    <div class="rt-header__info rt-header-grid">
-        <div class="rt-header-left">
-            <div class="rt-header-topline">
-                <div class="rt-header__logo rt-portrait-container">
-                    <img class="rt-header__logo-image rt-portrait" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+<div class="wh40k-header wh40k-grid-col-6 wh40k-panel wh40k-character-header">
+    <div class="wh40k-header__info wh40k-header-grid">
+        <div class="wh40k-header-left">
+            <div class="wh40k-header-topline">
+                <div class="wh40k-header__logo wh40k-portrait-container">
+                    <img class="wh40k-header__logo-image wh40k-portrait" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                 </div>
-                <div class="rt-header-info">
-                    <div class="rt-header-row rt-name-row">
-                        <span class="rt-header-label">{{localize "WH40K.Character.Name"}}</span>
-                        <input class="rt-header-input rt-name-input" name="name" type="text" value="{{actor.name}}" />
+                <div class="wh40k-header-info">
+                    <div class="wh40k-header-row wh40k-name-row">
+                        <span class="wh40k-header-label">{{localize "WH40K.Character.Name"}}</span>
+                        <input class="wh40k-header-input wh40k-name-input" name="name" type="text" value="{{actor.name}}" />
                     </div>
-                    <div class="rt-header-row rt-player-row">
-                        <span class="rt-header-label">{{localize "WH40K.Character.Player"}}</span>
-                        <input class="rt-header-input rt-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
+                    <div class="wh40k-header-row wh40k-player-row">
+                        <span class="wh40k-header-label">{{localize "WH40K.Character.Player"}}</span>
+                        <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
                     </div>
-                    <div class="rt-header-row">
-                        <span class="rt-header-label">{{localize "WH40K.OriginPath.Career"}}</span>
-                        <span class="rt-header-value">{{system.originPath.career}}</span>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">{{localize "WH40K.OriginPath.Career"}}</span>
+                        <span class="wh40k-header-value">{{system.originPath.career}}</span>
                     </div>
-                    <div class="rt-header-row">
-                        <span class="rt-header-label">{{localize "WH40K.Character.Rank"}}</span>
-                        <input class="rt-header-input rt-rank-input" name="system.rogueTrader.rank" type="text" value="{{system.rogueTrader.rank}}" placeholder="Rank" />
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">{{localize "WH40K.Character.Rank"}}</span>
+                        <input class="wh40k-header-input wh40k-rank-input" name="system.rogueTrader.rank" type="text" value="{{system.rogueTrader.rank}}" placeholder="Rank" />
                     </div>
-                    <div class="rt-header-row">
-                        <span class="rt-header-label">{{localize "WH40K.OriginPath.HomeWorld"}}</span>
-                        <span class="rt-header-value">{{system.originPath.homeWorld}}</span>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">{{localize "WH40K.OriginPath.HomeWorld"}}</span>
+                        <span class="wh40k-header-value">{{system.originPath.homeWorld}}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="rt-header-right">
-            <div class="rt-hud-stack">
+        <div class="wh40k-header-right">
+            <div class="wh40k-hud-stack">
                 {{!-- Characteristics HUD V1 Enhanced --}}
-                <div class="rt-characteristics-hud">
+                <div class="wh40k-characteristics-hud">
                     {{#each actor.characteristics as |characteristic name|}}
                         {{#unless (eq name "influence")}}
-                        <div class="rt-char-hud-item {{#if (gt this.modifier 0)}}rt-char-buffed{{/if}}{{#if (lt this.modifier 0)}}rt-char-debuffed{{/if}}"
+                        <div class="wh40k-char-hud-item {{#if (gt this.modifier 0)}}wh40k-char-buffed{{/if}}{{#if (lt this.modifier 0)}}wh40k-char-debuffed{{/if}}"
                              data-advance="{{this.advance}}"
                              style="--advance-progress: {{divide this.advance 5}};">
                             <button
-                                class="rt-char-hud-name roll-characteristic actor-drag"
+                                class="wh40k-char-hud-name roll-characteristic actor-drag"
                                 type="button"
                                 data-action="roll"
                                 data-roll-type="characteristic"
@@ -51,21 +51,21 @@
                                 data-characteristic="{{name}}"
                                 title="{{this.label}}"
                             >{{this.short}}</button>
-                            <div class="rt-char-hud-circle" title="{{this.label}}">
-                                <span class="rt-char-hud-mod">{{this.bonus}}</span>
-                                <span class="rt-char-hud-mod-label">MOD</span>
+                            <div class="wh40k-char-hud-circle" title="{{this.label}}">
+                                <span class="wh40k-char-hud-mod">{{this.bonus}}</span>
+                                <span class="wh40k-char-hud-mod-label">MOD</span>
                             </div>
-                            <div class="rt-char-hud-base">Total {{this.total}}</div>
-<!--                            <label class="rt-char-hud-toggle" data-action="toggleSection" data-toggle="charhud_{{name}}" title="Edit {{this.label}}">-->
-<!--                                <span class="rt-char-hud-toggle-icon">v</span>-->
+                            <div class="wh40k-char-hud-base">Total {{this.total}}</div>
+<!--                            <label class="wh40k-char-hud-toggle" data-action="toggleSection" data-toggle="charhud_{{name}}" title="Edit {{this.label}}">-->
+<!--                                <span class="wh40k-char-hud-toggle-icon">v</span>-->
 <!--                            </label>-->
-<!--                            <div class="rt-char-hud-details charhud_{{name}}">-->
-<!--                                <label class="rt-char-hud-field">-->
-<!--                                    <span class="rt-char-hud-field-label">Base</span>-->
+<!--                            <div class="wh40k-char-hud-details charhud_{{name}}">-->
+<!--                                <label class="wh40k-char-hud-field">-->
+<!--                                    <span class="wh40k-char-hud-field-label">Base</span>-->
 <!--                                    <input type="number" name="system.characteristics.{{name}}.base" data-dtype="Number" value="{{this.base}}" />-->
 <!--                                </label>-->
-<!--                                <label class="rt-char-hud-field">-->
-<!--                                    <span class="rt-char-hud-field-label">Advances</span>-->
+<!--                                <label class="wh40k-char-hud-field">-->
+<!--                                    <span class="wh40k-char-hud-field-label">Advances</span>-->
 <!--                                    <select name="system.characteristics.{{name}}.advance">-->
 <!--                                        {{option "0" this.advance "None"}}-->
 <!--                                        {{option "1" this.advance "Simple"}}-->
@@ -75,9 +75,9 @@
 <!--                                        {{option "5" this.advance "Expert"}}-->
 <!--                                    </select>-->
 <!--                                </label>-->
-<!--                                <label class="rt-char-hud-field">-->
-<!--                                    <span class="rt-char-hud-field-label">Unnatural</span>-->
-<!--                                    <select name="system.characteristics.{{name}}.unnatural" class="rt-unnatural-select" data-dtype="Number">-->
+<!--                                <label class="wh40k-char-hud-field">-->
+<!--                                    <span class="wh40k-char-hud-field-label">Unnatural</span>-->
+<!--                                    <select name="system.characteristics.{{name}}.unnatural" class="wh40k-unnatural-select" data-dtype="Number">-->
 <!--                                        <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>—</option>-->
 <!--                                        <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>-->
 <!--                                        <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>-->

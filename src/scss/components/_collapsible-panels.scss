@@ -16,7 +16,7 @@
     transition: all 0.3s ease;
 
     &:hover {
-        border-color: var(--rt-bronze, #cd7f32);
+        border-color: var(--wh40k-bronze, #cd7f32);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 }
@@ -30,14 +30,14 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    background: linear-gradient(90deg, var(--rt-iron, #3e3e3e) 0%, var(--rt-bronze, #cd7f32) 100%);
-    border-bottom: 2px solid var(--rt-gold, #d4af37);
+    background: linear-gradient(90deg, var(--wh40k-iron, #3e3e3e) 0%, var(--wh40k-bronze, #cd7f32) 100%);
+    border-bottom: 2px solid var(--wh40k-gold, #d4af37);
     cursor: pointer;
     user-select: none;
     transition: all 0.2s ease;
 
     &:hover {
-        background: linear-gradient(90deg, var(--rt-bronze, #cd7f32) 0%, var(--rt-gold, #d4af37) 100%);
+        background: linear-gradient(90deg, var(--wh40k-bronze, #cd7f32) 0%, var(--wh40k-gold, #d4af37) 100%);
         transform: translateX(2px);
     }
 
@@ -50,23 +50,23 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: var(--rt-font-header, 'Caslon Antique', serif);
+    font-family: var(--wh40k-font-header, 'Caslon Antique', serif);
     font-size: 1.1em;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--rt-bone, #e8dcc8);
+    color: var(--wh40k-bone, #e8dcc8);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 
     i {
         font-size: 0.9em;
-        color: var(--rt-gold, #d4af37);
+        color: var(--wh40k-gold, #d4af37);
     }
 }
 
 .wh40k-panel-toggle-icon {
     font-size: 1.2em;
-    color: var(--rt-bone, #e8dcc8);
+    color: var(--wh40k-bone, #e8dcc8);
     transition: transform 0.3s ease;
 
     .collapsed & {
@@ -85,7 +85,7 @@
     background: rgba(0, 0, 0, 0.5);
     font-size: 0.75em;
     font-weight: bold;
-    color: var(--rt-gold, #d4af37);
+    color: var(--wh40k-gold, #d4af37);
 }
 
 /* -------------------------------------------- */
@@ -126,10 +126,10 @@
     align-items: center;
     gap: 4px;
     padding: 4px 8px;
-    border: 1px solid var(--rt-bronze, #cd7f32);
+    border: 1px solid var(--wh40k-bronze, #cd7f32);
     border-radius: 3px;
     background: linear-gradient(135deg, rgba(62, 62, 62, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
-    color: var(--rt-bone, #e8dcc8);
+    color: var(--wh40k-bone, #e8dcc8);
     font-size: 0.85em;
     font-weight: 500;
     cursor: pointer;
@@ -137,12 +137,12 @@
 
     i {
         font-size: 0.9em;
-        color: var(--rt-gold, #d4af37);
+        color: var(--wh40k-gold, #d4af37);
     }
 
     &:hover {
-        background: linear-gradient(135deg, var(--rt-bronze, #cd7f32) 0%, var(--rt-iron, #3e3e3e) 100%);
-        border-color: var(--rt-gold, #d4af37);
+        background: linear-gradient(135deg, var(--wh40k-bronze, #cd7f32) 0%, var(--wh40k-iron, #3e3e3e) 100%);
+        border-color: var(--wh40k-gold, #d4af37);
         transform: translateY(-1px);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
@@ -207,7 +207,7 @@
         width: 16px;
         height: 16px;
         margin-left: 8px;
-        border: 2px solid var(--rt-gold, #d4af37);
+        border: 2px solid var(--wh40k-gold, #d4af37);
         border-top-color: transparent;
         border-radius: 50%;
         animation: panel-spin 0.8s linear infinite;
@@ -241,11 +241,11 @@
 
 /* Highlighted variant (important panels) */
 .wh40k-collapsible-panel.highlighted {
-    border-color: var(--rt-gold, #d4af37);
+    border-color: var(--wh40k-gold, #d4af37);
     box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
 
     .wh40k-panel-header-collapsible {
-        background: linear-gradient(90deg, var(--rt-bronze, #cd7f32) 0%, var(--rt-gold, #d4af37) 100%);
+        background: linear-gradient(90deg, var(--wh40k-bronze, #cd7f32) 0%, var(--wh40k-gold, #d4af37) 100%);
     }
 }
 
@@ -361,7 +361,7 @@
     top: 50%;
     transform: translateY(-50%);
     font-size: 8px;
-    color: var(--rt-iron, #3e3e3e);
+    color: var(--wh40k-iron, #3e3e3e);
     opacity: 0.6;
 }
 
@@ -377,7 +377,7 @@
 .wh40k-collapsible-panel.important .wh40k-panel-title::before {
     content: '⚜';
     margin-right: 4px;
-    color: var(--rt-gold, #d4af37);
+    color: var(--wh40k-gold, #d4af37);
     text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
 }
 
@@ -424,12 +424,12 @@
 /* -------------------------------------------- */
 
 .wh40k-panel-header-collapsible:focus {
-    outline: 2px solid var(--rt-gold, #d4af37);
+    outline: 2px solid var(--wh40k-gold, #d4af37);
     outline-offset: 2px;
 }
 
 .wh40k-preset-btn:focus {
-    outline: 2px solid var(--rt-gold, #d4af37);
+    outline: 2px solid var(--wh40k-gold, #d4af37);
     outline-offset: 1px;
 }
 
