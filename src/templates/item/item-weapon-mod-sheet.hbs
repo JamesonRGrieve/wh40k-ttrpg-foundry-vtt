@@ -1,5 +1,5 @@
 <form class="rt-item-sheet rt-item-sheet--weapon-mod" autocomplete="off">
-    {{!-- Header --}}
+    {{! Header }}
     <header class="rt-item-sheet__header">
         <div class="rt-item-sheet__portrait">
             <img class="rt-item-sheet__portrait-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
@@ -13,7 +13,7 @@
         </div>
     </header>
 
-    {{!-- Properties Panel --}}
+    {{! Properties Panel }}
     <section class="rt-item-sheet__panel">
         <h2 class="rt-item-sheet__panel-title">
             <span class="material-icons">tune</span>
@@ -53,14 +53,18 @@
         </div>
     </section>
 
-    {{!-- Description Panel --}}
+    {{! Description Panel }}
     <section class="rt-item-sheet__panel rt-item-sheet__panel--description">
         <h2 class="rt-item-sheet__panel-title">
             <span class="material-icons">description</span>
             Description
         </h2>
         <div class="rt-item-sheet__field rt-item-sheet__field--full">
-            <textarea class="rt-item-sheet__textarea" name="system.description" placeholder="Describe the modification's effects...">{{item.system.description}}</textarea>
+            <textarea
+                class="rt-item-sheet__textarea"
+                name="system.description"
+                placeholder="Describe the modification's effects..."
+            >{{item.system.description}}</textarea>
         </div>
     </section>
 </form>

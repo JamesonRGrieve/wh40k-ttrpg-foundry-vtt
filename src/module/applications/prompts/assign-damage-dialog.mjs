@@ -2,7 +2,7 @@
  * @file AssignDamageDialog - V2 dialog for damage assignment
  */
 
-import BaseRollDialog from "./base-roll-dialog.mjs";
+import BaseRollDialog from './base-roll-dialog.mjs';
 
 /**
  * Dialog for assigning damage to a target.
@@ -20,10 +20,10 @@ export default class AssignDamageDialog extends BaseRollDialog {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["assign-damage"],
+        classes: ['assign-damage'],
         window: {
-            title: "Assign Damage"
-        }
+            title: 'Assign Damage',
+        },
     };
 
     /* -------------------------------------------- */
@@ -31,9 +31,9 @@ export default class AssignDamageDialog extends BaseRollDialog {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs",
-            scrollable: [""]
-        }
+            template: 'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
+            scrollable: [''],
+        },
     };
 
     /* -------------------------------------------- */
@@ -45,16 +45,15 @@ export default class AssignDamageDialog extends BaseRollDialog {
         await super._onRender(context, options);
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (event) => {
-                    event.target.select();
-                });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (event) => {
+                event.target.select();
             });
+        });
 
         // Set up button listeners
-        this.element.querySelector("#assign-damage")?.addEventListener("click", this._onAssignDamage.bind(this));
-        this.element.querySelector("#cancel-prompt")?.addEventListener("click", this._onCancelPrompt.bind(this));
+        this.element.querySelector('#assign-damage')?.addEventListener('click', this._onAssignDamage.bind(this));
+        this.element.querySelector('#cancel-prompt')?.addEventListener('click', this._onCancelPrompt.bind(this));
     }
 
     /* -------------------------------------------- */

@@ -34,29 +34,29 @@
     --rt-bronze: #cd7f32;
     --rt-bronze-bright: #e89b5a;
     --rt-bronze-dark: #8b5a2b;
-    
+
     // Combat/Blood accents
     --rt-red: #8b0000;
     --rt-red-bright: #dc143c;
     --rt-red-dark: #5a0000;
-    
+
     // Success/Health accents
     --rt-green: #2d5a2d;
     --rt-green-bright: #4ade80;
 
     // Typography
-    --rt-font-header: "Caslon Antique", "Trajan Pro", serif;
-    --rt-font-body: "Garamond", "Georgia", serif;
-    --rt-font-numbers: "Cinzel", serif;
-    --rt-font-ui: "Roboto", sans-serif;
+    --rt-font-header: 'Caslon Antique', 'Trajan Pro', serif;
+    --rt-font-body: 'Garamond', 'Georgia', serif;
+    --rt-font-numbers: 'Cinzel', serif;
+    --rt-font-ui: 'Roboto', sans-serif;
 
     // Spacing Scale (based on 8px grid)
-    --rt-space-xs: 0.25rem;   // 4px
-    --rt-space-sm: 0.5rem;    // 8px
-    --rt-space-md: 1rem;      // 16px
-    --rt-space-lg: 1.5rem;    // 24px
-    --rt-space-xl: 2rem;      // 32px
-    --rt-space-2xl: 3rem;     // 48px
+    --rt-space-xs: 0.25rem; // 4px
+    --rt-space-sm: 0.5rem; // 8px
+    --rt-space-md: 1rem; // 16px
+    --rt-space-lg: 1.5rem; // 24px
+    --rt-space-xl: 2rem; // 32px
+    --rt-space-2xl: 3rem; // 48px
 
     // Border Radius
     --rt-radius-sm: 2px;
@@ -86,43 +86,43 @@ body.theme-light {
     // Sheet backgrounds
     --rt-sheet-bg: rgba(250, 244, 233, 0.95);
     --rt-sheet-bg-alt: rgba(245, 235, 220, 0.95);
-    
+
     // Panel backgrounds
     --rt-panel-bg: rgba(255, 255, 255, 0.5);
     --rt-panel-bg-solid: rgba(255, 255, 255, 0.85);
     --rt-panel-bg-translucent: rgba(255, 255, 255, 0.35);
     --rt-panel-body-bg: rgba(255, 255, 255, 0.4);
-    
+
     // Input backgrounds
     --rt-input-bg: rgba(255, 255, 255, 0.75);
     --rt-input-bg-focus: rgba(255, 255, 255, 0.9);
-    
+
     // Text colors
     --rt-text-dark: #2a1a0a;
     --rt-text-medium: #3a2820;
     --rt-text-muted: #6a5a43;
     --rt-text-subtle: #8b7355;
-    
+
     // Border colors
     --rt-border-color: rgba(120, 46, 34, 0.45);
     --rt-border-color-light: rgba(120, 46, 34, 0.25);
     --rt-border-color-strong: rgba(120, 46, 34, 0.7);
     --rt-border-accent: rgba(74, 55, 40, 0.3);
-    
+
     // Shadows
     --rt-shadow-soft: rgba(0, 0, 0, 0.05);
     --rt-shadow-medium: rgba(0, 0, 0, 0.12);
     --rt-text-shadow: rgba(255, 255, 255, 0.8);
-    
+
     // HUD and controls
     --rt-hud-bg: linear-gradient(180deg, rgba(40, 40, 40, 0.28), rgba(20, 20, 20, 0.22));
     --rt-hud-item-bg: rgba(255, 255, 255, 0.4);
     --rt-circle-bg: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(210, 210, 210, 0.65));
-    
+
     // Button colors
     --rt-btn-bg: rgba(255, 255, 255, 0.4);
     --rt-btn-bg-hover: rgba(255, 255, 255, 0.6);
-    
+
     // Accent overlays
     --rt-accent-overlay: rgba(36, 107, 131, 0.12);
     --rt-accent-border: rgba(36, 107, 131, 0.25);
@@ -133,43 +133,43 @@ body.theme-dark {
     // Sheet backgrounds
     --rt-sheet-bg: rgba(30, 25, 22, 0.95);
     --rt-sheet-bg-alt: rgba(35, 30, 25, 0.95);
-    
+
     // Panel backgrounds
     --rt-panel-bg: rgba(40, 35, 30, 0.7);
     --rt-panel-bg-solid: rgba(45, 40, 35, 0.9);
     --rt-panel-bg-translucent: rgba(50, 45, 40, 0.5);
     --rt-panel-body-bg: rgba(35, 30, 25, 0.6);
-    
+
     // Input backgrounds
     --rt-input-bg: rgba(50, 45, 40, 0.8);
     --rt-input-bg-focus: rgba(60, 55, 48, 0.9);
-    
+
     // Text colors
     --rt-text-dark: #e8dcc8;
     --rt-text-medium: #d4c8b4;
     --rt-text-muted: #a89880;
     --rt-text-subtle: #8a7a6a;
-    
+
     // Border colors
     --rt-border-color: rgba(180, 140, 100, 0.4);
     --rt-border-color-light: rgba(180, 140, 100, 0.25);
     --rt-border-color-strong: rgba(212, 175, 55, 0.5);
     --rt-border-accent: rgba(180, 140, 100, 0.35);
-    
+
     // Shadows
     --rt-shadow-soft: rgba(0, 0, 0, 0.2);
     --rt-shadow-medium: rgba(0, 0, 0, 0.35);
     --rt-text-shadow: rgba(0, 0, 0, 0.6);
-    
+
     // HUD and controls
     --rt-hud-bg: linear-gradient(180deg, rgba(50, 45, 40, 0.8), rgba(30, 25, 20, 0.85));
     --rt-hud-item-bg: rgba(60, 55, 48, 0.6);
     --rt-circle-bg: radial-gradient(circle at 30% 30%, rgba(70, 65, 58, 0.85), rgba(50, 45, 40, 0.75));
-    
+
     // Button colors
     --rt-btn-bg: rgba(60, 55, 48, 0.5);
     --rt-btn-bg-hover: rgba(80, 72, 62, 0.6);
-    
+
     // Accent overlays
     --rt-accent-overlay: rgba(212, 175, 55, 0.08);
     --rt-accent-border: rgba(212, 175, 55, 0.2);
@@ -191,101 +191,101 @@ body.theme-dark {
     --rt-wounds-bg: rgba(139, 0, 0, 0.08);
     --rt-wounds-border: rgba(139, 0, 0, 0.4);
     --rt-wounds-gradient: linear-gradient(90deg, rgba(120, 15, 15, 0.85), rgba(200, 70, 40, 0.85));
-    
+
     // Fatigue Panel - Amber/Orange
     --rt-fatigue-primary: #a07818;
     --rt-fatigue-secondary: #c4871d;
     --rt-fatigue-bg: rgba(160, 120, 24, 0.08);
     --rt-fatigue-border: rgba(160, 120, 24, 0.4);
     --rt-fatigue-gradient: linear-gradient(90deg, rgba(180, 120, 20, 0.85), rgba(220, 160, 30, 0.85));
-    
+
     // Fate Panel - Blue/Celestial
     --rt-fate-primary: #2563eb;
     --rt-fate-secondary: #3b82f6;
     --rt-fate-bg: rgba(37, 99, 235, 0.08);
     --rt-fate-border: rgba(37, 99, 235, 0.4);
     --rt-fate-gradient: linear-gradient(90deg, rgba(37, 99, 235, 0.85), rgba(59, 130, 246, 0.85));
-    
+
     // Corruption Panel - Teal/Dark Green
     --rt-corruption-primary: #147058;
     --rt-corruption-secondary: #1a8a6e;
     --rt-corruption-bg: rgba(20, 112, 88, 0.08);
     --rt-corruption-border: rgba(20, 112, 88, 0.4);
     --rt-corruption-gradient: linear-gradient(90deg, rgba(20, 90, 80, 0.85), rgba(40, 140, 120, 0.85));
-    
+
     // Insanity Panel - Purple/Violet
     --rt-insanity-primary: #6a2894;
     --rt-insanity-secondary: #9370db;
     --rt-insanity-bg: rgba(147, 112, 219, 0.08);
     --rt-insanity-border: rgba(147, 112, 219, 0.4);
     --rt-insanity-gradient: linear-gradient(90deg, rgba(90, 60, 120, 0.85), rgba(130, 90, 170, 0.85));
-    
+
     // Skills Panel - Blue/Teal
     --rt-skills-primary: #2a7a9a;
     --rt-skills-secondary: #3a9aba;
     --rt-skills-bg: rgba(42, 122, 154, 0.08);
     --rt-skills-border: rgba(42, 122, 154, 0.4);
     --rt-skills-gradient: linear-gradient(90deg, rgba(30, 100, 130, 0.85), rgba(60, 150, 180, 0.85));
-    
+
     // Combat Panel - Dark Red/Blood
     --rt-combat-primary: #a82020;
     --rt-combat-secondary: #c83030;
     --rt-combat-bg: rgba(168, 32, 32, 0.08);
     --rt-combat-border: rgba(168, 32, 32, 0.4);
     --rt-combat-gradient: linear-gradient(90deg, rgba(140, 25, 25, 0.85), rgba(180, 50, 50, 0.85));
-    
+
     // Talents/Abilities Panel - Bronze/Gold
     --rt-talents-primary: #a07818;
     --rt-talents-secondary: #c89828;
     --rt-talents-bg: rgba(160, 120, 24, 0.08);
     --rt-talents-border: rgba(160, 120, 24, 0.4);
-    
+
     // Traits Panel - Deep Purple (same as powers)
     --rt-traits-primary: #6a2090;
     --rt-traits-secondary: #8a40b0;
     --rt-traits-bg: rgba(106, 32, 144, 0.08);
     --rt-traits-border: rgba(106, 32, 144, 0.4);
-    
+
     // Equipment Panel - Steel/Teal
     --rt-equipment-primary: #3a5f5f;
     --rt-equipment-secondary: #4a7f7f;
     --rt-equipment-bg: rgba(58, 95, 95, 0.08);
     --rt-equipment-border: rgba(58, 95, 95, 0.4);
-    
+
     // Powers/Psychic Panel - Deep Purple
     --rt-powers-primary: #6a2090;
     --rt-powers-secondary: #8a40b0;
     --rt-powers-bg: rgba(106, 32, 144, 0.08);
     --rt-powers-border: rgba(106, 32, 144, 0.4);
-    
+
     // Dynasty Panel - Imperial Gold
     --rt-dynasty-primary: #d4a520;
     --rt-dynasty-secondary: #e8c040;
     --rt-dynasty-bg: rgba(212, 165, 32, 0.08);
     --rt-dynasty-border: rgba(212, 165, 32, 0.4);
-    
+
     // Movement Panel - Blue
     --rt-movement-primary: #2a7a9a;
     --rt-movement-secondary: #3a9aba;
     --rt-movement-bg: rgba(42, 122, 154, 0.08);
     --rt-movement-border: rgba(42, 122, 154, 0.4);
-    
+
     // Bio/Background Panel - Neutral Brown
     --rt-bio-primary: #6a5a4a;
     --rt-bio-secondary: #8a7a6a;
     --rt-bio-bg: rgba(106, 90, 74, 0.06);
     --rt-bio-border: rgba(106, 90, 74, 0.3);
-    
+
     // Success/Positive - Green
     --rt-success-primary: #2d5a2d;
     --rt-success-secondary: #4ade80;
     --rt-success-bg: rgba(45, 90, 45, 0.1);
-    
+
     // Warning - Amber
     --rt-warning-primary: #d97706;
     --rt-warning-secondary: #fbbf24;
     --rt-warning-bg: rgba(217, 119, 6, 0.1);
-    
+
     // Danger/Critical - Red
     --rt-danger-primary: #dc2626;
     --rt-danger-secondary: #ef4444;
@@ -326,27 +326,18 @@ body.theme-dark {
     background: var(--color-bg-secondary);
     border: 2px solid var(--rt-bronze);
     border-radius: var(--rt-radius-md);
-    box-shadow:
-        0 4px 8px var(--color-shadow-primary),
-        0 0 20px rgba(212, 175, 55, 0.2),
-        inset 0 1px 0 rgba(212, 175, 55, 0.1);
+    box-shadow: 0 4px 8px var(--color-shadow-primary), 0 0 20px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1);
     position: relative;
 
     // Subtle texture overlay
     &::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 2px,
-            rgba(212, 175, 55, 0.02) 2px,
-            rgba(212, 175, 55, 0.02) 4px
-        );
+        background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(212, 175, 55, 0.02) 2px, rgba(212, 175, 55, 0.02) 4px);
         pointer-events: none;
         border-radius: var(--rt-radius-md);
     }
@@ -366,7 +357,7 @@ body.theme-dark {
     text-shadow: 1px 1px 2px var(--color-shadow-primary);
 
     &::before {
-        content: "⚜";
+        content: '⚜';
         margin-right: var(--rt-space-sm);
         color: var(--rt-gold);
         font-size: 1rem;
@@ -392,7 +383,7 @@ body.theme-dark {
 
     // Shine effect
     &::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 0;
         left: -100%;
@@ -404,9 +395,7 @@ body.theme-dark {
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow:
-            0 6px 12px var(--color-shadow-primary),
-            0 0 20px rgba(212, 175, 55, 0.4);
+        box-shadow: 0 6px 12px var(--color-shadow-primary), 0 0 20px rgba(212, 175, 55, 0.4);
 
         &::before {
             left: 100%;
@@ -478,9 +467,7 @@ body.theme-dark {
 
 // Gothic Text Shadow
 @mixin gothic-text-shadow {
-    text-shadow:
-        1px 1px 2px var(--color-shadow-primary),
-        0 0 4px rgba(212, 175, 55, 0.3);
+    text-shadow: 1px 1px 2px var(--color-shadow-primary), 0 0 4px rgba(212, 175, 55, 0.3);
 }
 
 // Hover Lift
@@ -582,21 +569,45 @@ body.theme-dark {
 }
 
 // Spacing Utilities
-.wh40k-m-sm { margin: var(--rt-space-sm); }
-.wh40k-m-md { margin: var(--rt-space-md); }
-.wh40k-m-lg { margin: var(--rt-space-lg); }
+.wh40k-m-sm {
+    margin: var(--rt-space-sm);
+}
+.wh40k-m-md {
+    margin: var(--rt-space-md);
+}
+.wh40k-m-lg {
+    margin: var(--rt-space-lg);
+}
 
-.wh40k-p-sm { padding: var(--rt-space-sm); }
-.wh40k-p-md { padding: var(--rt-space-md); }
-.wh40k-p-lg { padding: var(--rt-space-lg); }
+.wh40k-p-sm {
+    padding: var(--rt-space-sm);
+}
+.wh40k-p-md {
+    padding: var(--rt-space-md);
+}
+.wh40k-p-lg {
+    padding: var(--rt-space-lg);
+}
 
-.wh40k-mt-sm { margin-top: var(--rt-space-sm); }
-.wh40k-mt-md { margin-top: var(--rt-space-md); }
-.wh40k-mt-lg { margin-top: var(--rt-space-lg); }
+.wh40k-mt-sm {
+    margin-top: var(--rt-space-sm);
+}
+.wh40k-mt-md {
+    margin-top: var(--rt-space-md);
+}
+.wh40k-mt-lg {
+    margin-top: var(--rt-space-lg);
+}
 
-.wh40k-mb-sm { margin-bottom: var(--rt-space-sm); }
-.wh40k-mb-md { margin-bottom: var(--rt-space-md); }
-.wh40k-mb-lg { margin-bottom: var(--rt-space-lg); }
+.wh40k-mb-sm {
+    margin-bottom: var(--rt-space-sm);
+}
+.wh40k-mb-md {
+    margin-bottom: var(--rt-space-md);
+}
+.wh40k-mb-lg {
+    margin-bottom: var(--rt-space-lg);
+}
 
 // Flex Utilities
 .wh40k-flex {
@@ -620,9 +631,15 @@ body.theme-dark {
     justify-content: space-between;
 }
 
-.wh40k-gap-sm { gap: var(--rt-space-sm); }
-.wh40k-gap-md { gap: var(--rt-space-md); }
-.wh40k-gap-lg { gap: var(--rt-space-lg); }
+.wh40k-gap-sm {
+    gap: var(--rt-space-sm);
+}
+.wh40k-gap-md {
+    gap: var(--rt-space-md);
+}
+.wh40k-gap-lg {
+    gap: var(--rt-space-lg);
+}
 
 /* ========================================
    STAT CHANGE ANIMATIONS
@@ -704,7 +721,8 @@ body.theme-dark {
 }
 
 @keyframes statCritical {
-    0%, 100% {
+    0%,
+    100% {
         box-shadow: 0 0 5px rgba(220, 20, 60, 0.3);
         border-color: var(--rt-red);
     }

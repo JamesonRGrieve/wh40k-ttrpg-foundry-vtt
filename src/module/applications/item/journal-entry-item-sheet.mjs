@@ -2,7 +2,7 @@
  * @file JournalEntryItemSheet - ApplicationV2 sheet for journal entry items
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for journal entry items (used for character notes/journals).
@@ -10,11 +10,11 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class JournalEntryItemSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["wh40k-rpg", "sheet", "item", "journal-entry"],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'journal-entry'],
         position: {
             width: 550,
-            height: 500
-        }
+            height: 500,
+        },
     };
 
     /* -------------------------------------------- */
@@ -22,22 +22,20 @@ export default class JournalEntryItemSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/wh40k-rpg/templates/item/item-journal-entry-sheet.hbs",
-            scrollable: [".rt-tab-content"]
-        }
+            template: 'systems/wh40k-rpg/templates/item/item-journal-entry-sheet.hbs',
+            scrollable: ['.rt-tab-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
-        { tab: "content", group: "primary", label: "Content" }
-    ];
+    static TABS = [{ tab: 'content', group: 'primary', label: 'Content' }];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "content"
+        primary: 'content',
     };
 }

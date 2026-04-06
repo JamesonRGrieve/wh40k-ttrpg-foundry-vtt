@@ -13,16 +13,27 @@
                 </label>
             </div>
         </div>
-        {{#each system.rogueTrader.acquisitions as | acquisition index |}}
+        {{#each system.rogueTrader.acquisitions as |acquisition index|}}
             <div class="table-row">
                 <div class="table-cell--span2">
                     <input class="rt-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.name" value="{{acquisition.name}}" />
                 </div>
                 <div class="table-cell">
-                    <input class="rt-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.availability" value="{{acquisition.availability}}" />
+                    <input
+                        class="rt-field__input"
+                        type="text"
+                        name="system.rogueTrader.acquisitions.{{index}}.availability"
+                        value="{{acquisition.availability}}"
+                    />
                 </div>
                 <div class="table-cell">
-                    <input class="rt-field__input" type="number" data-dtype="Number" name="system.rogueTrader.acquisitions.{{index}}.modifier" value="{{acquisition.modifier}}" />
+                    <input
+                        class="rt-field__input"
+                        type="number"
+                        data-dtype="Number"
+                        name="system.rogueTrader.acquisitions.{{index}}.modifier"
+                        value="{{acquisition.modifier}}"
+                    />
                 </div>
                 <div class="table-cell rt-checkbox-cell">
                     <input type="checkbox" data-dtype="Boolean" name="system.rogueTrader.acquisitions.{{index}}.acquired" {{checked acquisition.acquired}} />

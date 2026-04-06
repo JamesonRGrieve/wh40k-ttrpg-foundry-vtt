@@ -1,8 +1,6 @@
 import { roll1d100 } from './roll-helpers.mjs';
 
-
 export class ForceFieldData {
-
     actor;
     forceField;
     protectionRating = 0;
@@ -21,7 +19,7 @@ export class ForceFieldData {
     }
 
     craftsmanshipToOverload(craftsmanship) {
-        switch(craftsmanship) {
+        switch (craftsmanship) {
             case 'Poor':
                 return 15;
             case 'Common':
@@ -36,22 +34,22 @@ export class ForceFieldData {
     async finalize() {
         this.roll = await roll1d100();
 
-        if(this.roll.total <= this.protectionRating) {
+        if (this.roll.total <= this.protectionRating) {
             this.success = true;
         }
 
-        if(this.roll.total <= this.overloadRating) {
+        if (this.roll.total <= this.overloadRating) {
             this.overload = true;
         }
     }
 
     async performActionAndSendToChat() {
-        game.rt.log('performActionAndSendToChat', this)
+        game.rt.log('performActionAndSendToChat', this);
 
         // Update to overloaded if necessary
-        if(this.overload) {
+        if (this.overload) {
             this.forceField = await this.forceField.update({
-                "system.overloaded": true
+                'system.overloaded': true,
             });
         }
 

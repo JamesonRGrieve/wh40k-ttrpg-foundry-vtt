@@ -17,12 +17,12 @@ export default function ApplicationV2Mixin(Base) {
         /** @override */
         static DEFAULT_OPTIONS = {
             actions: {
-                toggleCollapsed: BaseApplicationWH40K.#toggleCollapsed
+                toggleCollapsed: BaseApplicationWH40K.#toggleCollapsed,
             },
-            classes: ["wh40k-rpg"],
+            classes: ['wh40k-rpg'],
             window: {
-                subtitle: ""
-            }
+                subtitle: '',
+            },
         };
 
         /* -------------------------------------------- */
@@ -53,7 +53,7 @@ export default function ApplicationV2Mixin(Base) {
          * @type {string}
          */
         get subtitle() {
-            return game.i18n.localize(this.options.window.subtitle ?? "");
+            return game.i18n.localize(this.options.window.subtitle ?? '');
         }
 
         /* -------------------------------------------- */
@@ -90,7 +90,7 @@ export default function ApplicationV2Mixin(Base) {
 
         /** @inheritDoc */
         async _preparePartContext(partId, context, options) {
-            return { ...await super._preparePartContext(partId, context, options) };
+            return { ...(await super._preparePartContext(partId, context, options)) };
         }
 
         /* -------------------------------------------- */
@@ -102,17 +102,17 @@ export default function ApplicationV2Mixin(Base) {
          * @protected
          */
         _renderContainers(context, options) {
-            const containerElements = Array.from(this.element.querySelectorAll("[data-container-id]"));
-            const containers = Object.fromEntries(containerElements.map(el => [el.dataset.containerId, el]));
+            const containerElements = Array.from(this.element.querySelectorAll('[data-container-id]'));
+            const containers = Object.fromEntries(containerElements.map((el) => [el.dataset.containerId, el]));
             for (const [part, config] of Object.entries(this.constructor.PARTS)) {
                 if (!config.container?.id) continue;
                 const element = this.element.querySelector(`[data-application-part="${part}"]`);
                 if (!element) continue;
                 let container = containers[config.container.id];
                 if (!container) {
-                    const div = document.createElement("div");
+                    const div = document.createElement('div');
                     div.dataset.containerId = config.container.id;
-                    div.classList.add(...config.container.classes ?? []);
+                    div.classList.add(...(config.container.classes ?? []));
                     container = containers[config.container.id] = div;
                     element.replaceWith(div);
                 }
@@ -125,9 +125,8 @@ export default function ApplicationV2Mixin(Base) {
         /** @inheritDoc */
         _replaceHTML(result, content, options) {
             for (const part of Object.values(result)) {
-                for (const element of part.querySelectorAll("[data-expand-id]")) {
-                    element.querySelector(".collapsible")?.classList
-                        .toggle("collapsed", !this.#expandedSections.get(element.dataset.expandId));
+                for (const element of part.querySelectorAll('[data-expand-id]')) {
+                    element.querySelector('.collapsible')?.classList.toggle('collapsed', !this.#expandedSections.get(element.dataset.expandId));
                 }
             }
             super._replaceHTML(result, content, options);
@@ -138,8 +137,8 @@ export default function ApplicationV2Mixin(Base) {
         /** @inheritDoc */
         _updateFrame(options) {
             super._updateFrame(options);
-            if (options.window && ("subtitle" in options.window)) {
-                const subtitle = this.element.querySelector(".window-header > .window-subtitle");
+            if (options.window && 'subtitle' in options.window) {
+                const subtitle = this.element.querySelector('.window-header > .window-subtitle');
                 if (subtitle) subtitle.innerText = options.window.subtitle;
             }
         }
@@ -151,11 +150,11 @@ export default function ApplicationV2Mixin(Base) {
             super._onRender(context, options);
 
             // Add special styling for multi-select tags
-            this.element.querySelectorAll("multi-select").forEach(select => {
+            this.element.querySelectorAll('multi-select').forEach((select) => {
                 if (select.disabled) return;
-                select.querySelectorAll(".tag").forEach(tag => {
-                    tag.classList.add("remove");
-                    tag.querySelector(":scope > span")?.classList.add("remove");
+                select.querySelectorAll('.tag').forEach((tag) => {
+                    tag.classList.add('remove');
+                    tag.querySelector(':scope > span')?.classList.add('remove');
                 });
             });
         }
@@ -166,11 +165,9 @@ export default function ApplicationV2Mixin(Base) {
          * Disable form fields that aren't marked with the `always-interactive` class.
          */
         _disableFields() {
-            const selector = `.window-content :is(${[
-                "INPUT", "SELECT", "TEXTAREA", "BUTTON"
-            ].join(", ")}):not(.always-interactive)`;
+            const selector = `.window-content :is(${['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].join(', ')}):not(.always-interactive)`;
             for (const element of this.element.querySelectorAll(selector)) {
-                if (element.tagName === "TEXTAREA") element.readOnly = true;
+                if (element.tagName === 'TEXTAREA') element.readOnly = true;
                 else element.disabled = true;
             }
         }
@@ -186,13 +183,10 @@ export default function ApplicationV2Mixin(Base) {
          * @param {HTMLElement} target  Button that was clicked.
          */
         static #toggleCollapsed(event, target) {
-            const collapsible = target.closest(".collapsible");
-            if (!collapsible || event.target.closest(".collapsible-content")) return;
-            collapsible.classList.toggle("collapsed");
-            this.#expandedSections.set(
-                target.closest("[data-expand-id]")?.dataset.expandId,
-                !collapsible.classList.contains("collapsed")
-            );
+            const collapsible = target.closest('.collapsible');
+            if (!collapsible || event.target.closest('.collapsible-content')) return;
+            collapsible.classList.toggle('collapsed');
+            this.#expandedSections.set(target.closest('[data-expand-id]')?.dataset.expandId, !collapsible.classList.contains('collapsed'));
         }
     }
     return BaseApplicationWH40K;

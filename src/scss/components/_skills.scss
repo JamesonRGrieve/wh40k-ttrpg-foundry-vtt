@@ -8,351 +8,351 @@ $wh40k-skill-group-grid: 1.5rem 1fr auto;
 // Skills panel layout adjustments
 .wh40k-skills-panel,
 .wh40k-specialist-skills-panel {
-  .wh40k-panel__header {
-    font-size: 1.2em;
-    padding: 0.5rem;
-    text-align: center;
-    width: 100%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(235, 230, 222, 0.9));
-    border-bottom: 2px solid rgba(74, 55, 40, 0.25);
-    box-shadow: inset 0 -1px 0 rgba(74, 55, 40, 0.15);
-  }
+    .wh40k-panel__header {
+        font-size: 1.2em;
+        padding: 0.5rem;
+        text-align: center;
+        width: 100%;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(235, 230, 222, 0.9));
+        border-bottom: 2px solid rgba(74, 55, 40, 0.25);
+        box-shadow: inset 0 -1px 0 rgba(74, 55, 40, 0.15);
+    }
 }
 
 // Skills table header
 .wh40k-skills-header {
-  background: linear-gradient(180deg, rgba(250, 248, 244, 0.98), rgba(235, 232, 226, 0.95)) !important;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.75em;
-  letter-spacing: 0.12em;
-  border-bottom: none;
-  position: relative;
-  
-  .table-cell {
-    padding: 0.6rem 0.4rem;
-    text-align: center;
-  }
-  
-  .wh40k-skill-name {
-    text-align: center;
-    padding-left: 0;
-  }
+    background: linear-gradient(180deg, rgba(250, 248, 244, 0.98), rgba(235, 232, 226, 0.95)) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75em;
+    letter-spacing: 0.12em;
+    border-bottom: none;
+    position: relative;
+
+    .table-cell {
+        padding: 0.6rem 0.4rem;
+        text-align: center;
+    }
+
+    .wh40k-skill-name {
+        text-align: center;
+        padding-left: 0;
+    }
 }
 
 // Skill row styling
 .wh40k-skill-row,
 .wh40k-specialist-row {
-  border-bottom: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  
-  &:hover {
-    background: rgba(74, 55, 40, 0.04);
-  }
-  
-  .table-cell {
-    padding: 0.45rem 0.4rem;
-    vertical-align: middle;
-  }
+    border-bottom: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+        background: rgba(74, 55, 40, 0.04);
+    }
+
+    .table-cell {
+        padding: 0.45rem 0.4rem;
+        vertical-align: middle;
+    }
 }
 
 .wh40k-skill-row:nth-child(even),
 .wh40k-specialist-row:nth-child(even) {
-  background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 // Skill name column
 .wh40k-skill-name {
-  text-align: left !important;
-  
-  .wh40k-skill-button {
-    background: transparent;
-    border: none;
-    color: #3a2a1d;
-    cursor: pointer;
-    font-weight: 500;
-    padding: 0.2rem 0.4rem;
-    text-align: left;
-    width: 100%;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    
-    &:hover {
-      background: rgba(74, 55, 40, 0.06);
-      color: #20150b;
-      border-radius: 6px;
+    text-align: left !important;
+
+    .wh40k-skill-button {
+        background: transparent;
+        border: none;
+        color: #3a2a1d;
+        cursor: pointer;
+        font-weight: 500;
+        padding: 0.2rem 0.4rem;
+        text-align: left;
+        width: 100%;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &:hover {
+            background: rgba(74, 55, 40, 0.06);
+            color: #20150b;
+            border-radius: 6px;
+        }
+
+        .material-icons {
+            font-size: 1em;
+            opacity: 0.7;
+        }
     }
-    
-    .material-icons {
-      font-size: 1em;
-      opacity: 0.7;
-    }
-  }
 }
 
 // Characteristic dropdown
 .wh40k-skill-char {
-  text-align: center;
-  
-  .wh40k-char-select {
-    width: 100%;
-    padding: 0.25rem;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-    background: white;
-    font-size: 0.9em;
-    
-    &:focus {
-      outline: none;
-      border-color: #246b83;
-      box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.1);
+    text-align: center;
+
+    .wh40k-char-select {
+        width: 100%;
+        padding: 0.25rem;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        background: white;
+        font-size: 0.9em;
+
+        &:focus {
+            outline: none;
+            border-color: #246b83;
+            box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.1);
+        }
     }
-  }
 }
 
 // Training selector
 .wh40k-skill-training {
-  text-align: center !important;
+    text-align: center !important;
 }
 
 .wh40k-training-select {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  width: 100%;
-
-  select {
-    appearance: none;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
     width: 100%;
-    padding: 0.35rem 1.6rem 0.35rem 0.5rem;
-    border: 1px solid rgba(74, 55, 40, 0.25);
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.95);
-    color: #2a1a0a;
-    font-size: 0.85em;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.7);
 
-    &:focus {
-      outline: none;
-      border-color: rgba(74, 55, 40, 0.5);
-      box-shadow: 0 0 0 2px rgba(74, 55, 40, 0.12);
+    select {
+        appearance: none;
+        width: 100%;
+        padding: 0.35rem 1.6rem 0.35rem 0.5rem;
+        border: 1px solid rgba(74, 55, 40, 0.25);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #2a1a0a;
+        font-size: 0.85em;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.7);
+
+        &:focus {
+            outline: none;
+            border-color: rgba(74, 55, 40, 0.5);
+            box-shadow: 0 0 0 2px rgba(74, 55, 40, 0.12);
+        }
     }
-  }
 
-  .wh40k-training-caret {
-    position: absolute;
-    right: 0.5rem;
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 6px solid rgba(74, 55, 40, 0.6);
-    pointer-events: none;
-  }
+    .wh40k-training-caret {
+        position: absolute;
+        right: 0.5rem;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid rgba(74, 55, 40, 0.6);
+        pointer-events: none;
+    }
 }
 
 // Bonus input
 .wh40k-skill-bonus {
-  text-align: center;
-  
-  .wh40k-bonus-input {
-    width: 100%;
-    padding: 0.25rem;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
     text-align: center;
-    font-size: 0.9em;
-    
-    &:focus {
-      outline: none;
-      border-color: #246b83;
-      box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.1);
+
+    .wh40k-bonus-input {
+        width: 100%;
+        padding: 0.25rem;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        text-align: center;
+        font-size: 0.9em;
+
+        &:focus {
+            outline: none;
+            border-color: #246b83;
+            box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.1);
+        }
     }
-  }
 }
 
 // Total value display
 .wh40k-skill-total {
-  text-align: center !important;
-  font-weight: bold;
-  
-  .wh40k-total-value {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 34px;
-    height: 26px;
-    padding: 0 6px;
-    border: 2px solid rgba(74, 55, 40, 0.45);
-    border-radius: 6px;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.98), rgba(220, 220, 220, 0.95));
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 2px 6px rgba(0, 0, 0, 0.12);
-    font-size: 1em;
-  }
+    text-align: center !important;
+    font-weight: bold;
+
+    .wh40k-total-value {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 34px;
+        height: 26px;
+        padding: 0 6px;
+        border: 2px solid rgba(74, 55, 40, 0.45);
+        border-radius: 6px;
+        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.98), rgba(220, 220, 220, 0.95));
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 2px 6px rgba(0, 0, 0, 0.12);
+        font-size: 1em;
+    }
 }
 
 // Specialist skills specific styling
 .wh40k-specialist-group {
-  background: rgba(36, 107, 131, 0.25);
-  border-top: 2px solid rgba(36, 107, 131, 0.4);
-  border-bottom: 2px solid rgba(36, 107, 131, 0.4);
-  margin-top: 0.5rem;
-  
-  .wh40k-specialist-group-name {
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.95em;
-    padding: 0.5rem !important;
-    
-    .wh40k-group-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
+    background: rgba(36, 107, 131, 0.25);
+    border-top: 2px solid rgba(36, 107, 131, 0.4);
+    border-bottom: 2px solid rgba(36, 107, 131, 0.4);
+    margin-top: 0.5rem;
+
+    .wh40k-specialist-group-name {
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.95em;
+        padding: 0.5rem !important;
+
+        .wh40k-group-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
     }
-  }
-  
-  .wh40k-specialist-add {
-    text-align: right !important;
-    padding-right: 0.5rem !important;
-    
-    .wh40k-add-specialization {
-      background: #246b83;
-      color: white;
-      border: none;
-      padding: 0.35rem 0.75rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.85em;
-      font-weight: 500;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      
-      &:hover {
-        background: #1a4f61;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-      
-      &:active {
-        transform: translateY(0);
-      }
-      
-      .material-icons {
-        font-size: 1em;
-      }
+
+    .wh40k-specialist-add {
+        text-align: right !important;
+        padding-right: 0.5rem !important;
+
+        .wh40k-add-specialization {
+            background: #246b83;
+            color: white;
+            border: none;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+
+            &:hover {
+                background: #1a4f61;
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
+
+            .material-icons {
+                font-size: 1em;
+            }
+        }
     }
-  }
 }
 
 // Specialist name field
 .wh40k-specialist-name {
-  display: flex !important;
-  gap: 0.5rem;
-  align-items: center;
-  
-  .wh40k-specialization-input {
-    flex: 1;
-    padding: 0.35rem 0.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-    font-size: 0.9em;
-    
-    &:focus {
-      outline: none;
-      border-color: #246b83;
-      box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.1);
+    display: flex !important;
+    gap: 0.5rem;
+    align-items: center;
+
+    .wh40k-specialization-input {
+        flex: 1;
+        padding: 0.35rem 0.5rem;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        font-size: 0.9em;
+
+        &:focus {
+            outline: none;
+            border-color: #246b83;
+            box-shadow: 0 0 0 2px rgba(36, 107, 131, 0.1);
+        }
     }
-  }
-  
-  .wh40k-skill-button {
-    flex-shrink: 0;
-    padding: 0.35rem 0.5rem;
-    min-width: auto;
-    
-    .material-icons {
-      margin: 0;
+
+    .wh40k-skill-button {
+        flex-shrink: 0;
+        padding: 0.35rem 0.5rem;
+        min-width: auto;
+
+        .material-icons {
+            margin: 0;
+        }
     }
-  }
 }
 
 // Empty state message
 .wh40k-no-specializations {
-  background: rgba(0, 0, 0, 0.02);
-  
-  .wh40k-empty-message {
-    padding: 1rem !important;
-    text-align: center !important;
-    color: #666;
-    font-style: italic;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    
-    .material-icons {
-      opacity: 0.6;
-      font-size: 1.2em;
+    background: rgba(0, 0, 0, 0.02);
+
+    .wh40k-empty-message {
+        padding: 1rem !important;
+        text-align: center !important;
+        color: #666;
+        font-style: italic;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        .material-icons {
+            opacity: 0.6;
+            font-size: 1.2em;
+        }
     }
-  }
 }
 
 // Update the grid layout for skill tables
 .wh40k-skilltable--border {
-  .table-row--head,
-  .table-row,
-  .wh40k-skill-row,
-  .wh40k-specialist-row {
-    grid-template-columns: $wh40k-skill-grid;
-    display: grid;
-    align-items: center;
-  }
-  
-  .table-row--grouped,
-  .wh40k-specialist-group,
-  .wh40k-no-specializations {
-    grid-template-columns: $wh40k-skill-group-grid;
-    display: grid;
-    align-items: center;
-  }
-}
-
-// Responsive adjustments for smaller screens
-@media (max-width: 1200px) {
-  .wh40k-skills-panel,
-  .wh40k-specialist-skills-panel {
-    grid-column: span 6 !important;
-  }
-  
-  .wh40k-skilltable--border {
     .table-row--head,
     .table-row,
     .wh40k-skill-row,
     .wh40k-specialist-row {
-      grid-template-columns: 1.6fr 0.6fr 0.9fr 0.6fr 0.7fr;
-      font-size: 0.9em;
+        grid-template-columns: $wh40k-skill-grid;
+        display: grid;
+        align-items: center;
     }
-  }
-  
-  .wh40k-skill-button {
-    font-size: 0.85em;
-  }
+
+    .table-row--grouped,
+    .wh40k-specialist-group,
+    .wh40k-no-specializations {
+        grid-template-columns: $wh40k-skill-group-grid;
+        display: grid;
+        align-items: center;
+    }
+}
+
+// Responsive adjustments for smaller screens
+@media (max-width: 1200px) {
+    .wh40k-skills-panel,
+    .wh40k-specialist-skills-panel {
+        grid-column: span 6 !important;
+    }
+
+    .wh40k-skilltable--border {
+        .table-row--head,
+        .table-row,
+        .wh40k-skill-row,
+        .wh40k-specialist-row {
+            grid-template-columns: 1.6fr 0.6fr 0.9fr 0.6fr 0.7fr;
+            font-size: 0.9em;
+        }
+    }
+
+    .wh40k-skill-button {
+        font-size: 0.85em;
+    }
 }
 
 // Additional polish
 .wh40k-skills-panel .wh40k-table--border,
 .wh40k-specialist-skills-panel .wh40k-table--border {
-  border: 1px solid rgba(36, 107, 131, 0.3);
-  border-radius: 4px;
-  overflow: hidden;
+    border: 1px solid rgba(36, 107, 131, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
 }
 
 // ============================================
@@ -362,187 +362,187 @@ $wh40k-skill-group-grid: 1.5rem 1fr auto;
 // skills with distinct but subtle colors
 
 .wh40k-specialist-panel .wh40k-specialist-group {
-  --rt-spec-a: rgba(36, 107, 131, 0.22);
-  --rt-spec-b: rgba(24, 80, 96, 0.14);
-  --rt-spec-top: rgba(36, 107, 131, 0.5);
-  --rt-spec-bottom: rgba(24, 80, 96, 0.5);
-  background: linear-gradient(135deg, var(--rt-spec-a), var(--rt-spec-b));
-  border-top-color: var(--rt-spec-top);
-  border-bottom-color: var(--rt-spec-bottom);
+    --rt-spec-a: rgba(36, 107, 131, 0.22);
+    --rt-spec-b: rgba(24, 80, 96, 0.14);
+    --rt-spec-top: rgba(36, 107, 131, 0.5);
+    --rt-spec-bottom: rgba(24, 80, 96, 0.5);
+    background: linear-gradient(135deg, var(--rt-spec-a), var(--rt-spec-b));
+    border-top-color: var(--rt-spec-top);
+    border-bottom-color: var(--rt-spec-bottom);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group .wh40k-specialist-header {
-  background: linear-gradient(180deg, var(--rt-spec-a) 0%, transparent 100%);
+    background: linear-gradient(180deg, var(--rt-spec-a) 0%, transparent 100%);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(2) {
-  --rt-spec-a: rgba(92, 0, 0, 0.18);
-  --rt-spec-b: rgba(60, 0, 40, 0.12);
-  --rt-spec-top: rgba(92, 0, 0, 0.5);
-  --rt-spec-bottom: rgba(60, 0, 40, 0.5);
+    --rt-spec-a: rgba(92, 0, 0, 0.18);
+    --rt-spec-b: rgba(60, 0, 40, 0.12);
+    --rt-spec-top: rgba(92, 0, 0, 0.5);
+    --rt-spec-bottom: rgba(60, 0, 40, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(3) {
-  --rt-spec-a: rgba(25, 25, 112, 0.15);
-  --rt-spec-b: rgba(0, 0, 128, 0.1);
-  --rt-spec-top: rgba(0, 0, 139, 0.5);
-  --rt-spec-bottom: rgba(0, 0, 139, 0.5);
+    --rt-spec-a: rgba(25, 25, 112, 0.15);
+    --rt-spec-b: rgba(0, 0, 128, 0.1);
+    --rt-spec-top: rgba(0, 0, 139, 0.5);
+    --rt-spec-bottom: rgba(0, 0, 139, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(4) {
-  --rt-spec-a: rgba(42, 120, 60, 0.18);
-  --rt-spec-b: rgba(28, 80, 44, 0.12);
-  --rt-spec-top: rgba(42, 120, 60, 0.5);
-  --rt-spec-bottom: rgba(28, 80, 44, 0.5);
+    --rt-spec-a: rgba(42, 120, 60, 0.18);
+    --rt-spec-b: rgba(28, 80, 44, 0.12);
+    --rt-spec-top: rgba(42, 120, 60, 0.5);
+    --rt-spec-bottom: rgba(28, 80, 44, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(5) {
-  --rt-spec-a: rgba(158, 112, 40, 0.18);
-  --rt-spec-b: rgba(120, 80, 24, 0.12);
-  --rt-spec-top: rgba(158, 112, 40, 0.5);
-  --rt-spec-bottom: rgba(120, 80, 24, 0.5);
+    --rt-spec-a: rgba(158, 112, 40, 0.18);
+    --rt-spec-b: rgba(120, 80, 24, 0.12);
+    --rt-spec-top: rgba(158, 112, 40, 0.5);
+    --rt-spec-bottom: rgba(120, 80, 24, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(6) {
-  --rt-spec-a: rgba(84, 72, 140, 0.18);
-  --rt-spec-b: rgba(60, 50, 100, 0.12);
-  --rt-spec-top: rgba(84, 72, 140, 0.5);
-  --rt-spec-bottom: rgba(60, 50, 100, 0.5);
+    --rt-spec-a: rgba(84, 72, 140, 0.18);
+    --rt-spec-b: rgba(60, 50, 100, 0.12);
+    --rt-spec-top: rgba(84, 72, 140, 0.5);
+    --rt-spec-bottom: rgba(60, 50, 100, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(7) {
-  --rt-spec-a: rgba(96, 56, 22, 0.18);
-  --rt-spec-b: rgba(74, 38, 18, 0.12);
-  --rt-spec-top: rgba(96, 56, 22, 0.5);
-  --rt-spec-bottom: rgba(74, 38, 18, 0.5);
+    --rt-spec-a: rgba(96, 56, 22, 0.18);
+    --rt-spec-b: rgba(74, 38, 18, 0.12);
+    --rt-spec-top: rgba(96, 56, 22, 0.5);
+    --rt-spec-bottom: rgba(74, 38, 18, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(8) {
-  --rt-spec-a: rgba(18, 86, 96, 0.18);
-  --rt-spec-b: rgba(12, 64, 72, 0.12);
-  --rt-spec-top: rgba(18, 86, 96, 0.5);
-  --rt-spec-bottom: rgba(12, 64, 72, 0.5);
+    --rt-spec-a: rgba(18, 86, 96, 0.18);
+    --rt-spec-b: rgba(12, 64, 72, 0.12);
+    --rt-spec-top: rgba(18, 86, 96, 0.5);
+    --rt-spec-bottom: rgba(12, 64, 72, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(9) {
-  --rt-spec-a: rgba(120, 90, 18, 0.18);
-  --rt-spec-b: rgba(86, 62, 12, 0.12);
-  --rt-spec-top: rgba(120, 90, 18, 0.5);
-  --rt-spec-bottom: rgba(86, 62, 12, 0.5);
+    --rt-spec-a: rgba(120, 90, 18, 0.18);
+    --rt-spec-b: rgba(86, 62, 12, 0.12);
+    --rt-spec-top: rgba(120, 90, 18, 0.5);
+    --rt-spec-bottom: rgba(86, 62, 12, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(10) {
-  --rt-spec-a: rgba(24, 96, 132, 0.18);
-  --rt-spec-b: rgba(16, 70, 98, 0.12);
-  --rt-spec-top: rgba(24, 96, 132, 0.5);
-  --rt-spec-bottom: rgba(16, 70, 98, 0.5);
+    --rt-spec-a: rgba(24, 96, 132, 0.18);
+    --rt-spec-b: rgba(16, 70, 98, 0.12);
+    --rt-spec-top: rgba(24, 96, 132, 0.5);
+    --rt-spec-bottom: rgba(16, 70, 98, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(11) {
-  --rt-spec-a: rgba(132, 54, 54, 0.18);
-  --rt-spec-b: rgba(92, 38, 38, 0.12);
-  --rt-spec-top: rgba(132, 54, 54, 0.5);
-  --rt-spec-bottom: rgba(92, 38, 38, 0.5);
+    --rt-spec-a: rgba(132, 54, 54, 0.18);
+    --rt-spec-b: rgba(92, 38, 38, 0.12);
+    --rt-spec-top: rgba(132, 54, 54, 0.5);
+    --rt-spec-bottom: rgba(92, 38, 38, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(12) {
-  --rt-spec-a: rgba(66, 96, 36, 0.18);
-  --rt-spec-b: rgba(50, 72, 26, 0.12);
-  --rt-spec-top: rgba(66, 96, 36, 0.5);
-  --rt-spec-bottom: rgba(50, 72, 26, 0.5);
+    --rt-spec-a: rgba(66, 96, 36, 0.18);
+    --rt-spec-b: rgba(50, 72, 26, 0.12);
+    --rt-spec-top: rgba(66, 96, 36, 0.5);
+    --rt-spec-bottom: rgba(50, 72, 26, 0.5);
 }
 
 .wh40k-specialist-group {
-  // Common Lore - Subtle bronze/amber theme (knowledge of common topics)
-  &[data-skill="commonLore"],
-  &.spec_skills_commonLore {
-    background: linear-gradient(135deg, rgba(139, 116, 88, 0.15), rgba(139, 116, 88, 0.08));
-    border-top-color: rgba(139, 116, 88, 0.4);
-    border-bottom-color: rgba(139, 116, 88, 0.4);
-    
-    .wh40k-specialist-group-name {
-      color: #4a3728;
+    // Common Lore - Subtle bronze/amber theme (knowledge of common topics)
+    &[data-skill='commonLore'],
+    &.spec_skills_commonLore {
+        background: linear-gradient(135deg, rgba(139, 116, 88, 0.15), rgba(139, 116, 88, 0.08));
+        border-top-color: rgba(139, 116, 88, 0.4);
+        border-bottom-color: rgba(139, 116, 88, 0.4);
+
+        .wh40k-specialist-group-name {
+            color: #4a3728;
+        }
+
+        .wh40k-add-specialization {
+            background: linear-gradient(135deg, #5d4e42, #4a3728);
+
+            &:hover {
+                background: linear-gradient(135deg, #6d5e52, #5d4e42);
+            }
+        }
     }
-    
-    .wh40k-add-specialization {
-      background: linear-gradient(135deg, #5d4e42, #4a3728);
-      
-      &:hover {
-        background: linear-gradient(135deg, #6d5e52, #5d4e42);
-      }
+
+    // Forbidden Lore - Dark crimson theme (dangerous knowledge)
+    &[data-skill='forbiddenLore'],
+    &.spec_skills_forbiddenLore {
+        background: linear-gradient(135deg, rgba(92, 0, 0, 0.18), rgba(60, 0, 40, 0.12));
+        border-top-color: rgba(92, 0, 0, 0.5);
+        border-bottom-color: rgba(60, 0, 40, 0.5);
+
+        .wh40k-specialist-group-name {
+            color: #5c0000;
+        }
+
+        .wh40k-add-specialization {
+            background: linear-gradient(135deg, #6b0000, #3c0028);
+
+            &:hover {
+                background: linear-gradient(135deg, #8b0000, #4b0035);
+            }
+        }
     }
-  }
-  
-  // Forbidden Lore - Dark crimson theme (dangerous knowledge)
-  &[data-skill="forbiddenLore"],
-  &.spec_skills_forbiddenLore {
-    background: linear-gradient(135deg, rgba(92, 0, 0, 0.18), rgba(60, 0, 40, 0.12));
-    border-top-color: rgba(92, 0, 0, 0.5);
-    border-bottom-color: rgba(60, 0, 40, 0.5);
-    
-    .wh40k-specialist-group-name {
-      color: #5c0000;
+
+    // Scholastic Lore - Deep blue theme (academic knowledge)
+    &[data-skill='scholasticLore'],
+    &.spec_skills_scholasticLore {
+        background: linear-gradient(135deg, rgba(25, 25, 112, 0.15), rgba(0, 0, 128, 0.1));
+        border-top-color: rgba(0, 0, 139, 0.5);
+        border-bottom-color: rgba(0, 0, 139, 0.5);
+
+        .wh40k-specialist-group-name {
+            color: #191970;
+        }
+
+        .wh40k-add-specialization {
+            background: linear-gradient(135deg, #191970, #000080);
+
+            &:hover {
+                background: linear-gradient(135deg, #0f0f50, #000050);
+            }
+        }
     }
-    
-    .wh40k-add-specialization {
-      background: linear-gradient(135deg, #6b0000, #3c0028);
-      
-      &:hover {
-        background: linear-gradient(135deg, #8b0000, #4b0035);
-      }
-    }
-  }
-  
-  // Scholastic Lore - Deep blue theme (academic knowledge)
-  &[data-skill="scholasticLore"],
-  &.spec_skills_scholasticLore {
-    background: linear-gradient(135deg, rgba(25, 25, 112, 0.15), rgba(0, 0, 128, 0.1));
-    border-top-color: rgba(0, 0, 139, 0.5);
-    border-bottom-color: rgba(0, 0, 139, 0.5);
-    
-    .wh40k-specialist-group-name {
-      color: #191970;
-    }
-    
-    .wh40k-add-specialization {
-      background: linear-gradient(135deg, #191970, #000080);
-      
-      &:hover {
-        background: linear-gradient(135deg, #0f0f50, #000050);
-      }
-    }
-  }
 }
 
 // Lore specialization rows styling
 .wh40k-specialist-block {
-  &.spec_skills_commonLore {
-    .wh40k-specialist-row {
-      border-left: 3px solid rgba(139, 116, 88, 0.35);
-      
-      &:hover {
-        background: rgba(139, 116, 88, 0.06);
-      }
+    &.spec_skills_commonLore {
+        .wh40k-specialist-row {
+            border-left: 3px solid rgba(139, 116, 88, 0.35);
+
+            &:hover {
+                background: rgba(139, 116, 88, 0.06);
+            }
+        }
     }
-  }
-  
-  &.spec_skills_forbiddenLore {
-    .wh40k-specialist-row {
-      border-left: 3px solid rgba(92, 0, 0, 0.4);
-      
-      &:hover {
-        background: rgba(92, 0, 0, 0.05);
-      }
+
+    &.spec_skills_forbiddenLore {
+        .wh40k-specialist-row {
+            border-left: 3px solid rgba(92, 0, 0, 0.4);
+
+            &:hover {
+                background: rgba(92, 0, 0, 0.05);
+            }
+        }
     }
-  }
-  
-  &.spec_skills_scholasticLore {
-    .wh40k-specialist-row {
-      border-left: 3px solid rgba(0, 0, 139, 0.4);
-      
-      &:hover {
-        background: rgba(0, 0, 139, 0.05);
-      }
+
+    &.spec_skills_scholasticLore {
+        .wh40k-specialist-row {
+            border-left: 3px solid rgba(0, 0, 139, 0.4);
+
+            &:hover {
+                background: rgba(0, 0, 139, 0.05);
+            }
+        }
     }
-  }
 }

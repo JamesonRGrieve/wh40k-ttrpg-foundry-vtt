@@ -85,9 +85,9 @@ WH40K.movementTypes = {
  * @enum {number}
  */
 WH40K.tokenRulerColors = {
-    normal: 0x33BC4E,
-    double: 0xF1D836,
-    triple: 0xE72124,
+    normal: 0x33bc4e,
+    double: 0xf1d836,
+    triple: 0xe72124,
 };
 
 /* -------------------------------------------- */
@@ -1498,14 +1498,14 @@ WH40K.combatActions = {
  * @type {Object<string, {label: string, description: string}>}
  */
 WH40K.careers = {
-  rogueTrader: { label: 'WH40K.Career.WH40K', description: 'WH40K.Career.WH40KDesc' },
-  archMilitant: { label: 'WH40K.Career.ArchMilitant', description: 'WH40K.Career.ArchMilitantDesc' },
-  astropath: { label: 'WH40K.Career.Astropath', description: 'WH40K.Career.AstropathDesc' },
-  explorator: { label: 'WH40K.Career.Explorator', description: 'WH40K.Career.ExploratorDesc' },
-  missionary: { label: 'WH40K.Career.Missionary', description: 'WH40K.Career.MissionaryDesc' },
-  navigator: { label: 'WH40K.Career.Navigator', description: 'WH40K.Career.NavigatorDesc' },
-  seneschal: { label: 'WH40K.Career.Seneschal', description: 'WH40K.Career.SeneschalDesc' },
-  voidMaster: { label: 'WH40K.Career.VoidMaster', description: 'WH40K.Career.VoidMasterDesc' }
+    rogueTrader: { label: 'WH40K.Career.WH40K', description: 'WH40K.Career.WH40KDesc' },
+    archMilitant: { label: 'WH40K.Career.ArchMilitant', description: 'WH40K.Career.ArchMilitantDesc' },
+    astropath: { label: 'WH40K.Career.Astropath', description: 'WH40K.Career.AstropathDesc' },
+    explorator: { label: 'WH40K.Career.Explorator', description: 'WH40K.Career.ExploratorDesc' },
+    missionary: { label: 'WH40K.Career.Missionary', description: 'WH40K.Career.MissionaryDesc' },
+    navigator: { label: 'WH40K.Career.Navigator', description: 'WH40K.Career.NavigatorDesc' },
+    seneschal: { label: 'WH40K.Career.Seneschal', description: 'WH40K.Career.SeneschalDesc' },
+    voidMaster: { label: 'WH40K.Career.VoidMaster', description: 'WH40K.Career.VoidMasterDesc' },
 };
 
 /* -------------------------------------------- */
@@ -1518,10 +1518,10 @@ WH40K.careers = {
  * @type {Object<string, {label: string, index: number}>}
  */
 WH40K.advancementTiers = {
-  simple: { label: 'WH40K.Advancement.Tier.Simple', index: 0 },
-  intermediate: { label: 'WH40K.Advancement.Tier.Intermediate', index: 1 },
-  trained: { label: 'WH40K.Advancement.Tier.Trained', index: 2 },
-  expert: { label: 'WH40K.Advancement.Tier.Expert', index: 3 }
+    simple: { label: 'WH40K.Advancement.Tier.Simple', index: 0 },
+    intermediate: { label: 'WH40K.Advancement.Tier.Intermediate', index: 1 },
+    trained: { label: 'WH40K.Advancement.Tier.Trained', index: 2 },
+    expert: { label: 'WH40K.Advancement.Tier.Expert', index: 3 },
 };
 
 /**

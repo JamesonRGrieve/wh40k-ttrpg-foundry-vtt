@@ -16,18 +16,14 @@ export class BasicActionManager {
         // Add show/hide support for chat messages
         Hooks.on('renderChatMessageHTML', async (message, html, context) => {
             game.rt.log('renderChatMessageHTML', { message, html, context });
-            html.querySelectorAll('.roll-control__hide-control').forEach(el => 
-                el.addEventListener('click', async (ev) => await this._toggleExpandChatMessage(ev)));
-            html.querySelectorAll('.roll-control__refund').forEach(el => 
-                el.addEventListener('click', async (ev) => await this._refundResources(ev)));
-            html.querySelectorAll('.roll-control__fate-reroll').forEach(el => 
-                el.addEventListener('click', async (ev) => await this._fateReroll(ev)));
-            html.querySelectorAll('.roll-control__assign-damage').forEach(el => 
-                el.addEventListener('click', async (ev) => await this._assignDamage(ev)));
-            html.querySelectorAll('.roll-control__roll-damage').forEach(el => 
-                el.addEventListener('click', async (ev) => await this._rollDamage(ev)));
-            html.querySelectorAll('.roll-control__apply-damage').forEach(el => 
-                el.addEventListener('click', async (ev) => await this._applyDamage(ev)));
+            html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
+                el.addEventListener('click', async (ev) => await this._toggleExpandChatMessage(ev)),
+            );
+            html.querySelectorAll('.roll-control__refund').forEach((el) => el.addEventListener('click', async (ev) => await this._refundResources(ev)));
+            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => el.addEventListener('click', async (ev) => await this._fateReroll(ev)));
+            html.querySelectorAll('.roll-control__assign-damage').forEach((el) => el.addEventListener('click', async (ev) => await this._assignDamage(ev)));
+            html.querySelectorAll('.roll-control__roll-damage').forEach((el) => el.addEventListener('click', async (ev) => await this._rollDamage(ev)));
+            html.querySelectorAll('.roll-control__apply-damage').forEach((el) => el.addEventListener('click', async (ev) => await this._applyDamage(ev)));
         });
 
         // Initialize Scene Control Buttons
@@ -80,9 +76,7 @@ export class BasicActionManager {
         await actionData.calculateHits();
 
         // Build template data
-        const damageRolls = actionData.damageData.hits
-            .map(h => h.damageRoll)
-            .filter(r => r);
+        const damageRolls = actionData.damageData.hits.map((h) => h.damageRoll).filter((r) => r);
         const templateData = {
             weaponName: actionData.rollData.name,
             hits: actionData.damageData.hits,
@@ -118,12 +112,12 @@ export class BasicActionManager {
         }
 
         const confirmed = await ConfirmationDialog.confirm({
-            title: "Confirm Refund",
-            content: "Are you sure you would like to refund ammo, fate, etc for this action?",
-            confirmLabel: "Refund",
-            cancelLabel: "Cancel"
+            title: 'Confirm Refund',
+            content: 'Are you sure you would like to refund ammo, fate, etc for this action?',
+            confirmLabel: 'Refund',
+            cancelLabel: 'Cancel',
         });
-        
+
         if (confirmed) {
             await actionData.refundResources();
             ui.notifications.info(`Resources refunded`);
@@ -147,12 +141,12 @@ export class BasicActionManager {
         }
 
         const confirmed = await ConfirmationDialog.confirm({
-            title: "Confirm Re-Roll",
-            content: "Are you sure you would like to use a fate point to re-roll action?",
-            confirmLabel: "Re-Roll",
-            cancelLabel: "Cancel"
+            title: 'Confirm Re-Roll',
+            content: 'Are you sure you would like to use a fate point to re-roll action?',
+            confirmLabel: 'Re-Roll',
+            cancelLabel: 'Cancel',
         });
-        
+
         if (confirmed) {
             // Generate new ID for action data
             actionData.id = uuid();
@@ -224,8 +218,8 @@ export class BasicActionManager {
             ui.notifications.warn(`Cannot determine actor to assign hit.`);
             return;
         }
-        for(const field of [damage, penetration, fatigue]) {
-            if(field && isNaN(parseInt(field))) {
+        for (const field of [damage, penetration, fatigue]) {
+            if (field && isNaN(parseInt(field))) {
                 ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
                 return;
             }
@@ -233,24 +227,24 @@ export class BasicActionManager {
 
         const assignDamageData = new AssignDamageData();
         assignDamageData.actor = actor;
-        if(ignoreArmour || "true" === ignoreArmour || "TRUE" === ignoreArmour) {
+        if (ignoreArmour || 'true' === ignoreArmour || 'TRUE' === ignoreArmour) {
             assignDamageData.ignoreArmour = true;
         }
 
         const hit = new Hit();
-        if(location) {
+        if (location) {
             hit.location = location;
         }
-        if(damage) {
+        if (damage) {
             hit.totalDamage = Number.parseInt(damage);
         }
-        if(penetration) {
+        if (penetration) {
             hit.totalPenetration = Number.parseInt(penetration);
         }
-        if(fatigue) {
+        if (fatigue) {
             hit.totalFatigue = Number.parseInt(fatigue);
         }
-        if(damageType) {
+        if (damageType) {
             hit.damageType = damageType;
         }
 
@@ -264,7 +258,7 @@ export class BasicActionManager {
     async assignDamageTool() {
         const sourceToken = DHTargetedActionManager.getSourceToken();
         const sourceActorData = sourceToken ? sourceToken.actor : source;
-        if(!sourceActorData) return;
+        if (!sourceActorData) return;
 
         const hitData = new Hit();
         const assignData = new AssignDamageData(sourceActorData, hitData);

@@ -8,7 +8,7 @@ export class WH40KItemContainer extends Item {
         return this.parent;
     }
 
-    async update(data={}, options={}) {
+    async update(data = {}, options = {}) {
         data._id = this.id;
         if (this.isNestedItem()) {
             await this.parent.updateNestedDocuments(data);
@@ -174,5 +174,4 @@ export class WH40KItemContainer extends Item {
             }
         });
     }
-
 }

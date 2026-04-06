@@ -338,7 +338,9 @@ $bp-wide: 1200px;
             color: $npc-accent-primary;
         }
 
-        i { font-size: 0.85rem; }
+        i {
+            font-size: 0.85rem;
+        }
     }
 
     // GM Tools (collapsible)
@@ -366,7 +368,10 @@ $bp-wide: 1200px;
             color: $npc-accent-primary;
         }
 
-        span { flex: 1; text-align: left; }
+        span {
+            flex: 1;
+            text-align: left;
+        }
 
         .wh40k-gm-chevron {
             font-size: 0.6rem;
@@ -1509,9 +1514,7 @@ $bp-wide: 1200px;
         border: 1px solid var(--color-border-secondary, #444);
         border-radius: 4px;
         padding: 0.4rem;
-        transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
         &:hover {
             border-color: rgba($npc-accent-primary, 0.5);
@@ -1699,13 +1702,17 @@ $bp-wide: 1200px;
         &.wh40k-arrow-up {
             background: rgba($npc-accent-movement, 0.15);
             color: $npc-accent-movement;
-            &:hover { background: rgba($npc-accent-movement, 0.3); }
+            &:hover {
+                background: rgba($npc-accent-movement, 0.3);
+            }
         }
 
         &.wh40k-arrow-down {
             background: rgba($npc-accent-combat, 0.15);
             color: $npc-accent-combat;
-            &:hover { background: rgba($npc-accent-combat, 0.3); }
+            &:hover {
+                background: rgba($npc-accent-combat, 0.3);
+            }
         }
     }
 
@@ -1726,7 +1733,9 @@ $bp-wide: 1200px;
 
         &.rollable {
             cursor: pointer;
-            &:hover { background: rgba(255, 255, 255, 0.1); }
+            &:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
         }
 
         i {
@@ -1750,7 +1759,9 @@ $bp-wide: 1200px;
 
         &.wh40k-quickstat--critical {
             border: 1px solid $npc-accent-combat;
-            .wh40k-quickstat-value { color: $npc-accent-combat; }
+            .wh40k-quickstat-value {
+                color: $npc-accent-combat;
+            }
         }
     }
 
@@ -1773,7 +1784,9 @@ $bp-wide: 1200px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         gap: 2px;
 
-        i { font-size: 0.85rem; }
+        i {
+            font-size: 0.85rem;
+        }
 
         .wh40k-move-card-value {
             font-size: 1.1rem;
@@ -1791,7 +1804,10 @@ $bp-wide: 1200px;
             border: 1px solid transparent;
             border-radius: 3px;
             color: var(--color-text-light-primary, #f0f0f0);
-            &:focus { border-color: $npc-accent-primary; outline: none; }
+            &:focus {
+                border-color: $npc-accent-primary;
+                outline: none;
+            }
         }
 
         .wh40k-move-card-label {
@@ -1801,10 +1817,18 @@ $bp-wide: 1200px;
             color: var(--color-text-light-secondary, #aaa);
         }
 
-        &--half i { color: $npc-accent-movement; }
-        &--full i { color: #66bb6a; }
-        &--charge i { color: $npc-accent-primary; }
-        &--run i { color: $npc-accent-combat; }
+        &--half i {
+            color: $npc-accent-movement;
+        }
+        &--full i {
+            color: #66bb6a;
+        }
+        &--charge i {
+            color: $npc-accent-primary;
+        }
+        &--run i {
+            color: $npc-accent-combat;
+        }
     }
 
     // ── 2-Column Combat Main Layout ──
@@ -1861,7 +1885,10 @@ $bp-wide: 1200px;
             border: 1px solid var(--color-border-secondary, #444);
             border-radius: 3px;
             color: $npc-accent-defense;
-            &:focus { border-color: $npc-accent-defense; outline: none; }
+            &:focus {
+                border-color: $npc-accent-defense;
+                outline: none;
+            }
         }
 
         .wh40k-loc-dr {
@@ -1901,7 +1928,10 @@ $bp-wide: 1200px;
             border: 1px solid var(--color-border-secondary, #444);
             border-radius: 3px;
             color: $npc-accent-defense;
-            &:focus { border-color: $npc-accent-defense; outline: none; }
+            &:focus {
+                border-color: $npc-accent-defense;
+                outline: none;
+            }
         }
 
         .wh40k-armour-total-value {
@@ -1994,38 +2024,68 @@ $bp-wide: 1200px;
         // Color variants
         &--dodge {
             border-color: rgba($npc-accent-defense, 0.3);
-            .wh40k-action-btn-value { color: $npc-accent-defense; }
-            &:hover { background: rgba($npc-accent-defense, 0.15); border-color: $npc-accent-defense; }
+            .wh40k-action-btn-value {
+                color: $npc-accent-defense;
+            }
+            &:hover {
+                background: rgba($npc-accent-defense, 0.15);
+                border-color: $npc-accent-defense;
+            }
         }
 
         &--parry {
             border-color: rgba($npc-accent-skills, 0.3);
-            .wh40k-action-btn-value { color: $npc-accent-skills; }
-            &:hover { background: rgba($npc-accent-skills, 0.15); border-color: $npc-accent-skills; }
+            .wh40k-action-btn-value {
+                color: $npc-accent-skills;
+            }
+            &:hover {
+                background: rgba($npc-accent-skills, 0.15);
+                border-color: $npc-accent-skills;
+            }
         }
 
         &--init {
             border-color: rgba($npc-accent-primary, 0.3);
-            .wh40k-action-btn-value { color: $npc-accent-primary; }
-            &:hover { background: rgba($npc-accent-primary, 0.15); border-color: $npc-accent-primary; }
+            .wh40k-action-btn-value {
+                color: $npc-accent-primary;
+            }
+            &:hover {
+                background: rgba($npc-accent-primary, 0.15);
+                border-color: $npc-accent-primary;
+            }
         }
 
         &--attack {
             border-color: rgba($npc-accent-combat, 0.3);
-            .wh40k-action-btn-value { color: $npc-accent-combat; }
-            &:hover { background: rgba($npc-accent-combat, 0.15); border-color: $npc-accent-combat; }
+            .wh40k-action-btn-value {
+                color: $npc-accent-combat;
+            }
+            &:hover {
+                background: rgba($npc-accent-combat, 0.15);
+                border-color: $npc-accent-combat;
+            }
         }
 
         &--reload {
             border-color: rgba($npc-accent-abilities, 0.3);
-            .wh40k-action-btn-value { color: $npc-accent-abilities; }
-            &:hover { background: rgba($npc-accent-abilities, 0.15); border-color: $npc-accent-abilities; }
+            .wh40k-action-btn-value {
+                color: $npc-accent-abilities;
+            }
+            &:hover {
+                background: rgba($npc-accent-abilities, 0.15);
+                border-color: $npc-accent-abilities;
+            }
         }
 
         &--ammo {
             border-color: rgba($npc-accent-movement, 0.3);
-            .wh40k-action-btn-value { color: $npc-accent-movement; }
-            &:hover { background: rgba($npc-accent-movement, 0.15); border-color: $npc-accent-movement; }
+            .wh40k-action-btn-value {
+                color: $npc-accent-movement;
+            }
+            &:hover {
+                background: rgba($npc-accent-movement, 0.15);
+                border-color: $npc-accent-movement;
+            }
         }
     }
 
@@ -2051,7 +2111,9 @@ $bp-wide: 1200px;
         tbody tr {
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             transition: background 0.1s;
-            &:hover { background: rgba(255, 255, 255, 0.03); }
+            &:hover {
+                background: rgba(255, 255, 255, 0.03);
+            }
         }
 
         td {
@@ -2072,7 +2134,10 @@ $bp-wide: 1200px;
         font-weight: 500;
         color: var(--color-text-light-primary, #f0f0f0);
         cursor: pointer;
-        &:hover { color: $npc-accent-primary; text-decoration: underline; }
+        &:hover {
+            color: $npc-accent-primary;
+            text-decoration: underline;
+        }
     }
 
     .wh40k-inv-name-input {
@@ -2083,7 +2148,10 @@ $bp-wide: 1200px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 3px;
         color: var(--color-text-light-primary, #f0f0f0);
-        &:focus { border-color: $npc-accent-primary; outline: none; }
+        &:focus {
+            border-color: $npc-accent-primary;
+            outline: none;
+        }
     }
 
     .wh40k-inv-type-badge {
@@ -2110,7 +2178,9 @@ $bp-wide: 1200px;
         font-size: 0.7rem;
         transition: all 0.15s;
         padding: 0;
-        &:hover { background: rgba($npc-accent-combat, 0.3); }
+        &:hover {
+            background: rgba($npc-accent-combat, 0.3);
+        }
     }
 
     // ── Combat Tracker in Nav ──
@@ -2132,7 +2202,9 @@ $bp-wide: 1200px;
         font-size: 0.75rem;
         color: var(--color-text-light-secondary, #aaa);
 
-        i { color: $npc-accent-combat; }
+        i {
+            color: $npc-accent-combat;
+        }
 
         strong {
             color: var(--color-text-light-primary, #f0f0f0);
@@ -2152,7 +2224,10 @@ $bp-wide: 1200px;
         cursor: pointer;
         font-size: 0.7rem;
         transition: all 0.15s;
-        &:hover { background: rgba($npc-accent-combat, 0.2); border-color: $npc-accent-combat; }
+        &:hover {
+            background: rgba($npc-accent-combat, 0.2);
+            border-color: $npc-accent-combat;
+        }
     }
 
     // ── Inventory Panel ──

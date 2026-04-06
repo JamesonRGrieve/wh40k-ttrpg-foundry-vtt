@@ -43,13 +43,12 @@ export async function checkAndMigrateWorld() {
             const compendiums = game.packs.filter((p) => p.metadata.packageName === SYSTEM_ID);
 
             for (let compendium of compendiums) {
-
                 await compendium.configure({
                     ownership: {
-                        "PLAYER": "OWNER",
-                        "TRUSTED": "OWNER",
-                        "ASSISTANT": "OWNER",
-                        "GAMEMASTER": "OWNER",
+                        PLAYER: 'OWNER',
+                        TRUSTED: 'OWNER',
+                        ASSISTANT: 'OWNER',
+                        GAMEMASTER: 'OWNER',
                     },
                 });
             }

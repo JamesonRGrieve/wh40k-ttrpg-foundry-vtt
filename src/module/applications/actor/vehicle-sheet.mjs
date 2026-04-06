@@ -2,9 +2,9 @@
  * @file VehicleSheet - Vehicle actor sheet using ApplicationV2 with PARTS system
  */
 
-import BaseActorSheet from "./base-actor-sheet.mjs";
-import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
-import WH40K from "../../config.mjs";
+import BaseActorSheet from './base-actor-sheet.mjs';
+import { HandlebarManager } from '../../handlebars/handlebars-manager.mjs';
+import WH40K from '../../config.mjs';
 
 /**
  * Actor sheet for Vehicle type actors.
@@ -13,18 +13,16 @@ import WH40K from "../../config.mjs";
 export default class VehicleSheet extends BaseActorSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["vehicle"],
+        classes: ['vehicle'],
         position: {
             width: 1000,
-            height: 750
+            height: 750,
         },
         actions: {
             adjustIntegrity: VehicleSheet.#adjustIntegrity,
-            rollWeapon: VehicleSheet.#rollWeapon
+            rollWeapon: VehicleSheet.#rollWeapon,
         },
-        tabs: [
-            { navSelector: "nav.rt-navigation", contentSelector: "#tab-body", initial: "stats", group: "primary" }
-        ]
+        tabs: [{ navSelector: 'nav.rt-navigation', contentSelector: '#tab-body', initial: 'stats', group: 'primary' }],
     };
 
     /* -------------------------------------------- */
@@ -32,42 +30,42 @@ export default class VehicleSheet extends BaseActorSheet {
     /** @override */
     static PARTS = {
         header: {
-            template: "systems/wh40k-rpg/templates/actor/vehicle/header.hbs"
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/header.hbs',
         },
         tabs: {
-            template: "systems/wh40k-rpg/templates/actor/vehicle/tabs.hbs"
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tabs.hbs',
         },
         stats: {
-            template: "systems/wh40k-rpg/templates/actor/vehicle/tab-stats.hbs",
-            container: { classes: ["wh40k-body"], id: "tab-body" },
-            scrollable: [""]
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tab-stats.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
         },
         weapons: {
-            template: "systems/wh40k-rpg/templates/actor/vehicle/tab-weapons.hbs",
-            container: { classes: ["wh40k-body"], id: "tab-body" },
-            scrollable: [""]
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tab-weapons.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
         },
         traits: {
-            template: "systems/wh40k-rpg/templates/actor/vehicle/tab-traits.hbs",
-            container: { classes: ["wh40k-body"], id: "tab-body" },
-            scrollable: [""]
-        }
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tab-traits.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "stats", label: "WH40K.Vehicle.Tabs.Stats", group: "primary", cssClass: "tab-stats" },
-        { tab: "weapons", label: "WH40K.Vehicle.Tabs.Weapons", group: "primary", cssClass: "tab-weapons" },
-        { tab: "traits", label: "WH40K.Vehicle.Tabs.Traits", group: "primary", cssClass: "tab-traits" }
+        { tab: 'stats', label: 'WH40K.Vehicle.Tabs.Stats', group: 'primary', cssClass: 'tab-stats' },
+        { tab: 'weapons', label: 'WH40K.Vehicle.Tabs.Weapons', group: 'primary', cssClass: 'tab-weapons' },
+        { tab: 'traits', label: 'WH40K.Vehicle.Tabs.Traits', group: 'primary', cssClass: 'tab-traits' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "stats"
+        primary: 'stats',
     };
 
     /* -------------------------------------------- */
@@ -78,12 +76,12 @@ export default class VehicleSheet extends BaseActorSheet {
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
         context.dh = CONFIG.wh40k || WH40K;
-        
+
         // Categorize items
-        context.weapons = this.actor.items.filter(i => i.type === 'weapon');
-        context.traits = this.actor.items.filter(i => i.type === 'vehicleTrait');
-        context.upgrades = this.actor.items.filter(i => i.type === 'vehicleUpgrade');
-        
+        context.weapons = this.actor.items.filter((i) => i.type === 'weapon');
+        context.traits = this.actor.items.filter((i) => i.type === 'vehicleTrait');
+        context.upgrades = this.actor.items.filter((i) => i.type === 'vehicleUpgrade');
+
         return context;
     }
 
@@ -97,18 +95,18 @@ export default class VehicleSheet extends BaseActorSheet {
         // Get shared context from _prepareContext
         const sharedContext = await this._prepareContext(options);
         context = { ...sharedContext, ...context };
-        
+
         // Add tab metadata for tab parts
-        if (["stats", "weapons", "traits"].includes(partId)) {
-            const tabConfig = this.constructor.TABS.find(t => t.tab === partId);
+        if (['stats', 'weapons', 'traits'].includes(partId)) {
+            const tabConfig = this.constructor.TABS.find((t) => t.tab === partId);
             context.tab = {
                 id: partId,
-                group: tabConfig?.group || "primary",
+                group: tabConfig?.group || 'primary',
                 active: this.tabGroups.primary === partId,
-                cssClass: tabConfig?.cssClass || ""
+                cssClass: tabConfig?.cssClass || '',
             };
         }
-        
+
         return context;
     }
 
@@ -125,11 +123,11 @@ export default class VehicleSheet extends BaseActorSheet {
         const delta = parseInt(target.dataset.delta) || 0;
         const current = this.actor.system.integrity.value;
         const max = this.actor.system.integrity.max;
-        
+
         const newValue = Math.max(0, Math.min(max, current + delta));
-        
-        await this.actor.update({ "system.integrity.value": newValue });
-        
+
+        await this.actor.update({ 'system.integrity.value': newValue });
+
         // Visual feedback
         if (delta < 0) {
             this._flashElement(target, 'damage');
@@ -146,10 +144,10 @@ export default class VehicleSheet extends BaseActorSheet {
     static async #rollWeapon(event, target) {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
-        
+
         const item = this.actor.items.get(itemId);
         if (!item) return;
-        
+
         // Use the vehicle's rollItem method
         await this.actor.rollItem(itemId);
     }

@@ -1,14 +1,14 @@
 /**
  * Actor Data Models for WH40K RPG
  */
-export { default as CharacterData } from "./character.mjs";
-export { default as NPCData } from "./npc.mjs";
-export { default as NPCDataV2 } from "./npc-v2.mjs";
-export { default as StarshipData } from "./starship.mjs";
-export { default as VehicleData } from "./vehicle.mjs";
+export { default as CharacterData } from './character.mjs';
+export { default as NPCData } from './npc.mjs';
+export { default as NPCDataV2 } from './npc-v2.mjs';
+export { default as StarshipData } from './starship.mjs';
+export { default as VehicleData } from './vehicle.mjs';
 
 // Templates
-export { CommonTemplate, CreatureTemplate } from "./templates/_module.mjs";
+export { CommonTemplate, CreatureTemplate } from './templates/_module.mjs';
 
 // Mixins
-export { HordeTemplate } from "./mixins/_module.mjs";
+export { HordeTemplate } from './mixins/_module.mjs';

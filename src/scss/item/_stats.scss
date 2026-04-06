@@ -3,93 +3,93 @@
 // ============================================
 
 .wh40k-quick-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $wh40k-space-sm;
-  padding: $wh40k-space-sm $wh40k-space-md;
-  background: var(--rt-panel-bg-translucent);
-  border-bottom: 1px solid var(--rt-border-color-light);
-  flex-shrink: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
+    background: var(--rt-panel-bg-translucent);
+    border-bottom: 1px solid var(--rt-border-color-light);
+    flex-shrink: 0;
 }
 
 .wh40k-stat-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: $wh40k-space-xs;
-  padding: $wh40k-space-xs $wh40k-space-sm;
-  background: var(--rt-panel-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: $wh40k-radius-md;
-  font-size: $wh40k-font-size-sm;
-  transition: all $wh40k-transition-fast;
-  
-  &__icon {
-    width: 16px;
-    height: 16px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    color: var(--rt-gold);
-    
-    i, .material-icons {
-      font-size: 14px;
-    }
-  }
-  
-  &__label {
-    color: var(--rt-text-muted);
-    text-transform: uppercase;
-    font-size: $wh40k-font-size-xs;
-    letter-spacing: 0.05em;
-  }
-  
-  &__value {
-    color: var(--rt-text-dark);
-    font-weight: 600;
-  }
-  
-  &:hover {
-    border-color: var(--rt-gold);
-    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-  }
-  
-  // Variants
-  &--damage {
-    border-color: var(--rt-red-dark);
-    
-    .wh40k-stat-badge__icon {
-      color: var(--rt-red);
-    }
-    
-    &:hover {
-      border-color: var(--rt-red);
-      box-shadow: 0 0 8px rgba(139, 0, 0, 0.4);
-    }
-  }
-  
-  &--equipped {
-    background: rgba(45, 90, 45, 0.2);
-    border-color: var(--rt-green);
-  }
-  
-  &--primary {
-    border-color: var(--rt-gold-dark);
-    
-    .wh40k-stat-badge__icon {
-      color: var(--rt-gold);
-    }
-  }
-  
-  &--muted {
-    opacity: 0.7;
-  }
-  
-  &--psychic {
-    border-color: var(--rt-powers-primary);
-    
-    .wh40k-stat-badge__icon {
-      color: var(--rt-powers-primary);
-    }
-  }
-}
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-xs $wh40k-space-sm;
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: $wh40k-radius-md;
+    font-size: $wh40k-font-size-sm;
+    transition: all $wh40k-transition-fast;
 
+    &__icon {
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--rt-gold);
+
+        i,
+        .material-icons {
+            font-size: 14px;
+        }
+    }
+
+    &__label {
+        color: var(--rt-text-muted);
+        text-transform: uppercase;
+        font-size: $wh40k-font-size-xs;
+        letter-spacing: 0.05em;
+    }
+
+    &__value {
+        color: var(--rt-text-dark);
+        font-weight: 600;
+    }
+
+    &:hover {
+        border-color: var(--rt-gold);
+        box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+    }
+
+    // Variants
+    &--damage {
+        border-color: var(--rt-red-dark);
+
+        .wh40k-stat-badge__icon {
+            color: var(--rt-red);
+        }
+
+        &:hover {
+            border-color: var(--rt-red);
+            box-shadow: 0 0 8px rgba(139, 0, 0, 0.4);
+        }
+    }
+
+    &--equipped {
+        background: rgba(45, 90, 45, 0.2);
+        border-color: var(--rt-green);
+    }
+
+    &--primary {
+        border-color: var(--rt-gold-dark);
+
+        .wh40k-stat-badge__icon {
+            color: var(--rt-gold);
+        }
+    }
+
+    &--muted {
+        opacity: 0.7;
+    }
+
+    &--psychic {
+        border-color: var(--rt-powers-primary);
+
+        .wh40k-stat-badge__icon {
+            color: var(--rt-powers-primary);
+        }
+    }
+}

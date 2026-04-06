@@ -2,17 +2,16 @@ import { WH40KBaseActor } from './base-actor.mjs';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 
 export class WH40KVehicle extends WH40KBaseActor {
-
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
         let initData = {
-            "token.bar1": { "attribute": "integrity" },
-            "token.displayName": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            "token.displayBars": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            "token.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            "token.name": data.name
-        }
-        this.updateSource(initData)
+            'token.bar1': { attribute: 'integrity' },
+            'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
+            'token.name': data.name,
+        };
+        this.updateSource(initData);
     }
 
     async prepareData() {
@@ -71,8 +70,8 @@ export class WH40KVehicle extends WH40KBaseActor {
     async rollItem(itemId) {
         const item = this.items.get(itemId);
         const character = game.user.character;
-        if(!character) {
-            ui.notifications.warn('Vehicle items are rolled using the current users\' character. However, no character found.');
+        if (!character) {
+            ui.notifications.warn("Vehicle items are rolled using the current users' character. However, no character found.");
             return;
         }
 
@@ -85,5 +84,4 @@ export class WH40KVehicle extends WH40KBaseActor {
                 return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
         }
     }
-
 }

@@ -1,13 +1,13 @@
-{{!-- Rogue Trader Damage Roll Card - Rich Hit-by-Hit Display --}}
+{{! Rogue Trader Damage Roll Card - Rich Hit-by-Hit Display }}
 <div class="rt-chat">
     <div class="rt-roll-card">
-        {{!-- Header --}}
+        {{! Header }}
         <div class="rt-roll-card__header">
             <div class="rt-roll-card__actor">Damage Roll</div>
             <h2 class="rt-roll-card__title">{{weaponName}}</h2>
         </div>
 
-        {{!-- Body --}}
+        {{! Body }}
         <div class="rt-roll-card__body">
             {{#if psychicEffect}}
                 <div class="rt-roll-card__divider rt-roll-card__divider--ornate"></div>
@@ -36,7 +36,7 @@
                         </div>
                     {{/each}}
 
-                    {{!-- Damage Display --}}
+                    {{! Damage Display }}
                     <div class="rt-roll-card__damage">
                         <div class="rt-roll-card__damage-header">
                             <span class="rt-roll-card__damage-title">Damage</span>
@@ -46,13 +46,13 @@
                         <div class="rt-roll-card__damage-type">{{hit.damageType}}</div>
                     </div>
 
-                    {{!-- Penetration --}}
+                    {{! Penetration }}
                     <div class="rt-roll-card__notice">
                         <span class="rt-roll-card__notice-label">Penetration</span>
                         <span class="rt-roll-card__notice-value">{{hit.totalPenetration}}</span>
                     </div>
 
-                    {{!-- Effects --}}
+                    {{! Effects }}
                     {{#each hit.effects as |effect|}}
                         <div class="rt-roll-card__effect">
                             <span class="rt-roll-card__effect-name">{{effect.name}}</span>
@@ -60,7 +60,7 @@
                         </div>
                     {{/each}}
 
-                    {{!-- Righteous Fury --}}
+                    {{! Righteous Fury }}
                     {{#each hit.righteousFury as |fury|}}
                         {{#if fury.confirmed}}
                             <div class="rt-roll-card__fury rt-roll-card__fury--confirmed">
@@ -75,22 +75,27 @@
                             <div class="rt-roll-card__fury rt-roll-card__fury--not-confirmed">
                                 <div class="rt-roll-card__fury-title">⚡ Righteous Fury (Not Confirmed)</div>
                                 <div class="rt-roll-card__fury-text">
-                                    Rolled {{fury.dieResult}} (threshold: {{fury.threshold}}), but failed confirmation roll.
+                                    Rolled
+                                    {{fury.dieResult}}
+                                    (threshold:
+                                    {{fury.threshold}}), but failed confirmation roll.
                                 </div>
                             </div>
                         {{/if}}
                     {{/each}}
 
-                    {{!-- Assign Damage Button --}}
+                    {{! Assign Damage Button }}
                     {{#if @root.targetActor}}
                         <div class="rt-roll-card__controls">
-                            <button class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__assign-damage"
-                                 data-location="{{hit.location}}"
-                                 data-total-damage="{{hit.totalDamage}}"
-                                 data-total-penetration="{{hit.totalPenetration}}"
-                                 data-total-fatigue="{{hit.totalFatigue}}"
-                                 data-target-uuid="{{@root.targetActor.uuid}}"
-                                 data-damage-type="{{hit.damageType}}">
+                            <button
+                                class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__assign-damage"
+                                data-location="{{hit.location}}"
+                                data-total-damage="{{hit.totalDamage}}"
+                                data-total-penetration="{{hit.totalPenetration}}"
+                                data-total-fatigue="{{hit.totalFatigue}}"
+                                data-target-uuid="{{@root.targetActor.uuid}}"
+                                data-damage-type="{{hit.damageType}}"
+                            >
                                 <span class="material-icons">api</span>
                                 <span>Assign Damage</span>
                             </button>

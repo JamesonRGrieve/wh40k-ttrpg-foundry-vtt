@@ -1,7 +1,6 @@
 import { SYSTEM_ID } from './constants.mjs';
 
 export class WH40KSettings {
-
     static SETTINGS = {
         worldVersion: 'world-version',
         simpleAttackRolls: 'simple-attack-rolls',
@@ -9,7 +8,7 @@ export class WH40KSettings {
         processActiveEffectsDuringCombat: 'active-effects-during-combat',
         combatPresets: 'combat-presets',
         movementAutomation: 'movement-automation',
-    }
+    };
 
     static registerSettings() {
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, {

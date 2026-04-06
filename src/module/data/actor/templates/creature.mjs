@@ -463,7 +463,7 @@ export default class CreatureTemplate extends CommonTemplate {
         Int: 'intelligence',
         Per: 'perception',
         WP: 'willpower',
-        Fel: 'fellowship'
+        Fel: 'fellowship',
     };
 
     /**
@@ -562,7 +562,7 @@ export default class CreatureTemplate extends CommonTemplate {
     _prepareCharacteristics() {
         for (const [key, char] of Object.entries(this.characteristics)) {
             // Calculate total: base + (advance * 5) + modifier
-            char.total = char.base + (char.advance * 5) + char.modifier;
+            char.total = char.base + char.advance * 5 + char.modifier;
 
             // Base modifier is tens digit
             const baseModifier = Math.floor(char.total / 10);
@@ -653,11 +653,11 @@ export default class CreatureTemplate extends CommonTemplate {
                 // Exclude origin paths - they're handled separately via _getOriginPathCharacteristicModifier
                 !item.isOriginPath &&
                 (item.isTalent ||
-                item.isTrait ||
-                item.isCondition ||
-                (item.type === 'armour' && item.system.equipped) ||
-                (item.type === 'cybernetic' && item.system.equipped) ||
-                (item.type === 'gear' && item.system.equipped)),
+                    item.isTrait ||
+                    item.isCondition ||
+                    (item.type === 'armour' && item.system.equipped) ||
+                    (item.type === 'cybernetic' && item.system.equipped) ||
+                    (item.type === 'gear' && item.system.equipped)),
         );
 
         for (const item of modifierItems) {
@@ -751,7 +751,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
             // Recalculate total from BASE values to avoid accumulation
             // Base total is: base + (advance * 5) + modifier (from schema)
-            const baseTotal = char.base + (char.advance * 5) + char.modifier;
+            const baseTotal = char.base + char.advance * 5 + char.modifier;
             char.total = baseTotal + totalMod;
 
             // Recalculate bonus with new total
@@ -763,7 +763,7 @@ export default class CreatureTemplate extends CommonTemplate {
         // Update initiative bonus from characteristic (recalculate from base)
         const initChar = this.characteristics[this.initiative.characteristic];
         const baseInitBonus = initChar?.bonus ?? 0;
-        
+
         // Apply combat modifiers from items
         const initMod = this._getTotalCombatModifier('initiative');
         this.initiative.bonus = baseInitBonus + initMod;

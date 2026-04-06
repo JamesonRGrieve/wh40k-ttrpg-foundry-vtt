@@ -1,15 +1,15 @@
-import SystemDataModel from "./system-data-model.mjs";
+import SystemDataModel from './system-data-model.mjs';
 
 const { NumberField } = foundry.data.fields;
 
 /**
  * Base data model for all Item types in WH40K RPG.
  * Provides shared functionality and schema patterns for items.
- * 
+ *
  * Uses template delegation pattern - subclasses should override:
  * - `_migrateData(source)` for migration (NOT migrateData)
  * - `_cleanData(source, options)` for cleaning (NOT cleanData)
- * 
+ *
  * @see SystemDataModel for mixin and template delegation details
  */
 export default class ItemDataModel extends SystemDataModel {
@@ -21,11 +21,17 @@ export default class ItemDataModel extends SystemDataModel {
      * Metadata describing this item data model.
      * @type {ItemDataModelMetadata}
      */
-    static metadata = Object.freeze(foundry.utils.mergeObject(super.metadata, {
-        enchantable: false,
-        hasEffects: false,
-        singleton: false,
-    }, { inplace: false }));
+    static metadata = Object.freeze(
+        foundry.utils.mergeObject(
+            super.metadata,
+            {
+                enchantable: false,
+                hasEffects: false,
+                singleton: false,
+            },
+            { inplace: false },
+        ),
+    );
 
     /**
      * @inheritdoc
@@ -105,7 +111,7 @@ export default class ItemDataModel extends SystemDataModel {
      */
     static #migrateImg(source) {
         if (!source.img) return;
-        
+
         const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'];
         const hasValidExtension = validExtensions.some((ext) => source.img.toLowerCase().endsWith(ext));
         if (!hasValidExtension) {
@@ -214,7 +220,7 @@ export default class ItemDataModel extends SystemDataModel {
 
     /** @override */
     get embeddedDescriptionKeyPath() {
-        return "description.value";
+        return 'description.value';
     }
 
     /* -------------------------------------------- */

@@ -1,14 +1,14 @@
-{{!-- Description Panel
+{{! Description Panel
      ProseMirror editor for item description with formatting toolbar
      Used in all item sheets
---}}
+}}
 <div class="rt-description-panel">
-  <header class="rt-panel-header">
-    <i class="fas fa-scroll"></i>
-    <span>{{localize "WH40K.Description"}}</span>
-  </header>
-  
-  <div class="rt-panel-body">
-    {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
-  </div>
+    <header class="rt-panel-header">
+        <i class="fas fa-scroll"></i>
+        <span>{{localize "WH40K.Description"}}</span>
+    </header>
+
+    <div class="rt-panel-body">
+        {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+    </div>
 </div>

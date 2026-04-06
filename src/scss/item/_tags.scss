@@ -3,13 +3,13 @@
 // ============================================
 
 .wh40k-empty-state {
-  text-align: center;
-  padding: $wh40k-space-xl;
-  color: var(--rt-text-muted);
-  font-style: italic;
-  background: var(--rt-panel-bg);
-  border: 1px dashed var(--rt-border-color-light);
-  border-radius: $wh40k-radius-md;
+    text-align: center;
+    padding: $wh40k-space-xl;
+    color: var(--rt-text-muted);
+    font-style: italic;
+    background: var(--rt-panel-bg);
+    border: 1px dashed var(--rt-border-color-light);
+    border-radius: $wh40k-radius-md;
 }
 
 // ============================================
@@ -17,33 +17,33 @@
 // ============================================
 
 .wh40k-tag {
-  &--success {
-    background: rgba(46, 204, 113, 0.2);
-    border-color: #2ecc71;
-    color: #27ae60;
-    
-    .theme-dark & {
-      background: rgba(46, 204, 113, 0.3);
-      color: #58d68d;
+    &--success {
+        background: rgba(46, 204, 113, 0.2);
+        border-color: #2ecc71;
+        color: #27ae60;
+
+        .theme-dark & {
+            background: rgba(46, 204, 113, 0.3);
+            color: #58d68d;
+        }
     }
-  }
-  
-  &--muted {
-    background: var(--rt-input-bg);
-    border-color: var(--rt-border-color-light);
-    color: var(--rt-text-muted);
-  }
-  
-  &--psychic {
-    background: rgba(106, 13, 173, 0.2);
-    border-color: #8b00ff;
-    color: #6a0dad;
-    
-    .theme-dark & {
-      background: rgba(106, 13, 173, 0.3);
-      color: #d8a8ff;
+
+    &--muted {
+        background: var(--rt-input-bg);
+        border-color: var(--rt-border-color-light);
+        color: var(--rt-text-muted);
     }
-  }
+
+    &--psychic {
+        background: rgba(106, 13, 173, 0.2);
+        border-color: #8b00ff;
+        color: #6a0dad;
+
+        .theme-dark & {
+            background: rgba(106, 13, 173, 0.3);
+            color: #d8a8ff;
+        }
+    }
 }
 
 // ============================================
@@ -51,46 +51,46 @@
 // ============================================
 
 .wh40k-stat-badge {
-  &--primary {
-    background: linear-gradient(135deg, var(--rt-gold-dark) 0%, rgba(212, 175, 55, 0.3) 100%);
-    border-color: var(--rt-gold);
-    
-    .wh40k-stat-badge__value {
-      color: var(--rt-gold);
+    &--primary {
+        background: linear-gradient(135deg, var(--rt-gold-dark) 0%, rgba(212, 175, 55, 0.3) 100%);
+        border-color: var(--rt-gold);
+
+        .wh40k-stat-badge__value {
+            color: var(--rt-gold);
+        }
     }
-  }
-  
-  &--gold {
-    background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
-    border-color: var(--rt-gold-light);
-    
-    .wh40k-stat-badge__value {
-      color: var(--rt-sheet-bg);
-      font-weight: 700;
+
+    &--gold {
+        background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
+        border-color: var(--rt-gold-light);
+
+        .wh40k-stat-badge__value {
+            color: var(--rt-sheet-bg);
+            font-weight: 700;
+        }
     }
-  }
-  
-  &--psychic {
-    background: linear-gradient(135deg, rgba(106, 13, 173, 0.4) 0%, rgba(139, 0, 255, 0.2) 100%);
-    border-color: #8b00ff;
-    
-    .wh40k-stat-badge__value {
-      color: #6a0dad;
-      
-      .theme-dark & {
-        color: #d8a8ff;
-      }
+
+    &--psychic {
+        background: linear-gradient(135deg, rgba(106, 13, 173, 0.4) 0%, rgba(139, 0, 255, 0.2) 100%);
+        border-color: #8b00ff;
+
+        .wh40k-stat-badge__value {
+            color: #6a0dad;
+
+            .theme-dark & {
+                color: #d8a8ff;
+            }
+        }
     }
-  }
-  
-  &--wide {
-    flex: 2;
-  }
-  
-  &__value--small {
-    font-size: $wh40k-font-size-xs !important;
-    font-weight: 500;
-  }
+
+    &--wide {
+        flex: 2;
+    }
+
+    &__value--small {
+        font-size: $wh40k-font-size-xs !important;
+        font-weight: 500;
+    }
 }
 
 // ============================================
@@ -98,28 +98,27 @@
 // ============================================
 
 .wh40k-field__textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: $wh40k-space-md;
-  background: var(--rt-input-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: $wh40k-radius-md;
-  color: var(--rt-text-dark);
-  font-family: $wh40k-font-body;
-  font-size: $wh40k-font-size-base;
-  line-height: 1.6;
-  resize: vertical;
-  transition: all $wh40k-transition-fast;
-  
-  &:focus {
-    outline: none;
-    background: var(--rt-input-bg-focus);
-    border-color: var(--rt-gold);
-    box-shadow: var(--rt-gold-glow);
-  }
-  
-  &::placeholder {
-    color: var(--rt-text-muted);
-  }
-}
+    width: 100%;
+    min-height: 100px;
+    padding: $wh40k-space-md;
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: $wh40k-radius-md;
+    color: var(--rt-text-dark);
+    font-family: $wh40k-font-body;
+    font-size: $wh40k-font-size-base;
+    line-height: 1.6;
+    resize: vertical;
+    transition: all $wh40k-transition-fast;
 
+    &:focus {
+        outline: none;
+        background: var(--rt-input-bg-focus);
+        border-color: var(--rt-gold);
+        box-shadow: var(--rt-gold-glow);
+    }
+
+    &::placeholder {
+        color: var(--rt-text-muted);
+    }
+}

@@ -3,228 +3,227 @@
 // ============================================
 
 .wh40k-actor-sheet-modern {
-  background: linear-gradient(135deg, var(--rt-sheet-bg) 0%, var(--rt-panel-bg) 100%);
-  color: var(--rt-text-dark);
-  font-family: $wh40k-font-body;
+    background: linear-gradient(135deg, var(--rt-sheet-bg) 0%, var(--rt-panel-bg) 100%);
+    color: var(--rt-text-dark);
+    font-family: $wh40k-font-body;
 }
 
 .wh40k-actor-header {
-  display: grid;
-  grid-template-columns: 120px 1fr auto;
-  gap: $wh40k-space-md;
-  padding: $wh40k-space-lg;
-  background: linear-gradient(180deg, rgba(139, 109, 43, 0.2) 0%, transparent 100%);
-  border-bottom: 2px solid var(--rt-gold-dark);
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-lg;
+    background: linear-gradient(180deg, rgba(139, 109, 43, 0.2) 0%, transparent 100%);
+    border-bottom: 2px solid var(--rt-gold-dark);
 }
 
 .wh40k-actor-portrait {
-  width: 120px;
-  height: 120px;
-  border: 3px solid var(--rt-gold);
-  border-radius: $wh40k-radius-md;
-  overflow: hidden;
-  cursor: pointer;
-  
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--rt-gold);
+    border-radius: $wh40k-radius-md;
+    overflow: hidden;
+    cursor: pointer;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 
 .wh40k-actor-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .wh40k-actor-name {
-  font-family: $wh40k-font-display;
-  font-size: $wh40k-font-size-xxl;
-  color: var(--rt-gold);
-  background: transparent;
-  border: none;
-  padding: $wh40k-space-xs;
-  margin-bottom: $wh40k-space-sm;
-  
-  &:focus {
-    outline: none;
-    background: var(--rt-input-bg-focus);
-    border-radius: $wh40k-radius-sm;
-  }
+    font-family: $wh40k-font-display;
+    font-size: $wh40k-font-size-xxl;
+    color: var(--rt-gold);
+    background: transparent;
+    border: none;
+    padding: $wh40k-space-xs;
+    margin-bottom: $wh40k-space-sm;
+
+    &:focus {
+        outline: none;
+        background: var(--rt-input-bg-focus);
+        border-radius: $wh40k-radius-sm;
+    }
 }
 
 .wh40k-actor-quickstats {
-  display: flex;
-  flex-direction: column;
-  gap: $wh40k-space-xs;
+    display: flex;
+    flex-direction: column;
+    gap: $wh40k-space-xs;
 }
 
 .wh40k-quickstat {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: $wh40k-space-xs $wh40k-space-sm;
-  background: var(--rt-panel-bg);
-  border-radius: $wh40k-radius-sm;
-  min-width: 140px;
-  
-  &__label {
-    font-size: $wh40k-font-size-xs;
-    color: var(--rt-text-muted);
-    text-transform: uppercase;
-  }
-  
-  &__value {
-    font-weight: 700;
-    color: var(--rt-text-dark);
-  }
-  
-  &--wounds {
-    border-left: 3px solid $wh40k-color-crimson;
-  }
-  
-  &--fate {
-    border-left: 3px solid var(--rt-gold);
-  }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $wh40k-space-xs $wh40k-space-sm;
+    background: var(--rt-panel-bg);
+    border-radius: $wh40k-radius-sm;
+    min-width: 140px;
+
+    &__label {
+        font-size: $wh40k-font-size-xs;
+        color: var(--rt-text-muted);
+        text-transform: uppercase;
+    }
+
+    &__value {
+        font-weight: 700;
+        color: var(--rt-text-dark);
+    }
+
+    &--wounds {
+        border-left: 3px solid $wh40k-color-crimson;
+    }
+
+    &--fate {
+        border-left: 3px solid var(--rt-gold);
+    }
 }
 
 .wh40k-panel-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $wh40k-space-md;
-  padding: $wh40k-space-md;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
 }
 
 .wh40k-char-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: $wh40k-space-sm;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: $wh40k-space-sm;
 }
 
 .wh40k-char-item {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .wh40k-char-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: $wh40k-space-sm;
-  background: linear-gradient(135deg, var(--rt-panel-bg) 0%, var(--rt-input-bg) 100%);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: $wh40k-radius-md;
-  cursor: pointer;
-  transition: all $wh40k-transition-fast;
-  
-  &:hover {
-    background: linear-gradient(135deg, var(--rt-input-bg) 0%, var(--rt-sheet-bg) 100%);
-    border-color: var(--rt-gold);
-    transform: translateY(-2px);
-    box-shadow: var(--rt-gold-glow);
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $wh40k-space-sm;
+    background: linear-gradient(135deg, var(--rt-panel-bg) 0%, var(--rt-input-bg) 100%);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: $wh40k-radius-md;
+    cursor: pointer;
+    transition: all $wh40k-transition-fast;
+
+    &:hover {
+        background: linear-gradient(135deg, var(--rt-input-bg) 0%, var(--rt-sheet-bg) 100%);
+        border-color: var(--rt-gold);
+        transform: translateY(-2px);
+        box-shadow: var(--rt-gold-glow);
+    }
 }
 
 .wh40k-char-abbr {
-  font-family: $wh40k-font-display;
-  font-size: $wh40k-font-size-lg;
-  color: var(--rt-gold);
-  font-weight: 700;
+    font-family: $wh40k-font-display;
+    font-size: $wh40k-font-size-lg;
+    color: var(--rt-gold);
+    font-weight: 700;
 }
 
 .wh40k-char-value {
-  font-size: $wh40k-font-size-xxl;
-  color: var(--rt-text-dark);
-  font-weight: 700;
-  margin: $wh40k-space-xs 0;
+    font-size: $wh40k-font-size-xxl;
+    color: var(--rt-text-dark);
+    font-weight: 700;
+    margin: $wh40k-space-xs 0;
 }
 
 .wh40k-char-label {
-  font-size: $wh40k-font-size-xs;
-  color: var(--rt-text-muted);
-  text-transform: uppercase;
+    font-size: $wh40k-font-size-xs;
+    color: var(--rt-text-muted);
+    text-transform: uppercase;
 }
 
 .wh40k-panel__content--scroll {
-  max-height: 300px;
-  overflow-y: auto;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .wh40k-item-row {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-sm;
-  padding: $wh40k-space-xs;
-  border-bottom: 1px solid var(--rt-border-color-light);
-  
-  &:hover {
-    background: rgba(212, 175, 55, 0.05);
-  }
-  
-  &--trait {
-    opacity: 0.8;
-  }
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-xs;
+    border-bottom: 1px solid var(--rt-border-color-light);
+
+    &:hover {
+        background: rgba(212, 175, 55, 0.05);
+    }
+
+    &--trait {
+        opacity: 0.8;
+    }
 }
 
 .wh40k-item-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: $wh40k-radius-sm;
-  border: 1px solid var(--rt-border-color-light);
+    width: 32px;
+    height: 32px;
+    border-radius: $wh40k-radius-sm;
+    border: 1px solid var(--rt-border-color-light);
 }
 
 .wh40k-item-name {
-  flex: 1;
-  color: var(--rt-text-dark);
+    flex: 1;
+    color: var(--rt-text-dark);
 }
 
 .wh40k-item-weight {
-  font-size: $wh40k-font-size-xs;
-  color: var(--rt-text-muted);
+    font-size: $wh40k-font-size-xs;
+    color: var(--rt-text-muted);
 }
 
 .wh40k-weapon-row {
-  display: flex;
-  gap: $wh40k-space-sm;
-  padding: $wh40k-space-sm;
-  background: var(--rt-panel-bg);
-  border-radius: $wh40k-radius-md;
-  margin-bottom: $wh40k-space-sm;
+    display: flex;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm;
+    background: var(--rt-panel-bg);
+    border-radius: $wh40k-radius-md;
+    margin-bottom: $wh40k-space-sm;
 }
 
 .wh40k-weapon-info {
-  flex: 1;
+    flex: 1;
 }
 
 .wh40k-weapon-name {
-  font-weight: 600;
-  color: var(--rt-text-dark);
-  margin-bottom: $wh40k-space-xs;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    margin-bottom: $wh40k-space-xs;
 }
 
 .wh40k-weapon-stats {
-  font-size: $wh40k-font-size-sm;
-  color: var(--rt-text-muted);
+    font-size: $wh40k-font-size-sm;
+    color: var(--rt-text-muted);
 }
 
 .wh40k-armour-display {
-  display: flex;
-  flex-direction: column;
-  gap: $wh40k-space-sm;
+    display: flex;
+    flex-direction: column;
+    gap: $wh40k-space-sm;
 }
 
 .wh40k-armour-item {
-  padding: $wh40k-space-sm;
-  background: var(--rt-panel-bg);
-  border-radius: $wh40k-radius-md;
+    padding: $wh40k-space-sm;
+    background: var(--rt-panel-bg);
+    border-radius: $wh40k-radius-md;
 }
 
 .wh40k-armour-points {
-  display: flex;
-  gap: $wh40k-space-md;
-  margin-top: $wh40k-space-xs;
-  font-size: $wh40k-font-size-sm;
-  color: var(--rt-text-muted);
+    display: flex;
+    gap: $wh40k-space-md;
+    margin-top: $wh40k-space-xs;
+    font-size: $wh40k-font-size-sm;
+    color: var(--rt-text-muted);
 }
-

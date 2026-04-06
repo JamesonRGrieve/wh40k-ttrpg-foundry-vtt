@@ -1390,11 +1390,7 @@
     // Hidden by default, shows on section hover
     &--hover {
         opacity: 0;
-        transition:
-            opacity 0.2s ease,
-            background 0.2s ease,
-            border-color 0.2s ease,
-            color 0.2s ease;
+        transition: opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
 
     // Done button (green checkmark)

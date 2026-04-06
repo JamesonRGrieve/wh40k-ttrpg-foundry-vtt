@@ -59,7 +59,7 @@ export class OriginChartLayout {
      * @private
      */
     static _getStepOrder() {
-        return ["homeWorld", "birthright", "lureOfTheVoid", "trialsAndTravails", "motivation", "career"];
+        return ['homeWorld', 'birthright', 'lureOfTheVoid', 'trialsAndTravails', 'motivation', 'career'];
     }
 
     /**
@@ -98,9 +98,7 @@ export class OriginChartLayout {
      * @private
      */
     static _getPositions(origin) {
-        const positions = origin?.system?.pathPositions
-            ?? origin?.system?.allPositions
-            ?? origin?.system?.positions;
+        const positions = origin?.system?.pathPositions ?? origin?.system?.allPositions ?? origin?.system?.positions;
 
         if (Array.isArray(positions) && positions.length > 0) {
             return [...positions].sort((a, b) => a - b);
@@ -123,7 +121,7 @@ export class OriginChartLayout {
         }
 
         const allowedPositions = this._getAllowedPositions(lastSelection);
-        const resolved = originPositions.filter(position => allowedPositions.has(position));
+        const resolved = originPositions.filter((position) => allowedPositions.has(position));
 
         return resolved.length > 0 ? resolved : originPositions;
     }
@@ -314,5 +312,4 @@ export class OriginChartLayout {
         const key = `RT.OriginPath.${stepKey.charAt(0).toUpperCase() + stepKey.slice(1)}`;
         return game.i18n.localize(key);
     }
-
 }

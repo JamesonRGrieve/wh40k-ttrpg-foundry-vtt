@@ -1,9 +1,9 @@
-import SystemDataModel from "./system-data-model.mjs";
+import SystemDataModel from './system-data-model.mjs';
 
 /**
  * Base data model for all Actor types in WH40K RPG.
  * Provides shared functionality and schema patterns for actors.
- * 
+ *
  * Key features:
  * - metadata for actor type configuration
  * - prepareEmbeddedData() hook for item-dependent calculations
@@ -14,9 +14,15 @@ export default class ActorDataModel extends SystemDataModel {
      * Actor-specific metadata.
      * @type {ActorDataModelMetadata}
      */
-    static metadata = Object.freeze(foundry.utils.mergeObject(super.metadata, {
-        supportsAdvancement: false,
-    }, { inplace: false }));
+    static metadata = Object.freeze(
+        foundry.utils.mergeObject(
+            super.metadata,
+            {
+                supportsAdvancement: false,
+            },
+            { inplace: false },
+        ),
+    );
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -24,7 +30,7 @@ export default class ActorDataModel extends SystemDataModel {
 
     /** @override */
     get embeddedDescriptionKeyPath() {
-        return "bio.notes";
+        return 'bio.notes';
     }
 
     /* -------------------------------------------- */
@@ -43,7 +49,7 @@ export default class ActorDataModel extends SystemDataModel {
     /**
      * Data preparation steps to perform after item data has been prepared,
      * but before active effects are applied.
-     * 
+     *
      * Override in subclasses to prepare data that depends on embedded items.
      */
     prepareEmbeddedData() {}
@@ -55,7 +61,7 @@ export default class ActorDataModel extends SystemDataModel {
     /**
      * Prepare a data object which defines the data schema used by dice roll commands against this Actor.
      * @param {object} [options]
-     * @param {boolean} [options.deterministic]  Whether to force deterministic values for data properties 
+     * @param {boolean} [options.deterministic]  Whether to force deterministic values for data properties
      *                                           that could be either a die term or a flat term.
      * @returns {object}
      */

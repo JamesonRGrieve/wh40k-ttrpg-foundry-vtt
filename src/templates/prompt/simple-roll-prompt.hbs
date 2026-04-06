@@ -1,27 +1,27 @@
-{{!-- Rogue Trader Simple Roll Prompt - Modern Design --}}
+{{! Rogue Trader Simple Roll Prompt - Modern Design }}
 {{#with rollData}}
-<form class="rt-prompt" autocomplete="off">
-    <div class="rt-prompt__panel">
-        <h3 class="rt-prompt__section-title">{{name}}</h3>
-        
-        <div class="rt-prompt__target">
-            <span class="rt-prompt__target-label">Target</span>
-            <span class="rt-prompt__target-value">{{baseTarget}}</span>
-            <span class="rt-prompt__target-percent">%</span>
+    <form class="rt-prompt" autocomplete="off">
+        <div class="rt-prompt__panel">
+            <h3 class="rt-prompt__section-title">{{name}}</h3>
+
+            <div class="rt-prompt__target">
+                <span class="rt-prompt__target-label">Target</span>
+                <span class="rt-prompt__target-value">{{baseTarget}}</span>
+                <span class="rt-prompt__target-percent">%</span>
+            </div>
+
+            <div class="rt-prompt__divider"></div>
+
+            <div class="rt-prompt__field">
+                <span class="rt-prompt__label">Difficulty</span>
+                <select class="rt-prompt__select" data-dtype="Number" name="modifiers.difficulty" id="difficulty">
+                    {{selectOptions difficulties selected=modifiers.difficulty}}
+                </select>
+            </div>
+            <div class="rt-prompt__field">
+                <span class="rt-prompt__label">Modifier</span>
+                <input class="rt-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" id="modifier" value="0" />
+            </div>
         </div>
-        
-        <div class="rt-prompt__divider"></div>
-        
-        <div class="rt-prompt__field">
-            <span class="rt-prompt__label">Difficulty</span>
-            <select class="rt-prompt__select" data-dtype="Number" name="modifiers.difficulty" id="difficulty">
-                {{selectOptions difficulties selected=modifiers.difficulty}}
-            </select>
-        </div>
-        <div class="rt-prompt__field">
-            <span class="rt-prompt__label">Modifier</span>
-            <input class="rt-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" id="modifier" value="0" />
-        </div>
-    </div>
-</form>
+    </form>
 {{/with}}

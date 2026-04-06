@@ -48,7 +48,8 @@
 }
 
 @keyframes pulse-gold {
-    0%, 100% {
+    0%,
+    100% {
         color: inherit;
         text-shadow: none;
     }
@@ -59,7 +60,8 @@
 }
 
 @keyframes pulse-glow {
-    0%, 100% {
+    0%,
+    100% {
         box-shadow: none;
     }
     50% {
@@ -120,8 +122,8 @@
 /* -------------------------------------------- */
 
 /* Smooth value changes for input fields */
-input[type="number"],
-input[type="text"].stat-value,
+input[type='number'],
+input[type='text'].stat-value,
 .stat-display {
     transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
@@ -129,11 +131,11 @@ input[type="text"].stat-value,
 /* Hover effects with smooth transitions */
 .rollable {
     transition: color 0.2s ease, transform 0.1s ease;
-    
+
     &:hover {
         transform: translateY(-1px);
     }
-    
+
     &:active {
         transform: translateY(0);
     }
@@ -152,11 +154,11 @@ input[type="text"].stat-value,
 .value-counter {
     display: inline-block;
     transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    
+
     &.counting-up {
         animation: count-up 0.5s ease-out;
     }
-    
+
     &.counting-down {
         animation: count-down 0.5s ease-out;
     }
@@ -219,7 +221,8 @@ input[type="text"].stat-value,
 }
 
 @keyframes critical-pulse {
-    0%, 100% {
+    0%,
+    100% {
         background-color: transparent;
         border-color: inherit;
     }
@@ -285,22 +288,22 @@ input[type="text"].stat-value,
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     white-space: nowrap;
     pointer-events: none;
-    
+
     &.wh40k-notification-success {
         background: linear-gradient(135deg, #4caf50, #66bb6a);
         color: white;
     }
-    
+
     &.wh40k-notification-error {
         background: linear-gradient(135deg, #f44336, #e57373);
         color: white;
     }
-    
+
     &.wh40k-notification-info {
         background: linear-gradient(135deg, #2196f3, #64b5f6);
         color: white;
     }
-    
+
     &.wh40k-notification-warning {
         background: linear-gradient(135deg, #ff9800, #ffb74d);
         color: white;
@@ -314,11 +317,10 @@ input[type="text"].stat-value,
 .wh40k-wounds-bar {
     position: relative;
     overflow: hidden;
-    
+
     .wh40k-wounds-bar-fill {
         width: var(--wounds-percent, 100%);
-        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                    background-color 0.3s ease;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
         will-change: width;
     }
 }
@@ -326,8 +328,8 @@ input[type="text"].stat-value,
 /* Smooth threshold marker transitions */
 .wh40k-threshold-marker {
     transition: opacity 0.3s ease;
-    
-    .wh40k-wounds-bar[data-percent="0"] & {
+
+    .wh40k-wounds-bar[data-percent='0'] & {
         opacity: 0.3;
     }
 }
@@ -340,11 +342,11 @@ input[type="text"].stat-value,
     display: inline-block;
     transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     font-variant-numeric: tabular-nums; // Monospaced numbers for smooth counting
-    
+
     &.counting-up {
         animation: count-up 0.5s ease-out;
     }
-    
+
     &.counting-down {
         animation: count-down 0.5s ease-out;
     }
@@ -357,7 +359,7 @@ input[type="text"].stat-value,
 .characteristic-bonus,
 .char-bonus {
     transition: all 0.3s ease;
-    
+
     &.changed {
         animation: pulse-gold 0.8s ease-out;
         transform: scale(1.15);
@@ -368,7 +370,7 @@ input[type="text"].stat-value,
 /* Derived stats (calculated values) */
 .derived-value {
     transition: color 0.3s ease, transform 0.2s ease;
-    
+
     &.derived-stat-changed {
         animation: pulse-glow 0.8s ease-out;
         color: var(--rt-gold, #d4af37);
@@ -382,7 +384,7 @@ input[type="text"].stat-value,
 .xp-display,
 .experience-tracker {
     transition: all 0.3s ease;
-    
+
     &.stat-advancement {
         animation: stat-advance 1s ease-out;
     }
@@ -432,8 +434,8 @@ input[type="text"].stat-value,
     .xp-display,
     .experience-tracker,
     .level-up-effect,
-    input[type="number"],
-    input[type="text"].stat-value,
+    input[type='number'],
+    input[type='text'].stat-value,
     .stat-display,
     .rollable,
     .progress-bar,
@@ -442,7 +444,7 @@ input[type="text"].stat-value,
         transition: none !important;
         transform: none !important;
     }
-    
+
     .wh40k-brief-notification {
         transition: opacity 0.1s ease !important;
     }

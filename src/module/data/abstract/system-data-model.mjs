@@ -1,10 +1,10 @@
 /**
  * Base data model for all WH40K RPG system data.
  * Provides common functionality for schema definition, validation, and template mixing.
- * 
+ *
  * This uses template mix-ins similar to DND5E - each template defines its own schema
  * which is merged into the final schema for the Document type's Data Model.
- * 
+ *
  * @see https://github.com/foundryvtt/dnd5e/blob/master/module/data/abstract/system-data-model.mjs
  */
 export default class SystemDataModel extends foundry.abstract.TypeDataModel {
@@ -31,7 +31,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel {
      * @private
      */
     static get _schemaTemplateFields() {
-        const fieldNames = Object.freeze(new Set(this._schemaTemplates.map(t => t.schema.keys()).flat()));
+        const fieldNames = Object.freeze(new Set(this._schemaTemplates.map((t) => t.schema.keys()).flat()));
         Object.defineProperty(this, '_schemaTemplateFields', {
             value: fieldNames,
             writable: false,

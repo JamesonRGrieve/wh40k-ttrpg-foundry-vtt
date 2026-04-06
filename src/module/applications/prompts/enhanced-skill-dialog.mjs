@@ -8,8 +8,8 @@
  * - Animated feedback
  */
 
-import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
-import { sendActionDataToChat } from "../../rolls/roll-helpers.mjs";
+import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
+import { sendActionDataToChat } from '../../rolls/roll-helpers.mjs';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -33,28 +33,28 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: "form",
-        classes: ["wh40k-rpg", "dialog", "enhanced-skill-roll", "standard-form"],
+        tag: 'form',
+        classes: ['wh40k-rpg', 'dialog', 'enhanced-skill-roll', 'standard-form'],
         actions: {
             selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty,
             toggleModifier: EnhancedSkillDialog.#onToggleModifier,
             updateCustom: EnhancedSkillDialog.#onUpdateCustom,
             roll: EnhancedSkillDialog.#onRoll,
             rollRepeat: EnhancedSkillDialog.#onRollRepeat,
-            cancel: EnhancedSkillDialog.#onCancel
+            cancel: EnhancedSkillDialog.#onCancel,
         },
         form: {
             submitOnChange: false,
-            closeOnSubmit: false
+            closeOnSubmit: false,
         },
         position: {
             width: 450,
-            height: "auto"
+            height: 'auto',
         },
         window: {
-            title: "Skill Test",
-            minimizable: false
-        }
+            title: 'Skill Test',
+            minimizable: false,
+        },
     };
 
     /* -------------------------------------------- */
@@ -62,8 +62,8 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/wh40k-rpg/templates/prompt/enhanced-skill-roll.hbs"
-        }
+            template: 'systems/wh40k-rpg/templates/prompt/enhanced-skill-roll.hbs',
+        },
     };
 
     /* -------------------------------------------- */
@@ -76,69 +76,69 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      */
     static DIFFICULTIES = [
         {
-            key: "trivial",
-            label: "Trivial",
+            key: 'trivial',
+            label: 'Trivial',
             modifier: 60,
-            icon: "fa-smile",
-            description: "Automatic success unless complications"
+            icon: 'fa-smile',
+            description: 'Automatic success unless complications',
         },
         {
-            key: "easy",
-            label: "Easy",
+            key: 'easy',
+            label: 'Easy',
             modifier: 30,
-            icon: "fa-grin",
-            description: "Simple tasks with no pressure"
+            icon: 'fa-grin',
+            description: 'Simple tasks with no pressure',
         },
         {
-            key: "routine",
-            label: "Routine",
+            key: 'routine',
+            label: 'Routine',
             modifier: 20,
-            icon: "fa-meh",
-            description: "Standard tasks with time"
+            icon: 'fa-meh',
+            description: 'Standard tasks with time',
         },
         {
-            key: "ordinary",
-            label: "Ordinary",
+            key: 'ordinary',
+            label: 'Ordinary',
             modifier: 10,
-            icon: "fa-smile-beam",
-            description: "Typical difficulty"
+            icon: 'fa-smile-beam',
+            description: 'Typical difficulty',
         },
         {
-            key: "challenging",
-            label: "Challenging",
+            key: 'challenging',
+            label: 'Challenging',
             modifier: 0,
-            icon: "fa-grimace",
-            description: "No modifier (baseline)",
-            default: true
+            icon: 'fa-grimace',
+            description: 'No modifier (baseline)',
+            default: true,
         },
         {
-            key: "difficult",
-            label: "Difficult",
+            key: 'difficult',
+            label: 'Difficult',
             modifier: -10,
-            icon: "fa-frown",
-            description: "Complex or contested tasks"
+            icon: 'fa-frown',
+            description: 'Complex or contested tasks',
         },
         {
-            key: "hard",
-            label: "Hard",
+            key: 'hard',
+            label: 'Hard',
             modifier: -20,
-            icon: "fa-dizzy",
-            description: "Very challenging circumstances"
+            icon: 'fa-dizzy',
+            description: 'Very challenging circumstances',
         },
         {
-            key: "veryHard",
-            label: "Very Hard",
+            key: 'veryHard',
+            label: 'Very Hard',
             modifier: -30,
-            icon: "fa-tired",
-            description: "Exceptional difficulty"
+            icon: 'fa-tired',
+            description: 'Exceptional difficulty',
         },
         {
-            key: "hellish",
-            label: "Hellish",
+            key: 'hellish',
+            label: 'Hellish',
             modifier: -60,
-            icon: "fa-skull",
-            description: "Near-impossible feats"
-        }
+            icon: 'fa-skull',
+            description: 'Near-impossible feats',
+        },
     ];
 
     /* -------------------------------------------- */
@@ -149,35 +149,35 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      */
     static COMMON_MODIFIERS = [
         {
-            key: "goodTools",
-            label: "Good Tools",
+            key: 'goodTools',
+            label: 'Good Tools',
             value: 10,
-            description: "Quality equipment aids the task"
+            description: 'Quality equipment aids the task',
         },
         {
-            key: "poorTools",
-            label: "Poor Tools",
+            key: 'poorTools',
+            label: 'Poor Tools',
             value: -10,
-            description: "Inadequate or damaged equipment"
+            description: 'Inadequate or damaged equipment',
         },
         {
-            key: "rushed",
-            label: "Rushed",
+            key: 'rushed',
+            label: 'Rushed',
             value: -10,
-            description: "Insufficient time to work carefully"
+            description: 'Insufficient time to work carefully',
         },
         {
-            key: "extraTime",
-            label: "Extra Time",
+            key: 'extraTime',
+            label: 'Extra Time',
             value: 10,
-            description: "Taking time to work methodically"
+            description: 'Taking time to work methodically',
         },
         {
-            key: "assistance",
-            label: "Assistance",
+            key: 'assistance',
+            label: 'Assistance',
             value: 10,
-            description: "+10 per helper (max +30)"
-        }
+            description: '+10 per helper (max +30)',
+        },
     ];
 
     /* -------------------------------------------- */
@@ -227,16 +227,16 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         const totalModifier = difficultyMod + commonMod + customMod;
 
         // Prepare difficulty buttons
-        const difficulties = this.constructor.DIFFICULTIES.map(d => ({
+        const difficulties = this.constructor.DIFFICULTIES.map((d) => ({
             ...d,
             selected: d.modifier === this._selectedDifficulty,
-            cssClass: d.modifier === this._selectedDifficulty ? "selected" : ""
+            cssClass: d.modifier === this._selectedDifficulty ? 'selected' : '',
         }));
 
         // Prepare common modifiers
-        const commonModifiers = this.constructor.COMMON_MODIFIERS.map(m => ({
+        const commonModifiers = this.constructor.COMMON_MODIFIERS.map((m) => ({
             ...m,
-            checked: this._commonModifiers[m.key] || false
+            checked: this._commonModifiers[m.key] || false,
         }));
 
         // Get recent rolls from user flags
@@ -244,7 +244,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
         return {
             ...context,
-            skillName: this.simpleSkillData.name || rollData?.name || "Test",
+            skillName: this.simpleSkillData.name || rollData?.name || 'Test',
             baseTarget: rollData?.baseTarget || 0,
             finalTarget: (rollData?.baseTarget || 0) + totalModifier,
             difficulties,
@@ -254,7 +254,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
             difficultyMod,
             commonMod,
             recentRolls,
-            hasRecentRolls: recentRolls.length > 0
+            hasRecentRolls: recentRolls.length > 0,
         };
     }
 
@@ -265,22 +265,21 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         await super._onRender(context, options);
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (event) => {
-                    event.target.select();
-                });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (event) => {
+                event.target.select();
             });
+        });
 
         // Focus custom modifier input
-        this.element.querySelector("#customModifier")?.addEventListener("input", (e) => {
+        this.element.querySelector('#customModifier')?.addEventListener('input', (e) => {
             this._customModifier = parseInt(e.target.value) || 0;
-            this.render(false, { parts: ["form"] });
+            this.render(false, { parts: ['form'] });
         });
 
         // Add keyboard shortcut (Enter to roll)
-        this.element.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
+        this.element.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 this._performRoll();
             }
@@ -300,7 +299,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         let total = 0;
         for (const [key, active] of Object.entries(this._commonModifiers)) {
             if (!active) continue;
-            const modifier = this.constructor.COMMON_MODIFIERS.find(m => m.key === key);
+            const modifier = this.constructor.COMMON_MODIFIERS.find((m) => m.key === key);
             if (modifier) total += modifier.value;
         }
         return total;
@@ -314,7 +313,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     _getRecentRolls() {
-        const recent = game.user.getFlag("wh40k-rpg", "recentRolls") || [];
+        const recent = game.user.getFlag('wh40k-rpg', 'recentRolls') || [];
         return recent.slice(0, 3); // Last 3 rolls
     }
 
@@ -326,16 +325,16 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     async _saveToRecentRolls(modifier) {
-        const recent = game.user.getFlag("wh40k-rpg", "recentRolls") || [];
+        const recent = game.user.getFlag('wh40k-rpg', 'recentRolls') || [];
         recent.unshift({
-            name: this.simpleSkillData.name || "Test",
+            name: this.simpleSkillData.name || 'Test',
             modifier,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         });
 
         // Keep only last 10
         const trimmed = recent.slice(0, 10);
-        await game.user.setFlag("wh40k-rpg", "recentRolls", trimmed);
+        await game.user.setFlag('wh40k-rpg', 'recentRolls', trimmed);
     }
 
     /* -------------------------------------------- */
@@ -353,10 +352,10 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         this._selectedDifficulty = modifier;
 
         // Animate selection
-        target.classList.add("flash-select");
-        setTimeout(() => target.classList.remove("flash-select"), 300);
+        target.classList.add('flash-select');
+        setTimeout(() => target.classList.remove('flash-select'), 300);
 
-        await this.render(false, { parts: ["form"] });
+        await this.render(false, { parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -370,7 +369,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     static async #onToggleModifier(event, target) {
         const key = target.dataset.modifierKey;
         this._commonModifiers[key] = target.checked;
-        await this.render(false, { parts: ["form"] });
+        await this.render(false, { parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -383,7 +382,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      */
     static async #onUpdateCustom(event, target) {
         this._customModifier = parseInt(target.value) || 0;
-        await this.render(false, { parts: ["form"] });
+        await this.render(false, { parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -442,9 +441,9 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         const totalModifier = this._selectedDifficulty + this._calculateCommonModifiers() + this._customModifier;
 
         // Apply to roll data
-        rollData.modifiers["difficulty"] = this._selectedDifficulty;
-        rollData.modifiers["common"] = this._calculateCommonModifiers();
-        rollData.modifiers["modifier"] = this._customModifier;
+        rollData.modifiers['difficulty'] = this._selectedDifficulty;
+        rollData.modifiers['common'] = this._calculateCommonModifiers();
+        rollData.modifiers['modifier'] = this._customModifier;
 
         // Save to recent rolls
         await this._saveToRecentRolls(totalModifier);

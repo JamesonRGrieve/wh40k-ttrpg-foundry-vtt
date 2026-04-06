@@ -2,7 +2,7 @@
  * @file ShipUpgradeSheet - ApplicationV2 sheet for ship upgrade items
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
 
 /**
  * Sheet for ship upgrade items.
@@ -11,11 +11,11 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class ShipUpgradeSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["wh40k-rpg", "sheet", "item", "ship-upgrade"],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'ship-upgrade'],
         position: {
             width: 600,
-            height: 650
-        }
+            height: 650,
+        },
     };
 
     /* -------------------------------------------- */
@@ -23,24 +23,24 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/wh40k-rpg/templates/item/ship-upgrade-sheet.hbs",
-            scrollable: [".rt-tab-content"]
-        }
+            template: 'systems/wh40k-rpg/templates/item/ship-upgrade-sheet.hbs',
+            scrollable: ['.rt-tab-content'],
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static TABS = [
-        { tab: "details", group: "primary", label: "WH40K.Item.Tabs.Details" },
-        { tab: "effects", group: "primary", label: "WH40K.Item.Tabs.Effects" }
+        { tab: 'details', group: 'primary', label: 'WH40K.Item.Tabs.Details' },
+        { tab: 'effects', group: 'primary', label: 'WH40K.Item.Tabs.Effects' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
     tabGroups = {
-        primary: "details"
+        primary: 'details',
     };
 
     /* -------------------------------------------- */
@@ -48,15 +48,15 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
     /** @override */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        
+
         // Add upgrade-specific choices
         context.availabilities = this._getAvailabilityChoices();
-        
+
         // Add display helpers
         context.hasModifiers = context.system.hasModifiers;
         context.isPowerConsumer = context.system.power > 0;
         context.isPowerGenerator = context.system.power < 0;
-        
+
         return context;
     }
 
@@ -68,17 +68,17 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
      */
     _getAvailabilityChoices() {
         return {
-            ubiquitous: game.i18n.localize("WH40K.Availability.Ubiquitous"),
-            abundant: game.i18n.localize("WH40K.Availability.Abundant"),
-            plentiful: game.i18n.localize("WH40K.Availability.Plentiful"),
-            common: game.i18n.localize("WH40K.Availability.Common"),
-            average: game.i18n.localize("WH40K.Availability.Average"),
-            scarce: game.i18n.localize("WH40K.Availability.Scarce"),
-            rare: game.i18n.localize("WH40K.Availability.Rare"),
-            "very-rare": game.i18n.localize("WH40K.Availability.VeryRare"),
-            "extremely-rare": game.i18n.localize("WH40K.Availability.ExtremelyRare"),
-            "near-unique": game.i18n.localize("WH40K.Availability.NearUnique"),
-            unique: game.i18n.localize("WH40K.Availability.Unique")
+            'ubiquitous': game.i18n.localize('WH40K.Availability.Ubiquitous'),
+            'abundant': game.i18n.localize('WH40K.Availability.Abundant'),
+            'plentiful': game.i18n.localize('WH40K.Availability.Plentiful'),
+            'common': game.i18n.localize('WH40K.Availability.Common'),
+            'average': game.i18n.localize('WH40K.Availability.Average'),
+            'scarce': game.i18n.localize('WH40K.Availability.Scarce'),
+            'rare': game.i18n.localize('WH40K.Availability.Rare'),
+            'very-rare': game.i18n.localize('WH40K.Availability.VeryRare'),
+            'extremely-rare': game.i18n.localize('WH40K.Availability.ExtremelyRare'),
+            'near-unique': game.i18n.localize('WH40K.Availability.NearUnique'),
+            'unique': game.i18n.localize('WH40K.Availability.Unique'),
         };
     }
 }

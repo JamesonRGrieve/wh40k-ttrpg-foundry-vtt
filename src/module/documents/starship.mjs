@@ -1,18 +1,17 @@
 import { WH40KBaseActor } from './base-actor.mjs';
 
 export class WH40KStarship extends WH40KBaseActor {
-
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
         let initData = {
-            "token.bar1": { "attribute": "hullIntegrity" },
-            "token.bar2": { "attribute": "crew.morale" },
-            "token.displayName": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            "token.displayBars": CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            "token.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            "token.name": data.name
-        }
-        this.updateSource(initData)
+            'token.bar1': { attribute: 'hullIntegrity' },
+            'token.bar2': { attribute: 'crew.morale' },
+            'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
+            'token.name': data.name,
+        };
+        this.updateSource(initData);
     }
 
     /** @override */
@@ -100,21 +99,21 @@ export class WH40KStarship extends WH40KBaseActor {
      * Get all ship components
      */
     get shipComponents() {
-        return this.items.filter(i => i.type === 'shipComponent');
+        return this.items.filter((i) => i.type === 'shipComponent');
     }
 
     /**
      * Get all ship weapons
      */
     get shipWeapons() {
-        return this.items.filter(i => i.type === 'shipWeapon');
+        return this.items.filter((i) => i.type === 'shipWeapon');
     }
 
     /**
      * Get all ship upgrades
      */
     get shipUpgrades() {
-        return this.items.filter(i => i.type === 'shipUpgrade');
+        return this.items.filter((i) => i.type === 'shipUpgrade');
     }
 
     /**
@@ -126,7 +125,7 @@ export class WH40KStarship extends WH40KBaseActor {
             dorsal: [],
             port: [],
             starboard: [],
-            keel: []
+            keel: [],
         };
         for (const weapon of this.shipWeapons) {
             const loc = weapon.system.location || 'dorsal';
@@ -151,7 +150,7 @@ export class WH40KStarship extends WH40KBaseActor {
             actor: this,
             weapon: weapon,
             crewRating: this.system.crew?.crewRating || 30,
-            detectionBonus: this.detectionBonus
+            detectionBonus: this.detectionBonus,
         };
 
         const html = await renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
@@ -160,7 +159,6 @@ export class WH40KStarship extends WH40KBaseActor {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: this }),
             content: html,
-
         });
     }
 
@@ -169,7 +167,7 @@ export class WH40KStarship extends WH40KBaseActor {
      */
     async rollInitiative() {
         const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
-        
+
         const content = `
             <div class="wh40k-hit-location-result">
                 <h3><i class="fas fa-satellite-dish"></i> Ship Initiative</h3>
@@ -185,7 +183,7 @@ export class WH40KStarship extends WH40KBaseActor {
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this }),
             content: content,
-            rolls: [roll]
+            rolls: [roll],
         });
 
         return roll;

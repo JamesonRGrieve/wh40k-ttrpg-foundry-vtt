@@ -73,7 +73,7 @@
 // ABILITIES TAB STYLES
 // ============================================
 
-.wh40k-tab[data-tab="abilities"] {
+.wh40k-tab[data-tab='abilities'] {
     .wh40k-panel {
         background: linear-gradient(135deg, rgba(36, 107, 131, 0.22), rgba(24, 80, 96, 0.14));
         border-top-color: rgba(36, 107, 131, 0.5);
@@ -83,28 +83,29 @@
     // Improve characteristics table
     .wh40k-chartable {
         padding: 8px;
-        
+
         &__cell--head {
             background: rgba(36, 107, 131, 0.15);
             border-radius: 4px;
             padding: 4px;
-            
+
             button {
                 font-weight: 700;
                 color: #1a4f61;
             }
         }
-        
+
         &__cell--highlight {
             background: rgba(36, 107, 131, 0.1);
             font-weight: bold;
         }
-        
-        select, input[type='number'] {
+
+        select,
+        input[type='number'] {
             border: 1px solid rgba(36, 107, 131, 0.2);
             border-radius: 3px;
             padding: 2px 4px;
-            
+
             &:focus {
                 outline: none;
                 border-color: rgba(36, 107, 131, 0.5);
@@ -119,18 +120,18 @@
     .table-row {
         transition: background-color 0.2s ease;
         border-bottom: 1px solid rgba(74, 55, 40, 0.1);
-        
+
         &:hover {
             background: rgba(218, 165, 32, 0.08);
         }
     }
-    
+
     .table-row--head {
         background: linear-gradient(135deg, rgba(218, 165, 32, 0.18), rgba(218, 165, 32, 0.1));
         font-weight: 600;
         border-bottom: 2px solid rgba(218, 165, 32, 0.3);
     }
-    
+
     .table-cell--description {
         background: rgba(255, 250, 240, 0.5);
         padding: 8px 12px;
@@ -142,7 +143,7 @@
 // POWERS TAB STYLES
 // ============================================
 
-.wh40k-tab[data-tab="powers"] {
+.wh40k-tab[data-tab='powers'] {
     .wh40k-panel {
         background: linear-gradient(135deg, rgba(75, 0, 130, 0.18), rgba(45, 0, 90, 0.12));
         border-top-color: rgba(75, 0, 130, 0.5);
@@ -155,19 +156,19 @@
         background: rgba(255, 255, 255, 0.6);
         border-radius: 4px;
     }
-    
+
     .table-row--head {
         background: rgba(75, 0, 130, 0.1);
     }
-    
+
     .table-row {
         transition: background-color 0.2s ease;
-        
+
         &:hover {
             background: rgba(75, 0, 130, 0.05);
         }
     }
-    
+
     .wh40k-psychictable--border {
         .table-cell--description {
             background: rgba(248, 245, 255, 0.6);
@@ -175,4 +176,3 @@
         }
     }
 }
-

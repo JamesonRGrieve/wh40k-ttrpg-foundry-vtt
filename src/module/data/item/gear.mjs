@@ -221,7 +221,9 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      */
     static #parseWeight(weightStr) {
         if (!weightStr || weightStr === '-' || weightStr === '?') return 0;
-        const cleaned = String(weightStr).replace(/kg|g|\s/gi, '').trim();
+        const cleaned = String(weightStr)
+            .replace(/kg|g|\s/gi, '')
+            .trim();
         const num = parseFloat(cleaned);
         return isNaN(num) ? 0 : num;
     }

@@ -9,21 +9,21 @@
 // ============================================
 
 :root {
-  // Header hierarchy (use for consistent sizing)
-  --rt-text-h1: 1.5rem;     // Tab headers, major sections
-  --rt-text-h2: 1.25rem;    // Panel headers
-  --rt-text-h3: 1.1rem;     // Section headers, subsections
-  --rt-text-h4: 0.95rem;    // Minor headers
-  --rt-text-body: 0.9rem;   // Normal text
-  --rt-text-small: 0.8rem;  // Labels, captions
-  --rt-text-tiny: 0.7rem;   // Badges, meta info
-  --rt-text-micro: 0.65rem; // Smallest labels
+    // Header hierarchy (use for consistent sizing)
+    --rt-text-h1: 1.5rem; // Tab headers, major sections
+    --rt-text-h2: 1.25rem; // Panel headers
+    --rt-text-h3: 1.1rem; // Section headers, subsections
+    --rt-text-h4: 0.95rem; // Minor headers
+    --rt-text-body: 0.9rem; // Normal text
+    --rt-text-small: 0.8rem; // Labels, captions
+    --rt-text-tiny: 0.7rem; // Badges, meta info
+    --rt-text-micro: 0.65rem; // Smallest labels
 
-  // Font stacks
-  --rt-font-display: "Modesto Condensed", "Cinzel", serif;
-  --rt-font-heading: "Modesto Condensed", "IM Fell DW Pica", serif;
-  --rt-font-body-alt: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --rt-font-numeric: "Modesto Condensed", "Roboto Mono", monospace;
+    // Font stacks
+    --rt-font-display: 'Modesto Condensed', 'Cinzel', serif;
+    --rt-font-heading: 'Modesto Condensed', 'IM Fell DW Pica', serif;
+    --rt-font-body-alt: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --rt-font-numeric: 'Modesto Condensed', 'Roboto Mono', monospace;
 }
 
 // ============================================
@@ -35,286 +35,295 @@
 
 // Base button reset and shared styles
 %rt-btn-base {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 0;
-  margin: 0;
-  background: var(--rt-btn-bg);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: $wh40k-radius-md;
-  color: var(--color-text-primary);
-  font-family: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all $wh40k-transition-fast;
-  text-decoration: none;
-  white-space: nowrap;
-  user-select: none;
-  
-  &:hover:not(:disabled) {
-    background: var(--rt-btn-bg-hover);
-    border-color: var(--color-border-highlight);
-  }
-  
-  &:active:not(:disabled) {
-    transform: scale(0.95);
-  }
-  
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  &:focus-visible {
-    outline: 2px solid var(--rt-gold);
-    outline-offset: 1px;
-  }
-  
-  i, .fas, .far, .fa {
-    line-height: 1;
-  }
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0;
+    margin: 0;
+    background: var(--rt-btn-bg);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: $wh40k-radius-md;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $wh40k-transition-fast;
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+
+    &:hover:not(:disabled) {
+        background: var(--rt-btn-bg-hover);
+        border-color: var(--color-border-highlight);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--rt-gold);
+        outline-offset: 1px;
+    }
+
+    i,
+    .fas,
+    .far,
+    .fa {
+        line-height: 1;
+    }
 }
 
 // ----------------------------------------
 // PRIMARY BUTTON - Major actions (roll, use, activate)
 // ----------------------------------------
 .wh40k-btn-primary {
-  @extend %rt-btn-base;
-  padding: 6px 12px;
-  background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-dark) 100%);
-  border: 1px solid var(--rt-gold-dark);
-  color: #fff;
-  font-size: $wh40k-font-size-sm;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
-  &:hover:not(:disabled) {
-    background: linear-gradient(135deg, lighten($wh40k-color-gold, 5%) 0%, var(--rt-gold) 100%);
-    border-color: var(--rt-gold);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-  
-  &:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  // Combat variant
-  &--combat {
-    background: linear-gradient(135deg, $wh40k-accent-combat 0%, darken($wh40k-accent-combat, 10%) 100%);
-    border-color: darken($wh40k-accent-combat, 10%);
-    
+    @extend %rt-btn-base;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-dark) 100%);
+    border: 1px solid var(--rt-gold-dark);
+    color: #fff;
+    font-size: $wh40k-font-size-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
     &:hover:not(:disabled) {
-      background: linear-gradient(135deg, lighten($wh40k-accent-combat, 5%) 0%, $wh40k-accent-combat 100%);
-      border-color: $wh40k-accent-combat;
+        background: linear-gradient(135deg, lighten($wh40k-color-gold, 5%) 0%, var(--rt-gold) 100%);
+        border-color: var(--rt-gold);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
-  }
-  
-  // Skills variant
-  &--skills {
-    background: linear-gradient(135deg, $wh40k-accent-skills 0%, darken($wh40k-accent-skills, 10%) 100%);
-    border-color: darken($wh40k-accent-skills, 10%);
-    
-    &:hover:not(:disabled) {
-      background: linear-gradient(135deg, lighten($wh40k-accent-skills, 5%) 0%, $wh40k-accent-skills 100%);
-      border-color: $wh40k-accent-skills;
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
     }
-  }
-  
-  // Compact variant for tighter spaces
-  &--compact {
-    padding: 4px 8px;
-    font-size: $wh40k-font-size-xs;
-  }
+
+    // Combat variant
+    &--combat {
+        background: linear-gradient(135deg, $wh40k-accent-combat 0%, darken($wh40k-accent-combat, 10%) 100%);
+        border-color: darken($wh40k-accent-combat, 10%);
+
+        &:hover:not(:disabled) {
+            background: linear-gradient(135deg, lighten($wh40k-accent-combat, 5%) 0%, $wh40k-accent-combat 100%);
+            border-color: $wh40k-accent-combat;
+        }
+    }
+
+    // Skills variant
+    &--skills {
+        background: linear-gradient(135deg, $wh40k-accent-skills 0%, darken($wh40k-accent-skills, 10%) 100%);
+        border-color: darken($wh40k-accent-skills, 10%);
+
+        &:hover:not(:disabled) {
+            background: linear-gradient(135deg, lighten($wh40k-accent-skills, 5%) 0%, $wh40k-accent-skills 100%);
+            border-color: $wh40k-accent-skills;
+        }
+    }
+
+    // Compact variant for tighter spaces
+    &--compact {
+        padding: 4px 8px;
+        font-size: $wh40k-font-size-xs;
+    }
 }
 
 // ----------------------------------------
 // CONTROL BUTTON - Stat adjustments (±), toggle, edit
 // ----------------------------------------
 .wh40k-btn-control {
-  @extend %rt-btn-base;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 700;
-  
-  &:hover:not(:disabled) {
-    transform: scale(1.08);
-    box-shadow: 0 2px 6px var(--rt-shadow-soft);
-  }
-  
-  // Minus/Decrease variant
-  &--minus {
-    color: $wh40k-accent-combat;
-    
+    @extend %rt-btn-base;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+
     &:hover:not(:disabled) {
-      border-color: $wh40k-accent-combat;
-      background: var(--rt-wounds-bg);
+        transform: scale(1.08);
+        box-shadow: 0 2px 6px var(--rt-shadow-soft);
     }
-  }
-  
-  // Plus/Increase variant
-  &--plus {
-    color: $wh40k-color-success;
-    
-    &:hover:not(:disabled) {
-      border-color: $wh40k-color-success;
-      background: var(--rt-success-bg);
+
+    // Minus/Decrease variant
+    &--minus {
+        color: $wh40k-accent-combat;
+
+        &:hover:not(:disabled) {
+            border-color: $wh40k-accent-combat;
+            background: var(--rt-wounds-bg);
+        }
     }
-  }
-  
-  // Compact variant (22-24px)
-  &--compact {
-    width: 24px;
-    height: 24px;
-    font-size: 0.85rem;
-    border-radius: 4px;
-  }
-  
-  // Large variant (36px)
-  &--large {
-    width: 36px;
-    height: 36px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-  }
+
+    // Plus/Increase variant
+    &--plus {
+        color: $wh40k-color-success;
+
+        &:hover:not(:disabled) {
+            border-color: $wh40k-color-success;
+            background: var(--rt-success-bg);
+        }
+    }
+
+    // Compact variant (22-24px)
+    &--compact {
+        width: 24px;
+        height: 24px;
+        font-size: 0.85rem;
+        border-radius: 4px;
+    }
+
+    // Large variant (36px)
+    &--large {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+    }
 }
 
 // ----------------------------------------
 // ICON BUTTON - Config, delete, expand, collapse
 // ----------------------------------------
 .wh40k-btn-icon {
-  @extend %rt-btn-base;
-  width: 22px;
-  height: 22px;
-  background: transparent;
-  border: none;
-  color: var(--color-text-secondary);
-  border-radius: $wh40k-radius-sm;
-  
-  i {
-    font-size: 0.75rem;
-  }
-  
-  &:hover:not(:disabled) {
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-primary);
-  }
-  
-  // Delete variant
-  &--delete {
-    color: var(--rt-wounds-secondary);
-    
-    &:hover:not(:disabled) {
-      background: var(--rt-wounds-bg);
-      color: var(--rt-wounds-primary);
+    @extend %rt-btn-base;
+    width: 22px;
+    height: 22px;
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    border-radius: $wh40k-radius-sm;
+
+    i {
+        font-size: 0.75rem;
     }
-  }
-  
-  // Add variant
-  &--add {
-    color: var(--rt-success-secondary);
-    
+
     &:hover:not(:disabled) {
-      background: var(--rt-success-bg);
-      color: var(--rt-success-primary);
+        background: var(--color-bg-tertiary);
+        color: var(--color-text-primary);
     }
-  }
-  
-  // Gold/accent variant
-  &--accent {
-    color: var(--rt-gold);
-    
-    &:hover:not(:disabled) {
-      background: rgba($wh40k-color-gold, 0.15);
-      color: var(--rt-gold-bright);
+
+    // Delete variant
+    &--delete {
+        color: var(--rt-wounds-secondary);
+
+        &:hover:not(:disabled) {
+            background: var(--rt-wounds-bg);
+            color: var(--rt-wounds-primary);
+        }
     }
-  }
-  
-  // Bordered variant (for header buttons)
-  &--bordered {
-    background: rgba($wh40k-accent-gold, 0.2);
-    border: 1px solid rgba($wh40k-accent-gold, 0.4);
-    color: $wh40k-accent-gold;
-    
-    &:hover:not(:disabled) {
-      background: rgba($wh40k-accent-gold, 0.3);
-      border-color: $wh40k-accent-gold;
-      transform: scale(1.1);
+
+    // Add variant
+    &--add {
+        color: var(--rt-success-secondary);
+
+        &:hover:not(:disabled) {
+            background: var(--rt-success-bg);
+            color: var(--rt-success-primary);
+        }
     }
-  }
+
+    // Gold/accent variant
+    &--accent {
+        color: var(--rt-gold);
+
+        &:hover:not(:disabled) {
+            background: rgba($wh40k-color-gold, 0.15);
+            color: var(--rt-gold-bright);
+        }
+    }
+
+    // Bordered variant (for header buttons)
+    &--bordered {
+        background: rgba($wh40k-accent-gold, 0.2);
+        border: 1px solid rgba($wh40k-accent-gold, 0.4);
+        color: $wh40k-accent-gold;
+
+        &:hover:not(:disabled) {
+            background: rgba($wh40k-accent-gold, 0.3);
+            border-color: $wh40k-accent-gold;
+            transform: scale(1.1);
+        }
+    }
 }
 
 // ----------------------------------------
 // QUICK ACTION BUTTON - Rest, clear, restore, etc.
 // ----------------------------------------
 .wh40k-btn-quick {
-  @extend %rt-btn-base;
-  flex: 1;
-  padding: 6px 10px;
-  font-size: $wh40k-font-size-xs;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-radius: 6px;
-  
-  i {
-    font-size: 0.85em;
-  }
-  
-  &:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px var(--rt-shadow-medium);
-  }
-  
-  // Success variant (rest, heal, restore)
-  &--success {
-    border-color: rgba(74, 143, 92, 0.4);
-    color: var(--rt-success-primary);
-    
-    i { color: var(--rt-success-secondary); }
-    
-    &:hover:not(:disabled) {
-      border-color: var(--rt-success-primary);
-      background: var(--rt-success-bg);
+    @extend %rt-btn-base;
+    flex: 1;
+    padding: 6px 10px;
+    font-size: $wh40k-font-size-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 6px;
+
+    i {
+        font-size: 0.85em;
     }
-  }
-  
-  // Warning variant (clear, reset)
-  &--warning {
-    border-color: var(--rt-fatigue-border);
-    color: var(--rt-fatigue-primary);
-    
-    i { color: var(--rt-fatigue-secondary); }
-    
+
     &:hover:not(:disabled) {
-      border-color: var(--rt-fatigue-secondary);
-      background: var(--rt-fatigue-bg);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px var(--rt-shadow-medium);
     }
-  }
-  
-  // Danger variant (delete, remove)
-  &--danger {
-    border-color: var(--rt-wounds-border);
-    color: var(--rt-wounds-primary);
-    
-    i { color: var(--rt-wounds-secondary); }
-    
-    &:hover:not(:disabled) {
-      border-color: var(--rt-wounds-secondary);
-      background: var(--rt-wounds-bg);
+
+    // Success variant (rest, heal, restore)
+    &--success {
+        border-color: rgba(74, 143, 92, 0.4);
+        color: var(--rt-success-primary);
+
+        i {
+            color: var(--rt-success-secondary);
+        }
+
+        &:hover:not(:disabled) {
+            border-color: var(--rt-success-primary);
+            background: var(--rt-success-bg);
+        }
     }
-  }
-  
-  // Full width variant
-  &--full {
-    width: 100%;
-  }
+
+    // Warning variant (clear, reset)
+    &--warning {
+        border-color: var(--rt-fatigue-border);
+        color: var(--rt-fatigue-primary);
+
+        i {
+            color: var(--rt-fatigue-secondary);
+        }
+
+        &:hover:not(:disabled) {
+            border-color: var(--rt-fatigue-secondary);
+            background: var(--rt-fatigue-bg);
+        }
+    }
+
+    // Danger variant (delete, remove)
+    &--danger {
+        border-color: var(--rt-wounds-border);
+        color: var(--rt-wounds-primary);
+
+        i {
+            color: var(--rt-wounds-secondary);
+        }
+
+        &:hover:not(:disabled) {
+            border-color: var(--rt-wounds-secondary);
+            background: var(--rt-wounds-bg);
+        }
+    }
+
+    // Full width variant
+    &--full {
+        width: 100%;
+    }
 }
 
 // ============================================
@@ -325,150 +334,156 @@
 
 // Base input styles
 %rt-input-base {
-  width: 100%;
-  padding: 4px 8px;
-  background: var(--rt-input-bg);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: $wh40k-radius-sm;
-  color: var(--color-text-primary);
-  font-family: inherit;
-  font-size: $wh40k-font-size-base;
-  transition: all $wh40k-transition-fast;
-  
-  &:hover:not(:disabled):not(:read-only) {
-    border-color: var(--color-border-highlight);
-  }
-  
-  &:focus {
-    outline: none;
-    border-color: var(--rt-gold);
-    background: var(--rt-input-bg-focus);
-    box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
-  }
-  
-  &:disabled,
-  &:read-only {
-    background: var(--rt-panel-bg);
-    color: var(--color-text-tertiary);
-    cursor: not-allowed;
-  }
-  
-  &::placeholder {
-    color: var(--color-text-tertiary);
-    font-style: italic;
-  }
+    width: 100%;
+    padding: 4px 8px;
+    background: var(--rt-input-bg);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: $wh40k-radius-sm;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: $wh40k-font-size-base;
+    transition: all $wh40k-transition-fast;
+
+    &:hover:not(:disabled):not(:read-only) {
+        border-color: var(--color-border-highlight);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--rt-gold);
+        background: var(--rt-input-bg-focus);
+        box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
+    }
+
+    &:disabled,
+    &:read-only {
+        background: var(--rt-panel-bg);
+        color: var(--color-text-tertiary);
+        cursor: not-allowed;
+    }
+
+    &::placeholder {
+        color: var(--color-text-tertiary);
+        font-style: italic;
+    }
 }
 
 // ----------------------------------------
 // STANDARD INPUT - Default text/number input
 // ----------------------------------------
 .wh40k-input {
-  @extend %rt-input-base;
-  
-  // Compact variant
-  &--compact {
-    padding: 2px 6px;
-    font-size: $wh40k-font-size-sm;
-  }
-  
-  // Large variant
-  &--large {
-    padding: 6px 10px;
-    font-size: $wh40k-font-size-md;
-  }
+    @extend %rt-input-base;
+
+    // Compact variant
+    &--compact {
+        padding: 2px 6px;
+        font-size: $wh40k-font-size-sm;
+    }
+
+    // Large variant
+    &--large {
+        padding: 6px 10px;
+        font-size: $wh40k-font-size-md;
+    }
 }
 
 // ----------------------------------------
 // NUMERIC INPUT - Numbers with special styling
 // ----------------------------------------
 .wh40k-input-numeric {
-  @extend %rt-input-base;
-  width: auto;
-  min-width: 50px;
-  max-width: 80px;
-  padding: 4px 8px;
-  text-align: center;
-  font-family: var(--rt-font-numeric);
-  font-weight: 600;
-  
-  // Styled variant (for vitals/stats)
-  &--styled {
-    height: 36px;
-    border-width: 2px;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    
-    &:focus {
-      box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+    @extend %rt-input-base;
+    width: auto;
+    min-width: 50px;
+    max-width: 80px;
+    padding: 4px 8px;
+    text-align: center;
+    font-family: var(--rt-font-numeric);
+    font-weight: 600;
+
+    // Styled variant (for vitals/stats)
+    &--styled {
+        height: 36px;
+        border-width: 2px;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        font-weight: 700;
+
+        &:focus {
+            box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+        }
     }
-  }
-  
-  // Large display variant
-  &--display {
-    height: 40px;
-    font-size: 1.2rem;
-  }
-  
-  // Width variants
-  &--narrow { min-width: 40px; max-width: 60px; }
-  &--wide { min-width: 70px; max-width: 100px; }
+
+    // Large display variant
+    &--display {
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    // Width variants
+    &--narrow {
+        min-width: 40px;
+        max-width: 60px;
+    }
+    &--wide {
+        min-width: 70px;
+        max-width: 100px;
+    }
 }
 
 // ----------------------------------------
 // INLINE INPUT - Transparent, underline style
 // ----------------------------------------
 .wh40k-input-inline {
-  @extend %rt-input-base;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--rt-border-color-light);
-  border-radius: 0;
-  padding: 2px 4px;
-  
-  &:hover:not(:disabled):not(:read-only) {
-    border-bottom-color: var(--rt-border-color);
-  }
-  
-  &:focus {
-    border-bottom-color: var(--rt-gold);
-    box-shadow: 0 1px 0 var(--rt-gold);
+    @extend %rt-input-base;
     background: transparent;
-  }
-  
-  // Name variant (larger, bolder)
-  &--name {
-    font-size: 1.1em;
-    font-weight: bold;
-    padding: 2px 5px;
-  }
+    border: none;
+    border-bottom: 1px solid var(--rt-border-color-light);
+    border-radius: 0;
+    padding: 2px 4px;
+
+    &:hover:not(:disabled):not(:read-only) {
+        border-bottom-color: var(--rt-border-color);
+    }
+
+    &:focus {
+        border-bottom-color: var(--rt-gold);
+        box-shadow: 0 1px 0 var(--rt-gold);
+        background: transparent;
+    }
+
+    // Name variant (larger, bolder)
+    &--name {
+        font-size: 1.1em;
+        font-weight: bold;
+        padding: 2px 5px;
+    }
 }
 
 // ----------------------------------------
 // SELECT INPUT - Dropdown styling
 // ----------------------------------------
 .wh40k-select {
-  @extend %rt-input-base;
-  appearance: none;
-  cursor: pointer;
-  padding-right: 24px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  
-  &:disabled {
-    cursor: not-allowed;
-  }
+    @extend %rt-input-base;
+    appearance: none;
+    cursor: pointer;
+    padding-right: 24px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+
+    &:disabled {
+        cursor: not-allowed;
+    }
 }
 
 // ----------------------------------------
 // TEXTAREA - Multi-line input
 // ----------------------------------------
 .wh40k-textarea {
-  @extend %rt-input-base;
-  resize: vertical;
-  min-height: 60px;
-  line-height: 1.4;
+    @extend %rt-input-base;
+    resize: vertical;
+    min-height: 60px;
+    line-height: 1.4;
 }
 
 // ============================================
@@ -478,137 +493,163 @@
 // All panel usage should reference this structure
 
 .wh40k-panel {
-  background: var(--rt-panel-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: $wh40k-space-md;
-  box-shadow: 0 2px 8px var(--rt-shadow-soft);
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--rt-accent-overlay);
-    border-top: 2px solid var(--rt-accent-border);
-    border-bottom: 2px solid var(--rt-accent-border);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  > * {
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: $wh40k-space-md;
+    box-shadow: 0 2px 8px var(--rt-shadow-soft);
     position: relative;
-    z-index: 1;
-  }
-  
-  // Accent color modifiers
-  &--wounds { --panel-accent: #{$wh40k-accent-combat}; }
-  &--fatigue { --panel-accent: #{$wh40k-color-gold}; }
-  &--fate { --panel-accent: var(--rt-fate-secondary); }
-  &--corruption { --panel-accent: #2d7a6b; }
-  &--insanity { --panel-accent: #7b5aa6; }
-  &--skills { --panel-accent: #{$wh40k-accent-skills}; }
-  &--talents { --panel-accent: #{$wh40k-accent-talents}; }
-  &--equipment { --panel-accent: #{$wh40k-accent-equipment}; }
-  &--powers { --panel-accent: #{$wh40k-accent-powers}; }
-  &--dynasty { --panel-accent: #{$wh40k-accent-dynasty}; }
-  &--bio { --panel-accent: #{$wh40k-accent-bio}; }
-  &--combat { --panel-accent: #{$wh40k-accent-combat}; }
-  &--xp { --panel-accent: #{$wh40k-color-gold}; }
-  
-  // Apply accent color to header icon when modifier is present
-  &[class*="--"] .wh40k-panel-header .wh40k-panel-title i {
-    color: var(--panel-accent, $wh40k-accent-gold);
-  }
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--rt-accent-overlay);
+        border-top: 2px solid var(--rt-accent-border);
+        border-bottom: 2px solid var(--rt-accent-border);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    // Accent color modifiers
+    &--wounds {
+        --panel-accent: #{$wh40k-accent-combat};
+    }
+    &--fatigue {
+        --panel-accent: #{$wh40k-color-gold};
+    }
+    &--fate {
+        --panel-accent: var(--rt-fate-secondary);
+    }
+    &--corruption {
+        --panel-accent: #2d7a6b;
+    }
+    &--insanity {
+        --panel-accent: #7b5aa6;
+    }
+    &--skills {
+        --panel-accent: #{$wh40k-accent-skills};
+    }
+    &--talents {
+        --panel-accent: #{$wh40k-accent-talents};
+    }
+    &--equipment {
+        --panel-accent: #{$wh40k-accent-equipment};
+    }
+    &--powers {
+        --panel-accent: #{$wh40k-accent-powers};
+    }
+    &--dynasty {
+        --panel-accent: #{$wh40k-accent-dynasty};
+    }
+    &--bio {
+        --panel-accent: #{$wh40k-accent-bio};
+    }
+    &--combat {
+        --panel-accent: #{$wh40k-accent-combat};
+    }
+    &--xp {
+        --panel-accent: #{$wh40k-color-gold};
+    }
+
+    // Apply accent color to header icon when modifier is present
+    &[class*='--'] .wh40k-panel-header .wh40k-panel-title i {
+        color: var(--panel-accent, $wh40k-accent-gold);
+    }
 }
 
 .wh40k-panel-header {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: $wh40k-space-sm;
-  padding: $wh40k-space-sm $wh40k-space-md;
-  background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.15) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
-  border-bottom: 1px solid var(--rt-border-color-light);
-  transition: box-shadow 0.2s ease, background 0.2s ease;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  min-width: 0 !important;
-  
-  .wh40k-panel-title {
-    flex: 1 1 auto !important;
-    font-family: var(--rt-font-display, 'Modesto Condensed', serif);
-    font-size: var(--rt-text-h3, 1.1rem);
-    font-weight: 600;
-    color: var(--rt-text-dark);
-    letter-spacing: 0.02em;
-    white-space: nowrap !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
     display: flex !important;
+    flex-direction: row !important;
     align-items: center !important;
     gap: $wh40k-space-sm;
-    min-width: 0;
-    
-    i {
-      margin-right: 0;
-      color: var(--panel-accent, $wh40k-accent-gold);
-      flex-shrink: 0;
+    padding: $wh40k-space-sm $wh40k-space-md;
+    background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.15) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
+    border-bottom: 1px solid var(--rt-border-color-light);
+    transition: box-shadow 0.2s ease, background 0.2s ease;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+
+    .wh40k-panel-title {
+        flex: 1 1 auto !important;
+        font-family: var(--rt-font-display, 'Modesto Condensed', serif);
+        font-size: var(--rt-text-h3, 1.1rem);
+        font-weight: 600;
+        color: var(--rt-text-dark);
+        letter-spacing: 0.02em;
+        white-space: nowrap !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: flex !important;
+        align-items: center !important;
+        gap: $wh40k-space-sm;
+        min-width: 0;
+
+        i {
+            margin-right: 0;
+            color: var(--panel-accent, $wh40k-accent-gold);
+            flex-shrink: 0;
+        }
     }
-  }
-  
-  // Ensure buttons don't break layout
-  > button,
-  > label,
-  > .wh40k-control-button,
-  > .wh40k-header-btn,
-  > .wh40k-btn-icon,
-  > .wh40k-btn-control {
-    flex-shrink: 0 !important;
-    margin-left: auto;
-  }
+
+    // Ensure buttons don't break layout
+    > button,
+    > label,
+    > .wh40k-control-button,
+    > .wh40k-header-btn,
+    > .wh40k-btn-icon,
+    > .wh40k-btn-control {
+        flex-shrink: 0 !important;
+        margin-left: auto;
+    }
 }
 
 // Clickable panel header for expand/collapse
 .wh40k-panel-header--clickable {
-  cursor: pointer;
-  user-select: none;
-  
-  &:hover {
-    background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.2) 0%, rgba($wh40k-accent-gold, 0.08) 100%);
-  }
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+        background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.2) 0%, rgba($wh40k-accent-gold, 0.08) 100%);
+    }
 }
 
 .wh40k-panel-chevron {
-  font-size: 0.75rem;
-  color: var(--rt-text-muted);
-  transition: transform 0.2s ease;
-  flex-shrink: 0;
-  margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--rt-text-muted);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
 .wh40k-panel-body {
-  padding: $wh40k-space-md;
-  background: var(--rt-panel-body-bg);
+    padding: $wh40k-space-md;
+    background: var(--rt-panel-body-bg);
 }
 
 .wh40k-panel-details {
-  padding: $wh40k-space-sm $wh40k-space-md;
-  background: rgba(0, 0, 0, 0.02);
-  border-top: 1px solid var(--rt-border-color-light);
+    padding: $wh40k-space-sm $wh40k-space-md;
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid var(--rt-border-color-light);
 }
 
 // Collapsed state
 .wh40k-panel.collapsed {
-  .wh40k-panel-body,
-  .wh40k-panel-details {
-    display: none;
-  }
-  
-  .wh40k-panel-chevron {
-    transform: rotate(-90deg);
-  }
+    .wh40k-panel-body,
+    .wh40k-panel-details {
+        display: none;
+    }
+
+    .wh40k-panel-chevron {
+        transform: rotate(-90deg);
+    }
 }
 
 // ============================================
@@ -617,146 +658,147 @@
 // Used in combat tab for wounds, fatigue, fate display
 
 .wh40k-vital-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: $wh40k-space-sm;
-  background: var(--rt-panel-bg);
-  border: 1px solid $wh40k-border-light;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-  min-width: 0;
-  width: 100%;
-  box-sizing: border-box;
-  
-  // Accent strip
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--vital-color, $wh40k-border-medium);
-    transition: all 0.3s ease;
-  }
-  
-  &:hover {
-    border-color: var(--vital-color, $wh40k-border-medium);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: $wh40k-space-sm;
+    background: var(--rt-panel-bg);
+    border: 1px solid $wh40k-border-light;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+
+    // Accent strip
     &::before {
-      width: 5px;
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--vital-color, $wh40k-border-medium);
+        transition: all 0.3s ease;
     }
-  }
+
+    &:hover {
+        border-color: var(--vital-color, $wh40k-border-medium);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+        &::before {
+            width: 5px;
+        }
+    }
 }
 
 // Vital-specific colors
 .wh40k-vital-wounds {
-  --vital-color: #{$wh40k-accent-combat};
-  --vital-color-rgb: 168, 32, 32;
+    --vital-color: #{$wh40k-accent-combat};
+    --vital-color-rgb: 168, 32, 32;
 }
 
 .wh40k-vital-fatigue {
-  --vital-color: #c08020;
-  --vital-color-rgb: 192, 128, 32;
+    --vital-color: #c08020;
+    --vital-color-rgb: 192, 128, 32;
 }
 
 .wh40k-vital-fate {
-  --vital-color: #3498db;
-  --vital-color-rgb: 52, 152, 219;
+    --vital-color: #3498db;
+    --vital-color-rgb: 52, 152, 219;
 }
 
 // Warning states
 .wh40k-vital-warning {
-  background: rgba(255, 165, 0, 0.05);
-  box-sizing: border-box;
-  
-  &::before {
-    animation: pulse-warn-intense 1.5s ease-in-out infinite;
-  }
+    background: rgba(255, 165, 0, 0.05);
+    box-sizing: border-box;
+
+    &::before {
+        animation: pulse-warn-intense 1.5s ease-in-out infinite;
+    }
 }
 
 .wh40k-vital-critical {
-  background: rgba($wh40k-accent-combat, 0.08);
-  box-sizing: border-box;
-  
-  &::before {
-    animation: pulse-critical-intense 1s ease-in-out infinite;
-  }
+    background: rgba($wh40k-accent-combat, 0.08);
+    box-sizing: border-box;
+
+    &::before {
+        animation: pulse-critical-intense 1s ease-in-out infinite;
+    }
 }
 
 @keyframes pulse-warn-intense {
-  0%, 100% { 
-    opacity: 1;
-    box-shadow: 0 0 8px currentColor;
-  }
-  50% { 
-    opacity: 0.3;
-    box-shadow: none;
-  }
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 8px currentColor;
+    }
+    50% {
+        opacity: 0.3;
+        box-shadow: none;
+    }
 }
 
 @keyframes pulse-critical-intense {
-  0%, 100% { 
-    opacity: 1;
-    box-shadow: 0 0 12px currentColor;
-  }
-  50% { 
-    opacity: 0.3;
-    box-shadow: none;
-  }
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 12px currentColor;
+    }
+    50% {
+        opacity: 0.3;
+        box-shadow: none;
+    }
 }
 
 // Vital stat header
 .wh40k-vital-stat-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $wh40k-space-sm;
-  width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $wh40k-space-sm;
+    width: 100%;
 }
 
 .wh40k-vital-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--vital-color, $wh40k-text-secondary);
-  white-space: nowrap;
-  
-  i {
-    font-size: 0.75rem;
-  }
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--vital-color, $wh40k-text-secondary);
+    white-space: nowrap;
+
+    i {
+        font-size: 0.75rem;
+    }
 }
 
 // Vital stat body
 .wh40k-vital-stat-body {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
 }
 
 .wh40k-vital-readout {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  justify-content: center;
-  padding: 4px 0;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    justify-content: center;
+    padding: 4px 0;
 }
 
-
 .wh40k-vital-max-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: $wh40k-text-muted;
-  line-height: 1;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $wh40k-text-muted;
+    line-height: 1;
 }
 
 // ============================================
@@ -764,107 +806,111 @@
 // ============================================
 
 .wh40k-dropzone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: $wh40k-space-sm;
-  margin: $wh40k-space-sm;
-  padding: $wh40k-space-lg;
-  border: 2px dashed var(--rt-border-color-light);
-  border-radius: $wh40k-radius-md;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.02) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(255, 255, 255, 0.02) 50%,
-    rgba(255, 255, 255, 0.02) 75%,
-    transparent 75%,
-    transparent
-  );
-  background-size: 20px 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 80px;
-  
-  &:hover {
-    border-color: $wh40k-accent-gold;
-    background-color: rgba($wh40k-accent-gold, 0.05);
-  }
-  
-  // Compact variant when items exist
-  &--compact,
-  &.has-items {
-    padding: $wh40k-space-sm $wh40k-space-md;
-    flex-direction: row;
-    gap: $wh40k-space-xs;
-    min-height: auto;
-    
-    .wh40k-dropzone-icon { font-size: 0.9rem; }
-    .wh40k-dropzone-text { font-size: 0.7rem; }
-  }
-  
-  // Active drag-over state
-  &--active {
-    border-color: $wh40k-accent-gold;
-    background-color: rgba($wh40k-accent-gold, 0.1);
-    box-shadow: inset 0 0 10px rgba($wh40k-accent-gold, 0.2);
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $wh40k-space-sm;
+    margin: $wh40k-space-sm;
+    padding: $wh40k-space-lg;
+    border: 2px dashed var(--rt-border-color-light);
+    border-radius: $wh40k-radius-md;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.02) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.02) 50%,
+        rgba(255, 255, 255, 0.02) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 20px 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 80px;
+
+    &:hover {
+        border-color: $wh40k-accent-gold;
+        background-color: rgba($wh40k-accent-gold, 0.05);
+    }
+
+    // Compact variant when items exist
+    &--compact,
+    &.has-items {
+        padding: $wh40k-space-sm $wh40k-space-md;
+        flex-direction: row;
+        gap: $wh40k-space-xs;
+        min-height: auto;
+
+        .wh40k-dropzone-icon {
+            font-size: 0.9rem;
+        }
+        .wh40k-dropzone-text {
+            font-size: 0.7rem;
+        }
+    }
+
+    // Active drag-over state
+    &--active {
+        border-color: $wh40k-accent-gold;
+        background-color: rgba($wh40k-accent-gold, 0.1);
+        box-shadow: inset 0 0 10px rgba($wh40k-accent-gold, 0.2);
+    }
 }
 
 .wh40k-dropzone-icon {
-  font-size: 2rem;
-  color: var(--rt-text-muted);
-  transition: color 0.2s ease;
-  
-  .wh40k-dropzone:hover & { 
-    color: $wh40k-accent-gold; 
-  }
+    font-size: 2rem;
+    color: var(--rt-text-muted);
+    transition: color 0.2s ease;
+
+    .wh40k-dropzone:hover & {
+        color: $wh40k-accent-gold;
+    }
 }
 
 .wh40k-dropzone-text {
-  font-size: 0.75rem;
-  color: var(--rt-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-align: center;
-  
-  .wh40k-dropzone:hover & { 
-    color: var(--rt-text-light); 
-  }
+    font-size: 0.75rem;
+    color: var(--rt-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+
+    .wh40k-dropzone:hover & {
+        color: var(--rt-text-light);
+    }
 }
 
 // Small variant (for inline use)
 .wh40k-dropzone-small {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $wh40k-space-xs;
-  padding: $wh40k-space-xs $wh40k-space-sm;
-  margin-top: $wh40k-space-sm;
-  background: rgba($wh40k-accent-gold, 0.05);
-  border: 1px dashed rgba($wh40k-accent-gold, 0.25);
-  border-radius: $wh40k-radius-sm;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.8rem;
-  color: $wh40k-text-muted;
-  
-  i {
-    font-size: 0.85rem;
-    color: rgba($wh40k-accent-gold, 0.6);
-  }
-  
-  &:hover {
-    background: rgba($wh40k-accent-gold, 0.1);
-    border-color: rgba($wh40k-accent-gold, 0.4);
-    color: var(--color-text-secondary);
-    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-xs $wh40k-space-sm;
+    margin-top: $wh40k-space-sm;
+    background: rgba($wh40k-accent-gold, 0.05);
+    border: 1px dashed rgba($wh40k-accent-gold, 0.25);
+    border-radius: $wh40k-radius-sm;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.8rem;
+    color: $wh40k-text-muted;
+
     i {
-      color: $wh40k-accent-gold;
+        font-size: 0.85rem;
+        color: rgba($wh40k-accent-gold, 0.6);
     }
-  }
+
+    &:hover {
+        background: rgba($wh40k-accent-gold, 0.1);
+        border-color: rgba($wh40k-accent-gold, 0.4);
+        color: var(--color-text-secondary);
+
+        i {
+            color: $wh40k-accent-gold;
+        }
+    }
 }
 
 // ============================================
@@ -872,27 +918,27 @@
 // ============================================
 
 .wh40k-actions-group-header {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-xs;
-  padding: 6px $wh40k-space-sm;
-  background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.08) 0%, rgba($wh40k-accent-gold, 0.03) 100%);
-  border-left: 3px solid $wh40k-accent-gold;
-  border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
-  margin-bottom: $wh40k-space-sm;
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-xs;
+    padding: 6px $wh40k-space-sm;
+    background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.08) 0%, rgba($wh40k-accent-gold, 0.03) 100%);
+    border-left: 3px solid $wh40k-accent-gold;
+    border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
+    margin-bottom: $wh40k-space-sm;
 }
 
 .wh40k-group-icon {
-  font-size: 0.85rem;
-  color: $wh40k-accent-gold;
+    font-size: 0.85rem;
+    color: $wh40k-accent-gold;
 }
 
 .wh40k-actions-group-label {
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--rt-text-secondary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--rt-text-secondary);
 }
 
 // ============================================
@@ -902,12 +948,26 @@
 // These can be removed once all templates are updated
 
 // Button aliases
-.wh40k-vital-btn { @extend .wh40k-btn-control; }
-.wh40k-vital-btn-compact { @extend .wh40k-btn-control--compact; }
-.wh40k-vital-ctrl-btn { @extend .wh40k-btn-control--compact; }
-.wh40k-btn-minus { @extend .wh40k-btn-control--minus; }
-.wh40k-btn-plus { @extend .wh40k-btn-control--plus; }
-.wh40k-header-btn { @extend .wh40k-btn-icon--bordered; }
-.wh40k-add-btn-small { @extend .wh40k-btn-icon--add; }
+.wh40k-vital-btn {
+    @extend .wh40k-btn-control;
+}
+.wh40k-vital-btn-compact {
+    @extend .wh40k-btn-control--compact;
+}
+.wh40k-vital-ctrl-btn {
+    @extend .wh40k-btn-control--compact;
+}
+.wh40k-btn-minus {
+    @extend .wh40k-btn-control--minus;
+}
+.wh40k-btn-plus {
+    @extend .wh40k-btn-control--plus;
+}
+.wh40k-header-btn {
+    @extend .wh40k-btn-icon--bordered;
+}
+.wh40k-add-btn-small {
+    @extend .wh40k-btn-icon--add;
+}
 
 // Note: These aliases ensure existing templates work while migration happens

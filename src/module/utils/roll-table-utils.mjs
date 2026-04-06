@@ -11,7 +11,6 @@
  */
 
 export class RollTableUtils {
-
     /**
      * Roll on a roll table by name and send results to chat.
      * @param {string} tableName - The name of the roll table
@@ -38,13 +37,13 @@ export class RollTableUtils {
 
         // Roll on the table
         const rollResult = await table.roll({ roll });
-        
+
         if (displayChat) {
             await table.toMessage(rollResult.results, {
                 roll: rollResult.roll,
                 messageData: {
-                    speaker: ChatMessage.getSpeaker()
-                }
+                    speaker: ChatMessage.getSpeaker(),
+                },
             });
         }
 
@@ -61,7 +60,7 @@ export class RollTableUtils {
             if (pack.documentName !== 'RollTable') continue;
 
             const index = await pack.getIndex();
-            const entry = index.find(e => e.name === tableName);
+            const entry = index.find((e) => e.name === tableName);
 
             if (entry) {
                 return await pack.getDocument(entry._id);
@@ -82,7 +81,7 @@ export class RollTableUtils {
 
         const result = await this.rollTable('Psychic Phenomena', {
             displayChat: true,
-            roll: roll
+            roll: roll,
         });
 
         // Check if result triggers Perils of the Warp (typically on 75+)
@@ -109,13 +108,13 @@ export class RollTableUtils {
      * @returns {Promise<TableResult>}
      */
     static async rollFearEffects(fearRating = 1, degreeOfFailure = 1) {
-        const modifier = (fearRating - 1) * 10 + (degreeOfFailure * 10);
+        const modifier = (fearRating - 1) * 10 + degreeOfFailure * 10;
         const roll = new Roll(`1d100 + ${modifier}`);
         await roll.evaluate();
 
         return await this.rollTable('Fear Effects', {
             displayChat: true,
-            roll: roll
+            roll: roll,
         });
     }
 
@@ -167,7 +166,7 @@ export class RollTableUtils {
 
         return await this.rollTable(tableName, {
             displayChat: true,
-            roll: roll
+            roll: roll,
         });
     }
 
@@ -183,7 +182,7 @@ export class RollTableUtils {
             { name: 'Mutations', category: 'Corruption' },
             { name: 'Malignancies', category: 'Corruption' },
             { name: 'Navigator Mutations', category: 'Navigator' },
-            { name: 'Gifts of the Gods', category: 'Corruption' }
+            { name: 'Gifts of the Gods', category: 'Corruption' },
         ];
 
         const content = `
@@ -191,7 +190,7 @@ export class RollTableUtils {
                 <div class="form-group">
                     <label>Select Roll Table:</label>
                     <select name="tableName">
-                        ${tables.map(t => `<option value="${t.name}">${t.name} (${t.category})</option>`).join('')}
+                        ${tables.map((t) => `<option value="${t.name}">${t.name} (${t.category})</option>`).join('')}
                     </select>
                 </div>
                 <div class="form-group">
@@ -211,7 +210,7 @@ export class RollTableUtils {
                     callback: async (html) => {
                         const tableName = html.find('[name="tableName"]').val();
                         const modifier = parseInt(html.find('[name="modifier"]').val()) || 0;
-                        
+
                         if (modifier !== 0) {
                             const roll = new Roll(`1d100 + ${modifier}`);
                             await roll.evaluate();
@@ -219,14 +218,14 @@ export class RollTableUtils {
                         } else {
                             await this.rollTable(tableName);
                         }
-                    }
+                    },
                 },
                 cancel: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: 'Cancel'
-                }
+                    label: 'Cancel',
+                },
             },
-            default: 'roll'
+            default: 'roll',
         }).render(true);
     }
 }

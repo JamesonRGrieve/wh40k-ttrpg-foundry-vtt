@@ -1,5 +1,5 @@
-import ItemDataModel from "../abstract/item-data-model.mjs";
-import DescriptionTemplate from "../shared/description-template.mjs";
+import ItemDataModel from '../abstract/item-data-model.mjs';
+import DescriptionTemplate from '../shared/description-template.mjs';
 
 /**
  * Data model for Storage Location items.
@@ -11,8 +11,8 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
-            location: new fields.StringField({ initial: "" }),
-            isContainer: new fields.BooleanField({ initial: true })
+            location: new fields.StringField({ initial: '' }),
+            isContainer: new fields.BooleanField({ initial: true }),
         };
     }
 
@@ -27,9 +27,7 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
 
     /** @override */
     get headerLabels() {
-        return [
-            { label: this.location || "Storage", icon: "fa-solid fa-warehouse" }
-        ];
+        return [{ label: this.location || 'Storage', icon: 'fa-solid fa-warehouse' }];
     }
 
     /**
@@ -37,18 +35,6 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
      * @returns {string[]}
      */
     static get containerTypes() {
-        return [
-            "ammunition",
-            "armour",
-            "armourModification",
-            "cybernetic",
-            "consumable",
-            "drug",
-            "forceField",
-            "gear",
-            "tool",
-            "weapon",
-            "weaponModification"
-        ];
+        return ['ammunition', 'armour', 'armourModification', 'cybernetic', 'consumable', 'drug', 'forceField', 'gear', 'tool', 'weapon', 'weaponModification'];
     }
 }

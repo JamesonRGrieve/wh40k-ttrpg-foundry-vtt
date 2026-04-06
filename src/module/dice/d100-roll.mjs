@@ -1,5 +1,5 @@
-import BasicRollRT from "./basic-roll.mjs";
-import RollConfigurationDialog from "../applications/dialogs/roll-configuration-dialog.mjs";
+import BasicRollRT from './basic-roll.mjs';
+import RollConfigurationDialog from '../applications/dialogs/roll-configuration-dialog.mjs';
 
 /**
  * D100Roll - Specialized roll class for d100 skill/characteristic tests
@@ -7,7 +7,6 @@ import RollConfigurationDialog from "../applications/dialogs/roll-configuration-
  * @extends BasicRollRT
  */
 export default class D100Roll extends BasicRollRT {
-
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -16,13 +15,13 @@ export default class D100Roll extends BasicRollRT {
      * Default flavor for d100 rolls
      * @type {string}
      */
-    static defaultFlavor = "Skill Test";
+    static defaultFlavor = 'Skill Test';
 
     /**
      * Chat template for d100 rolls
      * @type {string}
      */
-    static chatTemplate = "systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs";
+    static chatTemplate = 'systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs';
 
     /**
      * The configuration dialog class to use
@@ -168,7 +167,7 @@ export default class D100Roll extends BasicRollRT {
     static constructFormula(config) {
         // d100 rolls don't add modifiers to the roll itself
         // Modifiers affect the target number instead
-        return "1d100";
+        return '1d100';
     }
 
     /* -------------------------------------------- */
@@ -210,8 +209,8 @@ export default class D100Roll extends BasicRollRT {
                 isCriticalFailure: roll.isCriticalFailure,
                 isDoubles: roll.isDoubles,
                 triggersRighteousFury: roll.triggersRighteousFury,
-                sheetName: config.actor?.name || config.speaker?.alias || ""
-            }
+                sheetName: config.actor?.name || config.speaker?.alias || '',
+            },
         };
     }
 
@@ -226,8 +225,8 @@ export default class D100Roll extends BasicRollRT {
         const chatData = await super._prepareChatData(roll, config);
 
         // Add d100-specific flags
-        chatData.flags["wh40k-rpg"] = {
-            ...chatData.flags["wh40k-rpg"],
+        chatData.flags['wh40k-rpg'] = {
+            ...chatData.flags['wh40k-rpg'],
             target: config.target,
             baseTarget: config.baseTarget ?? config.target,
             success: roll.isSuccess,
@@ -236,7 +235,7 @@ export default class D100Roll extends BasicRollRT {
             degreesOfFailure: roll.degreesOfFailure,
             isCriticalSuccess: roll.isCriticalSuccess,
             isCriticalFailure: roll.isCriticalFailure,
-            isDoubles: roll.isDoubles
+            isDoubles: roll.isDoubles,
         };
 
         return chatData;
@@ -260,45 +259,45 @@ export default class D100Roll extends BasicRollRT {
 
         // Parse the HTML and add our summary
         const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const diceTotal = doc.querySelector(".dice-total");
+        const doc = parser.parseFromString(html, 'text/html');
+        const diceTotal = doc.querySelector('.dice-total');
 
         if (diceTotal) {
-            const summary = document.createElement("div");
-            summary.className = "wh40k-dice-summary";
+            const summary = document.createElement('div');
+            summary.className = 'wh40k-dice-summary';
 
             // Target info
-            const targetDiv = document.createElement("div");
-            targetDiv.className = "wh40k-dice-target";
+            const targetDiv = document.createElement('div');
+            targetDiv.className = 'wh40k-dice-target';
             targetDiv.textContent = `Target: ${target}`;
             summary.appendChild(targetDiv);
 
             // Result info
-            const resultDiv = document.createElement("div");
-            resultDiv.className = this.isSuccess ? "wh40k-dice-success" : "wh40k-dice-failure";
+            const resultDiv = document.createElement('div');
+            resultDiv.className = this.isSuccess ? 'wh40k-dice-success' : 'wh40k-dice-failure';
             const degrees = this.isSuccess ? this.degreesOfSuccess : this.degreesOfFailure;
-            const degreeLabel = this.isSuccess ? "DoS" : "DoF";
-            resultDiv.textContent = `${this.isSuccess ? "Success" : "Failure"}: ${degrees} ${degreeLabel}`;
+            const degreeLabel = this.isSuccess ? 'DoS' : 'DoF';
+            resultDiv.textContent = `${this.isSuccess ? 'Success' : 'Failure'}: ${degrees} ${degreeLabel}`;
             summary.appendChild(resultDiv);
 
             // Critical indicator
             if (this.isCriticalSuccess) {
-                const critDiv = document.createElement("div");
-                critDiv.className = "wh40k-dice-critical";
-                critDiv.textContent = "⚡ Critical Success!";
+                const critDiv = document.createElement('div');
+                critDiv.className = 'wh40k-dice-critical';
+                critDiv.textContent = '⚡ Critical Success!';
                 summary.appendChild(critDiv);
             } else if (this.isCriticalFailure) {
-                const critDiv = document.createElement("div");
-                critDiv.className = "wh40k-dice-fumble";
-                critDiv.textContent = "💀 Critical Failure!";
+                const critDiv = document.createElement('div');
+                critDiv.className = 'wh40k-dice-fumble';
+                critDiv.textContent = '💀 Critical Failure!';
                 summary.appendChild(critDiv);
             }
 
             // Doubles indicator (for Righteous Fury)
             if (this.isDoubles && this.isSuccess) {
-                const doublesDiv = document.createElement("div");
-                doublesDiv.className = "wh40k-dice-doubles";
-                doublesDiv.textContent = "🔥 Doubles! (Righteous Fury?)";
+                const doublesDiv = document.createElement('div');
+                doublesDiv.className = 'wh40k-dice-doubles';
+                doublesDiv.textContent = '🔥 Doubles! (Righteous Fury?)';
                 summary.appendChild(doublesDiv);
             }
 
@@ -325,7 +324,7 @@ export default class D100Roll extends BasicRollRT {
     static async test(options = {}) {
         return this.build({
             ...options,
-            baseTarget: options.baseTarget ?? options.target
+            baseTarget: options.baseTarget ?? options.target,
         });
     }
 
@@ -349,7 +348,7 @@ export default class D100Roll extends BasicRollRT {
             baseTarget: charData.total,
             flavor: `${charData.label || characteristic} Test`,
             speaker: ChatMessage.getSpeaker({ actor }),
-            ...options
+            ...options,
         });
     }
 
@@ -373,7 +372,7 @@ export default class D100Roll extends BasicRollRT {
             baseTarget: skillData.current,
             flavor: `${skillData.label || skill} Test`,
             speaker: ChatMessage.getSpeaker({ actor }),
-            ...options
+            ...options,
         });
     }
 }

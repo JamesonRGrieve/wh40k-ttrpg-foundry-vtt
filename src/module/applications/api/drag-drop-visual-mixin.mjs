@@ -1,7 +1,7 @@
 /**
  * @file DragDropVisualMixin - Visual drag-drop feedback layer
  * Extends the base DragDropAPIMixin with WH40K RPG-specific visual enhancements
- * 
+ *
  * Features:
  * - Custom Gothic 40K drag ghost images
  * - Visual drop zone highlighting
@@ -11,7 +11,7 @@
  * - Stat comparison tooltips while dragging
  * - Snap-to-slot animations
  * - Favorites bar for quick access items
- * 
+ *
  * This is the visual layer - for core API, see drag-drop-api-mixin.mjs
  */
 
@@ -23,7 +23,6 @@
  */
 export default function EnhancedDragDropMixin(Base) {
     return class EnhancedDragDropApplication extends Base {
-
         /* -------------------------------------------- */
         /*  Initialization                              */
         /* -------------------------------------------- */
@@ -76,17 +75,17 @@ export default function EnhancedDragDropMixin(Base) {
          */
         _setupEnhancedDragDrop() {
             // Item rows - exclude talent panel rows (rt-tp_row) which should not be draggable
-            this.element.querySelectorAll("[data-item-id]").forEach(el => {
+            this.element.querySelectorAll('[data-item-id]').forEach((el) => {
                 // Skip if element is inside a talent panel row
                 if (el.closest('.rt-tp_row') || el.closest('.rt-talent-row')) return;
-                
-                if (!el.hasAttribute("draggable")) {
-                    el.setAttribute("draggable", true);
+
+                if (!el.hasAttribute('draggable')) {
+                    el.setAttribute('draggable', true);
                 }
 
                 // Add enhanced drag listeners
-                el.addEventListener("dragstart", this._onEnhancedDragStart.bind(this));
-                el.addEventListener("dragend", this._onEnhancedDragEnd.bind(this));
+                el.addEventListener('dragstart', this._onEnhancedDragStart.bind(this));
+                el.addEventListener('dragend', this._onEnhancedDragEnd.bind(this));
             });
 
             // Drop zones
@@ -103,19 +102,19 @@ export default function EnhancedDragDropMixin(Base) {
          * @private
          */
         _setupDropZones() {
-            const dropZones = this.element.querySelectorAll("[data-drop-zone]");
-            
-            dropZones.forEach(zone => {
-                zone.addEventListener("dragover", this._onEnhancedDragOver.bind(this));
-                zone.addEventListener("dragleave", this._onEnhancedDragLeave.bind(this));
-                zone.addEventListener("drop", this._onEnhancedDrop.bind(this));
+            const dropZones = this.element.querySelectorAll('[data-drop-zone]');
+
+            dropZones.forEach((zone) => {
+                zone.addEventListener('dragover', this._onEnhancedDragOver.bind(this));
+                zone.addEventListener('dragleave', this._onEnhancedDragLeave.bind(this));
+                zone.addEventListener('drop', this._onEnhancedDrop.bind(this));
             });
 
             // Inventory list reordering
-            const inventoryLists = this.element.querySelectorAll(".inventory-list, .item-list");
-            inventoryLists.forEach(list => {
-                list.addEventListener("dragover", this._onInventoryDragOver.bind(this));
-                list.addEventListener("drop", this._onInventoryDrop.bind(this));
+            const inventoryLists = this.element.querySelectorAll('.inventory-list, .item-list');
+            inventoryLists.forEach((list) => {
+                list.addEventListener('dragover', this._onInventoryDragOver.bind(this));
+                list.addEventListener('drop', this._onInventoryDrop.bind(this));
             });
         }
 
@@ -126,11 +125,11 @@ export default function EnhancedDragDropMixin(Base) {
          * @private
          */
         _setupFavoritesBar() {
-            const favBar = this.element.querySelector("[data-favorites-bar]");
+            const favBar = this.element.querySelector('[data-favorites-bar]');
             if (!favBar) return;
 
-            favBar.addEventListener("dragover", this._onFavoritesDragOver.bind(this));
-            favBar.addEventListener("drop", this._onFavoritesDrop.bind(this));
+            favBar.addEventListener('dragover', this._onFavoritesDragOver.bind(this));
+            favBar.addEventListener('drop', this._onFavoritesDrop.bind(this));
         }
 
         /* -------------------------------------------- */
@@ -157,7 +156,7 @@ export default function EnhancedDragDropMixin(Base) {
                 id: itemId,
                 item: item,
                 element: element,
-                sourceList: element.closest(".inventory-list, .item-list")
+                sourceList: element.closest('.inventory-list, .item-list'),
             };
 
             // Check for split modifier (Ctrl key)
@@ -178,11 +177,11 @@ export default function EnhancedDragDropMixin(Base) {
             setTimeout(() => ghost.remove(), 0);
 
             // Set drag data
-            event.dataTransfer.setData("text/plain", JSON.stringify(item.toDragData()));
+            event.dataTransfer.setData('text/plain', JSON.stringify(item.toDragData()));
 
             // Visual feedback
-            element.classList.add("dragging");
-            this.element.classList.add("drag-active");
+            element.classList.add('dragging');
+            this.element.classList.add('drag-active');
 
             // Show valid drop zones
             this._highlightValidDropZones(item);
@@ -198,12 +197,12 @@ export default function EnhancedDragDropMixin(Base) {
          * @private
          */
         _createDragGhost(item, event) {
-            const ghost = document.createElement("div");
-            ghost.className = "wh40k-drag-ghost";
-            
+            const ghost = document.createElement('div');
+            ghost.className = 'wh40k-drag-ghost';
+
             // Check for split
-            const quantity = this._splitResult ? this._splitResult.quantity : (item.system.quantity || 1);
-            
+            const quantity = this._splitResult ? this._splitResult.quantity : item.system.quantity || 1;
+
             ghost.innerHTML = `
                 <div class="ghost-content">
                     <img src="${item.img}" alt="${item.name}" />
@@ -215,11 +214,11 @@ export default function EnhancedDragDropMixin(Base) {
                 </div>
             `;
 
-            ghost.style.position = "absolute";
-            ghost.style.top = "-1000px";
-            ghost.style.left = "-1000px";
-            ghost.style.pointerEvents = "none";
-            ghost.style.zIndex = "10000";
+            ghost.style.position = 'absolute';
+            ghost.style.top = '-1000px';
+            ghost.style.left = '-1000px';
+            ghost.style.pointerEvents = 'none';
+            ghost.style.zIndex = '10000';
 
             return ghost;
         }
@@ -235,9 +234,9 @@ export default function EnhancedDragDropMixin(Base) {
         _canSplitItem(item) {
             const quantity = item.system.quantity;
             if (!quantity || quantity <= 1) return false;
-            
+
             // Only certain item types can be split
-            const splittableTypes = ["gear", "weapon"];
+            const splittableTypes = ['gear', 'weapon'];
             return splittableTypes.includes(item.type);
         }
 
@@ -251,8 +250,8 @@ export default function EnhancedDragDropMixin(Base) {
          */
         async _showSplitDialog(item) {
             const quantity = item.system.quantity || 1;
-            
-            return new Promise(resolve => {
+
+            return new Promise((resolve) => {
                 new Dialog({
                     title: `Split ${item.name}`,
                     content: `
@@ -267,24 +266,24 @@ export default function EnhancedDragDropMixin(Base) {
                     buttons: {
                         split: {
                             icon: '<i class="fas fa-split"></i>',
-                            label: "Split",
-                            callback: html => {
+                            label: 'Split',
+                            callback: (html) => {
                                 const qty = parseInt(html.find('[name="quantity"]').val());
                                 if (qty > 0 && qty <= quantity) {
                                     resolve({ quantity: qty });
                                 } else {
-                                    ui.notifications.warn("Invalid quantity");
+                                    ui.notifications.warn('Invalid quantity');
                                     resolve(null);
                                 }
-                            }
+                            },
                         },
                         cancel: {
                             icon: '<i class="fas fa-times"></i>',
-                            label: "Cancel",
-                            callback: () => resolve(null)
-                        }
+                            label: 'Cancel',
+                            callback: () => resolve(null),
+                        },
                     },
-                    default: "split"
+                    default: 'split',
                 }).render(true);
             });
         }
@@ -297,17 +296,17 @@ export default function EnhancedDragDropMixin(Base) {
          * @private
          */
         _highlightValidDropZones(item) {
-            const dropZones = this.element.querySelectorAll("[data-drop-zone]");
-            
-            dropZones.forEach(zone => {
+            const dropZones = this.element.querySelectorAll('[data-drop-zone]');
+
+            dropZones.forEach((zone) => {
                 const zoneType = zone.dataset.dropZone;
-                const accepts = zone.dataset.accepts?.split(",") || [];
-                
+                const accepts = zone.dataset.accepts?.split(',') || [];
+
                 // Check if zone accepts this item type
                 if (accepts.length === 0 || accepts.includes(item.type)) {
-                    zone.classList.add("drop-valid");
+                    zone.classList.add('drop-valid');
                 } else {
-                    zone.classList.add("drop-invalid");
+                    zone.classList.add('drop-invalid');
                 }
             });
         }
@@ -327,18 +326,18 @@ export default function EnhancedDragDropMixin(Base) {
 
             const zone = event.currentTarget;
             const zoneType = zone.dataset.dropZone;
-            
+
             // Add drag-over visual feedback
-            if (zoneType === "personal" || zoneType === "ship") {
-                zone.classList.add("wh40k-drag-over");
-                event.dataTransfer.dropEffect = "move";
+            if (zoneType === 'personal' || zoneType === 'ship') {
+                zone.classList.add('wh40k-drag-over');
+                event.dataTransfer.dropEffect = 'move';
             }
             // Check if this is a valid drop for equipment zones
-            else if (zone.classList.contains("drop-valid")) {
-                zone.classList.add("drop-hover");
-                event.dataTransfer.dropEffect = "move";
-            } else if (zone.classList.contains("drop-invalid")) {
-                event.dataTransfer.dropEffect = "none";
+            else if (zone.classList.contains('drop-valid')) {
+                zone.classList.add('drop-hover');
+                event.dataTransfer.dropEffect = 'move';
+            } else if (zone.classList.contains('drop-invalid')) {
+                event.dataTransfer.dropEffect = 'none';
             }
         }
 
@@ -351,8 +350,8 @@ export default function EnhancedDragDropMixin(Base) {
          */
         _onEnhancedDragLeave(event) {
             const zone = event.currentTarget;
-            zone.classList.remove("drop-hover");
-            zone.classList.remove("wh40k-drag-over");
+            zone.classList.remove('drop-hover');
+            zone.classList.remove('wh40k-drag-over');
         }
 
         /* -------------------------------------------- */
@@ -369,7 +368,7 @@ export default function EnhancedDragDropMixin(Base) {
             if (!this._draggedItem) return;
 
             // Find the item row being hovered over
-            const targetRow = event.target.closest("[data-item-id]");
+            const targetRow = event.target.closest('[data-item-id]');
             if (!targetRow || targetRow === this._draggedItem.element) return;
 
             // Determine if we should insert before or after
@@ -378,11 +377,11 @@ export default function EnhancedDragDropMixin(Base) {
             const insertBefore = event.clientY < midpoint;
 
             // Remove previous indicators
-            this.element.querySelectorAll(".drop-indicator").forEach(el => el.remove());
+            this.element.querySelectorAll('.drop-indicator').forEach((el) => el.remove());
 
             // Add drop indicator
-            const indicator = document.createElement("div");
-            indicator.className = "drop-indicator";
+            const indicator = document.createElement('div');
+            indicator.className = 'drop-indicator';
             if (insertBefore) {
                 targetRow.parentNode.insertBefore(indicator, targetRow);
             } else {
@@ -402,8 +401,8 @@ export default function EnhancedDragDropMixin(Base) {
             event.stopPropagation();
 
             const favBar = event.currentTarget;
-            favBar.classList.add("drop-hover");
-            event.dataTransfer.dropEffect = "copy";
+            favBar.classList.add('drop-hover');
+            event.dataTransfer.dropEffect = 'copy';
         }
 
         /* -------------------------------------------- */
@@ -420,7 +419,7 @@ export default function EnhancedDragDropMixin(Base) {
             event.stopPropagation();
 
             const zone = event.currentTarget;
-            zone.classList.remove("drop-hover");
+            zone.classList.remove('drop-hover');
 
             // Parse drag data
             const data = TextEditor.getDragEventData(event);
@@ -434,42 +433,42 @@ export default function EnhancedDragDropMixin(Base) {
             const slot = zone.dataset.slot;
 
             // Handle ship/personal storage zone drops
-            if (zoneType === "personal") {
+            if (zoneType === 'personal') {
                 // If item is from compendium or another actor, create new item
                 if (item.actor?.id !== this.document.id) {
                     const itemData = item.toObject();
                     itemData.system.inShipStorage = false;
                     itemData.system.equipped = false;
-                    await this.document.createEmbeddedDocuments("Item", [itemData]);
-                    if (this.flashElement) this.flashElement(zone, "success");
+                    await this.document.createEmbeddedDocuments('Item', [itemData]);
+                    if (this.flashElement) this.flashElement(zone, 'success');
                 } else {
                     // Move existing item to personal inventory (remove from ship)
-                    await item.update({ 
-                        "system.inShipStorage": false 
+                    await item.update({
+                        'system.inShipStorage': false,
                     });
-                    if (this.flashElement) this.flashElement(zone, "success");
+                    if (this.flashElement) this.flashElement(zone, 'success');
                 }
-            } else if (zoneType === "ship") {
+            } else if (zoneType === 'ship') {
                 // If item is from compendium or another actor, create new item
                 if (item.actor?.id !== this.document.id) {
                     const itemData = item.toObject();
                     itemData.system.inShipStorage = true;
                     itemData.system.equipped = false;
                     itemData.system.inBackpack = false;
-                    await this.document.createEmbeddedDocuments("Item", [itemData]);
-                    if (this.flashElement) this.flashElement(zone, "success");
+                    await this.document.createEmbeddedDocuments('Item', [itemData]);
+                    if (this.flashElement) this.flashElement(zone, 'success');
                 } else {
                     // Move existing item to ship storage
-                    await item.update({ 
-                        "system.equipped": false,
-                        "system.inBackpack": false,
-                        "system.inShipStorage": true 
+                    await item.update({
+                        'system.equipped': false,
+                        'system.inBackpack': false,
+                        'system.inShipStorage': true,
                     });
-                    if (this.flashElement) this.flashElement(zone, "success");
+                    if (this.flashElement) this.flashElement(zone, 'success');
                 }
             }
             // Handle equipment slot drops
-            else if (zoneType === "equipment") {
+            else if (zoneType === 'equipment') {
                 await this._handleEquipmentDrop(item, slot);
             }
             // Handle general drops
@@ -491,7 +490,7 @@ export default function EnhancedDragDropMixin(Base) {
         async _handleEquipmentDrop(item, slot) {
             // Check if item belongs to this actor
             if (item.actor?.id !== this.document.id) {
-                ui.notifications.warn("Cannot equip items from other actors");
+                ui.notifications.warn('Cannot equip items from other actors');
                 return;
             }
 
@@ -503,11 +502,11 @@ export default function EnhancedDragDropMixin(Base) {
             }
 
             // Equip the item
-            await item.update({ "system.equipped": true });
-            
+            await item.update({ 'system.equipped': true });
+
             // Show feedback
             ui.notifications.info(`Equipped ${item.name}`);
-            
+
             // Animate snap-to-slot
             this._animateSnapToSlot(item);
         }
@@ -523,13 +522,13 @@ export default function EnhancedDragDropMixin(Base) {
          */
         _validateEquipmentSlot(item, slot) {
             // Weapons can go in weapon slots
-            if (slot === "primary-weapon" || slot === "secondary-weapon") {
-                return item.type === "weapon";
+            if (slot === 'primary-weapon' || slot === 'secondary-weapon') {
+                return item.type === 'weapon';
             }
-            
+
             // Armor can go in armor slots
-            if (slot.includes("armor")) {
-                return item.type === "armour";
+            if (slot.includes('armor')) {
+                return item.type === 'armour';
             }
 
             return true;
@@ -553,12 +552,12 @@ export default function EnhancedDragDropMixin(Base) {
 
             // Default: move/copy item
             const behavior = this._dropBehavior(event);
-            
-            if (behavior === "copy") {
+
+            if (behavior === 'copy') {
                 const itemData = item.toObject();
-                await this.document.createEmbeddedDocuments("Item", [itemData]);
+                await this.document.createEmbeddedDocuments('Item', [itemData]);
                 ui.notifications.info(`Added ${item.name} to inventory`);
-            } else if (behavior === "move") {
+            } else if (behavior === 'move') {
                 // Item is already on this actor, no action needed
                 ui.notifications.info(`Moved ${item.name}`);
             }
@@ -576,7 +575,7 @@ export default function EnhancedDragDropMixin(Base) {
             const remaining = (item.system.quantity || 1) - quantity;
 
             if (remaining <= 0) {
-                ui.notifications.error("Cannot split entire stack");
+                ui.notifications.error('Cannot split entire stack');
                 return;
             }
 
@@ -585,10 +584,10 @@ export default function EnhancedDragDropMixin(Base) {
             newItemData.system.quantity = quantity;
             newItemData.name = `${item.name} (${quantity})`;
 
-            await this.document.createEmbeddedDocuments("Item", [newItemData]);
+            await this.document.createEmbeddedDocuments('Item', [newItemData]);
 
             // Update original item quantity
-            await item.update({ "system.quantity": remaining });
+            await item.update({ 'system.quantity': remaining });
 
             ui.notifications.info(`Split ${item.name}: ${quantity} moved, ${remaining} remaining`);
         }
@@ -605,11 +604,11 @@ export default function EnhancedDragDropMixin(Base) {
             event.stopPropagation();
 
             // Remove drop indicator
-            this.element.querySelectorAll(".drop-indicator").forEach(el => el.remove());
+            this.element.querySelectorAll('.drop-indicator').forEach((el) => el.remove());
 
             if (!this._draggedItem) return;
 
-            const targetRow = event.target.closest("[data-item-id]");
+            const targetRow = event.target.closest('[data-item-id]');
             if (!targetRow) return;
 
             const targetId = targetRow.dataset.itemId;
@@ -635,10 +634,10 @@ export default function EnhancedDragDropMixin(Base) {
         async _reorderItems(sourceId, targetId, clientY) {
             // Get all items in order
             const items = Array.from(this.document.items);
-            
+
             // Find source and target
-            const sourceIndex = items.findIndex(i => i.id === sourceId);
-            const targetIndex = items.findIndex(i => i.id === targetId);
+            const sourceIndex = items.findIndex((i) => i.id === sourceId);
+            const targetIndex = items.findIndex((i) => i.id === targetId);
 
             if (sourceIndex === -1 || targetIndex === -1) return;
 
@@ -649,12 +648,12 @@ export default function EnhancedDragDropMixin(Base) {
             // Update sort values
             const updates = items.map((item, index) => ({
                 _id: item.id,
-                sort: index * 100
+                sort: index * 100,
             }));
 
-            await this.document.updateEmbeddedDocuments("Item", updates);
+            await this.document.updateEmbeddedDocuments('Item', updates);
 
-            ui.notifications.info("Items reordered");
+            ui.notifications.info('Items reordered');
         }
 
         /* -------------------------------------------- */
@@ -669,7 +668,7 @@ export default function EnhancedDragDropMixin(Base) {
             event.stopPropagation();
 
             const favBar = event.currentTarget;
-            favBar.classList.remove("drop-hover");
+            favBar.classList.remove('drop-hover');
 
             // Parse drag data
             const data = TextEditor.getDragEventData(event);
@@ -692,20 +691,20 @@ export default function EnhancedDragDropMixin(Base) {
          * @private
          */
         async _addToFavorites(item) {
-            const favorites = this.document.getFlag("wh40k-rpg", "favorites") || [];
-            
+            const favorites = this.document.getFlag('wh40k-rpg', 'favorites') || [];
+
             if (favorites.includes(item.id)) {
                 ui.notifications.warn(`${item.name} is already in favorites`);
                 return;
             }
 
             if (favorites.length >= 8) {
-                ui.notifications.warn("Favorites bar is full (max 8 items)");
+                ui.notifications.warn('Favorites bar is full (max 8 items)');
                 return;
             }
 
             favorites.push(item.id);
-            await this.document.setFlag("wh40k-rpg", "favorites", favorites);
+            await this.document.setFlag('wh40k-rpg', 'favorites', favorites);
 
             ui.notifications.info(`Added ${item.name} to favorites`);
         }
@@ -732,19 +731,19 @@ export default function EnhancedDragDropMixin(Base) {
         _resetDrag() {
             // Remove dragging class
             if (this._draggedItem?.element) {
-                this._draggedItem.element.classList.remove("dragging");
+                this._draggedItem.element.classList.remove('dragging');
             }
 
             // Remove drag-active state
-            this.element.classList.remove("drag-active");
+            this.element.classList.remove('drag-active');
 
             // Remove drop zone highlights
-            this.element.querySelectorAll("[data-drop-zone]").forEach(zone => {
-                zone.classList.remove("drop-valid", "drop-invalid", "drop-hover");
+            this.element.querySelectorAll('[data-drop-zone]').forEach((zone) => {
+                zone.classList.remove('drop-valid', 'drop-invalid', 'drop-hover');
             });
 
             // Remove drop indicators
-            this.element.querySelectorAll(".drop-indicator").forEach(el => el.remove());
+            this.element.querySelectorAll('.drop-indicator').forEach((el) => el.remove());
 
             // Clear drag state
             this._draggedItem = null;
@@ -767,9 +766,9 @@ export default function EnhancedDragDropMixin(Base) {
             if (!itemEl) return;
 
             // Add snap animation
-            itemEl.classList.add("snap-to-slot");
+            itemEl.classList.add('snap-to-slot');
             setTimeout(() => {
-                itemEl.classList.remove("snap-to-slot");
+                itemEl.classList.remove('snap-to-slot');
             }, 600);
         }
 
@@ -783,9 +782,9 @@ export default function EnhancedDragDropMixin(Base) {
          * @public
          */
         async removeFromFavorites(itemId) {
-            const favorites = this.document.getFlag("wh40k-rpg", "favorites") || [];
-            const newFavorites = favorites.filter(id => id !== itemId);
-            await this.document.setFlag("wh40k-rpg", "favorites", newFavorites);
+            const favorites = this.document.getFlag('wh40k-rpg', 'favorites') || [];
+            const newFavorites = favorites.filter((id) => id !== itemId);
+            await this.document.setFlag('wh40k-rpg', 'favorites', newFavorites);
         }
 
         /* -------------------------------------------- */
@@ -795,7 +794,7 @@ export default function EnhancedDragDropMixin(Base) {
          * @public
          */
         async clearFavorites() {
-            await this.document.setFlag("wh40k-rpg", "favorites", []);
+            await this.document.setFlag('wh40k-rpg', 'favorites', []);
         }
 
         /* -------------------------------------------- */
@@ -806,8 +805,8 @@ export default function EnhancedDragDropMixin(Base) {
          * @public
          */
         getFavoriteItems() {
-            const favorites = this.document.getFlag("wh40k-rpg", "favorites") || [];
-            return favorites.map(id => this.document.items.get(id)).filter(i => i);
+            const favorites = this.document.getFlag('wh40k-rpg', 'favorites') || [];
+            return favorites.map((id) => this.document.items.get(id)).filter((i) => i);
         }
     };
 }
