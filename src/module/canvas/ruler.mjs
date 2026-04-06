@@ -48,7 +48,7 @@ export default class TokenRulerRT extends foundry.canvas.placeables.tokens.Token
         if (!speed) return style;
 
         // Color based on cost/speed ratio
-        const { normal, double, triple } = CONFIG.rt.tokenRulerColors;
+        const { normal, double, triple } = CONFIG.wh40k.tokenRulerColors;
         const increment = (waypoint.measurement.cost - 0.1) / speed;
         if (increment <= 1) style.color = normal ?? style.color;
         else if (increment <= 2) style.color = double ?? style.color;

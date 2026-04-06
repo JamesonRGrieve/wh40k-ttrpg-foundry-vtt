@@ -77,7 +77,7 @@ export default class VehicleSheet extends BaseActorSheet {
      */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        context.dh = CONFIG.rt || WH40K;
+        context.dh = CONFIG.wh40k || WH40K;
         
         // Categorize items
         context.weapons = this.actor.items.filter(i => i.type === 'weapon');

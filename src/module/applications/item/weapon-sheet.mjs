@@ -99,12 +99,12 @@ export default class WeaponSheet extends ContainerItemSheet {
         context.CONFIG = CONFIG;
 
         // Explicitly pass dropdown options for selectOptions helper
-        // Use CONFIG.rt which is the registered config object
-        context.weaponClasses = CONFIG.rt?.weaponClasses || {};
-        context.weaponTypes = CONFIG.rt?.weaponTypes || {};
-        context.damageTypes = CONFIG.rt?.damageTypes || {};
-        context.availabilities = CONFIG.rt?.availabilities || {};
-        context.craftsmanships = CONFIG.rt?.craftsmanships || {};
+        // Use CONFIG.wh40k which is the registered config object
+        context.weaponClasses = CONFIG.wh40k?.weaponClasses || {};
+        context.weaponTypes = CONFIG.wh40k?.weaponTypes || {};
+        context.damageTypes = CONFIG.wh40k?.damageTypes || {};
+        context.availabilities = CONFIG.wh40k?.availabilities || {};
+        context.craftsmanships = CONFIG.wh40k?.craftsmanships || {};
         context.reloadTimes = {
             '-': { label: '—' },
             'free': { label: 'Free Action' },
@@ -123,11 +123,11 @@ export default class WeaponSheet extends ContainerItemSheet {
             const match = q.match(/-(\d+)$/);
             const level = match ? parseInt(match[1]) : null;
 
-            // Get localized label using CONFIG helper (CONFIG.rt not CONFIG.WH40K)
-            const label = CONFIG.rt?.getQualityLabel?.(q, level) || q;
+            // Get localized label using CONFIG helper (CONFIG.wh40k not CONFIG.WH40K)
+            const label = CONFIG.wh40k?.getQualityLabel?.(q, level) || q;
 
             // Get definition for description
-            const def = CONFIG.rt?.getQualityDefinition?.(q) || null;
+            const def = CONFIG.wh40k?.getQualityDefinition?.(q) || null;
 
             return {
                 identifier: q,
@@ -500,7 +500,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             quality?.sheet.render(true);
         } else {
             // Fallback: show tooltip from CONFIG
-            const def = CONFIG.rt?.getQualityDefinition?.(identifier);
+            const def = CONFIG.wh40k?.getQualityDefinition?.(identifier);
             if (def) {
                 const label = game.i18n.localize(def.label);
                 const description = game.i18n.localize(def.description);

@@ -82,7 +82,7 @@ export default function ApplicationV2Mixin(Base) {
         /** @inheritDoc */
         async _prepareContext(options) {
             const context = await super._prepareContext(options);
-            context.CONFIG = CONFIG.rt;
+            context.CONFIG = CONFIG.wh40k;
             return context;
         }
 

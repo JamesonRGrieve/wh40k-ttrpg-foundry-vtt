@@ -70,7 +70,7 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
         return {
             ...context,
             ...this.rollData,
-            dh: CONFIG.rt
+            dh: CONFIG.wh40k
         };
     }
 
@@ -168,7 +168,7 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
  * @param {object} rollData  The roll data.
  */
 export async function prepareDamageRoll(rollData) {
-    rollData.dh = CONFIG.rt;
+    rollData.dh = CONFIG.wh40k;
     const prompt = new DamageRollDialog(rollData);
     prompt.render(true);
 }

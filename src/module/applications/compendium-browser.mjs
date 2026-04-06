@@ -365,11 +365,11 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @returns {object}       Prepared quality data
      */
     _prepareQualityData(system) {
-        // Access CONFIG.rt (set during init hook)
+        // Access CONFIG.wh40k (set during init hook)
         const rtConfig = CONFIG?.rt;
         
         if (!rtConfig) {
-            console.warn("RT | CONFIG.rt not available in compendium browser");
+            console.warn("RT | CONFIG.wh40k not available in compendium browser");
             return {
                 identifier: system.identifier || "",
                 label: system.name || "Unknown Quality",
