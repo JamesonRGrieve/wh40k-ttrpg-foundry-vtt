@@ -123,7 +123,7 @@ function checkCharacteristicPrereq(actor, prereq) {
 
   return {
     valid: false,
-    reason: game.i18n.format('RT.Advancement.Prereq.Characteristic', {
+    reason: game.i18n.format('WH40K.Advancement.Prereq.Characteristic', {
       char: charLabel,
       required: requiredValue,
       current: currentValue
@@ -147,7 +147,7 @@ function checkSkillPrereq(actor, prereq) {
   if (!skill) {
     return {
       valid: false,
-      reason: game.i18n.format('RT.Advancement.Prereq.SkillMissing', { skill: skillName })
+      reason: game.i18n.format('WH40K.Advancement.Prereq.SkillMissing', { skill: skillName })
     };
   }
 
@@ -160,7 +160,7 @@ function checkSkillPrereq(actor, prereq) {
 
   return {
     valid: false,
-    reason: game.i18n.format('RT.Advancement.Prereq.SkillLevel', { 
+    reason: game.i18n.format('WH40K.Advancement.Prereq.SkillLevel', { 
       skill: skillName, 
       level: requiredLevel 
     })
@@ -188,7 +188,7 @@ function checkTalentPrereq(actor, prereq) {
 
   return {
     valid: false,
-    reason: game.i18n.format('RT.Advancement.Prereq.TalentMissing', { talent: prereq.key })
+    reason: game.i18n.format('WH40K.Advancement.Prereq.TalentMissing', { talent: prereq.key })
   };
 }
 

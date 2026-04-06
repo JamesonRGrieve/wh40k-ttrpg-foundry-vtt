@@ -35,10 +35,10 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "difficulty-calculator-{id}",
-    classes: ["rogue-trader", "difficulty-calculator-dialog"],
+    classes: ["wh40k-rpg", "difficulty-calculator-dialog"],
     tag: "div",
     window: {
-      title: "RT.NPC.DifficultyCalculator",
+      title: "WH40K.NPC.DifficultyCalculator",
       icon: "fa-solid fa-calculator"
     },
     position: {
@@ -53,7 +53,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
   /** @override */
   static PARTS = {
     form: {
-      template: "systems/rogue-trader/templates/dialogs/difficulty-calculator.hbs"
+      template: "systems/wh40k-rpg/templates/dialogs/difficulty-calculator.hbs"
     }
   };
 
@@ -63,7 +63,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
   /**
    * Create a new DifficultyCalculatorDialog.
-   * @param {RogueTraderNPC} npc - The NPC actor to calculate difficulty for.
+   * @param {WH40KNPC} npc - The NPC actor to calculate difficulty for.
    * @param {Object} options - Application options.
    */
   constructor(npc, options = {}) {
@@ -77,7 +77,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
   /**
    * Show the difficulty calculator for an NPC.
-   * @param {RogueTraderNPC} npc - The NPC actor.
+   * @param {WH40KNPC} npc - The NPC actor.
    * @returns {Promise<DifficultyCalculatorDialog>}
    */
   static async show(npc) {

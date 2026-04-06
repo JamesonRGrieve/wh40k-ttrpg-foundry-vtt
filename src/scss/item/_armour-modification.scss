@@ -8,7 +8,7 @@
 /* -------------------------------------------- */
 
 .armour-modification.sheet {
-  .rt-item-sheet__header {
+  .wh40k-item-sheet__header {
     background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(44, 36, 23, 0.95) 100%);
     border-bottom: 2px solid rgba(212, 175, 55, 0.3);
   }
@@ -18,13 +18,13 @@
 /*  Header Enhancements                         */
 /* -------------------------------------------- */
 
-.rt-armour-mod-header {
+.wh40k-armour-mod-header {
   position: relative;
   
-  .rt-item-sheet__portrait {
+  .wh40k-item-sheet__portrait {
     position: relative;
     
-    .rt-item-sheet__portrait-icon {
+    .wh40k-item-sheet__portrait-icon {
       position: absolute;
       bottom: -8px;
       right: -8px;
@@ -45,14 +45,14 @@
     }
   }
   
-  .rt-armour-mod-summary {
+  .wh40k-armour-mod-summary {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: 0.75rem;
   }
   
-  .rt-summary-badge {
+  .wh40k-summary-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
@@ -92,15 +92,15 @@
 /*  Restrictions Tab                            */
 /* -------------------------------------------- */
 
-.rt-armour-mod-restrictions {
-  .rt-restriction-grid {
+.wh40k-armour-mod-restrictions {
+  .wh40k-restriction-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 0.75rem;
     padding: 1rem 0;
   }
   
-  .rt-restriction-item {
+  .wh40k-restriction-item {
     position: relative;
     display: flex;
     align-items: center;
@@ -122,7 +122,7 @@
       accent-color: #d4af37;
     }
     
-    .rt-restriction-label {
+    .wh40k-restriction-label {
       flex: 1;
       font-weight: 600;
       font-size: 0.9rem;
@@ -130,7 +130,7 @@
       transition: color 0.2s ease;
     }
     
-    .rt-restriction-check {
+    .wh40k-restriction-check {
       position: absolute;
       top: 6px;
       right: 6px;
@@ -145,7 +145,7 @@
       background: rgba(212, 175, 55, 0.05);
       transform: translateY(-1px);
       
-      .rt-restriction-label {
+      .wh40k-restriction-label {
         color: rgba(255, 255, 255, 0.9);
       }
     }
@@ -155,11 +155,11 @@
       border-color: #d4af37;
       box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       
-      .rt-restriction-label {
+      .wh40k-restriction-label {
         color: #fff;
       }
       
-      .rt-restriction-check {
+      .wh40k-restriction-check {
         opacity: 1;
       }
       
@@ -175,7 +175,7 @@
     }
   }
   
-  .rt-help-text {
+  .wh40k-help-text {
     padding: 0.75rem 1rem;
     background: rgba(52, 152, 219, 0.1);
     border-left: 3px solid #3498db;
@@ -190,8 +190,8 @@
 /*  Modifiers Tab                               */
 /* -------------------------------------------- */
 
-.rt-armour-mod-modifiers {
-  .rt-modifier-stat {
+.wh40k-armour-mod-modifiers {
+  .wh40k-modifier-stat {
     display: flex;
     align-items: center;
     gap: 1.25rem;
@@ -207,7 +207,7 @@
       border-color: rgba(212, 175, 55, 0.3);
     }
     
-    .rt-stat-icon {
+    .wh40k-stat-icon {
       flex-shrink: 0;
       width: 48px;
       height: 48px;
@@ -224,10 +224,10 @@
       }
     }
     
-    .rt-stat-info {
+    .wh40k-stat-info {
       flex: 1;
       
-      .rt-stat-label {
+      .wh40k-stat-label {
         display: block;
         font-weight: 700;
         font-size: 1rem;
@@ -235,20 +235,20 @@
         margin-bottom: 0.25rem;
       }
       
-      .rt-stat-help {
+      .wh40k-stat-help {
         font-size: 0.8rem;
         color: rgba(255, 255, 255, 0.5);
         margin: 0;
       }
     }
     
-    .rt-stat-controls {
+    .wh40k-stat-controls {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
     
-    .rt-stat-button {
+    .wh40k-stat-button {
       width: 36px;
       height: 36px;
       display: flex;
@@ -283,7 +283,7 @@
       }
     }
     
-    .rt-stat-value {
+    .wh40k-stat-value {
       min-width: 80px;
       text-align: center;
       font-size: 1.5rem;
@@ -300,7 +300,7 @@
       }
     }
     
-    .rt-stat-input {
+    .wh40k-stat-input {
       width: 80px;
       text-align: center;
       font-size: 1.25rem;
@@ -325,21 +325,21 @@
 /*  Properties Tab                              */
 /* -------------------------------------------- */
 
-.rt-armour-mod-properties {
-  .rt-properties-grid {
+.wh40k-armour-mod-properties {
+  .wh40k-properties-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
   }
   
-  .rt-properties-column {
+  .wh40k-properties-column {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(212, 197, 166, 0.15);
     border-radius: 8px;
     overflow: hidden;
     
     &--added {
-      .rt-properties-header {
+      .wh40k-properties-header {
         background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(46, 204, 113, 0.05) 100%);
         border-bottom: 2px solid rgba(46, 204, 113, 0.3);
         
@@ -350,7 +350,7 @@
     }
     
     &--removed {
-      .rt-properties-header {
+      .wh40k-properties-header {
         background: linear-gradient(135deg, rgba(231, 76, 60, 0.15) 0%, rgba(231, 76, 60, 0.05) 100%);
         border-bottom: 2px solid rgba(231, 76, 60, 0.3);
         
@@ -361,7 +361,7 @@
     }
   }
   
-  .rt-properties-header {
+  .wh40k-properties-header {
     padding: 1rem 1.25rem;
     
     h3 {
@@ -379,12 +379,12 @@
     }
   }
   
-  .rt-properties-list {
+  .wh40k-properties-list {
     padding: 1rem;
     min-height: 200px;
   }
   
-  .rt-property-tag {
+  .wh40k-property-tag {
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
@@ -399,7 +399,7 @@
       background: rgba(255, 255, 255, 0.06);
       border-color: rgba(212, 175, 55, 0.4);
       
-      .rt-property-remove {
+      .wh40k-property-remove {
         opacity: 1;
       }
     }
@@ -412,10 +412,10 @@
       border-left: 3px solid #e74c3c;
     }
     
-    .rt-property-info {
+    .wh40k-property-info {
       flex: 1;
       
-      .rt-property-label {
+      .wh40k-property-label {
         display: block;
         font-weight: 600;
         font-size: 0.9rem;
@@ -423,7 +423,7 @@
         margin-bottom: 0.25rem;
       }
       
-      .rt-property-desc {
+      .wh40k-property-desc {
         display: block;
         font-size: 0.75rem;
         color: rgba(255, 255, 255, 0.5);
@@ -431,7 +431,7 @@
       }
     }
     
-    .rt-property-remove {
+    .wh40k-property-remove {
       flex-shrink: 0;
       width: 24px;
       height: 24px;
@@ -460,12 +460,12 @@
     }
   }
   
-  .rt-property-add {
+  .wh40k-property-add {
     padding: 1rem;
     border-top: 1px solid rgba(212, 197, 166, 0.15);
     background: rgba(0, 0, 0, 0.15);
     
-    .rt-field-label {
+    .wh40k-field-label {
       display: block;
       font-size: 0.8rem;
       font-weight: 600;
@@ -475,7 +475,7 @@
       margin-bottom: 0.5rem;
     }
     
-    .rt-property-select {
+    .wh40k-property-select {
       width: 100%;
       padding: 0.625rem;
       background: rgba(0, 0, 0, 0.3);
@@ -492,7 +492,7 @@
       }
     }
     
-    .rt-property-add-button {
+    .wh40k-property-add-button {
       width: 100%;
       padding: 0.75rem;
       background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
@@ -527,7 +527,7 @@
     }
   }
   
-  .rt-empty-state {
+  .wh40k-empty-state {
     text-align: center;
     padding: 2rem 1rem;
     color: rgba(255, 255, 255, 0.4);
@@ -546,8 +546,8 @@
 /*  Effect Tab                                  */
 /* -------------------------------------------- */
 
-.rt-armour-mod-effect {
-  .rt-field--editor {
+.wh40k-armour-mod-effect {
+  .wh40k-field--editor {
     .editor {
       min-height: 250px;
       background: rgba(0, 0, 0, 0.3);
@@ -561,7 +561,7 @@
     }
   }
   
-  .rt-field-textarea {
+  .wh40k-field-textarea {
     width: 100%;
     padding: 0.875rem;
     background: rgba(0, 0, 0, 0.3);
@@ -589,17 +589,17 @@
 /*  Panel Styles                                */
 /* -------------------------------------------- */
 
-.rt-panel--source {
+.wh40k-panel--source {
   margin-top: 1.5rem;
   
-  .rt-field-row {
+  .wh40k-field-row {
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 1rem;
   }
   
-  .rt-field {
-    .rt-field-label {
+  .wh40k-field {
+    .wh40k-field-label {
       display: block;
       font-size: 0.8rem;
       font-weight: 600;
@@ -609,8 +609,8 @@
       margin-bottom: 0.5rem;
     }
     
-    .rt-field-select,
-    .rt-field-input {
+    .wh40k-field-select,
+    .wh40k-field-input {
       width: 100%;
       padding: 0.625rem;
       background: rgba(0, 0, 0, 0.3);

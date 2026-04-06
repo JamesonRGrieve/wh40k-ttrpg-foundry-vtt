@@ -2,26 +2,26 @@
 // Modern Actor Sheet
 // ============================================
 
-.rt-actor-sheet-modern {
+.wh40k-actor-sheet-modern {
   background: linear-gradient(135deg, var(--rt-sheet-bg) 0%, var(--rt-panel-bg) 100%);
   color: var(--rt-text-dark);
-  font-family: $rt-font-body;
+  font-family: $wh40k-font-body;
 }
 
-.rt-actor-header {
+.wh40k-actor-header {
   display: grid;
   grid-template-columns: 120px 1fr auto;
-  gap: $rt-space-md;
-  padding: $rt-space-lg;
+  gap: $wh40k-space-md;
+  padding: $wh40k-space-lg;
   background: linear-gradient(180deg, rgba(139, 109, 43, 0.2) 0%, transparent 100%);
   border-bottom: 2px solid var(--rt-gold-dark);
 }
 
-.rt-actor-portrait {
+.wh40k-actor-portrait {
   width: 120px;
   height: 120px;
   border: 3px solid var(--rt-gold);
-  border-radius: $rt-radius-md;
+  border-radius: $wh40k-radius-md;
   overflow: hidden;
   cursor: pointer;
   
@@ -32,45 +32,45 @@
   }
 }
 
-.rt-actor-info {
+.wh40k-actor-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.rt-actor-name {
-  font-family: $rt-font-display;
-  font-size: $rt-font-size-xxl;
+.wh40k-actor-name {
+  font-family: $wh40k-font-display;
+  font-size: $wh40k-font-size-xxl;
   color: var(--rt-gold);
   background: transparent;
   border: none;
-  padding: $rt-space-xs;
-  margin-bottom: $rt-space-sm;
+  padding: $wh40k-space-xs;
+  margin-bottom: $wh40k-space-sm;
   
   &:focus {
     outline: none;
     background: var(--rt-input-bg-focus);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
   }
 }
 
-.rt-actor-quickstats {
+.wh40k-actor-quickstats {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
 }
 
-.rt-quickstat {
+.wh40k-quickstat {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: $rt-space-xs $rt-space-sm;
+  padding: $wh40k-space-xs $wh40k-space-sm;
   background: var(--rt-panel-bg);
-  border-radius: $rt-radius-sm;
+  border-radius: $wh40k-radius-sm;
   min-width: 140px;
   
   &__label {
-    font-size: $rt-font-size-xs;
+    font-size: $wh40k-font-size-xs;
     color: var(--rt-text-muted);
     text-transform: uppercase;
   }
@@ -81,7 +81,7 @@
   }
   
   &--wounds {
-    border-left: 3px solid $rt-color-crimson;
+    border-left: 3px solid $wh40k-color-crimson;
   }
   
   &--fate {
@@ -89,34 +89,34 @@
   }
 }
 
-.rt-panel-grid {
+.wh40k-panel-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $rt-space-md;
-  padding: $rt-space-md;
+  gap: $wh40k-space-md;
+  padding: $wh40k-space-md;
 }
 
-.rt-char-grid {
+.wh40k-char-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-char-item {
+.wh40k-char-item {
   display: flex;
   flex-direction: column;
 }
 
-.rt-char-button {
+.wh40k-char-button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: $rt-space-sm;
+  padding: $wh40k-space-sm;
   background: linear-gradient(135deg, var(--rt-panel-bg) 0%, var(--rt-input-bg) 100%);
   border: 1px solid var(--rt-border-color-light);
-  border-radius: $rt-radius-md;
+  border-radius: $wh40k-radius-md;
   cursor: pointer;
-  transition: all $rt-transition-fast;
+  transition: all $wh40k-transition-fast;
   
   &:hover {
     background: linear-gradient(135deg, var(--rt-input-bg) 0%, var(--rt-sheet-bg) 100%);
@@ -126,36 +126,36 @@
   }
 }
 
-.rt-char-abbr {
-  font-family: $rt-font-display;
-  font-size: $rt-font-size-lg;
+.wh40k-char-abbr {
+  font-family: $wh40k-font-display;
+  font-size: $wh40k-font-size-lg;
   color: var(--rt-gold);
   font-weight: 700;
 }
 
-.rt-char-value {
-  font-size: $rt-font-size-xxl;
+.wh40k-char-value {
+  font-size: $wh40k-font-size-xxl;
   color: var(--rt-text-dark);
   font-weight: 700;
-  margin: $rt-space-xs 0;
+  margin: $wh40k-space-xs 0;
 }
 
-.rt-char-label {
-  font-size: $rt-font-size-xs;
+.wh40k-char-label {
+  font-size: $wh40k-font-size-xs;
   color: var(--rt-text-muted);
   text-transform: uppercase;
 }
 
-.rt-panel__content--scroll {
+.wh40k-panel__content--scroll {
   max-height: 300px;
   overflow-y: auto;
 }
 
-.rt-item-row {
+.wh40k-item-row {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-xs;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-xs;
   border-bottom: 1px solid var(--rt-border-color-light);
   
   &:hover {
@@ -167,64 +167,64 @@
   }
 }
 
-.rt-item-icon {
+.wh40k-item-icon {
   width: 32px;
   height: 32px;
-  border-radius: $rt-radius-sm;
+  border-radius: $wh40k-radius-sm;
   border: 1px solid var(--rt-border-color-light);
 }
 
-.rt-item-name {
+.wh40k-item-name {
   flex: 1;
   color: var(--rt-text-dark);
 }
 
-.rt-item-weight {
-  font-size: $rt-font-size-xs;
+.wh40k-item-weight {
+  font-size: $wh40k-font-size-xs;
   color: var(--rt-text-muted);
 }
 
-.rt-weapon-row {
+.wh40k-weapon-row {
   display: flex;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-sm;
   background: var(--rt-panel-bg);
-  border-radius: $rt-radius-md;
-  margin-bottom: $rt-space-sm;
+  border-radius: $wh40k-radius-md;
+  margin-bottom: $wh40k-space-sm;
 }
 
-.rt-weapon-info {
+.wh40k-weapon-info {
   flex: 1;
 }
 
-.rt-weapon-name {
+.wh40k-weapon-name {
   font-weight: 600;
   color: var(--rt-text-dark);
-  margin-bottom: $rt-space-xs;
+  margin-bottom: $wh40k-space-xs;
 }
 
-.rt-weapon-stats {
-  font-size: $rt-font-size-sm;
+.wh40k-weapon-stats {
+  font-size: $wh40k-font-size-sm;
   color: var(--rt-text-muted);
 }
 
-.rt-armour-display {
+.wh40k-armour-display {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-armour-item {
-  padding: $rt-space-sm;
+.wh40k-armour-item {
+  padding: $wh40k-space-sm;
   background: var(--rt-panel-bg);
-  border-radius: $rt-radius-md;
+  border-radius: $wh40k-radius-md;
 }
 
-.rt-armour-points {
+.wh40k-armour-points {
   display: flex;
-  gap: $rt-space-md;
-  margin-top: $rt-space-xs;
-  font-size: $rt-font-size-sm;
+  gap: $wh40k-space-md;
+  margin-top: $wh40k-space-xs;
+  font-size: $wh40k-font-size-sm;
   color: var(--rt-text-muted);
 }
 

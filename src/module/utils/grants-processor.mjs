@@ -57,15 +57,15 @@ export class GrantsProcessor {
   /**
    * Process grants from an item.
    * 
-   * @param {RogueTraderItem} item - The item with grants
-   * @param {RogueTraderActor} actor - The actor receiving grants
+   * @param {WH40KItem} item - The item with grants
+   * @param {WH40KActor} actor - The actor receiving grants
    * @param {object} options - Processing options
    * @param {string} options.mode - "immediate" (default) or "batch"
    * @param {number} options.depth - Recursion depth for nested grants
    * @param {number} options.maxDepth - Maximum recursion depth (default 3)
    * @param {boolean} options.dryRun - Preview mode, don't apply
    * @param {boolean} options.showNotification - Show UI notification
-   * @param {RogueTraderItem} options.sourceItem - Item granting this (for nested grants)
+   * @param {WH40KItem} options.sourceItem - Item granting this (for nested grants)
    * @returns {Promise<object>} Result object with grants processed
    */
   static async processGrants(item, actor, options = {}) {
@@ -119,7 +119,7 @@ export class GrantsProcessor {
    * Apply accumulated grants to an actor (batch mode).
    * Used by origin path builder to commit all selected origins at once.
    * 
-   * @param {RogueTraderActor} actor - The actor to update
+   * @param {WH40KActor} actor - The actor to update
    * @param {object} result - Result from processGrants()
    * @param {object} options - Application options
    * @returns {Promise<void>}
@@ -200,8 +200,8 @@ export class GrantsProcessor {
   /**
    * Get a summary of what will be granted (dry run for previews).
    * 
-   * @param {RogueTraderItem} item - The item with grants
-   * @param {RogueTraderActor} actor - The actor that would receive grants
+   * @param {WH40KItem} item - The item with grants
+   * @param {WH40KActor} actor - The actor that would receive grants
    * @returns {Promise<object>} Summary object
    */
   static async getSummary(item, actor) {
@@ -523,7 +523,7 @@ export class GrantsProcessor {
 
     // Fallback: search compendium
     if (!talentItem) {
-      talentItem = await this._findInCompendium('rogue-trader.rt-items-talents', talentGrant.name);
+      talentItem = await this._findInCompendium('wh40k-rpg.rt-items-talents', talentGrant.name);
     }
 
     if (!talentItem) {
@@ -542,11 +542,11 @@ export class GrantsProcessor {
 
     // Mark as granted
     itemData.flags = itemData.flags || {};
-    itemData.flags['rogue-trader'] = itemData.flags['rogue-trader'] || {};
+    itemData.flags['wh40k-rpg'] = itemData.flags['wh40k-rpg'] || {};
     if (context.sourceItem) {
-      itemData.flags['rogue-trader'].grantedBy = context.sourceItem.name;
-      itemData.flags['rogue-trader'].grantedById = context.sourceItem.id;
-      itemData.flags['rogue-trader'].autoGranted = true;
+      itemData.flags['wh40k-rpg'].grantedBy = context.sourceItem.name;
+      itemData.flags['wh40k-rpg'].grantedById = context.sourceItem.id;
+      itemData.flags['wh40k-rpg'].autoGranted = true;
     }
 
     context.result.itemsToCreate.push(itemData);
@@ -626,7 +626,7 @@ export class GrantsProcessor {
     }
 
     if (!traitItem) {
-      traitItem = await this._findInCompendium('rogue-trader.rt-items-traits', traitGrant.name);
+      traitItem = await this._findInCompendium('wh40k-rpg.rt-items-traits', traitGrant.name);
     }
 
     if (!traitItem) {
@@ -643,11 +643,11 @@ export class GrantsProcessor {
 
     // Mark as granted
     itemData.flags = itemData.flags || {};
-    itemData.flags['rogue-trader'] = itemData.flags['rogue-trader'] || {};
+    itemData.flags['wh40k-rpg'] = itemData.flags['wh40k-rpg'] || {};
     if (context.sourceItem) {
-      itemData.flags['rogue-trader'].grantedBy = context.sourceItem.name;
-      itemData.flags['rogue-trader'].grantedById = context.sourceItem.id;
-      itemData.flags['rogue-trader'].autoGranted = true;
+      itemData.flags['wh40k-rpg'].grantedBy = context.sourceItem.name;
+      itemData.flags['wh40k-rpg'].grantedById = context.sourceItem.id;
+      itemData.flags['wh40k-rpg'].autoGranted = true;
     }
 
     context.result.itemsToCreate.push(itemData);
@@ -876,8 +876,8 @@ export class GrantsProcessor {
  * Handle removal of an item that granted other items.
  * Prompts user to optionally remove granted items.
  * 
- * @param {RogueTraderItem} item - The item being removed (talent/trait)
- * @param {RogueTraderActor} actor - The actor losing the item
+ * @param {WH40KItem} item - The item being removed (talent/trait)
+ * @param {WH40KActor} actor - The actor losing the item
  * @returns {Promise<void>}
  */
 export async function handleGrantRemoval(item, actor) {
@@ -887,7 +887,7 @@ export async function handleGrantRemoval(item, actor) {
 
   // Find all items granted by this item
   const grantedItems = actor.items.filter(i =>
-    i.flags['rogue-trader']?.grantedById === item.id
+    i.flags['wh40k-rpg']?.grantedById === item.id
   );
 
   if (grantedItems.length === 0) return;

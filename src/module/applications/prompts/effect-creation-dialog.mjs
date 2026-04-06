@@ -1,6 +1,6 @@
 /**
  * @file Effect Creation Dialog
- * Streamlined, thematic dialog for creating Active Effects in Rogue Trader
+ * Streamlined, thematic dialog for creating Active Effects in WH40K RPG
  */
 
 const { DialogV2 } = foundry.applications.api;
@@ -10,9 +10,9 @@ export default class EffectCreationDialog extends DialogV2 {
     /** @override */
     static DEFAULT_OPTIONS = {
         window: {
-            title: "RT.ActiveEffect.CreateEffect",
+            title: "WH40K.ActiveEffect.CreateEffect",
             icon: "fas fa-sparkles",
-            contentClasses: ["rt-effect-creation-dialog"]
+            contentClasses: ["wh40k-effect-creation-dialog"]
         },
         position: {
             width: 520,
@@ -69,7 +69,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/dialogs/effect-creation-dialog.hbs"
+            template: "systems/wh40k-rpg/templates/dialogs/effect-creation-dialog.hbs"
         }
     };
 
@@ -191,7 +191,7 @@ export default class EffectCreationDialog extends DialogV2 {
         }
 
         if (!effectData) {
-            ui.notifications.warn("RT.ActiveEffect.InvalidData");
+            ui.notifications.warn("WH40K.ActiveEffect.InvalidData");
             return this.resolve(null);
         }
 
@@ -212,75 +212,75 @@ export default class EffectCreationDialog extends DialogV2 {
         const conditions = {
             stunned: {
                 name: "Stunned",
-                icon: "systems/rogue-trader/assets/icons/conditions/stunned.webp",
+                icon: "systems/wh40k-rpg/assets/icons/conditions/stunned.webp",
                 changes: [
                     { key: "system.combat.defense", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
                     { key: "system.combat.attack", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
                 ],
-                flags: { "rogue-trader": { nature: "harmful" } }
+                flags: { "wh40k-rpg": { nature: "harmful" } }
             },
             prone: {
                 name: "Prone",
-                icon: "systems/rogue-trader/assets/icons/conditions/prone.webp",
+                icon: "systems/wh40k-rpg/assets/icons/conditions/prone.webp",
                 changes: [
                     { key: "system.combat.defense", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
                 ],
-                flags: { "rogue-trader": { nature: "harmful" } }
+                flags: { "wh40k-rpg": { nature: "harmful" } }
             },
             blinded: {
                 name: "Blinded",
-                icon: "systems/rogue-trader/assets/icons/conditions/blinded.webp",
+                icon: "systems/wh40k-rpg/assets/icons/conditions/blinded.webp",
                 changes: [
                     { key: "system.characteristics.ballisticSkill.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
                     { key: "system.characteristics.weaponSkill.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 }
                 ],
-                flags: { "rogue-trader": { nature: "harmful" } }
+                flags: { "wh40k-rpg": { nature: "harmful" } }
             },
             deafened: {
                 name: "Deafened",
-                icon: "systems/rogue-trader/assets/icons/conditions/deafened.webp",
+                icon: "systems/wh40k-rpg/assets/icons/conditions/deafened.webp",
                 changes: [
                     { key: "system.characteristics.perception.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
                 ],
-                flags: { "rogue-trader": { nature: "harmful" } }
+                flags: { "wh40k-rpg": { nature: "harmful" } }
             },
             grappled: {
                 name: "Grappled",
-                icon: "systems/rogue-trader/assets/icons/conditions/grappled.webp",
+                icon: "systems/wh40k-rpg/assets/icons/conditions/grappled.webp",
                 changes: [
                     { key: "system.characteristics.weaponSkill.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
                     { key: "system.characteristics.agility.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
                 ],
-                flags: { "rogue-trader": { nature: "harmful" } }
+                flags: { "wh40k-rpg": { nature: "harmful" } }
             },
             bleeding: {
                 name: "Bleeding",
-                icon: "systems/rogue-trader/assets/icons/conditions/bleeding.webp",
+                icon: "systems/wh40k-rpg/assets/icons/conditions/bleeding.webp",
                 changes: [],
-                flags: { "rogue-trader": { nature: "harmful", requiresProcessing: true } }
+                flags: { "wh40k-rpg": { nature: "harmful", requiresProcessing: true } }
             },
             onFire: {
                 name: "On Fire",
-                icon: "systems/rogue-trader/assets/icons/conditions/on-fire.webp",
+                icon: "systems/wh40k-rpg/assets/icons/conditions/on-fire.webp",
                 changes: [],
-                flags: { "rogue-trader": { nature: "harmful", requiresProcessing: true } }
+                flags: { "wh40k-rpg": { nature: "harmful", requiresProcessing: true } }
             },
             inspired: {
                 name: "Inspired",
-                icon: "systems/rogue-trader/assets/icons/conditions/inspired.webp",
+                icon: "systems/wh40k-rpg/assets/icons/conditions/inspired.webp",
                 changes: [
                     { key: "system.characteristics.willpower.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
                     { key: "system.characteristics.fellowship.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }
                 ],
-                flags: { "rogue-trader": { nature: "beneficial" } }
+                flags: { "wh40k-rpg": { nature: "beneficial" } }
             },
             blessed: {
                 name: "Blessed",
-                icon: "systems/rogue-trader/assets/icons/conditions/blessed.webp",
+                icon: "systems/wh40k-rpg/assets/icons/conditions/blessed.webp",
                 changes: [
                     { key: "system.combat.defense", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }
                 ],
-                flags: { "rogue-trader": { nature: "beneficial" } }
+                flags: { "wh40k-rpg": { nature: "beneficial" } }
             }
         };
 
@@ -312,7 +312,7 @@ export default class EffectCreationDialog extends DialogV2 {
         
         if (!characteristic || value === 0) return null;
 
-        const charLabel = CONFIG.ROGUE_TRADER.characteristics[characteristic] 
+        const charLabel = CONFIG.WH40K.characteristics[characteristic] 
             ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
         
         const effectData = {
@@ -324,7 +324,7 @@ export default class EffectCreationDialog extends DialogV2 {
                 value: value
             }],
             flags: { 
-                "rogue-trader": { 
+                "wh40k-rpg": { 
                     nature: value > 0 ? "beneficial" : "harmful" 
                 } 
             }
@@ -365,7 +365,7 @@ export default class EffectCreationDialog extends DialogV2 {
                 value: value
             }],
             flags: { 
-                "rogue-trader": { 
+                "wh40k-rpg": { 
                     nature: value > 0 ? "beneficial" : "harmful" 
                 } 
             }
@@ -406,7 +406,7 @@ export default class EffectCreationDialog extends DialogV2 {
                 value: value
             }],
             flags: { 
-                "rogue-trader": { 
+                "wh40k-rpg": { 
                     nature: value > 0 ? "beneficial" : "harmful" 
                 } 
             }

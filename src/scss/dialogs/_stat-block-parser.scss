@@ -118,17 +118,17 @@
     flex: 1;
     overflow: auto;
     border: 1px solid var(--color-border-tertiary);
-    border-radius: $rt-radius-md;
-    padding: $rt-space-lg;
-    background: $rt-bg-translucent;
-    box-shadow: $rt-shadow-inset;
+    border-radius: $wh40k-radius-md;
+    padding: $wh40k-space-lg;
+    background: $wh40k-bg-translucent;
+    box-shadow: $wh40k-shadow-inset;
     backdrop-filter: blur(4px);
 
     h3 {
       margin: 0 0 1rem 0;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--color-border-light-tertiary);
-      font-family: $rt-font-heading;
+      font-family: $wh40k-font-heading;
       letter-spacing: 0.02em;
     }
 
@@ -139,16 +139,16 @@
     }
 
     .preview-panel {
-      background: $rt-bg-paper-light;
-      padding: $rt-space-md;
-      border-radius: $rt-radius-lg;
+      background: $wh40k-bg-paper-light;
+      padding: $wh40k-space-md;
+      border-radius: $wh40k-radius-lg;
       border: 1px solid var(--color-border-secondary);
-      box-shadow: $rt-shadow-sm;
+      box-shadow: $wh40k-shadow-sm;
 
       h4 {
         margin: 0 0 0.5rem 0;
-        font-size: $rt-font-size-sm;
-        color: var(--rt-color-accent, $rt-color-gold);
+        font-size: $wh40k-font-size-sm;
+        color: var(--rt-color-accent, $wh40k-color-gold);
         display: flex;
         align-items: center;
         gap: 0.4rem;
@@ -157,7 +157,7 @@
 
         i {
           font-size: 0.7rem;
-          color: var(--rt-color-accent, $rt-color-gold);
+          color: var(--rt-color-accent, $wh40k-color-gold);
         }
       }
 
@@ -184,10 +184,10 @@
 
         .char-item {
           text-align: center;
-          background: $rt-bg-subtle;
+          background: $wh40k-bg-subtle;
           padding: 0.25rem;
-          border-radius: $rt-radius-sm;
-          border: 1px solid $rt-border-light;
+          border-radius: $wh40k-radius-sm;
+          border: 1px solid $wh40k-border-light;
 
           .char-label {
             display: block;
@@ -214,14 +214,14 @@
           align-items: center;
           gap: 0.4rem;
           padding: 0.3rem 0.4rem;
-          border-radius: $rt-radius-sm;
-          background: $rt-bg-overlay-medium;
+          border-radius: $wh40k-radius-sm;
+          background: $wh40k-bg-overlay-medium;
           border: 1px solid var(--color-border-light-tertiary);
-          font-size: $rt-font-size-sm;
+          font-size: $wh40k-font-size-sm;
           color: var(--color-text-secondary);
 
           i {
-            color: var(--rt-color-accent, $rt-color-gold);
+            color: var(--rt-color-accent, $wh40k-color-gold);
             font-size: 0.65rem;
           }
         }
@@ -230,24 +230,24 @@
           justify-content: center;
           font-style: italic;
           color: var(--color-text-tertiary);
-          background: $rt-bg-overlay-light;
+          background: $wh40k-bg-overlay-light;
         }
       }
 
       &.preview-panel--skills {
-        --rt-color-accent: #{$rt-accent-skills};
+        --rt-color-accent: #{$wh40k-accent-skills};
       }
 
       &.preview-panel--talents {
-        --rt-color-accent: #{$rt-accent-talents};
+        --rt-color-accent: #{$wh40k-accent-talents};
       }
 
       &.preview-panel--traits {
-        --rt-color-accent: #{$rt-accent-equipment};
+        --rt-color-accent: #{$wh40k-accent-equipment};
       }
 
       &.preview-panel--weapons {
-        --rt-color-accent: #{$rt-accent-combat};
+        --rt-color-accent: #{$wh40k-accent-combat};
       }
     }
   }

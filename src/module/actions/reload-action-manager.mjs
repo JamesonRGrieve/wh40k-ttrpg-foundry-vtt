@@ -1,6 +1,6 @@
 /**
  * @file ReloadActionManager - Handles weapon reload actions with action economy validation
- * Integrates with RogueTraderVTT-7jh Combat Actions System
+ * Integrates with WH40KVTT-7jh Combat Actions System
  */
 
 import { ConfirmationDialog } from '../applications/dialogs/_module.mjs';
@@ -183,7 +183,7 @@ export class ReloadActionManager {
         }
 
         // In combat - check available actions
-        // Note: The combat action tracking system (RogueTraderVTT-7jh) should provide
+        // Note: The combat action tracking system (WH40KVTT-7jh) should provide
         // methods to check and spend actions. For now, we'll use a simple notification.
 
         // Check if it's the actor's turn
@@ -253,7 +253,7 @@ export class ReloadActionManager {
             clipMax: weapon.system.clip.max,
         };
 
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/reload-action-chat.hbs', templateData);
+        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/reload-action-chat.hbs', templateData);
 
         const chatData = {
             user: game.user.id,

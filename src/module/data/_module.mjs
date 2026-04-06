@@ -1,7 +1,7 @@
 /**
- * Rogue Trader Data Models
+ * WH40K RPG Data Models
  * 
- * This module exports all data models used by the Rogue Trader system.
+ * This module exports all data models used by the WH40K RPG system.
  * Following the DnD5e pattern, we use DataModel composition with template mixins.
  */
 

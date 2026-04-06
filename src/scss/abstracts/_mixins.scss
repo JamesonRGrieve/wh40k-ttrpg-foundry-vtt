@@ -7,22 +7,22 @@
 // Icon Buttons
 // ============================================
 
-@mixin rt-icon-button($size: 24px, $hover-color: $rt-accent-gold, $icon-size: 0.7rem) {
+@mixin rt-icon-button($size: 24px, $hover-color: $wh40k-accent-gold, $icon-size: 0.7rem) {
   width: $size;
   height: $size;
   padding: 0;
   background: transparent;
-  border: 1px solid $rt-border-medium;
-  border-radius: $rt-radius-md;
+  border: 1px solid $wh40k-border-medium;
+  border-radius: $wh40k-radius-md;
   color: var(--color-text-secondary);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all $rt-transition-fast;
+  transition: all $wh40k-transition-fast;
 
   &:hover {
-    background: $rt-bg-subtle;
+    background: $wh40k-bg-subtle;
     color: $hover-color;
     border-color: $hover-color;
   }
@@ -36,13 +36,13 @@
 // Panel Headers
 // ============================================
 
-@mixin rt-panel-header-base($accent-color: $rt-accent-gold) {
+@mixin rt-panel-header-base($accent-color: $wh40k-accent-gold) {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm $rt-space-md;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-sm $wh40k-space-md;
   background: linear-gradient(180deg, rgba($accent-color, 0.12) 0%, transparent 100%);
-  border-bottom: 1px solid $rt-border-light;
+  border-bottom: 1px solid $wh40k-border-light;
 }
 
 @mixin rt-panel-title {
@@ -54,7 +54,7 @@
   letter-spacing: 0.05em;
 
   i {
-    margin-right: $rt-space-xs;
+    margin-right: $wh40k-space-xs;
     color: inherit;
   }
 }
@@ -75,10 +75,10 @@
 }
 
 @mixin rt-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
-  .rt-vitals-progress {
+  .wh40k-vitals-progress {
     @include rt-progress-gradient($progress-gradient);
   }
-  .rt-vitals-title {
+  .wh40k-vitals-title {
     color: $title-color;
     i { color: $icon-color; }
   }
@@ -90,16 +90,16 @@
 
 @mixin rt-input-base {
   padding: 6px 8px;
-  border: 1px solid $rt-border-medium;
-  border-radius: $rt-radius-md;
-  background: $rt-bg-input;
+  border: 1px solid $wh40k-border-medium;
+  border-radius: $wh40k-radius-md;
+  background: $wh40k-bg-input;
   color: var(--color-text-primary);
-  font-family: $rt-font-alt;
-  transition: border-color $rt-transition-fast;
+  font-family: $wh40k-font-alt;
+  transition: border-color $wh40k-transition-fast;
 
   &:focus {
     outline: none;
-    border-color: $rt-accent-gold;
+    border-color: $wh40k-accent-gold;
   }
 }
 
@@ -128,18 +128,18 @@
 // Training Buttons (T/+10/+20)
 // ============================================
 
-@mixin rt-train-button($active-color: $rt-accent-skills) {
+@mixin rt-train-button($active-color: $wh40k-accent-skills) {
   width: 28px;
   height: 20px;
   padding: 0;
   background: transparent;
-  border: 1px solid $rt-border-medium;
-  border-radius: $rt-radius-sm;
+  border: 1px solid $wh40k-border-medium;
+  border-radius: $wh40k-radius-sm;
   font-size: 0.65rem;
   font-weight: 600;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   cursor: pointer;
-  transition: all $rt-transition-fast;
+  transition: all $wh40k-transition-fast;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -161,8 +161,8 @@
 // Row Hover Effects
 // ============================================
 
-@mixin rt-row-hover($accent-color: $rt-accent-gold) {
-  transition: background $rt-transition-fast;
+@mixin rt-row-hover($accent-color: $wh40k-accent-gold) {
+  transition: background $wh40k-transition-fast;
 
   &:hover {
     background: rgba($accent-color, 0.06);
@@ -195,9 +195,9 @@
 // ============================================
 
 @mixin rt-panel-card {
-  background: $rt-bg-paper;
-  border: 1px solid $rt-border-light;
-  border-radius: $rt-radius-lg;
+  background: $wh40k-bg-paper;
+  border: 1px solid $wh40k-border-light;
+  border-radius: $wh40k-radius-lg;
   overflow: hidden;
 }
 
@@ -205,7 +205,7 @@
 // Tab Grid Layouts
 // ============================================
 
-@mixin rt-tab-grid($columns: 2, $gap: $rt-space-md) {
+@mixin rt-tab-grid($columns: 2, $gap: $wh40k-space-md) {
   display: grid;
   grid-template-columns: repeat($columns, 1fr);
   gap: $gap;
@@ -217,8 +217,8 @@
   flex-direction: column;
   gap: 0;
 
-  .rt-panel {
-    margin-bottom: $rt-space-md;
+  .wh40k-panel {
+    margin-bottom: $wh40k-space-md;
 
     &:last-child {
       margin-bottom: 0;

@@ -25,7 +25,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: "form",
-        classes: ["rogue-trader", "dialog", "specialist-skill", "standard-form"],
+        classes: ["wh40k-rpg", "dialog", "specialist-skill", "standard-form"],
         actions: {
             add: SpecialistSkillDialog.#onAdd,
             cancel: SpecialistSkillDialog.#onCancel
@@ -44,7 +44,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/prompt/add-speciality-prompt.hbs",
+            template: "systems/wh40k-rpg/templates/prompt/add-speciality-prompt.hbs",
             scrollable: [""]
         }
     };
@@ -91,7 +91,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
      * @protected
      */
     async _loadSpecializations() {
-        const skillsCompendium = game.packs.get("rogue-trader.rt-items-skills");
+        const skillsCompendium = game.packs.get("wh40k-rpg.rt-items-skills");
         if (!skillsCompendium) return;
 
         // Find the skill in the compendium by matching the label

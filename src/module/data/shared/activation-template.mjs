@@ -124,7 +124,7 @@ export default class ActivationTemplate extends SystemDataModel {
    */
   get targetLabel() {
     const target = this.target;
-    if ( target.type === "self" ) return game.i18n.localize("RT.Target.Self");
+    if ( target.type === "self" ) return game.i18n.localize("WH40K.Target.Self");
     if ( target.value ) {
       return `${target.value}${target.units} ${game.i18n.localize(`RT.Target.${target.type.capitalize()}`)}`;
     }
@@ -139,8 +139,8 @@ export default class ActivationTemplate extends SystemDataModel {
    */
   get durationLabel() {
     const duration = this.duration;
-    if ( duration.units === "instant" ) return game.i18n.localize("RT.Duration.Instant");
-    if ( duration.sustained ) return game.i18n.localize("RT.Duration.Sustained");
+    if ( duration.units === "instant" ) return game.i18n.localize("WH40K.Duration.Instant");
+    if ( duration.sustained ) return game.i18n.localize("WH40K.Duration.Sustained");
     if ( duration.value ) {
       return `${duration.value} ${game.i18n.localize(`RT.Duration.${duration.units.capitalize()}`)}`;
     }

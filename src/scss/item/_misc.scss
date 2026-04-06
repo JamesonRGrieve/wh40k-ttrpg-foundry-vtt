@@ -2,12 +2,12 @@
 // Compendium Browser Styles
 // ============================================
 
-.rt-compendium-browser-btn {
+.wh40k-compendium-browser-btn {
   background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
   border: 1px solid var(--rt-gold);
-  border-radius: $rt-radius-sm;
+  border-radius: $wh40k-radius-sm;
   color: var(--rt-sheet-bg);
-  font-size: $rt-font-size-xs;
+  font-size: $wh40k-font-size-xs;
   font-weight: 600;
   padding: 4px 8px;
   cursor: pointer;
@@ -23,30 +23,30 @@
   }
 }
 
-.rt-compendium-browser {
+.wh40k-compendium-browser {
   display: flex;
   flex-direction: column;
   height: 100%;
   background: var(--rt-sheet-bg);
   color: var(--rt-text-dark);
-  font-family: $rt-font-ui;
+  font-family: $wh40k-font-ui;
   
   .browser-header {
-    padding: $rt-space-md $rt-space-lg;
+    padding: $wh40k-space-md $wh40k-space-lg;
     background: linear-gradient(180deg, rgba(139, 109, 43, 0.2) 0%, transparent 100%);
     border-bottom: 2px solid var(--rt-gold-dark);
     
     h1 {
-      font-family: $rt-font-display;
-      font-size: $rt-font-size-lg;
+      font-family: $wh40k-font-display;
+      font-size: $wh40k-font-size-lg;
       color: var(--rt-gold);
-      margin: 0 0 $rt-space-xs;
+      margin: 0 0 $wh40k-space-xs;
       
-      i { margin-right: $rt-space-sm; }
+      i { margin-right: $wh40k-space-sm; }
     }
     
     p {
-      font-size: $rt-font-size-sm;
+      font-size: $wh40k-font-size-sm;
       color: var(--rt-text-muted);
       margin: 0;
     }
@@ -62,26 +62,26 @@
     width: 220px;
     background: var(--rt-panel-bg);
     border-right: 1px solid var(--rt-border-color-light);
-    padding: $rt-space-md;
+    padding: $wh40k-space-md;
     overflow-y: auto;
     
     h3 {
-      font-family: $rt-font-display;
-      font-size: $rt-font-size-sm;
+      font-family: $wh40k-font-display;
+      font-size: $wh40k-font-size-sm;
       color: var(--rt-gold);
-      margin: 0 0 $rt-space-sm;
+      margin: 0 0 $wh40k-space-sm;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       
-      i { margin-right: $rt-space-xs; }
+      i { margin-right: $wh40k-space-xs; }
     }
     
     .filter-group {
-      margin-bottom: $rt-space-md;
+      margin-bottom: $wh40k-space-md;
       
       label {
         display: block;
-        font-size: $rt-font-size-xs;
+        font-size: $wh40k-font-size-xs;
         color: var(--rt-text-muted);
         text-transform: uppercase;
         margin-bottom: 4px;
@@ -91,10 +91,10 @@
         width: 100%;
         background: var(--rt-input-bg);
         border: 1px solid var(--rt-border-color-light);
-        border-radius: $rt-radius-sm;
+        border-radius: $wh40k-radius-sm;
         color: var(--rt-text-dark);
-        font-size: $rt-font-size-sm;
-        padding: $rt-space-xs $rt-space-sm;
+        font-size: $wh40k-font-size-sm;
+        padding: $wh40k-space-xs $wh40k-space-sm;
         
         &:focus {
           outline: none;
@@ -105,16 +105,16 @@
     
     .clear-filters {
       width: 100%;
-      background: rgba($rt-color-crimson-dark, 0.2);
-      border: 1px solid $rt-color-crimson-dark;
-      border-radius: $rt-radius-sm;
+      background: rgba($wh40k-color-crimson-dark, 0.2);
+      border: 1px solid $wh40k-color-crimson-dark;
+      border-radius: $wh40k-radius-sm;
       color: var(--rt-text-dark);
-      font-size: $rt-font-size-xs;
-      padding: $rt-space-xs $rt-space-sm;
+      font-size: $wh40k-font-size-xs;
+      padding: $wh40k-space-xs $wh40k-space-sm;
       cursor: pointer;
       
       &:hover {
-        background: rgba($rt-color-crimson, 0.3);
+        background: rgba($wh40k-color-crimson, 0.3);
       }
     }
   }
@@ -126,13 +126,13 @@
     overflow: hidden;
     
     .results-header {
-      padding: $rt-space-sm $rt-space-md;
+      padding: $wh40k-space-sm $wh40k-space-md;
       background: var(--rt-panel-bg);
       border-bottom: 1px solid var(--rt-border-color-light);
       
       h3 {
         margin: 0;
-        font-size: $rt-font-size-sm;
+        font-size: $wh40k-font-size-sm;
         color: var(--rt-text-dark);
       }
     }
@@ -140,34 +140,34 @@
     .results-list {
       flex: 1;
       overflow-y: auto;
-      padding: $rt-space-sm;
+      padding: $wh40k-space-sm;
     }
     
     .results-group {
-      margin-bottom: $rt-space-md;
+      margin-bottom: $wh40k-space-md;
       
       .results-group-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: $rt-space-xs $rt-space-sm;
+        padding: $wh40k-space-xs $wh40k-space-sm;
         background: rgba(139, 109, 43, 0.15);
         border: 1px solid var(--rt-gold-dark);
-        border-radius: $rt-radius-sm;
-        margin-bottom: $rt-space-xs;
+        border-radius: $wh40k-radius-sm;
+        margin-bottom: $wh40k-space-xs;
         
         .results-group-title {
-          font-family: $rt-font-display;
-          font-size: $rt-font-size-sm;
+          font-family: $wh40k-font-display;
+          font-size: $wh40k-font-size-sm;
           color: var(--rt-gold);
         }
         
         .results-group-count {
-          font-size: $rt-font-size-xs;
+          font-size: $wh40k-font-size-xs;
           color: var(--rt-text-muted);
           background: var(--rt-sheet-bg);
           padding: 2px 6px;
-          border-radius: $rt-radius-sm;
+          border-radius: $wh40k-radius-sm;
         }
       }
     }
@@ -175,11 +175,11 @@
     .compendium-item {
       display: flex;
       align-items: center;
-      gap: $rt-space-sm;
-      padding: $rt-space-xs $rt-space-sm;
+      gap: $wh40k-space-sm;
+      padding: $wh40k-space-xs $wh40k-space-sm;
       background: var(--rt-panel-bg);
       border: 1px solid transparent;
-      border-radius: $rt-radius-sm;
+      border-radius: $wh40k-radius-sm;
       margin-bottom: 2px;
       cursor: pointer;
       
@@ -191,7 +191,7 @@
       .item-image {
         width: 28px;
         height: 28px;
-        border-radius: $rt-radius-sm;
+        border-radius: $wh40k-radius-sm;
         object-fit: cover;
       }
       
@@ -200,7 +200,7 @@
         min-width: 0;
         
         .item-name {
-          font-size: $rt-font-size-sm;
+          font-size: $wh40k-font-size-sm;
           color: var(--rt-text-dark);
           margin: 0;
           white-space: nowrap;
@@ -210,8 +210,8 @@
         
         .item-meta {
           display: flex;
-          gap: $rt-space-sm;
-          font-size: $rt-font-size-xs;
+          gap: $wh40k-space-sm;
+          font-size: $wh40k-font-size-xs;
           color: var(--rt-text-muted);
           
           span {
@@ -228,18 +228,18 @@
     
     .no-results {
       text-align: center;
-      padding: $rt-space-xl;
+      padding: $wh40k-space-xl;
       color: var(--rt-text-muted);
       
       i {
         font-size: 48px;
-        margin-bottom: $rt-space-md;
+        margin-bottom: $wh40k-space-md;
         opacity: 0.3;
       }
       
       p {
         margin: 0;
-        font-size: $rt-font-size-sm;
+        font-size: $wh40k-font-size-sm;
       }
     }
   }

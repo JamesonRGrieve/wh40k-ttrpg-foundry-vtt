@@ -1,0 +1,94 @@
+{
+  "name": "Void Born",
+  "type": "originPath",
+  "img": "modules/game-icons-net/whitetransparent/spaceship.svg",
+  "system": {
+    "identifier": "void-born",
+    "step": "homeWorld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Void Born</h2><blockquote><p><em>\"You were not born on one of the Emperor's worlds, but instead on a vast ship in the depths of space—perhaps even in the warp itself. Why this sets you apart from your fellow man is unknown, but the way you look, act, and think is somehow different. You have been raised in the company of voidfarers and psykers, and what other men fear or loathe is commonplace to you.\"</em></p></blockquote><p>Not merely star travellers but the products of many generations passed in the darkness between worlds, the void born are relatively few among the teeming multitudes of humanity, but singular, and form a disparate and odd collection of misfits, strangers, and other ill-omened folk, perhaps birthed in the belly of a vessel that has spent centuries charting its course through the stars or aboard an ancient orbital satellite.</p><p>The void born are often considered to be somehow touched by the taint of the warp, or at least associated with the many and unfathomable dangers of the outer darkness by the common well of the Imperium. Most consider them bringers of bad fortune and ill-tidings, secretive, and untrustworthy.</p><h3>Life as a Void Born</h3><p>The vast Imperial fleet is a vital factor in the maintenance of the Imperium; without it, human worlds would be isolated from each other and left unprotected. Without it, trade could not exist, weapons could not reach the Emperor's armies, and world after world would fall into the darkness.</p><p>Those who live their lives on void-ships become inured to some extent to the reality-altering process of warp travel, and to living in low- or zero-gravity environments and never knowing the feel of solid ground beneath their feet. Some vessels never make berth, their crews instead raising generations of families in the cold depths of space where gravitational variance, radiation exposure, genetic distortion, and warp anomalies slowly take their toll.</p><p>What true effect these taints have on individual void born humans is both uncertain and varied, but there is quite evidently something strange about most of them. In many cases, their features are drawn and their skin pallid, and they may have minor deformities, or an oddness of speech, gait, or general appearance that sets them apart from others.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Home World",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "2xTB+1d5",
+      "wounds": 0,
+      "fateFormula": "(1-5|=3),(6-10|=4)",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Speak Language",
+          "specialization": "Ship Dialect",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Charmed (Void Born)",
+          "specialization": "",
+          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.VB00000000000001"
+        },
+        {
+          "name": "Ill-Omened (Void Born)",
+          "specialization": "",
+          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.VB00000000000002"
+        },
+        {
+          "name": "Shipwise (Void Born)",
+          "specialization": "",
+          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.VB00000000000003"
+        },
+        {
+          "name": "Void Accustomed (Void Born)",
+          "specialization": "",
+          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.VB00000000000004"
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "modifiers": {
+      "characteristics": {
+        "strength": -5,
+        "willpower": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "22-23",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": [
+      2
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YwBPZ0s6JNPnHNI5"
+}

@@ -10,7 +10,7 @@
 // Apply theme variables to Foundry chat messages
 
 #chat-log .message.flexcol,
-.rt-chat {
+.wh40k-chat {
     // These local vars inherit from global theme vars
     --rt-card-bg: var(--rt-panel-bg-solid);
     --rt-card-border: var(--rt-gold);
@@ -35,7 +35,7 @@
 // Global Chat Message Dark Mode Override
 // ============================================
 // Foundry chat messages need explicit dark theme styling
-// because they're rendered outside .rt-wrapper context
+// because they're rendered outside .wh40k-wrapper context
 
 // Target Foundry's chat log container
 #chat-log {
@@ -117,7 +117,7 @@
 // Roll Card - The Main Component
 // ============================================
 
-.rt-roll-card {
+.wh40k-roll-card {
     position: relative;
     background: var(--rt-card-bg);
     border: 2px solid var(--rt-card-border);
@@ -155,13 +155,13 @@
 // Card Header
 // ============================================
 
-.rt-roll-card__header {
+.wh40k-roll-card__header {
     position: relative;
     padding: 12px 16px;
     background: linear-gradient(90deg, var(--rt-accent-overlay) 0%, transparent 100%);
     border-bottom: 1px solid var(--rt-border-color);
 
-    .rt-roll-card__actor {
+    .wh40k-roll-card__actor {
         font-size: 0.75rem;
         color: var(--rt-card-muted);
         text-transform: uppercase;
@@ -169,7 +169,7 @@
         margin-bottom: 4px;
     }
 
-    .rt-roll-card__title {
+    .wh40k-roll-card__title {
         font-family: 'Cinzel', serif;
         font-size: 1.1rem;
         font-weight: 600;
@@ -180,7 +180,7 @@
         text-shadow: 0 2px 4px var(--rt-shadow-medium);
     }
 
-    .rt-roll-card__subtitle {
+    .wh40k-roll-card__subtitle {
         font-size: 0.85rem;
         color: var(--rt-card-text);
         margin-top: 2px;
@@ -192,7 +192,7 @@
 // Card Body
 // ============================================
 
-.rt-roll-card__body {
+.wh40k-roll-card__body {
     padding: 12px 16px;
 }
 
@@ -200,7 +200,7 @@
 // Divider with Imperial Gothic Styling
 // ============================================
 
-.rt-roll-card__divider {
+.wh40k-roll-card__divider {
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, var(--rt-card-gold) 20%, var(--rt-card-gold) 80%, transparent 100%);
     margin: 10px 0;
@@ -245,7 +245,7 @@
 // Stat Rows
 // ============================================
 
-.rt-roll-card__row {
+.wh40k-roll-card__row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -259,12 +259,12 @@
     }
 }
 
-.rt-roll-card__label {
+.wh40k-roll-card__label {
     color: var(--rt-card-muted);
     font-weight: 500;
 }
 
-.rt-roll-card__value {
+.wh40k-roll-card__value {
     font-weight: 600;
     color: var(--rt-card-text);
 
@@ -281,7 +281,7 @@
 // Target Number Display
 // ============================================
 
-.rt-roll-card__target {
+.wh40k-roll-card__target {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -291,13 +291,13 @@
     border: 1px solid var(--rt-border-color);
     border-radius: 4px;
 
-    .rt-roll-card__label {
+    .wh40k-roll-card__label {
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
 
-    .rt-roll-card__value {
+    .wh40k-roll-card__value {
         font-size: 1.2rem;
         font-weight: 700;
         color: var(--rt-card-gold);
@@ -308,7 +308,7 @@
 // Result Display - The Star of the Show
 // ============================================
 
-.rt-roll-card__result {
+.wh40k-roll-card__result {
     position: relative;
     text-align: center;
     padding: 16px;
@@ -320,7 +320,7 @@
         border: 2px solid var(--rt-success-primary);
         box-shadow: 0 0 20px var(--rt-card-success-glow), inset 0 0 30px rgba(45, 138, 78, 0.1);
 
-        .rt-roll-card__result-label {
+        .wh40k-roll-card__result-label {
             color: var(--rt-success-secondary);
         }
     }
@@ -330,7 +330,7 @@
         border: 2px solid var(--rt-danger-primary);
         box-shadow: 0 0 20px var(--rt-card-fail-glow), inset 0 0 30px rgba(168, 50, 50, 0.1);
 
-        .rt-roll-card__result-label {
+        .wh40k-roll-card__result-label {
             color: var(--rt-danger-secondary);
         }
     }
@@ -349,7 +349,7 @@
     }
 }
 
-.rt-roll-card__result-label {
+.wh40k-roll-card__result-label {
     font-family: 'Cinzel', serif;
     font-size: 0.9rem;
     font-weight: 600;
@@ -358,7 +358,7 @@
     margin-bottom: 4px;
 }
 
-.rt-roll-card__result-roll {
+.wh40k-roll-card__result-roll {
     font-size: 2.5rem;
     font-weight: 700;
     line-height: 1;
@@ -369,7 +369,7 @@
 // Degrees Display
 // ============================================
 
-.rt-roll-card__degrees {
+.wh40k-roll-card__degrees {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -379,12 +379,12 @@
     background: var(--rt-panel-bg-translucent);
     border-radius: 4px;
 
-    .rt-roll-card__degrees-count {
+    .wh40k-roll-card__degrees-count {
         font-size: 1.5rem;
         font-weight: 700;
     }
 
-    .rt-roll-card__degrees-label {
+    .wh40k-roll-card__degrees-label {
         font-size: 0.8rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
@@ -392,13 +392,13 @@
     }
 
     &--success {
-        .rt-roll-card__degrees-count {
+        .wh40k-roll-card__degrees-count {
             color: var(--rt-success-secondary);
         }
     }
 
     &--failure {
-        .rt-roll-card__degrees-count {
+        .wh40k-roll-card__degrees-count {
             color: var(--rt-danger-secondary);
         }
     }
@@ -408,7 +408,7 @@
 // Notice/Info Banners
 // ============================================
 
-.rt-roll-card__notice {
+.wh40k-roll-card__notice {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -418,14 +418,14 @@
     border-left: 3px solid var(--rt-warning-primary);
     border-radius: 0 4px 4px 0;
 
-    .rt-roll-card__notice-label {
+    .wh40k-roll-card__notice-label {
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         color: var(--rt-warning-secondary);
     }
 
-    .rt-roll-card__notice-value {
+    .wh40k-roll-card__notice-value {
         font-size: 1.1rem;
         font-weight: 700;
         color: var(--rt-card-text);
@@ -436,14 +436,14 @@
 // Damage Display
 // ============================================
 
-.rt-roll-card__damage {
+.wh40k-roll-card__damage {
     padding: 12px;
     margin: 8px 0;
     background: var(--rt-wounds-bg);
     border: 1px solid var(--rt-wounds-border);
     border-radius: 4px;
 
-    .rt-roll-card__damage-header {
+    .wh40k-roll-card__damage-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -451,7 +451,7 @@
         padding-bottom: 8px;
         border-bottom: 1px solid var(--rt-wounds-border);
 
-        .rt-roll-card__damage-title {
+        .wh40k-roll-card__damage-title {
             font-family: 'Cinzel', serif;
             font-size: 0.9rem;
             color: var(--rt-wounds-secondary);
@@ -459,7 +459,7 @@
             letter-spacing: 0.1em;
         }
 
-        .rt-roll-card__damage-location {
+        .wh40k-roll-card__damage-location {
             font-size: 0.8rem;
             padding: 2px 8px;
             background: var(--rt-panel-bg-translucent);
@@ -468,7 +468,7 @@
         }
     }
 
-    .rt-roll-card__damage-value {
+    .wh40k-roll-card__damage-value {
         text-align: center;
         font-size: 2rem;
         font-weight: 700;
@@ -476,7 +476,7 @@
         text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
     }
 
-    .rt-roll-card__damage-type {
+    .wh40k-roll-card__damage-type {
         text-align: center;
         font-size: 0.8rem;
         text-transform: uppercase;
@@ -490,20 +490,20 @@
 // Hit Display (for multi-hit attacks)
 // ============================================
 
-.rt-roll-card__hit {
+.wh40k-roll-card__hit {
     margin: 12px 0;
     padding: 10px;
     background: var(--rt-panel-bg-translucent);
     border: 1px solid var(--rt-border-color);
     border-radius: 4px;
 
-    .rt-roll-card__hit-header {
+    .wh40k-roll-card__hit-header {
         display: flex;
         align-items: center;
         gap: 8px;
         margin-bottom: 8px;
 
-        .rt-roll-card__hit-number {
+        .wh40k-roll-card__hit-number {
             width: 24px;
             height: 24px;
             display: flex;
@@ -516,7 +516,7 @@
             border-radius: 50%;
         }
 
-        .rt-roll-card__hit-location {
+        .wh40k-roll-card__hit-location {
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -529,7 +529,7 @@
 // Righteous Fury
 // ============================================
 
-.rt-roll-card__fury {
+.wh40k-roll-card__fury {
     margin: 8px 0;
     padding: 12px;
     background: var(--rt-fate-bg);
@@ -537,7 +537,7 @@
     border-radius: 4px;
     text-align: center;
 
-    .rt-roll-card__fury-title {
+    .wh40k-roll-card__fury-title {
         font-family: 'Cinzel', serif;
         font-size: 1rem;
         font-weight: 700;
@@ -547,7 +547,7 @@
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     }
 
-    .rt-roll-card__fury-bonus {
+    .wh40k-roll-card__fury-bonus {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -557,27 +557,27 @@
         background: rgba(255, 215, 0, 0.1);
         border-radius: 3px;
 
-        .rt-roll-card__fury-label {
+        .wh40k-roll-card__fury-label {
             font-size: 0.85rem;
             color: var(--rt-text-medium);
             font-weight: 600;
         }
 
-        .rt-roll-card__fury-value {
+        .wh40k-roll-card__fury-value {
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--rt-gold-bright);
         }
     }
 
-    .rt-roll-card__fury-effect {
+    .wh40k-roll-card__fury-effect {
         font-size: 0.85rem;
         color: var(--rt-card-text);
         margin-top: 8px;
         line-height: 1.4;
     }
 
-    .rt-roll-card__fury-text {
+    .wh40k-roll-card__fury-text {
         font-size: 0.85rem;
         color: var(--rt-text-muted);
         margin-top: 6px;
@@ -595,7 +595,7 @@
         background: var(--rt-panel-bg);
         border-color: var(--rt-text-muted);
 
-        .rt-roll-card__fury-title {
+        .wh40k-roll-card__fury-title {
             color: var(--rt-text-medium);
             text-shadow: none;
         }
@@ -615,7 +615,7 @@
 // Action Controls
 // ============================================
 
-.rt-roll-card__controls {
+.wh40k-roll-card__controls {
     display: flex;
     gap: 6px;
     padding: 10px 16px;
@@ -628,12 +628,12 @@
     }
 }
 
-.rt-roll-card__controls-row {
+.wh40k-roll-card__controls-row {
     display: flex;
     gap: 6px;
 }
 
-.rt-roll-card__hit-loc {
+.wh40k-roll-card__hit-loc {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -651,7 +651,7 @@
     }
 }
 
-.rt-roll-card__btn {
+.wh40k-roll-card__btn {
     flex: 1;
     display: flex;
     align-items: center;
@@ -739,7 +739,7 @@
 // Text/Effect Display
 // ============================================
 
-.rt-roll-card__text {
+.wh40k-roll-card__text {
     padding: 8px 12px;
     margin: 8px 0;
     background: var(--rt-panel-bg-translucent);
@@ -759,20 +759,20 @@
     }
 }
 
-.rt-roll-card__effect {
+.wh40k-roll-card__effect {
     display: flex;
     align-items: flex-start;
     gap: 8px;
     padding: 6px 0;
     font-size: 0.85rem;
 
-    .rt-roll-card__effect-name {
+    .wh40k-roll-card__effect-name {
         font-weight: 600;
         color: var(--rt-card-gold);
         flex-shrink: 0;
     }
 
-    .rt-roll-card__effect-desc {
+    .wh40k-roll-card__effect-desc {
         color: var(--rt-card-text);
         opacity: 0.9;
     }
@@ -782,7 +782,7 @@
 // Collapsible Damage Section
 // ============================================
 
-.rt-roll-card__collapse {
+.wh40k-roll-card__collapse {
     margin-top: 8px;
 
     &[hidden] {
@@ -794,7 +794,7 @@
 // Dice Roll Visual (hidden by default)
 // ============================================
 
-.rt-roll-card__dice {
+.wh40k-roll-card__dice {
     display: none;
 }
 
@@ -802,7 +802,7 @@
 // Degree Badge (injected by ChatMessageRT)
 // ============================================
 
-.rt-degree-badge {
+.wh40k-degree-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -832,7 +832,7 @@
 // Message Portrait (injected by ChatMessageRT)
 // ============================================
 
-.rt-message-portrait {
+.wh40k-message-portrait {
     width: 28px;
     height: 28px;
     object-fit: cover;
@@ -846,7 +846,7 @@
 // Dice Tooltip Enhancements (D100Roll)
 // ============================================
 
-.rt-dice-summary {
+.wh40k-dice-summary {
     margin-top: 8px;
     padding: 8px;
     background: var(--rt-panel-bg-translucent);
@@ -855,34 +855,34 @@
     line-height: 1.5;
 }
 
-.rt-dice-target {
+.wh40k-dice-target {
     color: var(--rt-text-muted);
     font-weight: 500;
 }
 
-.rt-dice-success {
+.wh40k-dice-success {
     color: var(--rt-success-secondary);
     font-weight: 600;
 }
 
-.rt-dice-failure {
+.wh40k-dice-failure {
     color: var(--rt-danger-secondary);
     font-weight: 600;
 }
 
-.rt-dice-critical {
+.wh40k-dice-critical {
     color: var(--rt-gold-bright);
     font-weight: 700;
     text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
 }
 
-.rt-dice-fumble {
+.wh40k-dice-fumble {
     color: var(--rt-red-bright);
     font-weight: 700;
     text-shadow: 0 0 6px rgba(255, 68, 68, 0.5);
 }
 
-.rt-dice-doubles {
+.wh40k-dice-doubles {
     color: var(--rt-warning-primary);
     font-weight: 600;
     font-style: italic;
@@ -892,7 +892,7 @@
 // Manual Roll Badge
 // ============================================
 
-.rt-roll-card__manual-badge {
+.wh40k-roll-card__manual-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -913,7 +913,7 @@
 }
 
 // Target-only card (no roll result)
-.rt-roll-card__target-only {
+.wh40k-roll-card__target-only {
     text-align: center;
     padding: 8px 12px;
     margin: 8px 0;
@@ -929,7 +929,7 @@
 // Weapon Qualities Display
 // ============================================
 
-.rt-roll-card__qualities {
+.wh40k-roll-card__qualities {
     margin-bottom: 16px;
     padding: 12px;
     background: linear-gradient(135deg, rgba(75, 192, 115, 0.08) 0%, rgba(75, 192, 115, 0.03) 100%);
@@ -937,14 +937,14 @@
     border-radius: 4px;
 }
 
-.rt-roll-card__qualities-header {
+.wh40k-roll-card__qualities-header {
     display: flex;
     align-items: center;
     gap: 6px;
     margin-bottom: 8px;
 }
 
-.rt-roll-card__qualities-title {
+.wh40k-roll-card__qualities-title {
     font-weight: 600;
     font-size: 0.85rem;
     color: var(--rt-card-text);
@@ -952,13 +952,13 @@
     letter-spacing: 0.5px;
 }
 
-.rt-roll-card__qualities-list {
+.wh40k-roll-card__qualities-list {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
 }
 
-.rt-quality-tag {
+.wh40k-quality-tag {
     display: inline-block;
     padding: 4px 10px;
     background: rgba(75, 192, 115, 0.15);

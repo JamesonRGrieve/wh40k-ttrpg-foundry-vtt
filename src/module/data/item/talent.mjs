@@ -230,7 +230,7 @@ export default class TalentData extends ItemDataModel.mixin(
    * @type {string}
    */
   get categoryLabel() {
-    if (!this.category) return game.i18n.localize("RT.TalentCategory.General");
+    if (!this.category) return game.i18n.localize("WH40K.TalentCategory.General");
     const key = `RT.TalentCategory.${this.category.capitalize()}`;
     const localized = game.i18n.localize(key);
     return localized === key ? this.category : localized;
@@ -405,7 +405,7 @@ export default class TalentData extends ItemDataModel.mixin(
     };
     
     const html = await renderTemplate(
-      "systems/rogue-trader/templates/chat/talent-card.hbs",
+      "systems/wh40k-rpg/templates/chat/talent-card.hbs",
       templateData
     );
     

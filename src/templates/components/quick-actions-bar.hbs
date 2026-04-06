@@ -3,7 +3,7 @@
   Standardized action buttons for items
   
   Usage:
-  {{> "systems/rogue-trader/templates/components/quick-actions-bar.hbs" 
+  {{> "systems/wh40k-rpg/templates/components/quick-actions-bar.hbs" 
       item=item
       compact=false
       inSheet=false}}
@@ -21,25 +21,25 @@
             class="rt-quick-action rt-quick-action--primary" 
             data-action="itemRoll"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Attack'}}">
+            title="{{localize 'WH40K.Action.Attack'}}">
       <i class="fa-solid fa-crosshairs"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Attack"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Attack"}}</span>{{/unless}}
     </button>
     <button type="button" 
             class="rt-quick-action rt-quick-action--primary" 
             data-action="rollDamage"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Damage'}}">
+            title="{{localize 'WH40K.Action.Damage'}}">
       <i class="fa-solid fa-burst"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Damage"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Damage"}}</span>{{/unless}}
     </button>
     <button type="button" 
             class="rt-quick-action rt-quick-action--secondary" 
             data-action="reloadWeapon"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Reload'}}">
+            title="{{localize 'WH40K.Action.Reload'}}">
       <i class="fa-solid fa-rotate-right"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Reload"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Reload"}}</span>{{/unless}}
     </button>
   {{/if}}
 
@@ -49,10 +49,10 @@
             class="rt-quick-action rt-quick-action--primary" 
             data-action="toggleEquip"
             data-item-id="{{item.id}}"
-            title="{{#if system.equipped}}{{localize 'RT.Action.Unequip'}}{{else}}{{localize 'RT.Action.Equip'}}{{/if}}">
+            title="{{#if system.equipped}}{{localize 'WH40K.Action.Unequip'}}{{else}}{{localize 'WH40K.Action.Equip'}}{{/if}}">
       <i class="fa-solid {{#if system.equipped}}fa-user-check{{else}}fa-user-plus{{/if}}"></i>
       {{#unless compact}}
-      <span>{{#if system.equipped}}{{localize "RT.Action.Unequip"}}{{else}}{{localize "RT.Action.Equip"}}{{/if}}</span>
+      <span>{{#if system.equipped}}{{localize "WH40K.Action.Unequip"}}{{else}}{{localize "WH40K.Action.Equip"}}{{/if}}</span>
       {{/unless}}
     </button>
   {{/if}}
@@ -64,18 +64,18 @@
             class="rt-quick-action rt-quick-action--primary" 
             data-action="itemRoll"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Roll'}}">
+            title="{{localize 'WH40K.Action.Roll'}}">
       <i class="fa-solid fa-dice-d20"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Roll"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Roll"}}</span>{{/unless}}
     </button>
     {{/if}}
     <button type="button" 
             class="rt-quick-action rt-quick-action--secondary" 
             data-action="toggleFavorite"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Favorite'}}">
+            title="{{localize 'WH40K.Action.Favorite'}}">
       <i class="fa-solid fa-star"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Favorite"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Favorite"}}</span>{{/unless}}
     </button>
   {{/if}}
 
@@ -86,9 +86,9 @@
             class="rt-quick-action rt-quick-action--primary" 
             data-action="itemRoll"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Roll'}}">
+            title="{{localize 'WH40K.Action.Roll'}}">
       <i class="fa-solid fa-dice-d20"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Roll"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Roll"}}</span>{{/unless}}
     </button>
     {{/if}}
   {{/if}}
@@ -99,17 +99,17 @@
             class="rt-quick-action rt-quick-action--primary" 
             data-action="useItem"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Use'}}">
+            title="{{localize 'WH40K.Action.Use'}}">
       <i class="fa-solid fa-flask"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Use"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Use"}}</span>{{/unless}}
     </button>
     <button type="button" 
             class="rt-quick-action rt-quick-action--secondary" 
             data-action="adjustQuantity"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Adjust'}}">
+            title="{{localize 'WH40K.Action.Adjust'}}">
       <i class="fa-solid fa-sliders"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Adjust"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Adjust"}}</span>{{/unless}}
     </button>
   {{/if}}
 
@@ -119,25 +119,25 @@
             class="rt-quick-action rt-quick-action--secondary" 
             data-action="stackCondition"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Stack'}}">
+            title="{{localize 'WH40K.Action.Stack'}}">
       <i class="fa-solid fa-plus"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Stack"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Stack"}}</span>{{/unless}}
     </button>
     <button type="button" 
             class="rt-quick-action rt-quick-action--secondary" 
             data-action="reduceCondition"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Reduce'}}">
+            title="{{localize 'WH40K.Action.Reduce'}}">
       <i class="fa-solid fa-minus"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Reduce"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Reduce"}}</span>{{/unless}}
     </button>
     <button type="button" 
             class="rt-quick-action rt-quick-action--danger" 
             data-action="removeCondition"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Remove'}}">
+            title="{{localize 'WH40K.Action.Remove'}}">
       <i class="fa-solid fa-xmark"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Remove"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Remove"}}</span>{{/unless}}
     </button>
   {{/if}}
 
@@ -147,17 +147,17 @@
             class="rt-quick-action rt-quick-action--primary" 
             data-action="rollSeverity"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.RollSeverity'}}">
+            title="{{localize 'WH40K.Action.RollSeverity'}}">
       <i class="fa-solid fa-dice"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.RollSeverity"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.RollSeverity"}}</span>{{/unless}}
     </button>
     <button type="button" 
             class="rt-quick-action rt-quick-action--secondary" 
             data-action="treatInjury"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Treat'}}">
+            title="{{localize 'WH40K.Action.Treat'}}">
       <i class="fa-solid fa-kit-medical"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Treat"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Treat"}}</span>{{/unless}}
     </button>
   {{/if}}
 
@@ -167,9 +167,9 @@
             class="rt-quick-action rt-quick-action--primary" 
             data-action="manifestPower"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Manifest'}}">
+            title="{{localize 'WH40K.Action.Manifest'}}">
       <i class="fa-solid fa-brain"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Manifest"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Manifest"}}</span>{{/unless}}
     </button>
   {{/if}}
 
@@ -179,9 +179,9 @@
             class="rt-quick-action rt-quick-action--primary" 
             data-action="loadAmmo"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Load'}}">
+            title="{{localize 'WH40K.Action.Load'}}">
       <i class="fa-solid fa-arrow-up-from-bracket"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Load"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Load"}}</span>{{/unless}}
     </button>
   {{/if}}
 
@@ -191,9 +191,9 @@
             class="rt-quick-action rt-quick-action--secondary" 
             data-action="postToChat"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.PostToChat'}}">
+            title="{{localize 'WH40K.Action.PostToChat'}}">
       <i class="fa-solid fa-comment"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.PostToChat"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.PostToChat"}}</span>{{/unless}}
     </button>
   {{/unless}}
 
@@ -203,9 +203,9 @@
             class="rt-quick-action rt-quick-action--secondary" 
             data-action="editItem"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Edit'}}">
+            title="{{localize 'WH40K.Action.Edit'}}">
       <i class="fa-solid fa-pen-to-square"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Edit"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Edit"}}</span>{{/unless}}
     </button>
     {{/if}}
   {{/if}}
@@ -216,9 +216,9 @@
             class="rt-quick-action rt-quick-action--danger" 
             data-action="deleteItem"
             data-item-id="{{item.id}}"
-            title="{{localize 'RT.Action.Delete'}}">
+            title="{{localize 'WH40K.Action.Delete'}}">
       <i class="fa-solid fa-trash"></i>
-      {{#unless compact}}<span>{{localize "RT.Action.Delete"}}</span>{{/unless}}
+      {{#unless compact}}<span>{{localize "WH40K.Action.Delete"}}</span>{{/unless}}
     </button>
     {{/if}}
   {{/unless}}

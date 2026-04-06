@@ -11,10 +11,10 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "origin-detail-dialog"],
+        classes: ["wh40k-rpg", "origin-detail-dialog"],
         tag: "div",
         window: {
-            title: "RT.OriginPath.ViewDetails",
+            title: "WH40K.OriginPath.ViewDetails",
             icon: "fa-solid fa-scroll",
             minimizable: false,
             resizable: true
@@ -33,7 +33,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     /** @override */
     static PARTS = {
         content: {
-            template: "systems/rogue-trader/templates/character-creation/origin-detail-dialog.hbs",
+            template: "systems/wh40k-rpg/templates/character-creation/origin-detail-dialog.hbs",
             scrollable: [""]
         }
     };
@@ -380,7 +380,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 item.sheet.render(true);
             }
         } catch (e) {
-            ui.notifications.warn(game.i18n.localize("RT.OriginPath.ItemNotFound"));
+            ui.notifications.warn(game.i18n.localize("WH40K.OriginPath.ItemNotFound"));
         }
     }
 

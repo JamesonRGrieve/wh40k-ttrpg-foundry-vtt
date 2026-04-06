@@ -6,14 +6,14 @@ import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../ru
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.mjs';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.mjs';
 import { hitDropdown } from '../rules/hit-locations.mjs';
-import { RogueTrader } from '../rules/config.mjs';
+import { WH40K } from '../rules/config.mjs';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.mjs';
 
 export class RollData {
     difficulties = rollDifficulties();
     aims = aimModifiers();
     locations = hitDropdown();
-    lasModes = RogueTrader.combat.las_fire_modes;
+    lasModes = WH40K.combat.las_fire_modes;
 
     // Chat Controls
     ignoreModifiers = false;
@@ -200,7 +200,7 @@ export class WeaponRollData extends RollData {
 
     constructor() {
         super();
-        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
     }
 
     hasWeaponModification(special) {
@@ -356,7 +356,7 @@ export class PsychicRollData extends RollData {
 
     constructor() {
         super();
-        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
     }
 
     initialize() {

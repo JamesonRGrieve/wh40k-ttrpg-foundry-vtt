@@ -2,11 +2,11 @@
 // COMBAT TAB - Clean Combat Interface
 // ============================================
 
-.rt-combat-tab {
+.wh40k-combat-tab {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-md;
-  padding: $rt-space-md;
+  gap: $wh40k-space-md;
+  padding: $wh40k-space-md;
   container-type: inline-size;
 }
 
@@ -14,69 +14,69 @@
 // COMBAT GRID LAYOUT
 // ============================================
 
-.rt-combat-grid {
+.wh40k-combat-grid {
   display: grid;
   grid-template-columns: 1fr minmax(280px, 380px);
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   min-height: 0;
   width: 100%;
   align-items: start;
 }
 
 @container (max-width: 700px) {
-  .rt-combat-grid {
+  .wh40k-combat-grid {
     grid-template-columns: 1fr;
   }
 }
 
 // Left side contains vitals, armour, and weapons in a nested grid
-.rt-combat-left-side {
+.wh40k-combat-left-side {
   display: grid;
   grid-template-columns: minmax(200px, 240px) 1fr;
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   grid-auto-rows: min-content;
   
   // Weapons panel spans both columns
-  .rt-panel-arsenal {
+  .wh40k-panel-arsenal {
     grid-column: 1 / -1;
   }
 }
 
 @container (max-width: 550px) {
-  .rt-combat-left-side {
+  .wh40k-combat-left-side {
     grid-template-columns: 1fr;
     
-    .rt-panel-arsenal {
+    .wh40k-panel-arsenal {
       grid-column: auto;
     }
   }
 }
 
-.rt-combat-col {
+.wh40k-combat-col {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
 // Actions column on the right
-.rt-combat-actions {
+.wh40k-combat-actions {
   min-height: 100%;
 }
 
 // ============================================
 // SMALL HEADER BUTTONS
 // ============================================
-// NOTE: Use .rt-btn-icon--bordered for new code; this maintains backwards compatibility
+// NOTE: Use .wh40k-btn-icon--bordered for new code; this maintains backwards compatibility
 
-.rt-header-btn {
-  @extend .rt-btn-icon;
-  background: rgba($rt-accent-gold, 0.2);
-  border: 1px solid rgba($rt-accent-gold, 0.4);
-  color: $rt-accent-gold;
+.wh40k-header-btn {
+  @extend .wh40k-btn-icon;
+  background: rgba($wh40k-accent-gold, 0.2);
+  border: 1px solid rgba($wh40k-accent-gold, 0.4);
+  color: $wh40k-accent-gold;
   
   &:hover {
-    background: rgba($rt-accent-gold, 0.3);
-    border-color: $rt-accent-gold;
+    background: rgba($wh40k-accent-gold, 0.3);
+    border-color: $wh40k-accent-gold;
     transform: scale(1.1);
   }
   
@@ -92,30 +92,30 @@
 // VITALS HUD - Modern Status Display
 // ============================================
 
-.rt-vitals-hud {
+.wh40k-vitals-hud {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 100%);
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  padding: 0 $rt-space-sm $rt-space-sm;
+  padding: 0 $wh40k-space-sm $wh40k-space-sm;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.rt-vitals-hud-header {
+.wh40k-vitals-hud-header {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
-  padding: 6px $rt-space-sm;
-  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.1) 0%, rgba($rt-accent-gold, 0.05) 100%);
-  border-left: 3px solid $rt-accent-gold;
+  gap: $wh40k-space-xs;
+  padding: 6px $wh40k-space-sm;
+  background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.1) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
+  border-left: 3px solid $wh40k-accent-gold;
   border-radius: 4px;
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: $rt-accent-gold;
+  color: $wh40k-accent-gold;
   
   i {
     font-size: 0.85rem;
@@ -131,19 +131,19 @@
 // ============================================
 // VITAL STAT CARD - ADDITIONAL STYLES
 // ============================================
-// NOTE: Core .rt-vital-stat definition is in _unified-components.scss
+// NOTE: Core .wh40k-vital-stat definition is in _unified-components.scss
 // Only combat-specific extensions live here
 
 // Clickable area (label + chevron only)
-.rt-vital-header-clickable {
+.wh40k-vital-header-clickable {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   flex: 1;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  padding: $rt-space-xs;
-  margin: -#{$rt-space-xs};
+  padding: $wh40k-space-xs;
+  margin: -#{$wh40k-space-xs};
   margin-right: 0;
   border-radius: 4px;
   
@@ -151,37 +151,37 @@
     background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.05);
   }
   
-  .rt-panel-chevron {
+  .wh40k-panel-chevron {
     margin-left: auto;
     transition: transform 0.2s ease;
-    color: var(--vital-color, $rt-text-muted);
+    color: var(--vital-color, $wh40k-text-muted);
     font-size: 0.7rem;
     
-    &.rt-panel-chevron--open {
+    &.wh40k-panel-chevron--open {
       transform: rotate(180deg);
     }
   }
 }
 
-.rt-vital-controls {
+.wh40k-vital-controls {
   display: flex;
   gap: 4px;
   flex-shrink: 0;
 }
 
-// NOTE: Use .rt-btn-control--compact for new code; this maintains backwards compatibility
-.rt-vital-ctrl-btn {
-  @extend .rt-btn-control;
+// NOTE: Use .wh40k-btn-control--compact for new code; this maintains backwards compatibility
+.wh40k-vital-ctrl-btn {
+  @extend .wh40k-btn-control;
   width: 22px;
   height: 22px;
   font-size: 0.7rem;
   background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.08);
   border: 1px solid rgba(var(--vital-color-rgb, 0, 0, 0), 0.2);
-  color: var(--vital-color, $rt-text-primary);
+  color: var(--vital-color, $wh40k-text-primary);
   
   &:hover:not(:disabled) {
     background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.15);
-    border-color: var(--vital-color, $rt-border-medium);
+    border-color: var(--vital-color, $wh40k-border-medium);
   }
   
   i {
@@ -193,14 +193,14 @@
 // PROGRESS BAR
 // ============================================
 
-.rt-vital-bar-wrapper {
+.wh40k-vital-bar-wrapper {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   width: 100%;
 }
 
-.rt-vital-bar-track {
+.wh40k-vital-bar-track {
   flex: 1;
   height: 8px;
   background: rgba(0, 0, 0, 0.08);
@@ -210,7 +210,7 @@
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.rt-vital-bar-progress {
+.wh40k-vital-bar-progress {
   height: 100%;
   width: var(--progress, 0%);
   border-radius: 4px;
@@ -239,15 +239,15 @@
   100% { transform: translateX(100%); }
 }
 
-.rt-wounds-progress {
+.wh40k-wounds-progress {
   background: linear-gradient(90deg, 
-    darken($rt-accent-combat, 10%) 0%, 
-    $rt-accent-combat 50%, 
-    lighten($rt-accent-combat, 10%) 100%
+    darken($wh40k-accent-combat, 10%) 0%, 
+    $wh40k-accent-combat 50%, 
+    lighten($wh40k-accent-combat, 10%) 100%
   );
 }
 
-.rt-fatigue-progress {
+.wh40k-fatigue-progress {
   background: linear-gradient(90deg, 
     #a06020 0%, 
     #c08020 50%, 
@@ -255,10 +255,10 @@
   );
 }
 
-.rt-vital-percent {
+.wh40k-vital-percent {
   font-size: 0.65rem;
   font-weight: 700;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   min-width: 32px;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -268,7 +268,7 @@
 // ALERT MESSAGES
 // ============================================
 
-.rt-vital-alert {
+.wh40k-vital-alert {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -280,7 +280,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--vital-color, $rt-text-primary);
+  color: var(--vital-color, $wh40k-text-primary);
   
   i {
     font-size: 0.75rem;
@@ -293,7 +293,7 @@
   50% { opacity: 0.6; transform: scale(1.1); }
 }
 
-.rt-alert-fatigue {
+.wh40k-alert-fatigue {
   --vital-color-rgb: 192, 128, 32;
   --vital-color: #c08020;
 }
@@ -302,7 +302,7 @@
 // FATIGUE BOLTS DISPLAY
 // ============================================
 
-.rt-fatigue-bolts-combat {
+.wh40k-fatigue-bolts-combat {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -311,7 +311,7 @@
   flex-wrap: wrap;
 }
 
-.rt-fatigue-pip {
+.wh40k-fatigue-pip {
   font-size: 1.2rem;
   color: rgba(#c08020, 0.25);  // Unfilled: faded amber
   transition: all 0.2s ease;
@@ -329,7 +329,7 @@
     color: rgba(#c08020, 0.5);
   }
   
-  &.rt-fatigue-pip--filled {
+  &.wh40k-fatigue-pip--filled {
     color: #c08020;  // Filled: solid amber
     text-shadow: 0 0 6px rgba(#c08020, 0.5);
     animation: bolt-glow-combat 2s ease-in-out infinite;
@@ -349,7 +349,7 @@
 // FATE STARS DISPLAY
 // ============================================
 
-.rt-fate-stars {
+.wh40k-fate-stars {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -357,7 +357,7 @@
   padding: 6px 0;
 }
 
-.rt-fate-pip {
+.wh40k-fate-pip {
   font-size: 1.2rem;
   color: rgba(#3498db, 0.25);  // Unfilled: faded blue
   transition: all 0.2s ease;
@@ -374,7 +374,7 @@
     transform: scale(1.15);
   }
   
-  &.rt-fate-pip--active {
+  &.wh40k-fate-pip--active {
     color: #3498db;  // Filled: solid blue
     text-shadow: 0 0 8px rgba(#3498db, 0.5), 0 0 4px rgba(#3498db, 0.3);
     animation: star-glow 2s ease-in-out infinite;
@@ -396,8 +396,8 @@
 // MOBILITY SPEEDS (Compact Vitals Version)
 // ============================================
 
-.rt-vital-mobility {
-  .rt-vital-stat-body {
+.wh40k-vital-mobility {
+  .wh40k-vital-stat-body {
     padding: 0;
   }
 }
@@ -406,14 +406,14 @@
 // MOBILITY SPEEDS - Inline Compact Layout
 // ============================================
 
-.rt-mobility-speeds-inline {
+.wh40k-mobility-speeds-inline {
   display: flex;
   flex-direction: column;
   gap: 4px;
   width: 100%;
 }
 
-.rt-speed-inline {
+.wh40k-speed-inline {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -443,7 +443,7 @@
     flex-shrink: 0;
   }
   
-  .rt-speed-value {
+  .wh40k-speed-value {
     font-family: 'Modesto Condensed', serif;
     font-size: 0.95rem;
     font-weight: 700;
@@ -452,88 +452,88 @@
     flex-shrink: 0;
   }
   
-  .rt-speed-label {
+  .wh40k-speed-label {
     font-size: 0.65rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
     margin-left: auto;
   }
 }
 
 // Speed-specific icon colors
-.rt-speed-half i { color: #27ae60; }
-.rt-speed-full i { color: #2980b9; }
-.rt-speed-charge i { color: #e67e22; }
-.rt-speed-run i { color: #c0392b; }
+.wh40k-speed-half i { color: #27ae60; }
+.wh40k-speed-full i { color: #2980b9; }
+.wh40k-speed-charge i { color: #e67e22; }
+.wh40k-speed-run i { color: #c0392b; }
 
 // ============================================
 // ACTIVE EFFECTS - Compact Vitals Version
 // ============================================
 
-.rt-vital-effects {
-  .rt-effects-count {
+.wh40k-vital-effects {
+  .wh40k-effects-count {
     margin-left: 4px;
     font-size: 0.65rem;
     font-weight: 600;
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
   }
 }
 
-.rt-combat-vital-value {
+.wh40k-combat-vital-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--vital-color, $rt-text-primary);
+  color: var(--vital-color, $wh40k-text-primary);
   line-height: 1;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.rt-combat-vital-max-label {
+.wh40k-combat-vital-max-label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   line-height: 1;
 }
 
-.rt-effects-compact-list {
+.wh40k-effects-compact-list {
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
-.rt-effect-compact {
+.wh40k-effect-compact {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 4px 6px;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
-  border-left: 2px solid $rt-accent-gold;
+  border-left: 2px solid $wh40k-accent-gold;
   border-radius: 3px;
   transition: all 0.2s ease;
   
   &:hover {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-    border-left-color: lighten($rt-accent-gold, 10%);
+    border-left-color: lighten($wh40k-accent-gold, 10%);
   }
   
   &--disabled {
     opacity: 0.5;
-    border-left-color: $rt-text-muted;
+    border-left-color: $wh40k-text-muted;
     
-    .rt-effect-compact-icon {
+    .wh40k-effect-compact-icon {
       filter: grayscale(100%);
     }
     
-    .rt-effect-compact-name {
+    .wh40k-effect-compact-name {
       text-decoration: line-through;
-      color: $rt-text-muted;
+      color: $wh40k-text-muted;
     }
   }
 }
 
-.rt-effect-compact-icon {
+.wh40k-effect-compact-icon {
   width: 18px;
   height: 18px;
   border-radius: 2px;
@@ -542,7 +542,7 @@
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.rt-effect-compact-name {
+.wh40k-effect-compact-name {
   flex: 1;
   font-size: 0.75rem;
   font-weight: 500;
@@ -553,13 +553,13 @@
   line-height: 1.2;
 }
 
-.rt-effect-compact-controls {
+.wh40k-effect-compact-controls {
   display: flex;
   gap: 2px;
   margin-left: auto;
 }
 
-.rt-effect-compact-btn {
+.wh40k-effect-compact-btn {
   width: 18px;
   height: 18px;
   padding: 0;
@@ -568,7 +568,7 @@
   justify-content: center;
   background: transparent;
   border: none;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   cursor: pointer;
   border-radius: 2px;
   transition: all 0.2s ease;
@@ -579,21 +579,21 @@
   
   &:hover {
     background: rgba(255, 255, 255, 0.1);
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
   }
   
   &--danger:hover {
-    color: $rt-accent-combat;
+    color: $wh40k-accent-combat;
   }
 }
 
-.rt-effects-empty {
+.wh40k-effects-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: $rt-space-md 0;
-  color: $rt-text-muted;
+  padding: $wh40k-space-md 0;
+  color: $wh40k-text-muted;
   
   i {
     font-size: 1.2rem;
@@ -610,12 +610,12 @@
 // VITAL EDIT SECTIONS (Expandable)
 // ============================================
 
-.rt-vital-edit-section {
+.wh40k-vital-edit-section {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm;
-  margin-top: $rt-space-sm;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-sm;
+  margin-top: $wh40k-space-sm;
   background: rgba(0, 0, 0, 0.02);
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 4px;
@@ -625,18 +625,18 @@
 // CRITICAL DAMAGE PIPS (Compact for Combat Tab)
 // ============================================
 
-.rt-vital-critical-inline {
+.wh40k-vital-critical-inline {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 6px 8px;
   margin-top: 4px;
-  background: rgba($rt-accent-combat, 0.08);
-  border-left: 2px solid $rt-accent-combat;
+  background: rgba($wh40k-accent-combat, 0.08);
+  border-left: 2px solid $wh40k-accent-combat;
   border-radius: 0 4px 4px 0;
 }
 
-.rt-crit-label {
+.wh40k-crit-label {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -644,7 +644,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: $rt-accent-combat;
+  color: $wh40k-accent-combat;
   white-space: nowrap;
   
   i {
@@ -652,39 +652,39 @@
   }
 }
 
-.rt-critical-pips-compact {
+.wh40k-critical-pips-compact {
   display: flex;
   gap: 2px;
   flex: 1;
 }
 
-.rt-crit-pip-mini {
+.wh40k-crit-pip-mini {
   width: 10px;
   height: 10px;
   padding: 0;
-  background: rgba($rt-accent-combat, 0.15);
-  border: 1px solid rgba($rt-accent-combat, 0.3);
+  background: rgba($wh40k-accent-combat, 0.15);
+  border: 1px solid rgba($wh40k-accent-combat, 0.3);
   border-radius: 2px;
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
   
   &:hover {
-    background: rgba($rt-accent-combat, 0.3);
-    border-color: $rt-accent-combat;
+    background: rgba($wh40k-accent-combat, 0.3);
+    border-color: $wh40k-accent-combat;
     transform: scale(1.15);
   }
   
-  &.rt-crit-pip-mini--filled {
+  &.wh40k-crit-pip-mini--filled {
     background: linear-gradient(135deg, 
-      $rt-accent-combat 0%, 
-      darken($rt-accent-combat, 10%) 100%);
-    border-color: darken($rt-accent-combat, 5%);
-    box-shadow: 0 0 4px rgba($rt-accent-combat, 0.4),
+      $wh40k-accent-combat 0%, 
+      darken($wh40k-accent-combat, 10%) 100%);
+    border-color: darken($wh40k-accent-combat, 5%);
+    box-shadow: 0 0 4px rgba($wh40k-accent-combat, 0.4),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
     
     &:hover {
-      box-shadow: 0 0 6px rgba($rt-accent-combat, 0.6),
+      box-shadow: 0 0 6px rgba($wh40k-accent-combat, 0.6),
                   inset 0 1px 0 rgba(255, 255, 255, 0.3);
       transform: scale(1.2);
     }
@@ -695,60 +695,60 @@
 // VITAL EDIT FIELDS
 // ============================================
 
-.rt-vital-edit-field {
+.wh40k-vital-edit-field {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.rt-vital-edit-label {
+.wh40k-vital-edit-label {
   font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: $rt-text-secondary;
+  color: $wh40k-text-secondary;
 }
 
-.rt-vital-edit-input {
+.wh40k-vital-edit-input {
   width: 100%;
   padding: 6px 8px;
-  background: $rt-bg-paper;
-  border: 1px solid $rt-border-light;
+  background: $wh40k-bg-paper;
+  border: 1px solid $wh40k-border-light;
   border-radius: 4px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: $rt-text-primary;
+  color: $wh40k-text-primary;
   transition: all 0.2s ease;
   
   &:focus {
     outline: none;
-    border-color: var(--vital-color, $rt-accent-gold);
+    border-color: var(--vital-color, $wh40k-accent-gold);
     box-shadow: 0 0 0 2px rgba(var(--vital-color-rgb, 212, 175, 55), 0.15);
   }
   
   &:disabled,
   &[readonly] {
     background: rgba(0, 0, 0, 0.03);
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
     cursor: not-allowed;
   }
 }
 
-.rt-vital-info-text {
+.wh40k-vital-info-text {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 6px 8px;
-  background: rgba($rt-accent-gold, 0.08);
-  border-left: 2px solid $rt-accent-gold;
+  background: rgba($wh40k-accent-gold, 0.08);
+  border-left: 2px solid $wh40k-accent-gold;
   border-radius: 0 4px 4px 0;
   font-size: 0.65rem;
-  color: $rt-text-secondary;
+  color: $wh40k-text-secondary;
   line-height: 1.3;
   
   i {
     font-size: 0.75rem;
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
     flex-shrink: 0;
   }
   
@@ -761,55 +761,55 @@
 // PANEL ICON COLORS
 // ============================================
 
-.rt-panel-reactions .rt-panel-header i { color: $rt-accent-skills; }
-.rt-panel-initiative .rt-panel-header i { color: $rt-accent-gold; }
-.rt-panel-injuries .rt-panel-header i { color: $rt-accent-combat; }
-.rt-panel-movement .rt-panel-header i { color: $rt-accent-equipment; }
-.rt-panel-quick-actions .rt-panel-header i { color: $rt-accent-combat; }
-.rt-panel-arsenal .rt-panel-header i { color: $rt-accent-talents; }
-.rt-panel-forcefield .rt-panel-header i { color: $rt-accent-powers; }
+.wh40k-panel-reactions .wh40k-panel-header i { color: $wh40k-accent-skills; }
+.wh40k-panel-initiative .wh40k-panel-header i { color: $wh40k-accent-gold; }
+.wh40k-panel-injuries .wh40k-panel-header i { color: $wh40k-accent-combat; }
+.wh40k-panel-movement .wh40k-panel-header i { color: $wh40k-accent-equipment; }
+.wh40k-panel-quick-actions .wh40k-panel-header i { color: $wh40k-accent-combat; }
+.wh40k-panel-arsenal .wh40k-panel-header i { color: $wh40k-accent-talents; }
+.wh40k-panel-forcefield .wh40k-panel-header i { color: $wh40k-accent-powers; }
 
 // ============================================
 // COMBAT ACTIONS PANEL
 // ============================================
 
 // Action groups
-.rt-combat-actions-group {
+.wh40k-combat-actions-group {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
-  margin-bottom: $rt-space-md;
+  gap: $wh40k-space-sm;
+  margin-bottom: $wh40k-space-md;
   
   &:last-child {
     margin-bottom: 0;
   }
 }
 
-.rt-combat-actions-group-header {
+.wh40k-combat-actions-group-header {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
-  padding: 6px $rt-space-sm;
-  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.08) 0%, rgba($rt-accent-gold, 0.03) 100%);
-  border-left: 3px solid $rt-accent-gold;
+  gap: $wh40k-space-xs;
+  padding: 6px $wh40k-space-sm;
+  background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.08) 0%, rgba($wh40k-accent-gold, 0.03) 100%);
+  border-left: 3px solid $wh40k-accent-gold;
   border-radius: 0 4px 4px 0;
 }
 
-.rt-combat-group-icon {
+.wh40k-combat-group-icon {
   font-size: 0.85rem;
-  color: $rt-accent-gold;
+  color: $wh40k-accent-gold;
 }
 
-.rt-combat-actions-group-label {
+.wh40k-combat-actions-group-label {
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: $rt-text-secondary;
+  color: $wh40k-text-secondary;
 }
 
 // Action button grid
-.rt-combat-actions-grid {
+.wh40k-combat-actions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
   grid-auto-rows: 80px;
@@ -817,16 +817,16 @@
 }
 
 // Action button
-.rt-combat-action-btn {
+.wh40k-combat-action-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: $rt-space-sm;
-  background: $rt-bg-paper;
-  border: 1px solid $rt-border-light;
-  border-radius: $rt-radius-md;
+  padding: $wh40k-space-sm;
+  background: $wh40k-bg-paper;
+  border: 1px solid $wh40k-border-light;
+  border-radius: $wh40k-radius-md;
   cursor: pointer;
   transition: all 0.2s ease;
   min-height: 80px;
@@ -841,19 +841,19 @@
     top: 0;
     bottom: 0;
     width: 3px;
-    background: var(--action-color, $rt-border-medium);
+    background: var(--action-color, $wh40k-border-medium);
     opacity: 0;
     transition: opacity 0.2s ease;
   }
   
   i {
     font-size: 1.1rem;
-    color: var(--action-color, $rt-text-secondary);
+    color: var(--action-color, $wh40k-text-secondary);
     transition: all 0.2s ease;
   }
   
   &:hover {
-    border-color: var(--action-color, $rt-border-medium);
+    border-color: var(--action-color, $wh40k-border-medium);
     background: rgba(var(--action-color-rgb, 0, 0, 0), 0.04);
     transform: translateY(-2px);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -864,7 +864,7 @@
     
     i {
       transform: scale(1.15);
-      color: var(--action-color, $rt-text-primary);
+      color: var(--action-color, $wh40k-text-primary);
     }
   }
   
@@ -873,28 +873,28 @@
   }
 }
 
-.rt-combat-action-name {
+.wh40k-combat-action-name {
   font-size: 0.65rem;
   font-weight: 600;
   text-align: center;
   line-height: 1.2;
-  color: $rt-text-primary;
+  color: $wh40k-text-primary;
 }
 
-.rt-combat-action-type {
+.wh40k-combat-action-type {
   font-size: 0.55rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--action-color, $rt-text-muted);
+  color: var(--action-color, $wh40k-text-muted);
   opacity: 0.8;
 }
 
-.rt-combat-action-value {
+.wh40k-combat-action-value {
   font-family: 'Modesto Condensed', serif;
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--action-color, $rt-accent-gold);
+  color: var(--action-color, $wh40k-accent-gold);
   padding: 2px 8px;
   background: rgba(var(--action-color-rgb, 201, 162, 39), 0.1);
   border-radius: 3px;
@@ -902,49 +902,49 @@
 }
 
 // Action type colors
-.rt-combat-action-attack {
-  --action-color: #{$rt-accent-combat};
+.wh40k-combat-action-attack {
+  --action-color: #{$wh40k-accent-combat};
   --action-color-rgb: 168, 32, 32;
 }
 
-.rt-combat-action-movement {
-  --action-color: #{$rt-accent-equipment};
+.wh40k-combat-action-movement {
+  --action-color: #{$wh40k-accent-equipment};
   --action-color-rgb: 58, 95, 95;
 }
 
-.rt-combat-action-reaction {
-  --action-color: #{$rt-accent-skills};
+.wh40k-combat-action-reaction {
+  --action-color: #{$wh40k-accent-skills};
   --action-color-rgb: 42, 122, 154;
 }
 
-.rt-combat-action-utility {
-  --action-color: #{$rt-accent-talents};
+.wh40k-combat-action-utility {
+  --action-color: #{$wh40k-accent-talents};
   --action-color-rgb: 160, 120, 24;
 }
 
 // Info box
-.rt-combat-actions-info {
+.wh40k-combat-actions-info {
   display: flex;
   align-items: flex-start;
-  gap: $rt-space-xs;
-  padding: $rt-space-sm;
-  margin-top: $rt-space-md;
-  background: rgba($rt-accent-gold, 0.06);
-  border: 1px solid rgba($rt-accent-gold, 0.15);
-  border-radius: $rt-radius-md;
+  gap: $wh40k-space-xs;
+  padding: $wh40k-space-sm;
+  margin-top: $wh40k-space-md;
+  background: rgba($wh40k-accent-gold, 0.06);
+  border: 1px solid rgba($wh40k-accent-gold, 0.15);
+  border-radius: $wh40k-radius-md;
   font-size: 0.65rem;
   line-height: 1.4;
-  color: $rt-text-secondary;
+  color: $wh40k-text-secondary;
   
   i {
     font-size: 0.75rem;
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
     flex-shrink: 0;
     margin-top: 2px;
   }
   
   strong {
-    color: $rt-text-primary;
+    color: $wh40k-text-primary;
     font-weight: 700;
   }
 }
@@ -953,45 +953,45 @@
 // INJURIES PANEL
 // ============================================
 
-.rt-panel-injuries {
-  .rt-panel-header {
+.wh40k-panel-injuries {
+  .wh40k-panel-header {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
     
-    .rt-panel-title {
+    .wh40k-panel-title {
       flex: 1;
       white-space: nowrap;
     }
   }
 }
 
-.rt-injuries-list {
+.wh40k-injuries-list {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.rt-injury-row {
+.wh40k-injury-row {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  padding: 4px $rt-space-sm;
-  background: rgba($rt-accent-combat, 0.08);
-  border-left: 2px solid $rt-accent-combat;
-  border-radius: 0 $rt-radius-sm $rt-radius-sm 0;
+  gap: $wh40k-space-sm;
+  padding: 4px $wh40k-space-sm;
+  background: rgba($wh40k-accent-combat, 0.08);
+  border-left: 2px solid $wh40k-accent-combat;
+  border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
 }
 
-.rt-injury-name {
+.wh40k-injury-name {
   flex: 1;
-  font-size: $rt-font-size-sm;
+  font-size: $wh40k-font-size-sm;
   cursor: pointer;
   
   &:hover { text-decoration: underline; }
 }
 
-.rt-injury-delete {
+.wh40k-injury-delete {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1000,20 +1000,20 @@
   padding: 0;
   background: transparent;
   border: none;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   cursor: pointer;
   flex-shrink: 0;
   
-  &:hover { color: $rt-accent-combat; }
+  &:hover { color: $wh40k-accent-combat; }
   
   i { font-size: 0.7rem; }
 }
 
-.rt-injuries-empty {
-  padding: $rt-space-sm;
-  font-size: $rt-font-size-sm;
+.wh40k-injuries-empty {
+  padding: $wh40k-space-sm;
+  font-size: $wh40k-font-size-sm;
   font-style: italic;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   text-align: center;
 }
 
@@ -1021,43 +1021,43 @@
 // FORCE FIELD
 // ============================================
 
-.rt-panel-forcefield {
-  margin-top: $rt-space-xs;
+.wh40k-panel-forcefield {
+  margin-top: $wh40k-space-xs;
 }
 
-.rt-forcefield-bar {
+.wh40k-forcefield-bar {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
   
-  &.rt-ff-active .rt-ff-status { color: $rt-color-success; }
-  &.rt-ff-overloaded .rt-ff-status { color: $rt-accent-combat; }
+  &.wh40k-ff-active .wh40k-ff-status { color: $wh40k-color-success; }
+  &.wh40k-ff-overloaded .wh40k-ff-status { color: $wh40k-accent-combat; }
 }
 
-.rt-ff-name {
+.wh40k-ff-name {
   font-weight: 600;
 }
 
-.rt-ff-rating {
+.wh40k-ff-rating {
   color: var(--color-text-secondary);
-  font-size: $rt-font-size-sm;
+  font-size: $wh40k-font-size-sm;
 }
 
-.rt-ff-status {
+.wh40k-ff-status {
   margin-left: auto;
-  font-size: $rt-font-size-xs;
+  font-size: $wh40k-font-size-xs;
   font-weight: 700;
   text-transform: uppercase;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
 }
 
 // ============================================
 // ARSENAL/WEAPONS TABLE
 // ============================================
 
-.rt-panel-arsenal {
-  margin-top: $rt-space-sm;
-  border-top: 2px solid rgba($rt-accent-talents, 0.15);
+.wh40k-panel-arsenal {
+  margin-top: $wh40k-space-sm;
+  border-top: 2px solid rgba($wh40k-accent-talents, 0.15);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1070,30 +1070,30 @@
     transform: translateX(-50%);
     width: 60px;
     height: 4px;
-    background: linear-gradient(90deg, transparent, rgba($rt-accent-talents, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba($wh40k-accent-talents, 0.3), transparent);
     border-radius: 2px;
   }
   
-  .rt-panel-header {
+  .wh40k-panel-header {
     order: -1;  // Force header to top
     flex-shrink: 0;
   }
   
-  .rt-panel-body {
+  .wh40k-panel-body {
     flex: 1;
     overflow: auto;
   }
 }
 
 // Weapons table grid layout
-.rt-weapontable--border {
+.wh40k-weapontable--border {
   .table-row--head,
   .table-row {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     align-items: center;
-    gap: $rt-space-xs;
-    padding: $rt-space-xs $rt-space-sm;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-xs $wh40k-space-sm;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
 
@@ -1111,13 +1111,13 @@
   }
   
   .table-row--head {
-    background: rgba($rt-accent-combat, 0.08);
+    background: rgba($wh40k-accent-combat, 0.08);
     font-weight: 600;
-    font-size: $rt-font-size-xs;
+    font-size: $wh40k-font-size-xs;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 2px solid rgba($rt-accent-combat, 0.2);
-    padding: $rt-space-sm;
+    border-bottom: 2px solid rgba($wh40k-accent-combat, 0.2);
+    padding: $wh40k-space-sm;
   }
   
   .table-row {
@@ -1125,7 +1125,7 @@
     transition: background 0.2s ease;
     
     &:hover {
-      background: rgba($rt-accent-combat, 0.04);
+      background: rgba($wh40k-accent-combat, 0.04);
     }
   }
   
@@ -1156,22 +1156,22 @@
   
   .table-cell--last {
     display: flex;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     justify-content: flex-end;
   }
 }
 
-.rt-row-equipped {
-  background: rgba($rt-color-success, 0.08);
+.wh40k-row-equipped {
+  background: rgba($wh40k-color-success, 0.08);
 }
 
-.rt-equipped-icon {
-  color: $rt-color-success;
-  margin-right: $rt-space-xs;
+.wh40k-equipped-icon {
+  color: $wh40k-color-success;
+  margin-right: $wh40k-space-xs;
   font-size: 0.8em;
 }
 
-.rt-weapon-name-cell {
+.wh40k-weapon-name-cell {
   display: flex;
   align-items: center;
 }
@@ -1179,29 +1179,29 @@
 // ============================================
 // DROP ZONES
 // ============================================
-// NOTE: Core .rt-dropzone definitions are in _unified-components.scss
+// NOTE: Core .wh40k-dropzone definitions are in _unified-components.scss
 // No overrides needed here - using unified styles
 
 // ============================================
 // COMBAT ACTIONS FAVORITES
 // ============================================
 
-.rt-actions-favorites {
+.wh40k-actions-favorites {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  padding: $rt-space-xs;
+  padding: $wh40k-space-xs;
 }
 
-.rt-action-chip {
+.wh40k-action-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.1), rgba($rt-accent-gold, 0.05));
-  border: 1px solid rgba($rt-accent-gold, 0.3);
-  border-radius: $rt-radius-md;
-  color: $rt-text-primary;
+  background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.1), rgba($wh40k-accent-gold, 0.05));
+  border: 1px solid rgba($wh40k-accent-gold, 0.3);
+  border-radius: $wh40k-radius-md;
+  color: $wh40k-text-primary;
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
@@ -1209,12 +1209,12 @@
   
   i {
     font-size: 0.85rem;
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
   }
   
   &:hover {
-    background: linear-gradient(135deg, rgba($rt-accent-gold, 0.2), rgba($rt-accent-gold, 0.1));
-    border-color: $rt-accent-gold;
+    background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.2), rgba($wh40k-accent-gold, 0.1));
+    border-color: $wh40k-accent-gold;
     transform: translateY(-1px);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
@@ -1224,13 +1224,13 @@
   }
 }
 
-.rt-action-with-fav {
+.wh40k-action-with-fav {
   display: flex;
   gap: 4px;
   position: relative;
 }
 
-.rt-action-fav {
+.wh40k-action-fav {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1238,25 +1238,25 @@
   height: 100%;
   padding: 0;
   background: rgba(0, 0, 0, 0.05);
-  border: 1px solid $rt-border-light;
-  border-radius: $rt-radius-md;
-  color: $rt-text-muted;
+  border: 1px solid $wh40k-border-light;
+  border-radius: $wh40k-radius-md;
+  color: $wh40k-text-muted;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
   
   &:hover {
-    background: rgba($rt-accent-gold, 0.1);
-    border-color: $rt-accent-gold;
-    color: $rt-accent-gold;
+    background: rgba($wh40k-accent-gold, 0.1);
+    border-color: $wh40k-accent-gold;
+    color: $wh40k-accent-gold;
     transform: scale(1.1);
   }
   
-  &.rt-action-fav--active {
-    background: rgba($rt-accent-gold, 0.15);
-    border-color: $rt-accent-gold;
-    color: $rt-accent-gold;
+  &.wh40k-action-fav--active {
+    background: rgba($wh40k-accent-gold, 0.15);
+    border-color: $wh40k-accent-gold;
+    color: $wh40k-accent-gold;
     
     i {
       animation: star-pulse 1.5s ease-in-out infinite;

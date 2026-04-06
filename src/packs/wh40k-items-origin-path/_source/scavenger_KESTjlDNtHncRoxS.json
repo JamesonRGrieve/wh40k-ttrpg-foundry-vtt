@@ -1,0 +1,145 @@
+{
+  "name": "Scavenger",
+  "type": "originPath",
+  "img": "modules/game-icons-net/whitetransparent/vulture.svg",
+  "system": {
+    "identifier": "scavenger",
+    "step": "birthright",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Scavenger</h2><blockquote><p><em>\"You became an adult amidst the yearning and poverty of the least of the God-Emperor's flock, one soul amongst countless underhivers, renegades, bonepickers, and a thousand other outcast castes that exist on the fringes of the Imperium, scavenging what they can to survive.\"</em></p></blockquote><p>All that you owned was claimed from the wastes of those far above you in the Imperial hierarchy or gleaned from the wreckage and ashes of past war and catastrophe—at least, everything that wasn't taken from the bodies of your peers and rivals, of course. Yours was a hard life lived upon a knife-edge: the dark abyss of starvation on one side and death or worse on the other.</p><p>A childhood where each day of survival was a triumph has hardened and honed you, but left its scars on your soul. You have learned to blend into the background, to avoid notice, and to endure through sheer force of will.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Birthright",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "characteristic",
+          "label": "Choose one characteristic bonus",
+          "options": [
+            {
+              "label": "+3 Willpower",
+              "value": "willpower",
+              "description": "Gain +3 to Willpower.",
+              "grants": {
+                "characteristics": {
+                  "willpower": 3
+                }
+              }
+            },
+            {
+              "label": "+3 Agility",
+              "value": "agility",
+              "description": "Gain +3 to Agility.",
+              "grants": {
+                "characteristics": {
+                  "agility": 3
+                }
+              }
+            }
+          ],
+          "count": 1
+        },
+        {
+          "type": "talent",
+          "label": "Choose one talent",
+          "options": [
+            {
+              "label": "Unremarkable",
+              "value": "unremarkable",
+              "description": "You are forgettable and blend into crowds easily.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Unremarkable",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.J7ThXpRuaRPOo0sj"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Resistance (Fear)",
+              "value": "resistance_fear",
+              "description": "Gain +10 to resist Fear effects.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Resistance (Fear)",
+                    "specialization": "Fear",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.FWzsS62FRJhejE0b"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        },
+        {
+          "type": "corruption_or_insanity",
+          "label": "Choose corruption or insanity",
+          "options": [
+            {
+              "label": "1d5 Corruption Points",
+              "value": "corruption",
+              "description": "Gain 1d5 Corruption Points.",
+              "grants": {
+                "corruption": "1d5"
+              }
+            },
+            {
+              "label": "1d5 Insanity Points",
+              "value": "insanity",
+              "description": "Gain 1d5 Insanity Points.",
+              "grants": {
+                "insanity": "1d5"
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "28",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": [
+      1
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KESTjlDNtHncRoxS"
+}

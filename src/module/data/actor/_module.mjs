@@ -1,5 +1,5 @@
 /**
- * Actor Data Models for Rogue Trader
+ * Actor Data Models for WH40K RPG
  */
 export { default as CharacterData } from "./character.mjs";
 export { default as NPCData } from "./npc.mjs";

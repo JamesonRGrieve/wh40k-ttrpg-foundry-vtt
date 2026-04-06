@@ -1,5 +1,5 @@
 /**
- * @file DialogRT - Base dialog class for Rogue Trader
+ * @file DialogRT - Base dialog class for WH40K RPG
  * Based on dnd5e's Dialog5e pattern for Foundry V13+
  */
 
@@ -14,7 +14,7 @@ export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: "dialog",
-        classes: ["rogue-trader", "dialog", "standard-form"],
+        classes: ["wh40k-rpg", "dialog", "standard-form"],
         window: {
             contentTag: "form",
             contentClasses: ["standard-form"],
@@ -33,7 +33,7 @@ export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static PARTS = {
         content: {
-            template: "systems/rogue-trader/templates/prompt/dialog-content.hbs"
+            template: "systems/wh40k-rpg/templates/prompt/dialog-content.hbs"
         },
         footer: {
             template: "templates/generic/form-footer.hbs"

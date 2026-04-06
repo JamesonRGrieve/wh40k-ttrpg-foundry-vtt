@@ -24,10 +24,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /** @override */
     static DEFAULT_OPTIONS = {
         id: "combat-quick-panel-{id}",
-        classes: ["rogue-trader", "combat-hud", "floating-panel"],
+        classes: ["wh40k-rpg", "combat-hud", "floating-panel"],
         tag: "aside",
         window: {
-            title: "RT.CombatPanel.Title",
+            title: "WH40K.CombatPanel.Title",
             icon: "fa-solid fa-crosshairs",
             minimizable: true,
             resizable: false,
@@ -58,7 +58,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /** @override */
     static PARTS = {
         panel: {
-            template: "systems/rogue-trader/templates/hud/combat-quick-panel.hbs"
+            template: "systems/wh40k-rpg/templates/hud/combat-quick-panel.hbs"
         }
     };
 
@@ -341,7 +341,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @private
      */
     _restorePosition() {
-        const savedPos = game.user.getFlag("rogue-trader", `combatPanel.${this.actor.id}.position`);
+        const savedPos = game.user.getFlag("wh40k-rpg", `combatPanel.${this.actor.id}.position`);
         if (savedPos) {
             this.setPosition(savedPos);
         }
@@ -375,7 +375,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     _onClose(options) {
         // Save position
         const position = this.position;
-        game.user.setFlag("rogue-trader", `combatPanel.${this.actor.id}.position`, {
+        game.user.setFlag("wh40k-rpg", `combatPanel.${this.actor.id}.position`, {
             left: position.left,
             top: position.top
         });

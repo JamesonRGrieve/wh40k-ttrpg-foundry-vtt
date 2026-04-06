@@ -286,8 +286,8 @@ export default class ItemGrantData extends BaseGrantData {
 
   /**
    * Check if an item already exists on the actor.
-   * @param {RogueTraderActor} actor 
-   * @param {RogueTraderItem} sourceItem 
+   * @param {WH40KActor} actor 
+   * @param {WH40KItem} sourceItem 
    * @returns {boolean}
    * @private
    */
@@ -302,7 +302,7 @@ export default class ItemGrantData extends BaseGrantData {
 
   /**
    * Create item data for granting.
-   * @param {RogueTraderItem} sourceItem 
+   * @param {WH40KItem} sourceItem 
    * @param {string} uuid 
    * @param {object} overrides 
    * @returns {Promise<object>}
@@ -341,11 +341,11 @@ export default class ItemGrantData extends BaseGrantData {
 
     // Determine which pack to search based on expected item type
     const packIds = [
-      "rogue-trader.rt-items-talents",
-      "rogue-trader.rt-items-traits",
-      "rogue-trader.rt-items-weapons",
-      "rogue-trader.rt-items-armour",
-      "rogue-trader.rt-items-gear"
+      "wh40k-rpg.rt-items-talents",
+      "wh40k-rpg.rt-items-traits",
+      "wh40k-rpg.rt-items-weapons",
+      "wh40k-rpg.rt-items-armour",
+      "wh40k-rpg.rt-items-gear"
     ];
 
     for (const packId of packIds) {

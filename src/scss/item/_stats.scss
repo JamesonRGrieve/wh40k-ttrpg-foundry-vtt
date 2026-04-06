@@ -2,26 +2,26 @@
 // Quick Stats Bar
 // ============================================
 
-.rt-quick-stats {
+.wh40k-quick-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm $rt-space-md;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-sm $wh40k-space-md;
   background: var(--rt-panel-bg-translucent);
   border-bottom: 1px solid var(--rt-border-color-light);
   flex-shrink: 0;
 }
 
-.rt-stat-badge {
+.wh40k-stat-badge {
   display: inline-flex;
   align-items: center;
-  gap: $rt-space-xs;
-  padding: $rt-space-xs $rt-space-sm;
+  gap: $wh40k-space-xs;
+  padding: $wh40k-space-xs $wh40k-space-sm;
   background: var(--rt-panel-bg);
   border: 1px solid var(--rt-border-color-light);
-  border-radius: $rt-radius-md;
-  font-size: $rt-font-size-sm;
-  transition: all $rt-transition-fast;
+  border-radius: $wh40k-radius-md;
+  font-size: $wh40k-font-size-sm;
+  transition: all $wh40k-transition-fast;
   
   &__icon {
     width: 16px;
@@ -39,7 +39,7 @@
   &__label {
     color: var(--rt-text-muted);
     text-transform: uppercase;
-    font-size: $rt-font-size-xs;
+    font-size: $wh40k-font-size-xs;
     letter-spacing: 0.05em;
   }
   
@@ -57,7 +57,7 @@
   &--damage {
     border-color: var(--rt-red-dark);
     
-    .rt-stat-badge__icon {
+    .wh40k-stat-badge__icon {
       color: var(--rt-red);
     }
     
@@ -75,7 +75,7 @@
   &--primary {
     border-color: var(--rt-gold-dark);
     
-    .rt-stat-badge__icon {
+    .wh40k-stat-badge__icon {
       color: var(--rt-gold);
     }
   }
@@ -87,7 +87,7 @@
   &--psychic {
     border-color: var(--rt-powers-primary);
     
-    .rt-stat-badge__icon {
+    .wh40k-stat-badge__icon {
       color: var(--rt-powers-primary);
     }
   }

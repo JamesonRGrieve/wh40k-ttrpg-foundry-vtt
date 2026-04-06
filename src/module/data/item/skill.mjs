@@ -146,7 +146,7 @@ export default class SkillData extends ItemDataModel.mixin(
     ];
     
     if ( this.isBasic ) {
-      props.push(game.i18n.localize("RT.Skill.Basic"));
+      props.push(game.i18n.localize("WH40K.Skill.Basic"));
     }
     
     if ( this.aptitudes.length ) {
@@ -185,11 +185,11 @@ export default class SkillData extends ItemDataModel.mixin(
       type: CONST.CHAT_MESSAGE_TYPES.OTHER,
       speaker: ChatMessage.getSpeaker(),
       content: await renderTemplate(
-        'systems/rogue-trader/templates/chat/skill-card.hbs',
+        'systems/wh40k-rpg/templates/chat/skill-card.hbs',
         { skill: this.parent }
       ),
       flags: {
-        'rogue-trader': {
+        'wh40k-rpg': {
           skillId: this.parent.id,
           skillName: this.parent.name,
           type: 'skill-card'

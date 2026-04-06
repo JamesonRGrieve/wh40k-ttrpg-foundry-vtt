@@ -11,7 +11,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class ShipUpgradeSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "sheet", "item", "ship-upgrade"],
+        classes: ["wh40k-rpg", "sheet", "item", "ship-upgrade"],
         position: {
             width: 600,
             height: 650
@@ -23,7 +23,7 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/ship-upgrade-sheet.hbs",
+            template: "systems/wh40k-rpg/templates/item/ship-upgrade-sheet.hbs",
             scrollable: [".rt-tab-content"]
         }
     };
@@ -32,8 +32,8 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
 
     /** @override */
     static TABS = [
-        { tab: "details", group: "primary", label: "RT.Item.Tabs.Details" },
-        { tab: "effects", group: "primary", label: "RT.Item.Tabs.Effects" }
+        { tab: "details", group: "primary", label: "WH40K.Item.Tabs.Details" },
+        { tab: "effects", group: "primary", label: "WH40K.Item.Tabs.Effects" }
     ];
 
     /* -------------------------------------------- */
@@ -68,17 +68,17 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
      */
     _getAvailabilityChoices() {
         return {
-            ubiquitous: game.i18n.localize("RT.Availability.Ubiquitous"),
-            abundant: game.i18n.localize("RT.Availability.Abundant"),
-            plentiful: game.i18n.localize("RT.Availability.Plentiful"),
-            common: game.i18n.localize("RT.Availability.Common"),
-            average: game.i18n.localize("RT.Availability.Average"),
-            scarce: game.i18n.localize("RT.Availability.Scarce"),
-            rare: game.i18n.localize("RT.Availability.Rare"),
-            "very-rare": game.i18n.localize("RT.Availability.VeryRare"),
-            "extremely-rare": game.i18n.localize("RT.Availability.ExtremelyRare"),
-            "near-unique": game.i18n.localize("RT.Availability.NearUnique"),
-            unique: game.i18n.localize("RT.Availability.Unique")
+            ubiquitous: game.i18n.localize("WH40K.Availability.Ubiquitous"),
+            abundant: game.i18n.localize("WH40K.Availability.Abundant"),
+            plentiful: game.i18n.localize("WH40K.Availability.Plentiful"),
+            common: game.i18n.localize("WH40K.Availability.Common"),
+            average: game.i18n.localize("WH40K.Availability.Average"),
+            scarce: game.i18n.localize("WH40K.Availability.Scarce"),
+            rare: game.i18n.localize("WH40K.Availability.Rare"),
+            "very-rare": game.i18n.localize("WH40K.Availability.VeryRare"),
+            "extremely-rare": game.i18n.localize("WH40K.Availability.ExtremelyRare"),
+            "near-unique": game.i18n.localize("WH40K.Availability.NearUnique"),
+            unique: game.i18n.localize("WH40K.Availability.Unique")
         };
     }
 }

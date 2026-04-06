@@ -22,7 +22,7 @@ export default class D100Roll extends BasicRollRT {
      * Chat template for d100 rolls
      * @type {string}
      */
-    static chatTemplate = "systems/rogue-trader/templates/chat/simple-roll-chat.hbs";
+    static chatTemplate = "systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs";
 
     /**
      * The configuration dialog class to use
@@ -60,7 +60,7 @@ export default class D100Roll extends BasicRollRT {
 
     /**
      * Calculate degrees of success (if successful)
-     * Rogue Trader: DoS = floor((target - roll) / 10) + 1
+     * WH40K RPG: DoS = floor((target - roll) / 10) + 1
      * @type {number}
      */
     get degreesOfSuccess() {
@@ -70,7 +70,7 @@ export default class D100Roll extends BasicRollRT {
 
     /**
      * Calculate degrees of failure (if failed)
-     * Rogue Trader: DoF = floor((roll - target) / 10) + 1
+     * WH40K RPG: DoF = floor((roll - target) / 10) + 1
      * @type {number}
      */
     get degreesOfFailure() {
@@ -226,8 +226,8 @@ export default class D100Roll extends BasicRollRT {
         const chatData = await super._prepareChatData(roll, config);
 
         // Add d100-specific flags
-        chatData.flags["rogue-trader"] = {
-            ...chatData.flags["rogue-trader"],
+        chatData.flags["wh40k-rpg"] = {
+            ...chatData.flags["wh40k-rpg"],
             target: config.target,
             baseTarget: config.baseTarget ?? config.target,
             success: roll.isSuccess,
@@ -265,17 +265,17 @@ export default class D100Roll extends BasicRollRT {
 
         if (diceTotal) {
             const summary = document.createElement("div");
-            summary.className = "rt-dice-summary";
+            summary.className = "wh40k-dice-summary";
 
             // Target info
             const targetDiv = document.createElement("div");
-            targetDiv.className = "rt-dice-target";
+            targetDiv.className = "wh40k-dice-target";
             targetDiv.textContent = `Target: ${target}`;
             summary.appendChild(targetDiv);
 
             // Result info
             const resultDiv = document.createElement("div");
-            resultDiv.className = this.isSuccess ? "rt-dice-success" : "rt-dice-failure";
+            resultDiv.className = this.isSuccess ? "wh40k-dice-success" : "wh40k-dice-failure";
             const degrees = this.isSuccess ? this.degreesOfSuccess : this.degreesOfFailure;
             const degreeLabel = this.isSuccess ? "DoS" : "DoF";
             resultDiv.textContent = `${this.isSuccess ? "Success" : "Failure"}: ${degrees} ${degreeLabel}`;
@@ -284,12 +284,12 @@ export default class D100Roll extends BasicRollRT {
             // Critical indicator
             if (this.isCriticalSuccess) {
                 const critDiv = document.createElement("div");
-                critDiv.className = "rt-dice-critical";
+                critDiv.className = "wh40k-dice-critical";
                 critDiv.textContent = "⚡ Critical Success!";
                 summary.appendChild(critDiv);
             } else if (this.isCriticalFailure) {
                 const critDiv = document.createElement("div");
-                critDiv.className = "rt-dice-fumble";
+                critDiv.className = "wh40k-dice-fumble";
                 critDiv.textContent = "💀 Critical Failure!";
                 summary.appendChild(critDiv);
             }
@@ -297,7 +297,7 @@ export default class D100Roll extends BasicRollRT {
             // Doubles indicator (for Righteous Fury)
             if (this.isDoubles && this.isSuccess) {
                 const doublesDiv = document.createElement("div");
-                doublesDiv.className = "rt-dice-doubles";
+                doublesDiv.className = "wh40k-dice-doubles";
                 doublesDiv.textContent = "🔥 Doubles! (Righteous Fury?)";
                 summary.appendChild(doublesDiv);
             }

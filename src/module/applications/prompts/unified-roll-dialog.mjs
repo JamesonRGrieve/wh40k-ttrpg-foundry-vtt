@@ -68,7 +68,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: "form",
-        classes: ["rogue-trader", "dialog", "unified-roll-dialog", "standard-form"],
+        classes: ["wh40k-rpg", "dialog", "unified-roll-dialog", "standard-form"],
         actions: {
             toggleDifficultyPicker: UnifiedRollDialog.#onToggleDifficultyPicker,
             selectDifficulty: UnifiedRollDialog.#onSelectDifficulty,
@@ -115,22 +115,22 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /** @override */
     static PARTS = {
         header: {
-            template: "systems/rogue-trader/templates/prompt/unified/header.hbs"
+            template: "systems/wh40k-rpg/templates/prompt/unified/header.hbs"
         },
         targetDisplay: {
-            template: "systems/rogue-trader/templates/prompt/unified/target-display.hbs"
+            template: "systems/wh40k-rpg/templates/prompt/unified/target-display.hbs"
         },
         modifiers: {
-            template: "systems/rogue-trader/templates/prompt/unified/modifiers.hbs"
+            template: "systems/wh40k-rpg/templates/prompt/unified/modifiers.hbs"
         },
         contextPanel: {
-            template: "systems/rogue-trader/templates/prompt/unified/context-panel.hbs"
+            template: "systems/wh40k-rpg/templates/prompt/unified/context-panel.hbs"
         },
         diceInput: {
-            template: "systems/rogue-trader/templates/prompt/unified/dice-input.hbs"
+            template: "systems/wh40k-rpg/templates/prompt/unified/dice-input.hbs"
         },
         footer: {
-            template: "systems/rogue-trader/templates/prompt/unified/footer.hbs"
+            template: "systems/wh40k-rpg/templates/prompt/unified/footer.hbs"
         }
     };
 

@@ -1,10 +1,10 @@
-import { RogueTraderTour } from './rogue-trader-tour.mjs';
+import { WH40KTour } from './wh40k-rpg-tour.mjs';
 
-export class DHTourMain extends RogueTraderTour {
+export class DHTourMain extends WH40KTour {
     constructor() {
         super({
-            title: "Get started with Rogue Trader",
-            description: "Learn the basic features of the Rogue Trader system",
+            title: "Get started with WH40K RPG",
+            description: "Learn the basic features of the WH40K RPG system",
             canBeResumed: false,
             display: true,
             steps: [
@@ -17,9 +17,9 @@ export class DHTourMain extends RogueTraderTour {
                 },
                 {
                     id: "import-compendium",
-                    selector: "[data-pack=\"rogue-trader.ammo\"]",
+                    selector: "[data-pack=\"wh40k-rpg.ammo\"]",
                     title: 'Import Compendiums',
-                    content: 'Import the rogue-trader compendiums for the item and data lists.',
+                    content: 'Import the wh40k-rpg compendiums for the item and data lists.',
                 },
                 {
                     id: "goto-actors",

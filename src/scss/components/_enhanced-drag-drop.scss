@@ -7,7 +7,7 @@
 /*  Drag Ghost                                  */
 /* -------------------------------------------- */
 
-.rt-drag-ghost {
+.wh40k-drag-ghost {
     position: absolute;
     z-index: 10000;
     pointer-events: none;
@@ -79,7 +79,7 @@
 }
 
 // Sheet in drag-active state
-.rogue-trader.sheet.drag-active {
+.wh40k-rpg.sheet.drag-active {
     .inventory-list,
     .item-list {
         background: rgba(212, 175, 55, 0.05);
@@ -360,7 +360,7 @@
 /*  Split Dialog Styling                        */
 /* -------------------------------------------- */
 
-.rt-split-dialog {
+.wh40k-split-dialog {
     .form-group {
         margin-bottom: 1rem;
         
@@ -401,7 +401,7 @@
 /*  Item Comparison Tooltip (while dragging)    */
 /* -------------------------------------------- */
 
-.rt-drag-compare-tooltip {
+.wh40k-drag-compare-tooltip {
     position: fixed;
     z-index: 10001;
     pointer-events: none;
@@ -453,7 +453,7 @@
 /* -------------------------------------------- */
 
 @media (max-width: 768px) {
-    .rt-drag-ghost .ghost-content {
+    .wh40k-drag-ghost .ghost-content {
         min-width: 150px;
         
         img {
@@ -490,7 +490,7 @@
 /* -------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-    .rt-drag-ghost,
+    .wh40k-drag-ghost,
     [data-item-id].dragging,
     [data-drop-zone],
     .drop-indicator,
@@ -541,7 +541,7 @@
 /* -------------------------------------------- */
 
 @media print {
-    .rt-drag-ghost,
+    .wh40k-drag-ghost,
     .drop-indicator,
     [data-favorites-bar] {
         display: none !important;

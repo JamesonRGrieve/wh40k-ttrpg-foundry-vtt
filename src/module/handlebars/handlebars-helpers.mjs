@@ -1,4 +1,4 @@
-import ROGUE_TRADER from '../config.mjs';
+import WH40K from '../config.mjs';
 
 export function capitalize(text) {
     if (!text) return '';
@@ -166,8 +166,8 @@ export function registerHandlebarsHelpers() {
      */
     Handlebars.registerHelper('isExpanded', function (field, actor) {
         // Try to get from actor flags first (new system)
-        if (actor && actor.flags?.['rogue-trader']?.ui?.expanded) {
-            return actor.flags['rogue-trader'].ui.expanded.includes(field);
+        if (actor && actor.flags?.['wh40k-rpg']?.ui?.expanded) {
+            return actor.flags['wh40k-rpg'].ui.expanded.includes(field);
         }
         // Fallback to global CONFIG for compatibility (old system)
         return CONFIG.rt.ui.expanded ? CONFIG.rt.ui.expanded.includes(field) : false;
@@ -527,7 +527,7 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('skillIcon', function (skillKey) {
-        const config = CONFIG?.rt?.getSkillIcon ? CONFIG.rt : ROGUE_TRADER;
+        const config = CONFIG?.rt?.getSkillIcon ? CONFIG.rt : WH40K;
         const icon = config?.getSkillIcon?.(skillKey) || 'modules/game-icons-net/blacktransparent/skills.svg';
         if (foundry?.utils?.getRoute) return foundry.utils.getRoute(icon);
         return icon;
@@ -625,12 +625,12 @@ export function registerHandlebarsHelpers() {
      */
     Handlebars.registerHelper('corruptionDegreeClass', function (corruption) {
         const points = Number(corruption) || 0;
-        if (points === 0) return 'rt-degree-pure';
-        if (points <= 30) return 'rt-degree-tainted';
-        if (points <= 60) return 'rt-degree-soiled';
-        if (points <= 90) return 'rt-degree-debased';
-        if (points <= 99) return 'rt-degree-profane';
-        return 'rt-degree-damned';
+        if (points === 0) return 'wh40k-degree-pure';
+        if (points <= 30) return 'wh40k-degree-tainted';
+        if (points <= 60) return 'wh40k-degree-soiled';
+        if (points <= 90) return 'wh40k-degree-debased';
+        if (points <= 99) return 'wh40k-degree-profane';
+        return 'wh40k-degree-damned';
     });
 
     /**
@@ -638,12 +638,12 @@ export function registerHandlebarsHelpers() {
      */
     Handlebars.registerHelper('insanityDegreeClass', function (insanity) {
         const points = Number(insanity) || 0;
-        if (points <= 9) return 'rt-degree-stable';
-        if (points <= 39) return 'rt-degree-unsettled';
-        if (points <= 59) return 'rt-degree-disturbed';
-        if (points <= 79) return 'rt-degree-unhinged';
-        if (points <= 99) return 'rt-degree-deranged';
-        return 'rt-degree-terminally';
+        if (points <= 9) return 'wh40k-degree-stable';
+        if (points <= 39) return 'wh40k-degree-unsettled';
+        if (points <= 59) return 'wh40k-degree-disturbed';
+        if (points <= 79) return 'wh40k-degree-unhinged';
+        if (points <= 99) return 'wh40k-degree-deranged';
+        return 'wh40k-degree-terminally';
     });
 
     /**

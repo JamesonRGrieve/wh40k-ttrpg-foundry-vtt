@@ -242,7 +242,7 @@ export default class ChoiceGrantData extends BaseGrantData {
 
   /**
    * Apply a sub-grant.
-   * @param {RogueTraderActor} actor 
+   * @param {WH40KActor} actor 
    * @param {object} grantConfig 
    * @param {object} data 
    * @param {object} options 

@@ -4,7 +4,7 @@ import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } f
 import { refundAmmo, useAmmo } from '../rules/ammo.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 import { SYSTEM_ID } from '../constants.mjs';
-import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
+import { WH40KSettings } from '../wh40k-rpg-settings.mjs';
 import { getHitLocationForRoll } from '../rules/hit-locations.mjs';
 
 export class ActionData {
@@ -383,7 +383,7 @@ export class ActionData {
 export class WeaponActionData extends ActionData {
     constructor() {
         super();
-        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
         this.hasDamage = true;
         this.rollData = new WeaponRollData();
         this.damageData = new WeaponDamageData();
@@ -395,7 +395,7 @@ export class PsychicActionData extends ActionData {
 
     constructor() {
         super();
-        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
         this.hasDamage = true;
         this.rollData = new PsychicRollData();
         this.damageData = new PsychicDamageData();
@@ -403,8 +403,8 @@ export class PsychicActionData extends ActionData {
 
     async performActionAndSendToChat() {
         if (!this.rollData.hasDamage) {
-            this.rollData.template = 'systems/rogue-trader/templates/chat/psychic-action-chat.hbs';
-            this.template = 'systems/rogue-trader/templates/chat/psychic-action-chat.hbs';
+            this.rollData.template = 'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs';
+            this.template = 'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs';
         }
         await super.performActionAndSendToChat();
     }
@@ -419,7 +419,7 @@ export class PsychicActionData extends ActionData {
 export class PsychicSkillData extends ActionData {
     constructor() {
         super();
-        this.template = 'systems/rogue-trader/templates/chat/action-roll-chat.hbs';
+        this.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
         this.hasDamage = false;
         this.rollData = new PsychicRollData();
     }
@@ -428,7 +428,7 @@ export class PsychicSkillData extends ActionData {
 export class SimpleSkillData extends ActionData {
     constructor() {
         super();
-        this.template = 'systems/rogue-trader/templates/chat/simple-roll-chat.hbs';
+        this.template = 'systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs';
         this.hasDamage = false;
         this.rollData = new RollData();
     }

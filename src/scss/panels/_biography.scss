@@ -1,52 +1,52 @@
 // Biography Tab Layout
 // ============================================
 
-.rt-tab-bio {
-  // Override the base .rt-tab grid display
+.wh40k-tab-bio {
+  // Override the base .wh40k-tab grid display
   &.active {
     display: block !important;
   }
-  padding: $rt-space-md;
+  padding: $wh40k-space-md;
 }
 
 // Identity Grid
-.rt-identity-grid {
+.wh40k-identity-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
 // Origin Path
-.rt-origin-path {
+.wh40k-origin-path {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
 }
 
-.rt-origin-step {
+.wh40k-origin-step {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-xs $rt-space-sm;
-  background: $rt-bg-paper-light;
-  border: 1px solid $rt-border-light;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-xs $wh40k-space-sm;
+  background: $wh40k-bg-paper-light;
+  border: 1px solid $wh40k-border-light;
   border-radius: 4px;
   min-height: 36px;
   position: relative;
   overflow: hidden;
   
-  &.rt-filled {
-    background: $rt-bg-input;
-    border-color: rgba($rt-accent-bio, 0.3);
+  &.wh40k-filled {
+    background: $wh40k-bg-input;
+    border-color: rgba($wh40k-accent-bio, 0.3);
   }
   
   &:hover {
-    background: $rt-bg-paper;
-    border-color: $rt-border-medium;
+    background: $wh40k-bg-paper;
+    border-color: $wh40k-border-medium;
   }
 }
 
-.rt-origin-label {
+.wh40k-origin-label {
   width: 100px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -54,24 +54,24 @@
   flex-shrink: 0;
 }
 
-.rt-origin-choice {
+.wh40k-origin-choice {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   min-width: 0;
 }
 
-.rt-origin-img {
+.wh40k-origin-img {
   width: 24px;
   height: 24px;
-  border: 1px solid $rt-border-light;
+  border: 1px solid $wh40k-border-light;
   border-radius: 3px;
   object-fit: cover;
   flex-shrink: 0;
 }
 
-.rt-origin-name {
+.wh40k-origin-name {
   flex: 1;
   font-size: 0.85rem;
   color: var(--color-text-primary);
@@ -81,20 +81,20 @@
   text-overflow: ellipsis;
   
   &:hover {
-    color: $rt-accent-bio;
+    color: $wh40k-accent-bio;
   }
 }
 
-.rt-origin-info {
+.wh40k-origin-info {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
 
-.rt-origin-summary {
+.wh40k-origin-summary {
   font-size: 0.72rem;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   line-height: 1.2;
   max-width: 360px;
   white-space: nowrap;
@@ -102,32 +102,32 @@
   text-overflow: ellipsis;
 }
 
-.rt-origin-remove {
+.wh40k-origin-remove {
   background: transparent;
   border: none;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   cursor: pointer;
   padding: 4px;
   
   &:hover {
-    color: $rt-accent-combat;
+    color: $wh40k-accent-combat;
   }
 }
 
-.rt-origin-empty {
+.wh40k-origin-empty {
   flex: 1;
   padding: 4px 8px;
-  border: 1px dashed $rt-border-medium;
+  border: 1px dashed $wh40k-border-medium;
   border-radius: 4px;
   font-size: 0.75rem;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   text-align: center;
   font-style: italic;
   display: grid;
   gap: 2px;
 }
 
-.rt-origin-empty-title {
+.wh40k-origin-empty-title {
   font-weight: 600;
   color: var(--color-text-secondary);
   letter-spacing: 0.06em;
@@ -135,16 +135,16 @@
   font-size: 0.7rem;
 }
 
-.rt-origin-empty-sub {
+.wh40k-origin-empty-sub {
   font-size: 0.7rem;
 }
 
-.rt-journal-entries {
+.wh40k-journal-entries {
   display: grid;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-journal-entries-title {
+.wh40k-journal-entries-title {
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -154,20 +154,20 @@
 }
 
 // Journal Entries Section - Modern Design
-.rt-journal-entries-section {
-  margin-top: $rt-space-md;  // Consistent spacing
+.wh40k-journal-entries-section {
+  margin-top: $wh40k-space-md;  // Consistent spacing
 }
 
-.rt-section-header {
+.wh40k-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: $rt-space-sm;
-  padding-bottom: $rt-space-xs;
+  margin-bottom: $wh40k-space-sm;
+  padding-bottom: $wh40k-space-xs;
   border-bottom: 1px solid var(--rt-border-color-light);
 }
 
-.rt-section-title {
+.wh40k-section-title {
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -175,14 +175,14 @@
   color: var(--color-text-secondary);
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   
   i {
-    color: $rt-accent-bio;
+    color: $wh40k-accent-bio;
   }
 }
 
-.rt-add-btn {
+.wh40k-add-btn {
   background: transparent;
   border: 1px solid var(--rt-border-color-light);
   color: var(--rt-text-muted);
@@ -194,12 +194,12 @@
   
   &:hover {
     background: var(--rt-panel-bg-translucent);
-    border-color: $rt-accent-bio;
-    color: $rt-accent-bio;
+    border-color: $wh40k-accent-bio;
+    color: $wh40k-accent-bio;
   }
 }
 
-.rt-panel-action-btn {
+.wh40k-panel-action-btn {
   background: transparent;
   border: 1px solid var(--rt-border-color-light);
   color: var(--rt-text-muted);
@@ -218,12 +218,12 @@
   }
   
   &:hover {
-    background: rgba($rt-accent-bio, 0.1);
-    border-color: $rt-accent-bio;
-    color: $rt-accent-bio;
+    background: rgba($wh40k-accent-bio, 0.1);
+    border-color: $wh40k-accent-bio;
+    color: $wh40k-accent-bio;
     
     i {
-      color: $rt-accent-bio;
+      color: $wh40k-accent-bio;
     }
   }
   
@@ -233,17 +233,17 @@
 }
 
 
-.rt-journal-list {
+.wh40k-journal-list {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
 }
 
-.rt-journal-entry {
-  padding: $rt-space-sm;
+.wh40k-journal-entry {
+  padding: $wh40k-space-sm;
   background: var(--rt-panel-bg-solid);
   border: 1px solid var(--rt-border-color-light);
-  border-left: 3px solid $rt-accent-bio;
+  border-left: 3px solid $wh40k-accent-bio;
   border-radius: 4px;
   transition: all 0.2s ease;
   
@@ -254,13 +254,13 @@
   }
 }
 
-.rt-entry-header {
+.wh40k-entry-header {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-entry-name {
+.wh40k-entry-name {
   flex: 1;
   font-size: 0.875rem;
   font-weight: 600;
@@ -272,18 +272,18 @@
   padding: 0;
   
   &:hover {
-    color: $rt-accent-bio;
+    color: $wh40k-accent-bio;
     text-decoration: underline;
   }
 }
 
-.rt-entry-meta {
+.wh40k-entry-meta {
   font-size: 0.7rem;
   color: var(--rt-text-muted);
   white-space: nowrap;
 }
 
-.rt-entry-delete {
+.wh40k-entry-delete {
   background: transparent;
   border: 1px solid transparent;
   color: var(--rt-text-muted);
@@ -300,9 +300,9 @@
   }
 }
 
-.rt-entry-preview {
-  margin-top: $rt-space-xs;
-  padding-top: $rt-space-xs;
+.wh40k-entry-preview {
+  margin-top: $wh40k-space-xs;
+  padding-top: $wh40k-space-xs;
   border-top: 1px solid var(--rt-border-color-light);
   font-size: 0.8rem;
   color: var(--rt-text-secondary);
@@ -311,74 +311,74 @@
 }
 
 // Connections
-.rt-connections-section {
-  margin-bottom: $rt-space-sm;
+.wh40k-connections-section {
+  margin-bottom: $wh40k-space-sm;
   
   &:last-child {
     margin-bottom: 0;
   }
 }
 
-.rt-connection-bonus {
+.wh40k-connection-bonus {
   font-size: 0.75rem;
   font-weight: 600;
-  color: $rt-color-success;
+  color: $wh40k-color-success;
   padding: 2px 6px;
-  background: rgba($rt-color-success, 0.15);
+  background: rgba($wh40k-color-success, 0.15);
   border-radius: 3px;
 }
 
-.rt-connection-penalty {
+.wh40k-connection-penalty {
   font-size: 0.75rem;
   font-weight: 600;
-  color: $rt-accent-combat;
+  color: $wh40k-accent-combat;
   padding: 2px 6px;
-  background: rgba($rt-accent-combat, 0.15);
+  background: rgba($wh40k-accent-combat, 0.15);
   border-radius: 3px;
 }
 
 // Journal Panel
-.rt-panel-journal {
+.wh40k-panel-journal {
   flex: 1;
   display: flex;
   flex-direction: column;
   
-  .rt-panel-body {
+  .wh40k-panel-body {
     flex: 1;
     display: flex;
     flex-direction: column;
   }
 }
 
-.rt-journal-body {
+.wh40k-journal-body {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-journal-section {
+.wh40k-journal-section {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-xs;
-  margin-top: $rt-space-sm;  // Reduced spacing above journal sections
+  gap: $wh40k-space-xs;
+  margin-top: $wh40k-space-sm;  // Reduced spacing above journal sections
   
-  &.rt-journal-main {
+  &.wh40k-journal-main {
     flex: 1;
     min-height: 200px;
   }
 
-  &.rt-journal-notes {
+  &.wh40k-journal-notes {
     flex: 1;
     min-height: 150px;  // Reduced from 300px to avoid excessive space
   }
 }
 
 // ProseMirror Editor Integration
-.rt-prose-editor {
+.wh40k-prose-editor {
   flex: 1;
   min-height: 250px;
-  background: $rt-bg-input;
-  border: 1px solid $rt-border-light;
+  background: $wh40k-bg-input;
+  border: 1px solid $wh40k-border-light;
   border-radius: 4px;
   overflow-y: auto;
   font-size: 0.9rem;
@@ -387,29 +387,29 @@
   &:focus,
   &:focus-within {
     outline: none;
-    border-color: $rt-accent-bio;
-    box-shadow: 0 0 0 2px rgba($rt-accent-bio, 0.1);
+    border-color: $wh40k-accent-bio;
+    box-shadow: 0 0 0 2px rgba($wh40k-accent-bio, 0.1);
   }
   
   // ProseMirror content styling
   .ProseMirror {
-    padding: $rt-space-sm;
+    padding: $wh40k-space-sm;
     min-height: 100%;
     outline: none;
 
     p { 
-      margin: 0 0 $rt-space-sm 0; 
+      margin: 0 0 $wh40k-space-sm 0; 
       &:last-child { margin-bottom: 0; }
     }
     
     ul, ol { 
-      margin: 0 0 $rt-space-sm $rt-space-lg;
-      padding-left: $rt-space-md;
+      margin: 0 0 $wh40k-space-sm $wh40k-space-lg;
+      padding-left: $wh40k-space-md;
     }
     
     h1, h2, h3, h4, h5, h6 { 
       font-family: 'Modesto Condensed', serif;
-      margin: $rt-space-md 0 $rt-space-sm 0;
+      margin: $wh40k-space-md 0 $wh40k-space-sm 0;
       color: var(--color-text-primary);
       font-weight: 700;
       
@@ -422,10 +422,10 @@
     h4 { font-size: 1.1rem; }
     
     blockquote {
-      margin: $rt-space-sm 0;
-      padding: $rt-space-sm $rt-space-md;
-      border-left: 3px solid $rt-accent-bio;
-      background: rgba($rt-accent-bio, 0.05);
+      margin: $wh40k-space-sm 0;
+      padding: $wh40k-space-sm $wh40k-space-md;
+      border-left: 3px solid $wh40k-accent-bio;
+      background: rgba($wh40k-accent-bio, 0.05);
       font-style: italic;
     }
     
@@ -439,7 +439,7 @@
     
     pre {
       background: rgba(0, 0, 0, 0.1);
-      padding: $rt-space-sm;
+      padding: $wh40k-space-sm;
       border-radius: 4px;
       overflow-x: auto;
       
@@ -453,27 +453,27 @@
     table {
       border-collapse: collapse;
       width: 100%;
-      margin: $rt-space-sm 0;
+      margin: $wh40k-space-sm 0;
       
       th, td {
-        border: 1px solid $rt-border-light;
-        padding: $rt-space-xs $rt-space-sm;
+        border: 1px solid $wh40k-border-light;
+        padding: $wh40k-space-xs $wh40k-space-sm;
         text-align: left;
       }
       
       th {
-        background: rgba($rt-accent-bio, 0.1);
+        background: rgba($wh40k-accent-bio, 0.1);
         font-weight: 600;
       }
     }
     
     // Links
     a {
-      color: $rt-accent-bio;
+      color: $wh40k-accent-bio;
       text-decoration: underline;
       
       &:hover {
-        color: lighten($rt-accent-bio, 10%);
+        color: lighten($wh40k-accent-bio, 10%);
       }
     }
     
@@ -482,55 +482,55 @@
       max-width: 100%;
       height: auto;
       border-radius: 4px;
-      margin: $rt-space-sm 0;
+      margin: $wh40k-space-sm 0;
     }
     
     // Horizontal rule
     hr {
-      margin: $rt-space-md 0;
+      margin: $wh40k-space-md 0;
       border: none;
-      border-top: 2px solid $rt-border-light;
+      border-top: 2px solid $wh40k-border-light;
     }
   }
 }
 
 // Read-only prose content (for non-editable view)
-.rt-prose-content {
-  padding: $rt-space-sm;
-  background: $rt-bg-input;
-  border: 1px solid $rt-border-light;
+.wh40k-prose-content {
+  padding: $wh40k-space-sm;
+  background: $wh40k-bg-input;
+  border: 1px solid $wh40k-border-light;
   border-radius: 4px;
   font-size: 0.9rem;
   line-height: 1.6;
   min-height: 100px;
   
   p { 
-    margin: 0 0 $rt-space-sm 0; 
+    margin: 0 0 $wh40k-space-sm 0; 
     &:last-child { margin-bottom: 0; }
   }
   
   ul, ol { 
-    margin: 0 0 $rt-space-sm $rt-space-lg;
+    margin: 0 0 $wh40k-space-sm $wh40k-space-lg;
   }
   
   h1, h2, h3 { 
     font-family: 'Modesto Condensed', serif;
-    margin: $rt-space-sm 0;
+    margin: $wh40k-space-sm 0;
   }
   
   &:empty::before {
     content: "No notes recorded...";
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
     font-style: italic;
   }
 }
 
-.rt-journal-editor {
+.wh40k-journal-editor {
   flex: 1;
   min-height: 150px;
-  padding: $rt-space-sm;
-  background: $rt-bg-input;
-  border: 1px solid $rt-border-light;
+  padding: $wh40k-space-sm;
+  background: $wh40k-bg-input;
+  border: 1px solid $wh40k-border-light;
   border-radius: 4px;
   overflow-y: auto;
   font-size: 0.9rem;
@@ -539,15 +539,15 @@
   &:focus,
   &:focus-within {
     outline: none;
-    border-color: $rt-accent-bio;
+    border-color: $wh40k-accent-bio;
   }
   
   // Rich text styling
-  p { margin: 0 0 $rt-space-sm 0; }
-  ul, ol { margin: 0 0 $rt-space-sm $rt-space-lg; }
+  p { margin: 0 0 $wh40k-space-sm 0; }
+  ul, ol { margin: 0 0 $wh40k-space-sm $wh40k-space-lg; }
   h1, h2, h3 { 
     font-family: 'Modesto Condensed', serif;
-    margin: $rt-space-sm 0;
+    margin: $wh40k-space-sm 0;
   }
 }
 
@@ -555,25 +555,25 @@
 // Form Field Components
 // ============================================
 
-.rt-field-row {
+.wh40k-field-row {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
 }
 
-.rt-field-row-split {
+.wh40k-field-row-split {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
 }
 
-.rt-field-half {
+.wh40k-field-half {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
 }
 
-.rt-field-label {
+.wh40k-field-label {
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -581,31 +581,31 @@
   color: var(--color-text-secondary);
 }
 
-.rt-field-input {
+.wh40k-field-input {
   width: 100%;
   padding: 6px 8px;
-  background: $rt-bg-input;
-  border: 1px solid $rt-border-light;
+  background: $wh40k-bg-input;
+  border: 1px solid $wh40k-border-light;
   border-radius: 4px;
   color: var(--color-text-primary);
   font-size: 0.9rem;
   
   &:focus {
     outline: none;
-    border-color: $rt-accent-gold;
+    border-color: $wh40k-accent-gold;
   }
   
   &::placeholder {
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
     font-style: italic;
   }
 }
 
-.rt-textarea {
+.wh40k-textarea {
   width: 100%;
-  padding: $rt-space-sm;
-  background: $rt-bg-input;
-  border: 1px solid $rt-border-light;
+  padding: $wh40k-space-sm;
+  background: $wh40k-bg-input;
+  border: 1px solid $wh40k-border-light;
   border-radius: 4px;
   color: var(--color-text-primary);
   font-size: 0.85rem;
@@ -615,11 +615,11 @@
   
   &:focus {
     outline: none;
-    border-color: $rt-accent-gold;
+    border-color: $wh40k-accent-gold;
   }
   
   &::placeholder {
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
     font-style: italic;
   }
 }

@@ -203,11 +203,11 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
    * @type {string}
    */
   get threatDescription() {
-    if (this.threatLevel <= 5) return game.i18n.localize('RT.Threat.Low');
-    if (this.threatLevel <= 10) return game.i18n.localize('RT.Threat.Moderate');
-    if (this.threatLevel <= 15) return game.i18n.localize('RT.Threat.Dangerous');
-    if (this.threatLevel <= 20) return game.i18n.localize('RT.Threat.Deadly');
-    return game.i18n.localize('RT.Threat.Apocalyptic');
+    if (this.threatLevel <= 5) return game.i18n.localize('WH40K.Threat.Low');
+    if (this.threatLevel <= 10) return game.i18n.localize('WH40K.Threat.Moderate');
+    if (this.threatLevel <= 15) return game.i18n.localize('WH40K.Threat.Dangerous');
+    if (this.threatLevel <= 20) return game.i18n.localize('WH40K.Threat.Deadly');
+    return game.i18n.localize('WH40K.Threat.Apocalyptic');
   }
 
   /**

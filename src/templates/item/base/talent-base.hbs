@@ -4,11 +4,11 @@
   <form autocomplete="off">
     
     {{!-- HEADER: Image + Name + Type Badge --}}
-    {{> systems/rogue-trader/templates/item/panel/item-header.hbs}}
+    {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
     
     {{!-- MODIFIERS SUMMARY BAR (if has modifiers) --}}
     {{#if system.hasModifiers}}
-    {{> systems/rogue-trader/templates/item/panel/modifiers-summary.hbs}}
+    {{> systems/wh40k-rpg/templates/item/panel/modifiers-summary.hbs}}
     {{/if}}
     
     {{!-- TAB NAVIGATION --}}
@@ -36,20 +36,20 @@
         {{> @partial-block}}
         
         {{!-- DESCRIPTION --}}
-        {{> systems/rogue-trader/templates/item/panel/description-panel.hbs}}
+        {{> systems/wh40k-rpg/templates/item/panel/description-panel.hbs}}
         
         {{!-- SOURCE --}}
-        {{> systems/rogue-trader/templates/item/panel/source-panel.hbs}}
+        {{> systems/wh40k-rpg/templates/item/panel/source-panel.hbs}}
       </div>
       
       {{!-- MODIFIERS TAB --}}
       <div class="rt-item-panel" data-tab="modifiers" data-group="primary">
-        {{> systems/rogue-trader/templates/item/panel/modifiers-panel.hbs}}
+        {{> systems/wh40k-rpg/templates/item/panel/modifiers-panel.hbs}}
       </div>
       
       {{!-- EFFECTS TAB --}}
       <div class="rt-item-panel" data-tab="effects" data-group="primary">
-        {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+        {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
       </div>
       
     </section>

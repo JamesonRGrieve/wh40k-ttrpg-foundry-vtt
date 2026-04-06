@@ -580,9 +580,9 @@
             "Completed": "Completed Endeavours",
             "AddObjective": "Add Objective"
         },
-        "RogueTrader": {
-            "TabLabel": "Rogue Trader",
-            "Header": "Rogue Trader",
+        "WH40KRPG": {
+            "TabLabel": "WH40K RPG",
+            "Header": "WH40K RPG",
             "CareerPath": "Career Path",
             "Rank": "Rank",
             "HomeWorld": "Home World",
@@ -1448,7 +1448,7 @@
         }
     },
 
-    "RT.Weapon": {
+    "WH40K.Weapon": {
         "TwoHanded": "Two-Handed",
         "OneHanded": "One-Handed",
         "CanMelee": "Can Melee",
@@ -1458,7 +1458,7 @@
         "NeverJams": "Never Jams"
     },
 
-    "RT.Reload": {
+    "WH40K.Reload": {
         "Free": "Free Action",
         "Half": "Half Action",
         "Full": "Full Action",
@@ -1477,7 +1477,7 @@
         "AmmunitionStatus": "Ammunition Status"
     },
 
-    "RT.WeaponClass": {
+    "WH40K.WeaponClass": {
         "Melee": "Melee",
         "Pistol": "Pistol",
         "Basic": "Basic",
@@ -1490,7 +1490,7 @@
         "Force": "Force"
     },
 
-    "RT.WeaponType": {
+    "WH40K.WeaponType": {
         "Primitive": "Primitive",
         "Las": "Las",
         "SolidProjectile": "SP",
@@ -1508,7 +1508,7 @@
         "Xenos": "Xenos"
     },
 
-    "RT.Vehicle": {
+    "WH40K.Vehicle": {
         "Name": "Vehicle Name",
         "Type": "Vehicle Type",
         "Class": "Vehicle Class",
@@ -1524,7 +1524,7 @@
         "SpecialRules": "Special Rules & Traits"
     },
 
-    "RT.VehicleType": {
+    "WH40K.VehicleType": {
         "Vehicle": "Vehicle",
         "Walker": "Walker",
         "Flyer": "Flyer",
@@ -1533,7 +1533,7 @@
         "Tank": "Tank"
     },
 
-    "RT.VehicleClass": {
+    "WH40K.VehicleClass": {
         "Ground": "Ground Vehicle",
         "Air": "Air Vehicle",
         "Water": "Water Vehicle",
@@ -1541,27 +1541,27 @@
         "Walker": "Walker"
     },
 
-    "RT.VehicleUpgradeType": {
+    "WH40K.VehicleUpgradeType": {
         "Standard": "Standard",
         "Integral": "Integral",
         "Custom": "Custom"
     },
 
-    "RT.VehicleStat": {
+    "WH40K.VehicleStat": {
         "Speed": "Speed",
         "Manoeuvrability": "Manoeuvrability",
         "Armour": "Armour",
         "Integrity": "Integrity"
     },
 
-    "RT.VehicleUpgrade": {
+    "WH40K.VehicleUpgrade": {
         "Type": "Upgrade Type",
         "AllowedVehicles": "Allowed Vehicles",
         "Difficulty": "Installation Difficulty",
         "InstallCost": "Installation Cost"
     },
 
-    "RT.Advancement": {
+    "WH40K.Advancement": {
         "Title": "Character Advancement",
         "TitleWithCareer": "{career} Advancement",
         "XPAvailable": "XP Available",
@@ -1605,8 +1605,8 @@
         }
     },
 
-    "RT.Career": {
-        "RogueTrader": "Rogue Trader",
+    "WH40K.Career": {
+        "WH40KRPG": "WH40K RPG",
         "RogueTraderDesc": "A scion of a powerful dynasty, holder of a sacred Warrant of Trade.",
         "ArchMilitant": "Arch-Militant",
         "ArchMilitantDesc": "A warrior born, trained in the arts of war and destruction.",
@@ -1624,7 +1624,7 @@
         "VoidMasterDesc": "A seasoned spacefarer and ship commander."
     },
 
-    "RT.Combat.Action": {
+    "WH40K.Combat.Action": {
         "StandardAttack": "Standard Attack",
         "StandardAttackDesc": "Make one melee or ranged attack.",
         "CalledShot": "Called Shot",

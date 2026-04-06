@@ -1,5 +1,5 @@
 /**
- * Roll Table Utilities for Rogue Trader
+ * Roll Table Utilities for WH40K RPG
  * Provides integration with Foundry VTT's RollTable system for:
  * - Psychic Phenomena
  * - Perils of the Warp

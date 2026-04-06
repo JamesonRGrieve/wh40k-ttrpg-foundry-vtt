@@ -3,7 +3,7 @@ import SystemDataModel from "./system-data-model.mjs";
 const { NumberField } = foundry.data.fields;
 
 /**
- * Base data model for all Item types in Rogue Trader.
+ * Base data model for all Item types in WH40K RPG.
  * Provides shared functionality and schema patterns for items.
  * 
  * Uses template delegation pattern - subclasses should override:

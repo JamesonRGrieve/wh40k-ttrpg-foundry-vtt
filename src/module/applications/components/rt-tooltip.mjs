@@ -1,11 +1,11 @@
 /**
- * @file TooltipsRT - Rich tooltip system for Rogue Trader
+ * @file TooltipsRT - Rich tooltip system for WH40K RPG
  * Based on dnd5e's Tooltips5e pattern - uses Foundry's native TooltipManager
  * with MutationObserver to provide rich tooltip content.
  */
 
 /**
- * A class responsible for orchestrating rich tooltips in the Rogue Trader system.
+ * A class responsible for orchestrating rich tooltips in the WH40K RPG system.
  * Uses Foundry's native TooltipManager and observes tooltip activation via MutationObserver.
  */
 export class TooltipsRT {
@@ -69,7 +69,7 @@ export class TooltipsRT {
      */
     async _loadSkillDescriptions() {
         try {
-            const pack = game.packs.get('rogue-trader.rt-items-skills');
+            const pack = game.packs.get('wh40k-rpg.rt-items-skills');
             if (!pack) {
                 console.warn('RT Tooltips | Could not find skills compendium');
                 return;
@@ -171,7 +171,7 @@ export class TooltipsRT {
                 const content = await this._buildTooltipContent(data, tooltipType);
                 if (content) {
                     this.#tooltip.innerHTML = content;
-                    this.#tooltip.classList.add('rt-tooltip', `rt-tooltip--${tooltipType}`);
+                    this.#tooltip.classList.add('wh40k-tooltip', `rt-tooltip--${tooltipType}`);
                     // console.log('RT Tooltips | Rich tooltip rendered for', tooltipType);
                     // Reposition after content change
                     requestAnimationFrame(() => this._repositionTooltip());
@@ -208,7 +208,7 @@ export class TooltipsRT {
         if (!content) return;
 
         this.#tooltip.innerHTML = content;
-        this.#tooltip.classList.add('rt-tooltip');
+        this.#tooltip.classList.add('wh40k-tooltip');
         if (classes?.length) {
             this.#tooltip.classList.add(...classes);
         }
@@ -257,27 +257,27 @@ export class TooltipsRT {
         const { name, label, base = 0, advance = 0, modifier = 0, unnatural = 1, total = 0, bonus = 0, sources = [] } = data;
 
         let html = `
-            <div class="rt-tooltip__header">
-                <h4 class="rt-tooltip__title">${label || name}</h4>
-                <div class="rt-tooltip__total">${total}</div>
+            <div class="wh40k-tooltip__header">
+                <h4 class="wh40k-tooltip__title">${label || name}</h4>
+                <div class="wh40k-tooltip__total">${total}</div>
             </div>
-            <div class="rt-tooltip__divider"></div>
-            <div class="rt-tooltip__breakdown">
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Base:</span>
-                    <span class="rt-tooltip__value">${base}</span>
+            <div class="wh40k-tooltip__divider"></div>
+            <div class="wh40k-tooltip__breakdown">
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Base:</span>
+                    <span class="wh40k-tooltip__value">${base}</span>
                 </div>
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Advances:</span>
-                    <span class="rt-tooltip__value">${advance} (×5 = +${advance * 5})</span>
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Advances:</span>
+                    <span class="wh40k-tooltip__value">${advance} (×5 = +${advance * 5})</span>
                 </div>
         `;
 
         if (modifier !== 0) {
             html += `
-                <div class="rt-tooltip__line rt-tooltip__line--modifier">
-                    <span class="rt-tooltip__label">Modifiers:</span>
-                    <span class="rt-tooltip__value">${modifier >= 0 ? '+' : ''}${modifier}</span>
+                <div class="wh40k-tooltip__line rt-tooltip__line--modifier">
+                    <span class="wh40k-tooltip__label">Modifiers:</span>
+                    <span class="wh40k-tooltip__value">${modifier >= 0 ? '+' : ''}${modifier}</span>
                 </div>
             `;
         }
@@ -287,15 +287,15 @@ export class TooltipsRT {
         // Show modifier sources
         if (sources?.length > 0) {
             html += `
-                <div class="rt-tooltip__divider"></div>
-                <div class="rt-tooltip__sources">
-                    <div class="rt-tooltip__sources-title">Modifier Sources:</div>
+                <div class="wh40k-tooltip__divider"></div>
+                <div class="wh40k-tooltip__sources">
+                    <div class="wh40k-tooltip__sources-title">Modifier Sources:</div>
             `;
             for (const source of sources) {
                 html += `
-                    <div class="rt-tooltip__source">
-                        <span class="rt-tooltip__source-name">${source.name}</span>
-                        <span class="rt-tooltip__source-value">${source.value >= 0 ? '+' : ''}${source.value}</span>
+                    <div class="wh40k-tooltip__source">
+                        <span class="wh40k-tooltip__source-name">${source.name}</span>
+                        <span class="wh40k-tooltip__source-value">${source.value >= 0 ? '+' : ''}${source.value}</span>
                     </div>
                 `;
             }
@@ -304,13 +304,13 @@ export class TooltipsRT {
 
         // Bonus calculation
         html += `
-            <div class="rt-tooltip__divider"></div>
-            <div class="rt-tooltip__bonus">
-                <span class="rt-tooltip__label">Bonus:</span>
-                <span class="rt-tooltip__value rt-tooltip__value--bonus">${bonus}</span>
-                <span class="rt-tooltip__bonus-calc">(${Math.floor(total / 10)}${unnatural > 1 ? ` × ${unnatural}` : ''})</span>
+            <div class="wh40k-tooltip__divider"></div>
+            <div class="wh40k-tooltip__bonus">
+                <span class="wh40k-tooltip__label">Bonus:</span>
+                <span class="wh40k-tooltip__value rt-tooltip__value--bonus">${bonus}</span>
+                <span class="wh40k-tooltip__bonus-calc">(${Math.floor(total / 10)}${unnatural > 1 ? ` × ${unnatural}` : ''})</span>
             </div>
-            <div class="rt-tooltip__hint">
+            <div class="wh40k-tooltip__hint">
                 <i class="fas fa-mouse-pointer"></i>
                 Click characteristic to roll
             </div>
@@ -388,71 +388,71 @@ export class TooltipsRT {
         const descriptor = skillInfo?.descriptor || '';
 
         let html = `
-            <div class="rt-tooltip__header">
-                <h4 class="rt-tooltip__title">${label || name}</h4>
-                <div class="rt-tooltip__total">${current}</div>
+            <div class="wh40k-tooltip__header">
+                <h4 class="wh40k-tooltip__title">${label || name}</h4>
+                <div class="wh40k-tooltip__total">${current}</div>
             </div>
         `;
 
         // Add descriptor if available
         if (descriptor) {
             html += `
-            <div class="rt-tooltip__description">
+            <div class="wh40k-tooltip__description">
                 ${descriptor}
             </div>
             `;
         }
 
         html += `
-            <div class="rt-tooltip__divider"></div>
-            <div class="rt-tooltip__breakdown">
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">${characteristic} Value:</span>
-                    <span class="rt-tooltip__value">${charValue}</span>
+            <div class="wh40k-tooltip__divider"></div>
+            <div class="wh40k-tooltip__breakdown">
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">${characteristic} Value:</span>
+                    <span class="wh40k-tooltip__value">${charValue}</span>
                 </div>
         `;
 
         // Show base calculation for untrained skills
         if (level === 0) {
             html += `
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Base (÷2 untrained):</span>
-                    <span class="rt-tooltip__value">${calculatedBase}</span>
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Base (÷2 untrained):</span>
+                    <span class="wh40k-tooltip__value">${calculatedBase}</span>
                 </div>
             `;
         }
 
         if (trainingBonus > 0) {
             html += `
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Training (${training}):</span>
-                    <span class="rt-tooltip__value">+${trainingBonus}</span>
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Training (${training}):</span>
+                    <span class="wh40k-tooltip__value">+${trainingBonus}</span>
                 </div>
             `;
         } else if (level === 0) {
             html += `
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Training:</span>
-                    <span class="rt-tooltip__value">${training}</span>
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Training:</span>
+                    <span class="wh40k-tooltip__value">${training}</span>
                 </div>
             `;
         }
 
         if (bonus !== 0) {
             html += `
-                <div class="rt-tooltip__line rt-tooltip__line--modifier">
-                    <span class="rt-tooltip__label">Modifiers:</span>
-                    <span class="rt-tooltip__value">${bonus >= 0 ? '+' : ''}${bonus}</span>
+                <div class="wh40k-tooltip__line rt-tooltip__line--modifier">
+                    <span class="wh40k-tooltip__label">Modifiers:</span>
+                    <span class="wh40k-tooltip__value">${bonus >= 0 ? '+' : ''}${bonus}</span>
                 </div>
             `;
         }
 
         html += `
             </div>
-            <div class="rt-tooltip__divider"></div>
-            <div class="rt-tooltip__training">
-                <div class="rt-tooltip__training-title">Training Progression:</div>
-                <div class="rt-tooltip__training-track">
+            <div class="wh40k-tooltip__divider"></div>
+            <div class="wh40k-tooltip__training">
+                <div class="wh40k-tooltip__training-title">Training Progression:</div>
+                <div class="wh40k-tooltip__training-track">
                     <span class="${level === 0 ? 'active' : ''}">Untrained</span>
                     <i class="fas fa-arrow-right"></i>
                     <span class="${level === 1 ? 'active' : ''}">Trained</span>
@@ -462,7 +462,7 @@ export class TooltipsRT {
                     <span class="${level === 3 ? 'active' : ''}">+20</span>
                 </div>
             </div>
-            <div class="rt-tooltip__hint">
+            <div class="wh40k-tooltip__hint">
                 <i class="fas fa-mouse-pointer"></i>
                 Click skill name to roll
             </div>
@@ -481,32 +481,32 @@ export class TooltipsRT {
         const { location, total = 0, toughnessBonus = 0, traitBonus = 0, armorValue = 0, equipped = [] } = data;
 
         let html = `
-            <div class="rt-tooltip__header">
-                <h4 class="rt-tooltip__title">${location || 'Armour'}</h4>
-                <div class="rt-tooltip__total">AP ${total}</div>
+            <div class="wh40k-tooltip__header">
+                <h4 class="wh40k-tooltip__title">${location || 'Armour'}</h4>
+                <div class="wh40k-tooltip__total">AP ${total}</div>
             </div>
-            <div class="rt-tooltip__divider"></div>
-            <div class="rt-tooltip__breakdown">
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Toughness Bonus:</span>
-                    <span class="rt-tooltip__value">${toughnessBonus}</span>
+            <div class="wh40k-tooltip__divider"></div>
+            <div class="wh40k-tooltip__breakdown">
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Toughness Bonus:</span>
+                    <span class="wh40k-tooltip__value">${toughnessBonus}</span>
                 </div>
         `;
 
         if (traitBonus > 0) {
             html += `
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Trait Bonus:</span>
-                    <span class="rt-tooltip__value">${traitBonus}</span>
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Trait Bonus:</span>
+                    <span class="wh40k-tooltip__value">${traitBonus}</span>
                 </div>
             `;
         }
 
         if (armorValue > 0) {
             html += `
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Armour:</span>
-                    <span class="rt-tooltip__value">${armorValue}</span>
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Armour:</span>
+                    <span class="wh40k-tooltip__value">${armorValue}</span>
                 </div>
             `;
         }
@@ -515,13 +515,13 @@ export class TooltipsRT {
 
         if (equipped?.length > 0) {
             html += `
-                <div class="rt-tooltip__divider"></div>
-                <div class="rt-tooltip__equipped">
-                    <div class="rt-tooltip__equipped-title">Equipped:</div>
+                <div class="wh40k-tooltip__divider"></div>
+                <div class="wh40k-tooltip__equipped">
+                    <div class="wh40k-tooltip__equipped-title">Equipped:</div>
             `;
             for (const item of equipped) {
                 html += `
-                    <div class="rt-tooltip__equipped-item">
+                    <div class="wh40k-tooltip__equipped-item">
                         <img src="${item.img}" alt="${item.name}" />
                         <span>${item.name}</span>
                         <span class="ap">+${item.ap || 0}</span>
@@ -544,44 +544,44 @@ export class TooltipsRT {
         const { name, damage, penetration = 0, range, rof, qualities = [] } = data;
 
         let html = `
-            <div class="rt-tooltip__header">
-                <h4 class="rt-tooltip__title">${name}</h4>
+            <div class="wh40k-tooltip__header">
+                <h4 class="wh40k-tooltip__title">${name}</h4>
             </div>
-            <div class="rt-tooltip__divider"></div>
-            <div class="rt-tooltip__breakdown">
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Damage:</span>
-                    <span class="rt-tooltip__value">${damage}</span>
+            <div class="wh40k-tooltip__divider"></div>
+            <div class="wh40k-tooltip__breakdown">
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Damage:</span>
+                    <span class="wh40k-tooltip__value">${damage}</span>
                 </div>
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Penetration:</span>
-                    <span class="rt-tooltip__value">${penetration}</span>
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Penetration:</span>
+                    <span class="wh40k-tooltip__value">${penetration}</span>
                 </div>
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Range:</span>
-                    <span class="rt-tooltip__value">${range}</span>
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Range:</span>
+                    <span class="wh40k-tooltip__value">${range}</span>
                 </div>
-                <div class="rt-tooltip__line">
-                    <span class="rt-tooltip__label">Rate of Fire:</span>
-                    <span class="rt-tooltip__value">${rof}</span>
+                <div class="wh40k-tooltip__line">
+                    <span class="wh40k-tooltip__label">Rate of Fire:</span>
+                    <span class="wh40k-tooltip__value">${rof}</span>
                 </div>
             </div>
         `;
 
         if (qualities?.length > 0) {
             html += `
-                <div class="rt-tooltip__divider"></div>
-                <div class="rt-tooltip__qualities">
-                    <div class="rt-tooltip__qualities-title">Qualities:</div>
+                <div class="wh40k-tooltip__divider"></div>
+                <div class="wh40k-tooltip__qualities">
+                    <div class="wh40k-tooltip__qualities-title">Qualities:</div>
             `;
             for (const quality of qualities) {
-                html += `<div class="rt-tooltip__quality">${quality}</div>`;
+                html += `<div class="wh40k-tooltip__quality">${quality}</div>`;
             }
             html += `</div>`;
         }
 
         html += `
-            <div class="rt-tooltip__action">
+            <div class="wh40k-tooltip__action">
                 <i class="fas fa-crosshairs"></i>
                 Click to attack
             </div>
@@ -600,18 +600,18 @@ export class TooltipsRT {
         const { title, sources = [] } = data;
 
         let html = `
-            <div class="rt-tooltip__header">
-                <h4 class="rt-tooltip__title">${title || 'Modifiers'}</h4>
+            <div class="wh40k-tooltip__header">
+                <h4 class="wh40k-tooltip__title">${title || 'Modifiers'}</h4>
             </div>
-            <div class="rt-tooltip__divider"></div>
-            <div class="rt-tooltip__sources">
+            <div class="wh40k-tooltip__divider"></div>
+            <div class="wh40k-tooltip__sources">
         `;
 
         for (const source of sources) {
             html += `
-                <div class="rt-tooltip__source">
-                    <span class="rt-tooltip__source-name">${source.name}</span>
-                    <span class="rt-tooltip__source-value">${source.value >= 0 ? '+' : ''}${source.value}</span>
+                <div class="wh40k-tooltip__source">
+                    <span class="wh40k-tooltip__source-name">${source.name}</span>
+                    <span class="wh40k-tooltip__source-value">${source.value >= 0 ? '+' : ''}${source.value}</span>
                 </div>
             `;
         }
@@ -630,8 +630,8 @@ export class TooltipsRT {
         const { label, description, level = null, hasLevel = false, category = 'other', mechanicalEffect = false, source = null } = data;
 
         let html = `
-            <div class="rt-tooltip__header">
-                <h4 class="rt-tooltip__title">
+            <div class="wh40k-tooltip__header">
+                <h4 class="wh40k-tooltip__title">
                     ${label}${hasLevel && level !== null ? ` (${level})` : ''}
                 </h4>
         `;
@@ -648,7 +648,7 @@ export class TooltipsRT {
                       .join(' ');
 
         html += `
-                <span class="rt-tooltip__badge rt-tooltip__badge--${category}">
+                <span class="wh40k-tooltip__badge rt-tooltip__badge--${category}">
                     ${categoryLabel}
                 </span>
             </div>
@@ -657,7 +657,7 @@ export class TooltipsRT {
         // Add description
         if (description) {
             html += `
-            <div class="rt-tooltip__description">
+            <div class="wh40k-tooltip__description">
                 ${description}
             </div>
             `;
@@ -666,8 +666,8 @@ export class TooltipsRT {
         // Add mechanical effect indicator
         if (mechanicalEffect) {
             html += `
-            <div class="rt-tooltip__divider"></div>
-            <div class="rt-tooltip__info">
+            <div class="wh40k-tooltip__divider"></div>
+            <div class="wh40k-tooltip__info">
                 <i class="fas fa-cog"></i>
                 <span>This quality has automated mechanical effects</span>
             </div>
@@ -677,7 +677,7 @@ export class TooltipsRT {
         // Add source reference if available
         if (source) {
             html += `
-            <div class="rt-tooltip__source-ref">
+            <div class="wh40k-tooltip__source-ref">
                 <i class="fas fa-book"></i>
                 <span>${source}</span>
             </div>
@@ -696,10 +696,10 @@ export class TooltipsRT {
     _buildGenericTooltip(data) {
         const { title, content } = data;
         return `
-            <div class="rt-tooltip__header">
-                <h4 class="rt-tooltip__title">${title || 'Information'}</h4>
+            <div class="wh40k-tooltip__header">
+                <h4 class="wh40k-tooltip__title">${title || 'Information'}</h4>
             </div>
-            <div class="rt-tooltip__content">
+            <div class="wh40k-tooltip__content">
                 ${content || ''}
             </div>
         `;
@@ -916,7 +916,7 @@ export function prepareModifierTooltipData(title, sources) {
  * @returns {string}             JSON string for data-rt-tooltip-data attribute
  */
 export function prepareQualityTooltipData(identifier, level = null) {
-    const config = CONFIG.ROGUE_TRADER;
+    const config = CONFIG.WH40K;
     if (!config) return '{}';
 
     // Get quality definition
@@ -949,4 +949,4 @@ export function prepareQualityTooltipData(identifier, level = null) {
 }
 
 // Legacy export for backwards compatibility
-export { TooltipsRT as RTTooltip };
+export { TooltipsRT as WH40KTooltip };

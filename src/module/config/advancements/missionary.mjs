@@ -2,7 +2,7 @@
  * Missionary Career Advancement Configuration
  * 
  * Defines characteristic costs and rank advancements for the Missionary career.
- * Data sourced from Rogue Trader Core Rulebook.
+ * Data sourced from WH40K RPG Core Rulebook.
  */
 
 /**
@@ -47,7 +47,7 @@ export const RANK_1_ADVANCES = [
   { name: 'Performer', cost: 100, type: 'skill', specialization: 'Choose One', prerequisites: [] },
   { name: 'Scholastic Lore', cost: 100, type: 'skill', specialization: 'Imperial Creed', prerequisites: [] },
   { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'Ecclesiarchy', prerequisites: [] },
-  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'Rogue Trader', prerequisites: [] },
+  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'WH40K RPG', prerequisites: [] },
 
   // Talents (100 XP)
   { 
@@ -92,7 +92,7 @@ export const RANK_1_ADVANCES = [
  */
 export const CAREER_INFO = {
   key: 'missionary',
-  name: 'RT.Career.Missionary',
-  description: 'RT.Career.MissionaryDesc',
+  name: 'WH40K.Career.Missionary',
+  description: 'WH40K.Career.MissionaryDesc',
   ranks: ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4', 'Rank 5', 'Rank 6', 'Rank 7', 'Rank 8']
 };

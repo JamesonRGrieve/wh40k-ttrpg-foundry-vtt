@@ -35,17 +35,17 @@ export function clearSkillUuidCache() {
  * @example
  * // Standard skill
  * const awarenessUuid = await findSkillUuid("Awareness");
- * // Returns: "Compendium.rogue-trader.rt-items-skills.xxx"
+ * // Returns: "Compendium.wh40k-rpg.rt-items-skills.xxx"
  * 
  * @example
  * // Specialist skill with inline specialization
  * const loreUuid = await findSkillUuid("Common Lore (Imperium)");
- * // Returns: "Compendium.rogue-trader.rt-items-skills.yyy"
+ * // Returns: "Compendium.wh40k-rpg.rt-items-skills.yyy"
  * 
  * @example
  * // Specialist skill with separate specialization parameter
  * const loreUuid = await findSkillUuid("Common Lore", "Imperium");
- * // Returns: "Compendium.rogue-trader.rt-items-skills.yyy"
+ * // Returns: "Compendium.wh40k-rpg.rt-items-skills.yyy"
  */
 export async function findSkillUuid(skillName, specialization = null) {
     if (!skillName) return null;
@@ -71,11 +71,11 @@ export async function findSkillUuid(skillName, specialization = null) {
     try {
         // Find the skills compendium pack
         const skillPack = game.packs.find(p => 
-            p.metadata.name === "rt-items-skills" && p.documentName === "Item"
+            p.metadata.name === "wh40k-items-skills" && p.documentName === "Item"
         );
         
         if (!skillPack) {
-            console.warn("Skill compendium pack 'rt-items-skills' not found");
+            console.warn("Skill compendium pack 'wh40k-items-skills' not found");
             _skillUuidCache.set(cacheKey, null);
             return null;
         }

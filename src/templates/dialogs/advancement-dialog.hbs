@@ -10,10 +10,10 @@
       <div class="rt-adv__xp-info">
         <span class="rt-adv__xp-available">
           <i class="fas fa-bolt"></i>
-          <strong>{{xp.available}}</strong> {{localize "RT.Advancement.XPAvailable"}}
+          <strong>{{xp.available}}</strong> {{localize "WH40K.Advancement.XPAvailable"}}
         </span>
         <span class="rt-adv__xp-total">
-          ({{xp.used}} / {{xp.total}} {{localize "RT.Advancement.XPUsed"}})
+          ({{xp.used}} / {{xp.total}} {{localize "WH40K.Advancement.XPUsed"}})
         </span>
       </div>
     </div>
@@ -25,11 +25,11 @@
     <div class="rt-adv__blocked-icon">
       <i class="fas fa-route"></i>
     </div>
-    <h3 class="rt-adv__blocked-title">{{localize "RT.Advancement.NoCareerTitle"}}</h3>
-    <p class="rt-adv__blocked-message">{{localize "RT.Advancement.NoCareerMessage"}}</p>
+    <h3 class="rt-adv__blocked-title">{{localize "WH40K.Advancement.NoCareerTitle"}}</h3>
+    <p class="rt-adv__blocked-message">{{localize "WH40K.Advancement.NoCareerMessage"}}</p>
     <div class="rt-adv__blocked-hint">
       <i class="fas fa-info-circle"></i>
-      <span>{{localize "RT.Advancement.NoCareerHint"}}</span>
+      <span>{{localize "WH40K.Advancement.NoCareerHint"}}</span>
     </div>
   </div>
   {{else}}
@@ -80,7 +80,7 @@
           {{#if this.isMaxed}}
           <div class="rt-adv__char-status rt-adv__char-status--maxed">
             <i class="fas fa-crown"></i>
-            {{localize "RT.Advancement.Maxed"}}
+            {{localize "WH40K.Advancement.Maxed"}}
           </div>
           {{else if this.canPurchase}}
           <button 
@@ -93,7 +93,7 @@
             <span class="rt-adv__char-cost">{{this.nextCost}} XP</span>
           </button>
           {{else if this.cantAfford}}
-          <div class="rt-adv__char-status rt-adv__char-status--cant-afford" title="{{localize 'RT.Advancement.CannotAfford'}}">
+          <div class="rt-adv__char-status rt-adv__char-status--cant-afford" title="{{localize 'WH40K.Advancement.CannotAfford'}}">
             <i class="fas fa-coins"></i>
             <span class="rt-adv__char-cost rt-adv__char-cost--expensive">{{this.nextCost}} XP</span>
           </div>
@@ -123,12 +123,12 @@
                data-action="openCompendiumItem" 
                data-name="{{this.displayName}}" 
                data-type="skill"
-               title="{{localize 'RT.Advancement.ViewInCompendium'}}">
+               title="{{localize 'WH40K.Advancement.ViewInCompendium'}}">
               <i class="fas fa-external-link-alt"></i>
             </a>
             {{#if this.owned}}
             <span class="rt-adv__advance-badge rt-adv__advance-badge--owned">
-              <i class="fas fa-check"></i> {{localize "RT.Advancement.Owned"}}
+              <i class="fas fa-check"></i> {{localize "WH40K.Advancement.Owned"}}
             </span>
             {{/if}}
           </div>
@@ -153,7 +153,7 @@
             <span class="rt-adv__advance-cost">{{this.cost}} XP</span>
           </button>
           {{else if this.cantAfford}}
-          <div class="rt-adv__advance-status rt-adv__advance-status--cant-afford" title="{{localize 'RT.Advancement.CannotAfford'}}">
+          <div class="rt-adv__advance-status rt-adv__advance-status--cant-afford" title="{{localize 'WH40K.Advancement.CannotAfford'}}">
             <i class="fas fa-coins"></i>
             <span class="rt-adv__advance-cost">{{this.cost}} XP</span>
           </div>
@@ -164,7 +164,7 @@
       {{else}}
       <div class="rt-adv__empty">
         <i class="fas fa-book"></i>
-        <p>{{localize "RT.Advancement.NoSkillsAvailable"}}</p>
+        <p>{{localize "WH40K.Advancement.NoSkillsAvailable"}}</p>
       </div>
       {{/if}}
     </div>
@@ -188,18 +188,18 @@
                data-action="openCompendiumItem" 
                data-name="{{this.displayName}}" 
                data-type="talent"
-               title="{{localize 'RT.Advancement.ViewInCompendium'}}">
+               title="{{localize 'WH40K.Advancement.ViewInCompendium'}}">
               <i class="fas fa-external-link-alt"></i>
             </a>
             {{#if this.owned}}
             <span class="rt-adv__advance-badge rt-adv__advance-badge--owned">
-              <i class="fas fa-check"></i> {{localize "RT.Advancement.Owned"}}
+              <i class="fas fa-check"></i> {{localize "WH40K.Advancement.Owned"}}
             </span>
             {{/if}}
             {{#if this.blocked}}
             <span class="rt-adv__advance-prereq" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
               <i class="fas fa-exclamation-triangle"></i>
-              {{localize "RT.Advancement.RequiresPrereq"}}
+              {{localize "WH40K.Advancement.RequiresPrereq"}}
             </span>
             {{/if}}
           </div>
@@ -224,7 +224,7 @@
             <span class="rt-adv__advance-cost">{{this.cost}} XP</span>
           </button>
           {{else if this.cantAfford}}
-          <div class="rt-adv__advance-status rt-adv__advance-status--cant-afford" title="{{localize 'RT.Advancement.CannotAfford'}}">
+          <div class="rt-adv__advance-status rt-adv__advance-status--cant-afford" title="{{localize 'WH40K.Advancement.CannotAfford'}}">
             <i class="fas fa-coins"></i>
             <span class="rt-adv__advance-cost">{{this.cost}} XP</span>
           </div>
@@ -235,7 +235,7 @@
       {{else}}
       <div class="rt-adv__empty">
         <i class="fas fa-star"></i>
-        <p>{{localize "RT.Advancement.NoTalentsAvailable"}}</p>
+        <p>{{localize "WH40K.Advancement.NoTalentsAvailable"}}</p>
       </div>
       {{/if}}
     </div>

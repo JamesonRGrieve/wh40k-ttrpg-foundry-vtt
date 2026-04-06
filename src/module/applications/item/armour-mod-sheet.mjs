@@ -11,7 +11,7 @@ import ContainerItemSheet from "./container-item-sheet.mjs";
 export default class ArmourModSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "sheet", "item", "armour-modification"],
+        classes: ["wh40k-rpg", "sheet", "item", "armour-modification"],
         actions: {
             toggleArmourType: ArmourModSheet.#onToggleArmourType,
             adjustModifier: ArmourModSheet.#onAdjustModifier,
@@ -29,25 +29,25 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /** @override */
     static PARTS = {
         header: {
-            template: "systems/rogue-trader/templates/item/armour-mod-header.hbs"
+            template: "systems/wh40k-rpg/templates/item/armour-mod-header.hbs"
         },
         tabs: {
             template: "templates/generic/tab-navigation.hbs"
         },
         restrictions: {
-            template: "systems/rogue-trader/templates/item/armour-mod-restrictions.hbs",
+            template: "systems/wh40k-rpg/templates/item/armour-mod-restrictions.hbs",
             scrollable: [""]
         },
         modifiers: {
-            template: "systems/rogue-trader/templates/item/armour-mod-modifiers.hbs",
+            template: "systems/wh40k-rpg/templates/item/armour-mod-modifiers.hbs",
             scrollable: [""]
         },
         properties: {
-            template: "systems/rogue-trader/templates/item/armour-mod-properties.hbs",
+            template: "systems/wh40k-rpg/templates/item/armour-mod-properties.hbs",
             scrollable: [""]
         },
         effect: {
-            template: "systems/rogue-trader/templates/item/armour-mod-effect.hbs",
+            template: "systems/wh40k-rpg/templates/item/armour-mod-effect.hbs",
             scrollable: [""]
         }
     };
@@ -56,10 +56,10 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
     /** @override */
     static TABS = [
-        { tab: "restrictions", group: "primary", label: "RT.Modification.Restrictions" },
-        { tab: "modifiers", group: "primary", label: "RT.Modification.Modifiers" },
-        { tab: "properties", group: "primary", label: "RT.Modification.Properties" },
-        { tab: "effect", group: "primary", label: "RT.Modification.Effect" }
+        { tab: "restrictions", group: "primary", label: "WH40K.Modification.Restrictions" },
+        { tab: "modifiers", group: "primary", label: "WH40K.Modification.Modifiers" },
+        { tab: "properties", group: "primary", label: "WH40K.Modification.Properties" },
+        { tab: "effect", group: "primary", label: "WH40K.Modification.Effect" }
     ];
 
     /* -------------------------------------------- */

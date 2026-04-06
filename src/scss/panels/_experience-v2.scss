@@ -2,39 +2,39 @@
 // EXPERIENCE PANEL V2 - Compact, Clean Design
 // ============================================
 
-.rt-experience-panel-v2 {
+.wh40k-experience-panel-v2 {
   // ============================================
   // Compact Inline XP Display
   // ============================================
 
-  .rt-xp-compact-display {
+  .wh40k-xp-compact-display {
     display: flex;
     align-items: center;
-    gap: $rt-space-md;
-    padding: $rt-space-md;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-light);
     border-radius: 6px;
-    margin-bottom: $rt-space-md;
+    margin-bottom: $wh40k-space-md;
   }
 
-  .rt-xp-ring-inline {
+  .wh40k-xp-ring-inline {
     position: relative;
     width: 50px;
     height: 50px;
     flex-shrink: 0;
   }
 
-  .rt-xp-ring-svg {
+  .wh40k-xp-ring-svg {
     width: 100%;
     height: 100%;
   }
 
-  .rt-xp-ring-progress {
+  .wh40k-xp-ring-progress {
     transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .rt-xp-ring-percent {
+  .wh40k-xp-ring-percent {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -47,7 +47,7 @@
   }
 
   // Available XP Box (highlighted)
-  .rt-xp-available-box {
+  .wh40k-xp-available-box {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -59,7 +59,7 @@
     flex-shrink: 0;
   }
 
-  .rt-xp-available-value {
+  .wh40k-xp-available-value {
     font-size: 1.4rem;
     font-weight: 700;
     font-family: 'Modesto Condensed', serif;
@@ -67,7 +67,7 @@
     line-height: 1;
   }
 
-  .rt-xp-available-label {
+  .wh40k-xp-available-label {
     font-size: 0.65rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -76,7 +76,7 @@
   }
 
   // Separators
-  .rt-xp-separator {
+  .wh40k-xp-separator {
     font-size: 1.2rem;
     font-weight: 300;
     color: var(--color-border-primary);
@@ -84,14 +84,14 @@
   }
 
   // Inline stats (Spent/Total)
-  .rt-xp-inline-stat {
+  .wh40k-xp-inline-stat {
     display: flex;
     align-items: baseline;
     gap: 6px;
     flex-shrink: 0;
   }
 
-  .rt-xp-inline-value {
+  .wh40k-xp-inline-value {
     font-size: 1.1rem;
     font-weight: 700;
     font-family: 'Modesto Condensed', serif;
@@ -99,13 +99,13 @@
     line-height: 1;
   }
 
-  .rt-xp-inline-label {
+  .wh40k-xp-inline-label {
     font-size: 0.7rem;
     font-weight: 600;
     color: var(--color-text-dark-secondary);
   }
 
-  .rt-xp-add-button-inline {
+  .wh40k-xp-add-button-inline {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -137,7 +137,7 @@
     }
   }
 
-  .rt-xp-advancement-button {
+  .wh40k-xp-advancement-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -173,25 +173,25 @@
   // Edit Section (Expandable)
   // ============================================
 
-  .rt-xp-edit-section {
-    padding: $rt-space-md;
+  .wh40k-xp-edit-section {
+    padding: $wh40k-space-md;
     background: var(--rt-panel-bg-translucent);
     border: 1px solid var(--rt-border-color-light);
     border-radius: 8px;
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
 
     &:last-child {
       margin-bottom: 0;
     }
   }
 
-  .rt-xp-edit-header {
+  .wh40k-xp-edit-header {
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--rt-text-medium);
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -202,19 +202,19 @@
     }
   }
 
-  .rt-xp-edit-grid {
+  .wh40k-xp-edit-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
   }
 
-  .rt-edit-field {
+  .wh40k-edit-field {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .rt-edit-label {
+  .wh40k-edit-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -222,10 +222,10 @@
     color: var(--rt-text-muted);
   }
 
-  .rt-edit-input {
+  .wh40k-edit-input {
     width: 100%;
     height: 40px;
-    padding: 0 $rt-space-sm;
+    padding: 0 $wh40k-space-sm;
     border: 2px solid var(--rt-border-color-light);
     border-radius: 6px;
     background: var(--rt-input-bg);
@@ -252,14 +252,14 @@
   // Info Section
   // ============================================
 
-  .rt-xp-info-section {
-    margin-top: $rt-space-sm;
+  .wh40k-xp-info-section {
+    margin-top: $wh40k-space-sm;
   }
 
-  .rt-xp-info-box {
+  .wh40k-xp-info-box {
     display: flex;
-    gap: $rt-space-sm;
-    padding: $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-md;
     background: rgba(192, 128, 32, 0.08);
     border-left: 3px solid rgba(192, 128, 32, 0.4);
     border-radius: 4px;
@@ -272,10 +272,10 @@
     }
   }
 
-  .rt-info-content {
+  .wh40k-info-content {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
 
     strong {
       font-size: 0.8rem;

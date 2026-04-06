@@ -1,0 +1,95 @@
+{
+  "name": "Prestige",
+  "type": "originPath",
+  "img": "modules/game-icons-net/whitetransparent/medal.svg",
+  "system": {
+    "identifier": "prestige",
+    "step": "motivation",
+    "stepIndex": 5,
+    "description": {
+      "value": "<h2>Prestige</h2><blockquote><p><em>\"The Imperium of Mankind is a grand hierarchy, and that, to your eyes, is a ladder reaching from the least peasant to the blinding heights of the God-Emperor's own Holy Terra. You have dedicated your life to climbing that ladder in search of the highest station you can reach: the greatest power, the most important position of leadership, the utmost influence.\"</em></p></blockquote><p>Wealth, renown, and relationships with the powerful are only important insofar as they enable you to reach that next step. All too many fools never reach upward, but you bear them no ill-will. The position they might have ascended to will be yours, and they will be your loyal servants in the years ahead.</p><p>Every connection is a rung on the ladder. Every favor owed is leverage. Every alliance is a step closer to the pinnacle of power you seek.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Motivation",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": [
+        {
+          "type": "prestige_talent",
+          "label": "Choose Talented or Peer",
+          "options": [
+            {
+              "label": "Talented (choose one skill)",
+              "value": "talented",
+              "description": "You gain the Talented Talent for one chosen skill.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Talented (X)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.QRbdcZXAqmmHdgfn"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "Peer (choose one)",
+              "value": "peer",
+              "description": "You gain the Peer Talent for one chosen group.",
+              "grants": {
+                "talents": [
+                  {
+                    "name": "Peer (X)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.Icpx3A1ddmbsNRuL"
+                  }
+                ]
+              }
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "34",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": [
+      6
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rn7fg6IEWDmbH86S"
+}

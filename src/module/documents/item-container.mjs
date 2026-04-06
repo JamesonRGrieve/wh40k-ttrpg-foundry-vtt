@@ -2,7 +2,7 @@ import { SYSTEM_ID } from '../constants.mjs';
 
 export const DH_CONTAINER_ID = 'nested';
 
-export class RogueTraderItemContainer extends Item {
+export class WH40KItemContainer extends Item {
     get actor() {
         if (this.parent instanceof Item) return null;
         return this.parent;

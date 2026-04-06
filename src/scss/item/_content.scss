@@ -2,14 +2,14 @@
 // Damage Display
 // ============================================
 
-.rt-damage-display {
+.wh40k-damage-display {
   display: flex;
   align-items: center;
-  gap: $rt-space-md;
-  padding: $rt-space-md;
+  gap: $wh40k-space-md;
+  padding: $wh40k-space-md;
   background: linear-gradient(135deg, rgba(139, 0, 0, 0.1) 0%, transparent 100%);
   border: 1px solid var(--rt-red-dark);
-  border-radius: $rt-radius-md;
+  border-radius: $wh40k-radius-md;
   
   &__dice {
     display: flex;
@@ -18,11 +18,11 @@
     width: 48px;
     height: 48px;
     background: var(--rt-red-dark);
-    border-radius: $rt-radius-md;
-    font-family: $rt-font-display;
-    font-size: $rt-font-size-lg;
+    border-radius: $wh40k-radius-md;
+    font-family: $wh40k-font-display;
+    font-size: $wh40k-font-size-lg;
     color: #fff;
-    box-shadow: $rt-shadow-md;
+    box-shadow: $wh40k-shadow-md;
   }
   
   &__info {
@@ -30,22 +30,22 @@
   }
   
   &__formula {
-    font-family: $rt-font-display;
-    font-size: $rt-font-size-xl;
+    font-family: $wh40k-font-display;
+    font-size: $wh40k-font-size-xl;
     color: var(--rt-red-bright);
   }
   
   &__type {
-    font-size: $rt-font-size-sm;
+    font-size: $wh40k-font-size-sm;
     color: var(--rt-text-muted);
     text-transform: uppercase;
   }
   
   &__pen {
-    padding: $rt-space-xs $rt-space-sm;
+    padding: $wh40k-space-xs $wh40k-space-sm;
     background: var(--rt-panel-bg);
-    border-radius: $rt-radius-sm;
-    font-size: $rt-font-size-sm;
+    border-radius: $wh40k-radius-sm;
+    font-size: $wh40k-font-size-sm;
     
     span {
       color: var(--rt-gold);
@@ -58,25 +58,25 @@
 // Weapon Qualities / Tags
 // ============================================
 
-.rt-tags {
+.wh40k-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
 }
 
-.rt-tag {
+.wh40k-tag {
   display: inline-flex;
   align-items: center;
-  gap: $rt-space-xs;
-  padding: 2px $rt-space-sm;
+  gap: $wh40k-space-xs;
+  padding: 2px $wh40k-space-sm;
   background: var(--rt-panel-bg-translucent);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 12px;
-  font-size: $rt-font-size-xs;
+  font-size: $wh40k-font-size-xs;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--rt-text-muted);
-  transition: all $rt-transition-fast;
+  transition: all $wh40k-transition-fast;
   cursor: default;
   
   &:hover {

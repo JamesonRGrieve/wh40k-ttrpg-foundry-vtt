@@ -11,7 +11,7 @@ import BaseItemSheet from './base-item-sheet.mjs';
 export default class ConditionSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'item', 'condition'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'condition'],
         position: {
             width: 560,
             height: 640,
@@ -23,7 +23,7 @@ export default class ConditionSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/rogue-trader/templates/item/item-condition-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-condition-sheet-v2.hbs',
             scrollable: ['.rt-tab-content'],
         },
     };

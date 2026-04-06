@@ -10,7 +10,7 @@ import BaseItemSheet from './base-item-sheet.mjs';
 export default class TraitSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'item', 'trait'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'trait'],
         position: {
             width: 600,
             height: 720,
@@ -22,7 +22,7 @@ export default class TraitSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/rogue-trader/templates/item/item-trait-sheet-modern.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-trait-sheet-modern.hbs',
             scrollable: ['.rt-tab-content'],
         },
     };

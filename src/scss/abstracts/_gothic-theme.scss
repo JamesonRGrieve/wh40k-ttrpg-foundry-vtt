@@ -523,113 +523,113 @@ body.theme-dark {
    UTILITY CLASSES
    ======================================== */
 
-.rt-panel {
+.wh40k-panel {
     @include gothic-panel;
 }
 
-.rt-panel-header {
+.wh40k-panel-header {
     @include gothic-panel-header;
 }
 
-.rt-button {
+.wh40k-button {
     @include gothic-button;
 }
 
-.rt-input {
+.wh40k-input {
     @include gothic-input;
 }
 
-.rt-divider {
+.wh40k-divider {
     @include gothic-divider;
 }
 
-.rt-hover-lift {
+.wh40k-hover-lift {
     @include hover-lift;
 }
 
 // Text Colors - Use Foundry variables with accent overrides
-.rt-text-gold {
+.wh40k-text-gold {
     color: var(--rt-gold);
 }
 
-.rt-text-primary {
+.wh40k-text-primary {
     color: var(--color-text-primary);
 }
 
-.rt-text-secondary {
+.wh40k-text-secondary {
     color: var(--color-text-secondary);
 }
 
-.rt-text-red {
+.wh40k-text-red {
     color: var(--rt-red-bright);
 }
 
-.rt-text-green {
+.wh40k-text-green {
     color: var(--rt-green-bright);
 }
 
 // Background Colors
-.rt-bg-primary {
+.wh40k-bg-primary {
     background: var(--color-bg-primary);
 }
 
-.rt-bg-secondary {
+.wh40k-bg-secondary {
     background: var(--color-bg-secondary);
 }
 
-.rt-bg-tertiary {
+.wh40k-bg-tertiary {
     background: var(--color-bg-tertiary);
 }
 
 // Spacing Utilities
-.rt-m-sm { margin: var(--rt-space-sm); }
-.rt-m-md { margin: var(--rt-space-md); }
-.rt-m-lg { margin: var(--rt-space-lg); }
+.wh40k-m-sm { margin: var(--rt-space-sm); }
+.wh40k-m-md { margin: var(--rt-space-md); }
+.wh40k-m-lg { margin: var(--rt-space-lg); }
 
-.rt-p-sm { padding: var(--rt-space-sm); }
-.rt-p-md { padding: var(--rt-space-md); }
-.rt-p-lg { padding: var(--rt-space-lg); }
+.wh40k-p-sm { padding: var(--rt-space-sm); }
+.wh40k-p-md { padding: var(--rt-space-md); }
+.wh40k-p-lg { padding: var(--rt-space-lg); }
 
-.rt-mt-sm { margin-top: var(--rt-space-sm); }
-.rt-mt-md { margin-top: var(--rt-space-md); }
-.rt-mt-lg { margin-top: var(--rt-space-lg); }
+.wh40k-mt-sm { margin-top: var(--rt-space-sm); }
+.wh40k-mt-md { margin-top: var(--rt-space-md); }
+.wh40k-mt-lg { margin-top: var(--rt-space-lg); }
 
-.rt-mb-sm { margin-bottom: var(--rt-space-sm); }
-.rt-mb-md { margin-bottom: var(--rt-space-md); }
-.rt-mb-lg { margin-bottom: var(--rt-space-lg); }
+.wh40k-mb-sm { margin-bottom: var(--rt-space-sm); }
+.wh40k-mb-md { margin-bottom: var(--rt-space-md); }
+.wh40k-mb-lg { margin-bottom: var(--rt-space-lg); }
 
 // Flex Utilities
-.rt-flex {
+.wh40k-flex {
     display: flex;
 }
 
-.rt-flex-col {
+.wh40k-flex-col {
     display: flex;
     flex-direction: column;
 }
 
-.rt-flex-center {
+.wh40k-flex-center {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.rt-flex-between {
+.wh40k-flex-between {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.rt-gap-sm { gap: var(--rt-space-sm); }
-.rt-gap-md { gap: var(--rt-space-md); }
-.rt-gap-lg { gap: var(--rt-space-lg); }
+.wh40k-gap-sm { gap: var(--rt-space-sm); }
+.wh40k-gap-md { gap: var(--rt-space-md); }
+.wh40k-gap-lg { gap: var(--rt-space-lg); }
 
 /* ========================================
    STAT CHANGE ANIMATIONS
    ======================================== */
 
 // Increase animation - green flash with scale
-.rt-stat-increase {
+.wh40k-stat-increase {
     animation: statIncrease 0.6s ease-out;
 }
 
@@ -650,7 +650,7 @@ body.theme-dark {
 }
 
 // Decrease animation - red flash with shake
-.rt-stat-decrease {
+.wh40k-stat-decrease {
     animation: statDecrease 0.6s ease-out;
 }
 
@@ -682,7 +682,7 @@ body.theme-dark {
 }
 
 // Generic value change animation - gold glow
-.rt-stat-changed {
+.wh40k-stat-changed {
     animation: statChanged 0.5s ease-out;
 }
 
@@ -699,7 +699,7 @@ body.theme-dark {
 }
 
 // Critical warning pulse
-.rt-stat-critical {
+.wh40k-stat-critical {
     animation: statCritical 1.5s ease-in-out infinite;
 }
 
@@ -715,7 +715,7 @@ body.theme-dark {
 }
 
 // Success glow
-.rt-stat-success {
+.wh40k-stat-success {
     animation: statSuccess 0.8s ease-out;
 }
 

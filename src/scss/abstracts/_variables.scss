@@ -10,22 +10,22 @@
 // These are accent colors that remain consistent across themes
 
 // Gold / Brass / Bronze (Imperial accents)
-$rt-color-gold: #c9a227;
-$rt-color-gold-dark: #8b7015;
-$rt-color-gold-light: #e6c84a;
-$rt-color-brass: #b5a642;
-$rt-color-bronze: #cd7f32;
+$wh40k-color-gold: #c9a227;
+$wh40k-color-gold-dark: #8b7015;
+$wh40k-color-gold-light: #e6c84a;
+$wh40k-color-brass: #b5a642;
+$wh40k-color-bronze: #cd7f32;
 
 // Crimson (Blood/Combat)
-$rt-color-crimson: #8b0000;
-$rt-color-crimson-dark: #5c0000;
-$rt-color-crimson-light: #b22222;
+$wh40k-color-crimson: #8b0000;
+$wh40k-color-crimson-dark: #5c0000;
+$wh40k-color-crimson-light: #b22222;
 
 // Status colors (consistent across themes)
-$rt-color-success: #2d5016;
-$rt-color-failure: #6b1010;
-$rt-color-warning: #8b6914;
-$rt-color-info: #1a4a6b;
+$wh40k-color-success: #2d5016;
+$wh40k-color-failure: #6b1010;
+$wh40k-color-warning: #8b6914;
+$wh40k-color-info: #1a4a6b;
 
 // ============================================
 // Semantic Backgrounds - Using Foundry Variables
@@ -39,26 +39,26 @@ $rt-color-info: #1a4a6b;
 // --color-bg-option for inputs
 
 // Additional overlays with transparency
-$rt-bg-overlay-light: rgba(255, 255, 255, 0.05);
-$rt-bg-overlay-medium: rgba(0, 0, 0, 0.2);
-$rt-bg-overlay-heavy: rgba(0, 0, 0, 0.4);
-$rt-bg-input: rgba(0, 0, 0, 0.3);
-$rt-bg-input-focus: rgba(192, 128, 32, 0.15);
-$rt-bg-paper: rgba(30, 25, 20, 0.9);
-$rt-bg-paper-light: rgba(40, 35, 28, 0.85);
-$rt-bg-subtle: rgba(50, 45, 35, 0.6);
-$rt-bg-translucent: rgba(30, 25, 20, 0.7);
+$wh40k-bg-overlay-light: rgba(255, 255, 255, 0.05);
+$wh40k-bg-overlay-medium: rgba(0, 0, 0, 0.2);
+$wh40k-bg-overlay-heavy: rgba(0, 0, 0, 0.4);
+$wh40k-bg-input: rgba(0, 0, 0, 0.3);
+$wh40k-bg-input-focus: rgba(192, 128, 32, 0.15);
+$wh40k-bg-paper: rgba(30, 25, 20, 0.9);
+$wh40k-bg-paper-light: rgba(40, 35, 28, 0.85);
+$wh40k-bg-subtle: rgba(50, 45, 35, 0.6);
+$wh40k-bg-translucent: rgba(30, 25, 20, 0.7);
 
 // ============================================
 // Borders - Using Foundry Variables
 // ============================================
 // Use Foundry border colors for theme adaptation
 
-$rt-border-gold: 1px solid $rt-color-gold;
-$rt-border-bronze: 1px solid $rt-color-bronze;
-$rt-border-light: rgba(120, 100, 80, 0.4);
-$rt-border-medium: rgba(120, 100, 80, 0.6);
-$rt-border-dark: rgba(40, 30, 20, 0.8);
+$wh40k-border-gold: 1px solid $wh40k-color-gold;
+$wh40k-border-bronze: 1px solid $wh40k-color-bronze;
+$wh40k-border-light: rgba(120, 100, 80, 0.4);
+$wh40k-border-medium: rgba(120, 100, 80, 0.6);
+$wh40k-border-dark: rgba(40, 30, 20, 0.8);
 
 // Use Foundry variables for standard borders:
 // --color-border-primary (strongest contrast)
@@ -86,10 +86,10 @@ $grid-border-settings: 2px dashed var(--color-border-tertiary);
 // --color-text-light (light mode dark text)
 
 // RT-specific text colors
-$rt-text-primary: #e8e0d0;
-$rt-text-secondary: #b8a890;
-$rt-text-muted: #8a7a6a;
-$rt-text-highlight: $rt-color-gold;
+$wh40k-text-primary: #e8e0d0;
+$wh40k-text-secondary: #b8a890;
+$wh40k-text-muted: #8a7a6a;
+$wh40k-text-highlight: $wh40k-color-gold;
 
 // Legacy form colors - use Foundry variables for inputs
 $form-input-disabled: var(--color-text-tertiary);
@@ -103,61 +103,61 @@ $form-button-background: var(--color-warm-3);
 // Accent Colors (for panels/tabs)
 // ============================================
 
-$rt-accent-gold: #d4a520;
-$rt-accent-combat: #a82020;
-$rt-accent-red: #e74c3c;           // Critical injuries, danger states
-$rt-accent-skills: #2a7a9a;
-$rt-accent-talents: #a07818;
-$rt-accent-equipment: #3a5f5f;
-$rt-accent-powers: #6a2090;
-$rt-accent-dynasty: #d4a520;
-$rt-accent-bio: #6a5a4a;
+$wh40k-accent-gold: #d4a520;
+$wh40k-accent-combat: #a82020;
+$wh40k-accent-red: #e74c3c;           // Critical injuries, danger states
+$wh40k-accent-skills: #2a7a9a;
+$wh40k-accent-talents: #a07818;
+$wh40k-accent-equipment: #3a5f5f;
+$wh40k-accent-powers: #6a2090;
+$wh40k-accent-dynasty: #d4a520;
+$wh40k-accent-bio: #6a5a4a;
 
 // ============================================
 // Degree Colors (corruption/insanity)
 // ============================================
 
-$rt-degree-pure: #22c55e;
-$rt-degree-tainted: #eab308;
-$rt-degree-soiled: #f97316;
-$rt-degree-debased: #ef4444;
-$rt-degree-profane: #dc2626;
-$rt-degree-damned: #7f1d1d;
-$rt-degree-stable: #22c55e;
-$rt-degree-unsettled: #eab308;
-$rt-degree-disturbed: #f97316;
-$rt-degree-unhinged: #ef4444;
-$rt-degree-deranged: #dc2626;
-$rt-degree-terminally: #7f1d1d;
+$wh40k-degree-pure: #22c55e;
+$wh40k-degree-tainted: #eab308;
+$wh40k-degree-soiled: #f97316;
+$wh40k-degree-debased: #ef4444;
+$wh40k-degree-profane: #dc2626;
+$wh40k-degree-damned: #7f1d1d;
+$wh40k-degree-stable: #22c55e;
+$wh40k-degree-unsettled: #eab308;
+$wh40k-degree-disturbed: #f97316;
+$wh40k-degree-unhinged: #ef4444;
+$wh40k-degree-deranged: #dc2626;
+$wh40k-degree-terminally: #7f1d1d;
 
 // ============================================
 // Typography
 // ============================================
 
-$rt-font-display: 'Cinzel', serif;
-$rt-font-heading: 'IM Fell DW Pica', serif;
-$rt-font-body: 'Lusitana', serif;
-$rt-font-ui: 'Roboto', sans-serif;
-$rt-font-alt: 'Modesto Condensed', 'Palatino Linotype', serif;
+$wh40k-font-display: 'Cinzel', serif;
+$wh40k-font-heading: 'IM Fell DW Pica', serif;
+$wh40k-font-body: 'Lusitana', serif;
+$wh40k-font-ui: 'Roboto', sans-serif;
+$wh40k-font-alt: 'Modesto Condensed', 'Palatino Linotype', serif;
 
-$rt-font-size-2xs: 0.625rem;
-$rt-font-size-xs: 0.7rem;
-$rt-font-size-sm: 0.8rem;
-$rt-font-size-base: 0.9rem;
-$rt-font-size-md: 1rem;
-$rt-font-size-lg: 1.2rem;
-$rt-font-size-xl: 1.5rem;
-$rt-font-size-xxl: 2rem;
+$wh40k-font-size-2xs: 0.625rem;
+$wh40k-font-size-xs: 0.7rem;
+$wh40k-font-size-sm: 0.8rem;
+$wh40k-font-size-base: 0.9rem;
+$wh40k-font-size-md: 1rem;
+$wh40k-font-size-lg: 1.2rem;
+$wh40k-font-size-xl: 1.5rem;
+$wh40k-font-size-xxl: 2rem;
 
 // ============================================
 // Spacing
 // ============================================
 
-$rt-space-xs: 4px;
-$rt-space-sm: 8px;
-$rt-space-md: 12px;
-$rt-space-lg: 16px;
-$rt-space-xl: 24px;
+$wh40k-space-xs: 4px;
+$wh40k-space-sm: 8px;
+$wh40k-space-md: 12px;
+$wh40k-space-lg: 16px;
+$wh40k-space-xl: 24px;
 
 // Legacy spacing
 $margin-small: 0.25rem;
@@ -168,34 +168,34 @@ $margin-large: 1rem;
 // Shadows
 // ============================================
 
-$rt-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-$rt-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-$rt-shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
-$rt-shadow-glow-gold: 0 0 10px rgba($rt-color-gold, 0.5);
-$rt-shadow-glow-crimson: 0 0 10px rgba($rt-color-crimson, 0.5);
-$rt-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+$wh40k-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+$wh40k-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+$wh40k-shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
+$wh40k-shadow-glow-gold: 0 0 10px rgba($wh40k-color-gold, 0.5);
+$wh40k-shadow-glow-crimson: 0 0 10px rgba($wh40k-color-crimson, 0.5);
+$wh40k-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 
 // ============================================
 // Transitions
 // ============================================
 
-$rt-transition-fast: 150ms ease;
-$rt-transition-base: 250ms ease;
-$rt-transition-slow: 450ms ease;
+$wh40k-transition-fast: 150ms ease;
+$wh40k-transition-base: 250ms ease;
+$wh40k-transition-slow: 450ms ease;
 
 // ============================================
 // Border Radius
 // ============================================
 
-$rt-radius-sm: 2px;
-$rt-radius-md: 4px;
-$rt-radius-lg: 8px;
+$wh40k-radius-sm: 2px;
+$wh40k-radius-md: 4px;
+$wh40k-radius-lg: 8px;
 
 // ============================================
 // Z-Index Scale
 // ============================================
 
-$rt-z-dropdown: 100;
-$rt-z-sticky: 200;
-$rt-z-modal: 300;
-$rt-z-tooltip: 400;
+$wh40k-z-dropdown: 100;
+$wh40k-z-sticky: 200;
+$wh40k-z-modal: 300;
+$wh40k-z-tooltip: 400;

@@ -15,7 +15,7 @@
                 {{#if isAdvanced}}
                     <span class="origin-advanced-badge">
                         <i class="fa-solid fa-star"></i>
-                        {{localize "RT.OriginPath.Advanced"}}
+                        {{localize "WH40K.OriginPath.Advanced"}}
                     </span>
                 {{/if}}
                 {{#if xpCost}}
@@ -48,7 +48,7 @@
     <section class="origin-detail-section origin-grants">
         <h2 class="section-header">
             <i class="fa-solid fa-gift"></i>
-            {{localize "RT.OriginPath.Grants"}}
+            {{localize "WH40K.OriginPath.Grants"}}
         </h2>
         
         <div class="grants-grid">
@@ -57,7 +57,7 @@
                 <div class="grants-category">
                     <h3 class="category-header">
                         <i class="fa-solid fa-chart-simple"></i>
-                        {{localize "RT.Characteristics"}}
+                        {{localize "WH40K.Characteristics"}}
                     </h3>
                     <div class="grants-items">
                         {{#each characteristics}}
@@ -76,20 +76,20 @@
                 <div class="grants-category">
                     <h3 class="category-header">
                         <i class="fa-solid fa-dice"></i>
-                        {{localize "RT.OriginPath.StartingStats"}}
+                        {{localize "WH40K.OriginPath.StartingStats"}}
                     </h3>
                     <div class="grants-items formula-items">
                         {{#if woundsFormula}}
                             <div class="formula-tag" data-tooltip="Roll this formula to determine starting Wounds">
                                 <i class="fa-solid fa-heart"></i>
-                                <span class="formula-label">{{localize "RT.Wounds"}}:</span>
+                                <span class="formula-label">{{localize "WH40K.Wounds"}}:</span>
                                 <code class="formula-value">{{woundsFormula}}</code>
                             </div>
                         {{/if}}
                         {{#if fateFormula}}
                             <div class="formula-tag" data-tooltip="Roll this formula to determine starting Fate Points">
                                 <i class="fa-solid fa-star"></i>
-                                <span class="formula-label">{{localize "RT.Fate"}}:</span>
+                                <span class="formula-label">{{localize "WH40K.Fate"}}:</span>
                                 <code class="formula-value">{{fateFormula}}</code>
                             </div>
                         {{/if}}
@@ -102,7 +102,7 @@
                 <div class="grants-category">
                     <h3 class="category-header">
                         <i class="fa-solid fa-book-open"></i>
-                        {{localize "RT.Skills"}}
+                        {{localize "WH40K.Skills"}}
                     </h3>
                     <div class="grants-items">
                         {{#each skills}}
@@ -120,7 +120,7 @@
                 <div class="grants-category">
                     <h3 class="category-header">
                         <i class="fa-solid fa-star"></i>
-                        {{localize "RT.Talents"}}
+                        {{localize "WH40K.Talents"}}
                     </h3>
                     <div class="grants-items">
                         {{#each talents}}
@@ -141,7 +141,7 @@
                 <div class="grants-category">
                     <h3 class="category-header">
                         <i class="fa-solid fa-dna"></i>
-                        {{localize "RT.Traits"}}
+                        {{localize "WH40K.Traits"}}
                     </h3>
                     <div class="grants-items">
                         {{#each traits}}
@@ -162,7 +162,7 @@
                 <div class="grants-category">
                     <h3 class="category-header">
                         <i class="fa-solid fa-box"></i>
-                        {{localize "RT.Equipment"}}
+                        {{localize "WH40K.Equipment"}}
                     </h3>
                     <div class="grants-items">
                         {{#each equipment}}
@@ -185,7 +185,7 @@
         <section class="origin-detail-section origin-abilities">
             <h2 class="section-header">
                 <i class="fa-solid fa-bolt"></i>
-                {{localize "RT.OriginPath.SpecialAbilities"}}
+                {{localize "WH40K.OriginPath.SpecialAbilities"}}
             </h2>
             <div class="abilities-list">
                 {{#each specialAbilities}}
@@ -203,7 +203,7 @@
         <section class="origin-detail-section origin-choices-preview">
             <h2 class="section-header">
                 <i class="fa-solid fa-list-check"></i>
-                {{localize "RT.OriginPath.ChoicesRequired"}}
+                {{localize "WH40K.OriginPath.ChoicesRequired"}}
             </h2>
             <div class="choices-list">
                 {{#each choices}}
@@ -211,7 +211,7 @@
                         <div class="choice-header">
                             <span class="choice-type-badge">{{typeLabel}}</span>
                             <span class="choice-label">{{label}}</span>
-                            <span class="choice-count">({{localize "RT.OriginPath.Choose"}} {{count}})</span>
+                            <span class="choice-count">({{localize "WH40K.OriginPath.Choose"}} {{count}})</span>
                         </div>
                         <div class="choice-options-preview">
                             {{#each options}}
@@ -234,7 +234,7 @@
         <section class="origin-detail-section origin-requirements">
             <h2 class="section-header">
                 <i class="fa-solid fa-lock"></i>
-                {{localize "RT.OriginPath.Requirements"}}
+                {{localize "WH40K.OriginPath.Requirements"}}
             </h2>
             <div class="requirements-content">
                 {{#if requirements.text}}
@@ -242,7 +242,7 @@
                 {{/if}}
                 {{#if requirements.previousSteps.length}}
                     <p class="requirement-item">
-                        <strong>{{localize "RT.OriginPath.RequiresPrevious"}}:</strong>
+                        <strong>{{localize "WH40K.OriginPath.RequiresPrevious"}}:</strong>
                         {{#each requirements.previousSteps}}
                             <span class="req-tag">{{this}}</span>
                         {{/each}}
@@ -250,7 +250,7 @@
                 {{/if}}
                 {{#if requirements.excludedSteps.length}}
                     <p class="requirement-item">
-                        <strong>{{localize "RT.OriginPath.Excludes"}}:</strong>
+                        <strong>{{localize "WH40K.OriginPath.Excludes"}}:</strong>
                         {{#each requirements.excludedSteps}}
                             <span class="req-tag excluded">{{this}}</span>
                         {{/each}}
@@ -266,19 +266,19 @@
     <footer class="origin-detail-footer">
         <button type="button" class="detail-btn cancel-btn" data-action="cancel">
             <i class="fa-solid fa-times"></i>
-            {{localize "RT.Close"}}
+            {{localize "WH40K.Close"}}
         </button>
         
         {{#if allowSelection}}
             {{#if isSelected}}
                 <button type="button" class="detail-btn selected-btn" disabled>
                     <i class="fa-solid fa-check"></i>
-                    {{localize "RT.OriginPath.AlreadySelected"}}
+                    {{localize "WH40K.OriginPath.AlreadySelected"}}
                 </button>
             {{else}}
                 <button type="button" class="detail-btn confirm-btn" data-action="confirm">
                     <i class="fa-solid fa-check"></i>
-                    {{localize "RT.OriginPath.SelectThisOrigin"}}
+                    {{localize "WH40K.OriginPath.SelectThisOrigin"}}
                 </button>
             {{/if}}
         {{/if}}

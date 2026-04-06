@@ -2,7 +2,7 @@
 // ============================================
 // Styles for inline enriched content (characteristics, skills, modifiers, etc.)
 
-.rt-enricher {
+.wh40k-enricher {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -26,70 +26,70 @@
 }
 
 // Characteristic enricher
-.rt-enricher-characteristic {
-    background: rgba($rt-accent-gold, 0.15);
-    border: 1px solid rgba($rt-accent-gold, 0.3);
-    color: $rt-accent-gold;
+.wh40k-enricher-characteristic {
+    background: rgba($wh40k-accent-gold, 0.15);
+    border: 1px solid rgba($wh40k-accent-gold, 0.3);
+    color: $wh40k-accent-gold;
 
     &:hover {
-        background: rgba($rt-accent-gold, 0.25);
-        border-color: $rt-accent-gold;
-        color: lighten($rt-accent-gold, 10%);
+        background: rgba($wh40k-accent-gold, 0.25);
+        border-color: $wh40k-accent-gold;
+        color: lighten($wh40k-accent-gold, 10%);
     }
 
     i {
-        color: $rt-accent-gold;
+        color: $wh40k-accent-gold;
     }
 }
 
 // Skill enricher
-.rt-enricher-skill {
-    background: rgba($rt-accent-skills, 0.15);
-    border: 1px solid rgba($rt-accent-skills, 0.3);
-    color: $rt-accent-skills;
+.wh40k-enricher-skill {
+    background: rgba($wh40k-accent-skills, 0.15);
+    border: 1px solid rgba($wh40k-accent-skills, 0.3);
+    color: $wh40k-accent-skills;
 
     &:hover {
-        background: rgba($rt-accent-skills, 0.25);
-        border-color: $rt-accent-skills;
-        color: lighten($rt-accent-skills, 10%);
+        background: rgba($wh40k-accent-skills, 0.25);
+        border-color: $wh40k-accent-skills;
+        color: lighten($wh40k-accent-skills, 10%);
     }
 
     i {
-        color: $rt-accent-skills;
+        color: $wh40k-accent-skills;
     }
 }
 
 // Modifier enricher
-.rt-enricher-modifier {
+.wh40k-enricher-modifier {
     cursor: default;
 
     &.positive {
-        background: rgba($rt-color-success, 0.15);
-        border: 1px solid rgba($rt-color-success, 0.3);
-        color: $rt-color-success;
+        background: rgba($wh40k-color-success, 0.15);
+        border: 1px solid rgba($wh40k-color-success, 0.3);
+        color: $wh40k-color-success;
 
         i {
-            color: $rt-color-success;
+            color: $wh40k-color-success;
         }
 
         &:hover {
-            background: rgba($rt-color-success, 0.25);
+            background: rgba($wh40k-color-success, 0.25);
             transform: none;
             box-shadow: none;
         }
     }
 
     &.negative {
-        background: rgba($rt-accent-combat, 0.15);
-        border: 1px solid rgba($rt-accent-combat, 0.3);
-        color: $rt-accent-combat;
+        background: rgba($wh40k-accent-combat, 0.15);
+        border: 1px solid rgba($wh40k-accent-combat, 0.3);
+        color: $wh40k-accent-combat;
 
         i {
-            color: $rt-accent-combat;
+            color: $wh40k-accent-combat;
         }
 
         &:hover {
-            background: rgba($rt-accent-combat, 0.25);
+            background: rgba($wh40k-accent-combat, 0.25);
             transform: none;
             box-shadow: none;
         }
@@ -97,25 +97,25 @@
 }
 
 // Armor enricher
-.rt-enricher-armor {
-    background: rgba($rt-accent-combat, 0.15);
-    border: 1px solid rgba($rt-accent-combat, 0.3);
+.wh40k-enricher-armor {
+    background: rgba($wh40k-accent-combat, 0.15);
+    border: 1px solid rgba($wh40k-accent-combat, 0.3);
     color: var(--color-text-primary);
     cursor: default;
 
     i {
-        color: $rt-accent-combat;
+        color: $wh40k-accent-combat;
     }
 
     &:hover {
-        background: rgba($rt-accent-combat, 0.25);
+        background: rgba($wh40k-accent-combat, 0.25);
         transform: none;
         box-shadow: none;
     }
 }
 
 // Quality enricher (weapon qualities)
-.rt-enricher-quality {
+.wh40k-enricher-quality {
     background: rgba(239, 68, 68, 0.15);
     border: 1px solid rgba(239, 68, 68, 0.3);
     color: #ef4444;
@@ -132,7 +132,7 @@
 }
 
 // Property enricher (armour properties)
-.rt-enricher-property {
+.wh40k-enricher-property {
     background: rgba(59, 130, 246, 0.15);
     border: 1px solid rgba(59, 130, 246, 0.3);
     color: #3b82f6;
@@ -149,7 +149,7 @@
 }
 
 // Condition enricher
-.rt-enricher-condition {
+.wh40k-enricher-condition {
     background: rgba(245, 158, 11, 0.15);
     border: 1px solid rgba(245, 158, 11, 0.3);
     color: #f59e0b;
@@ -166,10 +166,10 @@
 }
 
 // Error enricher
-.rt-enricher-error {
-    background: rgba($rt-accent-combat, 0.2);
-    border: 1px dashed $rt-accent-combat;
-    color: $rt-accent-combat;
+.wh40k-enricher-error {
+    background: rgba($wh40k-accent-combat, 0.2);
+    border: 1px dashed $wh40k-accent-combat;
+    color: $wh40k-accent-combat;
     cursor: help;
     font-family: monospace;
     font-size: 0.85em;
@@ -177,12 +177,12 @@
     border-radius: 3px;
 
     &:hover {
-        background: rgba($rt-accent-combat, 0.3);
+        background: rgba($wh40k-accent-combat, 0.3);
     }
 }
 
 // Enricher tooltips
-.rt-enricher[data-tooltip] {
+.wh40k-enricher[data-tooltip] {
     position: relative;
 
     &::after {
@@ -211,7 +211,7 @@
 
 // Context within ProseMirror editor
 .ProseMirror {
-    .rt-enricher {
+    .wh40k-enricher {
         // Ensure enrichers display properly in rich text
         vertical-align: baseline;
     }
@@ -219,7 +219,7 @@
 
 // Context within chat messages
 .chat-message {
-    .rt-enricher {
+    .wh40k-enricher {
         // Slightly smaller in chat
         font-size: 0.85em;
     }
@@ -227,7 +227,7 @@
 
 // Context within item descriptions
 .item-description {
-    .rt-enricher {
+    .wh40k-enricher {
         // Keep consistent with description text
         font-size: 1em;
     }

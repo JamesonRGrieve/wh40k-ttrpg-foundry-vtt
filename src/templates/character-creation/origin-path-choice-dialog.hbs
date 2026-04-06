@@ -6,7 +6,7 @@
         <img src="{{itemImg}}" alt="{{itemName}}" class="item-img" />
         <div class="item-info">
             <h3 class="item-name">{{itemName}}</h3>
-            <p class="choice-instruction">{{localize "RT.OriginPath.ChoicesRequired"}}</p>
+            <p class="choice-instruction">{{localize "WH40K.OriginPath.ChoicesRequired"}}</p>
         </div>
     </div>
 
@@ -19,7 +19,7 @@
                     <span class="choice-text">{{choice.label}}</span>
                     {{#if (gt choice.remaining 0)}}
                         <span class="choice-remaining">
-                            ({{choice.remaining}} {{localize "RT.OriginPath.Remaining"}})
+                            ({{choice.remaining}} {{localize "WH40K.OriginPath.Remaining"}})
                         </span>
                     {{else}}
                         <i class="fa-solid fa-check-circle choice-complete"></i>
@@ -55,7 +55,7 @@
                             
                             {{!-- View Item Sheet Button (if applicable) --}}
                             {{#if option.uuid}}
-                                <button type="button" class="view-item-btn" data-action="viewItem" data-uuid="{{option.uuid}}" data-tooltip="{{localize 'RT.OriginPath.ViewDetails'}}">
+                                <button type="button" class="view-item-btn" data-action="viewItem" data-uuid="{{option.uuid}}" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
                             {{/if}}
@@ -70,7 +70,7 @@
     <div class="choice-footer">
         <button type="button" class="cancel-button" data-action="cancel">
             <i class="fa-solid fa-times"></i>
-            {{localize "RT.Cancel"}}
+            {{localize "WH40K.Cancel"}}
         </button>
         
         <button 
@@ -79,7 +79,7 @@
             data-action="confirm"
             {{#unless allChoicesComplete}}disabled{{/unless}}>
             <i class="fa-solid fa-check"></i>
-            {{localize "RT.OriginPath.ConfirmChoices"}}
+            {{localize "WH40K.OriginPath.ConfirmChoices"}}
         </button>
     </div>
 

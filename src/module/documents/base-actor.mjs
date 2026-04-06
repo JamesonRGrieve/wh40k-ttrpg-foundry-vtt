@@ -3,7 +3,7 @@ import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { toCamelCase } from '../handlebars/handlebars-helpers.mjs';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.mjs';
 
-export class RogueTraderBaseActor extends Actor {
+export class WH40KBaseActor extends Actor {
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */
     /* -------------------------------------------- */
@@ -102,8 +102,8 @@ export class RogueTraderBaseActor extends Actor {
             initData['token.actorLink'] = true;
 
             // Set default favorite skills for new characters
-            if (!this.getFlag('rogue-trader', 'favoriteSkills')) {
-                initData['flags.rogue-trader.favoriteSkills'] = ['dodge', 'awareness', 'scrutiny', 'inquiry', 'commerce', 'techUse', 'command', 'medicae'];
+            if (!this.getFlag('wh40k-rpg', 'favoriteSkills')) {
+                initData['flags.wh40k-rpg.favoriteSkills'] = ['dodge', 'awareness', 'scrutiny', 'inquiry', 'commerce', 'techUse', 'command', 'medicae'];
             }
         }
         this.updateSource(initData);

@@ -3,14 +3,14 @@
 // ============================================
 // Styles for homeworld, birthright, career, etc. selection items
 
-.rt-origin-path-sheet {
+.wh40k-origin-path-sheet {
   // Header customization
-  .rt-item-header {
+  .wh40k-item-header {
     background: linear-gradient(135deg, rgba(#3498db, 0.1) 0%, rgba(#9b59b6, 0.08) 100%);
     border-bottom: 2px solid rgba(#3498db, 0.3);
   }
 
-  .rt-meta-badge--origin {
+  .wh40k-meta-badge--origin {
     background: linear-gradient(135deg, rgba(#3498db, 0.15), rgba(#9b59b6, 0.12));
     border-color: rgba(#3498db, 0.4);
     color: #3498db;
@@ -21,7 +21,7 @@
   }
 
   // Meta controls
-  .rt-meta-select {
+  .wh40k-meta-select {
     padding: 4px 8px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(#3498db, 0.3);
@@ -43,7 +43,7 @@
     }
   }
 
-  .rt-meta-input {
+  .wh40k-meta-input {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -74,16 +74,16 @@
 }
 
 // Grants section
-.rt-grants-section {
-  .rt-section-title {
+.wh40k-grants-section {
+  .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding: $rt-space-sm $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: linear-gradient(135deg, rgba(#27ae60, 0.12) 0%, rgba(#27ae60, 0.05) 100%);
     border-left: 3px solid #27ae60;
     border-radius: 0 4px 4px 0;
-    margin-bottom: $rt-space-md;
+    margin-bottom: $wh40k-space-md;
     
     i {
       color: #27ae60;
@@ -91,15 +91,15 @@
   }
 }
 
-.rt-subsection {
-  margin-bottom: $rt-space-md;
-  padding: $rt-space-md;
+.wh40k-subsection {
+  margin-bottom: $wh40k-space-md;
+  padding: $wh40k-space-md;
   background: rgba(0, 0, 0, 0.2);
-  border-radius: $rt-radius-md;
+  border-radius: $wh40k-radius-md;
   border: 1px solid rgba(255, 255, 255, 0.08);
   
   h4 {
-    margin: 0 0 $rt-space-sm 0;
+    margin: 0 0 $wh40k-space-sm 0;
     font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -109,9 +109,9 @@
 }
 
 // Field grid layouts
-.rt-field-grid {
+.wh40k-field-grid {
   display: grid;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
   
   &--3col {
     grid-template-columns: repeat(3, 1fr);
@@ -122,7 +122,7 @@
   }
 }
 
-.rt-field {
+.wh40k-field {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -137,10 +137,10 @@
   
   input[type="number"],
   input[type="text"] {
-    padding: 6px $rt-space-sm;
+    padding: 6px $wh40k-space-sm;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     color: var(--color-text-primary);
     font-size: 0.85rem;
     
@@ -158,7 +158,7 @@
     label {
       display: flex;
       align-items: center;
-      gap: $rt-space-xs;
+      gap: $wh40k-space-xs;
       cursor: pointer;
       text-transform: none;
       color: var(--color-text-primary);
@@ -177,7 +177,7 @@
 }
 
 // Grants list
-.rt-grants-list {
+.wh40k-grants-list {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -186,11 +186,11 @@
   gap: 6px;
 }
 
-.rt-grant-item {
+.wh40k-grant-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $rt-space-sm;
+  padding: $wh40k-space-sm;
   background: linear-gradient(90deg, rgba(#27ae60, 0.08) 0%, transparent 100%);
   border-left: 3px solid rgba(#27ae60, 0.4);
   border-radius: 0 4px 4px 0;
@@ -202,20 +202,20 @@
     border-left-color: #27ae60;
   }
   
-  .rt-grant-name {
+  .wh40k-grant-name {
     flex: 1;
     font-weight: 500;
   }
   
-  .rt-grant-value {
+  .wh40k-grant-value {
     font-weight: 700;
     color: #27ae60;
-    font-family: $rt-font-alt;
+    font-family: $wh40k-font-alt;
   }
 }
 
 // Add/Remove buttons for arrays
-.rt-grant-controls {
+.wh40k-grant-controls {
   display: flex;
   gap: 4px;
   
@@ -223,7 +223,7 @@
     padding: 4px 8px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     color: var(--color-text-primary);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -238,7 +238,7 @@
       color: #3498db;
     }
     
-    &.rt-btn-remove:hover {
+    &.wh40k-btn-remove:hover {
       border-color: #e74c3c;
       color: #e74c3c;
     }
@@ -246,18 +246,18 @@
 }
 
 // Requirements section
-.rt-requirements-section {
-  padding: $rt-space-md;
+.wh40k-requirements-section {
+  padding: $wh40k-space-md;
   background: linear-gradient(135deg, rgba(#e67e22, 0.08) 0%, rgba(#d35400, 0.05) 100%);
   border: 1px solid rgba(#e67e22, 0.3);
-  border-radius: $rt-radius-md;
-  margin-bottom: $rt-space-md;
+  border-radius: $wh40k-radius-md;
+  margin-bottom: $wh40k-space-md;
   
   h3 {
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
-    margin: 0 0 $rt-space-sm 0;
+    gap: $wh40k-space-xs;
+    margin: 0 0 $wh40k-space-sm 0;
     color: #e67e22;
     
     i {
@@ -265,7 +265,7 @@
     }
   }
   
-  .rt-requirement-text {
+  .wh40k-requirement-text {
     font-size: 0.8rem;
     line-height: 1.5;
     color: var(--color-text-secondary);
@@ -273,8 +273,8 @@
 }
 
 // Empty states
-.rt-empty {
-  padding: $rt-space-md;
+.wh40k-empty {
+  padding: $wh40k-space-md;
   text-align: center;
   color: var(--color-text-muted);
   font-size: 0.8rem;
@@ -282,8 +282,8 @@
 }
 
 // Special effect box
-.rt-effect-text {
-  padding: $rt-space-md;
+.wh40k-effect-text {
+  padding: $wh40k-space-md;
   background: linear-gradient(135deg, rgba(#9b59b6, 0.08) 0%, rgba(#8e44ad, 0.05) 100%);
   border-left: 3px solid #9b59b6;
   border-radius: 0 4px 4px 0;

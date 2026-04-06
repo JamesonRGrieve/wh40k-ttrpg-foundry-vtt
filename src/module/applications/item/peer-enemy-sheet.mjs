@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class PeerEnemySheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "sheet", "item", "peer-enemy"],
+        classes: ["wh40k-rpg", "sheet", "item", "peer-enemy"],
         position: {
             width: 500,
             height: 380
@@ -22,7 +22,7 @@ export default class PeerEnemySheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-peer-enemy-sheet.hbs",
+            template: "systems/wh40k-rpg/templates/item/item-peer-enemy-sheet.hbs",
             scrollable: [".rt-tab-content"]
         }
     };

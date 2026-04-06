@@ -7,7 +7,7 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.mjs';
 import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.mjs';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.mjs';
-import ROGUE_TRADER from '../../config.mjs';
+import WH40K from '../../config.mjs';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -48,7 +48,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
                 initial: 'description',
             },
         ],
-        classes: ['rogue-trader', 'sheet', 'item', 'rt-item-sheet'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'wh40k-item-sheet'],
         form: {
             submitOnChange: true,
         },
@@ -66,7 +66,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/rogue-trader/templates/item/item-sheet-modern.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-sheet-modern.hbs',
             scrollable: ['.rt-tab-content'],
         },
     };
@@ -165,7 +165,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             fields: this.item.system.schema?.fields ?? {},
             effects: this.item.getEmbeddedCollection('ActiveEffect').contents,
             flags: this.item.flags,
-            dh: CONFIG.rt || ROGUE_TRADER,
+            dh: CONFIG.rt || WH40K,
             isEditable: this.isEditable,
             editable: this.isEditable, // Alias for template compatibility with {{editor}} helper
             owner: this.item.isOwner, // Required for {{editor}} helper
@@ -181,10 +181,10 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
         // Ensure dh has required config properties for selectOptions (safety measure)
         if (!context.dh.availabilities) {
-            context.dh.availabilities = CONFIG.ROGUE_TRADER?.availabilities || ROGUE_TRADER.availabilities || {};
+            context.dh.availabilities = CONFIG.WH40K?.availabilities || WH40K.availabilities || {};
         }
         if (!context.dh.craftsmanships) {
-            context.dh.craftsmanships = CONFIG.ROGUE_TRADER?.craftsmanships || ROGUE_TRADER.craftsmanships || {};
+            context.dh.craftsmanships = CONFIG.WH40K?.craftsmanships || WH40K.craftsmanships || {};
         }
 
         // Merge contexts: parent provides base, our values override

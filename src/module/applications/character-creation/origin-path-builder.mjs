@@ -47,10 +47,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /** @override */
     static DEFAULT_OPTIONS = {
         id: "origin-path-builder",
-        classes: ["rogue-trader", "origin-path-builder"],
+        classes: ["wh40k-rpg", "origin-path-builder"],
         tag: "div",
         window: {
-            title: "RT.OriginPath.BuilderTitle",
+            title: "WH40K.OriginPath.BuilderTitle",
             icon: "fa-solid fa-route",
             resizable: true,
             minimizable: true
@@ -85,7 +85,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /** @override */
     static PARTS = {
         main: {
-            template: "systems/rogue-trader/templates/character-creation/origin-path-builder.hbs"
+            template: "systems/wh40k-rpg/templates/character-creation/origin-path-builder.hbs"
         }
     };
 
@@ -120,7 +120,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     get title() {
-        return game.i18n.format("RT.OriginPath.BuilderTitle", { name: this.actor.name });
+        return game.i18n.format("WH40K.OriginPath.BuilderTitle", { name: this.actor.name });
     }
 
     /**
@@ -271,7 +271,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (this.allOrigins.length > 0 && this.lineageOrigins.length > 0) return;
         
         // Find origin path compendium
-        const pack = game.packs.find(p => p.metadata.name === "rt-items-origin-path");
+        const pack = game.packs.find(p => p.metadata.name === "wh40k-items-origin-path");
         if (!pack) {
             console.warn("Origin path compendium not found");
             return;
@@ -980,7 +980,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _findSkillUuid(skillName, specialization = null) {
         try {
-            const skillPack = game.packs.find(p => p.metadata.name === "rt-items-skills");
+            const skillPack = game.packs.find(p => p.metadata.name === "wh40k-items-skills");
             if (!skillPack) return null;
             
             const index = skillPack.index;
@@ -1105,8 +1105,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     static async #randomize(event, target) {
         const confirmed = await Dialog.confirm({
-            title: game.i18n.localize("RT.OriginPath.Randomize"),
-            content: game.i18n.localize("RT.OriginPath.RandomizeConfirm")
+            title: game.i18n.localize("WH40K.OriginPath.Randomize"),
+            content: game.i18n.localize("WH40K.OriginPath.RandomizeConfirm")
         });
         
         if (!confirmed) return;
@@ -1141,8 +1141,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     static async #reset(event, target) {
         const confirmed = await Dialog.confirm({
-            title: game.i18n.localize("RT.OriginPath.Reset"),
-            content: game.i18n.localize("RT.OriginPath.ConfirmReset")
+            title: game.i18n.localize("WH40K.OriginPath.Reset"),
+            content: game.i18n.localize("WH40K.OriginPath.ConfirmReset")
         });
         
         if (!confirmed) return;
@@ -1195,7 +1195,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         a.click();
         
         URL.revokeObjectURL(url);
-        ui.notifications.info(game.i18n.localize("RT.OriginPath.ExportSuccess"));
+        ui.notifications.info(game.i18n.localize("WH40K.OriginPath.ExportSuccess"));
     }
 
     /**
@@ -1235,10 +1235,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 
                 this.currentStepIndex = 0;
                 this.render();
-                ui.notifications.info(game.i18n.localize("RT.OriginPath.ImportSuccess"));
+                ui.notifications.info(game.i18n.localize("WH40K.OriginPath.ImportSuccess"));
             } catch (err) {
                 console.error("Import failed:", err);
-                ui.notifications.error(game.i18n.localize("RT.OriginPath.ImportFailed"));
+                ui.notifications.error(game.i18n.localize("WH40K.OriginPath.ImportFailed"));
             }
         });
         
@@ -1266,8 +1266,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // If direction changed and we have selections, warn about reset
             if (oldDirection !== this.direction && this.selections.size > 0) {
                 const confirmed = await Dialog.confirm({
-                    title: game.i18n.localize("RT.OriginPath.DirectionChange"),
-                    content: game.i18n.localize("RT.OriginPath.DirectionChangeWarning")
+                    title: game.i18n.localize("WH40K.OriginPath.DirectionChange"),
+                    content: game.i18n.localize("WH40K.OriginPath.DirectionChangeWarning")
                 });
                 
                 if (!confirmed) {
@@ -1297,7 +1297,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         
         // Check if accessible in guided mode
         if (this.guidedMode && !this._isStepAccessible(stepIndex)) {
-            ui.notifications.warn(game.i18n.localize("RT.OriginPath.CompletePreviousStep"));
+            ui.notifications.warn(game.i18n.localize("WH40K.OriginPath.CompletePreviousStep"));
             return;
         }
         
@@ -1318,7 +1318,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         
         // Check if disabled
         if (target.classList.contains("disabled")) {
-            ui.notifications.warn(game.i18n.localize("RT.OriginPath.OriginNotAvailable"));
+            ui.notifications.warn(game.i18n.localize("WH40K.OriginPath.OriginNotAvailable"));
             return;
         }
         
@@ -1341,7 +1341,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     static async #confirmSelection(event, target) {
         if (!this.previewedOrigin) {
-            ui.notifications.warn(game.i18n.localize("RT.OriginPath.NoPreviewedOrigin"));
+            ui.notifications.warn(game.i18n.localize("WH40K.OriginPath.NoPreviewedOrigin"));
             return;
         }
         
@@ -1362,8 +1362,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     .join(", ");
                 
                 const confirmed = await Dialog.confirm({
-                    title: game.i18n.localize("RT.OriginPath.ChangeSelection"),
-                    content: game.i18n.format("RT.OriginPath.ChangeSelectionWarning", { steps: stepNames })
+                    title: game.i18n.localize("WH40K.OriginPath.ChangeSelection"),
+                    content: game.i18n.format("WH40K.OriginPath.ChangeSelectionWarning", { steps: stepNames })
                 });
                 
                 if (!confirmed) {
@@ -1643,9 +1643,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             content: `
                 <form>
                     <div class="form-group">
-                        <label>${game.i18n.localize("RT.OriginPath.ManualValue")}</label>
+                        <label>${game.i18n.localize("WH40K.OriginPath.ManualValue")}</label>
                         <input type="number" name="value" value="" min="1" autofocus />
-                        <p class="notes">${game.i18n.localize("RT.OriginPath.FormulaHint")}: ${formula}</p>
+                        <p class="notes">${game.i18n.localize("WH40K.OriginPath.FormulaHint")}: ${formula}</p>
                     </div>
                 </form>
             `,
@@ -1703,7 +1703,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 item.sheet.render(true);
             }
         } catch (e) {
-            ui.notifications.warn(game.i18n.localize("RT.OriginPath.ItemNotFound"));
+            ui.notifications.warn(game.i18n.localize("WH40K.OriginPath.ItemNotFound"));
         }
     }
 
@@ -1715,17 +1715,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         
         if (!status.canCommit) {
             if (!status.stepsComplete) {
-                ui.notifications.warn(game.i18n.localize("RT.OriginPath.CompleteAllSteps"));
+                ui.notifications.warn(game.i18n.localize("WH40K.OriginPath.CompleteAllSteps"));
             } else if (!status.choicesComplete) {
-                ui.notifications.warn(game.i18n.localize("RT.OriginPath.CompleteAllChoices"));
+                ui.notifications.warn(game.i18n.localize("WH40K.OriginPath.CompleteAllChoices"));
             }
             return;
         }
         
         // Confirm
         const confirmed = await Dialog.confirm({
-            title: game.i18n.localize("RT.OriginPath.CommitToCharacter"),
-            content: game.i18n.localize("RT.OriginPath.ConfirmCommit")
+            title: game.i18n.localize("WH40K.OriginPath.CommitToCharacter"),
+            content: game.i18n.localize("WH40K.OriginPath.ConfirmCommit")
         });
         
         if (!confirmed) return;
@@ -1782,12 +1782,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             await this.actor.createEmbeddedDocuments("Item", cleanOriginItems);
             
             // Success
-            ui.notifications.info(game.i18n.localize("RT.OriginPath.CommitSuccess"));
+            ui.notifications.info(game.i18n.localize("WH40K.OriginPath.CommitSuccess"));
             this.close();
             
         } catch (err) {
             console.error("Failed to commit origin path:", err);
-            ui.notifications.error(game.i18n.localize("RT.OriginPath.CommitFailed"));
+            ui.notifications.error(game.i18n.localize("WH40K.OriginPath.CommitFailed"));
         }
     }
 

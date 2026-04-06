@@ -10,26 +10,26 @@
     overflow: visible;
   }
   
-  .rt-difficulty-calculator {
+  .wh40k-difficulty-calculator {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-lg;
-    padding: $rt-space-md;
+    gap: $wh40k-space-lg;
+    padding: $wh40k-space-md;
     max-height: 80vh;
     overflow-y: auto;
 
     // NPC Info Panel
-    .rt-panel--npc-info {
-      .rt-panel-header {
+    .wh40k-panel--npc-info {
+      .wh40k-panel-header {
         display: flex;
         align-items: center;
-        gap: $rt-space-md;
-        padding: $rt-space-md;
+        gap: $wh40k-space-md;
+        padding: $wh40k-space-md;
         background: var(--color-bg-secondary);
         border-radius: 8px;
       }
 
-      .rt-token-image {
+      .wh40k-token-image {
         width: 60px;
         height: 60px;
         border-radius: 8px;
@@ -37,7 +37,7 @@
         object-fit: cover;
       }
 
-      .rt-panel-header-text {
+      .wh40k-panel-header-text {
         flex: 1;
 
         h3 {
@@ -46,16 +46,16 @@
           color: var(--color-text-light-primary);
         }
 
-        .rt-subtitle {
+        .wh40k-subtitle {
           font-size: 0.9rem;
           color: var(--color-text-light-secondary);
           display: flex;
           align-items: center;
-          gap: $rt-space-sm;
+          gap: $wh40k-space-sm;
         }
       }
 
-      .rt-badge--horde {
+      .wh40k-badge--horde {
         background: #9c27b0;
         color: white;
         padding: 2px 8px;
@@ -67,16 +67,16 @@
     }
 
     // Quantity Panel
-    .rt-panel--quantity {
-      padding: $rt-space-md;
+    .wh40k-panel--quantity {
+      padding: $wh40k-space-md;
 
-      .rt-form-group {
+      .wh40k-form-group {
         display: flex;
         flex-direction: column;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
       }
 
-      .rt-label {
+      .wh40k-label {
         font-weight: 600;
         font-size: 0.9rem;
         color: var(--color-text-light-secondary);
@@ -96,19 +96,19 @@
         transition: all 0.2s;
 
         &:focus {
-          border-color: $rt-accent-gold;
+          border-color: $wh40k-accent-gold;
           outline: none;
         }
       }
     }
 
     // Party Panel
-    .rt-panel--party {
-      .rt-panel-header {
+    .wh40k-panel--party {
+      .wh40k-panel-header {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
-        padding: $rt-space-md $rt-space-md $rt-space-sm;
+        gap: $wh40k-space-sm;
+        padding: $wh40k-space-md $wh40k-space-md $wh40k-space-sm;
         border-bottom: 2px solid var(--color-border-secondary);
 
         h4 {
@@ -118,34 +118,34 @@
         }
 
         i {
-          color: $rt-accent-gold;
+          color: $wh40k-accent-gold;
         }
       }
 
-      .rt-panel-body {
-        padding: $rt-space-md;
+      .wh40k-panel-body {
+        padding: $wh40k-space-md;
       }
 
-      .rt-party-list {
+      .wh40k-party-list {
         list-style: none;
-        margin: 0 0 $rt-space-md 0;
+        margin: 0 0 $wh40k-space-md 0;
         padding: 0;
         display: flex;
         flex-direction: column;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
         max-height: 300px;
         overflow-y: auto;
       }
 
-      .rt-party-member {
+      .wh40k-party-member {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
-        padding: $rt-space-sm;
+        gap: $wh40k-space-sm;
+        padding: $wh40k-space-sm;
         background: var(--color-bg-secondary);
         border-radius: 4px;
 
-        .rt-avatar {
+        .wh40k-avatar {
           width: 36px;
           height: 36px;
           border-radius: 50%;
@@ -153,36 +153,36 @@
           object-fit: cover;
         }
 
-        .rt-party-member-name {
+        .wh40k-party-member-name {
           flex: 1;
           font-weight: 600;
           color: var(--color-text-light-primary);
         }
 
-        .rt-party-member-rank {
+        .wh40k-party-member-rank {
           font-size: 0.85rem;
           color: var(--color-text-light-secondary);
           font-weight: 600;
         }
       }
 
-      .rt-stats-grid {
+      .wh40k-stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: $rt-space-md;
-        margin-top: $rt-space-md;
+        gap: $wh40k-space-md;
+        margin-top: $wh40k-space-md;
       }
 
-      .rt-stat-box {
+      .wh40k-stat-box {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: $rt-space-md;
+        padding: $wh40k-space-md;
         background: var(--color-bg-secondary);
         border-radius: 8px;
         border: 2px solid var(--color-border-secondary);
 
-        .rt-stat-label {
+        .wh40k-stat-label {
           font-size: 0.75rem;
           text-transform: uppercase;
           letter-spacing: 0.5px;
@@ -190,28 +190,28 @@
           margin-bottom: 4px;
         }
 
-        .rt-stat-value {
+        .wh40k-stat-value {
           font-size: 2rem;
           font-weight: 700;
-          color: $rt-accent-gold;
+          color: $wh40k-accent-gold;
         }
       }
 
-      .rt-empty-message {
+      .wh40k-empty-message {
         text-align: center;
-        padding: $rt-space-lg;
+        padding: $wh40k-space-lg;
         color: var(--color-text-light-secondary);
         font-style: italic;
       }
     }
 
     // Threat Analysis Panel
-    .rt-panel--threat-analysis {
-      .rt-panel-header {
+    .wh40k-panel--threat-analysis {
+      .wh40k-panel-header {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
-        padding: $rt-space-md $rt-space-md $rt-space-sm;
+        gap: $wh40k-space-sm;
+        padding: $wh40k-space-md $wh40k-space-md $wh40k-space-sm;
         border-bottom: 2px solid var(--color-border-secondary);
 
         h4 {
@@ -221,30 +221,30 @@
         }
 
         i {
-          color: $rt-accent-gold;
+          color: $wh40k-accent-gold;
         }
       }
 
-      .rt-panel-body {
-        padding: $rt-space-md;
+      .wh40k-panel-body {
+        padding: $wh40k-space-md;
       }
 
-      .rt-threat-comparison {
-        margin-bottom: $rt-space-lg;
+      .wh40k-threat-comparison {
+        margin-bottom: $wh40k-space-lg;
       }
 
-      .rt-threat-bar {
-        margin-bottom: $rt-space-md;
+      .wh40k-threat-bar {
+        margin-bottom: $wh40k-space-md;
 
-        .rt-threat-bar-label {
+        .wh40k-threat-bar-label {
           font-size: 0.85rem;
           font-weight: 600;
           color: var(--color-text-light-secondary);
-          margin-bottom: $rt-space-sm;
+          margin-bottom: $wh40k-space-sm;
           text-transform: uppercase;
         }
 
-        .rt-threat-bar-visual {
+        .wh40k-threat-bar-visual {
           position: relative;
           width: 100%;
           height: 30px;
@@ -254,35 +254,35 @@
           border: 2px solid var(--color-border-secondary);
         }
 
-        .rt-threat-bar-fill {
+        .wh40k-threat-bar-fill {
           height: 100%;
           transition: width 0.3s ease;
         }
 
-        .rt-threat-bar-value {
+        .wh40k-threat-bar-value {
           text-align: center;
           font-size: 1.2rem;
           font-weight: 700;
           color: var(--color-text-light-primary);
-          margin-top: $rt-space-sm;
+          margin-top: $wh40k-space-sm;
         }
       }
 
-      .rt-threat-ratio {
+      .wh40k-threat-ratio {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: $rt-space-lg;
+        padding: $wh40k-space-lg;
         background: var(--color-bg-secondary);
         border-radius: 8px;
-        margin-bottom: $rt-space-lg;
+        margin-bottom: $wh40k-space-lg;
 
-        .rt-ratio-value {
+        .wh40k-ratio-value {
           font-size: 3rem;
           font-weight: 700;
         }
 
-        .rt-ratio-label {
+        .wh40k-ratio-label {
           font-size: 0.85rem;
           text-transform: uppercase;
           letter-spacing: 0.5px;
@@ -290,25 +290,25 @@
         }
       }
 
-      .rt-difficulty-result {
-        padding: $rt-space-lg;
+      .wh40k-difficulty-result {
+        padding: $wh40k-space-lg;
         border-radius: 8px;
         border: 3px solid;
-        margin-bottom: $rt-space-lg;
+        margin-bottom: $wh40k-space-lg;
         text-align: center;
 
-        .rt-difficulty-badge {
+        .wh40k-difficulty-badge {
           display: inline-block;
-          padding: $rt-space-sm $rt-space-lg;
+          padding: $wh40k-space-sm $wh40k-space-lg;
           border-radius: 8px;
           font-size: 1.4rem;
           font-weight: 700;
           text-transform: uppercase;
           color: white;
-          margin-bottom: $rt-space-md;
+          margin-bottom: $wh40k-space-md;
         }
 
-        .rt-difficulty-description {
+        .wh40k-difficulty-description {
           font-size: 0.95rem;
           color: var(--color-text-light-primary);
           margin: 0;
@@ -316,50 +316,50 @@
         }
       }
 
-      .rt-difficulty-scale {
+      .wh40k-difficulty-scale {
         h5 {
-          margin: 0 0 $rt-space-md 0;
+          margin: 0 0 $wh40k-space-md 0;
           font-size: 0.9rem;
           text-transform: uppercase;
           color: var(--color-text-light-secondary);
           letter-spacing: 0.5px;
         }
 
-        .rt-scale-list {
+        .wh40k-scale-list {
           list-style: none;
           margin: 0;
           padding: 0;
           display: flex;
           flex-direction: column;
-          gap: $rt-space-sm;
+          gap: $wh40k-space-sm;
           max-height: 240px;
           overflow-y: auto;
         }
 
-        .rt-scale-item {
+        .wh40k-scale-item {
           display: flex;
           align-items: center;
-          gap: $rt-space-sm;
-          padding: $rt-space-sm;
+          gap: $wh40k-space-sm;
+          padding: $wh40k-space-sm;
           background: var(--color-bg-secondary);
           border-radius: 4px;
           flex-wrap: wrap;
 
-          .rt-scale-dot {
+          .wh40k-scale-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
             flex-shrink: 0;
           }
 
-          .rt-scale-label {
+          .wh40k-scale-label {
             flex: 1 1 auto;
             min-width: 100px;
             font-weight: 600;
             color: var(--color-text-light-primary);
           }
 
-          .rt-scale-range {
+          .wh40k-scale-range {
             font-size: 0.85rem;
             color: var(--color-text-light-secondary);
             font-family: monospace;

@@ -31,7 +31,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/prompt/force-field-prompt.hbs",
+            template: "systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs",
             scrollable: [""]
         }
     };

@@ -284,7 +284,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get effective qualities (base + craftsmanship-derived + ammo).
-     * Applies Rogue Trader craftsmanship rules for ranged weapons:
+     * Applies WH40K RPG craftsmanship rules for ranged weapons:
      * - Poor: Gain Unreliable (or jam on any miss if already Unreliable)
      * - Good: Gain Reliable (or cancel Unreliable)
      * - Best: Never jams or overheats (gain Reliable, remove Overheats)
@@ -364,7 +364,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get craftsmanship-derived stat modifiers.
-     * Applies Rogue Trader craftsmanship rules:
+     * Applies WH40K RPG craftsmanship rules:
      *
      * MELEE WEAPONS:
      * - Poor: -10 to attack and parry
@@ -605,11 +605,11 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     get reloadLabel() {
         const labels = {
             '-': '-',
-            'free': game.i18n.localize('RT.Reload.Free'),
-            'half': game.i18n.localize('RT.Reload.Half'),
-            'full': game.i18n.localize('RT.Reload.Full'),
-            '2-full': game.i18n.localize('RT.Reload.2Full'),
-            '3-full': game.i18n.localize('RT.Reload.3Full'),
+            'free': game.i18n.localize('WH40K.Reload.Free'),
+            'half': game.i18n.localize('WH40K.Reload.Half'),
+            'full': game.i18n.localize('WH40K.Reload.Full'),
+            '2-full': game.i18n.localize('WH40K.Reload.2Full'),
+            '3-full': game.i18n.localize('WH40K.Reload.3Full'),
         };
         return labels[this.reload] ?? this.reload;
     }
@@ -647,11 +647,11 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     get effectiveReloadLabel() {
         const labels = {
             '-': '-',
-            'free': game.i18n.localize('RT.Reload.Free'),
-            'half': game.i18n.localize('RT.Reload.Half'),
-            'full': game.i18n.localize('RT.Reload.Full'),
-            '2-full': game.i18n.localize('RT.Reload.2Full'),
-            '3-full': game.i18n.localize('RT.Reload.3Full'),
+            'free': game.i18n.localize('WH40K.Reload.Free'),
+            'half': game.i18n.localize('WH40K.Reload.Half'),
+            'full': game.i18n.localize('WH40K.Reload.Full'),
+            '2-full': game.i18n.localize('WH40K.Reload.2Full'),
+            '3-full': game.i18n.localize('WH40K.Reload.3Full'),
         };
         return labels[this.effectiveReloadTime] ?? this.effectiveReloadTime;
     }
@@ -846,7 +846,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get qualitiesArray() {
         const qualities = [];
-        const config = CONFIG.ROGUE_TRADER?.weaponQualities ?? {};
+        const config = CONFIG.WH40K?.weaponQualities ?? {};
 
         for (const qualityId of this.effectiveSpecial) {
             // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
@@ -882,7 +882,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get handsLabel() {
-        return this.isTwoHanded ? game.i18n.localize('RT.Weapon.TwoHanded') : game.i18n.localize('RT.Weapon.OneHanded');
+        return this.isTwoHanded ? game.i18n.localize('WH40K.Weapon.TwoHanded') : game.i18n.localize('WH40K.Weapon.OneHanded');
     }
 
     /**

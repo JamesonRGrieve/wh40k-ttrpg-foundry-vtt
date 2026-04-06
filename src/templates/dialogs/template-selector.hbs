@@ -4,9 +4,9 @@
     <div class="template-filters">
         <div class="filter-row">
             <div class="filter-group">
-                <label for="category-filter">{{localize "RT.NPC.Category"}}</label>
+                <label for="category-filter">{{localize "WH40K.NPC.Category"}}</label>
                 <select id="category-filter" name="category" data-action="filterTemplates">
-                    <option value="">{{localize "RT.All"}}</option>
+                    <option value="">{{localize "WH40K.All"}}</option>
                     {{#each categories as |cat|}}
                     <option value="{{cat.value}}" {{#eq cat.value selectedCategory}}selected{{/eq}}>{{cat.label}}</option>
                     {{/each}}
@@ -14,9 +14,9 @@
             </div>
             
             <div class="filter-group">
-                <label for="faction-filter">{{localize "RT.NPC.Faction"}}</label>
+                <label for="faction-filter">{{localize "WH40K.NPC.Faction"}}</label>
                 <select id="faction-filter" name="faction" data-action="filterTemplates">
-                    <option value="">{{localize "RT.All"}}</option>
+                    <option value="">{{localize "WH40K.All"}}</option>
                     {{#each factions as |faction|}}
                     <option value="{{faction}}" {{#eq faction selectedFaction}}selected{{/eq}}>{{faction}}</option>
                     {{/each}}
@@ -24,9 +24,9 @@
             </div>
             
             <div class="filter-group search">
-                <label for="search-filter">{{localize "RT.Search"}}</label>
+                <label for="search-filter">{{localize "WH40K.Search"}}</label>
                 <input type="text" id="search-filter" name="search" 
-                       value="{{searchQuery}}" placeholder="{{localize 'RT.NPC.Template.SearchPlaceholder'}}"
+                       value="{{searchQuery}}" placeholder="{{localize 'WH40K.NPC.Template.SearchPlaceholder'}}"
                        data-action="filterTemplates" />
             </div>
         </div>
@@ -47,7 +47,7 @@
                         {{#if template.faction}}
                         <span class="template-faction">{{template.faction}}</span>
                         {{/if}}
-                        <span class="template-threat">{{localize "RT.NPC.ThreatLevel"}} {{template.threatLevel}}</span>
+                        <span class="template-threat">{{localize "WH40K.NPC.ThreatLevel"}} {{template.threatLevel}}</span>
                     </div>
                     {{#if template.description}}
                     <p class="template-desc">{{truncate template.description 80}}</p>
@@ -55,7 +55,7 @@
                 </div>
                 <div class="template-actions">
                     <button type="button" class="rt-btn rt-btn-icon" data-action="viewTemplate" 
-                            data-uuid="{{template.uuid}}" data-tooltip="{{localize 'RT.View'}}">
+                            data-uuid="{{template.uuid}}" data-tooltip="{{localize 'WH40K.View'}}">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
@@ -65,7 +65,7 @@
         {{else}}
         <div class="empty-state">
             <i class="fas fa-search"></i>
-            <p>{{localize "RT.NPC.Template.NoTemplatesFound"}}</p>
+            <p>{{localize "WH40K.NPC.Template.NoTemplatesFound"}}</p>
         </div>
         {{/if}}
     </div>
@@ -73,17 +73,17 @@
     {{!-- Selected Template Preview --}}
     {{#if selectedTemplateData}}
     <div class="selected-preview">
-        <h3>{{localize "RT.NPC.Template.SelectedTemplate"}}: {{selectedTemplateData.name}}</h3>
+        <h3>{{localize "WH40K.NPC.Template.SelectedTemplate"}}: {{selectedTemplateData.name}}</h3>
         
         <div class="creation-options">
             <div class="option-group">
-                <label for="npc-name">{{localize "RT.Name"}}</label>
+                <label for="npc-name">{{localize "WH40K.Name"}}</label>
                 <input type="text" id="npc-name" name="npcName" 
                        value="{{npcName}}" placeholder="{{selectedTemplateData.name}}" />
             </div>
             
             <div class="option-group">
-                <label for="target-threat">{{localize "RT.NPC.ThreatLevel"}}</label>
+                <label for="target-threat">{{localize "WH40K.NPC.ThreatLevel"}}</label>
                 <div class="threat-control">
                     <input type="range" id="target-threat" name="targetThreat" 
                            min="1" max="30" value="{{targetThreat}}" data-action="updateThreatPreview" />
@@ -94,7 +94,7 @@
             <div class="option-group checkbox">
                 <label>
                     <input type="checkbox" name="openSheet" {{#if openSheet}}checked{{/if}} />
-                    {{localize "RT.NPC.Template.OpenSheetAfterCreate"}}
+                    {{localize "WH40K.NPC.Template.OpenSheetAfterCreate"}}
                 </label>
             </div>
         </div>
@@ -104,11 +104,11 @@
     {{!-- Dialog Footer --}}
     <footer class="dialog-footer">
         <button type="button" class="rt-btn" data-action="cancel">
-            {{localize "RT.Cancel"}}
+            {{localize "WH40K.Cancel"}}
         </button>
         <button type="submit" class="rt-btn rt-btn-primary" {{#unless selectedTemplate}}disabled{{/unless}}>
             <i class="fas fa-user-plus"></i>
-            {{localize "RT.NPC.Template.CreateNPC"}}
+            {{localize "WH40K.NPC.Template.CreateNPC"}}
         </button>
     </footer>
 </form>

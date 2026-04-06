@@ -1,4 +1,4 @@
 /**
  * System constants
  */
-export const SYSTEM_ID = 'rogue-trader';
+export const SYSTEM_ID = 'wh40k-rpg';

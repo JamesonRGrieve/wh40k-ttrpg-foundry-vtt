@@ -1,5 +1,5 @@
 /**
- * Rogue Trader Compendium Browser - ApplicationV2
+ * WH40K RPG Compendium Browser - ApplicationV2
  * Enhanced compendium browsing with filtering, searching, and type organization
  */
 
@@ -26,8 +26,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        id: "rt-compendium-browser",
-        classes: ["rt-compendium-browser", "standard-form"],
+        id: "wh40k-compendium-browser",
+        classes: ["wh40k-compendium-browser", "standard-form"],
         tag: "div",
         actions: {
             clearFilters: RTCompendiumBrowser.#clearFilters,
@@ -49,7 +49,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static PARTS = {
         browser: {
-            template: "systems/rogue-trader/templates/applications/compendium-browser.hbs",
+            template: "systems/wh40k-rpg/templates/applications/compendium-browser.hbs",
             scrollable: [".content"]
         }
     };
@@ -77,7 +77,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
         
-        const packs = game.packs.filter(p => p.metadata.system === "rogue-trader");
+        const packs = game.packs.filter(p => p.metadata.system === "wh40k-rpg");
         
         context.tabs = {
             items: {
@@ -102,7 +102,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         // Add armour-specific filters if filtering armour
         const hasArmour = context.results.some(r => r.type === "armour");
         if (hasArmour) {
-            context.armourTypes = CONFIG.ROGUE_TRADER?.armourTypes || {};
+            context.armourTypes = CONFIG.WH40K?.armourTypes || {};
             context.hasArmourFilters = true;
         }
 
@@ -110,7 +110,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         const hasArmourMods = context.results.some(r => r.type === "armourModification");
         if (hasArmourMods) {
             context.hasArmourModFilters = true;
-            context.armourTypesForMods = CONFIG.ROGUE_TRADER?.armourTypes || {};
+            context.armourTypesForMods = CONFIG.WH40K?.armourTypes || {};
         }
 
         return context;
@@ -154,7 +154,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
     async _getSources() {
         const sources = new Set();
-        const packs = game.packs.filter(p => p.metadata.system === "rogue-trader" && p.documentName === "Item");
+        const packs = game.packs.filter(p => p.metadata.system === "wh40k-rpg" && p.documentName === "Item");
         
         for (const pack of packs) {
             const index = await pack.getIndex({ fields: ["system.source"] });
@@ -169,7 +169,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
     async _getCategories() {
         const categories = new Set();
-        const packs = game.packs.filter(p => p.metadata.system === 'rogue-trader' && p.documentName === 'Item');
+        const packs = game.packs.filter(p => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
         
         for (const pack of packs) {
             const index = await pack.getIndex({ fields: ['system.category', 'flags'] });
@@ -184,7 +184,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
     async _getFilteredResults() {
         const results = [];
-        const packs = game.packs.filter(p => p.metadata.system === 'rogue-trader');
+        const packs = game.packs.filter(p => p.metadata.system === 'wh40k-rpg');
         
         for (const pack of packs) {
             const index = await pack.getIndex({ 
@@ -306,10 +306,10 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         
         // Restriction summary
         const armourTypes = restrictions.armourTypes || [];
-        let restrictionLabel = game.i18n.localize("RT.Modification.AnyArmour");
+        let restrictionLabel = game.i18n.localize("WH40K.Modification.AnyArmour");
         if (armourTypes.length && !armourTypes.includes('any')) {
             const labels = armourTypes.map(type => {
-                const config = CONFIG.ROGUE_TRADER?.armourTypes?.[type];
+                const config = CONFIG.WH40K?.armourTypes?.[type];
                 return config ? game.i18n.localize(config.label) : type;
             });
             restrictionLabel = labels.join(", ");
@@ -475,7 +475,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
     _getEntryCategory(entry) {
         if (entry.system?.category) return entry.system.category;
-        if (entry.flags?.rt?.kind) return entry.flags.rt.kind;
+        if (entry.flags?.rt?.kind) return entry.flags.wh40k.kind;
         if (entry.type === 'skill' && entry.system?.skillType) {
             return entry.system.skillType;
         }

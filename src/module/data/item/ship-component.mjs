@@ -223,7 +223,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(
    * @type {string}
    */
   get hullTypeLabel() {
-    if ( this.hullType.has("all") ) return game.i18n.localize("RT.HullType.All");
+    if ( this.hullType.has("all") ) return game.i18n.localize("WH40K.HullType.All");
     return Array.from(this.hullType)
       .map(h => game.i18n.localize(`RT.HullType.${h.split("-").map(s => s.capitalize()).join("")}`))
       .join(", ");

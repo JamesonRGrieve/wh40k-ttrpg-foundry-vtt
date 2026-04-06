@@ -21,7 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Paths
-const PACK_SOURCE_DIR = path.join(__dirname, '..', 'packs', 'rt-items-origin-path', '_source');
+const PACK_SOURCE_DIR = path.join(__dirname, '..', 'packs', 'wh40k-items-origin-path', '_source');
 const REPORT_PATH = path.join(__dirname, '..', '..', 'PHASE4_MIGRATION_REPORT.md');
 
 // Statistics
@@ -58,7 +58,7 @@ function calculateNavigationData(position, stepIndex, step) {
   // Get max position for this step
   const maxPosition = STEP_INFO[step]?.maxPosition || 8;
 
-  // Origin Path Chart Rules (from Rogue Trader Core Rulebook):
+  // Origin Path Chart Rules (from WH40K RPG Core Rulebook):
   // "Each choice connects to the choice directly below it (or above it),
   //  or a choice adjacent to the one directly below."
   

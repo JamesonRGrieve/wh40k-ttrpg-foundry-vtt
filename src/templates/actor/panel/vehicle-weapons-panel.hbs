@@ -2,17 +2,17 @@
 <div class="rt-panel spacer rt-grid-col-6">
     <h1 class="rt-panel-header">
         <i class="fas fa-crosshairs"></i>
-        {{localize "RT.Vehicle.Weapons"}}
+        {{localize "WH40K.Vehicle.Weapons"}}
     </h1>
     <div class="rt-vehicle-weapons-section">
         {{#if weapons}}
         <div class="rt-table--border">
             <div class="table-row--head">
-                <div class="table-cell--span2">{{localize "RT.Weapon.Name"}}</div>
-                <div class="table-cell">{{localize "RT.Weapon.Class"}}</div>
-                <div class="table-cell">{{localize "RT.Weapon.Range"}}</div>
-                <div class="table-cell">{{localize "RT.Weapon.Damage"}}</div>
-                <div class="table-cell--last">{{localize "RT.Actions"}}</div>
+                <div class="table-cell--span2">{{localize "WH40K.Weapon.Name"}}</div>
+                <div class="table-cell">{{localize "WH40K.Weapon.Class"}}</div>
+                <div class="table-cell">{{localize "WH40K.Weapon.Range"}}</div>
+                <div class="table-cell">{{localize "WH40K.Weapon.Damage"}}</div>
+                <div class="table-cell--last">{{localize "WH40K.Actions"}}</div>
             </div>
             {{#each weapons as |weapon|}}
             <div class="table-row">
@@ -39,16 +39,16 @@
         {{/if}}
         
         <div class="rt-weapons-description">
-            <label class="rt-field__header">{{localize "RT.Vehicle.Weapons.Description"}}</label>
+            <label class="rt-field__header">{{localize "WH40K.Vehicle.Weapons.Description"}}</label>
             <div class="rt-editor">
                 {{editor system.weapons target="system.weapons" button=true editable=editable}}
             </div>
-            <small class="rt-field__hint">{{localize "RT.Vehicle.Weapons.Hint"}}</small>
+            <small class="rt-field__hint">{{localize "WH40K.Vehicle.Weapons.Hint"}}</small>
         </div>
         
         <div class="rt-item-controls">
             <button class="rt-control-button" data-action="itemCreate" data-type="weapon">
-                <i class="fas fa-plus"></i> {{localize "RT.Vehicle.Weapons.Add"}}
+                <i class="fas fa-plus"></i> {{localize "WH40K.Vehicle.Weapons.Add"}}
             </button>
         </div>
     </div>

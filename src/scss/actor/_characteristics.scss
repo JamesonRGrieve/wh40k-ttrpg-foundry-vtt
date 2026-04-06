@@ -2,7 +2,7 @@
 // ORIGIN PATH STYLES
 // ============================================
 
-.rt-origin-description {
+.wh40k-origin-description {
     text-align: center;
     font-style: italic;
     color: var(--rt-text-muted);
@@ -10,14 +10,14 @@
     font-size: 0.9em;
 }
 
-.rt-origin-path-container {
+.wh40k-origin-path-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     padding: 10px;
 }
 
-.rt-origin-step {
+.wh40k-origin-step {
     background: var(--rt-panel-bg);
     border: 2px solid var(--rt-border-color-light);
     border-radius: 6px;
@@ -29,13 +29,13 @@
         box-shadow: 0 2px 8px var(--rt-shadow-soft);
     }
     
-    &.rt-origin-step--filled {
+    &.wh40k-origin-step--filled {
         border-color: var(--rt-border-color-strong);
         background: var(--rt-panel-bg-solid);
     }
 }
 
-.rt-origin-step-header {
+.wh40k-origin-step-header {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -44,7 +44,7 @@
     border-bottom: 1px solid var(--rt-border-color-light);
 }
 
-.rt-origin-step-number {
+.wh40k-origin-step-number {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,36 +57,36 @@
     font-weight: bold;
 }
 
-.rt-origin-step-label {
+.wh40k-origin-step-label {
     font-weight: bold;
     color: var(--rt-text-medium);
     text-transform: uppercase;
     font-size: 0.85em;
 }
 
-.rt-origin-step-content {
+.wh40k-origin-step-content {
     padding: 10px;
     min-height: 60px;
 }
 
-.rt-origin-item {
+.wh40k-origin-item {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.rt-origin-item-img {
+.wh40k-origin-item-img {
     width: 40px;
     height: 40px;
     border-radius: 4px;
     border: 1px solid var(--rt-border-color-light);
 }
 
-.rt-origin-item-info {
+.wh40k-origin-item-info {
     flex: 1;
 }
 
-.rt-origin-item-name {
+.wh40k-origin-item-name {
     font-weight: bold;
     color: var(--rt-text-dark);
     cursor: pointer;
@@ -97,7 +97,7 @@
     }
 }
 
-.rt-origin-item-delete {
+.wh40k-origin-item-delete {
     opacity: 0.5;
     cursor: pointer;
     
@@ -111,7 +111,7 @@
     }
 }
 
-.rt-origin-dropzone {
+.wh40k-origin-dropzone {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -128,32 +128,32 @@
     }
 }
 
-.rt-dropzone-icon {
+.wh40k-dropzone-icon {
     font-size: 24px;
     margin-bottom: 3px;
 }
 
-.rt-dropzone-text {
+.wh40k-dropzone-text {
     font-size: 0.8em;
     font-style: italic;
 }
 
 // Effects List
-.rt-effects-list {
+.wh40k-effects-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     padding: 10px;
 }
 
-.rt-effect-card {
+.wh40k-effect-card {
     background: var(--rt-panel-bg);
     border: 1px solid var(--rt-border-color-light);
     border-radius: 4px;
     overflow: hidden;
 }
 
-.rt-effect-header {
+.wh40k-effect-header {
     display: flex;
     justify-content: space-between;
     padding: 6px 10px;
@@ -161,23 +161,23 @@
     border-bottom: 1px solid var(--rt-border-color-light);
 }
 
-.rt-effect-source {
+.wh40k-effect-source {
     font-size: 0.75em;
     text-transform: uppercase;
     color: var(--rt-text-muted);
 }
 
-.rt-effect-name {
+.wh40k-effect-name {
     font-weight: bold;
     color: var(--rt-text-medium);
     font-size: 0.9em;
 }
 
-.rt-effect-body {
+.wh40k-effect-body {
     padding: 8px 10px;
 }
 
-.rt-effect-benefit {
+.wh40k-effect-benefit {
     font-size: 0.85em;
     line-height: 1.4;
     color: var(--rt-text-dark);
@@ -186,12 +186,12 @@
     overflow-y: auto;
 }
 
-.rt-origin-empty {
+.wh40k-origin-empty {
     text-align: center;
     padding: 30px;
     color: var(--rt-text-muted);
     
-    .rt-empty-icon {
+    .wh40k-empty-icon {
         font-size: 48px;
         opacity: 0.3;
         margin-bottom: 10px;

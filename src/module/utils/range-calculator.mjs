@@ -260,7 +260,7 @@ export function formatRangeDisplay(rangeInfo) {
     let modifierText = modifier === 0 ? '±0' : modifier > 0 ? `+${modifier}` : `${modifier}`;
 
     // CSS class for styling
-    let modifierClass = 'rt-range-modifier';
+    let modifierClass = 'wh40k-range-modifier';
     if (modifier > 0) modifierClass += ' rt-range-modifier--positive';
     else if (modifier < 0) modifierClass += ' rt-range-modifier--negative';
     else modifierClass += ' rt-range-modifier--neutral';

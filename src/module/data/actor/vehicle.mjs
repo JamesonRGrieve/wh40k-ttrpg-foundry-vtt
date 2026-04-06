@@ -17,7 +17,7 @@ export default class VehicleData extends ActorDataModel {
         required: true,
         initial: "ground",
         choices: ["ground", "air", "water", "space", "walker"],
-        label: "RT.Vehicle.Class"
+        label: "WH40K.Vehicle.Class"
       }),
       
       // === Size ===
@@ -27,14 +27,14 @@ export default class VehicleData extends ActorDataModel {
         integer: true,
         min: 1,
         max: 10,
-        label: "RT.Vehicle.Size"
+        label: "WH40K.Vehicle.Size"
       }),
       
       sizeDescriptor: new fields.StringField({
         required: false,
         initial: "",
         blank: true,
-        label: "RT.Vehicle.SizeDescriptor"
+        label: "WH40K.Vehicle.SizeDescriptor"
       }),
       
       // === Threat Classification ===
@@ -44,7 +44,7 @@ export default class VehicleData extends ActorDataModel {
         required: true,
         initial: "vehicle",
         choices: ["vehicle", "walker", "flyer", "skimmer", "bike", "tank"],
-        label: "RT.Vehicle.Type"
+        label: "WH40K.Vehicle.Type"
       }),
       threatLevel: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
       

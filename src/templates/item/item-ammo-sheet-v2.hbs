@@ -207,7 +207,7 @@
             <p class="rt-help-text">Select which weapon types can use this ammunition. If none selected, ammo is universal.</p>
             
             <div class="rt-weapon-type-chips">
-              {{#each CONFIG.ROGUE_TRADER.weaponTypes as |type key|}}
+              {{#each CONFIG.WH40K.weaponTypes as |type key|}}
               <label class="rt-weapon-type-chip {{#if (setIncludes key system.weaponTypes)}}active{{/if}}">
                 <input type="checkbox" name="system.weaponTypes" value="{{key}}" 
                        {{#if (setIncludes key system.weaponTypes)}}checked{{/if}} />

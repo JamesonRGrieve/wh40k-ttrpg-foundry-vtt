@@ -217,7 +217,7 @@ export function computeArmour(actor) {
         });
 
     // Apply Good armour bonus (+1 AP on first attack per round)
-    const isFirstAttack = !actor.getFlag('rogue-trader', 'hitThisRound');
+    const isFirstAttack = !actor.getFlag('wh40k-rpg', 'hitThisRound');
     const goodArmourBonus = hasGoodArmour && isFirstAttack ? 1 : 0;
 
     // Apply max armour values and update totals

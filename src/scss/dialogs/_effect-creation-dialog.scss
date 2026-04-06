@@ -3,39 +3,39 @@
  * Thematic, streamlined active effect creation
  */
 
-.rt-effect-creation-dialog {
+.wh40k-effect-creation-dialog {
     .window-content {
         background: linear-gradient(135deg, #1a1612 0%, #2c2417 100%);
-        border: 2px solid $rt-accent-gold;
+        border: 2px solid $wh40k-accent-gold;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     }
 }
 
-.rt-effect-form {
+.wh40k-effect-form {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-lg;
-    padding: $rt-space-md;
+    gap: $wh40k-space-lg;
+    padding: $wh40k-space-md;
 }
 
 /* Category Tabs */
-.rt-effect-categories {
+.wh40k-effect-categories {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: $rt-space-xs;
-    padding: $rt-space-sm;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-sm;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 8px;
-    border: 1px solid rgba($rt-accent-gold, 0.2);
+    border: 1px solid rgba($wh40k-accent-gold, 0.2);
 }
 
-.rt-category-btn {
+.wh40k-category-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: $rt-space-sm;
+    padding: $wh40k-space-sm;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px;
@@ -57,37 +57,37 @@
 
     &:hover {
         background: rgba(255, 255, 255, 0.1);
-        border-color: rgba($rt-accent-gold, 0.5);
-        color: $rt-accent-gold;
+        border-color: rgba($wh40k-accent-gold, 0.5);
+        color: $wh40k-accent-gold;
         transform: translateY(-2px);
     }
 
     &.active {
-        background: linear-gradient(135deg, rgba($rt-accent-gold, 0.3) 0%, rgba($rt-accent-gold, 0.2) 100%);
-        border-color: $rt-accent-gold;
-        color: $rt-accent-gold;
-        box-shadow: 0 0 12px rgba($rt-accent-gold, 0.4);
+        background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.3) 0%, rgba($wh40k-accent-gold, 0.2) 100%);
+        border-color: $wh40k-accent-gold;
+        color: $wh40k-accent-gold;
+        box-shadow: 0 0 12px rgba($wh40k-accent-gold, 0.4);
     }
 }
 
 /* Effect Section */
-.rt-effect-section {
+.wh40k-effect-section {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-md;
-    padding: $rt-space-md;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
 }
 
-.rt-section-header {
+.wh40k-section-header {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding-bottom: $rt-space-sm;
-    border-bottom: 2px solid rgba($rt-accent-gold, 0.3);
-    color: $rt-accent-gold;
+    gap: $wh40k-space-sm;
+    padding-bottom: $wh40k-space-sm;
+    border-bottom: 2px solid rgba($wh40k-accent-gold, 0.3);
+    color: $wh40k-accent-gold;
     font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -99,32 +99,32 @@
 }
 
 /* Condition Cards Grid */
-.rt-conditions-grid {
-    .rt-condition-cards {
+.wh40k-conditions-grid {
+    .wh40k-condition-cards {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: $rt-space-sm;
-        margin-top: $rt-space-sm;
+        gap: $wh40k-space-sm;
+        margin-top: $wh40k-space-sm;
     }
 }
 
-.rt-condition-card {
+.wh40k-condition-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: $rt-space-xs;
-    padding: $rt-space-md;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-md;
     background: rgba(0, 0, 0, 0.3);
     border: 2px solid transparent;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
 
-    &.rt-condition-harmful {
+    &.wh40k-condition-harmful {
         border-color: rgba(231, 76, 60, 0.3);
 
-        .rt-condition-icon {
+        .wh40k-condition-icon {
             color: #e74c3c;
         }
 
@@ -135,10 +135,10 @@
         }
     }
 
-    &.rt-condition-beneficial {
+    &.wh40k-condition-beneficial {
         border-color: rgba(46, 204, 113, 0.3);
 
-        .rt-condition-icon {
+        .wh40k-condition-icon {
             color: #2ecc71;
         }
 
@@ -154,11 +154,11 @@
     }
 }
 
-.rt-condition-icon {
+.wh40k-condition-icon {
     font-size: 2rem;
 }
 
-.rt-condition-name {
+.wh40k-condition-name {
     color: rgba(255, 255, 255, 0.9);
     font-size: 0.85rem;
     font-weight: 600;
@@ -166,10 +166,10 @@
 }
 
 /* Form Groups */
-.rt-form-group {
+.wh40k-form-group {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
 
     label {
         color: rgba(255, 255, 255, 0.9);
@@ -180,9 +180,9 @@
     }
 }
 
-.rt-input,
-.rt-select {
-    padding: $rt-space-sm;
+.wh40k-input,
+.wh40k-select {
+    padding: $wh40k-space-sm;
     background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
@@ -192,8 +192,8 @@
 
     &:focus {
         outline: none;
-        border-color: $rt-accent-gold;
-        box-shadow: 0 0 8px rgba($rt-accent-gold, 0.3);
+        border-color: $wh40k-accent-gold;
+        box-shadow: 0 0 8px rgba($wh40k-accent-gold, 0.3);
     }
 
     &::placeholder {
@@ -201,32 +201,32 @@
     }
 }
 
-.rt-input-group {
+.wh40k-input-group {
     display: flex;
     align-items: stretch;
 
-    .rt-input {
+    .wh40k-input {
         flex: 1;
         border-right: none;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
 
-    .rt-input-suffix {
+    .wh40k-input-suffix {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 0 $rt-space-md;
+        padding: 0 $wh40k-space-md;
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-left: none;
         border-top-right-radius: 4px;
         border-bottom-right-radius: 4px;
-        color: $rt-accent-gold;
+        color: $wh40k-accent-gold;
     }
 }
 
-.rt-field-hint {
+.wh40k-field-hint {
     color: rgba(255, 255, 255, 0.5);
     font-size: 0.75rem;
     font-style: italic;
@@ -234,33 +234,33 @@
 }
 
 /* Duration Field */
-.rt-duration-field {
-    margin-top: $rt-space-md;
-    padding-top: $rt-space-md;
+.wh40k-duration-field {
+    margin-top: $wh40k-space-md;
+    padding-top: $wh40k-space-md;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
 
     label {
         display: flex;
         align-items: center;
-        gap: $rt-space-xs;
+        gap: $wh40k-space-xs;
         color: rgba(255, 255, 255, 0.8);
         font-size: 0.85rem;
         font-weight: 600;
 
         i {
-            color: $rt-accent-gold;
+            color: $wh40k-accent-gold;
         }
     }
 }
 
 /* Info Box */
-.rt-info-box {
+.wh40k-info-box {
     display: flex;
-    gap: $rt-space-sm;
-    padding: $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-md;
     background: rgba(52, 152, 219, 0.1);
     border: 1px solid rgba(52, 152, 219, 0.3);
     border-left: 3px solid #3498db;
@@ -282,19 +282,19 @@
 }
 
 /* Dialog Footer Buttons */
-.rt-dialog-footer {
+.wh40k-dialog-footer {
     display: flex;
     justify-content: flex-end;
-    gap: $rt-space-sm;
-    padding: $rt-space-md;
-    margin-top: $rt-space-lg;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-md;
+    margin-top: $wh40k-space-lg;
     background: rgba(0, 0, 0, 0.3);
-    border-top: 1px solid rgba($rt-accent-gold, 0.3);
+    border-top: 1px solid rgba($wh40k-accent-gold, 0.3);
     border-radius: 0 0 8px 8px;
 }
 
-.rt-btn {
-    padding: $rt-space-sm $rt-space-lg;
+.wh40k-btn {
+    padding: $wh40k-space-sm $wh40k-space-lg;
     border-radius: 4px;
     font-size: 0.85rem;
     font-weight: 600;
@@ -304,7 +304,7 @@
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
 
     i {
         font-size: 0.9rem;
@@ -315,18 +315,18 @@
     }
 }
 
-.rt-btn-primary {
-    background: linear-gradient(135deg, $rt-accent-gold 0%, darken($rt-accent-gold, 10%) 100%);
+.wh40k-btn-primary {
+    background: linear-gradient(135deg, $wh40k-accent-gold 0%, darken($wh40k-accent-gold, 10%) 100%);
     color: #0a0a0f;
-    border: 1px solid $rt-accent-gold;
+    border: 1px solid $wh40k-accent-gold;
 
     &:hover {
-        background: linear-gradient(135deg, lighten($rt-accent-gold, 10%) 0%, $rt-accent-gold 100%);
-        box-shadow: 0 4px 12px rgba($rt-accent-gold, 0.6);
+        background: linear-gradient(135deg, lighten($wh40k-accent-gold, 10%) 0%, $wh40k-accent-gold 100%);
+        box-shadow: 0 4px 12px rgba($wh40k-accent-gold, 0.6);
     }
 }
 
-.rt-btn-secondary {
+.wh40k-btn-secondary {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: rgba(255, 255, 255, 0.9);
@@ -339,7 +339,7 @@
 }
 
 /* Dialog specific overrides */
-.rt-effect-creation-dialog {
+.wh40k-effect-creation-dialog {
     .dialog-buttons {
         display: none; // Hide default Foundry dialog buttons
     }

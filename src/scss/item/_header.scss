@@ -2,11 +2,11 @@
 // Item Header Section
 // ============================================
 
-.rt-item-header {
+.wh40k-item-header {
   display: grid;
   grid-template-columns: 80px 1fr;
-  gap: $rt-space-md;
-  padding: $rt-space-md $rt-space-lg;
+  gap: $wh40k-space-md;
+  padding: $wh40k-space-md $wh40k-space-lg;
   background: linear-gradient(180deg, rgba(212, 175, 55, 0.15) 0%, transparent 100%);
   border-bottom: 2px solid var(--rt-gold-dark);
   flex-shrink: 0;
@@ -14,21 +14,21 @@
   // Compact variant for smaller sheets
   &--compact {
     grid-template-columns: 50px 1fr;
-    padding: $rt-space-sm $rt-space-md;
-    gap: $rt-space-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: $wh40k-space-sm;
   }
 }
 
 // Item Image
-.rt-item-image {
+.wh40k-item-image {
   width: 80px;
   height: 80px;
   border: 2px solid var(--rt-gold);
-  border-radius: $rt-radius-md;
+  border-radius: $wh40k-radius-md;
   overflow: hidden;
-  box-shadow: $rt-shadow-md, 0 0 10px rgba(212, 175, 55, 0.3);
+  box-shadow: $wh40k-shadow-md, 0 0 10px rgba(212, 175, 55, 0.3);
   cursor: pointer;
-  transition: transform $rt-transition-base, box-shadow $rt-transition-base;
+  transition: transform $wh40k-transition-base, box-shadow $wh40k-transition-base;
   flex-shrink: 0;
   
   img {
@@ -39,7 +39,7 @@
   
   &:hover {
     transform: scale(1.05);
-    box-shadow: $rt-shadow-lg, 0 0 20px rgba(212, 175, 55, 0.5);
+    box-shadow: $wh40k-shadow-lg, 0 0 20px rgba(212, 175, 55, 0.5);
   }
   
   // Small variant for compact sheets
@@ -50,28 +50,28 @@
 }
 
 // Item Title Block
-.rt-item-title {
+.wh40k-item-title {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   min-width: 0;
   
   &__name {
-    font-family: $rt-font-display;
-    font-size: $rt-font-size-xl;
+    font-family: $wh40k-font-display;
+    font-size: $wh40k-font-size-xl;
     color: var(--rt-gold);
     text-shadow: 0 1px 2px var(--rt-text-shadow);
     border: none;
     background: transparent;
-    padding: $rt-space-xs $rt-space-sm;
+    padding: $wh40k-space-xs $wh40k-space-sm;
     margin: 0;
     width: 100%;
     
     &:focus {
       outline: none;
       background: var(--rt-input-bg-focus);
-      border-radius: $rt-radius-sm;
+      border-radius: $wh40k-radius-sm;
     }
     
     &::placeholder {
@@ -82,8 +82,8 @@
   &__type {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    font-size: $rt-font-size-sm;
+    gap: $wh40k-space-sm;
+    font-size: $wh40k-font-size-sm;
     color: var(--rt-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -94,30 +94,30 @@
   }
   
   &__source {
-    font-size: $rt-font-size-xs;
+    font-size: $wh40k-font-size-xs;
     color: var(--rt-text-subtle);
     font-style: italic;
   }
 }
 
 // Item Metadata Badges
-.rt-item-meta {
+.wh40k-item-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: $rt-space-xs;
-  margin-top: $rt-space-xs;
+  gap: $wh40k-space-xs;
+  margin-top: $wh40k-space-xs;
   align-items: center;
 }
 
-.rt-meta-badge {
+.wh40k-meta-badge {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 2px $rt-space-sm;
+  padding: 2px $wh40k-space-sm;
   background: var(--rt-panel-bg-translucent);
   border: 1px solid var(--rt-border-color-light);
-  border-radius: $rt-radius-sm;
-  font-size: $rt-font-size-xs;
+  border-radius: $wh40k-radius-sm;
+  font-size: $wh40k-font-size-xs;
   color: var(--rt-text-muted);
   
   i {
@@ -128,7 +128,7 @@
   &--craft {
     background: rgba(181, 166, 66, 0.15);
     border-color: rgba(181, 166, 66, 0.4);
-    color: $rt-color-brass;
+    color: $wh40k-color-brass;
   }
   
   &--availability {

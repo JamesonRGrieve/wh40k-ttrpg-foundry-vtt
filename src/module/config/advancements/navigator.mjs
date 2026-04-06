@@ -2,7 +2,7 @@
  * Navigator Career Advancement Configuration
  * 
  * Defines characteristic costs and rank advancements for the Navigator career.
- * Data sourced from Rogue Trader Core Rulebook.
+ * Data sourced from WH40K RPG Core Rulebook.
  */
 
 /**
@@ -47,7 +47,7 @@ export const RANK_1_ADVANCES = [
   { name: 'Navigation', cost: 100, type: 'skill', specialization: 'Warp', prerequisites: [] },
   { name: 'Psyniscience', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Scholastic Lore', cost: 100, type: 'skill', specialization: 'Astromancy', prerequisites: [] },
-  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'Rogue Trader', prerequisites: [] },
+  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'WH40K RPG', prerequisites: [] },
   { 
     name: 'Secret Tongue', 
     cost: 100, 
@@ -92,7 +92,7 @@ export const RANK_1_ADVANCES = [
  */
 export const CAREER_INFO = {
   key: 'navigator',
-  name: 'RT.Career.Navigator',
-  description: 'RT.Career.NavigatorDesc',
+  name: 'WH40K.Career.Navigator',
+  description: 'WH40K.Career.NavigatorDesc',
   ranks: ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4', 'Rank 5', 'Rank 6', 'Rank 7', 'Rank 8']
 };

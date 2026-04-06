@@ -25,10 +25,10 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "encounter-builder",
-    classes: ["rogue-trader", "encounter-builder"],
+    classes: ["wh40k-rpg", "encounter-builder"],
     tag: "div",
     window: {
-      title: "RT.NPC.Encounter.Title",
+      title: "WH40K.NPC.Encounter.Title",
       icon: "fa-solid fa-swords",
       minimizable: true,
       resizable: true,
@@ -55,7 +55,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
   /** @override */
   static PARTS = {
     content: {
-      template: "systems/rogue-trader/templates/apps/encounter-builder.hbs"
+      template: "systems/wh40k-rpg/templates/apps/encounter-builder.hbs"
     }
   };
 
@@ -69,12 +69,12 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
    * @type {Object}
    */
   static DIFFICULTY_RATINGS = {
-    trivial: { maxRatio: 0.5, label: "RT.Threat.Trivial", color: "#4ade80" },
-    easy: { maxRatio: 0.8, label: "RT.Threat.Low", color: "#84cc16" },
-    moderate: { maxRatio: 1.2, label: "RT.Threat.Moderate", color: "#facc15" },
-    dangerous: { maxRatio: 1.6, label: "RT.Threat.Dangerous", color: "#fb923c" },
-    deadly: { maxRatio: 2.0, label: "RT.Threat.Deadly", color: "#ef4444" },
-    apocalyptic: { maxRatio: Infinity, label: "RT.Threat.Apocalyptic", color: "#991b1b" }
+    trivial: { maxRatio: 0.5, label: "WH40K.Threat.Trivial", color: "#4ade80" },
+    easy: { maxRatio: 0.8, label: "WH40K.Threat.Low", color: "#84cc16" },
+    moderate: { maxRatio: 1.2, label: "WH40K.Threat.Moderate", color: "#facc15" },
+    dangerous: { maxRatio: 1.6, label: "WH40K.Threat.Dangerous", color: "#fb923c" },
+    deadly: { maxRatio: 2.0, label: "WH40K.Threat.Deadly", color: "#ef4444" },
+    apocalyptic: { maxRatio: Infinity, label: "WH40K.Threat.Apocalyptic", color: "#991b1b" }
   };
 
   /* -------------------------------------------- */
@@ -329,10 +329,10 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
   _getActionAdvantage(partyActions, enemyActions) {
     const diff = enemyActions - partyActions;
     
-    if (diff <= -2) return { text: game.i18n.localize("RT.NPC.Encounter.PartyAdvantage"), color: "#4ade80" };
-    if (diff <= 0) return { text: game.i18n.localize("RT.NPC.Encounter.Balanced"), color: "#facc15" };
-    if (diff <= 2) return { text: game.i18n.localize("RT.NPC.Encounter.EnemyAdvantage"), color: "#fb923c" };
-    return { text: game.i18n.localize("RT.NPC.Encounter.EnemyOverwhelming"), color: "#ef4444" };
+    if (diff <= -2) return { text: game.i18n.localize("WH40K.NPC.Encounter.PartyAdvantage"), color: "#4ade80" };
+    if (diff <= 0) return { text: game.i18n.localize("WH40K.NPC.Encounter.Balanced"), color: "#facc15" };
+    if (diff <= 2) return { text: game.i18n.localize("WH40K.NPC.Encounter.EnemyAdvantage"), color: "#fb923c" };
+    return { text: game.i18n.localize("WH40K.NPC.Encounter.EnemyOverwhelming"), color: "#ef4444" };
   }
 
   /* -------------------------------------------- */
@@ -535,7 +535,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     
     await combat.createEmbeddedDocuments("Combatant", combatants);
     
-    ui.notifications.info(game.i18n.format("RT.NPC.Encounter.Deployed", { count: combatants.length }));
+    ui.notifications.info(game.i18n.format("WH40K.NPC.Encounter.Deployed", { count: combatants.length }));
   }
 
   /**

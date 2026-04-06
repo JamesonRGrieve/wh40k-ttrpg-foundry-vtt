@@ -1,6 +1,6 @@
-import { RogueTraderAcolyte } from './acolyte.mjs';
+import { WH40KAcolyte } from './acolyte.mjs';
 
-export class RogueTraderNPC extends RogueTraderAcolyte {
+export class WH40KNPC extends WH40KAcolyte {
 
     get faction() {
         return this.system.faction;

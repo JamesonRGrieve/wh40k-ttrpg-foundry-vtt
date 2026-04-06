@@ -69,7 +69,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             spendXPAdvance: BaseActorSheet.#spendXPAdvance,
             editCharacteristic: BaseActorSheet.#editCharacteristic,
         },
-        classes: ['rogue-trader', 'sheet', 'actor'],
+        classes: ['wh40k-rpg', 'sheet', 'actor'],
         form: {
             submitOnChange: true,
         },
@@ -257,7 +257,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         };
 
         // Use setFlag - this is async but we don't await it on close
-        this.actor.setFlag('rogue-trader', 'sheetState', state);
+        this.actor.setFlag('wh40k-rpg', 'sheetState', state);
     }
 
     /**
@@ -270,7 +270,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (this._stateRestored) return;
         this._stateRestored = true;
 
-        const state = this.actor.getFlag('rogue-trader', 'sheetState');
+        const state = this.actor.getFlag('wh40k-rpg', 'sheetState');
         if (!state) return;
 
         // Restore scroll positions
@@ -515,7 +515,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 });
                 
                 // Check favorite status for specialist skills
-                const specialistFavorites = this.actor.getFlag('rogue-trader', 'favoriteSpecialistSkills') || [];
+                const specialistFavorites = this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') || [];
                 
                 plainEntries.forEach((entry) => {
                     this._augmentSkillData(key, entry, characteristics, data);
@@ -594,7 +594,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
 
         // Check if skill is favorite
-        const favorites = this.actor.getFlag('rogue-trader', 'favoriteSkills') || [];
+        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
         data.isFavorite = favorites.includes(key);
 
         // Check if advanced skill is granted (for locking)
@@ -736,7 +736,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     _augmentTalentData(talent) {
         // Check if this talent is favorited
-        const favorites = this.actor.getFlag('rogue-trader', 'favoriteTalents') || [];
+        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
         const isFavorite = favorites.includes(talent.id);
 
         // Build tooltip text from description/benefit
@@ -1067,7 +1067,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Add rt-sheet class to the form element for CSS styling
         const form = this.element.querySelector('form');
         if (form) {
-            form.classList.add('rt-sheet');
+            form.classList.add('wh40k-sheet');
         }
 
         // Setup document update listener for visual feedback
@@ -1258,14 +1258,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (!target) return;
 
         // Get current expanded state from actor flags
-        const expanded = this.actor.getFlag('rogue-trader', 'ui.expanded') || [];
+        const expanded = this.actor.getFlag('wh40k-rpg', 'ui.expanded') || [];
         const isCurrentlyExpanded = expanded.includes(target);
 
         // Toggle the state
         const newExpanded = isCurrentlyExpanded ? expanded.filter((name) => name !== target) : [...expanded, target];
 
         // Update actor flags - this will trigger a re-render
-        await this.actor.setFlag('rogue-trader', 'ui.expanded', newExpanded);
+        await this.actor.setFlag('wh40k-rpg', 'ui.expanded', newExpanded);
     }
 
     /* -------------------------------------------- */
@@ -1777,7 +1777,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Try to find the skill item in the compendium
-        const pack = game.packs.get('rogue-trader.rt-items-skills');
+        const pack = game.packs.get('wh40k-rpg.rt-items-skills');
         if (!pack) {
             ui.notifications.warn('Skills compendium not found.');
             return;
@@ -1814,7 +1814,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Check if this item type is supported
         if (this.constructor.unsupportedItemTypes.has(item.type)) {
             ui.notifications.warn(
-                game.i18n.format('RT.Warning.InvalidItem', {
+                game.i18n.format('WH40K.Warning.InvalidItem', {
                     itemType: game.i18n.localize(CONFIG.Item.typeLabels[item.type]),
                     actorType: game.i18n.localize(CONFIG.Actor.typeLabels[this.actor.type]),
                 }),
@@ -1997,7 +1997,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 icon: 'fas fa-edit',
             },
             content: `
-                <div class="rt-char-edit-dialog">
+                <div class="wh40k-char-edit-dialog">
                     <div class="form-group">
                         <label>Base Value</label>
                         <input type="number" name="base" value="${currentBase}" min="0" max="100" />
@@ -2015,7 +2015,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                         <input type="number" name="unnatural" value="${currentUnnatural}" min="1" max="10" />
                     </div>
                     <hr/>
-                    <div class="rt-char-preview">
+                    <div class="wh40k-char-preview">
                         <p><strong>Total:</strong> <span class="preview-total">${char.total}</span></p>
                         <p><strong>Bonus:</strong> <span class="preview-bonus">${char.bonus}</span></p>
                     </div>

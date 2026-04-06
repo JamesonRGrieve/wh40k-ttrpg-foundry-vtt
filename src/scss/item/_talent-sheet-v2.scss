@@ -8,11 +8,11 @@
 // CSS Variables
 // ============================================
 
-.rt-talent-sheet-v2 {
-    --talent-accent: #{$rt-accent-talents};
-    --talent-accent-light: #{lighten($rt-accent-talents, 15%)};
-    --talent-accent-bg: #{rgba($rt-accent-talents, 0.1)};
-    --talent-accent-border: #{rgba($rt-accent-talents, 0.3)};
+.wh40k-talent-sheet-v2 {
+    --talent-accent: #{$wh40k-accent-talents};
+    --talent-accent-light: #{lighten($wh40k-accent-talents, 15%)};
+    --talent-accent-bg: #{rgba($wh40k-accent-talents, 0.1)};
+    --talent-accent-border: #{rgba($wh40k-accent-talents, 0.3)};
 
     // Tier colors
     --tier-1-color: #5ba86d;
@@ -32,13 +32,13 @@
 // Base Layout
 // ============================================
 
-.rt-talent-sheet-v2 {
+.wh40k-talent-sheet-v2 {
     display: flex;
     flex-direction: column;
     height: 100%;
     background: var(--color-bg-primary);
     color: var(--color-text-primary);
-    font-family: $rt-font-body;
+    font-family: $wh40k-font-body;
 
     form {
         display: flex;
@@ -52,23 +52,23 @@
 // HEADER
 // ============================================
 
-.rt-talent-header {
+.wh40k-talent-header {
     display: flex;
     align-items: flex-start;
-    gap: $rt-space-md;
-    padding: $rt-space-md;
-    background: linear-gradient(180deg, rgba($rt-accent-talents, 0.15) 0%, transparent 100%);
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
+    background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.15) 0%, transparent 100%);
     border-bottom: 2px solid var(--talent-accent-border);
     flex-shrink: 0;
 }
 
 // Portrait
-.rt-talent-portrait {
+.wh40k-talent-portrait {
     position: relative;
     width: 80px;
     height: 80px;
     flex-shrink: 0;
-    border-radius: $rt-radius-md;
+    border-radius: $wh40k-radius-md;
     overflow: hidden;
     border: 2px solid var(--color-border-secondary);
     cursor: pointer;
@@ -81,16 +81,16 @@
     }
 
     &:hover {
-        border-color: $rt-color-gold;
-        box-shadow: 0 0 12px rgba($rt-color-gold, 0.3);
+        border-color: $wh40k-color-gold;
+        box-shadow: 0 0 12px rgba($wh40k-color-gold, 0.3);
 
-        .rt-talent-portrait-overlay {
+        .wh40k-talent-portrait-overlay {
             opacity: 1;
         }
     }
 }
 
-.rt-talent-portrait-overlay {
+.wh40k-talent-portrait-overlay {
     position: absolute;
     inset: 0;
     display: flex;
@@ -101,26 +101,26 @@
     transition: opacity 0.2s ease;
 
     i {
-        color: $rt-color-gold;
+        color: $wh40k-color-gold;
         font-size: 1.5rem;
     }
 }
 
 // Title section
-.rt-talent-title {
+.wh40k-talent-title {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     min-width: 0;
 }
 
-.rt-talent-name {
+.wh40k-talent-name {
     width: 100%;
     margin: 0;
     font-size: 1.4rem;
     font-weight: 700;
-    font-family: $rt-font-display;
+    font-family: $wh40k-font-display;
     color: var(--color-text-primary);
 
     // Input variant
@@ -133,7 +133,7 @@
 
         &:focus {
             outline: none;
-            border-bottom-color: $rt-color-gold;
+            border-bottom-color: $wh40k-color-gold;
         }
 
         &::placeholder {
@@ -143,13 +143,13 @@
 }
 
 // Action buttons
-.rt-talent-actions {
+.wh40k-talent-actions {
     display: flex;
     gap: 6px;
     flex-shrink: 0;
 }
 
-.rt-action-btn {
+.wh40k-action-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -157,21 +157,21 @@
     height: 36px;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
-    border-radius: $rt-radius-md;
+    border-radius: $wh40k-radius-md;
     color: var(--color-text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
         background: var(--color-bg-secondary);
-        border-color: $rt-color-gold;
-        color: $rt-color-gold;
+        border-color: $wh40k-color-gold;
+        color: $wh40k-color-gold;
     }
 
     &.active {
-        background: rgba($rt-color-gold, 0.15);
-        border-color: $rt-color-gold;
-        color: $rt-color-gold;
+        background: rgba($wh40k-color-gold, 0.15);
+        border-color: $wh40k-color-gold;
+        color: $wh40k-color-gold;
     }
 
     &--roll {
@@ -195,19 +195,19 @@
 // BADGES
 // ============================================
 
-.rt-talent-badges {
+.wh40k-talent-badges {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: $rt-space-xs;
+    margin-top: $wh40k-space-xs;
 }
 
-.rt-badge {
+.wh40k-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     font-size: 0.72rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -251,9 +251,9 @@
     }
 
     &--category {
-        background: rgba($rt-color-gold, 0.1);
-        border-color: rgba($rt-color-gold, 0.3);
-        color: $rt-color-gold;
+        background: rgba($wh40k-color-gold, 0.1);
+        border-color: rgba($wh40k-color-gold, 0.3);
+        color: $wh40k-color-gold;
     }
 
     &--cost {
@@ -279,23 +279,23 @@
 // QUICK STATS BAR
 // ============================================
 
-.rt-talent-quickstats {
+.wh40k-talent-quickstats {
     display: flex;
     flex-wrap: wrap;
-    gap: $rt-space-sm;
-    padding: $rt-space-sm $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: var(--color-bg-secondary);
     border-bottom: 1px solid var(--color-border-light);
 }
 
-.rt-quickstat {
+.wh40k-quickstat {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding: $rt-space-xs $rt-space-sm;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-xs $wh40k-space-sm;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     font-size: 0.8rem;
 
     > i {
@@ -322,38 +322,38 @@
     }
 }
 
-.rt-aptitude-tag {
+.wh40k-aptitude-tag {
     display: inline-flex;
     align-items: center;
     padding: 2px 8px;
-    background: rgba($rt-color-gold, 0.15);
-    border: 1px solid rgba($rt-color-gold, 0.3);
+    background: rgba($wh40k-color-gold, 0.15);
+    border: 1px solid rgba($wh40k-color-gold, 0.3);
     border-radius: 10px;
     font-size: 0.7rem;
     font-weight: 600;
-    color: $rt-color-gold;
+    color: $wh40k-color-gold;
 }
 
 // ============================================
 // TAB NAVIGATION
 // ============================================
 
-.rt-talent-tabs {
+.wh40k-talent-tabs {
     display: flex;
     gap: 0;
     background: var(--color-bg-secondary);
     border-bottom: 2px solid var(--color-border-secondary);
-    padding: 0 $rt-space-md;
+    padding: 0 $wh40k-space-md;
     flex-shrink: 0;
 }
 
-.rt-talent-tab {
+.wh40k-talent-tab {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: $rt-space-sm $rt-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: transparent;
     border: none;
     border-bottom: 3px solid transparent;
@@ -371,13 +371,13 @@
 
     &:hover {
         color: var(--color-text-primary);
-        background: rgba($rt-color-gold, 0.05);
+        background: rgba($wh40k-color-gold, 0.05);
     }
 
     &.active {
-        color: $rt-color-gold;
-        border-bottom-color: $rt-color-gold;
-        background: rgba($rt-color-gold, 0.08);
+        color: $wh40k-color-gold;
+        border-bottom-color: $wh40k-color-gold;
+        background: rgba($wh40k-color-gold, 0.08);
     }
 }
 
@@ -385,18 +385,18 @@
 // TAB CONTENT
 // ============================================
 
-.rt-talent-content {
+.wh40k-talent-content {
     flex: 1;
     overflow: hidden;
     position: relative;
 }
 
-.rt-talent-panel {
+.wh40k-talent-panel {
     display: none;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: $rt-space-md;
+    padding: $wh40k-space-md;
 
     &.active {
         display: block;
@@ -413,7 +413,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--color-border-secondary);
-        border-radius: $rt-radius-sm;
+        border-radius: $wh40k-radius-sm;
 
         &:hover {
             background: var(--color-border-highlight);
@@ -425,11 +425,11 @@
 // SECTIONS
 // ============================================
 
-.rt-section {
-    margin-bottom: $rt-space-lg;
+.wh40k-section {
+    margin-bottom: $wh40k-space-lg;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
-    border-radius: $rt-radius-md;
+    border-radius: $wh40k-radius-md;
     overflow: hidden;
 
     &:last-child {
@@ -437,44 +437,44 @@
     }
 }
 
-.rt-section-header {
+.wh40k-section-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: $rt-space-sm $rt-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
     margin: 0;
-    background: linear-gradient(90deg, rgba($rt-color-gold, 0.12) 0%, transparent 100%);
+    background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, transparent 100%);
     border-bottom: 1px solid var(--color-border-light);
     font-size: 0.9rem;
     font-weight: 700;
-    font-family: $rt-font-heading;
+    font-family: $wh40k-font-heading;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--color-text-primary);
 
     i {
-        color: $rt-color-gold;
+        color: $wh40k-color-gold;
         font-size: 0.9em;
     }
 }
 
-.rt-section-body {
-    padding: $rt-space-md;
+.wh40k-section-body {
+    padding: $wh40k-space-md;
 }
 
 // ============================================
 // BENEFIT / DESCRIPTION TEXT
 // ============================================
 
-.rt-benefit-text,
-.rt-description-content,
-.rt-notes-content {
+.wh40k-benefit-text,
+.wh40k-description-content,
+.wh40k-notes-content {
     font-size: 0.9rem;
     line-height: 1.65;
     color: var(--color-text-primary);
 
     p {
-        margin: 0 0 $rt-space-sm 0;
+        margin: 0 0 $wh40k-space-sm 0;
 
         &:last-child {
             margin-bottom: 0;
@@ -483,7 +483,7 @@
 
     strong,
     b {
-        color: $rt-color-gold;
+        color: $wh40k-color-gold;
         font-weight: 600;
     }
 
@@ -495,12 +495,12 @@
 
     ul,
     ol {
-        margin: $rt-space-sm 0;
-        padding-left: $rt-space-lg;
+        margin: $wh40k-space-sm 0;
+        padding-left: $wh40k-space-lg;
     }
 
     li {
-        margin: $rt-space-xs 0;
+        margin: $wh40k-space-xs 0;
     }
 }
 
@@ -508,42 +508,42 @@
 // ABILITIES LIST
 // ============================================
 
-.rt-abilities-list {
+.wh40k-abilities-list {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
 }
 
-.rt-ability-card {
-    padding: $rt-space-md;
+.wh40k-ability-card {
+    padding: $wh40k-space-md;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-left: 3px solid $rt-color-gold;
-    border-radius: $rt-radius-sm;
+    border-left: 3px solid $wh40k-color-gold;
+    border-radius: $wh40k-radius-sm;
 }
 
-.rt-ability-name {
+.wh40k-ability-name {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 0 0 $rt-space-sm 0;
+    margin: 0 0 $wh40k-space-sm 0;
     font-size: 0.95rem;
     font-weight: 700;
-    font-family: $rt-font-heading;
-    color: $rt-color-gold;
+    font-family: $wh40k-font-heading;
+    color: $wh40k-color-gold;
 
     i {
         font-size: 0.6em;
     }
 }
 
-.rt-ability-description {
+.wh40k-ability-description {
     font-size: 0.85rem;
     line-height: 1.55;
     color: var(--color-text-secondary);
 
     p {
-        margin: 0 0 $rt-space-xs 0;
+        margin: 0 0 $wh40k-space-xs 0;
 
         &:last-child {
             margin-bottom: 0;
@@ -555,21 +555,21 @@
 // GRANTS GRID
 // ============================================
 
-.rt-grants-grid {
+.wh40k-grants-grid {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
 }
 
-.rt-grants-category {
+.wh40k-grants-category {
     // Category container
 }
 
-.rt-grants-category-header {
+.wh40k-grants-category-header {
     display: flex;
     align-items: center;
     gap: 6px;
-    margin: 0 0 $rt-space-sm 0;
+    margin: 0 0 $wh40k-space-sm 0;
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -581,29 +581,29 @@
     }
 }
 
-.rt-grants-items {
+.wh40k-grants-items {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
 }
 
-.rt-grant-tag {
+.wh40k-grant-tag {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 6px 10px;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     font-size: 0.82rem;
     transition: all 0.2s ease;
 
     &--skill {
-        border-left: 3px solid $rt-accent-skills;
+        border-left: 3px solid $wh40k-accent-skills;
     }
 
     &--talent {
-        border-left: 3px solid $rt-accent-talents;
+        border-left: 3px solid $wh40k-accent-talents;
     }
 
     &--trait {
@@ -614,23 +614,23 @@
         cursor: pointer;
 
         &:hover {
-            background: rgba($rt-color-gold, 0.1);
-            border-color: $rt-color-gold;
+            background: rgba($wh40k-color-gold, 0.1);
+            border-color: $wh40k-color-gold;
         }
     }
 }
 
-.rt-grant-name {
+.wh40k-grant-name {
     font-weight: 600;
     color: var(--color-text-primary);
 }
 
-.rt-grant-spec {
+.wh40k-grant-spec {
     font-style: italic;
     color: var(--color-text-tertiary);
 }
 
-.rt-grant-level {
+.wh40k-grant-level {
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -638,13 +638,13 @@
     border-radius: 3px;
 
     &--trained {
-        background: rgba($rt-accent-skills, 0.15);
-        color: $rt-accent-skills;
+        background: rgba($wh40k-accent-skills, 0.15);
+        color: $wh40k-accent-skills;
     }
 
     &--plus10 {
-        background: rgba($rt-color-gold, 0.15);
-        color: $rt-color-gold;
+        background: rgba($wh40k-color-gold, 0.15);
+        color: $wh40k-color-gold;
     }
 
     &--plus20 {
@@ -653,7 +653,7 @@
     }
 }
 
-.rt-grant-link {
+.wh40k-grant-link {
     font-size: 0.7em;
     opacity: 0.5;
 }
@@ -662,24 +662,24 @@
 // SITUATIONAL MODIFIERS
 // ============================================
 
-.rt-situational-list {
+.wh40k-situational-list {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
 }
 
-.rt-situational-item {
-    padding: $rt-space-sm $rt-space-md;
+.wh40k-situational-item {
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
 }
 
-.rt-situational-header {
+.wh40k-situational-header {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    margin-bottom: $rt-space-xs;
+    gap: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-xs;
 
     i {
         color: var(--talent-accent);
@@ -689,14 +689,14 @@
     }
 }
 
-.rt-situational-stat {
+.wh40k-situational-stat {
     font-weight: 600;
     color: var(--color-text-primary);
 }
 
-.rt-situational-value {
+.wh40k-situational-value {
     margin-left: auto;
-    font-family: $rt-font-display;
+    font-family: $wh40k-font-display;
     font-weight: 700;
 
     &.positive {
@@ -704,11 +704,11 @@
     }
 
     &.negative {
-        color: $rt-accent-combat;
+        color: $wh40k-accent-combat;
     }
 }
 
-.rt-situational-condition {
+.wh40k-situational-condition {
     margin: 0;
     padding-left: 28px;
     font-size: 0.8rem;
@@ -720,17 +720,17 @@
 // PROPERTIES GRID
 // ============================================
 
-.rt-properties-grid {
+.wh40k-properties-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
 
     @media (max-width: 500px) {
         grid-template-columns: 1fr;
     }
 }
 
-.rt-property {
+.wh40k-property {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -740,7 +740,7 @@
     }
 }
 
-.rt-property-label {
+.wh40k-property-label {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -756,21 +756,21 @@
     }
 }
 
-.rt-property-value {
+.wh40k-property-value {
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-text-primary);
     padding: 6px 0;
 }
 
-.rt-property-input,
-.rt-property-select,
-.rt-property-textarea {
+.wh40k-property-input,
+.wh40k-property-select,
+.wh40k-property-textarea {
     width: 100%;
     padding: 8px 12px;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     color: var(--color-text-primary);
     font-size: 0.88rem;
     font-family: inherit;
@@ -778,8 +778,8 @@
 
     &:focus {
         outline: none;
-        border-color: $rt-color-gold;
-        box-shadow: 0 0 0 2px rgba($rt-color-gold, 0.15);
+        border-color: $wh40k-color-gold;
+        box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
     }
 
     &::placeholder {
@@ -797,12 +797,12 @@
     }
 }
 
-.rt-property-textarea {
+.wh40k-property-textarea {
     min-height: 80px;
     resize: vertical;
 }
 
-.rt-checkbox-label {
+.wh40k-checkbox-label {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -814,7 +814,7 @@
         width: 18px;
         height: 18px;
         cursor: pointer;
-        accent-color: $rt-color-gold;
+        accent-color: $wh40k-color-gold;
     }
 
     span {
@@ -822,13 +822,13 @@
     }
 }
 
-.rt-rank-controls {
+.wh40k-rank-controls {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-.rt-rank-btn {
+.wh40k-rank-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -836,15 +836,15 @@
     height: 28px;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     color: var(--color-text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-        background: rgba($rt-color-gold, 0.15);
-        border-color: $rt-color-gold;
-        color: $rt-color-gold;
+        background: rgba($wh40k-color-gold, 0.15);
+        border-color: $wh40k-color-gold;
+        color: $wh40k-color-gold;
     }
 }
 
@@ -852,7 +852,7 @@
 // APTITUDES DISPLAY
 // ============================================
 
-.rt-aptitudes-display {
+.wh40k-aptitudes-display {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
@@ -862,13 +862,13 @@
 // SPECIALIZATION
 // ============================================
 
-.rt-specialization-badge {
+.wh40k-specialization-badge {
     display: inline-flex;
     align-items: center;
     padding: 6px 12px;
     background: var(--talent-accent-bg);
     border: 1px solid var(--talent-accent-border);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--talent-accent-light);
@@ -878,26 +878,26 @@
 // PREREQUISITES DISPLAY
 // ============================================
 
-.rt-prerequisites-display {
+.wh40k-prerequisites-display {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
 }
 
-.rt-prereq-text {
+.wh40k-prereq-text {
     font-size: 0.9rem;
     color: var(--color-text-primary);
     line-height: 1.5;
 }
 
-.rt-prereq-group {
+.wh40k-prereq-group {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 6px;
 }
 
-.rt-prereq-group-label {
+.wh40k-prereq-group-label {
     font-size: 0.78rem;
     font-weight: 600;
     color: var(--color-text-tertiary);
@@ -905,35 +905,35 @@
     letter-spacing: 0.03em;
 }
 
-.rt-prereq-tag {
+.wh40k-prereq-tag {
     display: inline-flex;
     padding: 3px 8px;
-    background: rgba($rt-accent-combat, 0.1);
-    border: 1px solid rgba($rt-accent-combat, 0.3);
-    border-radius: $rt-radius-sm;
+    background: rgba($wh40k-accent-combat, 0.1);
+    border: 1px solid rgba($wh40k-accent-combat, 0.3);
+    border-radius: $wh40k-radius-sm;
     font-size: 0.8rem;
     font-weight: 600;
-    color: lighten($rt-accent-combat, 15%);
+    color: lighten($wh40k-accent-combat, 15%);
 }
 
 // ============================================
 // ROLL CONFIG DISPLAY
 // ============================================
 
-.rt-roll-config-display {
+.wh40k-roll-config-display {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
 }
 
-.rt-config-item {
+.wh40k-config-item {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding: $rt-space-sm $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     font-size: 0.9rem;
 
     i {
@@ -943,9 +943,9 @@
     }
 }
 
-.rt-config-mod {
+.wh40k-config-mod {
     margin-left: auto;
-    font-family: $rt-font-display;
+    font-family: $wh40k-font-display;
     font-weight: 700;
 
     &.positive {
@@ -953,11 +953,11 @@
     }
 
     &.negative {
-        color: $rt-accent-combat;
+        color: $wh40k-accent-combat;
     }
 }
 
-.rt-config-desc {
+.wh40k-config-desc {
     margin: 0;
     padding-left: 28px;
     font-size: 0.82rem;
@@ -969,64 +969,64 @@
 // MODIFIERS GRID
 // ============================================
 
-.rt-modifiers-grid {
+.wh40k-modifiers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
 }
 
-.rt-modifier-group {
+.wh40k-modifier-group {
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     overflow: hidden;
 }
 
-.rt-modifier-group-header {
+.wh40k-modifier-group-header {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: $rt-space-sm $rt-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
     margin: 0;
-    background: rgba($rt-color-gold, 0.08);
+    background: rgba($wh40k-color-gold, 0.08);
     border-bottom: 1px solid var(--color-border-light);
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: $rt-color-gold;
+    color: $wh40k-color-gold;
 
     i {
         font-size: 0.9em;
     }
 }
 
-.rt-modifier-list {
+.wh40k-modifier-list {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    padding: $rt-space-xs;
+    padding: $wh40k-space-xs;
 }
 
-.rt-modifier-item {
+.wh40k-modifier-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 6px 10px;
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
 
     &:hover {
-        background: rgba($rt-color-gold, 0.05);
+        background: rgba($wh40k-color-gold, 0.05);
     }
 }
 
-.rt-modifier-name {
+.wh40k-modifier-name {
     font-size: 0.85rem;
     color: var(--color-text-secondary);
 }
 
-.rt-modifier-value {
-    font-family: $rt-font-display;
+.wh40k-modifier-value {
+    font-family: $wh40k-font-display;
     font-size: 0.9rem;
     font-weight: 700;
 
@@ -1035,7 +1035,7 @@
     }
 
     &.negative {
-        color: $rt-accent-combat;
+        color: $wh40k-accent-combat;
     }
 }
 
@@ -1043,38 +1043,38 @@
 // EFFECTS LIST
 // ============================================
 
-.rt-effects-list {
+.wh40k-effects-list {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
-    margin-bottom: $rt-space-md;
+    gap: $wh40k-space-xs;
+    margin-bottom: $wh40k-space-md;
 }
 
-.rt-effect-item {
+.wh40k-effect-item {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding: $rt-space-sm $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
 }
 
-.rt-effect-icon {
+.wh40k-effect-icon {
     width: 28px;
     height: 28px;
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     object-fit: cover;
 }
 
-.rt-effect-name {
+.wh40k-effect-name {
     flex: 1;
     font-size: 0.88rem;
     font-weight: 600;
     color: var(--color-text-primary);
 }
 
-.rt-effect-status {
+.wh40k-effect-status {
     font-size: 0.72rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -1092,12 +1092,12 @@
     }
 }
 
-.rt-effect-controls {
+.wh40k-effect-controls {
     display: flex;
     gap: 4px;
 }
 
-.rt-effect-btn {
+.wh40k-effect-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1105,42 +1105,42 @@
     height: 26px;
     background: transparent;
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     color: var(--color-text-tertiary);
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
         background: var(--color-bg-tertiary);
-        border-color: $rt-color-gold;
-        color: $rt-color-gold;
+        border-color: $wh40k-color-gold;
+        color: $wh40k-color-gold;
     }
 
     &--delete:hover {
-        border-color: $rt-accent-combat;
-        color: $rt-accent-combat;
+        border-color: $wh40k-accent-combat;
+        color: $wh40k-accent-combat;
     }
 }
 
-.rt-add-effect-btn {
+.wh40k-add-effect-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     width: 100%;
-    padding: $rt-space-sm;
+    padding: $wh40k-space-sm;
     background: transparent;
     border: 1px dashed var(--color-border-secondary);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     color: var(--color-text-tertiary);
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-        background: rgba($rt-color-gold, 0.08);
-        border-color: $rt-color-gold;
-        color: $rt-color-gold;
+        background: rgba($wh40k-color-gold, 0.08);
+        border-color: $wh40k-color-gold;
+        color: $wh40k-color-gold;
     }
 }
 
@@ -1148,11 +1148,11 @@
 // EDITOR CONTAINER
 // ============================================
 
-.rt-editor-container {
+.wh40k-editor-container {
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
-    padding: $rt-space-sm;
+    border-radius: $wh40k-radius-sm;
+    padding: $wh40k-space-sm;
     min-height: 150px;
 
     .editor {
@@ -1164,10 +1164,10 @@
 // SOURCE DISPLAY
 // ============================================
 
-.rt-source-display {
+.wh40k-source-display {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
     font-size: 0.9rem;
     font-style: italic;
     color: var(--color-text-secondary);
@@ -1181,18 +1181,18 @@
 // EMPTY STATE
 // ============================================
 
-.rt-empty-state {
+.wh40k-empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: $rt-space-xl;
+    padding: $wh40k-space-xl;
     text-align: center;
 
     i {
         font-size: 2.5rem;
         color: var(--color-text-tertiary);
-        margin-bottom: $rt-space-md;
+        margin-bottom: $wh40k-space-md;
         opacity: 0.4;
     }
 
@@ -1203,11 +1203,11 @@
     }
 
     &--compact {
-        padding: $rt-space-md;
+        padding: $wh40k-space-md;
 
         i {
             font-size: 1.5rem;
-            margin-bottom: $rt-space-sm;
+            margin-bottom: $wh40k-space-sm;
         }
 
         p {
@@ -1220,7 +1220,7 @@
 // HINTS
 // ============================================
 
-.rt-hint {
+.wh40k-hint {
     font-size: 0.7rem;
     font-weight: 400;
     font-style: italic;
@@ -1229,21 +1229,21 @@
     letter-spacing: 0;
 }
 
-.rt-hint-text {
+.wh40k-hint-text {
     display: flex;
     align-items: flex-start;
-    gap: $rt-space-sm;
-    margin-bottom: $rt-space-md;
-    padding: $rt-space-sm $rt-space-md;
-    background: rgba($rt-accent-skills, 0.08);
-    border: 1px solid rgba($rt-accent-skills, 0.2);
-    border-radius: $rt-radius-sm;
+    gap: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
+    background: rgba($wh40k-accent-skills, 0.08);
+    border: 1px solid rgba($wh40k-accent-skills, 0.2);
+    border-radius: $wh40k-radius-sm;
     font-size: 0.8rem;
     font-style: italic;
     color: var(--color-text-secondary);
 
     i {
-        color: $rt-accent-skills;
+        color: $wh40k-accent-skills;
         margin-top: 2px;
     }
 }
@@ -1252,22 +1252,22 @@
 // RADIO BUTTON TOGGLE (Passive/Active)
 // ============================================
 
-.rt-property--radio {
-    .rt-radio-group {
+.wh40k-property--radio {
+    .wh40k-radio-group {
         display: flex;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
         padding: 4px;
         background: rgba(0, 0, 0, 0.2);
-        border-radius: $rt-radius-md;
+        border-radius: $wh40k-radius-md;
     }
 
-    .rt-radio-label {
+    .wh40k-radio-label {
         display: flex;
         align-items: center;
         gap: 6px;
         padding: 6px 12px;
         cursor: pointer;
-        border-radius: $rt-radius-sm;
+        border-radius: $wh40k-radius-sm;
         font-size: 0.85rem;
         transition: all 0.2s ease;
 
@@ -1275,7 +1275,7 @@
             display: none;
         }
 
-        .rt-radio-indicator {
+        .wh40k-radio-indicator {
             display: none;
         }
 
@@ -1321,11 +1321,11 @@
 // INLINE CHECKBOX (Has Specialization)
 // ============================================
 
-.rt-specialization-edit {
-    .rt-checkbox-inline {
+.wh40k-specialization-edit {
+    .wh40k-checkbox-inline {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
         cursor: pointer;
         font-size: 0.85rem;
         color: var(--color-text-secondary);
@@ -1346,11 +1346,11 @@
         }
     }
 
-    .rt-specialization-field {
-        margin-top: $rt-space-sm;
+    .wh40k-specialization-field {
+        margin-top: $wh40k-space-sm;
         padding-left: 24px;
 
-        .rt-property-input--inline {
+        .wh40k-property-input--inline {
             max-width: 200px;
             font-size: 0.9rem;
         }
@@ -1361,7 +1361,7 @@
 // HEADER EDIT BUTTONS
 // ============================================
 
-.rt-header-btn {
+.wh40k-header-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1371,7 +1371,7 @@
     padding: 0;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-border-light);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     color: var(--color-text-tertiary);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -1399,14 +1399,14 @@
 
     // Done button (green checkmark)
     &--done {
-        background: rgba($rt-color-success, 0.15);
-        border-color: rgba($rt-color-success, 0.4);
-        color: $rt-color-success;
+        background: rgba($wh40k-color-success, 0.15);
+        border-color: rgba($wh40k-color-success, 0.4);
+        color: $wh40k-color-success;
 
         &:hover {
-            background: rgba($rt-color-success, 0.25);
-            border-color: rgba($rt-color-success, 0.6);
-            color: lighten($rt-color-success, 10%);
+            background: rgba($wh40k-color-success, 0.25);
+            border-color: rgba($wh40k-color-success, 0.6);
+            color: lighten($wh40k-color-success, 10%);
         }
     }
 }
@@ -1415,21 +1415,21 @@
 // EDITABLE SECTIONS (Hover to reveal edit button)
 // ============================================
 
-.rt-section--editable {
+.wh40k-section--editable {
     // Show edit button on hover
-    &:hover .rt-header-btn--hover {
+    &:hover .wh40k-header-btn--hover {
         opacity: 1;
     }
 
     // Editing state - subtle highlight
-    &.rt-section--editing {
+    &.wh40k-section--editing {
         border-color: var(--talent-accent-border);
         box-shadow: 0 0 0 1px var(--talent-accent-border) inset;
     }
 }
 
 // Clickable empty states
-.rt-empty-state--clickable {
+.wh40k-empty-state--clickable {
     cursor: pointer;
     transition: all 0.2s ease;
 
@@ -1448,16 +1448,16 @@
 // ADD DATA BUTTONS (in empty states)
 // ============================================
 
-.rt-btn-add-data {
+.wh40k-btn-add-data {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: $rt-space-sm;
+    margin-top: $wh40k-space-sm;
     padding: 8px 14px;
     background: rgba(var(--talent-accent), 0.1);
     background: var(--talent-accent-bg);
     border: 1px dashed var(--talent-accent-border);
-    border-radius: $rt-radius-md;
+    border-radius: $wh40k-radius-md;
     color: var(--talent-accent-light);
     font-size: 0.8rem;
     font-weight: 500;
@@ -1469,7 +1469,7 @@
     }
 
     &:hover {
-        background: rgba($rt-accent-talents, 0.2);
+        background: rgba($wh40k-accent-talents, 0.2);
         border-style: solid;
         color: var(--color-text-primary);
     }
@@ -1479,22 +1479,22 @@
 // FOOTER (Source Reference)
 // ============================================
 
-.rt-talent-footer {
+.wh40k-talent-footer {
     flex-shrink: 0;
-    padding: $rt-space-sm $rt-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
     border-top: 1px solid var(--color-border-light);
 
-    .rt-footer-edit {
+    .wh40k-footer-edit {
         display: flex;
-        gap: $rt-space-md;
+        gap: $wh40k-space-md;
         align-items: center;
     }
 
-    .rt-footer-field {
+    .wh40k-footer-field {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
         flex: 1;
 
         &--page {
@@ -1502,7 +1502,7 @@
         }
     }
 
-    .rt-footer-label {
+    .wh40k-footer-label {
         display: flex;
         align-items: center;
         gap: 4px;
@@ -1518,13 +1518,13 @@
         }
     }
 
-    .rt-footer-input {
+    .wh40k-footer-input {
         flex: 1;
         padding: 4px 8px;
         font-size: 0.8rem;
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid var(--color-border-light);
-        border-radius: $rt-radius-sm;
+        border-radius: $wh40k-radius-sm;
         color: var(--color-text-primary);
 
         &::placeholder {
@@ -1537,10 +1537,10 @@
         }
     }
 
-    .rt-footer-display {
+    .wh40k-footer-display {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
         font-size: 0.8rem;
         color: var(--color-text-secondary);
 
@@ -1549,7 +1549,7 @@
             color: var(--color-text-tertiary);
         }
 
-        .rt-footer-source {
+        .wh40k-footer-source {
             font-style: italic;
 
             &--empty {
@@ -1563,31 +1563,31 @@
 // EFFECTS BANNER (Modern Compact Design)
 // ============================================
 
-.rt-effects-banner {
+.wh40k-effects-banner {
     display: flex;
     align-items: center;
-    gap: $rt-space-md;
-    padding: $rt-space-sm $rt-space-md;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.2) 100%);
     border: 1px solid rgba(var(--talent-accent-border-rgb, 139, 113, 82), 0.4);
-    border-radius: $rt-radius-lg;
+    border-radius: $wh40k-radius-lg;
     backdrop-filter: blur(4px);
-    margin-bottom: $rt-space-md;
+    margin-bottom: $wh40k-space-md;
 
     &__header {
         display: flex;
         align-items: center;
-        gap: $rt-space-xs;
-        padding-right: $rt-space-md;
+        gap: $wh40k-space-xs;
+        padding-right: $wh40k-space-md;
         border-right: 1px solid rgba(255, 255, 255, 0.1);
 
         i {
-            color: $rt-color-gold;
+            color: $wh40k-color-gold;
             font-size: 0.9rem;
         }
 
         span {
-            font-family: $rt-font-heading;
+            font-family: $wh40k-font-heading;
             font-size: 0.75rem;
             font-weight: 600;
             color: var(--talent-accent-light);
@@ -1599,7 +1599,7 @@
     &__pills {
         display: flex;
         flex-wrap: wrap;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
         flex: 1;
     }
 
@@ -1608,10 +1608,10 @@
         align-items: center;
         gap: 6px;
         padding: 4px 10px;
-        background: rgba($rt-color-gold, 0.1);
-        border: 1px solid rgba($rt-color-gold, 0.3);
+        background: rgba($wh40k-color-gold, 0.1);
+        border: 1px solid rgba($wh40k-color-gold, 0.3);
         border-radius: 12px;
-        color: $rt-color-gold;
+        color: $wh40k-color-gold;
         font-size: 0.7rem;
         font-weight: 500;
         text-decoration: none;
@@ -1621,9 +1621,9 @@
         transition: all 0.2s ease;
 
         &:hover {
-            background: rgba($rt-color-gold, 0.2);
-            border-color: $rt-color-gold;
-            color: lighten($rt-color-gold, 10%);
+            background: rgba($wh40k-color-gold, 0.2);
+            border-color: $wh40k-color-gold;
+            color: lighten($wh40k-color-gold, 10%);
 
             i {
                 transform: translateX(2px);
@@ -1637,7 +1637,7 @@
     }
 }
 
-.rt-effect-pill {
+.wh40k-effect-pill {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -1684,41 +1684,41 @@
 
     // Variant colors
     &--modifiers {
-        border-color: rgba($rt-accent-talents, 0.4);
+        border-color: rgba($wh40k-accent-talents, 0.4);
 
         i {
-            color: $rt-accent-talents;
+            color: $wh40k-accent-talents;
         }
 
-        .rt-effect-pill__count {
-            background: rgba($rt-accent-talents, 0.2);
-            color: lighten($rt-accent-talents, 15%);
+        .wh40k-effect-pill__count {
+            background: rgba($wh40k-accent-talents, 0.2);
+            color: lighten($wh40k-accent-talents, 15%);
         }
     }
 
     &--situational {
-        border-color: rgba(darken($rt-accent-talents, 10%), 0.4);
+        border-color: rgba(darken($wh40k-accent-talents, 10%), 0.4);
 
         i {
-            color: darken($rt-accent-talents, 5%);
+            color: darken($wh40k-accent-talents, 5%);
         }
 
-        .rt-effect-pill__count {
-            background: rgba(darken($rt-accent-talents, 10%), 0.2);
-            color: darken($rt-accent-talents, 5%);
+        .wh40k-effect-pill__count {
+            background: rgba(darken($wh40k-accent-talents, 10%), 0.2);
+            color: darken($wh40k-accent-talents, 5%);
         }
     }
 
     &--grants {
-        border-color: rgba(lighten($rt-accent-talents, 10%), 0.4);
+        border-color: rgba(lighten($wh40k-accent-talents, 10%), 0.4);
 
         i {
-            color: lighten($rt-accent-talents, 15%);
+            color: lighten($wh40k-accent-talents, 15%);
         }
 
-        .rt-effect-pill__count {
-            background: rgba(lighten($rt-accent-talents, 10%), 0.2);
-            color: lighten($rt-accent-talents, 20%);
+        .wh40k-effect-pill__count {
+            background: rgba(lighten($wh40k-accent-talents, 10%), 0.2);
+            color: lighten($wh40k-accent-talents, 20%);
         }
     }
 }
@@ -1727,64 +1727,64 @@
 // LEGACY EFFECTS SUMMARY (kept for backwards compat)
 // ============================================
 
-.rt-effects-summary {
+.wh40k-effects-summary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
 }
 
-.rt-summary-card {
+.wh40k-summary-card {
     display: flex;
-    gap: $rt-space-md;
-    padding: $rt-space-md;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--color-border-light);
     border-left: 3px solid var(--talent-accent-border);
-    border-radius: $rt-radius-md;
+    border-radius: $wh40k-radius-md;
     transition: all 0.2s ease;
 
     &:hover {
         background: rgba(0, 0, 0, 0.3);
-        border-left-color: $rt-color-gold;
+        border-left-color: $wh40k-color-gold;
     }
 
     &--modifiers {
-        border-left-color: rgba($rt-accent-talents, 0.6);
+        border-left-color: rgba($wh40k-accent-talents, 0.6);
     }
 
     &--situational {
-        border-left-color: rgba(darken($rt-accent-talents, 10%), 0.6);
+        border-left-color: rgba(darken($wh40k-accent-talents, 10%), 0.6);
     }
 
     &--grants {
-        border-left-color: rgba(lighten($rt-accent-talents, 10%), 0.6);
+        border-left-color: rgba(lighten($wh40k-accent-talents, 10%), 0.6);
     }
 }
 
-.rt-summary-icon {
+.wh40k-summary-icon {
     flex-shrink: 0;
     width: 36px;
     height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba($rt-accent-talents, 0.15);
+    background: rgba($wh40k-accent-talents, 0.15);
     border: 1px solid var(--talent-accent-border);
-    border-radius: $rt-radius-md;
-    color: $rt-color-gold;
+    border-radius: $wh40k-radius-md;
+    color: $wh40k-color-gold;
     font-size: 1.2rem;
 }
 
-.rt-summary-content {
+.wh40k-summary-content {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.rt-summary-title {
+.wh40k-summary-title {
     margin: 0;
-    font-family: $rt-font-heading;
+    font-family: $wh40k-font-heading;
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--talent-accent-light);
@@ -1792,7 +1792,7 @@
     letter-spacing: 0.5px;
 }
 
-.rt-summary-text {
+.wh40k-summary-text {
     margin: 0;
     font-size: 0.82rem;
     color: var(--color-text-secondary);
@@ -1803,11 +1803,11 @@
 // EFFECTS TAB DYNAMIC ORDERING
 // ============================================
 
-.rt-talent-panel--effects {
+.wh40k-talent-panel--effects {
     display: flex;
     flex-direction: column;
 
-    .rt-section--effects {
+    .wh40k-section--effects {
         // Order is set inline via style attribute from template
         // Sections with data will have lower order values (0, 1, 2)
         // Empty sections will have higher order values

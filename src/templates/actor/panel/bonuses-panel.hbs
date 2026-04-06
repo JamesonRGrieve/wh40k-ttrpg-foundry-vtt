@@ -9,7 +9,7 @@
         {{#each actor.backgroundEffects.abilities as | ability |}}
             <div class="table-row">
                 <div class="table-cell">
-                    {{> systems/rogue-trader/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' ability.source) text=ability.name}}
+                    {{> systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' ability.source) text=ability.name}}
                 </div>
                 <div class="table-cell">
                     <span>{{ability.source}}</span>

@@ -295,7 +295,7 @@
  *
  * ```javascript
  * // Import the module
- * const WQE = await import('./modules/rogue-trader/rules/weapon-quality-effects.mjs');
+ * const WQE = await import('./modules/wh40k-rpg/rules/weapon-quality-effects.mjs');
  *
  * // Get a test weapon (replace with actual weapon ID)
  * const weapon = game.items.get('WEAPON_ID_HERE');

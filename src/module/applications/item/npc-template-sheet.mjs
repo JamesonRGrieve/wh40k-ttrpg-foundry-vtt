@@ -19,7 +19,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
   /** @override */
   static DEFAULT_OPTIONS = {
-    classes: ["sheet", "rogue-trader", "npc-template-sheet"],
+    classes: ["sheet", "wh40k-rpg", "npc-template-sheet"],
     position: {
       width: 700,
       height: 700
@@ -51,34 +51,34 @@ export default class NPCTemplateSheet extends BaseItemSheet {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/rogue-trader/templates/item/npc-template/header.hbs"
+      template: "systems/wh40k-rpg/templates/item/npc-template/header.hbs"
     },
     tabs: {
-      template: "systems/rogue-trader/templates/item/npc-template/tabs.hbs"
+      template: "systems/wh40k-rpg/templates/item/npc-template/tabs.hbs"
     },
     basics: {
-      template: "systems/rogue-trader/templates/item/npc-template/tab-basics.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/item/npc-template/tab-basics.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     },
     characteristics: {
-      template: "systems/rogue-trader/templates/item/npc-template/tab-characteristics.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/item/npc-template/tab-characteristics.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     },
     equipment: {
-      template: "systems/rogue-trader/templates/item/npc-template/tab-equipment.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/item/npc-template/tab-equipment.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     },
     abilities: {
-      template: "systems/rogue-trader/templates/item/npc-template/tab-abilities.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/item/npc-template/tab-abilities.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     },
     preview: {
-      template: "systems/rogue-trader/templates/item/npc-template/tab-preview.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/item/npc-template/tab-preview.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     }
   };
@@ -87,11 +87,11 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
   /** @override */
   static TABS = [
-    { tab: "basics", group: "primary", icon: "fa-solid fa-user", label: "RT.NPC.Template.Tabs.Basics" },
-    { tab: "characteristics", group: "primary", icon: "fa-solid fa-chart-bar", label: "RT.NPC.Template.Tabs.Characteristics" },
-    { tab: "equipment", group: "primary", icon: "fa-solid fa-swords", label: "RT.NPC.Template.Tabs.Equipment" },
-    { tab: "abilities", group: "primary", icon: "fa-solid fa-sparkles", label: "RT.NPC.Template.Tabs.Abilities" },
-    { tab: "preview", group: "primary", icon: "fa-solid fa-eye", label: "RT.NPC.Template.Tabs.Preview" }
+    { tab: "basics", group: "primary", icon: "fa-solid fa-user", label: "WH40K.NPC.Template.Tabs.Basics" },
+    { tab: "characteristics", group: "primary", icon: "fa-solid fa-chart-bar", label: "WH40K.NPC.Template.Tabs.Characteristics" },
+    { tab: "equipment", group: "primary", icon: "fa-solid fa-swords", label: "WH40K.NPC.Template.Tabs.Equipment" },
+    { tab: "abilities", group: "primary", icon: "fa-solid fa-sparkles", label: "WH40K.NPC.Template.Tabs.Abilities" },
+    { tab: "preview", group: "primary", icon: "fa-solid fa-eye", label: "WH40K.NPC.Template.Tabs.Preview" }
   ];
 
   /* -------------------------------------------- */

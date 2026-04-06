@@ -27,7 +27,7 @@ const STATIC_FILES = [
   "src/*.json"
 ];
 const PACK_SRC = "src/packs";
-const BUILD_DIR = "/mnt/c/Users/Dreski-PC/AppData/Local/FoundryVTT/Data/systems/rogue-trader";
+const BUILD_DIR = "dist";
 
 /* ----------------------------------------- */
 /*  Compile Packs (V13 LevelDB Format)
@@ -71,20 +71,20 @@ async function compilePacks() {
     
     // Determine the document collection type from the folder name
     let collectionType = 'items'; // default
-    if (folder.startsWith('rt-actors-')) {
+    if (folder.includes('-actors-')) {
       collectionType = 'actors';
-    } else if (folder.startsWith('rt-items-')) {
+    } else if (folder.includes('-items-')) {
       collectionType = 'items';
-    } else if (folder.startsWith('rt-journals-')) {
+    } else if (folder.includes('-journals-')) {
       collectionType = 'journal';
-    } else if (folder.startsWith('rt-rolltables-')) {
+    } else if (folder.includes('-rolltables-')) {
       collectionType = 'tables';
     }
     
     try {
       // Special handling for origin-path pack - create folders for each step
       const originPathFolders = {};
-      if (folder === 'rt-items-origin-path') {
+      if (folder === 'wh40k-items-origin-path') {
         // Foundry V13 requires exactly 16 alphanumeric characters for IDs
         const steps = [
           { id: 'ORGNfolder000001', name: '1. Home World', sort: 100000 },
@@ -120,8 +120,8 @@ async function compilePacks() {
           const doc = JSON.parse(content);
           
           // For origin-path items, assign to appropriate folder based on stepIndex
-          if (folder === 'rt-items-origin-path' && doc.flags?.rt?.stepIndex) {
-            const stepIndex = doc.flags.rt.stepIndex;
+          if (folder === 'wh40k-items-origin-path' && doc.flags?.wh40k?.stepIndex) {
+            const stepIndex = doc.flags.wh40k.stepIndex;
             if (originPathFolders[stepIndex]) {
               doc.folder = originPathFolders[stepIndex];
             }
@@ -137,7 +137,7 @@ async function compilePacks() {
         }
       }
       
-      const folderCount = folder === 'rt-items-origin-path' ? ' + 6 folders' : '';
+      const folderCount = folder === 'wh40k-items-origin-path' ? ' + 6 folders' : '';
       console.log(`Compiled pack: ${folder} (${files.length} documents${folderCount})`);
     } finally {
       await db.close();
@@ -200,7 +200,7 @@ function watchCopy() {
 
 function createArchive() {
   return gulp.src(`${BUILD_DIR}/**`)
-      .pipe(zip(`rogue-trader-${SYSTEM.version}.zip`))
+      .pipe(zip(`wh40k-rpg-${SYSTEM.version}.zip`))
       .pipe(gulp.dest('./archive'));
 }
 

@@ -40,7 +40,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: 'div',
-        classes: ['rogue-trader', 'dialog', 'righteous-fury', 'standard-form'],
+        classes: ['wh40k-rpg', 'dialog', 'righteous-fury', 'standard-form'],
         actions: {
             roll: RighteousFuryDialog.#onRoll,
             cancel: RighteousFuryDialog.#onCancel,
@@ -59,7 +59,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
     /** @override */
     static PARTS = {
         form: {
-            template: 'systems/rogue-trader/templates/prompt/righteous-fury-prompt.hbs',
+            template: 'systems/wh40k-rpg/templates/prompt/righteous-fury-prompt.hbs',
             scrollable: [''],
         },
     };

@@ -8,7 +8,7 @@
 // CYBERNETIC SHEET BASE
 // ============================================
 
-.rt-cybernetic-sheet {
+.wh40k-cybernetic-sheet {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -31,7 +31,7 @@
 // HEADER
 // ============================================
 
-.rt-cybernetic-header {
+.wh40k-cybernetic-header {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -60,7 +60,7 @@
       transform: scale(1.05);
       box-shadow: 0 4px 12px var(--rt-shadow-medium);
       
-      .rt-cybernetic-header__image-overlay {
+      .wh40k-cybernetic-header__image-overlay {
         opacity: 1;
       }
     }
@@ -124,7 +124,7 @@
 // CYBERNETIC BADGES
 // ============================================
 
-.rt-cybernetic-badge {
+.wh40k-cybernetic-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -150,25 +150,25 @@
   &--craft {
     border: 1px solid;
     
-    &.rt-cybernetic-badge--poor {
+    &.wh40k-cybernetic-badge--poor {
       background: rgba(139, 0, 0, 0.1);
       border-color: rgba(139, 0, 0, 0.4);
       color: var(--rt-red);
     }
     
-    &.rt-cybernetic-badge--common {
+    &.wh40k-cybernetic-badge--common {
       background: var(--rt-panel-bg-translucent);
       border-color: var(--rt-border-color-light);
       color: var(--rt-text-muted);
     }
     
-    &.rt-cybernetic-badge--good {
+    &.wh40k-cybernetic-badge--good {
       background: rgba(45, 90, 45, 0.1);
       border-color: rgba(45, 90, 45, 0.4);
       color: var(--rt-green);
     }
     
-    &.rt-cybernetic-badge--best {
+    &.wh40k-cybernetic-badge--best {
       background: rgba(212, 175, 55, 0.15);
       border-color: rgba(212, 175, 55, 0.5);
       color: var(--rt-gold);
@@ -180,7 +180,7 @@
 // STAT BAR
 // ============================================
 
-.rt-cybernetic-stats {
+.wh40k-cybernetic-stats {
   display: flex;
   flex-wrap: wrap;
   gap: 2px;
@@ -189,7 +189,7 @@
   border-bottom: 1px solid var(--rt-border-color-light);
 }
 
-.rt-cybernetic-stat {
+.wh40k-cybernetic-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -230,12 +230,12 @@
   
   // Stat variants
   &--type {
-    .rt-cybernetic-stat__icon { color: silver; }
-    .rt-cybernetic-stat__value { color: silver; }
+    .wh40k-cybernetic-stat__icon { color: silver; }
+    .wh40k-cybernetic-stat__value { color: silver; }
   }
   
   &--locations {
-    .rt-cybernetic-stat__icon { color: var(--rt-bronze); }
+    .wh40k-cybernetic-stat__icon { color: var(--rt-bronze); }
   }
 }
 
@@ -243,7 +243,7 @@
 // TAB NAVIGATION
 // ============================================
 
-.rt-cybernetic-tabs {
+.wh40k-cybernetic-tabs {
   display: flex;
   gap: 2px;
   padding: 0 12px;
@@ -251,7 +251,7 @@
   border-bottom: 1px solid var(--rt-border-color);
 }
 
-.rt-cybernetic-tab {
+.wh40k-cybernetic-tab {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -285,7 +285,7 @@
 // TAB CONTENT
 // ============================================
 
-.rt-cybernetic-content {
+.wh40k-cybernetic-content {
   flex: 1;
   overflow-y: auto;
   padding: 12px;
@@ -309,7 +309,7 @@
   }
 }
 
-.rt-cybernetic-panel {
+.wh40k-cybernetic-panel {
   display: none;
   
   &.active {
@@ -321,7 +321,7 @@
 // SECTIONS
 // ============================================
 
-.rt-cybernetic-section {
+.wh40k-cybernetic-section {
   background: var(--rt-panel-bg);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 6px;
@@ -376,7 +376,7 @@
     }
   }
   
-  &--full .rt-cybernetic-section__body {
+  &--full .wh40k-cybernetic-section__body {
     padding: 0;
   }
 }
@@ -385,13 +385,13 @@
 // LOCATION GRID
 // ============================================
 
-.rt-location-grid {
+.wh40k-location-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 8px;
 }
 
-.rt-location-toggle {
+.wh40k-location-toggle {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -446,7 +446,7 @@
 // CYBERNETIC AP GRID
 // ============================================
 
-.rt-cybernetic-ap-grid {
+.wh40k-cybernetic-ap-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
@@ -457,7 +457,7 @@
 // MODIFIER GRID
 // ============================================
 
-.rt-modifier-grid {
+.wh40k-modifier-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;

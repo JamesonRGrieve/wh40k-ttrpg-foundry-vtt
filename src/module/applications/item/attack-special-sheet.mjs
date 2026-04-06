@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class AttackSpecialSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "sheet", "item", "attack-special"],
+        classes: ["wh40k-rpg", "sheet", "item", "attack-special"],
         position: {
             width: 500,
             height: 400
@@ -22,7 +22,7 @@ export default class AttackSpecialSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-attack-special-sheet.hbs",
+            template: "systems/wh40k-rpg/templates/item/item-attack-special-sheet.hbs",
             scrollable: [".rt-tab-content"]
         }
     };

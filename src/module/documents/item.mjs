@@ -1,7 +1,7 @@
-import { RogueTraderItemContainer } from './item-container.mjs';
+import { WH40KItemContainer } from './item-container.mjs';
 import { capitalize } from '../handlebars/handlebars-helpers.mjs';
 
-export class RogueTraderItem extends RogueTraderItemContainer {
+export class WH40KItem extends WH40KItemContainer {
     
     /**
      * Override to clean/validate img field before validation runs.
@@ -20,7 +20,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             if (!imgValue || imgValue === '' || typeof imgValue !== 'string' || imgValue.trim() === '') {
                 // Set to type-specific default
                 source.img = this._getDefaultIcon(source.type || 'unknown');
-                console.warn(`RogueTrader | cleanData: Invalid img value "${imgValue}" for type "${source.type}", using default: ${source.img}`);
+                console.warn(`WH40K | cleanData: Invalid img value "${imgValue}" for type "${source.type}", using default: ${source.img}`);
             } else {
                 // Check if has valid extension
                 const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif', '.webm'];
@@ -29,14 +29,14 @@ export class RogueTraderItem extends RogueTraderItemContainer {
                 // Also check for obviously invalid paths
                 if (imgStr === 'null' || imgStr === 'undefined' || imgStr.length < 5) {
                     source.img = this._getDefaultIcon(source.type || 'unknown');
-                    console.warn(`RogueTrader | cleanData: Invalid img path "${imgValue}" for type "${source.type}", using default: ${source.img}`);
+                    console.warn(`WH40K | cleanData: Invalid img path "${imgValue}" for type "${source.type}", using default: ${source.img}`);
                 } else {
                     const hasValidExtension = validExtensions.some(ext => imgStr.endsWith(ext));
                     
                     if (!hasValidExtension) {
                         // Invalid extension - use type-specific default
                         source.img = this._getDefaultIcon(source.type || 'unknown');
-                        console.warn(`RogueTrader | cleanData: No valid extension in "${imgValue}" for type "${source.type}", using default: ${source.img}`);
+                        console.warn(`WH40K | cleanData: No valid extension in "${imgValue}" for type "${source.type}", using default: ${source.img}`);
                     }
                 }
             }
@@ -323,8 +323,8 @@ export class RogueTraderItem extends RogueTraderItemContainer {
         // Check for specials
         if (this.system.special) {
             game.rt.log('Performing first time nested item configuration for item: ' + this.name + ' with specials: ', this.system.special);
-            if (this.isWeapon) await this._updateSpecialsFromPack('rogue-trader.weapons', this.system.special);
-            if (this.isAmmunition) await this._updateSpecialsFromPack('rogue-trader.ammo', this.system.special);
+            if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', this.system.special);
+            if (this.isAmmunition) await this._updateSpecialsFromPack('wh40k-rpg.ammo', this.system.special);
             game.rt.log('Special migrated for item: ' + this.name, this.system.special);
             this.system.special = undefined;
 
@@ -344,7 +344,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
     }
 
     async _getAttackSpecials(specialData) {
-        const attackSpecialPack = game.packs.find((p) => p.collection === 'rogue-trader.attack-specials');
+        const attackSpecialPack = game.packs.find((p) => p.collection === 'wh40k-rpg.attack-specials');
         if (!attackSpecialPack) return;
         const index = await attackSpecialPack.getIndex({ fields: ['name', 'img', 'type', 'system'] });
         const specials = [];
@@ -431,11 +431,11 @@ export class RogueTraderItem extends RogueTraderItemContainer {
         };
 
         // Use type-specific templates
-        let template = 'systems/rogue-trader/templates/chat/item-card-chat.hbs';
+        let template = 'systems/wh40k-rpg/templates/chat/item-card-chat.hbs';
         if (this.isWeapon) {
-            template = 'systems/rogue-trader/templates/chat/weapon-card-chat.hbs';
+            template = 'systems/wh40k-rpg/templates/chat/weapon-card-chat.hbs';
         } else if (this.type === 'armour') {
-            template = 'systems/rogue-trader/templates/chat/armour-card-chat.hbs';
+            template = 'systems/wh40k-rpg/templates/chat/armour-card-chat.hbs';
         }
 
         const html = await renderTemplate(template, cardData);
@@ -446,7 +446,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             // Set flags for ChatMessageRT enrichment
             flags: {
-                "rogue-trader": {
+                "wh40k-rpg": {
                     itemCard: true,
                     item: {
                         uuid: this.uuid,
@@ -543,7 +543,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             rollDescription: rollConfig.description || ''
         };
 
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/talent-roll-chat.hbs', cardData);
+        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs', cardData);
         
         return ChatMessage.create({
             user: game.user.id,
@@ -586,7 +586,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             actor: this.actor.name
         };
 
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/navigator-power-chat.hbs', cardData);
+        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs', cardData);
         
         return ChatMessage.create({
             user: game.user.id,
@@ -624,7 +624,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             actor: this.actor.name
         };
 
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/order-roll-chat.hbs', cardData);
+        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/order-roll-chat.hbs', cardData);
         
         return ChatMessage.create({
             user: game.user.id,
@@ -662,7 +662,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
             actor: this.actor.name
         };
 
-        const html = await renderTemplate('systems/rogue-trader/templates/chat/ritual-roll-chat.hbs', cardData);
+        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs', cardData);
         
         return ChatMessage.create({
             user: game.user.id,
@@ -713,7 +713,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
         // Collect skills to add
         if (modifiers.skills && Array.isArray(modifiers.skills)) {
             for (const skillName of modifiers.skills) {
-                const skillPack = game.packs.get('rogue-trader.rt-items-skills');
+                const skillPack = game.packs.get('wh40k-rpg.rt-items-skills');
                 if (skillPack) {
                     const index = await skillPack.getIndex({ fields: ['name'] });
                     const skillEntry = index.find(s => s.name.toLowerCase() === skillName.toLowerCase());
@@ -728,7 +728,7 @@ export class RogueTraderItem extends RogueTraderItemContainer {
         // Collect talents to add
         if (modifiers.talents && Array.isArray(modifiers.talents)) {
             for (const talentName of modifiers.talents) {
-                const talentPack = game.packs.get('rogue-trader.rt-items-talents');
+                const talentPack = game.packs.get('wh40k-rpg.rt-items-talents');
                 if (talentPack) {
                     const index = await talentPack.getIndex({ fields: ['name'] });
                     const talentEntry = index.find(t => t.name.toLowerCase() === talentName.toLowerCase());

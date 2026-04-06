@@ -1,6 +1,6 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.mjs';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.mjs';
-import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
+import { WH40KSettings } from '../wh40k-rpg-settings.mjs';
 import { SYSTEM_ID } from '../constants.mjs';
 import { calculateTokenDistance } from '../utils/range-calculator.mjs';
 
@@ -11,7 +11,7 @@ export class TargetedActionManager {
             const bar = controls.token;
             if (!bar) return;
             try {
-                if (!game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
+                if (!game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     const toolOrder = Object.keys(bar.tools).length;
                     bar.tools.attack = {
                         name: 'Attack',

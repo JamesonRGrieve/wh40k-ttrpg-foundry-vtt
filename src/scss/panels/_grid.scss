@@ -16,57 +16,57 @@
 // ============================================
 // These replace the duplicate *-grid and *-col classes
 
-.rt-overview-grid,
-.rt-status-grid,
-.rt-combat-grid,
-.rt-talents-grid {
+.wh40k-overview-grid,
+.wh40k-status-grid,
+.wh40k-combat-grid,
+.wh40k-talents-grid {
   display: grid;
   // Use CSS variable with fallback to 2 columns
   grid-template-columns: repeat(var(--rt-columns, 2), 1fr);
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   width: 100%;
 }
 
 // These grids should always be 2 columns
-.rt-equipment-grid {
+.wh40k-equipment-grid {
   display: grid;
   grid-template-columns: 40% 60%;
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   width: 100%;
 }
 
-.rt-powers-grid,
-.rt-dynasty-grid,
-.rt-bio-grid {
+.wh40k-powers-grid,
+.wh40k-dynasty-grid,
+.wh40k-bio-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   width: 100%;
 }
 
 // Talents tab 2-column variant: Specialist Skills (left 60%) / Talents+Traits (right 40%)
-.rt-talents-grid--2col {
+.wh40k-talents-grid--2col {
   display: grid;
   grid-template-columns: 60% 40%;
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   width: 100%;
 }
 
-.rt-overview-col,
-.rt-status-col,
-.rt-combat-col,
-.rt-powers-col,
-.rt-equipment-col,
-.rt-dynasty-col,
-.rt-bio-col,
-.rt-talents-col {
+.wh40k-overview-col,
+.wh40k-status-col,
+.wh40k-combat-col,
+.wh40k-powers-col,
+.wh40k-equipment-col,
+.wh40k-dynasty-col,
+.wh40k-bio-col,
+.wh40k-talents-col {
   display: flex;
   flex-direction: column;
   gap: 0;
   overflow: visible;
   
-  .rt-panel {
-    margin-bottom: $rt-space-md;
+  .wh40k-panel {
+    margin-bottom: $wh40k-space-md;
     overflow: visible;
   }
 }
@@ -75,17 +75,17 @@
 // Header HUD Alignment Fix
 // ============================================
 
-.rt-header-right {
+.wh40k-header-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  padding-right: $rt-space-xl;
-  padding-top: $rt-space-md;
-  padding-bottom: $rt-space-md;
+  padding-right: $wh40k-space-xl;
+  padding-top: $wh40k-space-md;
+  padding-bottom: $wh40k-space-md;
 }
 
-.rt-hud-stack {
+.wh40k-hud-stack {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -100,38 +100,38 @@
 // These are fallbacks in case ResizeObserver doesn't run
 
 @media (max-width: 700px) {
-  .rt-overview-grid,
-  .rt-status-grid,
-  .rt-combat-grid,
-  .rt-powers-grid,
-  .rt-equipment-grid,
-  .rt-dynasty-grid,
-  .rt-bio-grid,
-  .rt-talents-grid,
-  .rt-talents-grid--2col {
+  .wh40k-overview-grid,
+  .wh40k-status-grid,
+  .wh40k-combat-grid,
+  .wh40k-powers-grid,
+  .wh40k-equipment-grid,
+  .wh40k-dynasty-grid,
+  .wh40k-bio-grid,
+  .wh40k-talents-grid,
+  .wh40k-talents-grid--2col {
     grid-template-columns: 1fr;
   }
 }
 
 @media (min-width: 701px) and (max-width: 900px) {
-  .rt-overview-grid,
-  .rt-status-grid,
-  .rt-combat-grid {
+  .wh40k-overview-grid,
+  .wh40k-status-grid,
+  .wh40k-combat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   
   // Talents keeps 60/40 split on medium screens
-  .rt-talents-grid,
-  .rt-talents-grid--2col {
+  .wh40k-talents-grid,
+  .wh40k-talents-grid--2col {
     grid-template-columns: 60% 40%;
   }
 }
 
 // Powers, Dynasty, and Bio grids are always 2 columns on desktop
 @media (min-width: 701px) {
-  .rt-powers-grid,
-  .rt-dynasty-grid,
-  .rt-bio-grid {
+  .wh40k-powers-grid,
+  .wh40k-dynasty-grid,
+  .wh40k-bio-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
