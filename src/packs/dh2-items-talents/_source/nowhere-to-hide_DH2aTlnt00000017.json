@@ -1,0 +1,49 @@
+{
+  "name": "Nowhere to Hide",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "nowhereToHide",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character is skilled at placing shots to flush out hidden enemies.</p>",
+    "tier": 1,
+    "benefit": "<p>When making a ranged attack against a target in cover, the character reduces the target's Armour Points from cover by 2, to a minimum of 0.</p>",
+    "aptitudes": ["Perception", "Offence"],
+    "prerequisites": {
+      "text": "Ballistic Skill 30, Perception 30",
+      "characteristics": { "ballisticSkill": 30, "perception": 30 },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Reduce target's cover AP by 2.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": { "attack": 0, "damage": 0, "penetration": 0, "defense": 0, "initiative": 0, "speed": 0 },
+      "resources": { "wounds": 0, "fate": 0, "insanity": 0, "corruption": 0 },
+      "other": [],
+      "situational": { "characteristics": [], "skills": [], "combat": [] }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000017"
+}

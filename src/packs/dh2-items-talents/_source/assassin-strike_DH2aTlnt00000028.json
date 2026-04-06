@@ -1,0 +1,49 @@
+{
+  "name": "Assassin Strike",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "assassinStrike",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character can strike and fade before the enemy has time to react.</p>",
+    "tier": 2,
+    "benefit": "<p>After making a melee attack, the character may make a Disengage action as a Free Action. The character may move a number of metres equal to their Agility Bonus without provoking free attacks.</p>",
+    "aptitudes": ["Agility", "Fieldcraft"],
+    "prerequisites": {
+      "text": "Agility 40, Acrobatics",
+      "characteristics": { "agility": 40 },
+      "skills": { "acrobatics": 0 },
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Free Disengage after melee attack, move AgB metres.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": { "attack": 0, "damage": 0, "penetration": 0, "defense": 0, "initiative": 0, "speed": 0 },
+      "resources": { "wounds": 0, "fate": 0, "insanity": 0, "corruption": 0 },
+      "other": [],
+      "situational": { "characteristics": [], "skills": [], "combat": [] }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000028"
+}

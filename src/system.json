@@ -645,6 +645,18 @@
             "flags": {}
         },
         {
+            "name": "dw-items-skills",
+            "label": "Deathwatch Skills",
+            "path": "packs/dw-items-skills",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-items-talents",
             "label": "DH2e Talents",
             "path": "packs/dh2-items-talents",
@@ -809,6 +821,7 @@
                     "sorting": "a",
                     "packs": [
                         "dh2-items-skills",
+                        "dw-items-skills",
                         "dh2-items-talents",
                         "dh2-items-traits",
                         "dh2-items-backgrounds",

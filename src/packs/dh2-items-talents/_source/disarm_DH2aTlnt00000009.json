@@ -1,0 +1,49 @@
+{
+  "name": "Disarm",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "disarm",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character can wrest weapons from their opponents in close combat.</p>",
+    "tier": 1,
+    "benefit": "<p>The character may use a Full Action to attempt to Disarm an opponent in melee. The character makes an Opposed Weapon Skill test against their target. If the character wins, the target drops their weapon. For every two additional degrees of success, the weapon flies 1d5 metres in a random direction.</p>",
+    "aptitudes": ["Weapon Skill", "Offence"],
+    "prerequisites": {
+      "text": "Agility 30",
+      "characteristics": { "agility": 30 },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Full Action to disarm via Opposed WS test.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": { "attack": 0, "damage": 0, "penetration": 0, "defense": 0, "initiative": 0, "speed": 0 },
+      "resources": { "wounds": 0, "fate": 0, "insanity": 0, "corruption": 0 },
+      "other": [],
+      "situational": { "characteristics": [], "skills": [], "combat": [] }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000009"
+}

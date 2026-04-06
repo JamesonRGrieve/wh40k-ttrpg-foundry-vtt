@@ -1,0 +1,20 @@
+{
+  "name": "Tox Rounds",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0.5,
+    "availability": "rare",
+    "quantity": 1,
+    "cost": { "value": 40, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>Ammunition with a hollow tip containing a toxic compound that is released upon impact. Any target that takes at least 1 wound from a tox round must make a Challenging (+0) Toughness test or take an additional 1d10 Impact Damage ignoring Armour and Toughness Bonus. Per clip/reload.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Dm9rTn4Kw6PmV2Yf"
+}

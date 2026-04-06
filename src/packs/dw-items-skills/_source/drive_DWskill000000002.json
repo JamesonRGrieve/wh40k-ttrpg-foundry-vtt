@@ -1,0 +1,21 @@
+{
+  "name": "Drive",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "agility",
+    "descriptor": "Drive covers the operation of ground vehicles, from simple wheeled transports to tracked assault vehicles and walkers.",
+    "uses": "Uses: Driving ground vehicles, performing evasive manoeuvres, navigating difficult terrain.\nSpecial Use: Pursuit: During a vehicle chase, make an opposed Drive test to gain or close distance on another vehicle.\nSpecial Use: Stunts: Particularly daring manoeuvres (jumps, controlled spins, ramming) require a Drive test with modifiers based on difficulty.",
+    "useTime": "Half Action",
+    "description": {
+      "value": "<p>Drive covers the operation of ground vehicles, from simple wheeled transports to tracked assault vehicles and walkers.</p>\n<p>In Deathwatch, Drive is a separate skill from Pilot, unlike Dark Heresy 2e where both are folded into Operate.</p>"
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": ["Agility", "Fieldcraft"],
+    "source": "Deathwatch Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DWskill000000002"
+}
