@@ -1,0 +1,28 @@
+{
+  "name": "Warp Instability",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The creature's hold on reality is tenuous. Whenever it suffers damage from a force weapon, Holy weapon, or psychic power, it must make a Willpower test at the end of the round. On failure, it suffers 1d10 damage (ignoring armour and Toughness bonus) and, if reduced to 0 Wounds, is banished back to the Warp. Additionally, if the creature is in an area of null psychic energy or anathema, it must test Willpower each round or be banished.</p>"
+    },
+    "benefit": "<p>When damaged by force, Holy, or psychic attacks, must pass Willpower test or suffer 1d10 additional damage (ignoring armour/TB). Banished at 0 Wounds. Must also test in null or anathema areas.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "warpInstability",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Cf3eT8HVv0KvFb2S"
+}

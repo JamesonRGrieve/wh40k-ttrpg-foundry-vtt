@@ -1,0 +1,21 @@
+{
+  "name": "Pilot",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "agility",
+    "descriptor": "Pilot covers the operation of aircraft and spacecraft. Each specialisation is a separate skill.",
+    "uses": "Uses: Flying aircraft, piloting spacecraft, performing aerial manoeuvres, landing in difficult conditions.\nPersonal: Jump packs, grav-chutes, and similar personal flight devices.\nMilitary Craft: Atmospheric military vehicles including Thunderhawks, Valkyries, and similar assault craft.\nSpacecraft: Void-capable vessels from system runners to warp-capable ships.\nFlyers: Civilian and light atmospheric craft.\nSpecialisations: Personal, Military Craft, Spacecraft, Flyers. Each specialisation must be taken separately as a distinct skill.",
+    "useTime": "Half Action",
+    "description": {
+      "value": "<p>Pilot covers the operation of aircraft and spacecraft. Each specialisation is a separate skill.</p>\n<p><strong>Specialisations:</strong> Personal, Military Craft, Spacecraft, Flyers</p>\n<p>In Deathwatch, Pilot is a separate skill from Drive, unlike Dark Heresy 2e where both are folded into Operate.</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": ["Agility", "Fieldcraft"],
+    "source": "Deathwatch Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DWskill000000003"
+}

@@ -1,0 +1,49 @@
+{
+  "name": "Inescapable Attack",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "inescapableAttack",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character's attacks are so well-placed that they are nearly impossible to avoid.</p>",
+    "tier": 2,
+    "benefit": "<p>The target of the character's melee attacks suffer a -10 penalty to their Evasion tests (Dodge or Parry) to avoid the character's attacks.</p>",
+    "aptitudes": ["Weapon Skill", "Finesse"],
+    "prerequisites": {
+      "text": "Weapon Skill 40, Perception 35",
+      "characteristics": { "weaponSkill": 40, "perception": 35 },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "-10 to enemy Evasion tests against character's melee attacks.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": { "attack": 0, "damage": 0, "penetration": 0, "defense": 0, "initiative": 0, "speed": 0 },
+      "resources": { "wounds": 0, "fate": 0, "insanity": 0, "corruption": 0 },
+      "other": [],
+      "situational": { "characteristics": [], "skills": [], "combat": [] }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000041"
+}

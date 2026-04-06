@@ -1,0 +1,49 @@
+{
+  "name": "Weapon Training",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "weaponTraining",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character has been trained to use a particular class of weapons effectively.</p>",
+    "tier": 1,
+    "benefit": "<p>The character can use the chosen weapon group without penalty. Without this talent, all attacks made with weapons of that group suffer a -20 penalty. Weapon groups include: Bolt, Chain, Flame, Heavy, Las, Launcher, Low-Tech, Melta, Plasma, Power, Shock, Solid Projectile, and Exotic.</p>",
+    "aptitudes": ["General", "Finesse"],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "(any)",
+    "notes": "Use chosen weapon group without -20 penalty.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": { "attack": 0, "damage": 0, "penetration": 0, "defense": 0, "initiative": 0, "speed": 0 },
+      "resources": { "wounds": 0, "fate": 0, "insanity": 0, "corruption": 0 },
+      "other": [],
+      "situational": { "characteristics": [], "skills": [], "combat": [] }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000026"
+}

@@ -1,0 +1,49 @@
+{
+  "name": "Battle Rage",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "battleRage",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character is able to channel their fury while still retaining enough control to parry blows.</p>",
+    "tier": 2,
+    "benefit": "<p>While Frenzied, the character may still make Parry attempts. In addition, the character may re-roll failed Willpower tests to snap out of Frenzy.</p>",
+    "aptitudes": ["Strength", "Defence"],
+    "prerequisites": {
+      "text": "Frenzy",
+      "characteristics": {},
+      "skills": {},
+      "talents": ["Frenzy"]
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "May Parry while Frenzied. Re-roll WP to end Frenzy.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": { "attack": 0, "damage": 0, "penetration": 0, "defense": 0, "initiative": 0, "speed": 0 },
+      "resources": { "wounds": 0, "fate": 0, "insanity": 0, "corruption": 0 },
+      "other": [],
+      "situational": { "characteristics": [], "skills": [], "combat": [] }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000029"
+}

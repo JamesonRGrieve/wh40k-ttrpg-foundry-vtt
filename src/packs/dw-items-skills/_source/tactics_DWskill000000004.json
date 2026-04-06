@@ -1,0 +1,21 @@
+{
+  "name": "Tactics",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "intelligence",
+    "descriptor": "Tactics represents knowledge of military strategy and the ability to plan and execute battlefield operations. Each specialisation is a separate skill.",
+    "uses": "Uses: Planning military operations, reading a battlefield, anticipating enemy movements, coordinating squad actions.\nAssault Doctrine: Offensive operations including breaching actions, drop assaults, and close-quarters engagements.\nDefensive Doctrine: Holding ground, establishing fire zones, fortification, and fighting withdrawals.\nRecon & Stealth: Reconnaissance operations, intelligence gathering, infiltration, and covert movement.\nVoid Combat: Ship-to-ship engagements, boarding actions, and void warfare.\nArmoured Tactics: Deployment and coordination of armoured vehicles and heavy assets.\nSpecialisations: Assault Doctrine, Defensive Doctrine, Recon & Stealth, Void Combat, Armoured Tactics. Each specialisation must be taken separately as a distinct skill.",
+    "useTime": "Full Action",
+    "description": {
+      "value": "<p>Tactics represents knowledge of military strategy and the ability to plan and execute battlefield operations. Each specialisation is a separate skill.</p>\n<p><strong>Specialisations:</strong> Assault Doctrine, Defensive Doctrine, Recon &amp; Stealth, Void Combat, Armoured Tactics</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": ["Intelligence", "Knowledge"],
+    "source": "Deathwatch Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DWskill000000004"
+}

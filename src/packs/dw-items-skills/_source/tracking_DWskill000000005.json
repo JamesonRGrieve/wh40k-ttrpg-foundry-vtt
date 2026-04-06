@@ -1,0 +1,21 @@
+{
+  "name": "Tracking",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "intelligence",
+    "descriptor": "Tracking covers the ability to follow trails and tracks, whether of beasts, men, or vehicles, across varied terrain.",
+    "uses": "Uses: Following tracks and trails, identifying what left a trail, estimating how old tracks are, concealing one's own trail.\nSpecial Use: Shadow: Make an opposed Tracking vs. Awareness test to follow a target through populated areas without being noticed.\nSpecial Use: Cover Tracks: Make a Tracking test to disguise or eliminate signs of passage. Others attempting to follow the concealed trail suffer a penalty equal to your Degrees of Success on the roll.",
+    "useTime": "Full Action",
+    "description": {
+      "value": "<p>Tracking covers the ability to follow trails and tracks, whether of beasts, men, or vehicles, across varied terrain.</p>\n<p>In Deathwatch, Tracking is a standalone skill. In Dark Heresy 2e, this functionality is covered by the Survival skill.</p>"
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": ["Intelligence", "Fieldcraft"],
+    "source": "Deathwatch Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DWskill000000005"
+}
