@@ -77,6 +77,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         },
         window: {
             resizable: true,
+            contentTag: 'form',
         },
     };
 
