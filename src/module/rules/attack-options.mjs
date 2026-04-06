@@ -336,10 +336,7 @@ export function getSituationalModifiers(isRanged) {
  * @returns {string|null} The combat action name, or null
  */
 export function getActionNameForMode(modeKey, isRanged) {
-    const allModes = [
-        ...(isRanged ? RANGED_ATTACK_MODES : MELEE_ATTACK_MODES),
-        ...MELEE_SPECIAL_OPTIONS,
-    ];
+    const allModes = [...(isRanged ? RANGED_ATTACK_MODES : MELEE_ATTACK_MODES), ...MELEE_SPECIAL_OPTIONS];
     return allModes.find((m) => m.key === modeKey)?.actionName ?? null;
 }
 

@@ -409,7 +409,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         };
 
         // Hit locations with roll ranges (always show, use total AP for simple mode)
-        const getAP = (key) => armourMode === 'simple' ? armourTotal : (locs[key] ?? 0);
+        const getAP = (key) => (armourMode === 'simple' ? armourTotal : locs[key] ?? 0);
         context.hitLocations = [
             { key: 'head', label: 'Head', short: 'Head', range: '01–10', value: getAP('head'), dr: getAP('head') + tb },
             { key: 'body', label: 'Body', short: 'Body', range: '31–70', value: getAP('body'), dr: getAP('body') + tb },
@@ -441,7 +441,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
         context.gearItems = context.items.filter((i) => !['weapon', 'talent', 'trait', 'psychicPower', 'specialAbility'].includes(i.type));
 
         // All items for inventory table (weapons, armour, gear, ammo, cybernetics, etc.)
-        context.allItems = context.items.filter((i) => !['talent', 'trait', 'psychicPower', 'specialAbility', 'condition', 'criticalInjury', 'mutation'].includes(i.type));
+        context.allItems = context.items.filter(
+            (i) => !['talent', 'trait', 'psychicPower', 'specialAbility', 'condition', 'criticalInjury', 'mutation'].includes(i.type),
+        );
 
         // Flag for weapon rows in actions grid (used for empty state)
         context.combatWeaponRows = (context.embeddedWeapons?.length ?? 0) > 0;
@@ -522,9 +524,16 @@ export default class NPCSheetV2 extends BaseActorSheet {
             const plus20 = trainedData?.plus20 || false;
             let levelClass = 'untrained';
             let levelTooltip = 'Untrained (click to train)';
-            if (plus20) { levelClass = 'plus20'; levelTooltip = '+20 Expert (click to remove)'; }
-            else if (plus10) { levelClass = 'plus10'; levelTooltip = '+10 Experienced (click for +20)'; }
-            else if (isTrained) { levelClass = 'trained'; levelTooltip = 'Trained (click for +10)'; }
+            if (plus20) {
+                levelClass = 'plus20';
+                levelTooltip = '+20 Expert (click to remove)';
+            } else if (plus10) {
+                levelClass = 'plus10';
+                levelTooltip = '+10 Experienced (click for +20)';
+            } else if (isTrained) {
+                levelClass = 'trained';
+                levelTooltip = 'Trained (click for +10)';
+            }
 
             return {
                 ...skill,
@@ -540,7 +549,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         });
 
         // Trained skill count for display
-        context.trainedSkillCount = context.basicSkillsList.filter(s => s.isTrained).length;
+        context.trainedSkillCount = context.basicSkillsList.filter((s) => s.isTrained).length;
 
         // Mark favorite status on trained skills list
         context.trainedSkillsList = context.trainedSkillsList.map((skill) => ({
@@ -975,13 +984,27 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
         // Skill characteristic mapping
         const skillCharMap = {
-            acrobatics: 'agility', athletics: 'strength', awareness: 'perception',
-            charm: 'fellowship', command: 'fellowship', commerce: 'fellowship',
-            deceive: 'fellowship', dodge: 'agility', inquiry: 'fellowship',
-            interrogation: 'willpower', intimidate: 'strength', logic: 'intelligence',
-            medicae: 'intelligence', parry: 'weaponSkill', psyniscience: 'perception',
-            scrutiny: 'perception', security: 'intelligence', sleightOfHand: 'agility',
-            stealth: 'agility', survival: 'perception', techUse: 'intelligence',
+            acrobatics: 'agility',
+            athletics: 'strength',
+            awareness: 'perception',
+            charm: 'fellowship',
+            command: 'fellowship',
+            commerce: 'fellowship',
+            deceive: 'fellowship',
+            dodge: 'agility',
+            inquiry: 'fellowship',
+            interrogation: 'willpower',
+            intimidate: 'strength',
+            logic: 'intelligence',
+            medicae: 'intelligence',
+            parry: 'weaponSkill',
+            psyniscience: 'perception',
+            scrutiny: 'perception',
+            security: 'intelligence',
+            sleightOfHand: 'agility',
+            stealth: 'agility',
+            survival: 'perception',
+            techUse: 'intelligence',
         };
 
         // Determine current level and cycle to next
@@ -991,7 +1014,10 @@ export default class NPCSheetV2 extends BaseActorSheet {
             currentSkills[skillKey] = {
                 name: skillKey,
                 characteristic: skillCharMap[skillKey] || 'perception',
-                trained: true, plus10: false, plus20: false, bonus: 0,
+                trained: true,
+                plus10: false,
+                plus20: false,
+                bonus: 0,
             };
             await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else if (current.trained && !current.plus10 && !current.plus20) {
@@ -1573,5 +1599,4 @@ export default class NPCSheetV2 extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
-
 }

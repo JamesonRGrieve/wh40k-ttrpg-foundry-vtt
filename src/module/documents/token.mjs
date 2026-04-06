@@ -6,7 +6,6 @@ import { SYSTEM_ID } from '../constants.mjs';
  * Foundry V13's CONFIG.Token.movement.actions system.
  */
 export class TokenDocumentRT extends TokenDocument {
-
     /* -------------------------------------------- */
     /*  Movement                                    */
     /* -------------------------------------------- */
@@ -28,13 +27,13 @@ export class TokenDocumentRT extends TokenDocument {
                 measure: true,
                 walls: 'move',
                 visualize: true,
-                canSelect: token => {
+                canSelect: (token) => {
                     return token?.actor?.system?.movement !== undefined;
                 },
             };
 
             const actionConfig = CONFIG.Token.movement.actions[type];
-            actionConfig.getAnimationOptions = token => {
+            actionConfig.getAnimationOptions = (token) => {
                 const movement = token?.actor?.system?.movement;
                 // Slow animation if actor has no speed for this type
                 if (!movement?.[type]) {
@@ -64,9 +63,7 @@ export class TokenDocumentRT extends TokenDocument {
         const speed = movement?.[type];
 
         // If automation is disabled, actor has no movement data, or speed is available, use default cost
-        return (noAutomation || !hasMovement || speed)
-            ? cost => cost
-            : (cost, _from, _to, distance) => cost + distance;
+        return noAutomation || !hasMovement || speed ? (cost) => cost : (cost, _from, _to, distance) => cost + distance;
     }
 
     /* -------------------------------------------- */
@@ -113,7 +110,7 @@ export class TokenDocumentRT extends TokenDocument {
             btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 this.#setMovementAction(token, type);
-                container.querySelectorAll('.rt-token-movement__btn').forEach(b => b.classList.remove('active'));
+                container.querySelectorAll('.rt-token-movement__btn').forEach((b) => b.classList.remove('active'));
                 btn.classList.add('active');
             });
 

@@ -1,63 +1,61 @@
 {
-  "name": "Lasgun",
-  "type": "weapon",
-  "img": "systems/wh40k-rpg/assets/icons/weapons/basic-lasgun.svg",
-  "system": {
-    "identifier": "lasgun",
-    "class": "basic",
-    "type": "las",
-    "twoHanded": true,
-    "melee": false,
-    "attack": {
-      "type": "ranged",
-      "characteristic": "ballisticSkill",
-      "modifier": 0,
-      "range": {
-        "value": 100,
-        "units": "m",
-        "special": ""
-      },
-      "rateOfFire": {
-        "single": true,
-        "semi": 3,
-        "full": 0
-      }
+    "name": "Lasgun",
+    "type": "weapon",
+    "img": "systems/wh40k-rpg/assets/icons/weapons/basic-lasgun.svg",
+    "system": {
+        "identifier": "lasgun",
+        "class": "basic",
+        "type": "las",
+        "twoHanded": true,
+        "melee": false,
+        "attack": {
+            "type": "ranged",
+            "characteristic": "ballisticSkill",
+            "modifier": 0,
+            "range": {
+                "value": 100,
+                "units": "m",
+                "special": ""
+            },
+            "rateOfFire": {
+                "single": true,
+                "semi": 3,
+                "full": 0
+            }
+        },
+        "damage": {
+            "formula": "1d10",
+            "type": "energy",
+            "bonus": 3,
+            "penetration": 0
+        },
+        "special": ["reliable"],
+        "clip": {
+            "max": 60,
+            "value": 60,
+            "type": ""
+        },
+        "reload": "full",
+        "weight": 4,
+        "availability": "common",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 75,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Special:</b> Reliable</p>"
+        },
+        "modifications": [],
+        "notes": "",
+        "source": "RT: Core Rulebook",
+        "requiredTraining": ""
     },
-    "damage": {
-      "formula": "1d10",
-      "type": "energy",
-      "bonus": 3,
-      "penetration": 0
-    },
-    "special": [
-      "reliable"
-    ],
-    "clip": {
-      "max": 60,
-      "value": 60,
-      "type": ""
-    },
-    "reload": "full",
-    "weight": 4,
-    "availability": "common",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 75,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Special:</b> Reliable</p>"
-    },
-    "modifications": [],
-    "notes": "",
-    "source": "RT: Core Rulebook",
-    "requiredTraining": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "j2StKxFkY0KsZmjN"
+    "effects": [],
+    "flags": {},
+    "_id": "j2StKxFkY0KsZmjN"
 }

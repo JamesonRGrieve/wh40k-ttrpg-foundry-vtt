@@ -1,75 +1,72 @@
 {
-  "name": "Grenadier",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "identifier": "grenadier",
-    "category": "combat",
-    "source": "DH 2E: Enemies Without",
-    "description": "<p>Your expertise with explosive ordnance allows you to compensate for scatter and maintain better control over blast weapons even when your shots go wide.</p>",
-    "tier": 1,
-    "cost": 300,
-    "isPassive": true,
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "benefit": "<p>When character misses with a thrown or Blast Weapon, they can reduce the distance it scatters by half their Ballistic Skill Bonus metres.</p>",
-    "aptitudes": [
-      "Ballistic Skill",
-      "Finesse"
-    ],
-    "prerequisites": {
-      "text": "Ballistic Skill 35",
-      "characteristics": {
-        "ballisticSkill": 35
-      },
-      "skills": {},
-      "talents": []
-    },
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {
-        "attack": 0,
-        "damage": 0,
-        "penetration": 0,
-        "defense": 0,
-        "initiative": 0,
-        "speed": 0
-      },
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Reduced Scatter",
-          "description": "<p>When you miss with a thrown or Blast weapon, reduce scatter distance by half your BS Bonus metres.</p>"
+    "name": "Grenadier",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "identifier": "grenadier",
+        "category": "combat",
+        "source": "DH 2E: Enemies Without",
+        "description": "<p>Your expertise with explosive ordnance allows you to compensate for scatter and maintain better control over blast weapons even when your shots go wide.</p>",
+        "tier": 1,
+        "cost": 300,
+        "isPassive": true,
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "benefit": "<p>When character misses with a thrown or Blast Weapon, they can reduce the distance it scatters by half their Ballistic Skill Bonus metres.</p>",
+        "aptitudes": ["Ballistic Skill", "Finesse"],
+        "prerequisites": {
+            "text": "Ballistic Skill 35",
+            "characteristics": {
+                "ballisticSkill": 35
+            },
+            "skills": {},
+            "talents": []
+        },
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {
+                "attack": 0,
+                "damage": 0,
+                "penetration": 0,
+                "defense": 0,
+                "initiative": 0,
+                "speed": 0
+            },
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Reduced Scatter",
+                    "description": "<p>When you miss with a thrown or Blast weapon, reduce scatter distance by half your BS Bonus metres.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "2WyJ7P8kdY0biMnR"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "2WyJ7P8kdY0biMnR"
 }

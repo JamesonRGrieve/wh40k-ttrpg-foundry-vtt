@@ -1,37 +1,31 @@
 {
-  "name": "Grox Hide / Chainmail",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "primitive",
-    "weight": 15,
-    "availability": "common",
-    "notes": "Halve primitive armour AP vs non primitive weapons",
-    "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    "name": "Grox Hide / Chainmail",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "primitive",
+        "weight": 15,
+        "availability": "common",
+        "notes": "Halve primitive armour AP vs non primitive weapons",
+        "source": "Rogue Trader Core",
+        "description": {
+            "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["leftArm", "rightArm", "body", "leftLeg", "rightLeg"],
+        "armourPoints": {
+            "head": 3,
+            "body": 3,
+            "leftArm": 3,
+            "rightArm": 3,
+            "leftLeg": 3,
+            "rightLeg": 3
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "leftArm",
-      "rightArm",
-      "body",
-      "leftLeg",
-      "rightLeg"
-    ],
-    "armourPoints": {
-      "head": 3,
-      "body": 3,
-      "leftArm": 3,
-      "rightArm": 3,
-      "leftLeg": 3,
-      "rightLeg": 3
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "qIQvdP6OvaN7svFW"
+    "effects": [],
+    "flags": {},
+    "_id": "qIQvdP6OvaN7svFW"
 }

@@ -1,4 +1,4 @@
-{{!-- Armour Modification Effect Tab --}}
+{{! Armour Modification Effect Tab }}
 <div class="rt-tab-content rt-armour-mod-effect" data-tab="effect">
     <div class="rt-panel">
         <header class="rt-panel-header">
@@ -7,18 +7,18 @@
                 {{localize "WH40K.Modification.Effect"}}
             </h3>
         </header>
-        
+
         <div class="rt-panel-body">
             <p class="rt-help-text">
                 Describe the special effects of this modification. Use rich text for formatting.
             </p>
-            
+
             <div class="rt-field rt-field--editor">
                 {{editor effect target="system.effect" button=true editable=isEditable engine="prosemirror"}}
             </div>
         </div>
     </div>
-    
+
     <div class="rt-panel">
         <header class="rt-panel-header">
             <h3>
@@ -26,14 +26,16 @@
                 {{localize "WH40K.Modification.Notes"}}
             </h3>
         </header>
-        
+
         <div class="rt-panel-body">
             <div class="rt-field">
-                <textarea name="system.notes" 
-                          class="rt-field-textarea" 
-                          rows="4"
-                          placeholder="Additional notes or clarifications..."
-                          {{disabled (not isEditable)}}>{{notes}}</textarea>
+                <textarea
+                    name="system.notes"
+                    class="rt-field-textarea"
+                    rows="4"
+                    placeholder="Additional notes or clarifications..."
+                    {{disabled (not isEditable)}}
+                >{{notes}}</textarea>
             </div>
         </div>
     </div>

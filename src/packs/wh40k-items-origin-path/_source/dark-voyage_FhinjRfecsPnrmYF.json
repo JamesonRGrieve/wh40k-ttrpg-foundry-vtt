@@ -1,129 +1,127 @@
 {
-  "name": "Dark Voyage",
-  "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/eclipse.svg",
-  "system": {
-    "identifier": "dark-voyage",
-    "step": "trialsAndTravails",
-    "stepIndex": 4,
-    "description": {
-      "value": "<h2>Dark Voyage</h2><blockquote><p><em>\"Starport taverns and station galleys are filled with travellers, wanderers, and old voidfarers. Sooner or later, when the lumen globes have dimmed, these folk will tell of the many strange legends they have heard. They tell of hell-hulks crewed by the lost and warp storms that howl with mocking voices, of the things that claw and scratch at the hull waiting for the merest flicker of the Geller Field for the warp to pour in and devour all, and of horrifying xenos encounters and voyages of the damned.\"</em></p></blockquote><p>But you have no taste for such stories, because you know the truth—you have lived them. You have stared into the eyes of the abyss and lived. You have seen the dead walk and the bulkheads bleed. These experiences have marked you, opening your eyes to the darkness that hides beneath the surface of things, and whether you have recoiled in dread or been drawn on in fascination is a truth you keep to yourself.</p><p>The horrors you witnessed have left scars on your soul that no medicae can heal, and the knowledge you gained came at a terrible price.</p>"
-    },
-    "requirements": {
-      "text": "Origin Path: Trials and Travails",
-      "previousSteps": [],
-      "excludedSteps": []
-    },
-    "grants": {
-      "skills": [],
-      "talents": [
-        {
-          "name": "Marked by Darkness (Dark Voyage)",
-          "specialization": "",
-          "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.DVO0000000000001"
-        }
-      ],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [],
-      "choices": [
-        {
-          "type": "forbidden_knowledge",
-          "label": "Things Man Was Not Meant to Know",
-          "options": [
-            {
-              "label": "Forbidden Lore (Warp)",
-              "value": "warp",
-              "description": "You gain Forbidden Lore (Warp) or increase it by one level.",
-              "grants": {
-                "skills": [
-                  {
-                    "name": "Forbidden Lore",
-                    "specialization": "Warp",
-                    "level": "trained"
-                  }
-                ]
-              }
+    "name": "Dark Voyage",
+    "type": "originPath",
+    "img": "modules/game-icons-net/whitetransparent/eclipse.svg",
+    "system": {
+        "identifier": "dark-voyage",
+        "step": "trialsAndTravails",
+        "stepIndex": 4,
+        "description": {
+            "value": "<h2>Dark Voyage</h2><blockquote><p><em>\"Starport taverns and station galleys are filled with travellers, wanderers, and old voidfarers. Sooner or later, when the lumen globes have dimmed, these folk will tell of the many strange legends they have heard. They tell of hell-hulks crewed by the lost and warp storms that howl with mocking voices, of the things that claw and scratch at the hull waiting for the merest flicker of the Geller Field for the warp to pour in and devour all, and of horrifying xenos encounters and voyages of the damned.\"</em></p></blockquote><p>But you have no taste for such stories, because you know the truth—you have lived them. You have stared into the eyes of the abyss and lived. You have seen the dead walk and the bulkheads bleed. These experiences have marked you, opening your eyes to the darkness that hides beneath the surface of things, and whether you have recoiled in dread or been drawn on in fascination is a truth you keep to yourself.</p><p>The horrors you witnessed have left scars on your soul that no medicae can heal, and the knowledge you gained came at a terrible price.</p>"
+        },
+        "requirements": {
+            "text": "Origin Path: Trials and Travails",
+            "previousSteps": [],
+            "excludedSteps": []
+        },
+        "grants": {
+            "skills": [],
+            "talents": [
+                {
+                    "name": "Marked by Darkness (Dark Voyage)",
+                    "specialization": "",
+                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.DVO0000000000001"
+                }
+            ],
+            "traits": [],
+            "aptitudes": [],
+            "equipment": [],
+            "specialAbilities": [],
+            "choices": [
+                {
+                    "type": "forbidden_knowledge",
+                    "label": "Things Man Was Not Meant to Know",
+                    "options": [
+                        {
+                            "label": "Forbidden Lore (Warp)",
+                            "value": "warp",
+                            "description": "You gain Forbidden Lore (Warp) or increase it by one level.",
+                            "grants": {
+                                "skills": [
+                                    {
+                                        "name": "Forbidden Lore",
+                                        "specialization": "Warp",
+                                        "level": "trained"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "label": "Forbidden Lore (Daemonology)",
+                            "value": "daemonology",
+                            "description": "You gain Forbidden Lore (Daemonology) or increase it by one level.",
+                            "grants": {
+                                "skills": [
+                                    {
+                                        "name": "Forbidden Lore",
+                                        "specialization": "Daemonology",
+                                        "level": "trained"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "label": "Forbidden Lore (Xenos)",
+                            "value": "xenos",
+                            "description": "You gain Forbidden Lore (Xenos) or increase it by one level.",
+                            "grants": {
+                                "skills": [
+                                    {
+                                        "name": "Forbidden Lore",
+                                        "specialization": "Xenos",
+                                        "level": "trained"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "label": "Resistance (Fear)",
+                            "value": "resistance_fear",
+                            "description": "You gain the Resistance (Fear) Talent.",
+                            "grants": {
+                                "talents": [
+                                    {
+                                        "name": "Resistance (Fear)",
+                                        "specialization": "Fear",
+                                        "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.FWzsS62FRJhejE0b"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "count": 1
+                }
+            ]
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
             },
-            {
-              "label": "Forbidden Lore (Daemonology)",
-              "value": "daemonology",
-              "description": "You gain Forbidden Lore (Daemonology) or increase it by one level.",
-              "grants": {
-                "skills": [
-                  {
-                    "name": "Forbidden Lore",
-                    "specialization": "Daemonology",
-                    "level": "trained"
-                  }
-                ]
-              }
-            },
-            {
-              "label": "Forbidden Lore (Xenos)",
-              "value": "xenos",
-              "description": "You gain Forbidden Lore (Xenos) or increase it by one level.",
-              "grants": {
-                "skills": [
-                  {
-                    "name": "Forbidden Lore",
-                    "specialization": "Xenos",
-                    "level": "trained"
-                  }
-                ]
-              }
-            },
-            {
-              "label": "Resistance (Fear)",
-              "value": "resistance_fear",
-              "description": "You gain the Resistance (Fear) Talent.",
-              "grants": {
-                "talents": [
-                  {
-                    "name": "Resistance (Fear)",
-                    "specialization": "Fear",
-                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.FWzsS62FRJhejE0b"
-                  }
-                ]
-              }
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
             }
-          ],
-          "count": 1
-        }
-      ]
+        },
+        "effectText": "",
+        "notes": "",
+        "source": {
+            "book": "Rogue Trader Core Rulebook",
+            "page": "32",
+            "custom": ""
+        },
+        "selectedChoices": {},
+        "activeModifiers": [],
+        "positions": [5]
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "effectText": "",
-    "notes": "",
-    "source": {
-      "book": "Rogue Trader Core Rulebook",
-      "page": "32",
-      "custom": ""
-    },
-    "selectedChoices": {},
-    "activeModifiers": [],
-    "positions": [
-      5
-    ]
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "FhinjRfecsPnrmYF"
+    "effects": [],
+    "flags": {},
+    "_id": "FhinjRfecsPnrmYF"
 }

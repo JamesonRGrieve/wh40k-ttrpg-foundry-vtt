@@ -258,8 +258,8 @@
 
         &__controlwrap {
             span.wh40k-current_level {
-              //noinspection CssUnknownTarget
-              &--1,
+                //noinspection CssUnknownTarget
+                &--1,
                 &--2,
                 &--3,
                 &--4 {
@@ -274,8 +274,8 @@
                 }
             }
 
-          //noinspection CssUnknownTarget
-          button[type='action'] {
+            //noinspection CssUnknownTarget
+            button[type='action'] {
                 background: url('../images/fail.png') no-repeat center/100% 100%;
                 color: #fff;
                 font-size: 9pt;

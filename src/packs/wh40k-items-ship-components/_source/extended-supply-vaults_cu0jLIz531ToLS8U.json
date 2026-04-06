@@ -1,41 +1,39 @@
 {
-  "name": "Extended Supply Vaults",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "all"
-    ],
-    "effect": "Double the time a ship can remain at void without suffering Population or Morale Loss. Only one per vessel.",
-    "availability": "rare",
-    "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Double the time a ship can remain at void without suffering Population or Morale Loss. Only one per vessel.</p>"
+    "name": "Extended Supply Vaults",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["all"],
+        "effect": "Double the time a ship can remain at void without suffering Population or Morale Loss. Only one per vessel.",
+        "availability": "rare",
+        "source": "Rogue Trader Core",
+        "description": {
+            "value": "<p>Double the time a ship can remain at void without suffering Population or Morale Loss. Only one per vessel.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "supplemental",
+        "essential": false,
+        "power": {
+            "used": 1,
+            "generated": 0
+        },
+        "space": 4,
+        "shipPoints": 2,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "extended-supply-vaults"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "supplemental",
-    "essential": false,
-    "power": {
-      "used": 1,
-      "generated": 0
-    },
-    "space": 4,
-    "shipPoints": 2,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "extended-supply-vaults"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "cu0jLIz531ToLS8U"
+    "effects": [],
+    "flags": {},
+    "_id": "cu0jLIz531ToLS8U"
 }

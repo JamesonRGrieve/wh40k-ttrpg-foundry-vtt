@@ -1,5 +1,5 @@
-import ItemDataModel from "../abstract/item-data-model.mjs";
-import DescriptionTemplate from "../shared/description-template.mjs";
+import ItemDataModel from '../abstract/item-data-model.mjs';
+import DescriptionTemplate from '../shared/description-template.mjs';
 
 /**
  * Data model for Aptitude items.

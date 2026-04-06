@@ -1,42 +1,39 @@
 {
-  "name": "Euphoric Life Sustainer (Large)",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "light-cruiser",
-      "cruiser"
-    ],
-    "effect": "Pumps euphoric chemicals throughout the ship. Increase Morale by 10, but Crew Rating drops by one level (EG Crew Rating 30 to 20). If effects are deactivated, morale decreases by 10 for a day. Hit and run attacks against this vessel suffer -10 to Command Tests unless the boarders have air filtration systems.",
-    "availability": "rare",
-    "source": "RT: Hostile Acquisitions",
-    "description": {
-      "value": "<p>Pumps euphoric chemicals throughout the ship. Increase Morale by 10, but Crew Rating drops by one level (EG Crew Rating 30 to 20). If effects are deactivated, morale decreases by 10 for a day. Hit and run attacks against this vessel suffer -10 to Command Tests unless the boarders have air filtration systems.</p>"
+    "name": "Euphoric Life Sustainer (Large)",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["light-cruiser", "cruiser"],
+        "effect": "Pumps euphoric chemicals throughout the ship. Increase Morale by 10, but Crew Rating drops by one level (EG Crew Rating 30 to 20). If effects are deactivated, morale decreases by 10 for a day. Hit and run attacks against this vessel suffer -10 to Command Tests unless the boarders have air filtration systems.",
+        "availability": "rare",
+        "source": "RT: Hostile Acquisitions",
+        "description": {
+            "value": "<p>Pumps euphoric chemicals throughout the ship. Increase Morale by 10, but Crew Rating drops by one level (EG Crew Rating 30 to 20). If effects are deactivated, morale decreases by 10 for a day. Hit and run attacks against this vessel suffer -10 to Command Tests unless the boarders have air filtration systems.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "lifeSupport",
+        "essential": true,
+        "power": {
+            "used": 5,
+            "generated": 0
+        },
+        "space": 3,
+        "shipPoints": 1,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "euphoric-life-sustainer-large-"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "lifeSupport",
-    "essential": true,
-    "power": {
-      "used": 5,
-      "generated": 0
-    },
-    "space": 3,
-    "shipPoints": 1,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "euphoric-life-sustainer-large-"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "1FI9EljF1wUjAUej"
+    "effects": [],
+    "flags": {},
+    "_id": "1FI9EljF1wUjAUej"
 }

@@ -307,7 +307,7 @@
     width: 100%;
     table-layout: fixed; /* prevents auto expansion from content */
     box-sizing: border-box;
-    min-width: 0;        /* allow shrinking inside flex children */
+    min-width: 0; /* allow shrinking inside flex children */
     border-collapse: collapse;
     font-size: 0.8rem;
     margin: 0;
@@ -401,7 +401,6 @@
     max-width: 80px;
     min-width: 80px;
 }
-
 
 .wh40k-col-actions {
     width: 40px;
@@ -564,12 +563,12 @@
 .wh40k-dropzone-area {
     position: relative;
 
-    &[data-drop-zone="personal"].wh40k-drag-over {
+    &[data-drop-zone='personal'].wh40k-drag-over {
         background: rgba($wh40k-color-gold, 0.1);
         border: 2px dashed $wh40k-color-gold;
 
         &::after {
-            content: "Drop here to move to backpack";
+            content: 'Drop here to move to backpack';
             position: absolute;
             top: 50%;
             left: 50%;
@@ -585,12 +584,12 @@
         }
     }
 
-    &[data-drop-zone="ship"].wh40k-drag-over {
+    &[data-drop-zone='ship'].wh40k-drag-over {
         background: rgba(#6a9bdc, 0.1);
         border: 2px dashed #6a9bdc;
 
         &::after {
-            content: "Drop here to stow in ship storage";
+            content: 'Drop here to stow in ship storage';
             position: absolute;
             top: 50%;
             left: 50%;
@@ -676,8 +675,13 @@
    ======================================== */
 
 @keyframes pulse-glow {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
 }
 
 /* ========================================

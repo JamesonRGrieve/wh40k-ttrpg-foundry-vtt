@@ -4,125 +4,125 @@
 // Uses theme-aware CSS custom properties
 
 .wh40k-sheet {
-  // Base input styling
-  input[type="text"],
-  input[type="number"],
-  input[type="email"],
-  input[type="password"],
-  textarea,
-  select {
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
-    color: var(--rt-text-dark);
-    transition: all 0.2s ease;
+    // Base input styling
+    input[type='text'],
+    input[type='number'],
+    input[type='email'],
+    input[type='password'],
+    textarea,
+    select {
+        background: var(--rt-input-bg);
+        border: 1px solid var(--rt-border-color-light);
+        color: var(--rt-text-dark);
+        transition: all 0.2s ease;
 
-    &:focus {
-      outline: none;
-      background: var(--rt-input-bg-focus);
-      border-color: var(--rt-gold);
-      box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
+        &:focus {
+            outline: none;
+            background: var(--rt-input-bg-focus);
+            border-color: var(--rt-gold);
+            box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
+        }
+
+        &::placeholder {
+            color: var(--rt-text-subtle);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     }
 
-    &::placeholder {
-      color: var(--rt-text-subtle);
+    // Specific overrides for common classes
+    .wh40k-field__input,
+    .wh40k-header__input {
+        background: var(--rt-input-bg);
+        border: 1px solid var(--rt-border-color-light);
+
+        &:focus {
+            background: var(--rt-input-bg-focus);
+            border-color: var(--rt-gold);
+            box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
+        }
     }
 
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    // Settings inputs
+    .wh40k-settings__input {
+        background: var(--rt-input-bg);
+        border: 1px solid var(--rt-border-color-light);
+
+        &:focus {
+            background: var(--rt-input-bg-focus);
+            border-color: var(--rt-gold);
+        }
     }
-  }
 
-  // Specific overrides for common classes
-  .wh40k-field__input,
-  .wh40k-header__input {
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
+    // Table inputs
+    .table-cell input,
+    .wh40k-table input {
+        background: var(--rt-input-bg);
+        border: 1px solid var(--rt-border-color-light);
 
-    &:focus {
-      background: var(--rt-input-bg-focus);
-      border-color: var(--rt-gold);
-      box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
+        &:focus {
+            background: var(--rt-input-bg-focus);
+            border-color: var(--rt-gold);
+        }
     }
-  }
-
-  // Settings inputs
-  .wh40k-settings__input {
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
-
-    &:focus {
-      background: var(--rt-input-bg-focus);
-      border-color: var(--rt-gold);
-    }
-  }
-
-  // Table inputs
-  .table-cell input,
-  .wh40k-table input {
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
-
-    &:focus {
-      background: var(--rt-input-bg-focus);
-      border-color: var(--rt-gold);
-    }
-  }
 }
 
 // Characteristics inputs
 .wh40k-char-hud-field {
-  input,
-  select {
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
-    color: var(--rt-text-dark);
+    input,
+    select {
+        background: var(--rt-input-bg);
+        border: 1px solid var(--rt-border-color-light);
+        color: var(--rt-text-dark);
 
-    &:focus {
-      background: var(--rt-input-bg-focus);
-      border-color: var(--rt-gold);
-      box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
+        &:focus {
+            background: var(--rt-input-bg-focus);
+            border-color: var(--rt-gold);
+            box-shadow: 0 0 8px rgba(192, 128, 32, 0.2);
+        }
     }
-  }
 }
 
 // Combat inputs
 .wh40k-combat-input,
 .wh40k-stat-input {
-  background: var(--rt-input-bg);
-  border: 1px solid var(--rt-border-color-light);
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
 
-  &:focus {
-    background: var(--rt-input-bg-focus);
-    border-color: var(--rt-gold);
-  }
+    &:focus {
+        background: var(--rt-input-bg-focus);
+        border-color: var(--rt-gold);
+    }
 }
 
 // Abilities tab inputs
 .wh40k-ability-input {
-  background: var(--rt-input-bg);
-  border: 1px solid var(--rt-border-color-light);
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
 
-  &:focus {
-    background: var(--rt-input-bg-focus);
-    border-color: var(--rt-gold);
-  }
+    &:focus {
+        background: var(--rt-input-bg-focus);
+        border-color: var(--rt-gold);
+    }
 }
 
 // Grid inputs
 .wh40k-grid input {
-  background: var(--rt-input-bg);
-  border: 1px solid var(--rt-border-color-light);
+    background: var(--rt-input-bg);
+    border: 1px solid var(--rt-border-color-light);
 
-  &:focus {
-    background: var(--rt-input-bg-focus);
-    border-color: var(--rt-gold);
-  }
+    &:focus {
+        background: var(--rt-input-bg-focus);
+        border-color: var(--rt-gold);
+    }
 }
 
 // Active state styling
 .active-state,
 .form-active {
-  background: rgba(192, 128, 32, 0.15) !important;
-  border-color: rgba(192, 128, 32, 0.3) !important;
+    background: rgba(192, 128, 32, 0.15) !important;
+    border-color: rgba(192, 128, 32, 0.3) !important;
 }

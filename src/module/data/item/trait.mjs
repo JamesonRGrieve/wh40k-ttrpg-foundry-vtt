@@ -1,7 +1,7 @@
-import ItemDataModel from "../abstract/item-data-model.mjs";
-import DescriptionTemplate from "../shared/description-template.mjs";
-import ModifiersTemplate from "../shared/modifiers-template.mjs";
-import IdentifierField from "../fields/identifier-field.mjs";
+import ItemDataModel from '../abstract/item-data-model.mjs';
+import DescriptionTemplate from '../shared/description-template.mjs';
+import ModifiersTemplate from '../shared/modifiers-template.mjs';
+import IdentifierField from '../fields/identifier-field.mjs';
 
 /**
  * Data model for Trait items.
@@ -9,167 +9,160 @@ import IdentifierField from "../fields/identifier-field.mjs";
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
-export default class TraitData extends ItemDataModel.mixin(
-  DescriptionTemplate,
-  ModifiersTemplate
-) {
-  
-  /** @inheritdoc */
-  static defineSchema() {
-    const fields = foundry.data.fields;
-    return {
-      ...super.defineSchema(),
-      
-      identifier: new IdentifierField({ required: true, blank: true }),
-      
-      // Category/type of trait
-      category: new fields.StringField({
-        required: false,
-        initial: "general",
-        blank: true
-      }),
-      
-      // Requirements (text description)
-      requirements: new fields.StringField({
-        required: false,
-        initial: "",
-        blank: true
-      }),
-      
-      // Benefit/effect description (HTML)
-      benefit: new fields.HTMLField({
-        required: false,
-        initial: "",
-        blank: true
-      }),
-      
-      // Level/rating (matching template.json)
-      level: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-      
-      // Notes
-      notes: new fields.StringField({ required: false, blank: true })
-    };
-  }
+export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
+    /** @inheritdoc */
+    static defineSchema() {
+        const fields = foundry.data.fields;
+        return {
+            ...super.defineSchema(),
 
-  /* -------------------------------------------- */
-  /*  Properties                                  */
-  /* -------------------------------------------- */
+            identifier: new IdentifierField({ required: true, blank: true }),
 
-  /**
-   * Does this trait have a level/rating?
-   * @type {boolean}
-   */
-  get hasLevel() {
-    return this.level > 0;
-  }
+            // Category/type of trait
+            category: new fields.StringField({
+                required: false,
+                initial: 'general',
+                blank: true,
+            }),
 
-  /**
-   * Get the full name including level.
-   * @type {string}
-   */
-  get fullName() {
-    let name = this.parent?.name ?? "";
-    if ( this.hasLevel ) {
-      name += ` (${this.level})`;
+            // Requirements (text description)
+            requirements: new fields.StringField({
+                required: false,
+                initial: '',
+                blank: true,
+            }),
+
+            // Benefit/effect description (HTML)
+            benefit: new fields.HTMLField({
+                required: false,
+                initial: '',
+                blank: true,
+            }),
+
+            // Level/rating (matching template.json)
+            level: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+
+            // Notes
+            notes: new fields.StringField({ required: false, blank: true }),
+        };
     }
-    return name;
-  }
 
-  /* -------------------------------------------- */
-  /*  Chat Properties                             */
-  /* -------------------------------------------- */
+    /* -------------------------------------------- */
+    /*  Properties                                  */
+    /* -------------------------------------------- */
 
-  /** @override */
-  get chatProperties() {
-    const props = [];
-    
-    if ( this.hasLevel ) {
-      props.push(`Level: ${this.level}`);
+    /**
+     * Does this trait have a level/rating?
+     * @type {boolean}
+     */
+    get hasLevel() {
+        return this.level > 0;
     }
-    
-    return props;
-  }
 
-  /* -------------------------------------------- */
-  /*  Header Labels                               */
-  /* -------------------------------------------- */
-
-  /** @override */
-  get headerLabels() {
-    return {
-      level: this.hasLevel ? this.level : "-"
-    };
-  }
-
-  /**
-   * Get category label.
-   * @type {string}
-   */
-  get categoryLabel() {
-    if (!this.category) return game.i18n.localize("WH40K.TraitCategory.General");
-    const key = `RT.TraitCategory.${this.category.capitalize()}`;
-    const localized = game.i18n.localize(key);
-    return localized === key ? this.category : localized;
-  }
-
-  /**
-   * Is this a variable trait (name contains (X))?
-   * @type {boolean}
-   */
-  get isVariable() {
-    const name = this.parent?.name ?? "";
-    return name.includes("(X)") || name.includes("(x)");
-  }
-
-  /* -------------------------------------------- */
-  /*  Vocalization                                */
-  /* -------------------------------------------- */
-
-  /**
-   * Post this trait to chat as a rich card.
-   * @param {object} [options]  Additional options
-   * @returns {Promise<ChatMessage>}
-   */
-  async toChat(options = {}) {
-    // Prepare template data
-    const templateData = {
-      trait: this.parent,
-      category: this.category,
-      categoryLabel: this.categoryLabel,
-      level: this.level,
-      hasLevel: this.hasLevel,
-      requirements: this.requirements,
-      benefit: this.benefit,
-      notes: this.notes,
-      fullName: this.fullName,
-      isVariable: this.isVariable,
-      timestamp: new Date().toLocaleString()
-    };
-
-    // Render chat template
-    const content = await renderTemplate(
-      "systems/wh40k-rpg/templates/chat/trait-card.hbs",
-      templateData
-    );
-
-    // Prepare chat message data
-    const chatData = {
-      user: game.user.id,
-      speaker: ChatMessage.getSpeaker(),
-      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-      content: content,
-      flags: {
-        "wh40k-rpg": {
-          itemId: this.parent.id,
-          itemType: "trait"
+    /**
+     * Get the full name including level.
+     * @type {string}
+     */
+    get fullName() {
+        let name = this.parent?.name ?? '';
+        if (this.hasLevel) {
+            name += ` (${this.level})`;
         }
-      }
-    };
+        return name;
+    }
 
-    // Apply roll mode
-    ChatMessage.applyRollMode(chatData, options.rollMode || game.settings.get("core", "rollMode"));
+    /* -------------------------------------------- */
+    /*  Chat Properties                             */
+    /* -------------------------------------------- */
 
-    // Create and return chat message
-    return ChatMessage.create(chatData);
-  }
+    /** @override */
+    get chatProperties() {
+        const props = [];
+
+        if (this.hasLevel) {
+            props.push(`Level: ${this.level}`);
+        }
+
+        return props;
+    }
+
+    /* -------------------------------------------- */
+    /*  Header Labels                               */
+    /* -------------------------------------------- */
+
+    /** @override */
+    get headerLabels() {
+        return {
+            level: this.hasLevel ? this.level : '-',
+        };
+    }
+
+    /**
+     * Get category label.
+     * @type {string}
+     */
+    get categoryLabel() {
+        if (!this.category) return game.i18n.localize('WH40K.TraitCategory.General');
+        const key = `RT.TraitCategory.${this.category.capitalize()}`;
+        const localized = game.i18n.localize(key);
+        return localized === key ? this.category : localized;
+    }
+
+    /**
+     * Is this a variable trait (name contains (X))?
+     * @type {boolean}
+     */
+    get isVariable() {
+        const name = this.parent?.name ?? '';
+        return name.includes('(X)') || name.includes('(x)');
+    }
+
+    /* -------------------------------------------- */
+    /*  Vocalization                                */
+    /* -------------------------------------------- */
+
+    /**
+     * Post this trait to chat as a rich card.
+     * @param {object} [options]  Additional options
+     * @returns {Promise<ChatMessage>}
+     */
+    async toChat(options = {}) {
+        // Prepare template data
+        const templateData = {
+            trait: this.parent,
+            category: this.category,
+            categoryLabel: this.categoryLabel,
+            level: this.level,
+            hasLevel: this.hasLevel,
+            requirements: this.requirements,
+            benefit: this.benefit,
+            notes: this.notes,
+            fullName: this.fullName,
+            isVariable: this.isVariable,
+            timestamp: new Date().toLocaleString(),
+        };
+
+        // Render chat template
+        const content = await renderTemplate('systems/wh40k-rpg/templates/chat/trait-card.hbs', templateData);
+
+        // Prepare chat message data
+        const chatData = {
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker(),
+            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+            content: content,
+            flags: {
+                'wh40k-rpg': {
+                    itemId: this.parent.id,
+                    itemType: 'trait',
+                },
+            },
+        };
+
+        // Apply roll mode
+        ChatMessage.applyRollMode(chatData, options.rollMode || game.settings.get('core', 'rollMode'));
+
+        // Create and return chat message
+        return ChatMessage.create(chatData);
+    }
 }

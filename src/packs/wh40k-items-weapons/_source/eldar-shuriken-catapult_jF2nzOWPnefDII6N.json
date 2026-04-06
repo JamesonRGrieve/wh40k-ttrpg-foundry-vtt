@@ -1,64 +1,61 @@
 {
-  "name": "Eldar Shuriken Catapult",
-  "type": "weapon",
-  "img": "systems/wh40k-rpg/assets/icons/weapons/basic-exotic.svg",
-  "system": {
-    "identifier": "eldar-shuriken-catapult",
-    "class": "basic",
-    "type": "exotic",
-    "twoHanded": true,
-    "melee": false,
-    "attack": {
-      "type": "ranged",
-      "characteristic": "ballisticSkill",
-      "modifier": 0,
-      "range": {
-        "value": 80,
-        "units": "m",
-        "special": ""
-      },
-      "rateOfFire": {
-        "single": true,
-        "semi": 3,
-        "full": 10
-      }
+    "name": "Eldar Shuriken Catapult",
+    "type": "weapon",
+    "img": "systems/wh40k-rpg/assets/icons/weapons/basic-exotic.svg",
+    "system": {
+        "identifier": "eldar-shuriken-catapult",
+        "class": "basic",
+        "type": "exotic",
+        "twoHanded": true,
+        "melee": false,
+        "attack": {
+            "type": "ranged",
+            "characteristic": "ballisticSkill",
+            "modifier": 0,
+            "range": {
+                "value": 80,
+                "units": "m",
+                "special": ""
+            },
+            "rateOfFire": {
+                "single": true,
+                "semi": 3,
+                "full": 10
+            }
+        },
+        "damage": {
+            "formula": "1d10",
+            "type": "rending",
+            "bonus": 4,
+            "penetration": 3
+        },
+        "special": ["razor-sharp", "reliable"],
+        "clip": {
+            "max": 120,
+            "value": 120,
+            "type": ""
+        },
+        "reload": "full",
+        "weight": 2.5,
+        "availability": "extremely-rare",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Special:</b> Razor Sharp, Reliable</p><p><b>Note:</b> Considered the Standard Armament amongst Eldar Craftworlds for those not dedicated entirely to war. Still exceptionally lethal.</p>"
+        },
+        "modifications": [],
+        "notes": "Considered the Standard Armament amongst Eldar Craftworlds for those not dedicated entirely to war. Still exceptionally lethal.",
+        "source": "DH2: Enemies Without",
+        "requiredTraining": ""
     },
-    "damage": {
-      "formula": "1d10",
-      "type": "rending",
-      "bonus": 4,
-      "penetration": 3
-    },
-    "special": [
-      "razor-sharp",
-      "reliable"
-    ],
-    "clip": {
-      "max": 120,
-      "value": 120,
-      "type": ""
-    },
-    "reload": "full",
-    "weight": 2.5,
-    "availability": "extremely-rare",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 0,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Special:</b> Razor Sharp, Reliable</p><p><b>Note:</b> Considered the Standard Armament amongst Eldar Craftworlds for those not dedicated entirely to war. Still exceptionally lethal.</p>"
-    },
-    "modifications": [],
-    "notes": "Considered the Standard Armament amongst Eldar Craftworlds for those not dedicated entirely to war. Still exceptionally lethal.",
-    "source": "DH2: Enemies Without",
-    "requiredTraining": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "jF2nzOWPnefDII6N"
+    "effects": [],
+    "flags": {},
+    "_id": "jF2nzOWPnefDII6N"
 }

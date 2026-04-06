@@ -1,63 +1,60 @@
 {
-  "name": "Integrated Weapons Expertise",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "identifier": "integratedWeaponsExpertise",
-    "category": "combat",
-    "source": "OW: Shield of Humanity",
-    "description": "<p>When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.</p>",
-    "tier": 2,
-    "benefit": "<p>When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.</p>",
-    "aptitudes": [
-      "Ballistic Skill",
-      "Defence"
-    ],
-    "prerequisites": {
-      "text": "BS 40, Implanted Potentia Coil or Mechanicus Implants.",
-      "characteristics": {
-        "ballisticSkill": 40
-      },
-      "skills": [],
-      "talents": []
-    },
-    "cost": 600,
-    "isPassive": true,
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Overcharge Shot",
-          "description": "<p>When you succeed on BS test with Integrated Weapon, gain 1 Fatigue to score +2 additional Degrees of Success.</p>"
+    "name": "Integrated Weapons Expertise",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "identifier": "integratedWeaponsExpertise",
+        "category": "combat",
+        "source": "OW: Shield of Humanity",
+        "description": "<p>When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.</p>",
+        "tier": 2,
+        "benefit": "<p>When Character succeeds on a Ballistic Skill Test with an Integrated Weapon, they can choose to gain 1 Fatigue, in so doing they score an additional Two Degrees of Success on that test.</p>",
+        "aptitudes": ["Ballistic Skill", "Defence"],
+        "prerequisites": {
+            "text": "BS 40, Implanted Potentia Coil or Mechanicus Implants.",
+            "characteristics": {
+                "ballisticSkill": 40
+            },
+            "skills": [],
+            "talents": []
+        },
+        "cost": 600,
+        "isPassive": true,
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Overcharge Shot",
+                    "description": "<p>When you succeed on BS test with Integrated Weapon, gain 1 Fatigue to score +2 additional Degrees of Success.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "qKJi4sqYTOnN8cMT"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "qKJi4sqYTOnN8cMT"
 }

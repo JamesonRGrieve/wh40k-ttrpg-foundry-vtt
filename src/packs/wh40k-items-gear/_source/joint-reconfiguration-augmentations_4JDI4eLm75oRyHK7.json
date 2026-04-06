@@ -1,41 +1,41 @@
 {
-  "name": "Joint Reconfiguration Augmentations",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "tech",
-    "weight": 2,
-    "availability": "very-rare",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 0,
-      "currency": "throne"
+    "name": "Joint Reconfiguration Augmentations",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "tech",
+        "weight": 2,
+        "availability": "very-rare",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Allows joints to rotate 360 Degrees, gives +20 to Contortionist Tests, +5 to Dodge Tests, and reduces time for Squeeze Through Special Action of Contortionist Skill by Half. When gaining however, permenantly reduces Strength and Toughness by 1d5. </p>\n<h3>Requirements</h3><p>Some more ignorant individuals may mistake it as a mutation due to little obvious mechanical influence.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+            "chat": "",
+            "summary": "Allows joints to rotate 360 Degrees, gives +20 to Contortionist Tests, +5 to Dodge Tests, and reduces time for Squeeze Through Special Action of Contortionist Skill by Half. When gaining however, perm"
+        },
+        "source": {
+            "book": "RT: Stars of Inquity",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Allows joints to rotate 360 Degrees, gives +20 to Contortionist Tests, +5 to Dodge Tests, and reduces time for Squeeze Through Special Action of Contortionist Skill by Half. When gaining however, permenantly reduces Strength and Toughness by 1d5. ",
+        "duration": "",
+        "notes": "-",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Allows joints to rotate 360 Degrees, gives +20 to Contortionist Tests, +5 to Dodge Tests, and reduces time for Squeeze Through Special Action of Contortionist Skill by Half. When gaining however, permenantly reduces Strength and Toughness by 1d5. </p>\n<h3>Requirements</h3><p>Some more ignorant individuals may mistake it as a mutation due to little obvious mechanical influence.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
-      "chat": "",
-      "summary": "Allows joints to rotate 360 Degrees, gives +20 to Contortionist Tests, +5 to Dodge Tests, and reduces time for Squeeze Through Special Action of Contortionist Skill by Half. When gaining however, perm"
-    },
-    "source": {
-      "book": "RT: Stars of Inquity",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Allows joints to rotate 360 Degrees, gives +20 to Contortionist Tests, +5 to Dodge Tests, and reduces time for Squeeze Through Special Action of Contortionist Skill by Half. When gaining however, permenantly reduces Strength and Toughness by 1d5. ",
-    "duration": "",
-    "notes": "-",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "4JDI4eLm75oRyHK7"
+    "effects": [],
+    "flags": {},
+    "_id": "4JDI4eLm75oRyHK7"
 }

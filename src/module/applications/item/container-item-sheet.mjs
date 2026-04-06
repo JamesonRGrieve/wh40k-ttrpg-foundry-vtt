@@ -3,8 +3,8 @@
  * Handles weapons with mods, armour with upgrades, etc.
  */
 
-import BaseItemSheet from "./base-item-sheet.mjs";
-import ConfirmationDialog from "../dialogs/confirmation-dialog.mjs";
+import BaseItemSheet from './base-item-sheet.mjs';
+import ConfirmationDialog from '../dialogs/confirmation-dialog.mjs';
 
 /**
  * Item sheet for container-type items (weapons, armour, gear, etc.)
@@ -18,8 +18,8 @@ export default class ContainerItemSheet extends BaseItemSheet {
             nestedItemCreate: ContainerItemSheet.#nestedItemCreate,
             nestedItemEdit: ContainerItemSheet.#nestedItemEdit,
             nestedItemDelete: ContainerItemSheet.#nestedItemDelete,
-            nestedItemRoll: ContainerItemSheet.#nestedItemRoll
-        }
+            nestedItemRoll: ContainerItemSheet.#nestedItemRoll,
+        },
     };
 
     /* -------------------------------------------- */
@@ -60,16 +60,16 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @protected
      */
     _setupContainerDragDrop() {
-        const form = this.element.querySelector("form") ?? this.element;
-        
-        form.addEventListener("dragover", this._onDragOver.bind(this));
-        form.addEventListener("drop", this._onDrop.bind(this));
-        form.addEventListener("dragend", this._onDragEnd.bind(this));
+        const form = this.element.querySelector('form') ?? this.element;
+
+        form.addEventListener('dragover', this._onDragOver.bind(this));
+        form.addEventListener('drop', this._onDrop.bind(this));
+        form.addEventListener('dragend', this._onDragEnd.bind(this));
 
         // Set up draggable nested items
-        this.element.querySelectorAll("[data-nested-item-id]").forEach(el => {
-            el.setAttribute("draggable", true);
-            el.addEventListener("dragstart", this._onNestedItemDragStart.bind(this));
+        this.element.querySelectorAll('[data-nested-item-id]').forEach((el) => {
+            el.setAttribute('draggable', true);
+            el.addEventListener('dragstart', this._onNestedItemDragStart.bind(this));
         });
     }
 
@@ -113,9 +113,9 @@ export default class ContainerItemSheet extends BaseItemSheet {
         let sourceActor;
 
         try {
-            data = JSON.parse(event.dataTransfer.getData("text/plain"));
-            if (data.type !== "Item") {
-                game.rt.log("ItemContainer | Containers only accept items", data);
+            data = JSON.parse(event.dataTransfer.getData('text/plain'));
+            if (data.type !== 'Item') {
+                game.rt.log('ItemContainer | Containers only accept items', data);
                 return false;
             }
 
@@ -123,17 +123,17 @@ export default class ContainerItemSheet extends BaseItemSheet {
             if (!droppedItem) return false;
 
             // Get source actor if applicable
-            if (data.uuid?.startsWith("Actor.")) {
-                sourceActor = await fromUuid(data.uuid.split(".Item.")[0]);
+            if (data.uuid?.startsWith('Actor.')) {
+                sourceActor = await fromUuid(data.uuid.split('.Item.')[0]);
             }
 
             // Check if item already exists
-            if (this.item.items?.find(i => i._id === droppedItem._id)) {
-                game.rt.log("Item already exists in container -- ignoring");
+            if (this.item.items?.find((i) => i._id === droppedItem._id)) {
+                game.rt.log('Item already exists in container -- ignoring');
                 return false;
             }
         } catch (err) {
-            game.rt.log("ItemContainer | drop error", err);
+            game.rt.log('ItemContainer | drop error', err);
             return false;
         }
 
@@ -144,7 +144,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
         // Prevent dropping item onto itself or ancestors
         if (!this._validateDropTarget(droppedItem)) {
-            ui.notifications.info("Cannot drop item into itself");
+            ui.notifications.info('Cannot drop item into itself');
             return false;
         }
 
@@ -152,8 +152,8 @@ export default class ContainerItemSheet extends BaseItemSheet {
         await this.item.createNestedDocuments([droppedItem]);
 
         // Remove from source actor if applicable
-        if (sourceActor && ["acolyte", "character"].includes(sourceActor.type)) {
-            await sourceActor.deleteEmbeddedDocuments("Item", [droppedItem._id]);
+        if (sourceActor && ['acolyte', 'character'].includes(sourceActor.type)) {
+            await sourceActor.deleteEmbeddedDocuments('Item', [droppedItem._id]);
         }
 
         return false;
@@ -215,10 +215,10 @@ export default class ContainerItemSheet extends BaseItemSheet {
         // Create drag data
         const dragData = {
             parentId: this.item.id,
-            type: "Item",
-            data: nestedItem
+            type: 'Item',
+            data: nestedItem,
         };
-        event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+        event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
 
         // Remove from container
         await this.item.deleteNestedDocuments([itemId]);
@@ -233,10 +233,10 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #nestedItemCreate(event, target) {
-        const itemType = target.dataset.type ?? "gear";
+        const itemType = target.dataset.type ?? 'gear';
         const data = {
             name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
-            type: itemType
+            type: itemType,
         };
         await this.item.createNestedDocuments([data]);
     }
@@ -250,7 +250,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #nestedItemEdit(event, target) {
-        const itemId = target.closest("[data-nested-item-id]")?.dataset.nestedItemId;
+        const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
         const nestedItem = this.item.items?.get(itemId);
         nestedItem?.sheet.render(true);
     }
@@ -264,14 +264,14 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #nestedItemDelete(event, target) {
-        const itemId = target.closest("[data-nested-item-id]")?.dataset.nestedItemId;
+        const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
         if (!itemId) return;
 
         const confirmed = await ConfirmationDialog.confirm({
-            title: "Confirm Delete",
-            content: "Are you sure you would like to delete this?",
-            confirmLabel: "Delete",
-            cancelLabel: "Cancel"
+            title: 'Confirm Delete',
+            content: 'Are you sure you would like to delete this?',
+            confirmLabel: 'Delete',
+            cancelLabel: 'Cancel',
         });
 
         if (confirmed) {

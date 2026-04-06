@@ -2,7 +2,7 @@
  * @file WeaponAttackDialog - V2 dialog for weapon attack configuration
  */
 
-import BaseRollDialog from "./base-roll-dialog.mjs";
+import BaseRollDialog from './base-roll-dialog.mjs';
 
 /**
  * Dialog for configuring weapon attacks.
@@ -21,13 +21,13 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["weapon-attack"],
+        classes: ['weapon-attack'],
         actions: {
-            selectWeapon: WeaponAttackDialog.#onSelectWeapon
+            selectWeapon: WeaponAttackDialog.#onSelectWeapon,
         },
         window: {
-            title: "Weapon Attack"
-        }
+            title: 'Weapon Attack',
+        },
     };
 
     /* -------------------------------------------- */
@@ -35,9 +35,9 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/wh40k-rpg/templates/prompt/weapon-roll-prompt.hbs",
-            scrollable: [""]
-        }
+            template: 'systems/wh40k-rpg/templates/prompt/weapon-roll-prompt.hbs',
+            scrollable: [''],
+        },
     };
 
     /* -------------------------------------------- */
@@ -59,21 +59,20 @@ export default class WeaponAttackDialog extends BaseRollDialog {
         await super._onRender(context, options);
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (event) => {
-                    event.target.select();
-                });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (event) => {
+                event.target.select();
             });
+        });
 
         // Set up weapon selection listeners
-        this.element.querySelectorAll(".weapon-select").forEach(el => {
-            el.addEventListener("change", this._onWeaponSelectChange.bind(this));
+        this.element.querySelectorAll('.weapon-select').forEach((el) => {
+            el.addEventListener('change', this._onWeaponSelectChange.bind(this));
         });
 
         // Set up button listeners
-        this.element.querySelector("#attack-roll")?.addEventListener("click", this._onAttackRoll.bind(this));
-        this.element.querySelector("#attack-cancel")?.addEventListener("click", this._onAttackCancel.bind(this));
+        this.element.querySelector('#attack-roll')?.addEventListener('click', this._onAttackRoll.bind(this));
+        this.element.querySelector('#attack-cancel')?.addEventListener('click', this._onAttackCancel.bind(this));
     }
 
     /* -------------------------------------------- */
@@ -136,7 +135,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /** @override */
     _validateRoll() {
         if (this.rollData.fireRate === 0) {
-            ui.notifications.warn("Not enough ammo to perform action. Do you need to reload?");
+            ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
             return false;
         }
         return true;

@@ -1,62 +1,59 @@
 {
-  "name": "Iron Faith",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "general",
-    "source": "DH 2E: Enemies Beyond",
-    "description": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>",
-    "tier": 3,
-    "isPassive": true,
-    "isRollable": false,
-    "benefit": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>",
-    "aptitudes": [
-      "Defence",
-      "Willpower"
-    ],
-    "prerequisites": {
-      "text": "Tier 3: Iron Resolve",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
+    "name": "Iron Faith",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "general",
+        "source": "DH 2E: Enemies Beyond",
+        "description": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>",
+        "tier": 3,
+        "isPassive": true,
+        "isRollable": false,
+        "benefit": "<p>Character is immune to the effects of the Baneful Presence Trait.</p>",
+        "aptitudes": ["Defence", "Willpower"],
+        "prerequisites": {
+            "text": "Tier 3: Iron Resolve",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 900,
+        "identifier": "ironFaith",
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": []
+        }
     },
-    "cost": 900,
-    "identifier": "ironFaith",
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": []
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "YzBnkUEUl8A6l1w8"
+    "effects": [],
+    "flags": {},
+    "_id": "YzBnkUEUl8A6l1w8"
 }

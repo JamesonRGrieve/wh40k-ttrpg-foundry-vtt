@@ -5,164 +5,162 @@
 // ============================================================================
 
 .wh40k-condition-sheet {
-  .wh40k-item-sheet__header {
-    position: relative;
-    background: linear-gradient(135deg, 
-                rgba(138, 122, 106, 0.1) 0%, 
-                rgba(138, 122, 106, 0.05) 100%);
-  }
-  
-  .wh40k-nature-icon {
-    position: absolute;
-    bottom: 4px;
-    right: 4px;
-    font-size: 20px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  }
-  
-  .wh40k-condition-badges {
-    display: flex;
-    gap: $wh40k-space-sm;
-    margin-top: $wh40k-space-sm;
-    flex-wrap: wrap;
-  }
-  
-  .wh40k-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    
-    // Nature badges
-    &--nature-beneficial {
-      background: rgba(#2ecc71, 0.2);
-      color: darken(#2ecc71, 20%);
-      border: 1px solid rgba(#2ecc71, 0.3);
+    .wh40k-item-sheet__header {
+        position: relative;
+        background: linear-gradient(135deg, rgba(138, 122, 106, 0.1) 0%, rgba(138, 122, 106, 0.05) 100%);
     }
-    
-    &--nature-harmful {
-      background: rgba(#e74c3c, 0.2);
-      color: darken(#e74c3c, 15%);
-      border: 1px solid rgba(#e74c3c, 0.3);
+
+    .wh40k-nature-icon {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        font-size: 20px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
-    
-    &--nature-neutral {
-      background: rgba(#95a5a6, 0.2);
-      color: darken(#95a5a6, 20%);
-      border: 1px solid rgba(#95a5a6, 0.3);
+
+    .wh40k-condition-badges {
+        display: flex;
+        gap: $wh40k-space-sm;
+        margin-top: $wh40k-space-sm;
+        flex-wrap: wrap;
     }
-    
-    // AppliesTo badges
-    &--applies-self {
-      background: rgba(#3498db, 0.2);
-      color: darken(#3498db, 15%);
-      border: 1px solid rgba(#3498db, 0.3);
+
+    .wh40k-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        // Nature badges
+        &--nature-beneficial {
+            background: rgba(#2ecc71, 0.2);
+            color: darken(#2ecc71, 20%);
+            border: 1px solid rgba(#2ecc71, 0.3);
+        }
+
+        &--nature-harmful {
+            background: rgba(#e74c3c, 0.2);
+            color: darken(#e74c3c, 15%);
+            border: 1px solid rgba(#e74c3c, 0.3);
+        }
+
+        &--nature-neutral {
+            background: rgba(#95a5a6, 0.2);
+            color: darken(#95a5a6, 20%);
+            border: 1px solid rgba(#95a5a6, 0.3);
+        }
+
+        // AppliesTo badges
+        &--applies-self {
+            background: rgba(#3498db, 0.2);
+            color: darken(#3498db, 15%);
+            border: 1px solid rgba(#3498db, 0.3);
+        }
+
+        &--applies-target {
+            background: rgba(#e74c3c, 0.2);
+            color: darken(#e74c3c, 15%);
+            border: 1px solid rgba(#e74c3c, 0.3);
+        }
+
+        &--applies-both {
+            background: rgba(#9b59b6, 0.2);
+            color: darken(#9b59b6, 15%);
+            border: 1px solid rgba(#9b59b6, 0.3);
+        }
+
+        &--applies-area {
+            background: rgba(#f39c12, 0.2);
+            color: darken(#f39c12, 20%);
+            border: 1px solid rgba(#f39c12, 0.3);
+        }
+
+        // Stacks badge
+        &--stacks {
+            background: rgba(#34495e, 0.2);
+            color: darken(#34495e, 10%);
+            border: 1px solid rgba(#34495e, 0.3);
+            font-weight: 700;
+        }
+
+        // Duration badge
+        &--duration {
+            background: rgba(#16a085, 0.2);
+            color: darken(#16a085, 15%);
+            border: 1px solid rgba(#16a085, 0.3);
+        }
     }
-    
-    &--applies-target {
-      background: rgba(#e74c3c, 0.2);
-      color: darken(#e74c3c, 15%);
-      border: 1px solid rgba(#e74c3c, 0.3);
+
+    .wh40k-condition-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $wh40k-space-md;
+
+        .wh40k-field--checkbox {
+            grid-column: 1 / -1;
+        }
     }
-    
-    &--applies-both {
-      background: rgba(#9b59b6, 0.2);
-      color: darken(#9b59b6, 15%);
-      border: 1px solid rgba(#9b59b6, 0.3);
+
+    .wh40k-field {
+        display: flex;
+        flex-direction: column;
+        gap: $wh40k-space-xs;
+
+        &__label {
+            display: flex;
+            align-items: center;
+            gap: $wh40k-space-xs;
+            font-size: 12px;
+            font-weight: 600;
+            color: #5a5a5a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            i {
+                color: #8a7a6a;
+            }
+        }
+
+        &__select,
+        &__input {
+            padding: 6px 10px;
+            border: 1px solid #d4c5a6;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+            background: white;
+            transition: border-color 0.2s ease;
+
+            &:focus {
+                outline: none;
+                border-color: $wh40k-accent-gold;
+                box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
+            }
+        }
+
+        &__textarea {
+            padding: 8px 10px;
+            border: 1px solid #d4c5a6;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+            background: white;
+            resize: vertical;
+            min-height: 60px;
+            transition: border-color 0.2s ease;
+
+            &:focus {
+                outline: none;
+                border-color: $wh40k-accent-gold;
+                box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
+            }
+        }
     }
-    
-    &--applies-area {
-      background: rgba(#f39c12, 0.2);
-      color: darken(#f39c12, 20%);
-      border: 1px solid rgba(#f39c12, 0.3);
-    }
-    
-    // Stacks badge
-    &--stacks {
-      background: rgba(#34495e, 0.2);
-      color: darken(#34495e, 10%);
-      border: 1px solid rgba(#34495e, 0.3);
-      font-weight: 700;
-    }
-    
-    // Duration badge
-    &--duration {
-      background: rgba(#16a085, 0.2);
-      color: darken(#16a085, 15%);
-      border: 1px solid rgba(#16a085, 0.3);
-    }
-  }
-  
-  .wh40k-condition-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
-    
-    .wh40k-field--checkbox {
-      grid-column: 1 / -1;
-    }
-  }
-  
-  .wh40k-field {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-xs;
-    
-    &__label {
-      display: flex;
-      align-items: center;
-      gap: $wh40k-space-xs;
-      font-size: 12px;
-      font-weight: 600;
-      color: #5a5a5a;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      
-      i {
-        color: #8a7a6a;
-      }
-    }
-    
-    &__select,
-    &__input {
-      padding: 6px 10px;
-      border: 1px solid #d4c5a6;
-      border-radius: 4px;
-      font-family: inherit;
-      font-size: 13px;
-      background: white;
-      transition: border-color 0.2s ease;
-      
-      &:focus {
-        outline: none;
-        border-color: $wh40k-accent-gold;
-        box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
-      }
-    }
-    
-    &__textarea {
-      padding: 8px 10px;
-      border: 1px solid #d4c5a6;
-      border-radius: 4px;
-      font-family: inherit;
-      font-size: 13px;
-      background: white;
-      resize: vertical;
-      min-height: 60px;
-      transition: border-color 0.2s ease;
-      
-      &:focus {
-        outline: none;
-        border-color: $wh40k-accent-gold;
-        box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
-      }
-    }
-  }
 }
 
 // ============================================================================
@@ -170,195 +168,189 @@
 // ============================================================================
 
 .wh40k-condition-card {
-  font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  margin: 8px 0;
-  
-  // Nature-based header themes
-  &--beneficial {
+    font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    margin: 8px 0;
+
+    // Nature-based header themes
+    &--beneficial {
+        .wh40k-card-header {
+            background: linear-gradient(135deg, rgba(#2ecc71, 0.9) 0%, rgba(#27ae60, 0.95) 100%);
+            color: white;
+        }
+    }
+
+    &--harmful {
+        .wh40k-card-header {
+            background: linear-gradient(135deg, rgba(#e74c3c, 0.9) 0%, rgba(#c0392b, 0.95) 100%);
+            color: white;
+        }
+    }
+
+    &--neutral {
+        .wh40k-card-header {
+            background: linear-gradient(135deg, rgba(#95a5a6, 0.9) 0%, rgba(#7f8c8d, 0.95) 100%);
+            color: white;
+        }
+    }
+
     .wh40k-card-header {
-      background: linear-gradient(135deg, 
-                  rgba(#2ecc71, 0.9) 0%, 
-                  rgba(#27ae60, 0.95) 100%);
-      color: white;
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-md;
+        padding: $wh40k-space-md;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     }
-  }
-  
-  &--harmful {
-    .wh40k-card-header {
-      background: linear-gradient(135deg, 
-                  rgba(#e74c3c, 0.9) 0%, 
-                  rgba(#c0392b, 0.95) 100%);
-      color: white;
+
+    .wh40k-card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        object-fit: cover;
     }
-  }
-  
-  &--neutral {
-    .wh40k-card-header {
-      background: linear-gradient(135deg, 
-                  rgba(#95a5a6, 0.9) 0%, 
-                  rgba(#7f8c8d, 0.95) 100%);
-      color: white;
+
+    .wh40k-card-title-area {
+        flex: 1;
     }
-  }
-  
-  .wh40k-card-header {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-  }
-  
-  .wh40k-card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    object-fit: cover;
-  }
-  
-  .wh40k-card-title-area {
-    flex: 1;
-  }
-  
-  .wh40k-card-title {
-    margin: 0 0 4px 0;
-    font-size: 18px;
-    font-weight: 700;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-  
-  .wh40k-card-subtitle {
-    font-size: 12px;
-    opacity: 0.9;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .wh40k-card-badges {
-    display: flex;
-    gap: $wh40k-space-xs;
-    margin-top: $wh40k-space-xs;
-    flex-wrap: wrap;
-    
-    .wh40k-badge {
-      background: rgba(255, 255, 255, 0.25);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      font-size: 10px;
-      padding: 2px 6px;
+
+    .wh40k-card-title {
+        margin: 0 0 4px 0;
+        font-size: 18px;
+        font-weight: 700;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
-  }
-  
-  .wh40k-card-body {
-    padding: $wh40k-space-md;
-    background: #f4f1e8;
-  }
-  
-  .wh40k-condition-meta {
-    display: flex;
-    gap: $wh40k-space-md;
-    margin-bottom: $wh40k-space-md;
-    padding-bottom: $wh40k-space-sm;
-    border-bottom: 1px solid #d4c5a6;
-  }
-  
-  .wh40k-meta-item {
-    display: inline-flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    font-size: 12px;
-    font-weight: 600;
-    color: #5a5a5a;
-    
-    i {
-      color: $wh40k-accent-gold;
+
+    .wh40k-card-subtitle {
+        font-size: 12px;
+        opacity: 0.9;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
-    
-    &--applies {
-      color: #3498db;
-      
-      i {
-        color: #3498db;
-      }
+
+    .wh40k-card-badges {
+        display: flex;
+        gap: $wh40k-space-xs;
+        margin-top: $wh40k-space-xs;
+        flex-wrap: wrap;
+
+        .wh40k-badge {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            padding: 2px 6px;
+        }
     }
-    
-    &--duration {
-      color: #16a085;
-      
-      i {
-        color: #16a085;
-      }
+
+    .wh40k-card-body {
+        padding: $wh40k-space-md;
+        background: #f4f1e8;
     }
-  }
-  
-  .wh40k-condition-effect,
-  .wh40k-condition-removal {
-    margin-bottom: $wh40k-space-md;
-    
-    h4 {
-      margin: 0 0 $wh40k-space-xs 0;
-      font-size: 13px;
-      font-weight: 700;
-      color: #2c2417;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+
+    .wh40k-condition-meta {
+        display: flex;
+        gap: $wh40k-space-md;
+        margin-bottom: $wh40k-space-md;
+        padding-bottom: $wh40k-space-sm;
+        border-bottom: 1px solid #d4c5a6;
     }
-    
-    p {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #3a3a3a;
+
+    .wh40k-meta-item {
+        display: inline-flex;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        font-size: 12px;
+        font-weight: 600;
+        color: #5a5a5a;
+
+        i {
+            color: $wh40k-accent-gold;
+        }
+
+        &--applies {
+            color: #3498db;
+
+            i {
+                color: #3498db;
+            }
+        }
+
+        &--duration {
+            color: #16a085;
+
+            i {
+                color: #16a085;
+            }
+        }
     }
-  }
-  
-  .wh40k-condition-effect {
-    background: rgba($wh40k-accent-gold, 0.08);
-    padding: $wh40k-space-sm $wh40k-space-md;
-    border-left: 3px solid $wh40k-accent-gold;
-    border-radius: 4px;
-  }
-  
-  .wh40k-condition-removal {
-    background: rgba(#3498db, 0.05);
-    padding: $wh40k-space-sm $wh40k-space-md;
-    border-left: 3px solid #3498db;
-    border-radius: 4px;
-  }
-  
-  .wh40k-condition-notes {
-    margin-top: $wh40k-space-md;
-    padding: $wh40k-space-sm $wh40k-space-md;
-    background: rgba(#95a5a6, 0.1);
-    border-radius: 4px;
-    font-size: 12px;
-    font-style: italic;
-    color: #5a5a5a;
-  }
-  
-  .wh40k-card-footer {
-    padding: $wh40k-space-sm $wh40k-space-md;
-    background: rgba(#2c2417, 0.05);
-    border-top: 1px solid #d4c5a6;
-  }
-  
-  .wh40k-source-ref {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    font-size: 11px;
-    color: #7a7a7a;
-    
-    i {
-      color: $wh40k-accent-gold;
+
+    .wh40k-condition-effect,
+    .wh40k-condition-removal {
+        margin-bottom: $wh40k-space-md;
+
+        h4 {
+            margin: 0 0 $wh40k-space-xs 0;
+            font-size: 13px;
+            font-weight: 700;
+            color: #2c2417;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #3a3a3a;
+        }
     }
-  }
+
+    .wh40k-condition-effect {
+        background: rgba($wh40k-accent-gold, 0.08);
+        padding: $wh40k-space-sm $wh40k-space-md;
+        border-left: 3px solid $wh40k-accent-gold;
+        border-radius: 4px;
+    }
+
+    .wh40k-condition-removal {
+        background: rgba(#3498db, 0.05);
+        padding: $wh40k-space-sm $wh40k-space-md;
+        border-left: 3px solid #3498db;
+        border-radius: 4px;
+    }
+
+    .wh40k-condition-notes {
+        margin-top: $wh40k-space-md;
+        padding: $wh40k-space-sm $wh40k-space-md;
+        background: rgba(#95a5a6, 0.1);
+        border-radius: 4px;
+        font-size: 12px;
+        font-style: italic;
+        color: #5a5a5a;
+    }
+
+    .wh40k-card-footer {
+        padding: $wh40k-space-sm $wh40k-space-md;
+        background: rgba(#2c2417, 0.05);
+        border-top: 1px solid #d4c5a6;
+    }
+
+    .wh40k-source-ref {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        font-size: 11px;
+        color: #7a7a7a;
+
+        i {
+            color: $wh40k-accent-gold;
+        }
+    }
 }
 
 // ============================================================================
@@ -366,12 +358,13 @@
 // ============================================================================
 
 @keyframes pulse-harmful {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.9;
-  }
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
 }

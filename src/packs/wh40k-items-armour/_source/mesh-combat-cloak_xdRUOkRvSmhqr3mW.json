@@ -1,37 +1,31 @@
 {
-  "name": "Mesh Combat Cloak",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "mesh",
-    "weight": 3,
-    "availability": "very-rare",
-    "notes": "Fabric-Like Material that hardens under stress, Easy to hide under clothes",
-    "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
+    "name": "Mesh Combat Cloak",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "mesh",
+        "weight": 3,
+        "availability": "very-rare",
+        "notes": "Fabric-Like Material that hardens under stress, Easy to hide under clothes",
+        "source": "Rogue Trader Core",
+        "description": {
+            "value": "<p>Fabric-Like Material that hardens under stress, Easy to hide under clothes</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["leftArm", "rightArm", "body", "leftLeg", "rightLeg"],
+        "armourPoints": {
+            "head": 4,
+            "body": 4,
+            "leftArm": 4,
+            "rightArm": 4,
+            "leftLeg": 4,
+            "rightLeg": 4
+        },
+        "modifications": [],
+        "maxAgility": 60,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "leftArm",
-      "rightArm",
-      "body",
-      "leftLeg",
-      "rightLeg"
-    ],
-    "armourPoints": {
-      "head": 4,
-      "body": 4,
-      "leftArm": 4,
-      "rightArm": 4,
-      "leftLeg": 4,
-      "rightLeg": 4
-    },
-    "modifications": [],
-    "maxAgility": 60,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "xdRUOkRvSmhqr3mW"
+    "effects": [],
+    "flags": {},
+    "_id": "xdRUOkRvSmhqr3mW"
 }

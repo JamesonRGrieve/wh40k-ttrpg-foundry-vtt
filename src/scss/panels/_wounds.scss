@@ -4,629 +4,636 @@
 // Complete overhaul with pip system, interactive controls, and visual feedback
 
 .wh40k-wounds-panel-v2 {
-  // Base panel styling inherits from rt-panel
+    // Base panel styling inherits from rt-panel
 
-  // ============================================
-  // Main Display Area
-  // ============================================
+    // ============================================
+    // Main Display Area
+    // ============================================
 
-  .wh40k-wounds-display {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-sm;
-  }
-
-  .wh40k-wounds-tracker {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-sm 0;
-  }
-
-  // +/- Control Buttons
-  .wh40k-wounds-btn {
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--rt-btn-bg);
-    border: 2px solid var(--rt-wounds-border);
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    color: var(--rt-text-medium);
-
-    &:hover {
-      background: var(--rt-btn-bg-hover);
-      border-color: var(--rt-wounds-primary);
-      transform: scale(1.08);
-      box-shadow: 0 2px 6px var(--rt-shadow-soft);
+    .wh40k-wounds-display {
+        display: flex;
+        flex-direction: column;
+        gap: $wh40k-space-sm;
     }
 
-    &:active {
-      transform: scale(0.95);
-      box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+    .wh40k-wounds-tracker {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $wh40k-space-md;
+        padding: $wh40k-space-sm 0;
     }
 
-    i {
-      font-size: 0.85rem;
-    }
-  }
+    // +/- Control Buttons
+    .wh40k-wounds-btn {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--rt-btn-bg);
+        border: 2px solid var(--rt-wounds-border);
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        color: var(--rt-text-medium);
 
-  .wh40k-wounds-minus {
-    color: var(--rt-wounds-secondary);
-    &:hover {
-      border-color: var(--rt-wounds-secondary);
-      background: var(--rt-wounds-bg);
-    }
-  }
+        &:hover {
+            background: var(--rt-btn-bg-hover);
+            border-color: var(--rt-wounds-primary);
+            transform: scale(1.08);
+            box-shadow: 0 2px 6px var(--rt-shadow-soft);
+        }
 
-  .wh40k-wounds-plus {
-    color: var(--rt-success-primary);
-    &:hover {
-      border-color: var(--rt-success-primary);
-      background: var(--rt-success-bg);
-    }
-  }
+        &:active {
+            transform: scale(0.95);
+            box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+        }
 
-  // Current/Max Value Display
-  .wh40k-wounds-value {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    font-family: 'Modesto Condensed', serif;
-  }
-
-  .wh40k-wounds-current {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--rt-text-dark);
-    line-height: 1;
-    transition: all 0.3s ease;
-  }
-
-  .wh40k-wounds-sep {
-    font-size: 1.5rem;
-    color: var(--rt-text-subtle);
-    font-weight: 400;
-  }
-
-  .wh40k-wounds-max {
-    font-size: 1.3rem;
-    color: var(--rt-text-muted);
-    font-weight: 600;
-  }
-
-  // ============================================
-  // Progress Bar with Gradient
-  // ============================================
-
-  .wh40k-wounds-bar-container {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
-  }
-
-  .wh40k-wounds-bar {
-    flex: 1;
-    height: 12px;
-    background: var(--rt-border-accent);
-    border-radius: 6px;
-    overflow: visible;  // Changed to visible for threshold markers
-    position: relative;
-    box-shadow: inset 0 1px 3px var(--rt-shadow-soft);
-  }
-
-  // Threshold Markers
-  .wh40k-threshold-marker {
-    position: absolute;
-    top: -2px;
-    height: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    pointer-events: none;
-    z-index: 2;
-
-    .wh40k-threshold-line {
-      width: 2px;
-      height: 100%;
-      background: var(--rt-border-accent);
-      border-radius: 1px;
+        i {
+            font-size: 0.85rem;
+        }
     }
 
-    .wh40k-threshold-label {
-      position: absolute;
-      top: -18px;
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--rt-text-muted);
-      background: var(--rt-panel-bg-solid);
-      padding: 1px 3px;
-      border-radius: 2px;
-      border: 1px solid var(--rt-border-color-light);
+    .wh40k-wounds-minus {
+        color: var(--rt-wounds-secondary);
+        &:hover {
+            border-color: var(--rt-wounds-secondary);
+            background: var(--rt-wounds-bg);
+        }
     }
-  }
 
-  .wh40k-wounds-bar-fill {
-    height: 100%;
-    width: var(--wounds-percent, 100%);
-    border-radius: 6px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
-
-    // Dynamic gradient based on percentage
-    background: linear-gradient(90deg,
-      #4a8f5c 0%,     // Green (healthy)
-      #7fa65c 25%,
-      #c4871d 50%,    // Yellow (moderate)
-      #d85545 75%,
-      #b63a2b 100%    // Red (critical)
-    );
-    background-size: 400% 100%;
-    background-position: calc((100 - var(--wounds-percent, 100)) * 1%) 0%;
-
-    box-shadow: 0 0 10px rgba(182, 58, 43, 0.3);
-  }
-
-  .wh40k-wounds-percent {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--rt-text-muted);
-    min-width: 36px;
-    text-align: right;
-    font-family: 'Modesto Condensed', serif;
-  }
-
-  // ============================================
-  // Alert Messages
-  // ============================================
-
-  .wh40k-wounds-alert {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-xs $wh40k-space-sm;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    border-radius: 6px;
-    letter-spacing: 0.03em;
-    margin-top: $wh40k-space-xs;
-
-    i {
-      font-size: 1em;
+    .wh40k-wounds-plus {
+        color: var(--rt-success-primary);
+        &:hover {
+            border-color: var(--rt-success-primary);
+            background: var(--rt-success-bg);
+        }
     }
-  }
 
-  .wh40k-alert-critical {
-    background: var(--rt-wounds-bg);
-    color: var(--rt-wounds-primary);
-    border: 2px solid var(--rt-wounds-border);
-    animation: pulse-red 2s ease-in-out infinite;
-  }
-
-  .wh40k-alert-warning {
-    background: var(--rt-warning-bg);
-    color: var(--rt-warning-primary);
-    border: 2px solid rgba(196, 135, 29, 0.5);
-  }
-
-  // Red pulse animation for critical wounds
-  @keyframes pulse-red {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(182, 58, 43, 0.7);
-    }
-    50% {
-      box-shadow: 0 0 0 6px rgba(182, 58, 43, 0);
-    }
-  }
-
-  // Panel state modifiers
-  &.wh40k-wounds-critical {
-    .wh40k-panel-header {
-      background: var(--rt-wounds-bg);
-      border-bottom: 2px solid var(--rt-wounds-secondary);
+    // Current/Max Value Display
+    .wh40k-wounds-value {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        font-family: 'Modesto Condensed', serif;
     }
 
     .wh40k-wounds-current {
-      color: var(--rt-wounds-secondary);
-      animation: pulse-scale 1.5s ease-in-out infinite;
-    }
-  }
-
-  &.wh40k-wounds-warning {
-    .wh40k-panel-header {
-      background: var(--rt-warning-bg);
-    }
-  }
-
-  @keyframes pulse-scale {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.05);
-    }
-  }
-
-  // ============================================
-  // Critical Damage Pip System
-  // ============================================
-
-  .wh40k-wounds-critical-section {
-    margin-top: $wh40k-space-md;
-    padding: $wh40k-space-sm;
-    background: var(--rt-wounds-bg);
-    border: 1px solid var(--rt-wounds-border);
-    border-radius: 8px;
-  }
-
-  .wh40k-critical-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: $wh40k-space-sm;
-  }
-
-  .wh40k-critical-title {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--rt-wounds-primary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    i { font-size: 0.9em; }
-  }
-
-  .wh40k-critical-value {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--rt-wounds-secondary);
-    font-family: 'Modesto Condensed', serif;
-  }
-
-  .wh40k-critical-pips {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .wh40k-crit-pip {
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    border: 2px solid var(--rt-border-color-light);
-    border-radius: 50%;
-    background: var(--rt-btn-bg);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-
-    &:hover {
-      border-color: var(--rt-wounds-border);
-      transform: scale(1.12);
-      box-shadow: 0 2px 6px var(--rt-shadow-medium);
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--rt-text-dark);
+        line-height: 1;
+        transition: all 0.3s ease;
     }
 
-    &:active {
-      transform: scale(0.95);
+    .wh40k-wounds-sep {
+        font-size: 1.5rem;
+        color: var(--rt-text-subtle);
+        font-weight: 400;
     }
-  }
 
-  .wh40k-pip-inner {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--rt-border-accent);
-    transition: all 0.2s ease;
-  }
+    .wh40k-wounds-max {
+        font-size: 1.3rem;
+        color: var(--rt-text-muted);
+        font-weight: 600;
+    }
 
-  .wh40k-crit-pip--filled {
-    border-color: var(--rt-wounds-secondary);
-    background: var(--rt-wounds-bg);
+    // ============================================
+    // Progress Bar with Gradient
+    // ============================================
+
+    .wh40k-wounds-bar-container {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-sm;
+    }
+
+    .wh40k-wounds-bar {
+        flex: 1;
+        height: 12px;
+        background: var(--rt-border-accent);
+        border-radius: 6px;
+        overflow: visible; // Changed to visible for threshold markers
+        position: relative;
+        box-shadow: inset 0 1px 3px var(--rt-shadow-soft);
+    }
+
+    // Threshold Markers
+    .wh40k-threshold-marker {
+        position: absolute;
+        top: -2px;
+        height: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        pointer-events: none;
+        z-index: 2;
+
+        .wh40k-threshold-line {
+            width: 2px;
+            height: 100%;
+            background: var(--rt-border-accent);
+            border-radius: 1px;
+        }
+
+        .wh40k-threshold-label {
+            position: absolute;
+            top: -18px;
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--rt-text-muted);
+            background: var(--rt-panel-bg-solid);
+            padding: 1px 3px;
+            border-radius: 2px;
+            border: 1px solid var(--rt-border-color-light);
+        }
+    }
+
+    .wh40k-wounds-bar-fill {
+        height: 100%;
+        width: var(--wounds-percent, 100%);
+        border-radius: 6px;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+
+        // Dynamic gradient based on percentage
+        background: linear-gradient(
+            90deg,
+            #4a8f5c 0%,
+            // Green (healthy)
+            #7fa65c 25%,
+            #c4871d 50%,
+            // Yellow (moderate)
+            #d85545 75%,
+            #b63a2b 100% // Red (critical)
+        );
+        background-size: 400% 100%;
+        background-position: calc((100 - var(--wounds-percent, 100)) * 1%) 0%;
+
+        box-shadow: 0 0 10px rgba(182, 58, 43, 0.3);
+    }
+
+    .wh40k-wounds-percent {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--rt-text-muted);
+        min-width: 36px;
+        text-align: right;
+        font-family: 'Modesto Condensed', serif;
+    }
+
+    // ============================================
+    // Alert Messages
+    // ============================================
+
+    .wh40k-wounds-alert {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        padding: $wh40k-space-xs $wh40k-space-sm;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 6px;
+        letter-spacing: 0.03em;
+        margin-top: $wh40k-space-xs;
+
+        i {
+            font-size: 1em;
+        }
+    }
+
+    .wh40k-alert-critical {
+        background: var(--rt-wounds-bg);
+        color: var(--rt-wounds-primary);
+        border: 2px solid var(--rt-wounds-border);
+        animation: pulse-red 2s ease-in-out infinite;
+    }
+
+    .wh40k-alert-warning {
+        background: var(--rt-warning-bg);
+        color: var(--rt-warning-primary);
+        border: 2px solid rgba(196, 135, 29, 0.5);
+    }
+
+    // Red pulse animation for critical wounds
+    @keyframes pulse-red {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(182, 58, 43, 0.7);
+        }
+        50% {
+            box-shadow: 0 0 0 6px rgba(182, 58, 43, 0);
+        }
+    }
+
+    // Panel state modifiers
+    &.wh40k-wounds-critical {
+        .wh40k-panel-header {
+            background: var(--rt-wounds-bg);
+            border-bottom: 2px solid var(--rt-wounds-secondary);
+        }
+
+        .wh40k-wounds-current {
+            color: var(--rt-wounds-secondary);
+            animation: pulse-scale 1.5s ease-in-out infinite;
+        }
+    }
+
+    &.wh40k-wounds-warning {
+        .wh40k-panel-header {
+            background: var(--rt-warning-bg);
+        }
+    }
+
+    @keyframes pulse-scale {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    // ============================================
+    // Critical Damage Pip System
+    // ============================================
+
+    .wh40k-wounds-critical-section {
+        margin-top: $wh40k-space-md;
+        padding: $wh40k-space-sm;
+        background: var(--rt-wounds-bg);
+        border: 1px solid var(--rt-wounds-border);
+        border-radius: 8px;
+    }
+
+    .wh40k-critical-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: $wh40k-space-sm;
+    }
+
+    .wh40k-critical-title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--rt-wounds-primary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        i {
+            font-size: 0.9em;
+        }
+    }
+
+    .wh40k-critical-value {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--rt-wounds-secondary);
+        font-family: 'Modesto Condensed', serif;
+    }
+
+    .wh40k-critical-pips {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .wh40k-crit-pip {
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border: 2px solid var(--rt-border-color-light);
+        border-radius: 50%;
+        background: var(--rt-btn-bg);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        &:hover {
+            border-color: var(--rt-wounds-border);
+            transform: scale(1.12);
+            box-shadow: 0 2px 6px var(--rt-shadow-medium);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
 
     .wh40k-pip-inner {
-      background: radial-gradient(circle, #d85545, var(--rt-wounds-secondary));
-      box-shadow: 0 0 8px rgba(182, 58, 43, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.3);
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--rt-border-accent);
+        transition: all 0.2s ease;
     }
 
-    &:hover {
-      box-shadow: 0 0 12px rgba(182, 58, 43, 0.5);
-    }
-  }
+    .wh40k-crit-pip--filled {
+        border-color: var(--rt-wounds-secondary);
+        background: var(--rt-wounds-bg);
 
-  // ============================================
-  // Edit Mode Sections
-  // ============================================
+        .wh40k-pip-inner {
+            background: radial-gradient(circle, #d85545, var(--rt-wounds-secondary));
+            box-shadow: 0 0 8px rgba(182, 58, 43, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
 
-  .wh40k-wounds-edit-section {
-    padding: $wh40k-space-md;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
-    border-radius: 8px;
-    margin-bottom: $wh40k-space-sm;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  .wh40k-wounds-edit-header {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--rt-text-medium);
-    margin-bottom: $wh40k-space-sm;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    i {
-      font-size: 0.9em;
-      margin-right: 4px;
-    }
-  }
-
-  .wh40k-wounds-edit-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
-  }
-
-  .wh40k-edit-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .wh40k-edit-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--rt-text-muted);
-  }
-
-  .wh40k-edit-input {
-    width: 100%;
-    height: 40px;
-    padding: 0 $wh40k-space-sm;
-    border: 2px solid var(--rt-border-color-light);
-    border-radius: 6px;
-    background: var(--rt-input-bg);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--rt-text-dark);
-    text-align: center;
-    font-family: 'Modesto Condensed', serif;
-    transition: all 0.15s ease;
-
-    &:focus {
-      outline: none;
-      border-color: var(--rt-border-color-strong);
-      background: var(--rt-input-bg-focus);
-      box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+        &:hover {
+            box-shadow: 0 0 12px rgba(182, 58, 43, 0.5);
+        }
     }
 
-    &:hover {
-      border-color: var(--rt-border-color);
-    }
-  }
+    // ============================================
+    // Edit Mode Sections
+    // ============================================
 
-  // ============================================
-  // Critical Controls (Edit Mode)
-  // ============================================
+    .wh40k-wounds-edit-section {
+        padding: $wh40k-space-md;
+        background: var(--rt-panel-bg-translucent);
+        border: 1px solid var(--rt-border-color-light);
+        border-radius: 8px;
+        margin-bottom: $wh40k-space-sm;
 
-  .wh40k-critical-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-md;
-  }
-
-  .wh40k-critical-btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--rt-input-bg);
-    border: 2px solid var(--rt-border-color-light);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-
-    i {
-      font-size: 0.75rem;
-      color: var(--rt-text-medium);
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
-    &:hover {
-      background: var(--rt-input-bg-focus);
-      border-color: var(--rt-border-color);
-      transform: scale(1.05);
+    .wh40k-wounds-edit-header {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--rt-text-medium);
+        margin-bottom: $wh40k-space-sm;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        i {
+            font-size: 0.9em;
+            margin-right: 4px;
+        }
     }
 
-    &:active {
-      transform: scale(0.95);
-    }
-  }
-
-  .wh40k-critical-input {
-    width: 70px;
-    height: 36px;
-    padding: 0 $wh40k-space-sm;
-    border: 2px solid var(--rt-border-color-light);
-    border-radius: 6px;
-    background: var(--rt-input-bg);
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--rt-wounds-secondary);
-    text-align: center;
-    font-family: 'Modesto Condensed', serif;
-    transition: all 0.15s ease;
-
-    &:focus {
-      outline: none;
-      border-color: var(--rt-wounds-secondary);
-      background: var(--rt-input-bg-focus);
-      box-shadow: 0 0 0 3px var(--rt-wounds-bg);
-    }
-  }
-
-  // Edit mode pips with level numbers
-  .wh40k-critical-pips-edit {
-    .wh40k-pip-inner {
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: var(--rt-text-muted);
-      background: none;
-      width: auto;
-      height: auto;
+    .wh40k-wounds-edit-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $wh40k-space-md;
     }
 
-    .wh40k-crit-pip--filled .wh40k-pip-inner {
-      color: #fff;
-      background: radial-gradient(circle, #d85545, var(--rt-wounds-secondary));
-    }
-  }
-
-  // ============================================
-  // Critical Injuries List
-  // ============================================
-
-  .wh40k-add-btn-small {
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--rt-success-bg);
-    border: 1px solid rgba(74, 143, 92, 0.4);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-
-    i {
-      font-size: 0.7rem;
-      color: var(--rt-success-secondary);
+    .wh40k-edit-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
     }
 
-    &:hover {
-      background: rgba(74, 143, 92, 0.25);
-      border-color: var(--rt-success-primary);
-      transform: scale(1.05);
-    }
-  }
-
-  .wh40k-injury-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .wh40k-injury-card {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-xs $wh40k-space-sm;
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
-    border-radius: 6px;
-    transition: all 0.15s ease;
-
-    &:hover {
-      background: var(--rt-panel-bg-solid);
-      border-color: var(--rt-border-color);
-    }
-  }
-
-  .wh40k-injury-name {
-    flex: 1;
-    background: none;
-    border: none;
-    padding: 4px;
-    text-align: left;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--rt-text-medium);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: color 0.15s ease;
-
-    i {
-      font-size: 0.85em;
-      color: var(--rt-wounds-secondary);
+    .wh40k-edit-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--rt-text-muted);
     }
 
-    &:hover {
-      color: var(--rt-wounds-secondary);
-    }
-  }
+    .wh40k-edit-input {
+        width: 100%;
+        height: 40px;
+        padding: 0 $wh40k-space-sm;
+        border: 2px solid var(--rt-border-color-light);
+        border-radius: 6px;
+        background: var(--rt-input-bg);
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--rt-text-dark);
+        text-align: center;
+        font-family: 'Modesto Condensed', serif;
+        transition: all 0.15s ease;
 
-  .wh40k-injury-delete {
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--rt-wounds-bg);
-    border: 1px solid var(--rt-wounds-border);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s ease;
+        &:focus {
+            outline: none;
+            border-color: var(--rt-border-color-strong);
+            background: var(--rt-input-bg-focus);
+            box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+        }
 
-    i {
-      font-size: 0.7rem;
-      color: var(--rt-wounds-secondary);
-    }
-
-    &:hover {
-      background: rgba(182, 58, 43, 0.2);
-      border-color: var(--rt-wounds-secondary);
-      transform: scale(1.05);
-    }
-  }
-
-  .wh40k-wounds-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-md;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px dashed var(--rt-border-color-light);
-    border-radius: 6px;
-
-    i {
-      font-size: 1.8rem;
-      color: var(--rt-success-secondary);
-      opacity: 0.5;
+        &:hover {
+            border-color: var(--rt-border-color);
+        }
     }
 
-    span {
-      font-size: 0.75rem;
-      color: var(--rt-text-muted);
-      font-style: italic;
+    // ============================================
+    // Critical Controls (Edit Mode)
+    // ============================================
+
+    .wh40k-critical-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $wh40k-space-sm;
+        margin-bottom: $wh40k-space-md;
     }
-  }
+
+    .wh40k-critical-btn {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--rt-input-bg);
+        border: 2px solid var(--rt-border-color-light);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        i {
+            font-size: 0.75rem;
+            color: var(--rt-text-medium);
+        }
+
+        &:hover {
+            background: var(--rt-input-bg-focus);
+            border-color: var(--rt-border-color);
+            transform: scale(1.05);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+
+    .wh40k-critical-input {
+        width: 70px;
+        height: 36px;
+        padding: 0 $wh40k-space-sm;
+        border: 2px solid var(--rt-border-color-light);
+        border-radius: 6px;
+        background: var(--rt-input-bg);
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--rt-wounds-secondary);
+        text-align: center;
+        font-family: 'Modesto Condensed', serif;
+        transition: all 0.15s ease;
+
+        &:focus {
+            outline: none;
+            border-color: var(--rt-wounds-secondary);
+            background: var(--rt-input-bg-focus);
+            box-shadow: 0 0 0 3px var(--rt-wounds-bg);
+        }
+    }
+
+    // Edit mode pips with level numbers
+    .wh40k-critical-pips-edit {
+        .wh40k-pip-inner {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--rt-text-muted);
+            background: none;
+            width: auto;
+            height: auto;
+        }
+
+        .wh40k-crit-pip--filled .wh40k-pip-inner {
+            color: #fff;
+            background: radial-gradient(circle, #d85545, var(--rt-wounds-secondary));
+        }
+    }
+
+    // ============================================
+    // Critical Injuries List
+    // ============================================
+
+    .wh40k-add-btn-small {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--rt-success-bg);
+        border: 1px solid rgba(74, 143, 92, 0.4);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        i {
+            font-size: 0.7rem;
+            color: var(--rt-success-secondary);
+        }
+
+        &:hover {
+            background: rgba(74, 143, 92, 0.25);
+            border-color: var(--rt-success-primary);
+            transform: scale(1.05);
+        }
+    }
+
+    .wh40k-injury-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .wh40k-injury-card {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        padding: $wh40k-space-xs $wh40k-space-sm;
+        background: var(--rt-panel-bg);
+        border: 1px solid var(--rt-border-color-light);
+        border-radius: 6px;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background: var(--rt-panel-bg-solid);
+            border-color: var(--rt-border-color);
+        }
+    }
+
+    .wh40k-injury-name {
+        flex: 1;
+        background: none;
+        border: none;
+        padding: 4px;
+        text-align: left;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--rt-text-medium);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.15s ease;
+
+        i {
+            font-size: 0.85em;
+            color: var(--rt-wounds-secondary);
+        }
+
+        &:hover {
+            color: var(--rt-wounds-secondary);
+        }
+    }
+
+    .wh40k-injury-delete {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--rt-wounds-bg);
+        border: 1px solid var(--rt-wounds-border);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        i {
+            font-size: 0.7rem;
+            color: var(--rt-wounds-secondary);
+        }
+
+        &:hover {
+            background: rgba(182, 58, 43, 0.2);
+            border-color: var(--rt-wounds-secondary);
+            transform: scale(1.05);
+        }
+    }
+
+    .wh40k-wounds-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        padding: $wh40k-space-md;
+        background: var(--rt-panel-bg-translucent);
+        border: 1px dashed var(--rt-border-color-light);
+        border-radius: 6px;
+
+        i {
+            font-size: 1.8rem;
+            color: var(--rt-success-secondary);
+            opacity: 0.5;
+        }
+
+        span {
+            font-size: 0.75rem;
+            color: var(--rt-text-muted);
+            font-style: italic;
+        }
+    }
 }

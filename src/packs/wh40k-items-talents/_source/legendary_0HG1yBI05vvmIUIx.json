@@ -1,73 +1,73 @@
 {
-  "name": "Legendary",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "identifier": "legendary",
-    "category": "social",
-    "source": "RT: Into the Storm",
-    "description": {
-      "value": "<p>Your name is known on hundreds or even thousands of worlds, your reputation preceding you wherever you go such that all of any worth know your name. Many bow before you and sing tales of your exploits. Many more reach for their weapons, watch you warily, or envy the Legend you have forged. Gain Two extra Degrees of Success to successful Influence tests made using Profit Factor, and all successful Interaction Tests. In combat you have Fear(+1).</p>"
-    },
-    "tier": 1,
-    "benefit": "<p>Your name is known on hundreds or even thousands of worlds, your reputation preceding you wherever you go such that all of any worth know your name. Many bow before you and sing tales of your exploits. Many more reach for their weapons, watch you warily, or envy the Legend you have forged. Gain Two extra Degrees of Success to successful Influence tests made using Profit Factor, and all successful Interaction Tests. In combat you have Fear(+1).</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Legend of the Expanse Alternate Advance, 1000xp",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [
-          {
-            "key": "fellowship",
-            "value": 10,
-            "condition": "When reputation is relevant",
-            "icon": "fa-solid fa-trophy"
-          }
-        ],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [
-        {
-          "name": "Fear (1)",
-          "level": 1,
-          "uuid": ""
+    "name": "Legendary",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "identifier": "legendary",
+        "category": "social",
+        "source": "RT: Into the Storm",
+        "description": {
+            "value": "<p>Your name is known on hundreds or even thousands of worlds, your reputation preceding you wherever you go such that all of any worth know your name. Many bow before you and sing tales of your exploits. Many more reach for their weapons, watch you warily, or envy the Legend you have forged. Gain Two extra Degrees of Success to successful Influence tests made using Profit Factor, and all successful Interaction Tests. In combat you have Fear(+1).</p>"
+        },
+        "tier": 1,
+        "benefit": "<p>Your name is known on hundreds or even thousands of worlds, your reputation preceding you wherever you go such that all of any worth know your name. Many bow before you and sing tales of your exploits. Many more reach for their weapons, watch you warily, or envy the Legend you have forged. Gain Two extra Degrees of Success to successful Influence tests made using Profit Factor, and all successful Interaction Tests. In combat you have Fear(+1).</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Legend of the Expanse Alternate Advance, 1000xp",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [
+                    {
+                        "key": "fellowship",
+                        "value": 10,
+                        "condition": "When reputation is relevant",
+                        "icon": "fa-solid fa-trophy"
+                    }
+                ],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [
+                {
+                    "name": "Fear (1)",
+                    "level": 1,
+                    "uuid": ""
+                }
+            ],
+            "specialAbilities": [
+                {
+                    "name": "Legendary Status",
+                    "description": "<p>Your reputation precedes you. Gain +10 to Fellowship tests with those who know of your exploits.</p>"
+                }
+            ]
         }
-      ],
-      "specialAbilities": [
-        {
-          "name": "Legendary Status",
-          "description": "<p>Your reputation precedes you. Gain +10 to Fellowship tests with those who know of your exploits.</p>"
-        }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "0HG1yBI05vvmIUIx"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "0HG1yBI05vvmIUIx"
 }

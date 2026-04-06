@@ -1,28 +1,26 @@
 {
-  "name": "Extreme Heat/Cold Protection",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "Grants +10 to Toughness Tests to endure the elements, or +20 if armour is fully sealed.",
-    "availability": "very-rare",
-    "source": "RT: Stars of Inequity",
-    "description": {
-      "value": "<p>Grants +10 to Toughness Tests to endure the elements, or +20 if armour is fully sealed.</p>"
+    "name": "Extreme Heat/Cold Protection",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "Grants +10 to Toughness Tests to endure the elements, or +20 if armour is fully sealed.",
+        "availability": "very-rare",
+        "source": "RT: Stars of Inequity",
+        "description": {
+            "value": "<p>Grants +10 to Toughness Tests to endure the elements, or +20 if armour is fully sealed.</p>"
+        },
+        "modifiers": {
+            "armourPoints": 0,
+            "maxAgility": 0,
+            "weight": 1
+        },
+        "restrictions": {
+            "armourTypes": ["any"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 0,
-      "maxAgility": 0,
-      "weight": 1
-    },
-    "restrictions": {
-      "armourTypes": [
-        "any"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "gvjgBR0YkZVZ7Dyy"
+    "effects": [],
+    "flags": {},
+    "_id": "gvjgBR0YkZVZ7Dyy"
 }

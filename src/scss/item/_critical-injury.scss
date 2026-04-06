@@ -5,221 +5,219 @@
 // ============================================================================
 
 .wh40k-injury-sheet {
-  .wh40k-item-sheet__header {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
-    background: linear-gradient(135deg, 
-                rgba($wh40k-accent-red, 0.1) 0%, 
-                rgba($wh40k-accent-red, 0.05) 100%);
-    border-bottom: 2px solid rgba($wh40k-accent-red, 0.2);
-  }
-  
-  .wh40k-item-sheet__image-wrapper {
-    position: relative;
-    flex-shrink: 0;
-  }
-  
-  .wh40k-item-sheet__image {
-    width: 64px;
-    height: 64px;
-    border: 2px solid rgba($wh40k-accent-red, 0.3);
-    border-radius: 8px;
-    object-fit: cover;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    
-    &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 2px 8px rgba($wh40k-accent-red, 0.3);
-    }
-  }
-  
-  .wh40k-damage-icon {
-    position: absolute;
-    bottom: 4px;
-    right: 4px;
-    font-size: 16px;
-    color: $wh40k-accent-red;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    pointer-events: none;
-  }
-  
-  .wh40k-item-sheet__title-area {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  .wh40k-item-sheet__name-input {
-    width: 100%;
-    padding: $wh40k-space-xs $wh40k-space-sm;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: 600;
-    background: transparent;
-    color: #2c2417;
-    
-    &:focus {
-      outline: none;
-      border-color: $wh40k-accent-gold;
-      background: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
-    }
-  }
-  
-  .wh40k-item-sheet__panel {
-    padding: $wh40k-space-md;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-  
-  .wh40k-injury-badges {
-    display: flex;
-    gap: $wh40k-space-sm;
-    margin-top: $wh40k-space-sm;
-    flex-wrap: wrap;
-  }
-  
-  .wh40k-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    
-    &--severity-minor {
-      background: rgba(#2ecc71, 0.2);
-      color: darken(#2ecc71, 20%);
-      border: 1px solid rgba(#2ecc71, 0.3);
-    }
-    
-    &--severity-moderate {
-      background: rgba(#f39c12, 0.2);
-      color: darken(#f39c12, 20%);
-      border: 1px solid rgba(#f39c12, 0.3);
-    }
-    
-    &--severity-severe {
-      background: rgba(#e74c3c, 0.2);
-      color: darken(#e74c3c, 15%);
-      border: 1px solid rgba(#e74c3c, 0.3);
-    }
-    
-    &--severity-fatal {
-      background: rgba(#c0392b, 0.3);
-      color: #c0392b;
-      border: 1px solid rgba(#c0392b, 0.4);
-      animation: pulse-danger 2s ease-in-out infinite;
-    }
-    
-    &--permanent {
-      background: rgba(#9b59b6, 0.2);
-      color: darken(#9b59b6, 15%);
-      border: 1px solid rgba(#9b59b6, 0.3);
-    }
-  }
-  
-  .wh40k-injury-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
-    
-    .wh40k-field--checkbox {
-      grid-column: 1 / -1;
-    }
-  }
-  
-  .wh40k-field {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-xs;
-    
-    &__label {
-      display: flex;
-      align-items: center;
-      gap: $wh40k-space-xs;
-      font-size: 12px;
-      font-weight: 600;
-      color: #5a5a5a;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      
-      i {
-        color: $wh40k-accent-red;
-      }
-    }
-    
-    &__select,
-    &__input {
-      padding: 6px 10px;
-      border: 1px solid #d4c5a6;
-      border-radius: 4px;
-      font-size: 14px;
-      background: #fff;
-      
-      &:focus {
-        outline: none;
-        border-color: $wh40k-accent-gold;
-        box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
-      }
-    }
-    
-    &__textarea {
-      padding: 8px 10px;
-      border: 1px solid #d4c5a6;
-      border-radius: 4px;
-      font-size: 14px;
-      font-family: inherit;
-      background: #fff;
-      resize: vertical;
-      min-height: 60px;
-      
-      &:focus {
-        outline: none;
-        border-color: $wh40k-accent-gold;
-        box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
-      }
-    }
-    
-    &--checkbox {
-      label {
+    .wh40k-item-sheet__header {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
+        gap: $wh40k-space-md;
+        padding: $wh40k-space-md;
+        background: linear-gradient(135deg, rgba($wh40k-accent-red, 0.1) 0%, rgba($wh40k-accent-red, 0.05) 100%);
+        border-bottom: 2px solid rgba($wh40k-accent-red, 0.2);
+    }
+
+    .wh40k-item-sheet__image-wrapper {
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .wh40k-item-sheet__image {
+        width: 64px;
+        height: 64px;
+        border: 2px solid rgba($wh40k-accent-red, 0.3);
+        border-radius: 8px;
+        object-fit: cover;
         cursor: pointer;
-        
-        input[type="checkbox"] {
-          width: 18px;
-          height: 18px;
-          cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba($wh40k-accent-red, 0.3);
         }
-        
-        span {
-          font-size: 14px;
-          font-weight: 500;
+    }
+
+    .wh40k-damage-icon {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        font-size: 16px;
+        color: $wh40k-accent-red;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        pointer-events: none;
+    }
+
+    .wh40k-item-sheet__title-area {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .wh40k-item-sheet__name-input {
+        width: 100%;
+        padding: $wh40k-space-xs $wh40k-space-sm;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: 600;
+        background: transparent;
+        color: #2c2417;
+
+        &:focus {
+            outline: none;
+            border-color: $wh40k-accent-gold;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
         }
-      }
     }
-  }
-  
-  .wh40k-source-panel {
-    display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
-    gap: $wh40k-space-md;
-    
-    .wh40k-field__input--short {
-      max-width: 100px;
+
+    .wh40k-item-sheet__panel {
+        padding: $wh40k-space-md;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+        &:last-child {
+            border-bottom: none;
+        }
     }
-  }
+
+    .wh40k-injury-badges {
+        display: flex;
+        gap: $wh40k-space-sm;
+        margin-top: $wh40k-space-sm;
+        flex-wrap: wrap;
+    }
+
+    .wh40k-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        &--severity-minor {
+            background: rgba(#2ecc71, 0.2);
+            color: darken(#2ecc71, 20%);
+            border: 1px solid rgba(#2ecc71, 0.3);
+        }
+
+        &--severity-moderate {
+            background: rgba(#f39c12, 0.2);
+            color: darken(#f39c12, 20%);
+            border: 1px solid rgba(#f39c12, 0.3);
+        }
+
+        &--severity-severe {
+            background: rgba(#e74c3c, 0.2);
+            color: darken(#e74c3c, 15%);
+            border: 1px solid rgba(#e74c3c, 0.3);
+        }
+
+        &--severity-fatal {
+            background: rgba(#c0392b, 0.3);
+            color: #c0392b;
+            border: 1px solid rgba(#c0392b, 0.4);
+            animation: pulse-danger 2s ease-in-out infinite;
+        }
+
+        &--permanent {
+            background: rgba(#9b59b6, 0.2);
+            color: darken(#9b59b6, 15%);
+            border: 1px solid rgba(#9b59b6, 0.3);
+        }
+    }
+
+    .wh40k-injury-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $wh40k-space-md;
+
+        .wh40k-field--checkbox {
+            grid-column: 1 / -1;
+        }
+    }
+
+    .wh40k-field {
+        display: flex;
+        flex-direction: column;
+        gap: $wh40k-space-xs;
+
+        &__label {
+            display: flex;
+            align-items: center;
+            gap: $wh40k-space-xs;
+            font-size: 12px;
+            font-weight: 600;
+            color: #5a5a5a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            i {
+                color: $wh40k-accent-red;
+            }
+        }
+
+        &__select,
+        &__input {
+            padding: 6px 10px;
+            border: 1px solid #d4c5a6;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+
+            &:focus {
+                outline: none;
+                border-color: $wh40k-accent-gold;
+                box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
+            }
+        }
+
+        &__textarea {
+            padding: 8px 10px;
+            border: 1px solid #d4c5a6;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fff;
+            resize: vertical;
+            min-height: 60px;
+
+            &:focus {
+                outline: none;
+                border-color: $wh40k-accent-gold;
+                box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
+            }
+        }
+
+        &--checkbox {
+            label {
+                display: flex;
+                align-items: center;
+                gap: $wh40k-space-sm;
+                cursor: pointer;
+
+                input[type='checkbox'] {
+                    width: 18px;
+                    height: 18px;
+                    cursor: pointer;
+                }
+
+                span {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+
+    .wh40k-source-panel {
+        display: grid;
+        grid-template-columns: 2fr 1fr 2fr;
+        gap: $wh40k-space-md;
+
+        .wh40k-field__input--short {
+            max-width: 100px;
+        }
+    }
 }
 
 // ============================================================================
@@ -227,164 +225,154 @@
 // ============================================================================
 
 .wh40k-injury-card {
-  margin: 0;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  
-  .wh40k-card-header {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
-    background: linear-gradient(135deg, 
-                rgba(#e74c3c, 0.15) 0%, 
-                rgba(#e74c3c, 0.05) 100%);
-    border-bottom: 2px solid rgba(#e74c3c, 0.2);
-  }
-  
-  // Damage type specific themes
-  &--impact .wh40k-card-header {
-    background: linear-gradient(135deg, 
-                rgba(#795548, 0.2) 0%, 
-                rgba(#795548, 0.1) 100%);
-    border-bottom-color: rgba(#795548, 0.3);
-  }
-  
-  &--rending .wh40k-card-header {
-    background: linear-gradient(135deg, 
-                rgba(#e74c3c, 0.2) 0%, 
-                rgba(#e74c3c, 0.1) 100%);
-    border-bottom-color: rgba(#e74c3c, 0.3);
-  }
-  
-  &--explosive .wh40k-card-header {
-    background: linear-gradient(135deg, 
-                rgba(#f39c12, 0.2) 0%, 
-                rgba(#f39c12, 0.1) 100%);
-    border-bottom-color: rgba(#f39c12, 0.3);
-  }
-  
-  &--energy .wh40k-card-header {
-    background: linear-gradient(135deg, 
-                rgba(#3498db, 0.2) 0%, 
-                rgba(#3498db, 0.1) 100%);
-    border-bottom-color: rgba(#3498db, 0.3);
-  }
-  
-  .wh40k-card-icon {
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .wh40k-card-title-area {
-    flex: 1;
-  }
-  
-  .wh40k-card-title {
-    margin: 0 0 $wh40k-space-xs 0;
-    font-size: 16px;
-    font-weight: 700;
-    color: #2c2417;
-  }
-  
-  .wh40k-card-badges {
-    display: flex;
-    gap: $wh40k-space-xs;
-    flex-wrap: wrap;
-  }
-  
-  .wh40k-card-body {
-    padding: $wh40k-space-md;
-    background: #fff;
-  }
-  
-  .wh40k-injury-meta {
-    display: flex;
-    gap: $wh40k-space-md;
-    margin-bottom: $wh40k-space-md;
-    padding: $wh40k-space-sm;
-    background: rgba(0, 0, 0, 0.03);
-    border-radius: 4px;
-    border-left: 3px solid $wh40k-accent-red;
-    
-    .wh40k-meta-item {
-      display: flex;
-      align-items: center;
-      gap: $wh40k-space-xs;
-      font-size: 13px;
-      font-weight: 600;
-      
-      i {
-        color: $wh40k-accent-red;
-      }
+    margin: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    .wh40k-card-header {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-md;
+        padding: $wh40k-space-md;
+        background: linear-gradient(135deg, rgba(#e74c3c, 0.15) 0%, rgba(#e74c3c, 0.05) 100%);
+        border-bottom: 2px solid rgba(#e74c3c, 0.2);
     }
-  }
-  
-  .wh40k-injury-effect {
-    padding: $wh40k-space-md;
-    background: rgba(#fef5e7, 0.5);
-    border-left: 3px solid $wh40k-accent-red;
-    border-radius: 4px;
-    line-height: 1.6;
-    
-    p {
-      margin: 0 0 $wh40k-space-sm 0;
-      
-      &:last-child {
-        margin-bottom: 0;
-      }
+
+    // Damage type specific themes
+    &--impact .wh40k-card-header {
+        background: linear-gradient(135deg, rgba(#795548, 0.2) 0%, rgba(#795548, 0.1) 100%);
+        border-bottom-color: rgba(#795548, 0.3);
     }
-    
-    strong {
-      font-weight: 700;
-      color: #c0392b;
+
+    &--rending .wh40k-card-header {
+        background: linear-gradient(135deg, rgba(#e74c3c, 0.2) 0%, rgba(#e74c3c, 0.1) 100%);
+        border-bottom-color: rgba(#e74c3c, 0.3);
     }
-  }
-  
-  .wh40k-injury-notes {
-    margin-top: $wh40k-space-md;
-    padding: $wh40k-space-sm;
-    background: rgba(0, 0, 0, 0.03);
-    border-radius: 4px;
-    font-size: 13px;
-    line-height: 1.5;
-    
-    strong {
-      font-weight: 600;
-      color: #5a5a5a;
+
+    &--explosive .wh40k-card-header {
+        background: linear-gradient(135deg, rgba(#f39c12, 0.2) 0%, rgba(#f39c12, 0.1) 100%);
+        border-bottom-color: rgba(#f39c12, 0.3);
     }
-  }
-  
-  .wh40k-injury-description {
-    margin-top: $wh40k-space-md;
-    padding-top: $wh40k-space-md;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  
-  .wh40k-card-footer {
-    padding: $wh40k-space-sm $wh40k-space-md;
-    background: rgba(0, 0, 0, 0.03);
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  
-  .wh40k-source-ref {
-    display: inline-flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    font-size: 12px;
-    color: #7a7a7a;
-    
-    i {
-      color: $wh40k-accent-gold;
+
+    &--energy .wh40k-card-header {
+        background: linear-gradient(135deg, rgba(#3498db, 0.2) 0%, rgba(#3498db, 0.1) 100%);
+        border-bottom-color: rgba(#3498db, 0.3);
     }
-  }
+
+    .wh40k-card-icon {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .wh40k-card-title-area {
+        flex: 1;
+    }
+
+    .wh40k-card-title {
+        margin: 0 0 $wh40k-space-xs 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #2c2417;
+    }
+
+    .wh40k-card-badges {
+        display: flex;
+        gap: $wh40k-space-xs;
+        flex-wrap: wrap;
+    }
+
+    .wh40k-card-body {
+        padding: $wh40k-space-md;
+        background: #fff;
+    }
+
+    .wh40k-injury-meta {
+        display: flex;
+        gap: $wh40k-space-md;
+        margin-bottom: $wh40k-space-md;
+        padding: $wh40k-space-sm;
+        background: rgba(0, 0, 0, 0.03);
+        border-radius: 4px;
+        border-left: 3px solid $wh40k-accent-red;
+
+        .wh40k-meta-item {
+            display: flex;
+            align-items: center;
+            gap: $wh40k-space-xs;
+            font-size: 13px;
+            font-weight: 600;
+
+            i {
+                color: $wh40k-accent-red;
+            }
+        }
+    }
+
+    .wh40k-injury-effect {
+        padding: $wh40k-space-md;
+        background: rgba(#fef5e7, 0.5);
+        border-left: 3px solid $wh40k-accent-red;
+        border-radius: 4px;
+        line-height: 1.6;
+
+        p {
+            margin: 0 0 $wh40k-space-sm 0;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        strong {
+            font-weight: 700;
+            color: #c0392b;
+        }
+    }
+
+    .wh40k-injury-notes {
+        margin-top: $wh40k-space-md;
+        padding: $wh40k-space-sm;
+        background: rgba(0, 0, 0, 0.03);
+        border-radius: 4px;
+        font-size: 13px;
+        line-height: 1.5;
+
+        strong {
+            font-weight: 600;
+            color: #5a5a5a;
+        }
+    }
+
+    .wh40k-injury-description {
+        margin-top: $wh40k-space-md;
+        padding-top: $wh40k-space-md;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .wh40k-card-footer {
+        padding: $wh40k-space-sm $wh40k-space-md;
+        background: rgba(0, 0, 0, 0.03);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .wh40k-source-ref {
+        display: inline-flex;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        font-size: 12px;
+        color: #7a7a7a;
+
+        i {
+            color: $wh40k-accent-gold;
+        }
+    }
 }
 
 // ============================================================================
@@ -392,10 +380,11 @@
 // ============================================================================
 
 @keyframes pulse-danger {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(#c0392b, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 8px 2px rgba(#c0392b, 0.3);
-  }
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(#c0392b, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 8px 2px rgba(#c0392b, 0.3);
+    }
 }

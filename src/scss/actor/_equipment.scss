@@ -2,7 +2,7 @@
 // EQUIPMENT TAB STYLES
 // ============================================
 
-.wh40k-tab[data-tab="equipment"] {
+.wh40k-tab[data-tab='equipment'] {
     .wh40k-panel {
         background: linear-gradient(135deg, rgba(47, 79, 79, 0.18), rgba(28, 54, 54, 0.12));
         border-top-color: rgba(47, 79, 79, 0.5);
@@ -12,16 +12,16 @@
     .table-row--head {
         background: rgba(47, 79, 79, 0.1);
     }
-    
+
     .table-row {
         transition: background-color 0.2s ease;
         border-bottom: 1px solid rgba(47, 79, 79, 0.1);
-        
+
         &:hover {
             background: rgba(47, 79, 79, 0.05);
         }
     }
-    
+
     .wh40k-armourtable--border,
     .wh40k-geartable--border {
         .table-cell--description {
@@ -35,7 +35,7 @@
 // DYNASTY TAB STYLES
 // ============================================
 
-.wh40k-tab[data-tab="dynasty"] {
+.wh40k-tab[data-tab='dynasty'] {
     .wh40k-panel {
         background: linear-gradient(135deg, rgba(218, 165, 32, 0.18), rgba(150, 110, 20, 0.12));
         border-top-color: rgba(218, 165, 32, 0.5);
@@ -49,20 +49,20 @@
         border-radius: 6px;
         border: 1px solid rgba(218, 165, 32, 0.15);
     }
-    
+
     .wh40k-field__header {
         font-weight: 600;
-        color: #8B6914;
+        color: #8b6914;
         text-transform: uppercase;
         font-size: 0.85em;
         letter-spacing: 0.05em;
     }
-    
+
     .wh40k-profit-current {
         font-size: 1.4em;
-        color: #8B6914;
+        color: #8b6914;
     }
-    
+
     .table-row--head {
         background: rgba(218, 165, 32, 0.12);
     }
@@ -72,7 +72,7 @@
 // BIOGRAPHY TAB STYLES
 // ============================================
 
-.wh40k-tab[data-tab="bio"] {
+.wh40k-tab[data-tab='bio'] {
     .wh40k-panel {
         background: linear-gradient(135deg, rgba(74, 55, 40, 0.18), rgba(50, 35, 28, 0.12));
         border-top-color: rgba(74, 55, 40, 0.5);
@@ -88,7 +88,7 @@
         border: 1px solid rgba(74, 55, 40, 0.1);
         margin: 2px;
     }
-    
+
     .wh40k-header__title {
         font-weight: 600;
         color: #4a3728;
@@ -96,27 +96,27 @@
         font-size: 0.8em;
         letter-spacing: 0.05em;
     }
-    
+
     .wh40k-header__input,
     .wh40k-header__textarea {
         border: 1px solid rgba(74, 55, 40, 0.2);
         border-radius: 4px;
         padding: 6px 8px;
         background: rgba(255, 255, 255, 0.7);
-        
+
         &:focus {
             outline: none;
             border-color: rgba(74, 55, 40, 0.4);
         }
     }
-    
+
     .table-row--head {
         background: rgba(74, 55, 40, 0.1);
     }
-    
+
     .table-row {
         transition: background-color 0.2s ease;
-        
+
         &:hover {
             background: rgba(74, 55, 40, 0.05);
             box-shadow: inset 0 0 0 1px rgba(74, 55, 40, 0.18);

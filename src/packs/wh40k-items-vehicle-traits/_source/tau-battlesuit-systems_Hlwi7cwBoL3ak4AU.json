@@ -1,24 +1,24 @@
 {
-  "name": "Tau Battlesuit Systems",
-  "type": "vehicleTrait",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "descriptionText": "",
-    "description": {
-      "value": ""
+    "name": "Tau Battlesuit Systems",
+    "type": "vehicleTrait",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "descriptionText": "",
+        "description": {
+            "value": ""
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "armour": 0,
+            "integrity": 0
+        },
+        "identifier": "",
+        "hasLevel": false,
+        "level": null,
+        "notes": ""
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "armour": 0,
-      "integrity": 0
-    },
-    "identifier": "",
-    "hasLevel": false,
-    "level": null,
-    "notes": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "Hlwi7cwBoL3ak4AU"
+    "effects": [],
+    "flags": {},
+    "_id": "Hlwi7cwBoL3ak4AU"
 }

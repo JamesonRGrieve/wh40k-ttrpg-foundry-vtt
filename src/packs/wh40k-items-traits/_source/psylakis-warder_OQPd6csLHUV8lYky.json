@@ -1,27 +1,27 @@
 {
-  "name": "Psylakis Warder",
-  "type": "trait",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "requirements": "Not Navigator, Astropath, or Ork. RT Rank 4+, Agility 40+, Perception 35+. Does not have Psy Rating or Untouchable Trait. Must have trained by Psylakis Brotherhood and undergone their Secret Rites.",
-    "source": "RT: The Navis Primer\n(Page 78)",
-    "description": {
-      "value": "<p>The Psylakis Warder is one who devotes themselves to the protection of a psyker, linking their mind to that of the psyker such that they may aid in the burden of the warp. Through their connection, the Warder and Psyker charge sense each others emotions, and offer protection against psychic assault.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Psylakis Warder\nAutomatically Gain Mindlinked Unique Trait</p>"
+    "name": "Psylakis Warder",
+    "type": "trait",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "requirements": "Not Navigator, Astropath, or Ork. RT Rank 4+, Agility 40+, Perception 35+. Does not have Psy Rating or Untouchable Trait. Must have trained by Psylakis Brotherhood and undergone their Secret Rites.",
+        "source": "RT: The Navis Primer\n(Page 78)",
+        "description": {
+            "value": "<p>The Psylakis Warder is one who devotes themselves to the protection of a psyker, linking their mind to that of the psyker such that they may aid in the burden of the warp. Through their connection, the Warder and Psyker charge sense each others emotions, and offer protection against psychic assault.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Psylakis Warder\nAutomatically Gain Mindlinked Unique Trait</p>"
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "other": []
+        },
+        "isPassive": true,
+        "category": "creature",
+        "level": 0,
+        "benefit": "<p>The Psylakis Warder is one who devotes themselves to the protection of a psyker, linking their mind to that of the psyker such that they may aid in the burden of the warp. Through their connection, the Warder and Psyker charge sense each others emotions, and offer protection against psychic assault.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Psylakis Warder\nAutomatically Gain Mindlinked Unique Trait</p>",
+        "notes": "",
+        "identifier": ""
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "other": []
-    },
-    "isPassive": true,
-    "category": "creature",
-    "level": 0,
-    "benefit": "<p>The Psylakis Warder is one who devotes themselves to the protection of a psyker, linking their mind to that of the psyker such that they may aid in the burden of the warp. Through their connection, the Warder and Psyker charge sense each others emotions, and offer protection against psychic assault.</p><p><b>Effects:</b> Replace new Rank's Advances with that of the Psylakis Warder\nAutomatically Gain Mindlinked Unique Trait</p>",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "OQPd6csLHUV8lYky"
+    "effects": [],
+    "flags": {},
+    "_id": "OQPd6csLHUV8lYky"
 }

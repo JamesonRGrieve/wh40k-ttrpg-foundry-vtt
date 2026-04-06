@@ -1,751 +1,647 @@
 {
-  "id": "wh40k-rpg",
-  "title": "Warhammer 40K RPG",
-  "description": "Unified Foundry VTT system for FFG/Cubicle 7 Warhammer 40,000 RPGs (Dark Heresy 2e, Rogue Trader, Black Crusade, Only War, Deathwatch).",
-  "version": "1.0.0",
-  "compatibility": {
-    "minimum": 13,
-    "verified": "14.349",
-    "maximum": 14
-  },
-  "authors": [
-    {
-      "name": "JamesonRGrieve"
+    "id": "wh40k-rpg",
+    "title": "Warhammer 40K RPG",
+    "description": "Unified Foundry VTT system for FFG/Cubicle 7 Warhammer 40,000 RPGs (Dark Heresy 2e, Rogue Trader, Black Crusade, Only War, Deathwatch).",
+    "version": "1.0.0",
+    "compatibility": {
+        "minimum": 13,
+        "verified": "14.349",
+        "maximum": 14
     },
-    {
-      "name": "AndruQuiroga"
-    },
-    {
-      "name": "Matt Keathley"
-    }
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    }
-  ],
-  "esmodules": [
-    "module/wh40k-rpg.mjs"
-  ],
-  "styles": [
-    "css/wh40k-rpg.css"
-  ],
-  "scripts": [],
-  "documentTypes": {
-    "Actor": {
-      "character": {
-        "htmlFields": [
-          "details.biography"
-        ]
-      },
-      "npc": {
-        "htmlFields": [
-          "description",
-          "tactics",
-          "specialAbilities",
-          "quickNotes"
-        ]
-      },
-      "vehicle": {
-        "htmlFields": [
-          "details.biography"
-        ]
-      },
-      "starship": {
-        "htmlFields": [
-          "details.biography"
-        ]
-      }
-    },
-    "Item": {
-      "ammunition": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "aptitude": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "armour": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "armourModification": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "attackSpecial": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "backpack": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "combatAction": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "consumable": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "criticalInjury": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "cybernetic": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "drug": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "enemy": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "forceField": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "gear": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "journalEntry": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "malignancy": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "mentalDisorder": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "mutation": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "navigatorPower": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "order": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "originPath": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "peer": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "psychicPower": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "ritual": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "shipComponent": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "shipRole": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "shipUpgrade": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "shipWeapon": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "skill": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "specialAbility": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "storageLocation": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "talent": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "tool": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "trait": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "vehicleTrait": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "vehicleUpgrade": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "weapon": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "weaponModification": {
-        "htmlFields": [
-          "description.value"
-        ]
-      },
-      "weaponQuality": {
-        "htmlFields": [
-          "description.value"
-        ]
-      }
-    },
-    "JournalEntryPage": {}
-  },
-  "packs": [
-    {
-      "name": "wh40k-actors-bestiary",
-      "label": "Bestiary",
-      "path": "packs/wh40k-actors-bestiary",
-      "system": "wh40k-rpg",
-      "type": "Actor",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-actors-ships",
-      "label": "Starships",
-      "path": "packs/wh40k-actors-ships",
-      "system": "wh40k-rpg",
-      "type": "Actor",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-actors-vehicles",
-      "label": "Vehicles",
-      "path": "packs/wh40k-actors-vehicles",
-      "system": "wh40k-rpg",
-      "type": "Actor",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-ammo",
-      "label": "Ammunition",
-      "path": "packs/wh40k-items-ammo",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-armour",
-      "label": "Armour",
-      "path": "packs/wh40k-items-armour",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-armour-customisations",
-      "label": "Armour Customisations",
-      "path": "packs/wh40k-items-armour-customisations",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-conditions",
-      "label": "Conditions",
-      "path": "packs/wh40k-items-conditions",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-critical-injuries",
-      "label": "Critical Injuries",
-      "path": "packs/wh40k-items-critical-injuries",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-gear",
-      "label": "Gear",
-      "path": "packs/wh40k-items-gear",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-navigator-powers",
-      "label": "Navigator Powers",
-      "path": "packs/wh40k-items-navigator-powers",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-orders",
-      "label": "Ship Orders",
-      "path": "packs/wh40k-items-orders",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-origin-path",
-      "label": "Origin Path",
-      "path": "packs/wh40k-items-origin-path",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-psychic-powers",
-      "label": "Psychic Powers",
-      "path": "packs/wh40k-items-psychic-powers",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-rituals",
-      "label": "Rituals",
-      "path": "packs/wh40k-items-rituals",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-ship-components",
-      "label": "Ship Components",
-      "path": "packs/wh40k-items-ship-components",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-ship-roles",
-      "label": "Ship Roles",
-      "path": "packs/wh40k-items-ship-roles",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-ship-upgrades",
-      "label": "Ship Upgrades",
-      "path": "packs/wh40k-items-ship-upgrades",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-ship-weapons",
-      "label": "Ship Weapons",
-      "path": "packs/wh40k-items-ship-weapons",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-skills",
-      "label": "Skills",
-      "path": "packs/wh40k-items-skills",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-talents",
-      "label": "Talents",
-      "path": "packs/wh40k-items-talents",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-traits",
-      "label": "Traits",
-      "path": "packs/wh40k-items-traits",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-vehicle-traits",
-      "label": "Vehicle Traits",
-      "path": "packs/wh40k-items-vehicle-traits",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-vehicle-upgrades",
-      "label": "Vehicle Upgrades",
-      "path": "packs/wh40k-items-vehicle-upgrades",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-weapon-qualities",
-      "label": "Weapon Qualities",
-      "path": "packs/wh40k-items-weapon-qualities",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-items-weapons",
-      "label": "Weapons",
-      "path": "packs/wh40k-items-weapons",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-journals-character-actions",
-      "label": "Character Actions",
-      "path": "packs/wh40k-journals-character-actions",
-      "system": "wh40k-rpg",
-      "type": "JournalEntry",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-journals-character-creation",
-      "label": "Character Creation",
-      "path": "packs/wh40k-journals-character-creation",
-      "system": "wh40k-rpg",
-      "type": "JournalEntry",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-journals-colonies",
-      "label": "Colonies",
-      "path": "packs/wh40k-journals-colonies",
-      "system": "wh40k-rpg",
-      "type": "JournalEntry",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-journals-fear-insanity-corruption",
-      "label": "Fear, Insanity & Corruption",
-      "path": "packs/wh40k-journals-fear-insanity-corruption",
-      "system": "wh40k-rpg",
-      "type": "JournalEntry",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-journals-ship-vehicle-actions",
-      "label": "Ship & Vehicle Actions",
-      "path": "packs/wh40k-journals-ship-vehicle-actions",
-      "system": "wh40k-rpg",
-      "type": "JournalEntry",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "wh40k-rolltables-fear-insanity-corruption",
-      "label": "Fear & Corruption Tables",
-      "path": "packs/wh40k-rolltables-fear-insanity-corruption",
-      "system": "wh40k-rpg",
-      "type": "RollTable",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      }
-    },
-    {
-      "name": "wh40k-rolltables-psychic",
-      "label": "Psychic Phenomena Tables",
-      "path": "packs/wh40k-rolltables-psychic",
-      "system": "wh40k-rpg",
-      "type": "RollTable",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      }
-    }
-  ],
-  "packFolders": [
-    {
-      "name": "Actors",
-      "color": "#8B0000",
-      "sorting": "a",
-      "packs": [
-        "wh40k-actors-bestiary",
-        "wh40k-actors-ships",
-        "wh40k-actors-vehicles"
-      ]
-    },
-    {
-      "name": "Equipment",
-      "color": "#8B4513",
-      "sorting": "a",
-      "packs": [
-        "wh40k-items-ammo",
-        "wh40k-items-armour",
-        "wh40k-items-armour-customisations",
-        "wh40k-items-gear",
-        "wh40k-items-weapons",
-        "wh40k-items-weapon-qualities"
-      ]
-    },
-    {
-      "name": "Character Features",
-      "color": "#2F4F4F",
-      "sorting": "a",
-      "packs": [
-        "wh40k-items-skills",
-        "wh40k-items-talents",
-        "wh40k-items-traits",
-        "wh40k-items-origin-path",
-        "wh40k-items-conditions",
-        "wh40k-items-critical-injuries"
-      ]
-    },
-    {
-      "name": "Powers & Abilities",
-      "color": "#4B0082",
-      "sorting": "a",
-      "packs": [
-        "wh40k-items-psychic-powers",
-        "wh40k-items-navigator-powers",
-        "wh40k-items-rituals"
-      ]
-    },
-    {
-      "name": "Ships & Vehicles",
-      "color": "#191970",
-      "sorting": "a",
-      "packs": [
-        "wh40k-items-ship-components",
-        "wh40k-items-ship-roles",
-        "wh40k-items-ship-upgrades",
-        "wh40k-items-ship-weapons",
-        "wh40k-items-vehicle-traits",
-        "wh40k-items-vehicle-upgrades",
-        "wh40k-items-orders"
-      ]
-    },
-    {
-      "name": "Journals & Rules",
-      "color": "#556B2F",
-      "sorting": "a",
-      "packs": [
-        "wh40k-journals-character-actions",
-        "wh40k-journals-character-creation",
-        "wh40k-journals-colonies",
-        "wh40k-journals-fear-insanity-corruption",
-        "wh40k-journals-ship-vehicle-actions"
-      ]
-    },
-    {
-      "name": "Roll Tables",
-      "color": "#800080",
-      "sorting": "a",
-      "packs": [
-        "wh40k-rolltables-fear-insanity-corruption",
-        "wh40k-rolltables-psychic"
-      ]
-    }
-  ],
-  "grid": {
-    "distance": 1,
-    "units": "m"
-  },
-  "primaryTokenAttribute": "wounds",
-  "secondaryTokenAttribute": "fate",
-  "url": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt",
-  "manifest": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/system.json",
-  "download": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/wh40k-rpg.zip",
-  "license": "LICENSE.txt",
-  "bugs": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues",
-  "relationships": {
-    "requires": [
-      {
-        "id": "game-icons-net",
-        "type": "module",
-        "manifest": "https://github.com/fitzthum/game-icons-net/releases/latest/download/module.json",
-        "compatibility": {
-          "minimum": "1.4.0"
+    "authors": [
+        {
+            "name": "JamesonRGrieve"
+        },
+        {
+            "name": "AndruQuiroga"
+        },
+        {
+            "name": "Matt Keathley"
         }
-      }
-    ]
-  }
+    ],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json"
+        }
+    ],
+    "esmodules": ["module/wh40k-rpg.mjs"],
+    "styles": ["css/wh40k-rpg.css"],
+    "scripts": [],
+    "documentTypes": {
+        "Actor": {
+            "character": {
+                "htmlFields": ["details.biography"]
+            },
+            "npc": {
+                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+            },
+            "vehicle": {
+                "htmlFields": ["details.biography"]
+            },
+            "starship": {
+                "htmlFields": ["details.biography"]
+            }
+        },
+        "Item": {
+            "ammunition": {
+                "htmlFields": ["description.value"]
+            },
+            "aptitude": {
+                "htmlFields": ["description.value"]
+            },
+            "armour": {
+                "htmlFields": ["description.value"]
+            },
+            "armourModification": {
+                "htmlFields": ["description.value"]
+            },
+            "attackSpecial": {
+                "htmlFields": ["description.value"]
+            },
+            "backpack": {
+                "htmlFields": ["description.value"]
+            },
+            "combatAction": {
+                "htmlFields": ["description.value"]
+            },
+            "consumable": {
+                "htmlFields": ["description.value"]
+            },
+            "criticalInjury": {
+                "htmlFields": ["description.value"]
+            },
+            "cybernetic": {
+                "htmlFields": ["description.value"]
+            },
+            "drug": {
+                "htmlFields": ["description.value"]
+            },
+            "enemy": {
+                "htmlFields": ["description.value"]
+            },
+            "forceField": {
+                "htmlFields": ["description.value"]
+            },
+            "gear": {
+                "htmlFields": ["description.value"]
+            },
+            "journalEntry": {
+                "htmlFields": ["description.value"]
+            },
+            "malignancy": {
+                "htmlFields": ["description.value"]
+            },
+            "mentalDisorder": {
+                "htmlFields": ["description.value"]
+            },
+            "mutation": {
+                "htmlFields": ["description.value"]
+            },
+            "navigatorPower": {
+                "htmlFields": ["description.value"]
+            },
+            "order": {
+                "htmlFields": ["description.value"]
+            },
+            "originPath": {
+                "htmlFields": ["description.value"]
+            },
+            "peer": {
+                "htmlFields": ["description.value"]
+            },
+            "psychicPower": {
+                "htmlFields": ["description.value"]
+            },
+            "ritual": {
+                "htmlFields": ["description.value"]
+            },
+            "shipComponent": {
+                "htmlFields": ["description.value"]
+            },
+            "shipRole": {
+                "htmlFields": ["description.value"]
+            },
+            "shipUpgrade": {
+                "htmlFields": ["description.value"]
+            },
+            "shipWeapon": {
+                "htmlFields": ["description.value"]
+            },
+            "skill": {
+                "htmlFields": ["description.value"]
+            },
+            "specialAbility": {
+                "htmlFields": ["description.value"]
+            },
+            "storageLocation": {
+                "htmlFields": ["description.value"]
+            },
+            "talent": {
+                "htmlFields": ["description.value"]
+            },
+            "tool": {
+                "htmlFields": ["description.value"]
+            },
+            "trait": {
+                "htmlFields": ["description.value"]
+            },
+            "vehicleTrait": {
+                "htmlFields": ["description.value"]
+            },
+            "vehicleUpgrade": {
+                "htmlFields": ["description.value"]
+            },
+            "weapon": {
+                "htmlFields": ["description.value"]
+            },
+            "weaponModification": {
+                "htmlFields": ["description.value"]
+            },
+            "weaponQuality": {
+                "htmlFields": ["description.value"]
+            }
+        },
+        "JournalEntryPage": {}
+    },
+    "packs": [
+        {
+            "name": "wh40k-actors-bestiary",
+            "label": "Bestiary",
+            "path": "packs/wh40k-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-actors-ships",
+            "label": "Starships",
+            "path": "packs/wh40k-actors-ships",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-actors-vehicles",
+            "label": "Vehicles",
+            "path": "packs/wh40k-actors-vehicles",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-ammo",
+            "label": "Ammunition",
+            "path": "packs/wh40k-items-ammo",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-armour",
+            "label": "Armour",
+            "path": "packs/wh40k-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-armour-customisations",
+            "label": "Armour Customisations",
+            "path": "packs/wh40k-items-armour-customisations",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-conditions",
+            "label": "Conditions",
+            "path": "packs/wh40k-items-conditions",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-critical-injuries",
+            "label": "Critical Injuries",
+            "path": "packs/wh40k-items-critical-injuries",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-gear",
+            "label": "Gear",
+            "path": "packs/wh40k-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-navigator-powers",
+            "label": "Navigator Powers",
+            "path": "packs/wh40k-items-navigator-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-orders",
+            "label": "Ship Orders",
+            "path": "packs/wh40k-items-orders",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-origin-path",
+            "label": "Origin Path",
+            "path": "packs/wh40k-items-origin-path",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-psychic-powers",
+            "label": "Psychic Powers",
+            "path": "packs/wh40k-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-rituals",
+            "label": "Rituals",
+            "path": "packs/wh40k-items-rituals",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-ship-components",
+            "label": "Ship Components",
+            "path": "packs/wh40k-items-ship-components",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-ship-roles",
+            "label": "Ship Roles",
+            "path": "packs/wh40k-items-ship-roles",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-ship-upgrades",
+            "label": "Ship Upgrades",
+            "path": "packs/wh40k-items-ship-upgrades",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-ship-weapons",
+            "label": "Ship Weapons",
+            "path": "packs/wh40k-items-ship-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-skills",
+            "label": "Skills",
+            "path": "packs/wh40k-items-skills",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-talents",
+            "label": "Talents",
+            "path": "packs/wh40k-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-traits",
+            "label": "Traits",
+            "path": "packs/wh40k-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-vehicle-traits",
+            "label": "Vehicle Traits",
+            "path": "packs/wh40k-items-vehicle-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-vehicle-upgrades",
+            "label": "Vehicle Upgrades",
+            "path": "packs/wh40k-items-vehicle-upgrades",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-weapon-qualities",
+            "label": "Weapon Qualities",
+            "path": "packs/wh40k-items-weapon-qualities",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-items-weapons",
+            "label": "Weapons",
+            "path": "packs/wh40k-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-journals-character-actions",
+            "label": "Character Actions",
+            "path": "packs/wh40k-journals-character-actions",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-journals-character-creation",
+            "label": "Character Creation",
+            "path": "packs/wh40k-journals-character-creation",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-journals-colonies",
+            "label": "Colonies",
+            "path": "packs/wh40k-journals-colonies",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-journals-fear-insanity-corruption",
+            "label": "Fear, Insanity & Corruption",
+            "path": "packs/wh40k-journals-fear-insanity-corruption",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-journals-ship-vehicle-actions",
+            "label": "Ship & Vehicle Actions",
+            "path": "packs/wh40k-journals-ship-vehicle-actions",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "wh40k-rolltables-fear-insanity-corruption",
+            "label": "Fear & Corruption Tables",
+            "path": "packs/wh40k-rolltables-fear-insanity-corruption",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            }
+        },
+        {
+            "name": "wh40k-rolltables-psychic",
+            "label": "Psychic Phenomena Tables",
+            "path": "packs/wh40k-rolltables-psychic",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            }
+        }
+    ],
+    "packFolders": [
+        {
+            "name": "Actors",
+            "color": "#8B0000",
+            "sorting": "a",
+            "packs": ["wh40k-actors-bestiary", "wh40k-actors-ships", "wh40k-actors-vehicles"]
+        },
+        {
+            "name": "Equipment",
+            "color": "#8B4513",
+            "sorting": "a",
+            "packs": [
+                "wh40k-items-ammo",
+                "wh40k-items-armour",
+                "wh40k-items-armour-customisations",
+                "wh40k-items-gear",
+                "wh40k-items-weapons",
+                "wh40k-items-weapon-qualities"
+            ]
+        },
+        {
+            "name": "Character Features",
+            "color": "#2F4F4F",
+            "sorting": "a",
+            "packs": [
+                "wh40k-items-skills",
+                "wh40k-items-talents",
+                "wh40k-items-traits",
+                "wh40k-items-origin-path",
+                "wh40k-items-conditions",
+                "wh40k-items-critical-injuries"
+            ]
+        },
+        {
+            "name": "Powers & Abilities",
+            "color": "#4B0082",
+            "sorting": "a",
+            "packs": ["wh40k-items-psychic-powers", "wh40k-items-navigator-powers", "wh40k-items-rituals"]
+        },
+        {
+            "name": "Ships & Vehicles",
+            "color": "#191970",
+            "sorting": "a",
+            "packs": [
+                "wh40k-items-ship-components",
+                "wh40k-items-ship-roles",
+                "wh40k-items-ship-upgrades",
+                "wh40k-items-ship-weapons",
+                "wh40k-items-vehicle-traits",
+                "wh40k-items-vehicle-upgrades",
+                "wh40k-items-orders"
+            ]
+        },
+        {
+            "name": "Journals & Rules",
+            "color": "#556B2F",
+            "sorting": "a",
+            "packs": [
+                "wh40k-journals-character-actions",
+                "wh40k-journals-character-creation",
+                "wh40k-journals-colonies",
+                "wh40k-journals-fear-insanity-corruption",
+                "wh40k-journals-ship-vehicle-actions"
+            ]
+        },
+        {
+            "name": "Roll Tables",
+            "color": "#800080",
+            "sorting": "a",
+            "packs": ["wh40k-rolltables-fear-insanity-corruption", "wh40k-rolltables-psychic"]
+        }
+    ],
+    "grid": {
+        "distance": 1,
+        "units": "m"
+    },
+    "primaryTokenAttribute": "wounds",
+    "secondaryTokenAttribute": "fate",
+    "url": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt",
+    "manifest": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/system.json",
+    "download": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/wh40k-rpg.zip",
+    "license": "LICENSE.txt",
+    "bugs": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues",
+    "relationships": {
+        "requires": [
+            {
+                "id": "game-icons-net",
+                "type": "module",
+                "manifest": "https://github.com/fitzthum/game-icons-net/releases/latest/download/module.json",
+                "compatibility": {
+                    "minimum": "1.4.0"
+                }
+            }
+        ]
+    }
 }

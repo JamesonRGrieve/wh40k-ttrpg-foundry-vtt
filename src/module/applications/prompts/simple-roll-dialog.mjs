@@ -2,8 +2,8 @@
  * @file SimpleRollDialog - V2 dialog for simple skill/characteristic rolls
  */
 
-import ApplicationV2Mixin from "../api/application-v2-mixin.mjs";
-import { sendActionDataToChat } from "../../rolls/roll-helpers.mjs";
+import ApplicationV2Mixin from '../api/application-v2-mixin.mjs';
+import { sendActionDataToChat } from '../../rolls/roll-helpers.mjs';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -24,19 +24,19 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: "form",
-        classes: ["wh40k-rpg", "dialog", "simple-roll", "standard-form"],
+        tag: 'form',
+        classes: ['wh40k-rpg', 'dialog', 'simple-roll', 'standard-form'],
         actions: {
             roll: SimpleRollDialog.#onRoll,
-            cancel: SimpleRollDialog.#onCancel
+            cancel: SimpleRollDialog.#onCancel,
         },
         position: {
-            width: 300
+            width: 300,
         },
         window: {
-            title: "Roll Modifier",
-            minimizable: false
-        }
+            title: 'Roll Modifier',
+            minimizable: false,
+        },
     };
 
     /* -------------------------------------------- */
@@ -44,9 +44,9 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs",
-            scrollable: [""]
-        }
+            template: 'systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs',
+            scrollable: [''],
+        },
     };
 
     /* -------------------------------------------- */
@@ -68,7 +68,7 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
         const context = await super._prepareContext(options);
         return {
             ...context,
-            ...this.simpleSkillData
+            ...this.simpleSkillData,
         };
     }
 
@@ -81,19 +81,18 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
         await super._onRender(context, options);
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (event) => {
-                    event.target.select();
-                });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (event) => {
+                event.target.select();
             });
+        });
 
         // Set up button listeners for V1-style templates
-        this.element.querySelector("[data-action='roll']")?.addEventListener("click", (e) => {
+        this.element.querySelector("[data-action='roll']")?.addEventListener('click', (e) => {
             e.preventDefault();
             this._performRoll();
         });
-        this.element.querySelector("[data-action='cancel']")?.addEventListener("click", (e) => {
+        this.element.querySelector("[data-action='cancel']")?.addEventListener('click', (e) => {
             e.preventDefault();
             this.close();
         });
@@ -134,15 +133,15 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
      * @protected
      */
     async _performRoll() {
-        const form = this.element.querySelector("form") ?? this.element;
+        const form = this.element.querySelector('form') ?? this.element;
         const rollData = this.simpleSkillData.rollData;
 
         // Get form values
-        const difficultySelect = form.querySelector("#difficulty");
-        const modifierInput = form.querySelector("#modifier");
+        const difficultySelect = form.querySelector('#difficulty');
+        const modifierInput = form.querySelector('#modifier');
 
-        rollData.modifiers["difficulty"] = parseInt(difficultySelect?.value ?? 0);
-        rollData.modifiers["modifier"] = modifierInput?.value ?? 0;
+        rollData.modifiers['difficulty'] = parseInt(difficultySelect?.value ?? 0);
+        rollData.modifiers['modifier'] = modifierInput?.value ?? 0;
 
         await rollData.calculateTotalModifiers();
         await this.simpleSkillData.calculateSuccessOrFailure();

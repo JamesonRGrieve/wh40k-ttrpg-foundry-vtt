@@ -1,43 +1,39 @@
 {
-  "name": "Ship's Stores (Large)",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "transport",
-      "grand-cruiser",
-      "cruiser"
-    ],
-    "effect": "Can Store Ship Components of a combind space equal to or less than the space this component takes up. When successfully completing extended repairs, can replace a destroyed component with the one in your ship store. Additionally, Extended Repairs repair an additional 2 Hull Integrity.",
-    "availability": "rare",
-    "source": "RT: BF Koronus",
-    "description": {
-      "value": "<p>Can Store Ship Components of a combind space equal to or less than the space this component takes up. When successfully completing extended repairs, can replace a destroyed component with the one in your ship store. Additionally, Extended Repairs repair an additional 2 Hull Integrity.</p>"
+    "name": "Ship's Stores (Large)",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["transport", "grand-cruiser", "cruiser"],
+        "effect": "Can Store Ship Components of a combind space equal to or less than the space this component takes up. When successfully completing extended repairs, can replace a destroyed component with the one in your ship store. Additionally, Extended Repairs repair an additional 2 Hull Integrity.",
+        "availability": "rare",
+        "source": "RT: BF Koronus",
+        "description": {
+            "value": "<p>Can Store Ship Components of a combind space equal to or less than the space this component takes up. When successfully completing extended repairs, can replace a destroyed component with the one in your ship store. Additionally, Extended Repairs repair an additional 2 Hull Integrity.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "supplemental",
+        "essential": false,
+        "power": {
+            "used": 1,
+            "generated": 0
+        },
+        "space": 10,
+        "shipPoints": 2,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "ship-s-stores-large-"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "supplemental",
-    "essential": false,
-    "power": {
-      "used": 1,
-      "generated": 0
-    },
-    "space": 10,
-    "shipPoints": 2,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "ship-s-stores-large-"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "McJl7kp7h4PTZyA9"
+    "effects": [],
+    "flags": {},
+    "_id": "McJl7kp7h4PTZyA9"
 }

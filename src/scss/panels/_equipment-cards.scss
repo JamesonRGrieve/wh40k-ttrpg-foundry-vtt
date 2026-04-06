@@ -5,241 +5,241 @@
 
 // Equipment Table Container
 .wh40k-equipment-table {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-bottom: $wh40k-space-sm;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: $wh40k-space-sm;
 }
 
 // Equipment Row (Single Line)
 .wh40k-equip-row {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-sm;
-  padding: $wh40k-space-xs $wh40k-space-sm;
-  background: var(--rt-panel-bg-solid);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  cursor: grab;
-  min-height: 36px;
-  
-  &:hover {
-    background: var(--rt-panel-bg);
-    border-color: var(--rt-border-color);
-    transform: translateX(2px);
-    box-shadow: -2px 0 0 var(--rt-gold);
-  }
-  
-  &:active {
-    cursor: grabbing;
-  }
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-xs $wh40k-space-sm;
+    background: var(--rt-panel-bg-solid);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    cursor: grab;
+    min-height: 36px;
+
+    &:hover {
+        background: var(--rt-panel-bg);
+        border-color: var(--rt-border-color);
+        transform: translateX(2px);
+        box-shadow: -2px 0 0 var(--rt-gold);
+    }
+
+    &:active {
+        cursor: grabbing;
+    }
 }
 
 // Row State Variants
 .wh40k-equip-equipped {
-  border-left: 3px solid var(--rt-success-primary);
-  background: var(--rt-success-bg);
+    border-left: 3px solid var(--rt-success-primary);
+    background: var(--rt-success-bg);
 }
 
 .wh40k-equip-active {
-  border-left: 3px solid var(--rt-fate-primary);
-  background: var(--rt-fate-bg);
-  
-  .wh40k-equip-icon {
-    box-shadow: 0 0 8px var(--rt-fate-primary);
-  }
+    border-left: 3px solid var(--rt-fate-primary);
+    background: var(--rt-fate-bg);
+
+    .wh40k-equip-icon {
+        box-shadow: 0 0 8px var(--rt-fate-primary);
+    }
 }
 
 .wh40k-equip-overloaded {
-  border-left: 3px solid var(--rt-danger-primary);
-  background: var(--rt-danger-bg);
-  opacity: 0.8;
+    border-left: 3px solid var(--rt-danger-primary);
+    background: var(--rt-danger-bg);
+    opacity: 0.8;
 }
 
 .wh40k-equip-stowed {
-  opacity: 0.65;
-  border-left: 3px solid var(--rt-text-subtle);
+    opacity: 0.65;
+    border-left: 3px solid var(--rt-text-subtle);
 }
 
 // Icon (Small)
 .wh40k-equip-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  object-fit: cover;
-  border: 1px solid var(--rt-border-color-light);
-  flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid var(--rt-border-color-light);
+    flex-shrink: 0;
 }
 
 // Name Button
 .wh40k-equip-name {
-  flex: 1;
-  min-width: 0;
-  text-align: left;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--rt-text-dark);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color 0.2s ease;
-  
-  &:hover {
-    color: var(--rt-gold);
-  }
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: var(--rt-gold);
+    }
 }
 
 // Meta Info (Type, Location, etc.)
 .wh40k-equip-meta {
-  font-size: 0.7rem;
-  color: var(--rt-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  flex-shrink: 0;
+    font-size: 0.7rem;
+    color: var(--rt-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
 }
 
 // Status Badge (Active, Offline, etc.)
 .wh40k-equip-status {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--rt-text-muted);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
-  
-  i {
-    font-size: 0.85em;
-  }
-  
-  .wh40k-status-active {
-    color: var(--rt-fate-primary);
-  }
-  
-  .wh40k-status-danger {
-    color: var(--rt-danger-primary);
-  }
-  
-  .wh40k-status-offline {
-    color: var(--rt-text-subtle);
-  }
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--rt-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+
+    i {
+        font-size: 0.85em;
+    }
+
+    .wh40k-status-active {
+        color: var(--rt-fate-primary);
+    }
+
+    .wh40k-status-danger {
+        color: var(--rt-danger-primary);
+    }
+
+    .wh40k-status-offline {
+        color: var(--rt-text-subtle);
+    }
 }
 
 // Stat Display (AP, Weight, etc.)
 .wh40k-equip-stat {
-  font-size: 0.75rem;
-  color: var(--rt-text-dark);
-  flex-shrink: 0;
-  
-  .wh40k-stat-l {
-    color: var(--rt-text-muted);
-    font-weight: 500;
-    margin-right: 2px;
-  }
-  
-  strong {
-    color: var(--rt-gold);
-    font-weight: 700;
-  }
+    font-size: 0.75rem;
+    color: var(--rt-text-dark);
+    flex-shrink: 0;
+
+    .wh40k-stat-l {
+        color: var(--rt-text-muted);
+        font-weight: 500;
+        margin-right: 2px;
+    }
+
+    strong {
+        color: var(--rt-gold);
+        font-weight: 700;
+    }
 }
 
 // Actions Container
 .wh40k-equip-actions {
-  display: flex;
-  gap: 4px;
-  margin-left: auto;
-  flex-shrink: 0;
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+    flex-shrink: 0;
 }
 
 // Action Buttons (Small & Stylistic)
 .wh40k-equip-btn {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--rt-btn-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  color: var(--rt-text-muted);
-  
-  i {
-    font-size: 0.75rem;
-  }
-  
-  &:hover {
-    background: var(--rt-btn-bg-hover);
-    border-color: var(--rt-border-color);
-    color: var(--rt-text-dark);
-    transform: translateY(-1px);
-  }
-  
-  &:active {
-    transform: scale(0.95);
-  }
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-btn-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--rt-text-muted);
+
+    i {
+        font-size: 0.75rem;
+    }
+
+    &:hover {
+        background: var(--rt-btn-bg-hover);
+        border-color: var(--rt-border-color);
+        color: var(--rt-text-dark);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
 }
 
 // Toggle Button (Equip/Activate)
 .wh40k-equip-toggle {
-  .fa-check-circle {
-    color: var(--rt-success-primary);
-  }
-  
-  .fa-bolt {
-    color: var(--rt-fate-primary);
-  }
-  
-  .fa-power-off {
-    color: var(--rt-text-subtle);
-  }
+    .fa-check-circle {
+        color: var(--rt-success-primary);
+    }
+
+    .fa-bolt {
+        color: var(--rt-fate-primary);
+    }
+
+    .fa-power-off {
+        color: var(--rt-text-subtle);
+    }
 }
 
 // Danger Button
 .wh40k-equip-danger {
-  color: var(--rt-danger-primary);
-  
-  &:hover {
-    background: var(--rt-danger-bg);
-    border-color: var(--rt-danger-primary);
-  }
+    color: var(--rt-danger-primary);
+
+    &:hover {
+        background: var(--rt-danger-bg);
+        border-color: var(--rt-danger-primary);
+    }
 }
 
 // Add Item Button (Compact)
 .wh40k-add-item-btn {
-  width: 100%;
-  padding: $wh40k-space-sm;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $wh40k-space-xs;
-  background: var(--rt-panel-bg-translucent);
-  border: 1px dashed var(--rt-border-color-light);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: var(--rt-text-muted);
-  font-size: 0.8rem;
-  font-weight: 600;
-  
-  i {
-    font-size: 0.9em;
-    color: var(--rt-success-primary);
-  }
-  
-  &:hover {
-    background: var(--rt-panel-bg);
-    border-color: var(--rt-border-color);
-    border-style: solid;
-    color: var(--rt-text-dark);
-  }
+    width: 100%;
+    padding: $wh40k-space-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $wh40k-space-xs;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px dashed var(--rt-border-color-light);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--rt-text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    i {
+        font-size: 0.9em;
+        color: var(--rt-success-primary);
+    }
+
+    &:hover {
+        background: var(--rt-panel-bg);
+        border-color: var(--rt-border-color);
+        border-style: solid;
+        color: var(--rt-text-dark);
+    }
 }
 
 // ============================================
@@ -248,406 +248,406 @@
 
 // Item Count Badge in Header
 .wh40k-item-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 8px;
-  background: rgba(196, 135, 29, 0.15);
-  border: 1px solid rgba(196, 135, 29, 0.3);
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #c4871d;
-  flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: rgba(196, 135, 29, 0.15);
+    border: 1px solid rgba(196, 135, 29, 0.3);
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #c4871d;
+    flex-shrink: 0;
 }
 
 // Equipment List Container
 .wh40k-equipment-list {
-  display: flex;
-  flex-direction: column;
-  gap: $wh40k-space-sm;
-  margin-bottom: $wh40k-space-sm;
+    display: flex;
+    flex-direction: column;
+    gap: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-sm;
 }
 
 // Equipment Card
 .wh40k-equipment-card {
-  background: var(--rt-panel-bg-solid);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 8px;
-  padding: $wh40k-space-sm;
-  transition: all 0.2s ease;
-  cursor: grab;
-  
-  &:hover {
-    background: var(--rt-panel-bg);
-    border-color: var(--rt-border-color);
-    box-shadow: 0 2px 8px var(--rt-shadow-medium);
-    transform: translateY(-1px);
-  }
-  
-  &:active {
-    cursor: grabbing;
-  }
+    background: var(--rt-panel-bg-solid);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 8px;
+    padding: $wh40k-space-sm;
+    transition: all 0.2s ease;
+    cursor: grab;
+
+    &:hover {
+        background: var(--rt-panel-bg);
+        border-color: var(--rt-border-color);
+        box-shadow: 0 2px 8px var(--rt-shadow-medium);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        cursor: grabbing;
+    }
 }
 
 // Card States
 .wh40k-card-equipped {
-  border-left: 4px solid var(--rt-success-primary);
-  background: var(--rt-success-bg);
-  
-  &:hover {
+    border-left: 4px solid var(--rt-success-primary);
     background: var(--rt-success-bg);
-    opacity: 0.95;
-  }
+
+    &:hover {
+        background: var(--rt-success-bg);
+        opacity: 0.95;
+    }
 }
 
 .wh40k-card-active {
-  border-left: 4px solid var(--rt-fate-primary);
-  background: var(--rt-fate-bg);
-  
-  &:hover {
+    border-left: 4px solid var(--rt-fate-primary);
     background: var(--rt-fate-bg);
-    opacity: 0.95;
-  }
-  
-  .wh40k-card-icon {
-    box-shadow: 0 0 8px var(--rt-fate-primary);
-  }
+
+    &:hover {
+        background: var(--rt-fate-bg);
+        opacity: 0.95;
+    }
+
+    .wh40k-card-icon {
+        box-shadow: 0 0 8px var(--rt-fate-primary);
+    }
 }
 
 .wh40k-card-overloaded {
-  border-left: 4px solid var(--rt-danger-primary);
-  background: var(--rt-danger-bg);
-  opacity: 0.7;
-  
-  &:hover {
+    border-left: 4px solid var(--rt-danger-primary);
     background: var(--rt-danger-bg);
-    opacity: 0.85;
-  }
+    opacity: 0.7;
+
+    &:hover {
+        background: var(--rt-danger-bg);
+        opacity: 0.85;
+    }
 }
 
 .wh40k-card-stowed {
-  opacity: 0.7;
-  border-left: 4px solid var(--rt-text-muted);
-  
-  &:hover {
-    opacity: 0.85;
-  }
+    opacity: 0.7;
+    border-left: 4px solid var(--rt-text-muted);
+
+    &:hover {
+        opacity: 0.85;
+    }
 }
 
 // Card Header (Icon, Name, Action Button)
 .wh40k-card-header {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-sm;
-  margin-bottom: $wh40k-space-xs;
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-xs;
 }
 
 .wh40k-card-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  object-fit: cover;
-  border: 1px solid var(--rt-border-color-light);
-  flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid var(--rt-border-color-light);
+    flex-shrink: 0;
 }
 
 .wh40k-card-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .wh40k-card-name {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--rt-text-dark);
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  
-  &:hover {
-    color: var(--rt-gold);
-  }
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+        color: var(--rt-gold);
+    }
 }
 
 .wh40k-card-meta {
-  font-size: 0.7rem;
-  color: var(--rt-text-muted);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  
-  i {
-    font-size: 0.85em;
-  }
+    font-size: 0.7rem;
+    color: var(--rt-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    i {
+        font-size: 0.85em;
+    }
 }
 
 // Card Action Button (Equip/Activate)
 .wh40k-card-action {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--rt-btn-bg);
-  border: 1px solid var(--rt-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--rt-text-muted);
-  flex-shrink: 0;
-  position: relative;
-  overflow: hidden;
-
-  // Ripple effect
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.1);
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
-  }
-
-  &:active::before {
-    width: 200%;
-    height: 200%;
-  }
-
-  &:hover {
-    background: var(--rt-btn-bg-hover);
-    border-color: var(--rt-border-color-strong);
-    transform: scale(1.05);
-  }
-
-  &:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
-  }
-
-  &.wh40k-action-equip {
-    .fa-check-circle {
-      color: var(--rt-success-primary);
-    }
-  }
-
-  &.wh40k-action-activate {
-    .fa-bolt {
-      color: var(--rt-fate-primary);
-    }
-  }
-
-  i {
-    font-size: 1rem;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-btn-bg);
+    border: 1px solid var(--rt-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--rt-text-muted);
+    flex-shrink: 0;
     position: relative;
-    z-index: 1;
-  }
+    overflow: hidden;
+
+    // Ripple effect
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.1);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s;
+    }
+
+    &:active::before {
+        width: 200%;
+        height: 200%;
+    }
+
+    &:hover {
+        background: var(--rt-btn-bg-hover);
+        border-color: var(--rt-border-color-strong);
+        transform: scale(1.05);
+    }
+
+    &:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+
+    &.wh40k-action-equip {
+        .fa-check-circle {
+            color: var(--rt-success-primary);
+        }
+    }
+
+    &.wh40k-action-activate {
+        .fa-bolt {
+            color: var(--rt-fate-primary);
+        }
+    }
+
+    i {
+        font-size: 1rem;
+        position: relative;
+        z-index: 1;
+    }
 }
 
 // Status Badges
 .wh40k-status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: var(--rt-panel-bg-translucent);
-  color: var(--rt-text-muted);
-  
-  i {
-    font-size: 0.9em;
-  }
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--rt-panel-bg-translucent);
+    color: var(--rt-text-muted);
+
+    i {
+        font-size: 0.9em;
+    }
 }
 
 .wh40k-status-active {
-  background: var(--rt-fate-bg);
-  color: var(--rt-fate-primary);
+    background: var(--rt-fate-bg);
+    color: var(--rt-fate-primary);
 }
 
 .wh40k-status-overloaded {
-  background: var(--rt-danger-bg);
-  color: var(--rt-danger-primary);
+    background: var(--rt-danger-bg);
+    color: var(--rt-danger-primary);
 }
 
 // Card Description
 .wh40k-card-description {
-  font-size: 0.75rem;
-  color: var(--rt-text-medium);
-  line-height: 1.4;
-  margin-bottom: $wh40k-space-xs;
-  padding: $wh40k-space-xs;
-  background: var(--rt-panel-bg-translucent);
-  border-radius: 4px;
-  font-style: italic;
+    font-size: 0.75rem;
+    color: var(--rt-text-medium);
+    line-height: 1.4;
+    margin-bottom: $wh40k-space-xs;
+    padding: $wh40k-space-xs;
+    background: var(--rt-panel-bg-translucent);
+    border-radius: 4px;
+    font-style: italic;
 }
 
 // Card Stats (Badges for AP, Weight, etc.)
 .wh40k-card-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: $wh40k-space-xs;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: $wh40k-space-xs;
 }
 
 .wh40k-stat-badge {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  background: var(--rt-btn-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
-  font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--rt-btn-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    font-size: 0.7rem;
 }
 
 .wh40k-stat-label {
-  color: var(--rt-text-muted);
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
 }
 
 .wh40k-stat-value {
-  color: var(--rt-text-dark);
-  font-weight: 700;
+    color: var(--rt-text-dark);
+    font-weight: 700;
 }
 
 // Special stat badges
 .wh40k-badge-ap {
-  border-color: var(--rt-danger-border);
-  background: var(--rt-danger-bg);
-  
-  .wh40k-stat-value {
-    color: var(--rt-danger-primary);
-  }
+    border-color: var(--rt-danger-border);
+    background: var(--rt-danger-bg);
+
+    .wh40k-stat-value {
+        color: var(--rt-danger-primary);
+    }
 }
 
 .wh40k-badge-rating {
-  border-color: var(--rt-fate-border);
-  background: var(--rt-fate-bg);
-  
-  .wh40k-stat-value {
-    color: var(--rt-fate-primary);
-  }
+    border-color: var(--rt-fate-border);
+    background: var(--rt-fate-bg);
+
+    .wh40k-stat-value {
+        color: var(--rt-fate-primary);
+    }
 }
 
 // Card Actions Row
 .wh40k-card-actions {
-  display: flex;
-  gap: 4px;
-  padding-top: $wh40k-space-xs;
-  border-top: 1px solid var(--rt-border-color-light);
+    display: flex;
+    gap: 4px;
+    padding-top: $wh40k-space-xs;
+    border-top: 1px solid var(--rt-border-color-light);
 }
 
 .wh40k-card-btn {
-  flex: 1;
-  height: 28px;
-  padding: 0 $wh40k-space-xs;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--rt-btn-bg);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--rt-text-medium);
-  font-size: 0.85rem;
-  position: relative;
-  overflow: hidden;
-
-  // Ripple effect
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.1);
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
-  }
-
-  &:active::before {
-    width: 200%;
-    height: 200%;
-  }
-
-  &:active {
-    transform: scale(0.97);
-    transition: transform 0.1s ease;
-  }
-
-  i {
+    flex: 1;
+    height: 28px;
+    padding: 0 $wh40k-space-xs;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rt-btn-bg);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--rt-text-medium);
+    font-size: 0.85rem;
     position: relative;
-    z-index: 1;
-  }
+    overflow: hidden;
 
-  &:hover {
-    background: var(--rt-btn-bg-hover);
-    border-color: var(--rt-border-color);
-    transform: translateY(-1px);
-  }
-  
-  i {
-    font-size: 0.9em;
-  }
+    // Ripple effect
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.1);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s;
+    }
+
+    &:active::before {
+        width: 200%;
+        height: 200%;
+    }
+
+    &:active {
+        transform: scale(0.97);
+        transition: transform 0.1s ease;
+    }
+
+    i {
+        position: relative;
+        z-index: 1;
+    }
+
+    &:hover {
+        background: var(--rt-btn-bg-hover);
+        border-color: var(--rt-border-color);
+        transform: translateY(-1px);
+    }
+
+    i {
+        font-size: 0.9em;
+    }
 }
 
 .wh40k-btn-danger {
-  color: var(--rt-danger-primary);
-  
-  &:hover {
-    background: var(--rt-danger-bg);
-    border-color: var(--rt-danger-primary);
-  }
+    color: var(--rt-danger-primary);
+
+    &:hover {
+        background: var(--rt-danger-bg);
+        border-color: var(--rt-danger-primary);
+    }
 }
 
 // Add Item Button
 .wh40k-add-item-btn {
-  width: 100%;
-  padding: $wh40k-space-md;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $wh40k-space-xs;
-  background: var(--rt-panel-bg-translucent);
-  border: 2px dashed var(--rt-border-color-light);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: var(--rt-text-muted);
-  font-size: 0.85rem;
-  font-weight: 600;
-  
-  &:hover {
-    background: var(--rt-panel-bg);
-    border-color: var(--rt-border-color);
-    color: var(--rt-text-dark);
-    transform: translateY(-1px);
-  }
-  
-  i {
-    font-size: 1.1em;
-    color: var(--rt-success-primary);
-  }
+    width: 100%;
+    padding: $wh40k-space-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $wh40k-space-xs;
+    background: var(--rt-panel-bg-translucent);
+    border: 2px dashed var(--rt-border-color-light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--rt-text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    &:hover {
+        background: var(--rt-panel-bg);
+        border-color: var(--rt-border-color);
+        color: var(--rt-text-dark);
+        transform: translateY(-1px);
+    }
+
+    i {
+        font-size: 1.1em;
+        color: var(--rt-success-primary);
+    }
 }
 
 // ============================================
@@ -655,13 +655,13 @@
 // ============================================
 
 .wh40k-equipment-card.dragging {
-  opacity: 0.5;
-  transform: scale(0.95);
+    opacity: 0.5;
+    transform: scale(0.95);
 }
 
 .wh40k-equipment-list.drag-over {
-  background: var(--rt-accent-overlay);
-  border-radius: 8px;
+    background: var(--rt-accent-overlay);
+    border-radius: 8px;
 }
 
 // ============================================
@@ -669,17 +669,17 @@
 // ============================================
 
 @media (max-width: 768px) {
-  .wh40k-card-stats {
-    .wh40k-stat-badge {
-      flex: 1 1 45%;
+    .wh40k-card-stats {
+        .wh40k-stat-badge {
+            flex: 1 1 45%;
+        }
     }
-  }
-  
-  .wh40k-card-actions {
-    flex-wrap: wrap;
-    
-    .wh40k-card-btn {
-      flex: 1 1 30%;
+
+    .wh40k-card-actions {
+        flex-wrap: wrap;
+
+        .wh40k-card-btn {
+            flex: 1 1 30%;
+        }
     }
-  }
 }

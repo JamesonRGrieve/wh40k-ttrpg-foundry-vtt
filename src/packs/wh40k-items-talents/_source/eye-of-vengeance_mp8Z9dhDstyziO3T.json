@@ -1,66 +1,62 @@
 {
-  "name": "Eye of Vengeance",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "identifier": "eyeOfVengeance",
-    "category": "combat",
-    "source": "Only War Core",
-    "description": {
-      "value": "<p>Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.</p>"
-    },
-    "tier": 3,
-    "benefit": "<p>Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.</p>",
-    "aptitudes": [
-      "Ballistic Skill",
-      "Offence",
-      "Tzeentch"
-    ],
-    "prerequisites": {
-      "text": "Ballistic Skill 50",
-      "characteristics": {
-        "ballisticSkill": 50
-      },
-      "skills": {},
-      "talents": []
-    },
-    "cost": 900,
-    "isPassive": false,
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Vengeful Strike",
-          "description": "<p>Before making a ranged attack, spend a Fate Point to add Degrees of Success to both Damage and Penetration.</p>"
+    "name": "Eye of Vengeance",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "identifier": "eyeOfVengeance",
+        "category": "combat",
+        "source": "Only War Core",
+        "description": {
+            "value": "<p>Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.</p>"
+        },
+        "tier": 3,
+        "benefit": "<p>Before making a ranged attack, character can spend a Infamy/Fate Point to add an amount of Damage and Penetration equal to the Number of Degrees of Success on the Ballistic Skill Test they make.</p>",
+        "aptitudes": ["Ballistic Skill", "Offence", "Tzeentch"],
+        "prerequisites": {
+            "text": "Ballistic Skill 50",
+            "characteristics": {
+                "ballisticSkill": 50
+            },
+            "skills": {},
+            "talents": []
+        },
+        "cost": 900,
+        "isPassive": false,
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Vengeful Strike",
+                    "description": "<p>Before making a ranged attack, spend a Fate Point to add Degrees of Success to both Damage and Penetration.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "mp8Z9dhDstyziO3T"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "mp8Z9dhDstyziO3T"
 }

@@ -1,1519 +1,1370 @@
 {
-  "Actor": {
-    "types": [
-      "character",
-      "npc",
-      "vehicle",
-      "starship"
-    ],
-    "templates": {
-      "base": {
-        "wounds": {
-          "max": 0,
-          "value": 0,
-          "critical": 0,
-          "rolled": false
+    "Actor": {
+        "types": ["character", "npc", "vehicle", "starship"],
+        "templates": {
+            "base": {
+                "wounds": {
+                    "max": 0,
+                    "value": 0,
+                    "critical": 0,
+                    "rolled": false
+                },
+                "initiative": {
+                    "characteristic": "agility",
+                    "base": "1d10"
+                },
+                "size": 4,
+                "characteristics": {
+                    "weaponSkill": {
+                        "label": "Weapon Skill",
+                        "short": "WS",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    },
+                    "ballisticSkill": {
+                        "label": "Ballistic Skill",
+                        "short": "BS",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    },
+                    "strength": {
+                        "label": "Strength",
+                        "short": "S",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    },
+                    "toughness": {
+                        "label": "Toughness",
+                        "short": "T",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    },
+                    "agility": {
+                        "label": "Agility",
+                        "short": "Ag",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    },
+                    "intelligence": {
+                        "label": "Intelligence",
+                        "short": "Int",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    },
+                    "perception": {
+                        "label": "Perception",
+                        "short": "Per",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    },
+                    "willpower": {
+                        "label": "Willpower",
+                        "short": "WP",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    },
+                    "fellowship": {
+                        "label": "Fellowship",
+                        "short": "Fel",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    },
+                    "influence": {
+                        "label": "Influence",
+                        "short": "Inf",
+                        "base": 0,
+                        "advance": 0,
+                        "modifier": 0,
+                        "unnatural": 0,
+                        "cost": 0
+                    }
+                }
+            },
+            "creature": {
+                "fatigue": {
+                    "max": 0,
+                    "value": 0
+                },
+                "fate": {
+                    "max": 0,
+                    "value": 0,
+                    "rolled": false
+                },
+                "psy": {
+                    "rating": 0,
+                    "sustained": 0,
+                    "defaultPR": 0,
+                    "class": "bound",
+                    "cost": 0,
+                    "hasFocus": false
+                },
+                "backpack": {
+                    "hasBackpack": false,
+                    "name": "Backpack",
+                    "isCombatVest": false,
+                    "weight": {
+                        "max": 30
+                    }
+                },
+                "skills": {
+                    "acrobatics": {
+                        "label": "Acrobatics",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "awareness": {
+                        "label": "Awareness",
+                        "characteristic": "Per",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "barter": {
+                        "label": "Barter",
+                        "characteristic": "Fel",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "blather": {
+                        "label": "Blather",
+                        "characteristic": "Fel",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "carouse": {
+                        "label": "Carouse",
+                        "characteristic": "T",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "charm": {
+                        "label": "Charm",
+                        "characteristic": "Fel",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "chemUse": {
+                        "label": "Chem-Use",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "ciphers": {
+                        "label": "Ciphers",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "climb": {
+                        "label": "Climb",
+                        "characteristic": "S",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "command": {
+                        "label": "Command",
+                        "characteristic": "Fel",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "commerce": {
+                        "label": "Commerce",
+                        "characteristic": "Fel",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "concealment": {
+                        "label": "Concealment",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "contortionist": {
+                        "label": "Contortionist",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "deceive": {
+                        "label": "Deceive",
+                        "characteristic": "Fel",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "demolition": {
+                        "label": "Demolition",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "disguise": {
+                        "label": "Disguise",
+                        "characteristic": "Fel",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "dodge": {
+                        "label": "Dodge",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "drive": {
+                        "label": "Drive",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "evaluate": {
+                        "label": "Evaluate",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "gamble": {
+                        "label": "Gamble",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "inquiry": {
+                        "label": "Inquiry",
+                        "characteristic": "Fel",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "interrogation": {
+                        "label": "Interrogation",
+                        "characteristic": "WP",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "intimidate": {
+                        "label": "Intimidate",
+                        "characteristic": "S",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "invocation": {
+                        "label": "Invocation",
+                        "characteristic": "WP",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "lipReading": {
+                        "label": "Lip Reading",
+                        "characteristic": "Per",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "literacy": {
+                        "label": "Literacy",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "logic": {
+                        "label": "Logic",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "medicae": {
+                        "label": "Medicae",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "navigation": {
+                        "label": "Navigation",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "psyniscience": {
+                        "label": "Psyniscience",
+                        "characteristic": "Per",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "scrutiny": {
+                        "label": "Scrutiny",
+                        "characteristic": "Per",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "search": {
+                        "label": "Search",
+                        "characteristic": "Per",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "security": {
+                        "label": "Security",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "shadowing": {
+                        "label": "Shadowing",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "silentMove": {
+                        "label": "Silent Move",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "sleightOfHand": {
+                        "label": "Sleight of Hand",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "survival": {
+                        "label": "Survival",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "swim": {
+                        "label": "Swim",
+                        "characteristic": "S",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "techUse": {
+                        "label": "Tech-Use",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "tracking": {
+                        "label": "Tracking",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "wrangling": {
+                        "label": "Wrangling",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0
+                    },
+                    "commonLore": {
+                        "label": "Common Lore",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0,
+                        "entries": []
+                    },
+                    "forbiddenLore": {
+                        "label": "Forbidden Lore",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0,
+                        "entries": []
+                    },
+                    "scholasticLore": {
+                        "label": "Scholastic Lore",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0,
+                        "entries": []
+                    },
+                    "speakLanguage": {
+                        "label": "Speak Language",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0,
+                        "entries": []
+                    },
+                    "secretTongue": {
+                        "label": "Secret Tongue",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0,
+                        "entries": []
+                    },
+                    "trade": {
+                        "label": "Trade",
+                        "characteristic": "Int",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0,
+                        "entries": []
+                    },
+                    "performer": {
+                        "label": "Performer",
+                        "characteristic": "Fel",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0,
+                        "entries": []
+                    },
+                    "pilot": {
+                        "label": "Pilot",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": false,
+                        "cost": 0,
+                        "entries": []
+                    },
+                    "athletics": {
+                        "label": "Athletics",
+                        "characteristic": "S",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": true,
+                        "cost": 0
+                    },
+                    "parry": {
+                        "label": "Parry",
+                        "characteristic": "WS",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": true,
+                        "cost": 0
+                    },
+                    "stealth": {
+                        "label": "Stealth",
+                        "characteristic": "Ag",
+                        "basic": false,
+                        "trained": false,
+                        "plus10": false,
+                        "plus20": false,
+                        "bonus": 0,
+                        "notes": "",
+                        "hidden": true,
+                        "cost": 0
+                    }
+                }
+            },
+            "npc": {
+                "faction": "",
+                "subfaction": "",
+                "allegiance": "",
+                "role": "specialist",
+                "type": "troop",
+                "threatLevel": 5
+            },
+            "vehicle": {
+                "front": "",
+                "side": "",
+                "rear": "",
+                "availability": "",
+                "speed": {
+                    "cruising": 0,
+                    "tactical": 0
+                },
+                "crew": "",
+                "manoeuverability": 0,
+                "carryingCapacity": 0,
+                "integrity": {
+                    "max": 0,
+                    "value": 0,
+                    "critical": 0
+                }
+            },
+            "rogueTraderExtras": {
+                "rogueTrader": {
+                    "careerPath": "",
+                    "rank": "",
+                    "homeWorld": "",
+                    "motivation": "",
+                    "profitFactor": {
+                        "starting": 0,
+                        "current": 0,
+                        "modifier": 0,
+                        "misfortunes": ""
+                    },
+                    "endeavours": {
+                        "current": "",
+                        "objectives": [],
+                        "achievementPoints": 0,
+                        "completed": []
+                    },
+                    "shipName": "",
+                    "dynasty": {
+                        "name": "",
+                        "history": "",
+                        "reputation": 0
+                    },
+                    "armour": {
+                        "head": 0,
+                        "rightArm": 0,
+                        "leftArm": 0,
+                        "body": 0,
+                        "rightLeg": 0,
+                        "leftLeg": 0
+                    },
+                    "lifting": {
+                        "lift": 0,
+                        "carry": 0,
+                        "push": 0
+                    },
+                    "armourWeight": 0,
+                    "weight": {
+                        "total": 0,
+                        "current": 0
+                    },
+                    "wounds": {
+                        "total": 0,
+                        "current": 0,
+                        "critical": 0,
+                        "fatigue": 0
+                    },
+                    "fate": {
+                        "total": 0,
+                        "current": 0
+                    },
+                    "acquisitions": [],
+                    "mutations": ""
+                }
+            }
         },
-        "initiative": {
-          "characteristic": "agility",
-          "base": "1d10"
+        "character": {
+            "templates": ["base", "creature", "rogueTraderExtras"],
+            "bio": {
+                "gender": "",
+                "age": "",
+                "build": "",
+                "complexion": "",
+                "hair": "",
+                "quirks": "",
+                "superstition": "",
+                "mementos": "",
+                "notes": ""
+            },
+            "originPath": {
+                "homeWorld": "",
+                "birthright": "",
+                "lureOfTheVoid": "",
+                "trialsAndTravails": "",
+                "motivation": "",
+                "career": ""
+            },
+            "experience": {
+                "used": 0,
+                "total": 0
+            },
+            "insanity": 0,
+            "corruption": 0,
+            "aptitudes": {},
+            "backgroundEffects": {
+                "abilities": []
+            }
         },
-        "size": 4,
-        "characteristics": {
-          "weaponSkill": {
-            "label": "Weapon Skill",
-            "short": "WS",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          },
-          "ballisticSkill": {
-            "label": "Ballistic Skill",
-            "short": "BS",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          },
-          "strength": {
-            "label": "Strength",
-            "short": "S",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          },
-          "toughness": {
-            "label": "Toughness",
-            "short": "T",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          },
-          "agility": {
-            "label": "Agility",
-            "short": "Ag",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          },
-          "intelligence": {
-            "label": "Intelligence",
-            "short": "Int",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          },
-          "perception": {
-            "label": "Perception",
-            "short": "Per",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          },
-          "willpower": {
-            "label": "Willpower",
-            "short": "WP",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          },
-          "fellowship": {
-            "label": "Fellowship",
-            "short": "Fel",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          },
-          "influence": {
-            "label": "Influence",
-            "short": "Inf",
-            "base": 0,
-            "advance": 0,
-            "modifier": 0,
-            "unnatural": 0,
-            "cost": 0
-          }
+        "npc": {
+            "templates": ["base", "creature", "npc"]
+        },
+        "xenos": {
+            "templates": ["base", "creature", "npc"],
+            "species": ""
+        },
+        "vehicle": {
+            "templates": ["base", "vehicle", "npc"]
+        },
+        "starship": {
+            "hullType": "",
+            "hullClass": "",
+            "dimensions": "",
+            "crew": {
+                "population": 100,
+                "crewRating": 30,
+                "morale": {
+                    "max": 100,
+                    "value": 100
+                }
+            },
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "voidShields": 0,
+            "hullIntegrity": {
+                "max": 0,
+                "value": 0
+            },
+            "space": {
+                "total": 0,
+                "used": 0
+            },
+            "power": {
+                "total": 0,
+                "used": 0
+            },
+            "turretRating": 0,
+            "shipPoints": 0,
+            "machineSpiritOddities": "",
+            "pastHistory": "",
+            "complications": "",
+            "weaponCapacity": {
+                "dorsal": 0,
+                "prow": 0,
+                "port": 0,
+                "starboard": 0,
+                "keel": 0
+            },
+            "notes": ""
         }
-      },
-      "creature": {
-        "fatigue": {
-          "max": 0,
-          "value": 0
+    },
+    "Item": {
+        "types": [
+            "ammunition",
+            "aptitude",
+            "armour",
+            "armourModification",
+            "attackSpecial",
+            "backpack",
+            "condition",
+            "consumable",
+            "criticalInjury",
+            "cybernetic",
+            "drug",
+            "enemy",
+            "forceField",
+            "gear",
+            "journalEntry",
+            "malignancy",
+            "mentalDisorder",
+            "mutation",
+            "navigatorPower",
+            "order",
+            "originPath",
+            "peer",
+            "psychicPower",
+            "ritual",
+            "shipComponent",
+            "shipRole",
+            "shipUpgrade",
+            "shipWeapon",
+            "skill",
+            "specialAbility",
+            "storageLocation",
+            "talent",
+            "tool",
+            "trait",
+            "vehicleTrait",
+            "vehicleUpgrade",
+            "weapon",
+            "weaponModification",
+            "weaponQuality",
+            "npcTemplate"
+        ],
+        "templates": {
+            "physicalItem": {
+                "craftsmanship": "common",
+                "availability": "common",
+                "weight": 0,
+                "equipped": false,
+                "inBackpack": false
+            },
+            "armourPoints": {
+                "type": "",
+                "armourPoints": {
+                    "head": 0,
+                    "leftArm": 0,
+                    "rightArm": 0,
+                    "body": 0,
+                    "leftLeg": 0,
+                    "rightLeg": 0
+                }
+            },
+            "itemDescription": {
+                "description": "",
+                "source": ""
+            },
+            "attack": {
+                "range": "",
+                "attackType": "",
+                "attackBonus": 0,
+                "rateOfFire": {
+                    "single": 1,
+                    "burst": 0,
+                    "full": 0
+                }
+            },
+            "damage": {
+                "damage": "",
+                "damageType": "",
+                "penetration": "",
+                "special": {}
+            },
+            "action": {
+                "target": "",
+                "effect": ""
+            },
+            "backpack": {
+                "backpack": {
+                    "inBackpack": false
+                }
+            }
         },
-        "fate": {
-          "max": 0,
-          "value": 0,
-          "rolled": false
+        "ammunition": {
+            "templates": ["physicalItem", "itemDescription", "damage", "attack", "action", "backpack"],
+            "container": true,
+            "containerTypes": ["attackSpecial"],
+            "weaponType": ""
         },
-        "psy": {
-          "rating": 0,
-          "sustained": 0,
-          "defaultPR": 0,
-          "class": "bound",
-          "cost": 0,
-          "hasFocus": false
+        "aptitude": {
+            "template": ["itemDescription"]
         },
-        "backpack": {
-          "hasBackpack": false,
-          "name": "Backpack",
-          "isCombatVest": false,
-          "weight": {
-            "max": 30
-          }
+        "armour": {
+            "templates": ["physicalItem", "itemDescription", "container", "backpack", "armourPoints"],
+            "container": true,
+            "containerTypes": ["armourModification"],
+            "maxAgility": 0
         },
-        "skills": {
-          "acrobatics": {
-            "label": "Acrobatics",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "awareness": {
-            "label": "Awareness",
-            "characteristic": "Per",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "barter": {
-            "label": "Barter",
-            "characteristic": "Fel",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "blather": {
-            "label": "Blather",
-            "characteristic": "Fel",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "carouse": {
-            "label": "Carouse",
-            "characteristic": "T",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "charm": {
-            "label": "Charm",
-            "characteristic": "Fel",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "chemUse": {
-            "label": "Chem-Use",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "ciphers": {
-            "label": "Ciphers",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "climb": {
-            "label": "Climb",
-            "characteristic": "S",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "command": {
-            "label": "Command",
-            "characteristic": "Fel",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "commerce": {
-            "label": "Commerce",
-            "characteristic": "Fel",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "concealment": {
-            "label": "Concealment",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "contortionist": {
-            "label": "Contortionist",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "deceive": {
-            "label": "Deceive",
-            "characteristic": "Fel",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "demolition": {
-            "label": "Demolition",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "disguise": {
-            "label": "Disguise",
-            "characteristic": "Fel",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "dodge": {
-            "label": "Dodge",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "drive": {
-            "label": "Drive",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "evaluate": {
-            "label": "Evaluate",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "gamble": {
-            "label": "Gamble",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "inquiry": {
-            "label": "Inquiry",
-            "characteristic": "Fel",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "interrogation": {
-            "label": "Interrogation",
-            "characteristic": "WP",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "intimidate": {
-            "label": "Intimidate",
-            "characteristic": "S",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "invocation": {
-            "label": "Invocation",
-            "characteristic": "WP",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "lipReading": {
-            "label": "Lip Reading",
-            "characteristic": "Per",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "literacy": {
-            "label": "Literacy",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "logic": {
-            "label": "Logic",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "medicae": {
-            "label": "Medicae",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "navigation": {
-            "label": "Navigation",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "psyniscience": {
-            "label": "Psyniscience",
-            "characteristic": "Per",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "scrutiny": {
-            "label": "Scrutiny",
-            "characteristic": "Per",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "search": {
-            "label": "Search",
-            "characteristic": "Per",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "security": {
-            "label": "Security",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "shadowing": {
-            "label": "Shadowing",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "silentMove": {
-            "label": "Silent Move",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "sleightOfHand": {
-            "label": "Sleight of Hand",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "survival": {
-            "label": "Survival",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "swim": {
-            "label": "Swim",
-            "characteristic": "S",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "techUse": {
-            "label": "Tech-Use",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "tracking": {
-            "label": "Tracking",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "wrangling": {
-            "label": "Wrangling",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0
-          },
-          "commonLore": {
-            "label": "Common Lore",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0,
-            "entries": []
-          },
-          "forbiddenLore": {
-            "label": "Forbidden Lore",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0,
-            "entries": []
-          },
-          "scholasticLore": {
-            "label": "Scholastic Lore",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0,
-            "entries": []
-          },
-          "speakLanguage": {
-            "label": "Speak Language",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0,
-            "entries": []
-          },
-          "secretTongue": {
-            "label": "Secret Tongue",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0,
-            "entries": []
-          },
-          "trade": {
-            "label": "Trade",
-            "characteristic": "Int",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0,
-            "entries": []
-          },
-          "performer": {
-            "label": "Performer",
-            "characteristic": "Fel",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0,
-            "entries": []
-          },
-          "pilot": {
-            "label": "Pilot",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": false,
-            "cost": 0,
-            "entries": []
-          },
-          "athletics": {
-            "label": "Athletics",
-            "characteristic": "S",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": true,
-            "cost": 0
-          },
-          "parry": {
-            "label": "Parry",
-            "characteristic": "WS",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": true,
-            "cost": 0
-          },
-          "stealth": {
-            "label": "Stealth",
-            "characteristic": "Ag",
-            "basic": false,
-            "trained": false,
-            "plus10": false,
-            "plus20": false,
-            "bonus": 0,
-            "notes": "",
-            "hidden": true,
-            "cost": 0
-          }
-        }
-      },
-      "npc": {
-        "faction": "",
-        "subfaction": "",
-        "allegiance": "",
-        "role": "specialist",
-        "type": "troop",
-        "threatLevel": 5
-      },
-      "vehicle": {
-        "front": "",
-        "side": "",
-        "rear": "",
-        "availability": "",
-        "speed": {
-          "cruising": 0,
-          "tactical": 0
+        "armourModification": {
+            "templates": ["physicalItem", "itemDescription", "backpack"]
         },
-        "crew": "",
-        "manoeuverability": 0,
-        "carryingCapacity": 0,
-        "integrity": {
-          "max": 0,
-          "value": 0,
-          "critical": 0
-        }
-      },
-      "rogueTraderExtras": {
-        "rogueTrader": {
-          "careerPath": "",
-          "rank": "",
-          "homeWorld": "",
-          "motivation": "",
-          "profitFactor": {
-            "starting": 0,
-            "current": 0,
-            "modifier": 0,
-            "misfortunes": ""
-          },
-          "endeavours": {
-            "current": "",
-            "objectives": [],
-            "achievementPoints": 0,
-            "completed": []
-          },
-          "shipName": "",
-          "dynasty": {
+        "attackSpecial": {
+            "templates": ["itemDescription"],
+            "enabled": true,
+            "hasLevel": false,
+            "level": 0
+        },
+        "bonus": {
+            "source": "",
             "name": "",
-            "history": "",
-            "reputation": 0
-          },
-          "armour": {
-            "head": 0,
-            "rightArm": 0,
-            "leftArm": 0,
-            "body": 0,
-            "rightLeg": 0,
-            "leftLeg": 0
-          },
-          "lifting": {
-            "lift": 0,
-            "carry": 0,
-            "push": 0
-          },
-          "armourWeight": 0,
-          "weight": {
-            "total": 0,
-            "current": 0
-          },
-          "wounds": {
-            "total": 0,
-            "current": 0,
-            "critical": 0,
-            "fatigue": 0
-          },
-          "fate": {
-            "total": 0,
-            "current": 0
-          },
-          "acquisitions": [],
-          "mutations": ""
-        }
-      }
-    },
-    "character": {
-      "templates": [
-        "base",
-        "creature",
-        "rogueTraderExtras"
-      ],
-      "bio": {
-        "gender": "",
-        "age": "",
-        "build": "",
-        "complexion": "",
-        "hair": "",
-        "quirks": "",
-        "superstition": "",
-        "mementos": "",
-        "notes": ""
-      },
-      "originPath": {
-        "homeWorld": "",
-        "birthright": "",
-        "lureOfTheVoid": "",
-        "trialsAndTravails": "",
-        "motivation": "",
-        "career": ""
-      },
-      "experience": {
-        "used": 0,
-        "total": 0
-      },
-      "insanity": 0,
-      "corruption": 0,
-      "aptitudes": {},
-      "backgroundEffects": {
-        "abilities": []
-      }
-    },
-    "npc": {
-      "templates": [
-        "base",
-        "creature",
-        "npc"
-      ]
-    },
-    "xenos": {
-      "templates": [
-        "base",
-        "creature",
-        "npc"
-      ],
-      "species": ""
-    },
-    "vehicle": {
-      "templates": [
-        "base",
-        "vehicle",
-        "npc"
-      ]
-    },
-    "starship": {
-      "hullType": "",
-      "hullClass": "",
-      "dimensions": "",
-      "crew": {
-        "population": 100,
-        "crewRating": 30,
-        "morale": {
-          "max": 100,
-          "value": 100
-        }
-      },
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "voidShields": 0,
-      "hullIntegrity": {
-        "max": 0,
-        "value": 0
-      },
-      "space": {
-        "total": 0,
-        "used": 0
-      },
-      "power": {
-        "total": 0,
-        "used": 0
-      },
-      "turretRating": 0,
-      "shipPoints": 0,
-      "machineSpiritOddities": "",
-      "pastHistory": "",
-      "complications": "",
-      "weaponCapacity": {
-        "dorsal": 0,
-        "prow": 0,
-        "port": 0,
-        "starboard": 0,
-        "keel": 0
-      },
-      "notes": ""
-    }
-  },
-  "Item": {
-    "types": [
-      "ammunition",
-      "aptitude",
-      "armour",
-      "armourModification",
-      "attackSpecial",
-      "backpack",
-      "condition",
-      "consumable",
-      "criticalInjury",
-      "cybernetic",
-      "drug",
-      "enemy",
-      "forceField",
-      "gear",
-      "journalEntry",
-      "malignancy",
-      "mentalDisorder",
-      "mutation",
-      "navigatorPower",
-      "order",
-      "originPath",
-      "peer",
-      "psychicPower",
-      "ritual",
-      "shipComponent",
-      "shipRole",
-      "shipUpgrade",
-      "shipWeapon",
-      "skill",
-      "specialAbility",
-      "storageLocation",
-      "talent",
-      "tool",
-      "trait",
-      "vehicleTrait",
-      "vehicleUpgrade",
-      "weapon",
-      "weaponModification",
-      "weaponQuality",
-      "npcTemplate"
-    ],
-    "templates": {
-      "physicalItem": {
-        "craftsmanship": "common",
-        "availability": "common",
-        "weight": 0,
-        "equipped": false,
-        "inBackpack": false
-      },
-      "armourPoints": {
-        "type": "",
-        "armourPoints": {
-          "head": 0,
-          "leftArm": 0,
-          "rightArm": 0,
-          "body": 0,
-          "leftLeg": 0,
-          "rightLeg": 0
-        }
-      },
-      "itemDescription": {
-        "description": "",
-        "source": ""
-      },
-      "attack": {
-        "range": "",
-        "attackType": "",
-        "attackBonus": 0,
-        "rateOfFire": {
-          "single": 1,
-          "burst": 0,
-          "full": 0
-        }
-      },
-      "damage": {
-        "damage": "",
-        "damageType": "",
-        "penetration": "",
-        "special": {}
-      },
-      "action": {
-        "target": "",
-        "effect": ""
-      },
-      "backpack": {
-        "backpack": {
-          "inBackpack": false
-        }
-      }
-    },
-    "ammunition": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "damage",
-        "attack",
-        "action",
-        "backpack"
-      ],
-      "container": true,
-      "containerTypes": [
-        "attackSpecial"
-      ],
-      "weaponType": ""
-    },
-    "aptitude": {
-      "template": [
-        "itemDescription"
-      ]
-    },
-    "armour": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "container",
-        "backpack",
-        "armourPoints"
-      ],
-      "container": true,
-      "containerTypes": [
-        "armourModification"
-      ],
-      "maxAgility": 0
-    },
-    "armourModification": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "backpack"
-      ]
-    },
-    "attackSpecial": {
-      "templates": [
-        "itemDescription"
-      ],
-      "enabled": true,
-      "hasLevel": false,
-      "level": 0
-    },
-    "bonus": {
-      "source": "",
-      "name": "",
-      "benefit": ""
-    },
-    "criticalInjury": {
-      "templates": [
-        "itemDescription"
-      ],
-      "identifier": "",
-      "damageType": "impact",
-      "bodyPart": "body",
-      "severity": 1,
-      "effect": "",
-      "permanent": false,
-      "notes": ""
-    },
-    "condition": {
-      "templates": [
-        "itemDescription"
-      ],
-      "identifier": "",
-      "nature": "harmful",
-      "effect": "",
-      "removal": "",
-      "stackable": false,
-      "stacks": 1,
-      "appliesTo": "self",
-      "duration": {
-        "value": 0,
-        "units": "permanent"
-      },
-      "notes": ""
-    },
-    "cybernetic": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "backpack",
-        "armourPoints"
-      ],
-      "hasArmourPoints": false
-    },
-    "consumable": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "backpack"
-      ]
-    },
-    "drug": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "backpack"
-      ]
-    },
-    "enemy": {
-      "templates": [
-        "itemDescription"
-      ],
-      "name": "",
-      "modifier": 0
-    },
-    "forceField": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "action",
-        "backpack"
-      ],
-      "protectionRating": 0,
-      "activated": false,
-      "overloaded": false
-    },
-    "gear": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "action",
-        "backpack"
-      ]
-    },
-    "journalEntry": {
-      "templates": [
-        "itemDescription"
-      ],
-      "time": "",
-      "place": ""
-    },
-    "malignancy": {
-      "templates": [
-        "itemDescription"
-      ]
-    },
-    "mentalDisorder": {
-      "templates": [
-        "itemDescription"
-      ]
-    },
-    "mutation": {
-      "templates": [
-        "itemDescription"
-      ]
-    },
-    "peer": {
-      "templates": [
-        "itemDescription"
-      ],
-      "name": "",
-      "modifier": 0
-    },
-    "psychicPower": {
-      "templates": [
-        "itemDescription",
-        "damage",
-        "attack",
-        "action"
-      ],
-      "container": true,
-      "containerTypes": [
-        "attackSpecial"
-      ],
-      "cost": 0,
-      "sustained": "No",
-      "discipline": "",
-      "subtype": "Concentration",
-      "action": "Half Action",
-      "target": {
-        "bonus": 0,
-        "useSkill": false,
-        "characteristic": "willpower",
-        "skill": "None",
-        "opposedBonus": 0,
-        "isOpposed": false,
-        "useOpposedSkill": false,
-        "opposed": "willpower",
-        "opposedSkill": "None"
-      }
-    },
-    "specialAbility": {
-      "templates": [
-        "itemDescription"
-      ],
-      "benefit": ""
-    },
-    "talent": {
-      "templates": [
-        "itemDescription"
-      ],
-      "prerequisites": "",
-      "aptitudes": "",
-      "benefit": "",
-      "tier": 0,
-      "cost": 0,
-      "category": "",
-      "isPassive": true,
-      "isRollable": false,
-      "rollConfig": {
-        "characteristic": "",
-        "modifier": 0,
-        "description": ""
-      },
-      "modifiers": {
-        "characteristics": {},
-        "skills": {},
-        "combat": {},
-        "other": []
-      }
-    },
-    "tool": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "action",
-        "backpack"
-      ]
-    },
-    "trait": {
-      "templates": [
-        "itemDescription"
-      ],
-      "level": 0
-    },
-    "weapon": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "damage",
-        "attack",
-        "action",
-        "container",
-        "backpack"
-      ],
-      "container": true,
-      "containerTypes": [
-        "weaponModification",
-        "attackSpecial",
-        "ammunition"
-      ],
-      "class": "",
-      "type": "",
-      "reload": "",
-      "clip": {
-        "max": 0,
-        "value": 0
-      },
-      "modifications": []
-    },
-    "weaponModification": {
-      "templates": [
-        "physicalItem",
-        "itemDescription",
-        "damage",
-        "attack",
-        "backpack"
-      ],
-      "modifierType": "",
-      "modifiers": {
-        "damage": 0,
-        "penetration": 0,
-        "range": 0,
-        "rateOfFire": {
-          "single": 0,
-          "semi": 0,
-          "full": 0
+            "benefit": ""
         },
-        "clip": 0,
-        "reliability": 0,
-        "weight": 0,
-        "toHit": 0,
-        "special": []
-      },
-      "restrictions": {
-        "weaponClass": [],
-        "weaponType": []
-      }
-    },
-    "storageLocation": {
-      "templates": [
-        "itemDescription"
-      ],
-      "location": "",
-      "container": true,
-      "containerTypes": [
-        "ammunition",
-        "armour",
-        "armourModification",
-        "cybernetic",
-        "consumable",
-        "drug",
-        "forceField",
-        "gear",
-        "tool",
-        "weapon",
-        "weaponModification"
-      ]
-    },
-    "navigatorPower": {
-      "templates": [
-        "itemDescription"
-      ],
-      "useTime": "",
-      "range": "",
-      "test": "",
-      "sustain": "",
-      "novice": "",
-      "adept": "",
-      "master": ""
-    },
-    "order": {
-      "templates": [
-        "itemDescription"
-      ],
-      "typeAndAction": "",
-      "requirements": "",
-      "descriptionText": ""
-    },
-    "originPath": {
-      "templates": [
-        "itemDescription"
-      ],
-      "step": "",
-      "stepIndex": 0,
-      "requirements": "",
-      "effects": "",
-      "descriptionText": "",
-      "modifiers": {
-        "characteristics": {
-          "weaponSkill": 0,
-          "ballisticSkill": 0,
-          "strength": 0,
-          "toughness": 0,
-          "agility": 0,
-          "intelligence": 0,
-          "perception": 0,
-          "willpower": 0,
-          "fellowship": 0,
-          "influence": 0
+        "criticalInjury": {
+            "templates": ["itemDescription"],
+            "identifier": "",
+            "damageType": "impact",
+            "bodyPart": "body",
+            "severity": 1,
+            "effect": "",
+            "permanent": false,
+            "notes": ""
         },
-        "wounds": 0,
-        "fate": 0,
-        "skills": [],
-        "talents": [],
-        "traits": [],
-        "other": []
-      }
-    },
-    "ritual": {
-      "templates": [
-        "itemDescription"
-      ],
-      "test": "",
-      "requirements": "",
-      "effect": "",
-      "costs": "",
-      "failure": ""
-    },
-    "shipComponent": {
-      "templates": [
-        "itemDescription"
-      ],
-      "componentType": "",
-      "hullType": "",
-      "powerUsage": 0,
-      "spaceUsage": 0,
-      "spCost": 0,
-      "effect": "",
-      "availability": ""
-    },
-    "shipRole": {
-      "templates": [
-        "itemDescription"
-      ],
-      "rank": 0,
-      "purpose": "",
-      "careerPreferences": "",
-      "subordinates": "",
-      "importantSkills": "",
-      "effect": ""
-    },
-    "shipUpgrade": {
-      "templates": [
-        "itemDescription"
-      ],
-      "powerUsage": 0,
-      "spaceUsage": 0,
-      "spCost": 0,
-      "effect": "",
-      "availability": ""
-    },
-    "shipWeapon": {
-      "templates": [
-        "itemDescription"
-      ],
-      "weaponType": "",
-      "hullType": "",
-      "powerUsage": 0,
-      "spaceUsage": 0,
-      "spCost": 0,
-      "strength": 0,
-      "damage": "",
-      "crit": 0,
-      "range": "",
-      "special": "",
-      "availability": ""
-    },
-    "skill": {
-      "templates": [
-        "itemDescription"
-      ],
-      "skillType": "",
-      "characteristic": "",
-      "descriptor": "",
-      "uses": "",
-      "useTime": "",
-      "isBasic": false,
-      "aptitudes": [],
-      "specializations": [],
-      "rollConfig": {
-        "defaultModifier": 0,
-        "canBeUsedUntrained": true
-      }
-    },
-    "vehicleTrait": {
-      "templates": [
-        "itemDescription"
-      ],
-      "effect": "",
-      "level": 0
-    },
-    "vehicleUpgrade": {
-      "templates": [
-        "itemDescription"
-      ],
-      "effect": "",
-      "availability": ""
-    },
-    "weaponQuality": {
-      "templates": [
-        "itemDescription"
-      ],
-      "effect": "",
-      "hasLevel": false,
-      "level": 0
-    },
-    "npcTemplate": {
-      "templates": [
-        "itemDescription"
-      ],
-      "category": "humanoid",
-      "faction": "",
-      "subfaction": "",
-      "role": "bruiser",
-      "baseThreatLevel": 5
+        "condition": {
+            "templates": ["itemDescription"],
+            "identifier": "",
+            "nature": "harmful",
+            "effect": "",
+            "removal": "",
+            "stackable": false,
+            "stacks": 1,
+            "appliesTo": "self",
+            "duration": {
+                "value": 0,
+                "units": "permanent"
+            },
+            "notes": ""
+        },
+        "cybernetic": {
+            "templates": ["physicalItem", "itemDescription", "backpack", "armourPoints"],
+            "hasArmourPoints": false
+        },
+        "consumable": {
+            "templates": ["physicalItem", "itemDescription", "backpack"]
+        },
+        "drug": {
+            "templates": ["physicalItem", "itemDescription", "backpack"]
+        },
+        "enemy": {
+            "templates": ["itemDescription"],
+            "name": "",
+            "modifier": 0
+        },
+        "forceField": {
+            "templates": ["physicalItem", "itemDescription", "action", "backpack"],
+            "protectionRating": 0,
+            "activated": false,
+            "overloaded": false
+        },
+        "gear": {
+            "templates": ["physicalItem", "itemDescription", "action", "backpack"]
+        },
+        "journalEntry": {
+            "templates": ["itemDescription"],
+            "time": "",
+            "place": ""
+        },
+        "malignancy": {
+            "templates": ["itemDescription"]
+        },
+        "mentalDisorder": {
+            "templates": ["itemDescription"]
+        },
+        "mutation": {
+            "templates": ["itemDescription"]
+        },
+        "peer": {
+            "templates": ["itemDescription"],
+            "name": "",
+            "modifier": 0
+        },
+        "psychicPower": {
+            "templates": ["itemDescription", "damage", "attack", "action"],
+            "container": true,
+            "containerTypes": ["attackSpecial"],
+            "cost": 0,
+            "sustained": "No",
+            "discipline": "",
+            "subtype": "Concentration",
+            "action": "Half Action",
+            "target": {
+                "bonus": 0,
+                "useSkill": false,
+                "characteristic": "willpower",
+                "skill": "None",
+                "opposedBonus": 0,
+                "isOpposed": false,
+                "useOpposedSkill": false,
+                "opposed": "willpower",
+                "opposedSkill": "None"
+            }
+        },
+        "specialAbility": {
+            "templates": ["itemDescription"],
+            "benefit": ""
+        },
+        "talent": {
+            "templates": ["itemDescription"],
+            "prerequisites": "",
+            "aptitudes": "",
+            "benefit": "",
+            "tier": 0,
+            "cost": 0,
+            "category": "",
+            "isPassive": true,
+            "isRollable": false,
+            "rollConfig": {
+                "characteristic": "",
+                "modifier": 0,
+                "description": ""
+            },
+            "modifiers": {
+                "characteristics": {},
+                "skills": {},
+                "combat": {},
+                "other": []
+            }
+        },
+        "tool": {
+            "templates": ["physicalItem", "itemDescription", "action", "backpack"]
+        },
+        "trait": {
+            "templates": ["itemDescription"],
+            "level": 0
+        },
+        "weapon": {
+            "templates": ["physicalItem", "itemDescription", "damage", "attack", "action", "container", "backpack"],
+            "container": true,
+            "containerTypes": ["weaponModification", "attackSpecial", "ammunition"],
+            "class": "",
+            "type": "",
+            "reload": "",
+            "clip": {
+                "max": 0,
+                "value": 0
+            },
+            "modifications": []
+        },
+        "weaponModification": {
+            "templates": ["physicalItem", "itemDescription", "damage", "attack", "backpack"],
+            "modifierType": "",
+            "modifiers": {
+                "damage": 0,
+                "penetration": 0,
+                "range": 0,
+                "rateOfFire": {
+                    "single": 0,
+                    "semi": 0,
+                    "full": 0
+                },
+                "clip": 0,
+                "reliability": 0,
+                "weight": 0,
+                "toHit": 0,
+                "special": []
+            },
+            "restrictions": {
+                "weaponClass": [],
+                "weaponType": []
+            }
+        },
+        "storageLocation": {
+            "templates": ["itemDescription"],
+            "location": "",
+            "container": true,
+            "containerTypes": [
+                "ammunition",
+                "armour",
+                "armourModification",
+                "cybernetic",
+                "consumable",
+                "drug",
+                "forceField",
+                "gear",
+                "tool",
+                "weapon",
+                "weaponModification"
+            ]
+        },
+        "navigatorPower": {
+            "templates": ["itemDescription"],
+            "useTime": "",
+            "range": "",
+            "test": "",
+            "sustain": "",
+            "novice": "",
+            "adept": "",
+            "master": ""
+        },
+        "order": {
+            "templates": ["itemDescription"],
+            "typeAndAction": "",
+            "requirements": "",
+            "descriptionText": ""
+        },
+        "originPath": {
+            "templates": ["itemDescription"],
+            "step": "",
+            "stepIndex": 0,
+            "requirements": "",
+            "effects": "",
+            "descriptionText": "",
+            "modifiers": {
+                "characteristics": {
+                    "weaponSkill": 0,
+                    "ballisticSkill": 0,
+                    "strength": 0,
+                    "toughness": 0,
+                    "agility": 0,
+                    "intelligence": 0,
+                    "perception": 0,
+                    "willpower": 0,
+                    "fellowship": 0,
+                    "influence": 0
+                },
+                "wounds": 0,
+                "fate": 0,
+                "skills": [],
+                "talents": [],
+                "traits": [],
+                "other": []
+            }
+        },
+        "ritual": {
+            "templates": ["itemDescription"],
+            "test": "",
+            "requirements": "",
+            "effect": "",
+            "costs": "",
+            "failure": ""
+        },
+        "shipComponent": {
+            "templates": ["itemDescription"],
+            "componentType": "",
+            "hullType": "",
+            "powerUsage": 0,
+            "spaceUsage": 0,
+            "spCost": 0,
+            "effect": "",
+            "availability": ""
+        },
+        "shipRole": {
+            "templates": ["itemDescription"],
+            "rank": 0,
+            "purpose": "",
+            "careerPreferences": "",
+            "subordinates": "",
+            "importantSkills": "",
+            "effect": ""
+        },
+        "shipUpgrade": {
+            "templates": ["itemDescription"],
+            "powerUsage": 0,
+            "spaceUsage": 0,
+            "spCost": 0,
+            "effect": "",
+            "availability": ""
+        },
+        "shipWeapon": {
+            "templates": ["itemDescription"],
+            "weaponType": "",
+            "hullType": "",
+            "powerUsage": 0,
+            "spaceUsage": 0,
+            "spCost": 0,
+            "strength": 0,
+            "damage": "",
+            "crit": 0,
+            "range": "",
+            "special": "",
+            "availability": ""
+        },
+        "skill": {
+            "templates": ["itemDescription"],
+            "skillType": "",
+            "characteristic": "",
+            "descriptor": "",
+            "uses": "",
+            "useTime": "",
+            "isBasic": false,
+            "aptitudes": [],
+            "specializations": [],
+            "rollConfig": {
+                "defaultModifier": 0,
+                "canBeUsedUntrained": true
+            }
+        },
+        "vehicleTrait": {
+            "templates": ["itemDescription"],
+            "effect": "",
+            "level": 0
+        },
+        "vehicleUpgrade": {
+            "templates": ["itemDescription"],
+            "effect": "",
+            "availability": ""
+        },
+        "weaponQuality": {
+            "templates": ["itemDescription"],
+            "effect": "",
+            "hasLevel": false,
+            "level": 0
+        },
+        "npcTemplate": {
+            "templates": ["itemDescription"],
+            "category": "humanoid",
+            "faction": "",
+            "subfaction": "",
+            "role": "bruiser",
+            "baseThreatLevel": 5
+        }
     }
-  }
 }

@@ -116,7 +116,7 @@
         color: var(--rt-text-light);
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        
+
         i {
             color: var(--rt-gold);
         }
@@ -221,7 +221,7 @@
     font-family: 'Courier New', monospace;
     font-size: 0.95rem;
     color: var(--rt-text-muted);
-    
+
     i {
         color: var(--rt-gold);
     }
@@ -257,8 +257,15 @@
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
 }
 
 /* -------------------------------------------- */
@@ -393,8 +400,13 @@
 }
 
 @keyframes emphasize {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 .accept-button {
@@ -402,6 +414,11 @@
 }
 
 @keyframes glow {
-    0%, 100% { box-shadow: 0 0 8px rgba(201, 162, 39, 0.3); }
-    50% { box-shadow: 0 0 25px rgba(201, 162, 39, 0.6); }
+    0%,
+    100% {
+        box-shadow: 0 0 8px rgba(201, 162, 39, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(201, 162, 39, 0.6);
+    }
 }

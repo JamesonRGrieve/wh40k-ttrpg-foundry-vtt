@@ -154,7 +154,9 @@
         line-height: 1.6;
         color: var(--rt-text-light);
 
-        h2, h3, h4 {
+        h2,
+        h3,
+        h4 {
             font-family: var(--rt-font-header);
             color: var(--rt-gold);
             margin: var(--rt-space-md) 0 var(--rt-space-sm);
@@ -198,7 +200,8 @@
             color: var(--rt-gold);
         }
 
-        ul, ol {
+        ul,
+        ol {
             margin: var(--rt-space-sm) 0;
             padding-left: var(--rt-space-lg);
         }
@@ -326,25 +329,33 @@
 .skill-tag {
     border-color: #3498db;
 
-    i { color: #3498db; }
+    i {
+        color: #3498db;
+    }
 }
 
 .talent-tag {
     border-color: #f39c12;
 
-    i { color: #f39c12; }
+    i {
+        color: #f39c12;
+    }
 }
 
 .trait-tag {
     border-color: #9b59b6;
 
-    i { color: #9b59b6; }
+    i {
+        color: #9b59b6;
+    }
 }
 
 .equipment-tag {
     border-color: #27ae60;
 
-    i { color: #27ae60; }
+    i {
+        color: #27ae60;
+    }
 }
 
 /* Formula display */

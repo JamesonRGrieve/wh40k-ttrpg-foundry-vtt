@@ -2,7 +2,7 @@
  * @file PsychicPowerDialog - V2 dialog for psychic power configuration
  */
 
-import BaseRollDialog from "./base-roll-dialog.mjs";
+import BaseRollDialog from './base-roll-dialog.mjs';
 
 /**
  * Dialog for configuring psychic power uses.
@@ -21,13 +21,13 @@ export default class PsychicPowerDialog extends BaseRollDialog {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["psychic-power"],
+        classes: ['psychic-power'],
         actions: {
-            selectPower: PsychicPowerDialog.#onSelectPower
+            selectPower: PsychicPowerDialog.#onSelectPower,
         },
         window: {
-            title: "Psychic Power"
-        }
+            title: 'Psychic Power',
+        },
     };
 
     /* -------------------------------------------- */
@@ -35,9 +35,9 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/wh40k-rpg/templates/prompt/psychic-power-roll-prompt.hbs",
-            scrollable: [""]
-        }
+            template: 'systems/wh40k-rpg/templates/prompt/psychic-power-roll-prompt.hbs',
+            scrollable: [''],
+        },
     };
 
     /* -------------------------------------------- */
@@ -59,21 +59,20 @@ export default class PsychicPowerDialog extends BaseRollDialog {
         await super._onRender(context, options);
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]')
-            .forEach(input => {
-                input.addEventListener("focus", (event) => {
-                    event.target.select();
-                });
+        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+            input.addEventListener('focus', (event) => {
+                event.target.select();
             });
+        });
 
         // Set up power selection listeners
-        this.element.querySelectorAll(".power-select").forEach(el => {
-            el.addEventListener("change", this._onPowerSelectChange.bind(this));
+        this.element.querySelectorAll('.power-select').forEach((el) => {
+            el.addEventListener('change', this._onPowerSelectChange.bind(this));
         });
 
         // Set up button listeners
-        this.element.querySelector("#power-roll")?.addEventListener("click", this._onPowerRoll.bind(this));
-        this.element.querySelector("#power-cancel")?.addEventListener("click", this._onPowerCancel.bind(this));
+        this.element.querySelector('#power-roll')?.addEventListener('click', this._onPowerRoll.bind(this));
+        this.element.querySelector('#power-cancel')?.addEventListener('click', this._onPowerCancel.bind(this));
     }
 
     /* -------------------------------------------- */

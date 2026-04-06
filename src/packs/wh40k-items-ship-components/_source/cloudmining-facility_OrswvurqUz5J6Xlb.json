@@ -1,41 +1,39 @@
 {
-  "name": "Cloudmining Facility",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "transport"
-    ],
-    "effect": "Allows procesing of comets for waters and minerals. Can conduct Ice mining in suitable comet field in outer solar system. Locate comet with +0 Scrutiny+Detection Test, spend 1d10+5 days mining. Gives +1d5 Morale and +1 Month of Deep Void Operations, or +50 Achievement Points for ongoing endeavours. (Can be an endeavour in and of itself). One Per Vessel.",
-    "availability": "scarce",
-    "source": "RT: BF Koronus",
-    "description": {
-      "value": "<p>Allows procesing of comets for waters and minerals. Can conduct Ice mining in suitable comet field in outer solar system. Locate comet with +0 Scrutiny+Detection Test, spend 1d10+5 days mining. Gives +1d5 Morale and +1 Month of Deep Void Operations, or +50 Achievement Points for ongoing endeavours. (Can be an endeavour in and of itself). One Per Vessel.</p>"
+    "name": "Cloudmining Facility",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["transport"],
+        "effect": "Allows procesing of comets for waters and minerals. Can conduct Ice mining in suitable comet field in outer solar system. Locate comet with +0 Scrutiny+Detection Test, spend 1d10+5 days mining. Gives +1d5 Morale and +1 Month of Deep Void Operations, or +50 Achievement Points for ongoing endeavours. (Can be an endeavour in and of itself). One Per Vessel.",
+        "availability": "scarce",
+        "source": "RT: BF Koronus",
+        "description": {
+            "value": "<p>Allows procesing of comets for waters and minerals. Can conduct Ice mining in suitable comet field in outer solar system. Locate comet with +0 Scrutiny+Detection Test, spend 1d10+5 days mining. Gives +1d5 Morale and +1 Month of Deep Void Operations, or +50 Achievement Points for ongoing endeavours. (Can be an endeavour in and of itself). One Per Vessel.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "supplemental",
+        "essential": false,
+        "power": {
+            "used": 3,
+            "generated": 0
+        },
+        "space": 4,
+        "shipPoints": 1,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "cloudmining-facility"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "supplemental",
-    "essential": false,
-    "power": {
-      "used": 3,
-      "generated": 0
-    },
-    "space": 4,
-    "shipPoints": 1,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "cloudmining-facility"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "OrswvurqUz5J6Xlb"
+    "effects": [],
+    "flags": {},
+    "_id": "OrswvurqUz5J6Xlb"
 }

@@ -212,10 +212,10 @@ export class WeaponRollData extends RollData {
     }
 
     async update() {
-        if(this.weapon.system.attackBonus) {
+        if (this.weapon.system.attackBonus) {
             this.modifiers['weapon'] = this.weapon.system.attackBonus;
         }
-        
+
         // Check weapon training
         if (this.sourceActor) {
             const trainingModifier = getWeaponTrainingModifier(this.sourceActor, this.weapon);
@@ -223,7 +223,7 @@ export class WeaponRollData extends RollData {
                 this.modifiers['weapon-training'] = trainingModifier;
             }
         }
-        
+
         this.canAim = this.action !== 'All Out Attack';
         this.isLasWeapon = this.weapon.system.type === 'Las';
         this.isSpray = this.hasAttackSpecial('Spray');
@@ -239,8 +239,8 @@ export class WeaponRollData extends RollData {
         this.isThrown = this.weapon.isThrown;
 
         this.isOpposed = this.isKnockDown || this.isFeint;
-        if(this.isOpposed && this.targetActor) {
-            if(this.isFeint) {
+        if (this.isOpposed && this.targetActor) {
+            if (this.isFeint) {
                 this.opposedTarget = this.targetActor?.characteristics?.weaponSkill?.total ?? 0;
                 this.opposedChar = 'WS';
             } else if (this.isKnockDown) {

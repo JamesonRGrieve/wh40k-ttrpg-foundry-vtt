@@ -3,7 +3,6 @@
  * Colors ruler segments based on movement speed budget (green/yellow/red).
  */
 export default class TokenRulerRT extends foundry.canvas.placeables.tokens.TokenRuler {
-
     /** @inheritDoc */
     _getWaypointStyle(waypoint) {
         const style = super._getWaypointStyle(waypoint);
@@ -37,8 +36,7 @@ export default class TokenRulerRT extends foundry.canvas.placeables.tokens.Token
      */
     #getSpeedBasedStyle(waypoint, style) {
         // Only apply to the local user's movement
-        if (!(game.user.id in this.token._plannedMovement)
-            || CONFIG.Token.movement.actions[waypoint.action]?.teleport) return style;
+        if (!(game.user.id in this.token._plannedMovement) || CONFIG.Token.movement.actions[waypoint.action]?.teleport) return style;
 
         // Get actor's movement speed for the current action
         const movement = this.token.actor?.system?.movement;

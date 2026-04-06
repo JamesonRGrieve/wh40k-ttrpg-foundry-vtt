@@ -1,30 +1,26 @@
 {
-  "name": "Vac-Sealed",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "Armour becomes sealed and wearer can survive for 6 hours in a vacuum without adverse effects such as suffocation.\nDecrease Armour Availability by 1 (Rare-->Very Rare)",
-    "availability": "Special",
-    "source": "Black Crusade: Core",
-    "description": {
-      "value": "<p>Armour becomes sealed and wearer can survive for 6 hours in a vacuum without adverse effects such as suffocation.\nDecrease Armour Availability by 1 (Rare-->Very Rare)</p>"
+    "name": "Vac-Sealed",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "Armour becomes sealed and wearer can survive for 6 hours in a vacuum without adverse effects such as suffocation.\nDecrease Armour Availability by 1 (Rare-->Very Rare)",
+        "availability": "Special",
+        "source": "Black Crusade: Core",
+        "description": {
+            "value": "<p>Armour becomes sealed and wearer can survive for 6 hours in a vacuum without adverse effects such as suffocation.\nDecrease Armour Availability by 1 (Rare-->Very Rare)</p>"
+        },
+        "modifiers": {
+            "armourPoints": 0,
+            "maxAgility": 0,
+            "weight": 0.75
+        },
+        "restrictions": {
+            "armourTypes": ["mesh", "carapace", "power"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 0,
-      "maxAgility": 0,
-      "weight": 0.75
-    },
-    "restrictions": {
-      "armourTypes": [
-        "mesh",
-        "carapace",
-        "power"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "uLGyo1JVTR5WTuMo"
+    "effects": [],
+    "flags": {},
+    "_id": "uLGyo1JVTR5WTuMo"
 }

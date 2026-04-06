@@ -1,33 +1,31 @@
 {
-  "name": "Power Field (Personal)",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "void",
-    "weight": 50,
-    "availability": "near-unique",
-    "notes": "Bulky Backpacks. Drains energy Quickly. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m or melee attacks. [AP: 80%]",
-    "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": "<p>Bulky Backpacks. Drains energy Quickly. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m or melee attacks.</p>"
+    "name": "Power Field (Personal)",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "void",
+        "weight": 50,
+        "availability": "near-unique",
+        "notes": "Bulky Backpacks. Drains energy Quickly. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m or melee attacks. [AP: 80%]",
+        "source": "Dark Heresy 2E: Core",
+        "description": {
+            "value": "<p>Bulky Backpacks. Drains energy Quickly. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m or melee attacks.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["all"],
+        "armourPoints": {
+            "head": 0,
+            "body": 0,
+            "leftArm": 0,
+            "rightArm": 0,
+            "leftLeg": 0,
+            "rightLeg": 0
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "all"
-    ],
-    "armourPoints": {
-      "head": 0,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "czkkxokontiVPNPa"
+    "effects": [],
+    "flags": {},
+    "_id": "czkkxokontiVPNPa"
 }

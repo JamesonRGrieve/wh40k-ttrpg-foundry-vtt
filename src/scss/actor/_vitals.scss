@@ -222,7 +222,7 @@
     font-weight: 700;
     color: var(--rt-text-dark);
     box-shadow: inset 0 1px 2px var(--rt-text-shadow);
-    
+
     &:focus {
         outline: none;
         border-color: var(--rt-border-color);
@@ -257,34 +257,22 @@
 
 // Panel-specific vitals theming using mixin
 .wh40k-wounds-panel {
-    @include rt-panel-vitals-theme(
-        linear-gradient(90deg, rgba(120, 15, 15, 0.9), rgba(200, 70, 40, 0.9)),
-        #5c1a1a,
-        #b63a2b
-    );
+    @include rt-panel-vitals-theme(linear-gradient(90deg, rgba(120, 15, 15, 0.9), rgba(200, 70, 40, 0.9)), #5c1a1a, #b63a2b);
 }
 
 .wh40k-fatigue-panel {
-    @include rt-panel-vitals-theme(
-        linear-gradient(90deg, rgba(180, 120, 20, 0.9), rgba(220, 160, 30, 0.9)),
-        #6b4a12,
-        #c4871d
-    );
+    @include rt-panel-vitals-theme(linear-gradient(90deg, rgba(180, 120, 20, 0.9), rgba(220, 160, 30, 0.9)), #6b4a12, #c4871d);
 }
 
 .wh40k-fate-panel {
-    @include rt-panel-vitals-theme(
-        linear-gradient(90deg, rgba(30, 80, 140, 0.9), rgba(60, 140, 200, 0.9)),
-        #1e4f86,
-        #3c8cd0
-    );
+    @include rt-panel-vitals-theme(linear-gradient(90deg, rgba(30, 80, 140, 0.9), rgba(60, 140, 200, 0.9)), #1e4f86, #3c8cd0);
 }
 
 .wh40k-tracker-row {
     display: flex;
     gap: 15px;
     margin-bottom: 10px;
-    
+
     &:last-child {
         margin-bottom: 0;
     }
@@ -323,25 +311,29 @@
     font-weight: bold;
     color: var(--rt-text-medium);
     transition: all 0.15s ease;
-    
+
     &:hover {
         background: var(--rt-btn-bg-hover);
         border-color: var(--rt-border-color);
     }
-    
+
     &:active {
         transform: scale(0.95);
     }
 }
 
 .wh40k-tracker-up {
-    color: #4CAF50;
-    &:hover { background: rgba(76, 175, 80, 0.2); }
+    color: #4caf50;
+    &:hover {
+        background: rgba(76, 175, 80, 0.2);
+    }
 }
 
 .wh40k-tracker-down {
     color: #f44336;
-    &:hover { background: rgba(244, 67, 54, 0.2); }
+    &:hover {
+        background: rgba(244, 67, 54, 0.2);
+    }
 }
 
 // Degree Field Styling
@@ -389,15 +381,15 @@
     border-radius: 2px;
     transition: all 0.2s ease;
     cursor: pointer;
-    
+
     &:hover {
         background: rgba(139, 0, 0, 0.3);
     }
 }
 
 .wh40k-crit-pip--filled {
-    background: linear-gradient(180deg, #8B0000, #5a0000);
-    border-color: #8B0000;
+    background: linear-gradient(180deg, #8b0000, #5a0000);
+    border-color: #8b0000;
     box-shadow: 0 0 4px rgba(139, 0, 0, 0.5);
 }
 
@@ -457,13 +449,13 @@
     background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.2));
     border: 1px solid rgba(255, 152, 0, 0.5);
     border-radius: 6px;
-    border-left: 4px solid #FF9800;
+    border-left: 4px solid #ff9800;
 }
 
 .wh40k-fatigue-critical {
     background: linear-gradient(135deg, rgba(244, 67, 54, 0.2), rgba(183, 28, 28, 0.2));
     border-color: rgba(183, 28, 28, 0.5);
-    border-left-color: #B71C1C;
+    border-left-color: #b71c1c;
 }
 
 .wh40k-warning-icon {
@@ -476,7 +468,7 @@
 }
 
 .wh40k-fatigue-critical .wh40k-warning-text {
-    color: #B71C1C;
+    color: #b71c1c;
 }
 
 .wh40k-fatigue-info {
@@ -499,7 +491,7 @@
     padding-left: 18px;
     font-size: 0.85em;
     color: var(--rt-text-muted);
-    
+
     li {
         margin-bottom: 3px;
     }

@@ -1,54 +1,54 @@
 {
-  "name": "Labyrinth Conditioning",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "social",
-    "source": "DH: Inquisitor's Handbook",
-    "description": {
-      "value": "<p>Gain +10 to Deceive tests whilst being questioned, to resist someone using the Initimidate Skill, and to Willpower when resisting Interrogation or mind reading effects (if a psychic power, combines with outer resistance talents).</p>"
+    "name": "Labyrinth Conditioning",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "social",
+        "source": "DH: Inquisitor's Handbook",
+        "description": {
+            "value": "<p>Gain +10 to Deceive tests whilst being questioned, to resist someone using the Initimidate Skill, and to Willpower when resisting Interrogation or mind reading effects (if a psychic power, combines with outer resistance talents).</p>"
+        },
+        "tier": 1,
+        "benefit": "<p>Gain +10 to Deceive tests whilst being questioned, to resist someone using the Initimidate Skill, and to Willpower when resisting Interrogation or mind reading effects (if a psychic power, combines with outer resistance talents).</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Tyrantine Shadow Agent Alternative Advance, 100xp, Int 30.",
+            "characteristics": {
+                "intelligence": 30
+            },
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "identifier": "labyrinthConditioning",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [
+                    {
+                        "key": "willpower",
+                        "value": 20,
+                        "condition": "When resisting interrogation, torture, or mind-reading",
+                        "icon": "fa-solid fa-brain"
+                    }
+                ],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": []
+        }
     },
-    "tier": 1,
-    "benefit": "<p>Gain +10 to Deceive tests whilst being questioned, to resist someone using the Initimidate Skill, and to Willpower when resisting Interrogation or mind reading effects (if a psychic power, combines with outer resistance talents).</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Tyrantine Shadow Agent Alternative Advance, 100xp, Int 30.",
-      "characteristics": {
-        "intelligence": 30
-      },
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "identifier": "labyrinthConditioning",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [
-          {
-            "key": "willpower",
-            "value": 20,
-            "condition": "When resisting interrogation, torture, or mind-reading",
-            "icon": "fa-solid fa-brain"
-          }
-        ],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": []
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "OCCxlYnWAvQLbUuf"
+    "effects": [],
+    "flags": {},
+    "_id": "OCCxlYnWAvQLbUuf"
 }

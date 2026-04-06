@@ -4,7 +4,6 @@
  * @extends ChatMessage
  */
 export class ChatMessageRT extends ChatMessage {
-
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -22,7 +21,7 @@ export class ChatMessageRT extends ChatMessage {
      * @type {boolean}
      */
     get isItemCard() {
-        return !!this.getFlag("wh40k-rpg", "itemCard");
+        return !!this.getFlag('wh40k-rpg', 'itemCard');
     }
 
     /**
@@ -30,7 +29,7 @@ export class ChatMessageRT extends ChatMessage {
      * @type {boolean}
      */
     get isTargetedRoll() {
-        return this.isRoll && this.getFlag("wh40k-rpg", "target") !== undefined;
+        return this.isRoll && this.getFlag('wh40k-rpg', 'target') !== undefined;
     }
 
     /**
@@ -38,7 +37,7 @@ export class ChatMessageRT extends ChatMessage {
      * @type {string|null}
      */
     get itemUuid() {
-        return this.getFlag("wh40k-rpg", "item.uuid") ?? null;
+        return this.getFlag('wh40k-rpg', 'item.uuid') ?? null;
     }
 
     /* -------------------------------------------- */
@@ -53,7 +52,7 @@ export class ChatMessageRT extends ChatMessage {
         if (!this.isRoll || !this.rolls?.length) return null;
 
         const roll = this.rolls[0];
-        const target = this.getFlag("wh40k-rpg", "target");
+        const target = this.getFlag('wh40k-rpg', 'target');
 
         if (target === undefined || target === null) return null;
 
@@ -76,20 +75,20 @@ export class ChatMessageRT extends ChatMessage {
     async rollDamage() {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
-            ui.notifications.warn("WH40K.Chat.NoItemFound", { localize: true });
+            ui.notifications.warn('WH40K.Chat.NoItemFound', { localize: true });
             return;
         }
 
         const item = await fromUuid(itemUuid);
         if (!item) {
-            ui.notifications.warn("WH40K.Chat.ItemNotFound", { localize: true });
+            ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
         }
 
         // Check if item has a rollDamage method
-        if (typeof item.rollDamage === "function") {
+        if (typeof item.rollDamage === 'function') {
             await item.rollDamage();
-        } else if (item.type === "weapon") {
+        } else if (item.type === 'weapon') {
             // Fallback for weapons without rollDamage method
             const actor = item.actor;
             if (actor?.rollWeaponDamage) {
@@ -111,7 +110,7 @@ export class ChatMessageRT extends ChatMessage {
         const targets = game.user.targets;
 
         if (targets.size === 0) {
-            ui.notifications.warn("WH40K.Chat.NoTokensTargeted", { localize: true });
+            ui.notifications.warn('WH40K.Chat.NoTokensTargeted', { localize: true });
             return;
         }
 
@@ -119,13 +118,13 @@ export class ChatMessageRT extends ChatMessage {
             const actor = token.actor;
             if (!actor) continue;
 
-            if (typeof actor.applyDamage === "function") {
+            if (typeof actor.applyDamage === 'function') {
                 await actor.applyDamage(damage, options);
             } else {
                 // Fallback: directly modify wounds
                 const currentWounds = actor.system.wounds?.value ?? 0;
                 const newWounds = Math.max(0, currentWounds - damage);
-                await actor.update({ "system.wounds.value": newWounds });
+                await actor.update({ 'system.wounds.value': newWounds });
             }
         }
     }
@@ -137,20 +136,20 @@ export class ChatMessageRT extends ChatMessage {
     async useItem() {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
-            ui.notifications.warn("WH40K.Chat.NoItemFound", { localize: true });
+            ui.notifications.warn('WH40K.Chat.NoItemFound', { localize: true });
             return;
         }
 
         const item = await fromUuid(itemUuid);
         if (!item) {
-            ui.notifications.warn("WH40K.Chat.ItemNotFound", { localize: true });
+            ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
         }
 
         // Use the item if it has a use method
-        if (typeof item.use === "function") {
+        if (typeof item.use === 'function') {
             await item.use();
-        } else if (typeof item.roll === "function") {
+        } else if (typeof item.roll === 'function') {
             await item.roll();
         }
     }
@@ -169,57 +168,57 @@ export class ChatMessageRT extends ChatMessage {
         event.preventDefault();
         const button = event.currentTarget;
         const action = button.dataset.action;
-        
+
         // Get the message from the card
-        const card = button.closest(".chat-message");
+        const card = button.closest('.chat-message');
         if (!card) return;
-        
+
         const messageId = card.dataset.messageId;
         const message = game.messages.get(messageId);
 
         if (!message) {
-            console.warn("RT | ChatMessage not found for action:", action);
+            console.warn('RT | ChatMessage not found for action:', action);
             return;
         }
 
         // Route to appropriate handler
         switch (action) {
-            case "rollDamage":
-            case "damage":
+            case 'rollDamage':
+            case 'damage':
                 return message.rollDamage();
 
-            case "applyDamage": {
+            case 'applyDamage': {
                 const damage = parseInt(button.dataset.damage) || 0;
                 const options = {
                     damageType: button.dataset.damageType,
                     penetration: parseInt(button.dataset.penetration) || 0,
-                    location: button.dataset.location
+                    location: button.dataset.location,
                 };
                 return message.applyDamage(damage, options);
             }
 
-            case "useItem":
-            case "use":
+            case 'useItem':
+            case 'use':
                 return message.useItem();
 
-            case "attack": {
+            case 'attack': {
                 const itemUuid = button.dataset.itemUuid || message.itemUuid;
                 if (itemUuid) {
                     const item = await fromUuid(itemUuid);
                     if (item?.actor) {
                         // Import and use targeted action manager
-                        const { DHTargetedActionManager } = await import("../actions/targeted-action-manager.mjs");
+                        const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.mjs');
                         await DHTargetedActionManager.performWeaponAttack(item.actor, null, item);
                     }
                 }
                 return;
             }
 
-            case "roll": {
+            case 'roll': {
                 const itemUuid = button.dataset.itemUuid || message.itemUuid;
                 if (itemUuid) {
                     const item = await fromUuid(itemUuid);
-                    if (item && typeof item.roll === "function") {
+                    if (item && typeof item.roll === 'function') {
                         await item.roll();
                     }
                 }
@@ -243,17 +242,17 @@ export class ChatMessageRT extends ChatMessage {
         const { success, degrees } = result;
 
         // Find the dice total element
-        const diceTotal = html.querySelector(".dice-total");
+        const diceTotal = html.querySelector('.dice-total');
         if (!diceTotal) return;
 
         // Check if badge already exists
-        if (diceTotal.querySelector(".rt-degree-badge")) return;
+        if (diceTotal.querySelector('.rt-degree-badge')) return;
 
         // Create degree badge
-        const badge = document.createElement("span");
-        badge.className = `rt-degree-badge ${success ? "wh40k-degree-badge--success" : "wh40k-degree-badge--failure"}`;
-        badge.textContent = `${degrees} ${success ? "DoS" : "DoF"}`;
-        
+        const badge = document.createElement('span');
+        badge.className = `rt-degree-badge ${success ? 'wh40k-degree-badge--success' : 'wh40k-degree-badge--failure'}`;
+        badge.textContent = `${degrees} ${success ? 'DoS' : 'DoF'}`;
+
         diceTotal.appendChild(badge);
     }
 
@@ -266,17 +265,17 @@ export class ChatMessageRT extends ChatMessage {
         const actor = message.speakerActor;
         if (!actor) return;
 
-        const sender = html.querySelector(".message-sender");
+        const sender = html.querySelector('.message-sender');
         if (!sender) return;
 
         // Check if portrait already exists
-        if (sender.querySelector(".rt-message-portrait")) return;
+        if (sender.querySelector('.rt-message-portrait')) return;
 
-        const portrait = document.createElement("img");
-        portrait.className = "wh40k-message-portrait";
+        const portrait = document.createElement('img');
+        portrait.className = 'wh40k-message-portrait';
         portrait.src = actor.img;
         portrait.alt = actor.name;
-        
+
         sender.prepend(portrait);
     }
 
@@ -286,7 +285,7 @@ export class ChatMessageRT extends ChatMessage {
      * @param {ChatMessageRT} message - The chat message
      */
     static enrichActionButtons(html, message) {
-        html.querySelectorAll("[data-action]").forEach(btn => {
+        html.querySelectorAll('[data-action]').forEach((btn) => {
             // Add message ID if not present
             if (!btn.dataset.messageId) {
                 btn.dataset.messageId = message.id;
@@ -303,7 +302,7 @@ export class ChatMessageRT extends ChatMessage {
  * Register chat message event listeners
  * This integrates with the existing renderChatMessageHTML hook pattern
  */
-Hooks.on("renderChatMessageHTML", (message, html, context) => {
+Hooks.on('renderChatMessageHTML', (message, html, context) => {
     // Enrich the message HTML
     ChatMessageRT.enrichDegreeBadge(html, message);
     ChatMessageRT.enrichSpeakerPortrait(html, message);
@@ -311,8 +310,10 @@ Hooks.on("renderChatMessageHTML", (message, html, context) => {
 
     // Add click listeners for RT-specific actions
     // Note: Existing roll-control__* listeners are handled by BasicActionManager
-    html.querySelectorAll("[data-action]:not(.roll-control__hide-control):not(.roll-control__refund):not(.roll-control__fate-reroll):not(.roll-control__assign-damage):not(.roll-control__apply-damage)").forEach(btn => {
-        btn.addEventListener("click", async (event) => {
+    html.querySelectorAll(
+        '[data-action]:not(.roll-control__hide-control):not(.roll-control__refund):not(.roll-control__fate-reroll):not(.roll-control__assign-damage):not(.roll-control__apply-damage)',
+    ).forEach((btn) => {
+        btn.addEventListener('click', async (event) => {
             await ChatMessageRT.onChatCardAction(event, html);
         });
     });

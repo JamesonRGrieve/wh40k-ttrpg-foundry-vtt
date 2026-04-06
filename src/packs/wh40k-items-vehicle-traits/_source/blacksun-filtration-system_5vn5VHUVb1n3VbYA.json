@@ -1,24 +1,24 @@
 {
-  "name": "Blacksun Filtration System",
-  "type": "vehicleTrait",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "descriptionText": "Shields Pilot from Radiation Bursts and light that may impair vision. Acts as a Tau Blacksun Filter Gear Item.\n(Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.)",
-    "description": {
-      "value": "<p>Shields Pilot from Radiation Bursts and light that may impair vision. Acts as a Tau Blacksun Filter Gear Item.\n(Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.)</p>"
+    "name": "Blacksun Filtration System",
+    "type": "vehicleTrait",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "descriptionText": "Shields Pilot from Radiation Bursts and light that may impair vision. Acts as a Tau Blacksun Filter Gear Item.\n(Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.)",
+        "description": {
+            "value": "<p>Shields Pilot from Radiation Bursts and light that may impair vision. Acts as a Tau Blacksun Filter Gear Item.\n(Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.)</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "armour": 0,
+            "integrity": 0
+        },
+        "identifier": "",
+        "hasLevel": false,
+        "level": null,
+        "notes": ""
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "armour": 0,
-      "integrity": 0
-    },
-    "identifier": "",
-    "hasLevel": false,
-    "level": null,
-    "notes": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "5vn5VHUVb1n3VbYA"
+    "effects": [],
+    "flags": {},
+    "_id": "5vn5VHUVb1n3VbYA"
 }

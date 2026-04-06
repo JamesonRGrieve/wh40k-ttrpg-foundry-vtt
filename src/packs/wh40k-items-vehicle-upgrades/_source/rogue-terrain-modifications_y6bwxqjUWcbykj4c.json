@@ -1,28 +1,28 @@
 {
-  "name": "Rogue Terrain Modifications",
-  "type": "vehicleUpgrade",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "descriptionText": "Allows Vehicle Driver to reroll one Failed Operate/Drive Test per Turn when navigating Difficult Terrain. Skimmers with this Upgrade gain +10 Manoeuvrability.",
-    "description": {
-      "value": "<p>Allows Vehicle Driver to reroll one Failed Operate/Drive Test per Turn when navigating Difficult Terrain. Skimmers with this Upgrade gain +10 Manoeuvrability.</p>"
+    "name": "Rogue Terrain Modifications",
+    "type": "vehicleUpgrade",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "descriptionText": "Allows Vehicle Driver to reroll one Failed Operate/Drive Test per Turn when navigating Difficult Terrain. Skimmers with this Upgrade gain +10 Manoeuvrability.",
+        "description": {
+            "value": "<p>Allows Vehicle Driver to reroll one Failed Operate/Drive Test per Turn when navigating Difficult Terrain. Skimmers with this Upgrade gain +10 Manoeuvrability.</p>"
+        },
+        "availability": "very-rare",
+        "source": "OW: Shield of Humanity",
+        "installCost": 0,
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "armour": 0,
+            "integrity": 0
+        },
+        "upgradeType": "integral",
+        "difficulty": -20,
+        "allowedVehicles": "Any",
+        "identifier": "",
+        "notes": ""
     },
-    "availability": "very-rare",
-    "source": "OW: Shield of Humanity",
-    "installCost": 0,
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "armour": 0,
-      "integrity": 0
-    },
-    "upgradeType": "integral",
-    "difficulty": -20,
-    "allowedVehicles": "Any",
-    "identifier": "",
-    "notes": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "y6bwxqjUWcbykj4c"
+    "effects": [],
+    "flags": {},
+    "_id": "y6bwxqjUWcbykj4c"
 }

@@ -1,41 +1,41 @@
 {
-  "name": "Upgrade: Fear Suppression",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "tech",
-    "weight": 0,
-    "availability": "average",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 250,
-      "currency": "throne"
+    "name": "Upgrade: Fear Suppression",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "tech",
+        "weight": 0,
+        "availability": "average",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 250,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Adds Fearless Trait to a Cyber Familiar, the Bestial Trait may be optionally removed.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> 250 T</p>",
+            "chat": "",
+            "summary": "Adds Fearless Trait to a Cyber Familiar, the Bestial Trait may be optionally removed."
+        },
+        "source": {
+            "book": "DH: The Inquisitor's Handbook",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Adds Fearless Trait to a Cyber Familiar, the Bestial Trait may be optionally removed.",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Adds Fearless Trait to a Cyber Familiar, the Bestial Trait may be optionally removed.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> 250 T</p>",
-      "chat": "",
-      "summary": "Adds Fearless Trait to a Cyber Familiar, the Bestial Trait may be optionally removed."
-    },
-    "source": {
-      "book": "DH: The Inquisitor's Handbook",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Adds Fearless Trait to a Cyber Familiar, the Bestial Trait may be optionally removed.",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "bKrf0zzaXUVzJEzs"
+    "effects": [],
+    "flags": {},
+    "_id": "bKrf0zzaXUVzJEzs"
 }

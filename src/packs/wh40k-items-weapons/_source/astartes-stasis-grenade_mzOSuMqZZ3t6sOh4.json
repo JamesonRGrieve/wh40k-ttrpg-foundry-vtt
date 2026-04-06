@@ -1,64 +1,61 @@
 {
-  "name": "Astartes Stasis Grenade",
-  "type": "weapon",
-  "img": "systems/wh40k-rpg/assets/icons/weapons/thrown-grenade.svg",
-  "system": {
-    "identifier": "astartes-stasis-grenade",
-    "class": "thrown",
-    "type": "explosive",
-    "twoHanded": false,
-    "melee": false,
-    "attack": {
-      "type": "thrown",
-      "characteristic": "ballisticSkill",
-      "modifier": 0,
-      "range": {
-        "value": 0,
-        "units": "m",
-        "special": "SBx3"
-      },
-      "rateOfFire": {
-        "single": true,
-        "semi": 0,
-        "full": 0
-      }
+    "name": "Astartes Stasis Grenade",
+    "type": "weapon",
+    "img": "systems/wh40k-rpg/assets/icons/weapons/thrown-grenade.svg",
+    "system": {
+        "identifier": "astartes-stasis-grenade",
+        "class": "thrown",
+        "type": "explosive",
+        "twoHanded": false,
+        "melee": false,
+        "attack": {
+            "type": "thrown",
+            "characteristic": "ballisticSkill",
+            "modifier": 0,
+            "range": {
+                "value": 0,
+                "units": "m",
+                "special": "SBx3"
+            },
+            "rateOfFire": {
+                "single": true,
+                "semi": 0,
+                "full": 0
+            }
+        },
+        "damage": {
+            "formula": "-",
+            "type": "impact",
+            "bonus": 0,
+            "penetration": 0
+        },
+        "special": ["sm-wep", "blast-2"],
+        "clip": {
+            "max": 0,
+            "value": 0,
+            "type": ""
+        },
+        "reload": "-",
+        "weight": 1,
+        "availability": "common",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Special:</b> SM Wep, Blast (2)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Cannot be requisitioned due to extreme dangers, can only be granted.\nTraps Blast area in a state of frozen time for 1d5 Rounds (rolled by GM). Those inside cannot perceive anything, those outside can see inside by can't interact.</p>"
+        },
+        "modifications": [],
+        "notes": "Space Marines Only, not easily acquirable. Cannot be requisitioned due to extreme dangers, can only be granted.\nTraps Blast area in a state of frozen time for 1d5 Rounds (rolled by GM). Those inside cannot perceive anything, those outside can see inside by can't interact.",
+        "source": "DW: Core Rulebook",
+        "requiredTraining": ""
     },
-    "damage": {
-      "formula": "-",
-      "type": "impact",
-      "bonus": 0,
-      "penetration": 0
-    },
-    "special": [
-      "sm-wep",
-      "blast-2"
-    ],
-    "clip": {
-      "max": 0,
-      "value": 0,
-      "type": ""
-    },
-    "reload": "-",
-    "weight": 1,
-    "availability": "common",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 0,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Special:</b> SM Wep, Blast (2)</p><p><b>Note:</b> Space Marines Only, not easily acquirable. Cannot be requisitioned due to extreme dangers, can only be granted.\nTraps Blast area in a state of frozen time for 1d5 Rounds (rolled by GM). Those inside cannot perceive anything, those outside can see inside by can't interact.</p>"
-    },
-    "modifications": [],
-    "notes": "Space Marines Only, not easily acquirable. Cannot be requisitioned due to extreme dangers, can only be granted.\nTraps Blast area in a state of frozen time for 1d5 Rounds (rolled by GM). Those inside cannot perceive anything, those outside can see inside by can't interact.",
-    "source": "DW: Core Rulebook",
-    "requiredTraining": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "mzOSuMqZZ3t6sOh4"
+    "effects": [],
+    "flags": {},
+    "_id": "mzOSuMqZZ3t6sOh4"
 }

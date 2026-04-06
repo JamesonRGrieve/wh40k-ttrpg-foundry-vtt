@@ -1,37 +1,31 @@
 {
-  "name": "Obsidian Armour",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "flak",
-    "weight": 4,
-    "availability": "unique",
-    "notes": "Weapons with the Force Quality have it negated while attacking anyone wearing this armour.",
-    "source": "Black Crusade: Core",
-    "description": {
-      "value": "<p>Weapons with the Force Quality have it negated while attacking anyone wearing this armour.</p>"
+    "name": "Obsidian Armour",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "flak",
+        "weight": 4,
+        "availability": "unique",
+        "notes": "Weapons with the Force Quality have it negated while attacking anyone wearing this armour.",
+        "source": "Black Crusade: Core",
+        "description": {
+            "value": "<p>Weapons with the Force Quality have it negated while attacking anyone wearing this armour.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["leftArm", "rightArm", "body", "leftLeg", "rightLeg"],
+        "armourPoints": {
+            "head": 7,
+            "body": 7,
+            "leftArm": 7,
+            "rightArm": 7,
+            "leftLeg": 7,
+            "rightLeg": 7
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "leftArm",
-      "rightArm",
-      "body",
-      "leftLeg",
-      "rightLeg"
-    ],
-    "armourPoints": {
-      "head": 7,
-      "body": 7,
-      "leftArm": 7,
-      "rightArm": 7,
-      "leftLeg": 7,
-      "rightLeg": 7
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "4Oj4wVSivkt7jote"
+    "effects": [],
+    "flags": {},
+    "_id": "4Oj4wVSivkt7jote"
 }

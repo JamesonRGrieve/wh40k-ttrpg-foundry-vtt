@@ -1,41 +1,41 @@
 {
-  "name": "Nerve Induction Tines",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "tech",
-    "weight": 0,
-    "availability": "rare",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 0,
-      "currency": "throne"
+    "name": "Nerve Induction Tines",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "tech",
+        "weight": 0,
+        "availability": "rare",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Grants +20 to Interrogation and Charm Tests against Prone or Restrained Targets. Consists of flexible nano-sharp spikes in the fingernails that can reach into a target's nerves, causing horrific pain or pleasure, as the user desires.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+            "chat": "",
+            "summary": "Grants +20 to Interrogation and Charm Tests against Prone or Restrained Targets. Consists of flexible nano-sharp spikes in the fingernails that can reach into a target's nerves, causing horrific pain "
+        },
+        "source": {
+            "book": "Black Crusade: Core",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Grants +20 to Interrogation and Charm Tests against Prone or Restrained Targets. Consists of flexible nano-sharp spikes in the fingernails that can reach into a target's nerves, causing horrific pain or pleasure, as the user desires.",
+        "duration": "",
+        "notes": "-",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Grants +20 to Interrogation and Charm Tests against Prone or Restrained Targets. Consists of flexible nano-sharp spikes in the fingernails that can reach into a target's nerves, causing horrific pain or pleasure, as the user desires.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
-      "chat": "",
-      "summary": "Grants +20 to Interrogation and Charm Tests against Prone or Restrained Targets. Consists of flexible nano-sharp spikes in the fingernails that can reach into a target's nerves, causing horrific pain "
-    },
-    "source": {
-      "book": "Black Crusade: Core",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Grants +20 to Interrogation and Charm Tests against Prone or Restrained Targets. Consists of flexible nano-sharp spikes in the fingernails that can reach into a target's nerves, causing horrific pain or pleasure, as the user desires.",
-    "duration": "",
-    "notes": "-",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "O1oxv9nFHe9Y8rEZ"
+    "effects": [],
+    "flags": {},
+    "_id": "O1oxv9nFHe9Y8rEZ"
 }

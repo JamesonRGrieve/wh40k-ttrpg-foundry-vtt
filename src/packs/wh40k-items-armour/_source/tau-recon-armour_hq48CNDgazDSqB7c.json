@@ -1,33 +1,31 @@
 {
-  "name": "Tau Recon Armour",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "xenos",
-    "weight": 3,
-    "availability": "near-unique",
-    "notes": "Designed for Tau rather than Humans, debatably wearable by humans with some modification. Comes fitted with a Micro-Bead. Characters wearing it gain +10 to Concealment and Silent Move Tests.",
-    "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>Designed for Tau rather than Humans, debatably wearable by humans with some modification. Comes fitted with a Micro-Bead. Characters wearing it gain +10 to Concealment and Silent Move Tests.</p>"
+    "name": "Tau Recon Armour",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "xenos",
+        "weight": 3,
+        "availability": "near-unique",
+        "notes": "Designed for Tau rather than Humans, debatably wearable by humans with some modification. Comes fitted with a Micro-Bead. Characters wearing it gain +10 to Concealment and Silent Move Tests.",
+        "source": "RT: Tau Character Guide",
+        "description": {
+            "value": "<p>Designed for Tau rather than Humans, debatably wearable by humans with some modification. Comes fitted with a Micro-Bead. Characters wearing it gain +10 to Concealment and Silent Move Tests.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["all"],
+        "armourPoints": {
+            "head": 4,
+            "body": 4,
+            "leftArm": 4,
+            "rightArm": 4,
+            "leftLeg": 4,
+            "rightLeg": 4
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "all"
-    ],
-    "armourPoints": {
-      "head": 4,
-      "body": 4,
-      "leftArm": 4,
-      "rightArm": 4,
-      "leftLeg": 4,
-      "rightLeg": 4
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "hq48CNDgazDSqB7c"
+    "effects": [],
+    "flags": {},
+    "_id": "hq48CNDgazDSqB7c"
 }

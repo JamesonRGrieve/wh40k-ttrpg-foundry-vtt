@@ -50,11 +50,11 @@
     &.wh40k-effect-disabled {
         opacity: 0.5;
         border-left-color: $wh40k-text-muted;
-        
+
         .wh40k-effect-icon {
             filter: grayscale(100%);
         }
-        
+
         .wh40k-effect-name {
             text-decoration: line-through;
             color: $wh40k-text-muted;
@@ -100,7 +100,7 @@
     font-size: 0.75rem;
     color: $wh40k-text-muted;
     font-style: italic;
-    
+
     i {
         font-size: 0.7rem;
     }
@@ -125,11 +125,11 @@
     color: $wh40k-text-muted;
     cursor: pointer;
     transition: all 0.2s ease;
-    
+
     i {
         font-size: 0.85rem;
     }
-    
+
     &:hover {
         background: rgba(0, 0, 0, 0.05);
         border-color: $wh40k-accent-gold;

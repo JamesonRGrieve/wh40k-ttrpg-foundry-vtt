@@ -1,211 +1,217 @@
-import BaseGrantData from "./base-grant.mjs";
+import BaseGrantData from './base-grant.mjs';
 
 /**
  * Grant that provides characteristic bonuses to an actor.
  * Modifies characteristic advance values.
- * 
+ *
  * @extends BaseGrantData
  */
 export default class CharacteristicGrantData extends BaseGrantData {
+    /* -------------------------------------------- */
+    /*  Static Properties                           */
+    /* -------------------------------------------- */
 
-  /* -------------------------------------------- */
-  /*  Static Properties                           */
-  /* -------------------------------------------- */
+    static TYPE = 'characteristic';
+    static ICON = 'icons/svg/dice-target.svg';
 
-  static TYPE = "characteristic";
-  static ICON = "icons/svg/dice-target.svg";
+    /**
+     * Valid characteristic keys.
+     * @type {Set<string>}
+     */
+    static VALID_CHARACTERISTICS = new Set([
+        'weaponSkill',
+        'ballisticSkill',
+        'strength',
+        'toughness',
+        'agility',
+        'intelligence',
+        'perception',
+        'willpower',
+        'fellowship',
+    ]);
 
-  /**
-   * Valid characteristic keys.
-   * @type {Set<string>}
-   */
-  static VALID_CHARACTERISTICS = new Set([
-    "weaponSkill", "ballisticSkill", "strength", "toughness",
-    "agility", "intelligence", "perception", "willpower", "fellowship"
-  ]);
+    /* -------------------------------------------- */
+    /*  Schema Definition                           */
+    /* -------------------------------------------- */
 
-  /* -------------------------------------------- */
-  /*  Schema Definition                           */
-  /* -------------------------------------------- */
+    /** @inheritDoc */
+    static defineSchema() {
+        const fields = foundry.data.fields;
+        return {
+            ...super.defineSchema(),
 
-  /** @inheritDoc */
-  static defineSchema() {
-    const fields = foundry.data.fields;
-    return {
-      ...super.defineSchema(),
-      
-      // Characteristics to modify
-      characteristics: new fields.ArrayField(
-        new fields.SchemaField({
-          // Characteristic key
-          key: new fields.StringField({ required: true }),
-          // Value to add (positive or negative)
-          value: new fields.NumberField({ required: true, initial: 0, integer: true }),
-          // Is this optional?
-          optional: new fields.BooleanField({ initial: false })
-        }),
-        { required: true, initial: [] }
-      ),
-      
-      // Applied state - tracks what was granted
-      // Format: { "characteristicKey": { previousValue, appliedValue } }
-      applied: new fields.ObjectField({ required: true, initial: {} })
-    };
-  }
+            // Characteristics to modify
+            characteristics: new fields.ArrayField(
+                new fields.SchemaField({
+                    // Characteristic key
+                    key: new fields.StringField({ required: true }),
+                    // Value to add (positive or negative)
+                    value: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                    // Is this optional?
+                    optional: new fields.BooleanField({ initial: false }),
+                }),
+                { required: true, initial: [] },
+            ),
 
-  /* -------------------------------------------- */
-  /*  Grant Application Methods                   */
-  /* -------------------------------------------- */
-
-  /** @inheritDoc */
-  async apply(actor, data = {}, options = {}) {
-    const result = {
-      success: true,
-      applied: {},
-      notifications: [],
-      errors: []
-    };
-
-    if (!actor) {
-      result.success = false;
-      result.errors.push("No actor provided");
-      return result;
+            // Applied state - tracks what was granted
+            // Format: { "characteristicKey": { previousValue, appliedValue } }
+            applied: new fields.ObjectField({ required: true, initial: {} }),
+        };
     }
 
-    const selectedChars = data.selected ?? this.characteristics.map(c => c.key);
-    const updates = {};
+    /* -------------------------------------------- */
+    /*  Grant Application Methods                   */
+    /* -------------------------------------------- */
 
-    for (const charConfig of this.characteristics) {
-      const { key, value, optional: charOptional } = charConfig;
+    /** @inheritDoc */
+    async apply(actor, data = {}, options = {}) {
+        const result = {
+            success: true,
+            applied: {},
+            notifications: [],
+            errors: [],
+        };
 
-      // Validate characteristic
-      if (!this.constructor.VALID_CHARACTERISTICS.has(key)) {
-        result.errors.push(`Invalid characteristic: ${key}`);
-        continue;
-      }
-
-      // Skip if not selected
-      if (!selectedChars.includes(key)) {
-        if (!charOptional && !this.optional) {
-          result.errors.push(`Required characteristic ${key} not selected`);
+        if (!actor) {
+            result.success = false;
+            result.errors.push('No actor provided');
+            return result;
         }
-        continue;
-      }
 
-      // Skip zero values
-      if (value === 0) continue;
+        const selectedChars = data.selected ?? this.characteristics.map((c) => c.key);
+        const updates = {};
 
-      // Get current advance value
-      const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
-      const newAdvance = currentAdvance + value;
+        for (const charConfig of this.characteristics) {
+            const { key, value, optional: charOptional } = charConfig;
 
-      updates[`system.characteristics.${key}.advance`] = newAdvance;
-      result.applied[key] = {
-        previousValue: currentAdvance,
-        appliedValue: value,
-        newValue: newAdvance
-      };
+            // Validate characteristic
+            if (!this.constructor.VALID_CHARACTERISTICS.has(key)) {
+                result.errors.push(`Invalid characteristic: ${key}`);
+                continue;
+            }
 
-      const charLabel = game.i18n.localize(`RT.Characteristic.${key}`);
-      const sign = value > 0 ? "+" : "";
-      result.notifications.push(`${charLabel} ${sign}${value}`);
+            // Skip if not selected
+            if (!selectedChars.includes(key)) {
+                if (!charOptional && !this.optional) {
+                    result.errors.push(`Required characteristic ${key} not selected`);
+                }
+                continue;
+            }
+
+            // Skip zero values
+            if (value === 0) continue;
+
+            // Get current advance value
+            const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
+            const newAdvance = currentAdvance + value;
+
+            updates[`system.characteristics.${key}.advance`] = newAdvance;
+            result.applied[key] = {
+                previousValue: currentAdvance,
+                appliedValue: value,
+                newValue: newAdvance,
+            };
+
+            const charLabel = game.i18n.localize(`RT.Characteristic.${key}`);
+            const sign = value > 0 ? '+' : '';
+            result.notifications.push(`${charLabel} ${sign}${value}`);
+        }
+
+        // Apply if not dry run
+        if (!options.dryRun && Object.keys(updates).length > 0) {
+            await actor.update(updates);
+        }
+
+        result.success = result.errors.length === 0;
+        return result;
     }
 
-    // Apply if not dry run
-    if (!options.dryRun && Object.keys(updates).length > 0) {
-      await actor.update(updates);
+    /** @inheritDoc */
+    async reverse(actor, appliedState) {
+        const restoreData = { characteristics: {} };
+        const updates = {};
+
+        for (const [key, state] of Object.entries(appliedState)) {
+            if (state.previousValue !== undefined) {
+                updates[`system.characteristics.${key}.advance`] = state.previousValue;
+                restoreData.characteristics[key] = state;
+            }
+        }
+
+        if (Object.keys(updates).length > 0) {
+            await actor.update(updates);
+        }
+
+        return restoreData;
     }
 
-    result.success = result.errors.length === 0;
-    return result;
-  }
+    /** @inheritDoc */
+    async restore(actor, restoreData) {
+        // Re-apply with the original applied values
+        const result = {
+            success: true,
+            applied: {},
+            notifications: [],
+            errors: [],
+        };
 
-  /** @inheritDoc */
-  async reverse(actor, appliedState) {
-    const restoreData = { characteristics: {} };
-    const updates = {};
+        const updates = {};
+        for (const [key, state] of Object.entries(restoreData.characteristics ?? {})) {
+            const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
+            const newAdvance = currentAdvance + state.appliedValue;
 
-    for (const [key, state] of Object.entries(appliedState)) {
-      if (state.previousValue !== undefined) {
-        updates[`system.characteristics.${key}.advance`] = state.previousValue;
-        restoreData.characteristics[key] = state;
-      }
+            updates[`system.characteristics.${key}.advance`] = newAdvance;
+            result.applied[key] = {
+                previousValue: currentAdvance,
+                appliedValue: state.appliedValue,
+                newValue: newAdvance,
+            };
+        }
+
+        if (Object.keys(updates).length > 0) {
+            await actor.update(updates);
+        }
+
+        return result;
     }
 
-    if (Object.keys(updates).length > 0) {
-      await actor.update(updates);
+    /** @inheritDoc */
+    getAutomaticValue() {
+        if (this.optional) return false;
+        if (this.characteristics.some((c) => c.optional)) return false;
+        return { selected: this.characteristics.map((c) => c.key) };
     }
 
-    return restoreData;
-  }
+    /** @inheritDoc */
+    async getSummary() {
+        const summary = await super.getSummary();
+        summary.icon = this.constructor.ICON;
 
-  /** @inheritDoc */
-  async restore(actor, restoreData) {
-    // Re-apply with the original applied values
-    const result = {
-      success: true,
-      applied: {},
-      notifications: [],
-      errors: []
-    };
+        for (const charConfig of this.characteristics) {
+            const label = game.i18n.localize(`RT.Characteristic.${charConfig.key}`);
+            const sign = charConfig.value > 0 ? '+' : '';
 
-    const updates = {};
-    for (const [key, state] of Object.entries(restoreData.characteristics ?? {})) {
-      const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
-      const newAdvance = currentAdvance + state.appliedValue;
-      
-      updates[`system.characteristics.${key}.advance`] = newAdvance;
-      result.applied[key] = {
-        previousValue: currentAdvance,
-        appliedValue: state.appliedValue,
-        newValue: newAdvance
-      };
+            summary.details.push({
+                label: label,
+                value: `${sign}${charConfig.value}`,
+                optional: charConfig.optional,
+            });
+        }
+
+        return summary;
     }
 
-    if (Object.keys(updates).length > 0) {
-      await actor.update(updates);
+    /** @inheritDoc */
+    validateGrant() {
+        const errors = super.validateGrant();
+
+        const characteristics = this.characteristics ?? [];
+        for (const charConfig of characteristics) {
+            if (!this.constructor.VALID_CHARACTERISTICS.has(charConfig.key)) {
+                errors.push(`Invalid characteristic key: ${charConfig.key}`);
+            }
+        }
+
+        return errors;
     }
-
-    return result;
-  }
-
-  /** @inheritDoc */
-  getAutomaticValue() {
-    if (this.optional) return false;
-    if (this.characteristics.some(c => c.optional)) return false;
-    return { selected: this.characteristics.map(c => c.key) };
-  }
-
-  /** @inheritDoc */
-  async getSummary() {
-    const summary = await super.getSummary();
-    summary.icon = this.constructor.ICON;
-
-    for (const charConfig of this.characteristics) {
-      const label = game.i18n.localize(`RT.Characteristic.${charConfig.key}`);
-      const sign = charConfig.value > 0 ? "+" : "";
-      
-      summary.details.push({
-        label: label,
-        value: `${sign}${charConfig.value}`,
-        optional: charConfig.optional
-      });
-    }
-
-    return summary;
-  }
-
-  /** @inheritDoc */
-  validateGrant() {
-    const errors = super.validateGrant();
-
-    const characteristics = this.characteristics ?? [];
-    for (const charConfig of characteristics) {
-      if (!this.constructor.VALID_CHARACTERISTICS.has(charConfig.key)) {
-        errors.push(`Invalid characteristic key: ${charConfig.key}`);
-      }
-    }
-
-    return errors;
-  }
 }

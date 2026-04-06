@@ -168,7 +168,7 @@
         opacity: 0.5;
         cursor: not-allowed;
         filter: grayscale(0.5);
-        
+
         &:hover {
             transform: none;
             box-shadow: none;
@@ -186,7 +186,7 @@
 .option-checkbox {
     flex-shrink: 0;
     margin-top: 2px;
-    
+
     i {
         font-size: 1.2rem;
         color: var(--rt-text-muted);
@@ -207,7 +207,7 @@
     color: white;
     border-radius: 50%;
     font-size: 0.8rem;
-    font-family: "Font Awesome 6 Pro", "Font Awesome 6 Solid";
+    font-family: 'Font Awesome 6 Pro', 'Font Awesome 6 Solid';
     font-weight: 900;
     box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
     z-index: 5;
@@ -258,7 +258,7 @@
         border-color: var(--rt-gold);
         transform: scale(1.1);
     }
-    
+
     i {
         font-size: 0.85rem;
     }

@@ -1,59 +1,57 @@
 {
-  "name": "Fortune",
-  "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/coins-pile.svg",
-  "system": {
-    "identifier": "fortune",
-    "step": "motivation",
-    "stepIndex": 5,
-    "description": {
-      "value": "<h2>Fortune</h2><blockquote><p><em>\"You seek wealth beyond measure, countless Thrones with which to purchase the fulfilment of your every desire. You understand that all things begin with the clink, clink, clink of Throne coins dropped upon a finely crafted counter, the sound that carries into the hearts of men and makes them listen where they would otherwise turn away.\"</em></p></blockquote><p>Birth and wealth causes others to care not. So it is that everything you have ever wanted, everything you could ever need, all comes down to Thrones. You must have them and the great wealth they represent. That is your quest, and you can only hope that you are still the same person at the end of it, having evaded the myriad ways in which single-minded fortune-seeking twists the mind and the soul.</p><p>In the void, wealth is power, and power is survival. You will have both, no matter the cost.</p>"
+    "name": "Fortune",
+    "type": "originPath",
+    "img": "modules/game-icons-net/whitetransparent/coins-pile.svg",
+    "system": {
+        "identifier": "fortune",
+        "step": "motivation",
+        "stepIndex": 5,
+        "description": {
+            "value": "<h2>Fortune</h2><blockquote><p><em>\"You seek wealth beyond measure, countless Thrones with which to purchase the fulfilment of your every desire. You understand that all things begin with the clink, clink, clink of Throne coins dropped upon a finely crafted counter, the sound that carries into the hearts of men and makes them listen where they would otherwise turn away.\"</em></p></blockquote><p>Birth and wealth causes others to care not. So it is that everything you have ever wanted, everything you could ever need, all comes down to Thrones. You must have them and the great wealth they represent. That is your quest, and you can only hope that you are still the same person at the end of it, having evaded the myriad ways in which single-minded fortune-seeking twists the mind and the soul.</p><p>In the void, wealth is power, and power is survival. You will have both, no matter the cost.</p>"
+        },
+        "requirements": {
+            "text": "Origin Path: Motivation",
+            "previousSteps": [],
+            "excludedSteps": []
+        },
+        "grants": {
+            "fate": 1,
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "aptitudes": [],
+            "equipment": [],
+            "specialAbilities": []
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 1,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "effectText": "",
+        "notes": "",
+        "source": {
+            "book": "Rogue Trader Core Rulebook",
+            "page": "33",
+            "custom": ""
+        },
+        "selectedChoices": {},
+        "activeModifiers": [],
+        "positions": [2]
     },
-    "requirements": {
-      "text": "Origin Path: Motivation",
-      "previousSteps": [],
-      "excludedSteps": []
-    },
-    "grants": {
-      "fate": 1,
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": []
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 1,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "effectText": "",
-    "notes": "",
-    "source": {
-      "book": "Rogue Trader Core Rulebook",
-      "page": "33",
-      "custom": ""
-    },
-    "selectedChoices": {},
-    "activeModifiers": [],
-    "positions": [
-      2
-    ]
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "Sw4y6TekvknMmLBo"
+    "effects": [],
+    "flags": {},
+    "_id": "Sw4y6TekvknMmLBo"
 }

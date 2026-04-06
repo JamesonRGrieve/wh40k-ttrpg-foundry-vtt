@@ -1,18 +1,18 @@
 {
-  "name": "Blast",
-  "type": "weaponQuality",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "identifier": "blast",
-    "hasLevel": false,
-    "level": null,
-    "effect": "<p>Effect reference: 151</p>",
-    "notes": "",
-    "description": {
-      "value": "<p>151</p>"
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "vmhwQiVzKzZZMCQ7"
+    "name": "Blast",
+    "type": "weaponQuality",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "identifier": "blast",
+        "hasLevel": false,
+        "level": null,
+        "effect": "<p>Effect reference: 151</p>",
+        "notes": "",
+        "description": {
+            "value": "<p>151</p>"
+        }
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "vmhwQiVzKzZZMCQ7"
 }

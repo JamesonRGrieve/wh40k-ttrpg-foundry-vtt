@@ -1,28 +1,26 @@
 {
-  "name": "Lumen Heraldry",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "+10 to Intimidate and Command Tests, -30 to Concealment Tests. Uses a power source if armour doesn't already have one, recharged every 5 days (draw on power armour is negligable).",
-    "availability": "scarce",
-    "source": "RT: Hostile Acq.",
-    "description": {
-      "value": "<p>+10 to Intimidate and Command Tests, -30 to Concealment Tests. Uses a power source if armour doesn't already have one, recharged every 5 days (draw on power armour is negligable).</p>"
+    "name": "Lumen Heraldry",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "+10 to Intimidate and Command Tests, -30 to Concealment Tests. Uses a power source if armour doesn't already have one, recharged every 5 days (draw on power armour is negligable).",
+        "availability": "scarce",
+        "source": "RT: Hostile Acq.",
+        "description": {
+            "value": "<p>+10 to Intimidate and Command Tests, -30 to Concealment Tests. Uses a power source if armour doesn't already have one, recharged every 5 days (draw on power armour is negligable).</p>"
+        },
+        "modifiers": {
+            "armourPoints": 0,
+            "maxAgility": 0,
+            "weight": 0
+        },
+        "restrictions": {
+            "armourTypes": ["any"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 0,
-      "maxAgility": 0,
-      "weight": 0
-    },
-    "restrictions": {
-      "armourTypes": [
-        "any"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "VS7A3pYaFM8TVBkX"
+    "effects": [],
+    "flags": {},
+    "_id": "VS7A3pYaFM8TVBkX"
 }

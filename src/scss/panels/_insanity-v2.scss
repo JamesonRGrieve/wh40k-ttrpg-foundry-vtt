@@ -4,764 +4,779 @@
 // Complete redesign matching corruption panel with threshold warnings and disorder tracking
 
 .wh40k-insanity-panel-v2 {
-  // Base panel styling inherits from rt-panel
+    // Base panel styling inherits from rt-panel
 
-  // Dynamic border color based on insanity degree
-  &.degree-stable { border-left: 4px solid $wh40k-degree-stable; }
-  &.degree-unsettled { border-left: 4px solid $wh40k-degree-unsettled; }
-  &.degree-disturbed { border-left: 4px solid $wh40k-degree-disturbed; }
-  &.degree-unhinged { border-left: 4px solid $wh40k-degree-unhinged; }
-  &.degree-deranged { border-left: 4px solid $wh40k-degree-deranged; }
-  &.degree-terminally {
-    border-left: 4px solid $wh40k-degree-terminally;
-    animation: insane-pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes insane-pulse {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
-    }
-    50% {
-      box-shadow: 0 0 0 8px rgba(139, 0, 0, 0);
-    }
-  }
-
-  // ============================================
-  // Header Status (Badge with Icon)
-  // ============================================
-
-  .wh40k-insanity-header-status {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: auto;
-    margin-right: 8px;
-  }
-
-  .wh40k-insanity-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 5px 12px;
-    border-radius: 4px;
-    border: 2px solid;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease;
-    font-family: 'Modesto Condensed', serif;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    .wh40k-badge-icon {
-      font-size: 1rem;
-      transition: all 0.2s ease;
-    }
-
-    .wh40k-badge-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      line-height: 1.2;
-    }
-
-    // STABLE (0-9) - Green
+    // Dynamic border color based on insanity degree
     &.degree-stable {
-      background: rgba(34, 197, 94, 0.15);
-      border-color: #16a34a;
-      color: #15803d;
-      
-      .wh40k-badge-label {
-        text-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
-      }
+        border-left: 4px solid $wh40k-degree-stable;
     }
-
-    // UNSETTLED (10-39) - Yellow/Gold
     &.degree-unsettled {
-      background: rgba(234, 179, 8, 0.15);
-      border-color: #ca8a04;
-      color: #a16207;
-      
-      .wh40k-badge-label {
-        text-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
-      }
+        border-left: 4px solid $wh40k-degree-unsettled;
     }
-
-    // DISTURBED (40-59) - Orange
     &.degree-disturbed {
-      background: rgba(249, 115, 22, 0.15);
-      border-color: #ea580c;
-      color: #c2410c;
-      
-      .wh40k-badge-label {
-        text-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
-      }
+        border-left: 4px solid $wh40k-degree-disturbed;
     }
-
-    // UNHINGED (60-79) - Red
     &.degree-unhinged {
-      background: rgba(239, 68, 68, 0.15);
-      border-color: #dc2626;
-      color: #b91c1c;
-      
-      .wh40k-badge-label {
-        text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
-      }
+        border-left: 4px solid $wh40k-degree-unhinged;
     }
-
-    // DERANGED (80-99) - Dark Red
     &.degree-deranged {
-      background: rgba(220, 38, 38, 0.2);
-      border-color: #b91c1c;
-      color: #991b1b;
-      animation: badge-pulse 2s ease-in-out infinite;
-      
-      .wh40k-badge-label {
-        text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
-      }
+        border-left: 4px solid $wh40k-degree-deranged;
     }
-
-    // TERMINALLY INSANE (100) - Darkest Red
     &.degree-terminally {
-      background: rgba(127, 29, 29, 0.25);
-      border-color: #7f1d1d;
-      color: #7f1d1d;
-      animation: badge-pulse 1s ease-in-out infinite;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 8px rgba(127, 29, 29, 0.4);
-      
-      .wh40k-badge-label {
-        text-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
-      }
-    }
-  }
-
-  @keyframes badge-pulse {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.06);
-    }
-  }
-
-  @keyframes seal-pulse {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.08);
-    }
-  }
-
-  // ============================================
-  // Main Display Area
-  // ============================================
-
-  .wh40k-insanity-display {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-md;
-  }
-
-  // Header with value and modifier
-  .wh40k-insanity-header {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-sm;
-    align-items: center;
-  }
-
-  .wh40k-insanity-value {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-md;
-  }
-
-  // +/- Control Buttons
-  .wh40k-insanity-btn {
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--rt-btn-bg);
-    border: 2px solid var(--rt-border-color);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    color: var(--rt-text-medium);
-
-    i {
-      font-size: 0.85rem;
+        border-left: 4px solid $wh40k-degree-terminally;
+        animation: insane-pulse 2s ease-in-out infinite;
     }
 
-    &:hover {
-      background: var(--rt-btn-bg-hover);
-      border-color: var(--rt-border-color-strong);
-      transform: scale(1.08);
-      box-shadow: 0 2px 6px var(--rt-shadow-medium);
+    @keyframes insane-pulse {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
+        }
+        50% {
+            box-shadow: 0 0 0 8px rgba(139, 0, 0, 0);
+        }
     }
 
-    &:active {
-      transform: scale(0.95);
-      box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
-    }
-  }
+    // ============================================
+    // Header Status (Badge with Icon)
+    // ============================================
 
-  .wh40k-insanity-minus {
-    color: var(--rt-success-secondary);
-    &:hover {
-      border-color: var(--rt-success-primary);
-      background: var(--rt-success-bg);
-    }
-  }
-
-  .wh40k-insanity-plus {
-    color: var(--rt-insanity-primary);
-    &:hover {
-      border-color: var(--rt-insanity-primary);
-      background: var(--rt-insanity-bg);
-    }
-  }
-
-  // Number Display
-  .wh40k-insanity-number {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-    font-family: 'Modesto Condensed', serif;
-  }
-
-  .wh40k-insanity-current {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #ef4444; // Brighter red instead of dark purple
-    line-height: 1;
-  }
-
-  .wh40k-insanity-max {
-    font-size: 1.3rem;
-    color: var(--rt-text-muted);
-    font-weight: 600;
-  }
-
-  // Modifier Display
-  .wh40k-insanity-modifier {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--rt-text-muted);
-  }
-
-  .wh40k-modifier-value {
-    font-size: 1.1rem;
-    color: #ef4444; // Brighter red instead of dark purple
-    font-family: 'Modesto Condensed', serif;
-  }
-
-  // ============================================
-  // Progress Bar with Threshold Markers
-  // ============================================
-
-  .wh40k-insanity-bar-container {
-    width: 100%;
-    position: relative;
-  }
-
-  .wh40k-insanity-bar {
-    width: 100%;
-    height: 14px;
-    background: var(--rt-border-accent);
-    border-radius: 7px;
-    overflow: visible; // Allow markers to show
-    position: relative;
-    box-shadow: inset 0 1px 3px var(--rt-shadow-medium);
-  }
-
-  .wh40k-insanity-bar-fill {
-    height: 100%;
-    border-radius: 7px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-  }
-
-  // Bar color matches current degree
-  &.degree-stable .wh40k-insanity-bar-fill {
-    background-color: #22c55e;
-  }
-
-  &.degree-unsettled .wh40k-insanity-bar-fill {
-    background-color: #eab308;
-  }
-
-  &.degree-disturbed .wh40k-insanity-bar-fill {
-    background-color: #f97316;
-  }
-
-  &.degree-unhinged .wh40k-insanity-bar-fill {
-    background-color: #ef4444;
-  }
-
-  &.degree-deranged .wh40k-insanity-bar-fill {
-    background-color: #dc2626;
-    box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);
-  }
-
-  &.degree-terminally .wh40k-insanity-bar-fill {
-    background-color: #7f1d1d;
-    box-shadow: 0 0 10px rgba(127, 29, 29, 0.6);
-  }
-
-  // Threshold Markers
-  .wh40k-threshold-marker {
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    pointer-events: none;
-  }
-
-  .wh40k-threshold-line {
-    width: 2px;
-    height: 14px;
-    background: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-  }
-
-  .wh40k-threshold-label {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--rt-text-muted);
-    margin-top: 2px;
-    background: var(--rt-panel-bg-solid);
-    padding: 1px 3px;
-    border-radius: 2px;
-  }
-
-  // ============================================
-  // Alert Messages
-  // ============================================
-
-  .wh40k-insanity-alert {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-sm;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    border-radius: 6px;
-    letter-spacing: 0.03em;
-
-    i {
-      font-size: 1.2em;
-    }
-  }
-
-  .wh40k-alert-debased {
-    background: rgba(139, 69, 19, 0.2);
-    color: #8b4513;
-    border: 2px solid rgba(139, 69, 19, 0.5);
-  }
-
-  .wh40k-alert-profane {
-    background: rgba(139, 0, 0, 0.2);
-    color: #8b0000;
-    border: 2px solid rgba(139, 0, 0, 0.6);
-    animation: alert-pulse 2s ease-in-out infinite;
-  }
-
-  .wh40k-alert-damned {
-    background: rgba(0, 0, 0, 0.3);
-    color: #ff0000;
-    border: 2px solid #8b0000;
-    animation: damned-alert 1s ease-in-out infinite;
-  }
-
-  @keyframes alert-pulse {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
-    }
-    50% {
-      box-shadow: 0 0 0 4px rgba(139, 0, 0, 0);
-    }
-  }
-
-  @keyframes damned-alert {
-    0%, 100% {
-      background: rgba(0, 0, 0, 0.3);
-      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
-    }
-    50% {
-      background: rgba(139, 0, 0, 0.4);
-      box-shadow: 0 0 0 6px rgba(255, 0, 0, 0);
-    }
-  }
-
-  // ============================================
-  // Disorder Preview
-  // ============================================
-
-  .wh40k-disorder-preview {
-    padding: $wh40k-space-sm;
-    background: var(--rt-insanity-bg);
-    border: 1px solid var(--rt-insanity-border);
-    border-radius: 6px;
-  }
-
-  .wh40k-disorder-count {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--rt-insanity-primary);
-
-    i {
-      font-size: 1.1em;
-    }
-  }
-
-  // ============================================
-  // Edit Mode Sections
-  // ============================================
-
-  .wh40k-insanity-edit-section {
-    padding: $wh40k-space-md;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
-    border-radius: 8px;
-    margin-bottom: $wh40k-space-sm;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  .wh40k-insanity-edit-header {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--rt-text-medium);
-    margin-bottom: $wh40k-space-sm;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-
-    i {
-      font-size: 0.9em;
-      color: var(--rt-insanity-primary);
-    }
-  }
-
-  .wh40k-insanity-edit-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .wh40k-edit-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--rt-text-muted);
-  }
-
-  .wh40k-edit-input {
-    width: 100%;
-    height: 40px;
-    padding: 0 $wh40k-space-sm;
-    border: 2px solid var(--rt-insanity-border);
-    border-radius: 6px;
-    background: var(--rt-input-bg);
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--rt-insanity-primary);
-    text-align: center;
-    font-family: 'Modesto Condensed', serif;
-    transition: all 0.15s ease;
-
-    &:focus {
-      outline: none;
-      border-color: var(--rt-insanity-primary);
-      background: var(--rt-input-bg-focus);
-      box-shadow: 0 0 0 3px var(--rt-insanity-bg);
+    .wh40k-insanity-header-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+        margin-right: 8px;
     }
 
-    &:hover {
-      border-color: rgba(139, 0, 0, 0.5);
+    .wh40k-insanity-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 4px;
+        border: 2px solid;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+        font-family: 'Modesto Condensed', serif;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+
+        .wh40k-badge-icon {
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .wh40k-badge-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            line-height: 1.2;
+        }
+
+        // STABLE (0-9) - Green
+        &.degree-stable {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: #16a34a;
+            color: #15803d;
+
+            .wh40k-badge-label {
+                text-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+            }
+        }
+
+        // UNSETTLED (10-39) - Yellow/Gold
+        &.degree-unsettled {
+            background: rgba(234, 179, 8, 0.15);
+            border-color: #ca8a04;
+            color: #a16207;
+
+            .wh40k-badge-label {
+                text-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
+            }
+        }
+
+        // DISTURBED (40-59) - Orange
+        &.degree-disturbed {
+            background: rgba(249, 115, 22, 0.15);
+            border-color: #ea580c;
+            color: #c2410c;
+
+            .wh40k-badge-label {
+                text-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
+            }
+        }
+
+        // UNHINGED (60-79) - Red
+        &.degree-unhinged {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: #dc2626;
+            color: #b91c1c;
+
+            .wh40k-badge-label {
+                text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+            }
+        }
+
+        // DERANGED (80-99) - Dark Red
+        &.degree-deranged {
+            background: rgba(220, 38, 38, 0.2);
+            border-color: #b91c1c;
+            color: #991b1b;
+            animation: badge-pulse 2s ease-in-out infinite;
+
+            .wh40k-badge-label {
+                text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+            }
+        }
+
+        // TERMINALLY INSANE (100) - Darkest Red
+        &.degree-terminally {
+            background: rgba(127, 29, 29, 0.25);
+            border-color: #7f1d1d;
+            color: #7f1d1d;
+            animation: badge-pulse 1s ease-in-out infinite;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 8px rgba(127, 29, 29, 0.4);
+
+            .wh40k-badge-label {
+                text-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
+            }
+        }
     }
-  }
 
-  // Quick Adjust Buttons
-  .wh40k-insanity-quick-set {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: $wh40k-space-xs;
-    margin-top: $wh40k-space-sm;
-  }
-
-  .wh40k-quick-adjust-btn {
-    padding: $wh40k-space-sm;
-    background: var(--rt-panel-bg-solid);
-    border: 2px solid var(--rt-border-color);
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--rt-text-medium);
-    cursor: pointer;
-    transition: all 0.15s ease;
-    font-family: 'Modesto Condensed', serif;
-
-    &:hover {
-      background: var(--rt-panel-bg-alt);
-      border-color: var(--rt-border-color-strong);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px var(--rt-shadow-soft);
+    @keyframes badge-pulse {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.06);
+        }
     }
 
-    &:active {
-      transform: translateY(0);
-      box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+    @keyframes seal-pulse {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.08);
+        }
     }
 
-    // Decrease buttons (green tint)
-    &[data-delta^="-"] {
-      color: var(--rt-success-secondary);
-      
-      &:hover {
-        border-color: var(--rt-success-primary);
-        background: var(--rt-success-bg);
-        color: var(--rt-success-primary);
-      }
+    // ============================================
+    // Main Display Area
+    // ============================================
+
+    .wh40k-insanity-display {
+        display: flex;
+        flex-direction: column;
+        gap: $wh40k-space-md;
     }
 
-    // Increase buttons (red tint)
-    &[data-delta^="+"]:not([data-delta="+0"]) {
-      color: var(--rt-insanity-primary);
-      
-      &:hover {
-        border-color: var(--rt-insanity-primary);
-        background: var(--rt-insanity-bg);
+    // Header with value and modifier
+    .wh40k-insanity-header {
+        display: flex;
+        flex-direction: column;
+        gap: $wh40k-space-sm;
+        align-items: center;
+    }
+
+    .wh40k-insanity-value {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-md;
+    }
+
+    // +/- Control Buttons
+    .wh40k-insanity-btn {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--rt-btn-bg);
+        border: 2px solid var(--rt-border-color);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        color: var(--rt-text-medium);
+
+        i {
+            font-size: 0.85rem;
+        }
+
+        &:hover {
+            background: var(--rt-btn-bg-hover);
+            border-color: var(--rt-border-color-strong);
+            transform: scale(1.08);
+            box-shadow: 0 2px 6px var(--rt-shadow-medium);
+        }
+
+        &:active {
+            transform: scale(0.95);
+            box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+        }
+    }
+
+    .wh40k-insanity-minus {
+        color: var(--rt-success-secondary);
+        &:hover {
+            border-color: var(--rt-success-primary);
+            background: var(--rt-success-bg);
+        }
+    }
+
+    .wh40k-insanity-plus {
         color: var(--rt-insanity-primary);
-      }
-    }
-  }
-
-  // ============================================
-  // Disorder List
-  // ============================================
-
-  .wh40k-disorder-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .wh40k-disorder-card {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-xs $wh40k-space-sm;
-    background: var(--rt-insanity-bg);
-    border: 1px solid var(--rt-insanity-border);
-    border-radius: 6px;
-    transition: all 0.15s ease;
-
-    &:hover {
-      background: rgba(139, 0, 0, 0.15);
-      border-color: var(--rt-insanity-primary);
-    }
-  }
-
-  .wh40k-disorder-name {
-    flex: 1;
-    background: none;
-    border: none;
-    padding: 4px;
-    text-align: left;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--rt-text-medium);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: color 0.15s ease;
-
-    i {
-      font-size: 0.9em;
-      color: var(--rt-insanity-primary);
+        &:hover {
+            border-color: var(--rt-insanity-primary);
+            background: var(--rt-insanity-bg);
+        }
     }
 
-    &:hover {
-      color: var(--rt-insanity-primary);
-    }
-  }
-
-  .wh40k-disorder-delete {
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--rt-wounds-bg);
-    border: 1px solid var(--rt-wounds-border);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-
-    i {
-      font-size: 0.7rem;
-      color: var(--rt-wounds-secondary);
+    // Number Display
+    .wh40k-insanity-number {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+        font-family: 'Modesto Condensed', serif;
     }
 
-    &:hover {
-      background: rgba(182, 58, 43, 0.2);
-      border-color: var(--rt-wounds-secondary);
-      transform: scale(1.05);
-    }
-  }
-
-  // Empty state - lighter purple (no disorders yet)
-  .wh40k-insanity-edit-section .wh40k-dropzone-empty {
-    .wh40k-dropzone-icon {
-      color: rgba(168, 85, 247, 0.6); // Lighter purple smile
-    }
-    
-    .wh40k-dropzone-text {
-      color: rgba(168, 85, 247, 0.7);
-    }
-    
-    &:hover {
-      .wh40k-dropzone-icon {
-        color: rgba(168, 85, 247, 0.8);
-      }
-      
-      .wh40k-dropzone-text {
-        color: rgba(168, 85, 247, 0.9);
-      }
-    }
-  }
-
-  // ============================================
-  // Info Box
-  // ============================================
-
-  .wh40k-insanity-info-box {
-    display: flex;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-md;
-    background: var(--rt-insanity-bg);
-    border-left: 3px solid var(--rt-insanity-border);
-    border-radius: 4px;
-
-    > i {
-      color: var(--rt-insanity-primary);
-      font-size: 1.3rem;
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
-  }
-
-  .wh40k-info-content {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-xs;
-
-    strong {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--rt-text-medium);
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+    .wh40k-insanity-current {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #ef4444; // Brighter red instead of dark purple
+        line-height: 1;
     }
 
-    .wh40k-degree-list {
-      font-size: 0.75rem;
-      color: var(--rt-text-muted);
-      line-height: 1.6;
-      margin: 0;
-      padding-left: 20px;
+    .wh40k-insanity-max {
+        font-size: 1.3rem;
+        color: var(--rt-text-muted);
+        font-weight: 600;
+    }
 
-      li {
-        margin: 4px 0;
-      }
+    // Modifier Display
+    .wh40k-insanity-modifier {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--rt-text-muted);
+    }
 
-      .wh40k-degree-name {
+    .wh40k-modifier-value {
+        font-size: 1.1rem;
+        color: #ef4444; // Brighter red instead of dark purple
+        font-family: 'Modesto Condensed', serif;
+    }
+
+    // ============================================
+    // Progress Bar with Threshold Markers
+    // ============================================
+
+    .wh40k-insanity-bar-container {
+        width: 100%;
+        position: relative;
+    }
+
+    .wh40k-insanity-bar {
+        width: 100%;
+        height: 14px;
+        background: var(--rt-border-accent);
+        border-radius: 7px;
+        overflow: visible; // Allow markers to show
+        position: relative;
+        box-shadow: inset 0 1px 3px var(--rt-shadow-medium);
+    }
+
+    .wh40k-insanity-bar-fill {
+        height: 100%;
+        border-radius: 7px;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    // Bar color matches current degree
+    &.degree-stable .wh40k-insanity-bar-fill {
+        background-color: #22c55e;
+    }
+
+    &.degree-unsettled .wh40k-insanity-bar-fill {
+        background-color: #eab308;
+    }
+
+    &.degree-disturbed .wh40k-insanity-bar-fill {
+        background-color: #f97316;
+    }
+
+    &.degree-unhinged .wh40k-insanity-bar-fill {
+        background-color: #ef4444;
+    }
+
+    &.degree-deranged .wh40k-insanity-bar-fill {
+        background-color: #dc2626;
+        box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);
+    }
+
+    &.degree-terminally .wh40k-insanity-bar-fill {
+        background-color: #7f1d1d;
+        box-shadow: 0 0 10px rgba(127, 29, 29, 0.6);
+    }
+
+    // Threshold Markers
+    .wh40k-threshold-marker {
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    .wh40k-threshold-line {
+        width: 2px;
+        height: 14px;
+        background: rgba(255, 255, 255, 0.6);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .wh40k-threshold-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--rt-text-muted);
+        margin-top: 2px;
+        background: var(--rt-panel-bg-solid);
+        padding: 1px 3px;
+        border-radius: 2px;
+    }
+
+    // ============================================
+    // Alert Messages
+    // ============================================
+
+    .wh40k-insanity-alert {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        padding: $wh40k-space-sm;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 6px;
+        letter-spacing: 0.03em;
+
+        i {
+            font-size: 1.2em;
+        }
+    }
+
+    .wh40k-alert-debased {
+        background: rgba(139, 69, 19, 0.2);
+        color: #8b4513;
+        border: 2px solid rgba(139, 69, 19, 0.5);
+    }
+
+    .wh40k-alert-profane {
+        background: rgba(139, 0, 0, 0.2);
+        color: #8b0000;
+        border: 2px solid rgba(139, 0, 0, 0.6);
+        animation: alert-pulse 2s ease-in-out infinite;
+    }
+
+    .wh40k-alert-damned {
+        background: rgba(0, 0, 0, 0.3);
+        color: #ff0000;
+        border: 2px solid #8b0000;
+        animation: damned-alert 1s ease-in-out infinite;
+    }
+
+    @keyframes alert-pulse {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
+        }
+        50% {
+            box-shadow: 0 0 0 4px rgba(139, 0, 0, 0);
+        }
+    }
+
+    @keyframes damned-alert {
+        0%,
+        100% {
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+        }
+        50% {
+            background: rgba(139, 0, 0, 0.4);
+            box-shadow: 0 0 0 6px rgba(255, 0, 0, 0);
+        }
+    }
+
+    // ============================================
+    // Disorder Preview
+    // ============================================
+
+    .wh40k-disorder-preview {
+        padding: $wh40k-space-sm;
+        background: var(--rt-insanity-bg);
+        border: 1px solid var(--rt-insanity-border);
+        border-radius: 6px;
+    }
+
+    .wh40k-disorder-count {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--rt-insanity-primary);
+
+        i {
+            font-size: 1.1em;
+        }
+    }
+
+    // ============================================
+    // Edit Mode Sections
+    // ============================================
+
+    .wh40k-insanity-edit-section {
+        padding: $wh40k-space-md;
+        background: var(--rt-panel-bg-translucent);
+        border: 1px solid var(--rt-border-color-light);
+        border-radius: 8px;
+        margin-bottom: $wh40k-space-sm;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .wh40k-insanity-edit-header {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--rt-text-medium);
+        margin-bottom: $wh40k-space-sm;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+
+        i {
+            font-size: 0.9em;
+            color: var(--rt-insanity-primary);
+        }
+    }
+
+    .wh40k-insanity-edit-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .wh40k-edit-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--rt-text-muted);
+    }
+
+    .wh40k-edit-input {
+        width: 100%;
+        height: 40px;
+        padding: 0 $wh40k-space-sm;
+        border: 2px solid var(--rt-insanity-border);
+        border-radius: 6px;
+        background: var(--rt-input-bg);
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--rt-insanity-primary);
+        text-align: center;
+        font-family: 'Modesto Condensed', serif;
+        transition: all 0.15s ease;
+
+        &:focus {
+            outline: none;
+            border-color: var(--rt-insanity-primary);
+            background: var(--rt-input-bg-focus);
+            box-shadow: 0 0 0 3px var(--rt-insanity-bg);
+        }
+
+        &:hover {
+            border-color: rgba(139, 0, 0, 0.5);
+        }
+    }
+
+    // Quick Adjust Buttons
+    .wh40k-insanity-quick-set {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: $wh40k-space-xs;
+        margin-top: $wh40k-space-sm;
+    }
+
+    .wh40k-quick-adjust-btn {
+        padding: $wh40k-space-sm;
+        background: var(--rt-panel-bg-solid);
+        border: 2px solid var(--rt-border-color);
+        border-radius: 4px;
+        font-size: 0.85rem;
         font-weight: 700;
         color: var(--rt-text-medium);
-      }
+        cursor: pointer;
+        transition: all 0.15s ease;
+        font-family: 'Modesto Condensed', serif;
 
-      .wh40k-degree-terminally {
-        color: var(--rt-insanity-primary);
-      }
+        &:hover {
+            background: var(--rt-panel-bg-alt);
+            border-color: var(--rt-border-color-strong);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px var(--rt-shadow-soft);
+        }
 
-      strong {
-        font-size: inherit;
-        text-transform: none;
-        letter-spacing: normal;
-        color: var(--rt-insanity-primary);
-      }
+        &:active {
+            transform: translateY(0);
+            box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+        }
+
+        // Decrease buttons (green tint)
+        &[data-delta^='-'] {
+            color: var(--rt-success-secondary);
+
+            &:hover {
+                border-color: var(--rt-success-primary);
+                background: var(--rt-success-bg);
+                color: var(--rt-success-primary);
+            }
+        }
+
+        // Increase buttons (red tint)
+        &[data-delta^='+']:not([data-delta='+0']) {
+            color: var(--rt-insanity-primary);
+
+            &:hover {
+                border-color: var(--rt-insanity-primary);
+                background: var(--rt-insanity-bg);
+                color: var(--rt-insanity-primary);
+            }
+        }
     }
 
-    p {
-      font-size: 0.75rem;
-      color: var(--rt-text-muted);
-      line-height: 1.5;
-      margin: 6px 0 0 0;
-    }
-  }
+    // ============================================
+    // Disorder List
+    // ============================================
 
-  .wh40k-insanity-warning {
-    padding: $wh40k-space-xs $wh40k-space-sm;
-    background: var(--rt-insanity-bg);
-    border-left: 2px solid var(--rt-insanity-primary);
-    border-radius: 3px;
-    color: var(--rt-insanity-primary) !important;
-
-    i {
-      margin-right: 4px;
-    }
-  }
-
-  // ============================================
-  // Add Button Small
-  // ============================================
-
-  .wh40k-add-btn-small {
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--rt-success-bg);
-    border: 1px solid rgba(74, 143, 92, 0.4);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-
-    i {
-      font-size: 0.7rem;
-      color: var(--rt-success-secondary);
+    .wh40k-disorder-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
     }
 
-    &:hover {
-      background: rgba(74, 143, 92, 0.25);
-      border-color: var(--rt-success-primary);
-      transform: scale(1.05);
+    .wh40k-disorder-card {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        padding: $wh40k-space-xs $wh40k-space-sm;
+        background: var(--rt-insanity-bg);
+        border: 1px solid var(--rt-insanity-border);
+        border-radius: 6px;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background: rgba(139, 0, 0, 0.15);
+            border-color: var(--rt-insanity-primary);
+        }
     }
-  }
+
+    .wh40k-disorder-name {
+        flex: 1;
+        background: none;
+        border: none;
+        padding: 4px;
+        text-align: left;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--rt-text-medium);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.15s ease;
+
+        i {
+            font-size: 0.9em;
+            color: var(--rt-insanity-primary);
+        }
+
+        &:hover {
+            color: var(--rt-insanity-primary);
+        }
+    }
+
+    .wh40k-disorder-delete {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--rt-wounds-bg);
+        border: 1px solid var(--rt-wounds-border);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        i {
+            font-size: 0.7rem;
+            color: var(--rt-wounds-secondary);
+        }
+
+        &:hover {
+            background: rgba(182, 58, 43, 0.2);
+            border-color: var(--rt-wounds-secondary);
+            transform: scale(1.05);
+        }
+    }
+
+    // Empty state - lighter purple (no disorders yet)
+    .wh40k-insanity-edit-section .wh40k-dropzone-empty {
+        .wh40k-dropzone-icon {
+            color: rgba(168, 85, 247, 0.6); // Lighter purple smile
+        }
+
+        .wh40k-dropzone-text {
+            color: rgba(168, 85, 247, 0.7);
+        }
+
+        &:hover {
+            .wh40k-dropzone-icon {
+                color: rgba(168, 85, 247, 0.8);
+            }
+
+            .wh40k-dropzone-text {
+                color: rgba(168, 85, 247, 0.9);
+            }
+        }
+    }
+
+    // ============================================
+    // Info Box
+    // ============================================
+
+    .wh40k-insanity-info-box {
+        display: flex;
+        gap: $wh40k-space-sm;
+        padding: $wh40k-space-md;
+        background: var(--rt-insanity-bg);
+        border-left: 3px solid var(--rt-insanity-border);
+        border-radius: 4px;
+
+        > i {
+            color: var(--rt-insanity-primary);
+            font-size: 1.3rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+    }
+
+    .wh40k-info-content {
+        display: flex;
+        flex-direction: column;
+        gap: $wh40k-space-xs;
+
+        strong {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--rt-text-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .wh40k-degree-list {
+            font-size: 0.75rem;
+            color: var(--rt-text-muted);
+            line-height: 1.6;
+            margin: 0;
+            padding-left: 20px;
+
+            li {
+                margin: 4px 0;
+            }
+
+            .wh40k-degree-name {
+                font-weight: 700;
+                color: var(--rt-text-medium);
+            }
+
+            .wh40k-degree-terminally {
+                color: var(--rt-insanity-primary);
+            }
+
+            strong {
+                font-size: inherit;
+                text-transform: none;
+                letter-spacing: normal;
+                color: var(--rt-insanity-primary);
+            }
+        }
+
+        p {
+            font-size: 0.75rem;
+            color: var(--rt-text-muted);
+            line-height: 1.5;
+            margin: 6px 0 0 0;
+        }
+    }
+
+    .wh40k-insanity-warning {
+        padding: $wh40k-space-xs $wh40k-space-sm;
+        background: var(--rt-insanity-bg);
+        border-left: 2px solid var(--rt-insanity-primary);
+        border-radius: 3px;
+        color: var(--rt-insanity-primary) !important;
+
+        i {
+            margin-right: 4px;
+        }
+    }
+
+    // ============================================
+    // Add Button Small
+    // ============================================
+
+    .wh40k-add-btn-small {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--rt-success-bg);
+        border: 1px solid rgba(74, 143, 92, 0.4);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        i {
+            font-size: 0.7rem;
+            color: var(--rt-success-secondary);
+        }
+
+        &:hover {
+            background: rgba(74, 143, 92, 0.25);
+            border-color: var(--rt-success-primary);
+            transform: scale(1.05);
+        }
+    }
 }

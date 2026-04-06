@@ -1,42 +1,39 @@
 {
-  "name": "Mark I.R Life Sustainer (Large)",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "light-cruiser",
-      "cruiser"
-    ],
-    "effect": "Recycles air and water for the ship. Increase all Morale Loss by 1 due to low quality air and water.",
-    "availability": "scarce",
-    "source": "Rogue Trader Core",
-    "description": {
-      "value": "<p>Recycles air and water for the ship. Increase all Morale Loss by 1 due to low quality air and water.</p>"
+    "name": "Mark I.R Life Sustainer (Large)",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["light-cruiser", "cruiser"],
+        "effect": "Recycles air and water for the ship. Increase all Morale Loss by 1 due to low quality air and water.",
+        "availability": "scarce",
+        "source": "Rogue Trader Core",
+        "description": {
+            "value": "<p>Recycles air and water for the ship. Increase all Morale Loss by 1 due to low quality air and water.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "lifeSupport",
+        "essential": true,
+        "power": {
+            "used": 4,
+            "generated": 0
+        },
+        "space": 2,
+        "shipPoints": 0,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "mark-i-r-life-sustainer-large-"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "lifeSupport",
-    "essential": true,
-    "power": {
-      "used": 4,
-      "generated": 0
-    },
-    "space": 2,
-    "shipPoints": 0,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "mark-i-r-life-sustainer-large-"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "YrBkcAImrNwefGib"
+    "effects": [],
+    "flags": {},
+    "_id": "YrBkcAImrNwefGib"
 }

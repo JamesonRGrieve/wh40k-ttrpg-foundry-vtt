@@ -1,24 +1,24 @@
 {
-  "name": "Divine Shot",
-  "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
-  "system": {
-    "discipline": "Divination",
-    "prerequisites": "-",
-    "focusPower": "Free Action",
-    "action": "Self",
-    "range": "Threshold 15",
-    "opposed": "No",
-    "sustained": "Automatically hit one ranged attack against target individual within range of fired weapon. If weapon fired multiple shots, only first hit is guaranteed.",
-    "effect": "-",
-    "source": "Dark Heresy: Core",
-    "description": {
-      "value": "<p>-</p>"
+    "name": "Divine Shot",
+    "type": "psychicPower",
+    "img": "icons/svg/eye.svg",
+    "system": {
+        "discipline": "Divination",
+        "prerequisites": "-",
+        "focusPower": "Free Action",
+        "action": "Self",
+        "range": "Threshold 15",
+        "opposed": "No",
+        "sustained": "Automatically hit one ranged attack against target individual within range of fired weapon. If weapon fired multiple shots, only first hit is guaranteed.",
+        "effect": "-",
+        "source": "Dark Heresy: Core",
+        "description": {
+            "value": "<p>-</p>"
+        },
+        "focusTime": "Half Action",
+        "threshold": 0
     },
-    "focusTime": "Half Action",
-    "threshold": 0
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "enW5d0cIDQH8U0aa"
+    "effects": [],
+    "flags": {},
+    "_id": "enW5d0cIDQH8U0aa"
 }

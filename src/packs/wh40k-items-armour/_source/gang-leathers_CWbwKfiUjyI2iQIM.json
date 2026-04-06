@@ -1,37 +1,31 @@
 {
-  "name": "Gang Leathers",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "primitive",
-    "weight": 5,
-    "availability": "average",
-    "notes": "Often found in outlandish colours of whichever Gang the wearer belongs to.",
-    "source": "Dark Heresy: Core",
-    "description": {
-      "value": "<p>Often found in outlandish colours of whichever Gang the wearer belongs to.</p>"
+    "name": "Gang Leathers",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "primitive",
+        "weight": 5,
+        "availability": "average",
+        "notes": "Often found in outlandish colours of whichever Gang the wearer belongs to.",
+        "source": "Dark Heresy: Core",
+        "description": {
+            "value": "<p>Often found in outlandish colours of whichever Gang the wearer belongs to.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["leftArm", "rightArm", "body", "leftLeg", "rightLeg"],
+        "armourPoints": {
+            "head": 1,
+            "body": 1,
+            "leftArm": 1,
+            "rightArm": 1,
+            "leftLeg": 1,
+            "rightLeg": 1
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "leftArm",
-      "rightArm",
-      "body",
-      "leftLeg",
-      "rightLeg"
-    ],
-    "armourPoints": {
-      "head": 1,
-      "body": 1,
-      "leftArm": 1,
-      "rightArm": 1,
-      "leftLeg": 1,
-      "rightLeg": 1
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "CWbwKfiUjyI2iQIM"
+    "effects": [],
+    "flags": {},
+    "_id": "CWbwKfiUjyI2iQIM"
 }

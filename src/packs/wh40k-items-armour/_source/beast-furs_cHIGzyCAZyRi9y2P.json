@@ -1,33 +1,31 @@
 {
-  "name": "Beast Furs",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "primitive",
-    "weight": 10,
-    "availability": "average",
-    "notes": "Halve primitive armour AP vs non primitive weapons",
-    "source": "Black Crusade: Core",
-    "description": {
-      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    "name": "Beast Furs",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "primitive",
+        "weight": 10,
+        "availability": "average",
+        "notes": "Halve primitive armour AP vs non primitive weapons",
+        "source": "Black Crusade: Core",
+        "description": {
+            "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["body"],
+        "armourPoints": {
+            "head": 2,
+            "body": 2,
+            "leftArm": 2,
+            "rightArm": 2,
+            "leftLeg": 2,
+            "rightLeg": 2
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "body"
-    ],
-    "armourPoints": {
-      "head": 2,
-      "body": 2,
-      "leftArm": 2,
-      "rightArm": 2,
-      "leftLeg": 2,
-      "rightLeg": 2
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "cHIGzyCAZyRi9y2P"
+    "effects": [],
+    "flags": {},
+    "_id": "cHIGzyCAZyRi9y2P"
 }

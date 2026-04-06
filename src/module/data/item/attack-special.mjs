@@ -1,5 +1,5 @@
-import ItemDataModel from "../abstract/item-data-model.mjs";
-import DescriptionTemplate from "../shared/description-template.mjs";
+import ItemDataModel from '../abstract/item-data-model.mjs';
+import DescriptionTemplate from '../shared/description-template.mjs';
 
 /**
  * Data model for Attack Special (Weapon Quality) items.
@@ -13,7 +13,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
             ...super.defineSchema(),
             enabled: new fields.BooleanField({ initial: true }),
             hasLevel: new fields.BooleanField({ initial: false }),
-            level: new fields.NumberField({ integer: true, initial: 0, min: 0 })
+            level: new fields.NumberField({ integer: true, initial: 0, min: 0 }),
         };
     }
 
@@ -24,7 +24,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
             props.push(`Level ${this.level}`);
         }
         if (!this.enabled) {
-            props.push("Disabled");
+            props.push('Disabled');
         }
         return props;
     }
@@ -33,7 +33,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
     get headerLabels() {
         const labels = [];
         if (this.hasLevel && this.level > 0) {
-            labels.push({ label: this.level.toString(), icon: "fa-solid fa-layer-group" });
+            labels.push({ label: this.level.toString(), icon: 'fa-solid fa-layer-group' });
         }
         return labels;
     }

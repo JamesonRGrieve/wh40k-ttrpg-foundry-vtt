@@ -1,71 +1,67 @@
 {
-  "name": "Double Team",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "general",
-    "source": "Only War Core",
-    "description": {
-      "value": "<p>Gain additional +10 to WS when ganging up on an opponent, if ally also has this talent, both gain additional +10, for a total of +20 on top of normal outnumbering bonuses.</p>"
+    "name": "Double Team",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "general",
+        "source": "Only War Core",
+        "description": {
+            "value": "<p>Gain additional +10 to WS when ganging up on an opponent, if ally also has this talent, both gain additional +10, for a total of +20 on top of normal outnumbering bonuses.</p>"
+        },
+        "tier": 1,
+        "isPassive": true,
+        "isRollable": false,
+        "benefit": "<p>Gain additional +10 to WS when ganging up on an opponent, if ally also has this talent, both gain additional +10, for a total of +20 on top of normal outnumbering bonuses.</p>",
+        "aptitudes": ["General", "Offence", "Unaligned"],
+        "prerequisites": {
+            "text": "None",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "identifier": "doubleTeam",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {
+                "attack": 0,
+                "damage": 0,
+                "penetration": 0,
+                "defense": 0,
+                "initiative": 0,
+                "speed": 0
+            },
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Assist Ally",
+                    "description": "<p>When you assist an ally with a skill test, they gain +20 instead of +10.</p>"
+                }
+            ]
+        },
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": ""
     },
-    "tier": 1,
-    "isPassive": true,
-    "isRollable": false,
-    "benefit": "<p>Gain additional +10 to WS when ganging up on an opponent, if ally also has this talent, both gain additional +10, for a total of +20 on top of normal outnumbering bonuses.</p>",
-    "aptitudes": [
-      "General",
-      "Offence",
-      "Unaligned"
-    ],
-    "prerequisites": {
-      "text": "None",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "identifier": "doubleTeam",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {
-        "attack": 0,
-        "damage": 0,
-        "penetration": 0,
-        "defense": 0,
-        "initiative": 0,
-        "speed": 0
-      },
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Assist Ally",
-          "description": "<p>When you assist an ally with a skill test, they gain +20 instead of +10.</p>"
-        }
-      ]
-    },
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "EphjySAz93EkLRz9"
+    "effects": [],
+    "flags": {},
+    "_id": "EphjySAz93EkLRz9"
 }

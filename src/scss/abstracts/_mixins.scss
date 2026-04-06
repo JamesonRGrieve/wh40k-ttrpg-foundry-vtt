@@ -8,28 +8,28 @@
 // ============================================
 
 @mixin rt-icon-button($size: 24px, $hover-color: $wh40k-accent-gold, $icon-size: 0.7rem) {
-  width: $size;
-  height: $size;
-  padding: 0;
-  background: transparent;
-  border: 1px solid $wh40k-border-medium;
-  border-radius: $wh40k-radius-md;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all $wh40k-transition-fast;
+    width: $size;
+    height: $size;
+    padding: 0;
+    background: transparent;
+    border: 1px solid $wh40k-border-medium;
+    border-radius: $wh40k-radius-md;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all $wh40k-transition-fast;
 
-  &:hover {
-    background: $wh40k-bg-subtle;
-    color: $hover-color;
-    border-color: $hover-color;
-  }
+    &:hover {
+        background: $wh40k-bg-subtle;
+        color: $hover-color;
+        border-color: $hover-color;
+    }
 
-  i {
-    font-size: $icon-size;
-  }
+    i {
+        font-size: $icon-size;
+    }
 }
 
 // ============================================
@@ -37,26 +37,26 @@
 // ============================================
 
 @mixin rt-panel-header-base($accent-color: $wh40k-accent-gold) {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-sm;
-  padding: $wh40k-space-sm $wh40k-space-md;
-  background: linear-gradient(180deg, rgba($accent-color, 0.12) 0%, transparent 100%);
-  border-bottom: 1px solid $wh40k-border-light;
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
+    background: linear-gradient(180deg, rgba($accent-color, 0.12) 0%, transparent 100%);
+    border-bottom: 1px solid $wh40k-border-light;
 }
 
 @mixin rt-panel-title {
-  flex: 1;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+    flex: 1;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 
-  i {
-    margin-right: $wh40k-space-xs;
-    color: inherit;
-  }
+    i {
+        margin-right: $wh40k-space-xs;
+        color: inherit;
+    }
 }
 
 // ============================================
@@ -64,24 +64,26 @@
 // ============================================
 
 @mixin rt-progress-gradient($gradient) {
-  &::-webkit-progress-value {
-    border-radius: 999px;
-    background: $gradient;
-  }
-  &::-moz-progress-bar {
-    border-radius: 999px;
-    background: $gradient;
-  }
+    &::-webkit-progress-value {
+        border-radius: 999px;
+        background: $gradient;
+    }
+    &::-moz-progress-bar {
+        border-radius: 999px;
+        background: $gradient;
+    }
 }
 
 @mixin rt-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
-  .wh40k-vitals-progress {
-    @include rt-progress-gradient($progress-gradient);
-  }
-  .wh40k-vitals-title {
-    color: $title-color;
-    i { color: $icon-color; }
-  }
+    .wh40k-vitals-progress {
+        @include rt-progress-gradient($progress-gradient);
+    }
+    .wh40k-vitals-title {
+        color: $title-color;
+        i {
+            color: $icon-color;
+        }
+    }
 }
 
 // ============================================
@@ -89,25 +91,25 @@
 // ============================================
 
 @mixin rt-input-base {
-  padding: 6px 8px;
-  border: 1px solid $wh40k-border-medium;
-  border-radius: $wh40k-radius-md;
-  background: $wh40k-bg-input;
-  color: var(--color-text-primary);
-  font-family: $wh40k-font-alt;
-  transition: border-color $wh40k-transition-fast;
+    padding: 6px 8px;
+    border: 1px solid $wh40k-border-medium;
+    border-radius: $wh40k-radius-md;
+    background: $wh40k-bg-input;
+    color: var(--color-text-primary);
+    font-family: $wh40k-font-alt;
+    transition: border-color $wh40k-transition-fast;
 
-  &:focus {
-    outline: none;
-    border-color: $wh40k-accent-gold;
-  }
+    &:focus {
+        outline: none;
+        border-color: $wh40k-accent-gold;
+    }
 }
 
 @mixin rt-input-number($width: 50px) {
-  @include rt-input-base;
-  width: $width;
-  text-align: center;
-  font-weight: 600;
+    @include rt-input-base;
+    width: $width;
+    text-align: center;
+    font-weight: 600;
 }
 
 // ============================================
@@ -115,13 +117,13 @@
 // ============================================
 
 @mixin rt-degree-badge-style($color, $darken-amount: 15%) {
-  background: rgba($color, 0.15);
-  border: 2px solid $color;
-  @if $darken-amount > 0 {
-    color: darken($color, $darken-amount);
-  } @else {
-    color: $color;
-  }
+    background: rgba($color, 0.15);
+    border: 2px solid $color;
+    @if $darken-amount > 0 {
+        color: darken($color, $darken-amount);
+    } @else {
+        color: $color;
+    }
 }
 
 // ============================================
@@ -129,32 +131,32 @@
 // ============================================
 
 @mixin rt-train-button($active-color: $wh40k-accent-skills) {
-  width: 28px;
-  height: 20px;
-  padding: 0;
-  background: transparent;
-  border: 1px solid $wh40k-border-medium;
-  border-radius: $wh40k-radius-sm;
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: $wh40k-text-muted;
-  cursor: pointer;
-  transition: all $wh40k-transition-fast;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 28px;
+    height: 20px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid $wh40k-border-medium;
+    border-radius: $wh40k-radius-sm;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: $wh40k-text-muted;
+    cursor: pointer;
+    transition: all $wh40k-transition-fast;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  &:hover {
-    background: rgba($active-color, 0.1);
-    border-color: $active-color;
-    color: $active-color;
-  }
+    &:hover {
+        background: rgba($active-color, 0.1);
+        border-color: $active-color;
+        color: $active-color;
+    }
 
-  &.active {
-    background: linear-gradient(180deg, rgba($active-color, 0.2) 0%, rgba($active-color, 0.3) 100%);
-    border-color: $active-color;
-    color: darken($active-color, 10%);
-  }
+    &.active {
+        background: linear-gradient(180deg, rgba($active-color, 0.2) 0%, rgba($active-color, 0.3) 100%);
+        border-color: $active-color;
+        color: darken($active-color, 10%);
+    }
 }
 
 // ============================================
@@ -162,11 +164,11 @@
 // ============================================
 
 @mixin rt-row-hover($accent-color: $wh40k-accent-gold) {
-  transition: background $wh40k-transition-fast;
+    transition: background $wh40k-transition-fast;
 
-  &:hover {
-    background: rgba($accent-color, 0.06);
-  }
+    &:hover {
+        background: rgba($accent-color, 0.06);
+    }
 }
 
 // ============================================
@@ -174,20 +176,20 @@
 // ============================================
 
 @mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 @mixin flex-column {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 // ============================================
@@ -195,10 +197,10 @@
 // ============================================
 
 @mixin rt-panel-card {
-  background: $wh40k-bg-paper;
-  border: 1px solid $wh40k-border-light;
-  border-radius: $wh40k-radius-lg;
-  overflow: hidden;
+    background: $wh40k-bg-paper;
+    border: 1px solid $wh40k-border-light;
+    border-radius: $wh40k-radius-lg;
+    overflow: hidden;
 }
 
 // ============================================
@@ -206,22 +208,22 @@
 // ============================================
 
 @mixin rt-tab-grid($columns: 2, $gap: $wh40k-space-md) {
-  display: grid;
-  grid-template-columns: repeat($columns, 1fr);
-  gap: $gap;
-  width: 100%;
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    gap: $gap;
+    width: 100%;
 }
 
 @mixin rt-tab-column {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 
-  .wh40k-panel {
-    margin-bottom: $wh40k-space-md;
+    .wh40k-panel {
+        margin-bottom: $wh40k-space-md;
 
-    &:last-child {
-      margin-bottom: 0;
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
-  }
 }

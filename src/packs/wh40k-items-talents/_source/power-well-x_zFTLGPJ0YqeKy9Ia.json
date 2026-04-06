@@ -1,63 +1,63 @@
 {
-  "name": "Power Well (X)",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "psychic",
-    "source": "Dark Heresy: Core",
-    "description": {
-      "value": "<p>Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times</p>"
+    "name": "Power Well (X)",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "psychic",
+        "source": "Dark Heresy: Core",
+        "description": {
+            "value": "<p>Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times</p>"
+        },
+        "tier": 1,
+        "benefit": "<p>Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Psy Rating",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "identifier": "powerWellX",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {
+                "attack": 0,
+                "damage": 0,
+                "penetration": 0,
+                "defense": 0,
+                "initiative": 0,
+                "speed": 0
+            },
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Power Well",
+                    "description": "<p>When you push a psychic power, you gain an additional +1 to your Psy Rating (beyond the normal bonus).</p>"
+                }
+            ]
+        },
+        "stackable": true
     },
-    "tier": 1,
-    "benefit": "<p>Gain an additional +5 to Focus Power Tests, Talent can be taken multiple times</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Psy Rating",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "identifier": "powerWellX",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {
-        "attack": 0,
-        "damage": 0,
-        "penetration": 0,
-        "defense": 0,
-        "initiative": 0,
-        "speed": 0
-      },
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Power Well",
-          "description": "<p>When you push a psychic power, you gain an additional +1 to your Psy Rating (beyond the normal bonus).</p>"
-        }
-      ]
-    },
-    "stackable": true
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "zFTLGPJ0YqeKy9Ia"
+    "effects": [],
+    "flags": {},
+    "_id": "zFTLGPJ0YqeKy9Ia"
 }

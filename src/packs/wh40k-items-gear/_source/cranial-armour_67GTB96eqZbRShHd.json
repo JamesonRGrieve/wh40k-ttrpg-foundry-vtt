@@ -1,41 +1,41 @@
 {
-  "name": "Cranial Armour",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "tech",
-    "weight": 0,
-    "availability": "scarce",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 0,
-      "currency": "throne"
+    "name": "Cranial Armour",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "tech",
+        "weight": 0,
+        "availability": "scarce",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>+1 AP to head location, stacks with armour. \nPoor Versions also reduce Intelligence Characteristic by 1, wheras Good Versions also subtract one from Critical Effects to the head.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
+            "chat": "",
+            "summary": "+1 AP to head location, stacks with armour. \nPoor Versions also reduce Intelligence Characteristic by 1, wheras Good Versions also subtract one from Critical Effects to the head."
+        },
+        "source": {
+            "book": "Rogue Trader Core",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "+1 AP to head location, stacks with armour. \nPoor Versions also reduce Intelligence Characteristic by 1, wheras Good Versions also subtract one from Critical Effects to the head.",
+        "duration": "",
+        "notes": "-",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>+1 AP to head location, stacks with armour. \nPoor Versions also reduce Intelligence Characteristic by 1, wheras Good Versions also subtract one from Critical Effects to the head.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> -</p>",
-      "chat": "",
-      "summary": "+1 AP to head location, stacks with armour. \nPoor Versions also reduce Intelligence Characteristic by 1, wheras Good Versions also subtract one from Critical Effects to the head."
-    },
-    "source": {
-      "book": "Rogue Trader Core",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "+1 AP to head location, stacks with armour. \nPoor Versions also reduce Intelligence Characteristic by 1, wheras Good Versions also subtract one from Critical Effects to the head.",
-    "duration": "",
-    "notes": "-",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "67GTB96eqZbRShHd"
+    "effects": [],
+    "flags": {},
+    "_id": "67GTB96eqZbRShHd"
 }

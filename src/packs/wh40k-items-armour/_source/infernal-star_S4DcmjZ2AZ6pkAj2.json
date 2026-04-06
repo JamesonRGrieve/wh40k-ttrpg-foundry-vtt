@@ -1,33 +1,31 @@
 {
-  "name": "Infernal Star",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "void",
-    "weight": 1,
-    "availability": "extremely-rare",
-    "notes": "Chaos Equivilent to a Space Marine's Iron Halo. Good Quality [AP: 50%]",
-    "source": "BC: Tome of Blood",
-    "description": {
-      "value": "<p>Chaos Equivilent to a Space Marine's Iron Halo. Good Quality</p>"
+    "name": "Infernal Star",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "void",
+        "weight": 1,
+        "availability": "extremely-rare",
+        "notes": "Chaos Equivilent to a Space Marine's Iron Halo. Good Quality [AP: 50%]",
+        "source": "BC: Tome of Blood",
+        "description": {
+            "value": "<p>Chaos Equivilent to a Space Marine's Iron Halo. Good Quality</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["all"],
+        "armourPoints": {
+            "head": 0,
+            "body": 0,
+            "leftArm": 0,
+            "rightArm": 0,
+            "leftLeg": 0,
+            "rightLeg": 0
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "all"
-    ],
-    "armourPoints": {
-      "head": 0,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "S4DcmjZ2AZ6pkAj2"
+    "effects": [],
+    "flags": {},
+    "_id": "S4DcmjZ2AZ6pkAj2"
 }

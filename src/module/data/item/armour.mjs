@@ -43,11 +43,21 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             } else if (parsed?.defaultValue !== undefined) {
                 const ap = parsed.defaultValue;
                 source.armourPoints = {
-                    head: ap, body: ap, leftArm: ap, rightArm: ap, leftLeg: ap, rightLeg: ap,
+                    head: ap,
+                    body: ap,
+                    leftArm: ap,
+                    rightArm: ap,
+                    leftLeg: ap,
+                    rightLeg: ap,
                 };
             } else if (parsed?.special) {
                 source.armourPoints = {
-                    head: 0, body: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0,
+                    head: 0,
+                    body: 0,
+                    leftArm: 0,
+                    rightArm: 0,
+                    leftLeg: 0,
+                    rightLeg: 0,
                 };
                 const specialNote = typeof source.ap === 'string' ? source.ap : 'Special';
                 source.notes = ((source.notes || '') + ` [AP: ${specialNote}]`).trim();

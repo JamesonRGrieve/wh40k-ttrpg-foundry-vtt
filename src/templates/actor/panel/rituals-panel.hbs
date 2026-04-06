@@ -4,33 +4,33 @@
     </div>
     <div class="rt-panel-body">
         <div class="rt-table--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">{{localize "WH40K.Rituals.Name"}}</div>
-            <div class="table-cell">{{localize "WH40K.Rituals.Test"}}</div>
-            <div class="table-cell--last">
-                <label class="rt-control-button" data-action="itemCreate" data-type="ritual">
-                    <span class="rt-control-button__span material-icons">add_circle</span>
-                </label>
-            </div>
-        </div>
-        {{#each actor.items as |item|}}
-            {{#if item.isRitual}}
-                <div class="table-row">
-                    <div class="table-cell--span2">
-                        <button class="item-name rt-item-button" data-item-id="{{item.id}}" type="button">
-                            <img class="rt-item-img" src="{{item.img}}" alt="{{item.name}}" />
-                            {{item.name}}
-                        </button>
-                    </div>
-                    <div class="table-cell rt-test-cell">{{item.system.test}}</div>
-                    <div class="table-cell--last">
-                        <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="rt-control-button__span material-icons">delete</span>
-                        </label>
-                    </div>
+            <div class="table-row--head">
+                <div class="table-cell--span2">{{localize "WH40K.Rituals.Name"}}</div>
+                <div class="table-cell">{{localize "WH40K.Rituals.Test"}}</div>
+                <div class="table-cell--last">
+                    <label class="rt-control-button" data-action="itemCreate" data-type="ritual">
+                        <span class="rt-control-button__span material-icons">add_circle</span>
+                    </label>
                 </div>
-            {{/if}}
-        {{/each}}
+            </div>
+            {{#each actor.items as |item|}}
+                {{#if item.isRitual}}
+                    <div class="table-row">
+                        <div class="table-cell--span2">
+                            <button class="item-name rt-item-button" data-item-id="{{item.id}}" type="button">
+                                <img class="rt-item-img" src="{{item.img}}" alt="{{item.name}}" />
+                                {{item.name}}
+                            </button>
+                        </div>
+                        <div class="table-cell rt-test-cell">{{item.system.test}}</div>
+                        <div class="table-cell--last">
+                            <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
+                                <span class="rt-control-button__span material-icons">delete</span>
+                            </label>
+                        </div>
+                    </div>
+                {{/if}}
+            {{/each}}
         </div>
     </div>
 </div>

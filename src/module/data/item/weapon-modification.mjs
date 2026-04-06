@@ -65,44 +65,44 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-  /**
-   * Get restrictions label.
-   * @type {string}
-   */
-  get restrictionsLabel() {
-    const parts = [];
-    if ( this.restrictions.weaponClasses.size ) {
-      parts.push(`Classes: ${Array.from(this.restrictions.weaponClasses).join(", ")}`);
+    /**
+     * Get restrictions label.
+     * @type {string}
+     */
+    get restrictionsLabel() {
+        const parts = [];
+        if (this.restrictions.weaponClasses.size) {
+            parts.push(`Classes: ${Array.from(this.restrictions.weaponClasses).join(', ')}`);
+        }
+        if (this.restrictions.weaponTypes.size) {
+            parts.push(`Types: ${Array.from(this.restrictions.weaponTypes).join(', ')}`);
+        }
+        return parts.join('; ') || game.i18n.localize('WH40K.Modification.NoRestrictions');
     }
-    if ( this.restrictions.weaponTypes.size ) {
-      parts.push(`Types: ${Array.from(this.restrictions.weaponTypes).join(", ")}`);
+
+    /**
+     * Get category icon class.
+     * @type {string}
+     */
+    get categoryIcon() {
+        const icons = {
+            sight: 'fa-crosshairs',
+            barrel: 'fa-gun',
+            stock: 'fa-wrench',
+            magazine: 'fa-database',
+            accessory: 'fa-cog',
+            other: 'fa-tools',
+        };
+        return icons[this.category] || 'fa-cog';
     }
-    return parts.join("; ") || game.i18n.localize("WH40K.Modification.NoRestrictions");
-  }
 
-  /**
-   * Get category icon class.
-   * @type {string}
-   */
-  get categoryIcon() {
-    const icons = {
-      sight: 'fa-crosshairs',
-      barrel: 'fa-gun',
-      stock: 'fa-wrench',
-      magazine: 'fa-database',
-      accessory: 'fa-cog',
-      other: 'fa-tools',
-    };
-    return icons[this.category] || 'fa-cog';
-  }
-
-  /**
-   * Get category label.
-   * @type {string}
-   */
-  get categoryLabel() {
-    return game.i18n.localize(`RT.Modification.Category.${this.category.capitalize()}`);
-  }
+    /**
+     * Get category label.
+     * @type {string}
+     */
+    get categoryLabel() {
+        return game.i18n.localize(`RT.Modification.Category.${this.category.capitalize()}`);
+    }
 
     /**
      * Has any non-zero modifiers?

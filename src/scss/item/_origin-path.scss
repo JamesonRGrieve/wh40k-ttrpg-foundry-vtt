@@ -4,294 +4,294 @@
 // Styles for homeworld, birthright, career, etc. selection items
 
 .wh40k-origin-path-sheet {
-  // Header customization
-  .wh40k-item-header {
-    background: linear-gradient(135deg, rgba(#3498db, 0.1) 0%, rgba(#9b59b6, 0.08) 100%);
-    border-bottom: 2px solid rgba(#3498db, 0.3);
-  }
+    // Header customization
+    .wh40k-item-header {
+        background: linear-gradient(135deg, rgba(#3498db, 0.1) 0%, rgba(#9b59b6, 0.08) 100%);
+        border-bottom: 2px solid rgba(#3498db, 0.3);
+    }
 
-  .wh40k-meta-badge--origin {
-    background: linear-gradient(135deg, rgba(#3498db, 0.15), rgba(#9b59b6, 0.12));
-    border-color: rgba(#3498db, 0.4);
-    color: #3498db;
-    
-    i {
-      color: #3498db;
-    }
-  }
+    .wh40k-meta-badge--origin {
+        background: linear-gradient(135deg, rgba(#3498db, 0.15), rgba(#9b59b6, 0.12));
+        border-color: rgba(#3498db, 0.4);
+        color: #3498db;
 
-  // Meta controls
-  .wh40k-meta-select {
-    padding: 4px 8px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(#3498db, 0.3);
-    border-radius: 4px;
-    color: var(--color-text-primary);
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      border-color: #3498db;
-      background: rgba(#3498db, 0.1);
+        i {
+            color: #3498db;
+        }
     }
-    
-    &:focus {
-      outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
-    }
-  }
 
-  .wh40k-meta-input {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    
-    span {
-      font-size: 0.7rem;
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    // Meta controls
+    .wh40k-meta-select {
+        padding: 4px 8px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(#3498db, 0.3);
+        border-radius: 4px;
+        color: var(--color-text-primary);
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            border-color: #3498db;
+            background: rgba(#3498db, 0.1);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+        }
     }
-    
-    input {
-      width: 50px;
-      padding: 4px;
-      text-align: center;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(#3498db, 0.3);
-      border-radius: 4px;
-      color: var(--color-text-primary);
-      
-      &:focus {
-        outline: none;
-        border-color: #3498db;
-        box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
-      }
+
+    .wh40k-meta-input {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        span {
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 50px;
+            padding: 4px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(#3498db, 0.3);
+            border-radius: 4px;
+            color: var(--color-text-primary);
+
+            &:focus {
+                outline: none;
+                border-color: #3498db;
+                box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+            }
+        }
     }
-  }
 }
 
 // Grants section
 .wh40k-grants-section {
-  .wh40k-section-title {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm $wh40k-space-md;
-    background: linear-gradient(135deg, rgba(#27ae60, 0.12) 0%, rgba(#27ae60, 0.05) 100%);
-    border-left: 3px solid #27ae60;
-    border-radius: 0 4px 4px 0;
-    margin-bottom: $wh40k-space-md;
-    
-    i {
-      color: #27ae60;
+    .wh40k-section-title {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-sm;
+        padding: $wh40k-space-sm $wh40k-space-md;
+        background: linear-gradient(135deg, rgba(#27ae60, 0.12) 0%, rgba(#27ae60, 0.05) 100%);
+        border-left: 3px solid #27ae60;
+        border-radius: 0 4px 4px 0;
+        margin-bottom: $wh40k-space-md;
+
+        i {
+            color: #27ae60;
+        }
     }
-  }
 }
 
 .wh40k-subsection {
-  margin-bottom: $wh40k-space-md;
-  padding: $wh40k-space-md;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: $wh40k-radius-md;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  
-  h4 {
-    margin: 0 0 $wh40k-space-sm 0;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--color-text-secondary);
-  }
+    margin-bottom: $wh40k-space-md;
+    padding: $wh40k-space-md;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: $wh40k-radius-md;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    h4 {
+        margin: 0 0 $wh40k-space-sm 0;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--color-text-secondary);
+    }
 }
 
 // Field grid layouts
 .wh40k-field-grid {
-  display: grid;
-  gap: $wh40k-space-sm;
-  
-  &--3col {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
-  &--2col {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    display: grid;
+    gap: $wh40k-space-sm;
+
+    &--3col {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    &--2col {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 .wh40k-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  
-  label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  input[type="number"],
-  input[type="text"] {
-    padding: 6px $wh40k-space-sm;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: $wh40k-radius-sm;
-    color: var(--color-text-primary);
-    font-size: 0.85rem;
-    
-    &:focus {
-      outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
-    }
-  }
-  
-  &--checkbox {
-    flex-direction: row;
-    align-items: center;
-    
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
     label {
-      display: flex;
-      align-items: center;
-      gap: $wh40k-space-xs;
-      cursor: pointer;
-      text-transform: none;
-      color: var(--color-text-primary);
-      
-      &:hover {
-        color: var(--color-text-dark);
-      }
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
-    
-    input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
+
+    input[type='number'],
+    input[type='text'] {
+        padding: 6px $wh40k-space-sm;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: $wh40k-radius-sm;
+        color: var(--color-text-primary);
+        font-size: 0.85rem;
+
+        &:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+        }
     }
-  }
+
+    &--checkbox {
+        flex-direction: row;
+        align-items: center;
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: $wh40k-space-xs;
+            cursor: pointer;
+            text-transform: none;
+            color: var(--color-text-primary);
+
+            &:hover {
+                color: var(--color-text-dark);
+            }
+        }
+
+        input[type='checkbox'] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+    }
 }
 
 // Grants list
 .wh40k-grants-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .wh40k-grant-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: $wh40k-space-sm;
-  background: linear-gradient(90deg, rgba(#27ae60, 0.08) 0%, transparent 100%);
-  border-left: 3px solid rgba(#27ae60, 0.4);
-  border-radius: 0 4px 4px 0;
-  font-size: 0.8rem;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: linear-gradient(90deg, rgba(#27ae60, 0.15) 0%, transparent 100%);
-    border-left-color: #27ae60;
-  }
-  
-  .wh40k-grant-name {
-    flex: 1;
-    font-weight: 500;
-  }
-  
-  .wh40k-grant-value {
-    font-weight: 700;
-    color: #27ae60;
-    font-family: $wh40k-font-alt;
-  }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $wh40k-space-sm;
+    background: linear-gradient(90deg, rgba(#27ae60, 0.08) 0%, transparent 100%);
+    border-left: 3px solid rgba(#27ae60, 0.4);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: linear-gradient(90deg, rgba(#27ae60, 0.15) 0%, transparent 100%);
+        border-left-color: #27ae60;
+    }
+
+    .wh40k-grant-name {
+        flex: 1;
+        font-weight: 500;
+    }
+
+    .wh40k-grant-value {
+        font-weight: 700;
+        color: #27ae60;
+        font-family: $wh40k-font-alt;
+    }
 }
 
 // Add/Remove buttons for arrays
 .wh40k-grant-controls {
-  display: flex;
-  gap: 4px;
-  
-  button {
-    padding: 4px 8px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: $wh40k-radius-sm;
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    i {
-      font-size: 0.7rem;
+    display: flex;
+    gap: 4px;
+
+    button {
+        padding: 4px 8px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: $wh40k-radius-sm;
+        color: var(--color-text-primary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        i {
+            font-size: 0.7rem;
+        }
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        &.wh40k-btn-remove:hover {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
     }
-    
-    &:hover {
-      background: rgba(0, 0, 0, 0.3);
-      border-color: #3498db;
-      color: #3498db;
-    }
-    
-    &.wh40k-btn-remove:hover {
-      border-color: #e74c3c;
-      color: #e74c3c;
-    }
-  }
 }
 
 // Requirements section
 .wh40k-requirements-section {
-  padding: $wh40k-space-md;
-  background: linear-gradient(135deg, rgba(#e67e22, 0.08) 0%, rgba(#d35400, 0.05) 100%);
-  border: 1px solid rgba(#e67e22, 0.3);
-  border-radius: $wh40k-radius-md;
-  margin-bottom: $wh40k-space-md;
-  
-  h3 {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    margin: 0 0 $wh40k-space-sm 0;
-    color: #e67e22;
-    
-    i {
-      font-size: 0.9rem;
+    padding: $wh40k-space-md;
+    background: linear-gradient(135deg, rgba(#e67e22, 0.08) 0%, rgba(#d35400, 0.05) 100%);
+    border: 1px solid rgba(#e67e22, 0.3);
+    border-radius: $wh40k-radius-md;
+    margin-bottom: $wh40k-space-md;
+
+    h3 {
+        display: flex;
+        align-items: center;
+        gap: $wh40k-space-xs;
+        margin: 0 0 $wh40k-space-sm 0;
+        color: #e67e22;
+
+        i {
+            font-size: 0.9rem;
+        }
     }
-  }
-  
-  .wh40k-requirement-text {
-    font-size: 0.8rem;
-    line-height: 1.5;
-    color: var(--color-text-secondary);
-  }
+
+    .wh40k-requirement-text {
+        font-size: 0.8rem;
+        line-height: 1.5;
+        color: var(--color-text-secondary);
+    }
 }
 
 // Empty states
 .wh40k-empty {
-  padding: $wh40k-space-md;
-  text-align: center;
-  color: var(--color-text-muted);
-  font-size: 0.8rem;
-  font-style: italic;
+    padding: $wh40k-space-md;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    font-style: italic;
 }
 
 // Special effect box
 .wh40k-effect-text {
-  padding: $wh40k-space-md;
-  background: linear-gradient(135deg, rgba(#9b59b6, 0.08) 0%, rgba(#8e44ad, 0.05) 100%);
-  border-left: 3px solid #9b59b6;
-  border-radius: 0 4px 4px 0;
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--color-text-secondary);
-  
-  strong {
-    color: var(--color-text-primary);
-  }
+    padding: $wh40k-space-md;
+    background: linear-gradient(135deg, rgba(#9b59b6, 0.08) 0%, rgba(#8e44ad, 0.05) 100%);
+    border-left: 3px solid #9b59b6;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+
+    strong {
+        color: var(--color-text-primary);
+    }
 }

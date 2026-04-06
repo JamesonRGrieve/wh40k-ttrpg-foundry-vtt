@@ -1,41 +1,39 @@
 {
-  "name": "Voss \"Glimmer\"-Pattern Multi-Void Shield Array",
-  "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
-  "system": {
-    "hullType": [
-      "cruiser"
-    ],
-    "effect": "Provdes 2 Void Shields, absorbing 2 attacks from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.",
-    "availability": "scarce",
-    "source": "RT: BF Koronus",
-    "description": {
-      "value": "<p>Provdes 2 Void Shields, absorbing 2 attacks from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.</p>"
+    "name": "Voss \"Glimmer\"-Pattern Multi-Void Shield Array",
+    "type": "shipComponent",
+    "img": "icons/svg/gears.svg",
+    "system": {
+        "hullType": ["cruiser"],
+        "effect": "Provdes 2 Void Shields, absorbing 2 attacks from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.",
+        "availability": "scarce",
+        "source": "RT: BF Koronus",
+        "description": {
+            "value": "<p>Provdes 2 Void Shields, absorbing 2 attacks from any attacking vessel each round.. When this Void shield cancels a hit, roll 1d10, on a 3, hit is not cancled but shield goes down anyway.</p>"
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "detection": 0,
+            "armour": 0,
+            "hullIntegrity": 0,
+            "turretRating": 0,
+            "voidShields": 0,
+            "morale": 0,
+            "crewRating": 0
+        },
+        "componentType": "voidShields",
+        "essential": true,
+        "power": {
+            "used": 5,
+            "generated": 0
+        },
+        "space": 1,
+        "shipPoints": 0,
+        "condition": "functional",
+        "notes": "",
+        "identifier": "voss-glimmer-pattern-multi-void-shield-array"
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "detection": 0,
-      "armour": 0,
-      "hullIntegrity": 0,
-      "turretRating": 0,
-      "voidShields": 0,
-      "morale": 0,
-      "crewRating": 0
-    },
-    "componentType": "voidShields",
-    "essential": true,
-    "power": {
-      "used": 5,
-      "generated": 0
-    },
-    "space": 1,
-    "shipPoints": 0,
-    "condition": "functional",
-    "notes": "",
-    "identifier": "voss-glimmer-pattern-multi-void-shield-array"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "69eBkD1rYYPFYKKd"
+    "effects": [],
+    "flags": {},
+    "_id": "69eBkD1rYYPFYKKd"
 }

@@ -3,55 +3,55 @@
 // ============================================
 
 .wh40k-damage-display {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-md;
-  padding: $wh40k-space-md;
-  background: linear-gradient(135deg, rgba(139, 0, 0, 0.1) 0%, transparent 100%);
-  border: 1px solid var(--rt-red-dark);
-  border-radius: $wh40k-radius-md;
-  
-  &__dice {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: var(--rt-red-dark);
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
+    background: linear-gradient(135deg, rgba(139, 0, 0, 0.1) 0%, transparent 100%);
+    border: 1px solid var(--rt-red-dark);
     border-radius: $wh40k-radius-md;
-    font-family: $wh40k-font-display;
-    font-size: $wh40k-font-size-lg;
-    color: #fff;
-    box-shadow: $wh40k-shadow-md;
-  }
-  
-  &__info {
-    flex: 1;
-  }
-  
-  &__formula {
-    font-family: $wh40k-font-display;
-    font-size: $wh40k-font-size-xl;
-    color: var(--rt-red-bright);
-  }
-  
-  &__type {
-    font-size: $wh40k-font-size-sm;
-    color: var(--rt-text-muted);
-    text-transform: uppercase;
-  }
-  
-  &__pen {
-    padding: $wh40k-space-xs $wh40k-space-sm;
-    background: var(--rt-panel-bg);
-    border-radius: $wh40k-radius-sm;
-    font-size: $wh40k-font-size-sm;
-    
-    span {
-      color: var(--rt-gold);
-      font-weight: 600;
+
+    &__dice {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: var(--rt-red-dark);
+        border-radius: $wh40k-radius-md;
+        font-family: $wh40k-font-display;
+        font-size: $wh40k-font-size-lg;
+        color: #fff;
+        box-shadow: $wh40k-shadow-md;
     }
-  }
+
+    &__info {
+        flex: 1;
+    }
+
+    &__formula {
+        font-family: $wh40k-font-display;
+        font-size: $wh40k-font-size-xl;
+        color: var(--rt-red-bright);
+    }
+
+    &__type {
+        font-size: $wh40k-font-size-sm;
+        color: var(--rt-text-muted);
+        text-transform: uppercase;
+    }
+
+    &__pen {
+        padding: $wh40k-space-xs $wh40k-space-sm;
+        background: var(--rt-panel-bg);
+        border-radius: $wh40k-radius-sm;
+        font-size: $wh40k-font-size-sm;
+
+        span {
+            color: var(--rt-gold);
+            font-weight: 600;
+        }
+    }
 }
 
 // ============================================
@@ -59,59 +59,58 @@
 // ============================================
 
 .wh40k-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $wh40k-space-xs;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $wh40k-space-xs;
 }
 
 .wh40k-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: $wh40k-space-xs;
-  padding: 2px $wh40k-space-sm;
-  background: var(--rt-panel-bg-translucent);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 12px;
-  font-size: $wh40k-font-size-xs;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--rt-text-muted);
-  transition: all $wh40k-transition-fast;
-  cursor: default;
-  
-  &:hover {
-    background: var(--rt-panel-bg);
-    border-color: var(--rt-border-color);
-  }
-  
-  &--positive,
-  &--success {
-    background: rgba(45, 90, 45, 0.2);
-    border-color: var(--rt-green);
-    color: var(--rt-green-bright);
-  }
-  
-  &--negative,
-  &--danger {
-    background: rgba(139, 0, 0, 0.2);
-    border-color: var(--rt-red);
-    color: var(--rt-red-bright);
-  }
-  
-  &--special {
-    background: rgba(212, 175, 55, 0.15);
-    border-color: var(--rt-gold-dark);
-    color: var(--rt-gold);
-  }
-  
-  &--psychic {
-    background: rgba(106, 32, 144, 0.15);
-    border-color: var(--rt-powers-primary);
-    color: var(--rt-powers-secondary);
-  }
-  
-  &--muted {
-    opacity: 0.6;
-  }
-}
+    display: inline-flex;
+    align-items: center;
+    gap: $wh40k-space-xs;
+    padding: 2px $wh40k-space-sm;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 12px;
+    font-size: $wh40k-font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-muted);
+    transition: all $wh40k-transition-fast;
+    cursor: default;
 
+    &:hover {
+        background: var(--rt-panel-bg);
+        border-color: var(--rt-border-color);
+    }
+
+    &--positive,
+    &--success {
+        background: rgba(45, 90, 45, 0.2);
+        border-color: var(--rt-green);
+        color: var(--rt-green-bright);
+    }
+
+    &--negative,
+    &--danger {
+        background: rgba(139, 0, 0, 0.2);
+        border-color: var(--rt-red);
+        color: var(--rt-red-bright);
+    }
+
+    &--special {
+        background: rgba(212, 175, 55, 0.15);
+        border-color: var(--rt-gold-dark);
+        color: var(--rt-gold);
+    }
+
+    &--psychic {
+        background: rgba(106, 32, 144, 0.15);
+        border-color: var(--rt-powers-primary);
+        color: var(--rt-powers-secondary);
+    }
+
+    &--muted {
+        opacity: 0.6;
+    }
+}

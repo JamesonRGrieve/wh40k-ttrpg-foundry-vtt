@@ -152,10 +152,10 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const situationalModifierTotal = this._calculateSituationalTotal();
 
         // Prepare permanent modifiers (from items, conditions, etc.)
-        const permanentModifiers = (this.config.permanentModifiers || []).map(mod => ({
+        const permanentModifiers = (this.config.permanentModifiers || []).map((mod) => ({
             ...mod,
             valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
-            hasSource: !!mod.uuid
+            hasSource: !!mod.uuid,
         }));
         const hasPermanentModifiers = permanentModifiers.length > 0;
 
@@ -172,7 +172,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             ...mod,
             id: `sit-${index}`,
             active: this.activeSituationalModifiers.has(`sit-${index}`),
-            valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString()
+            valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
         }));
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
@@ -194,7 +194,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             situationalModifierTotal,
             permanentModifierTotal,
             totalModifier: totalModifier,
-            
+
             // Situational modifiers
             situationalModifiers,
             hasSituationalModifiers,

@@ -1,33 +1,31 @@
 {
-  "name": "The Armour of Faith",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "power",
-    "weight": 100,
-    "availability": "Hero",
-    "notes": "Master Crafted Relic Astartes Arificer Armour of the Black Templars Chapter. Has all benefits of Artificer Armour, plus a Protection 30 Forcefield with Overload 01-05",
-    "source": "DW: Honour the Chapter",
-    "description": {
-      "value": "<p>Master Crafted Relic Astartes Arificer Armour of the Black Templars Chapter. Has all benefits of Artificer Armour, plus a Protection 30 Forcefield with Overload 01-05</p>"
+    "name": "The Armour of Faith",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "power",
+        "weight": 100,
+        "availability": "Hero",
+        "notes": "Master Crafted Relic Astartes Arificer Armour of the Black Templars Chapter. Has all benefits of Artificer Armour, plus a Protection 30 Forcefield with Overload 01-05",
+        "source": "DW: Honour the Chapter",
+        "description": {
+            "value": "<p>Master Crafted Relic Astartes Arificer Armour of the Black Templars Chapter. Has all benefits of Artificer Armour, plus a Protection 30 Forcefield with Overload 01-05</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["all"],
+        "armourPoints": {
+            "head": 12,
+            "body": 12,
+            "leftArm": 12,
+            "rightArm": 12,
+            "leftLeg": 12,
+            "rightLeg": 12
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "all"
-    ],
-    "armourPoints": {
-      "head": 12,
-      "body": 12,
-      "leftArm": 12,
-      "rightArm": 12,
-      "leftLeg": 12,
-      "rightLeg": 12
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "NkpkRACAGTRp6PNT"
+    "effects": [],
+    "flags": {},
+    "_id": "NkpkRACAGTRp6PNT"
 }

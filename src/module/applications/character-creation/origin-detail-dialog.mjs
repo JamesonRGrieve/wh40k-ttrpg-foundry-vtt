@@ -1,6 +1,6 @@
 /**
  * Origin Detail Dialog
- * 
+ *
  * Full-screen dialog showing complete details for an origin path choice,
  * with a confirm button to select it.
  */
@@ -8,34 +8,33 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginDetailDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["wh40k-rpg", "origin-detail-dialog"],
-        tag: "div",
+        classes: ['wh40k-rpg', 'origin-detail-dialog'],
+        tag: 'div',
         window: {
-            title: "WH40K.OriginPath.ViewDetails",
-            icon: "fa-solid fa-scroll",
+            title: 'WH40K.OriginPath.ViewDetails',
+            icon: 'fa-solid fa-scroll',
             minimizable: false,
-            resizable: true
+            resizable: true,
         },
         position: {
             width: 700,
-            height: 600
+            height: 600,
         },
         actions: {
             confirm: OriginDetailDialog.#confirm,
             cancel: OriginDetailDialog.#cancel,
-            openItem: OriginDetailDialog.#openItem
-        }
+            openItem: OriginDetailDialog.#openItem,
+        },
     };
 
     /** @override */
     static PARTS = {
         content: {
-            template: "systems/wh40k-rpg/templates/character-creation/origin-detail-dialog.hbs",
-            scrollable: [""]
-        }
+            template: 'systems/wh40k-rpg/templates/character-creation/origin-detail-dialog.hbs',
+            scrollable: [''],
+        },
     };
 
     /* -------------------------------------------- */
@@ -48,7 +47,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      */
     constructor(origin, options = {}) {
         super(options);
-        
+
         /**
          * The origin path item
          * @type {Item}
@@ -106,7 +105,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.isAdvanced = system?.isAdvancedOrigin || false;
 
         // Description - parse HTML properly
-        context.description = system?.description?.value || "";
+        context.description = system?.description?.value || '';
         context.hasDescription = !!context.description;
 
         // Source info
@@ -122,7 +121,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                     label: this._getCharacteristicLabel(key),
                     short: this._getCharacteristicShort(key),
                     value: value,
-                    positive: value > 0
+                    positive: value > 0,
                 });
             }
         }
@@ -134,12 +133,12 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.hasFormulas = !!(context.woundsFormula || context.fateFormula);
 
         // Skills
-        context.skills = (grants.skills || []).map(skill => ({
+        context.skills = (grants.skills || []).map((skill) => ({
             name: skill.name,
             specialization: skill.specialization || null,
-            level: skill.level || "trained",
+            level: skill.level || 'trained',
             levelLabel: this._getTrainingLabel(skill.level),
-            displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name
+            displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
         context.hasSkills = context.skills.length > 0;
 
@@ -152,10 +151,10 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.hasTraits = context.traits.length > 0;
 
         // Equipment
-        context.equipment = (grants.equipment || []).map(item => ({
+        context.equipment = (grants.equipment || []).map((item) => ({
             name: item.name || item,
             quantity: item.quantity || 1,
-            uuid: item.uuid || null
+            uuid: item.uuid || null,
         }));
         context.hasEquipment = context.equipment.length > 0;
 
@@ -164,24 +163,22 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.hasSpecialAbilities = context.specialAbilities.length > 0;
 
         // Choices
-        context.choices = (grants.choices || []).map(choice => ({
+        context.choices = (grants.choices || []).map((choice) => ({
             type: choice.type,
             typeLabel: this._getChoiceTypeLabel(choice.type),
             label: choice.label,
             count: choice.count || 1,
-            options: choice.options.map(opt => ({
+            options: choice.options.map((opt) => ({
                 label: opt.label,
                 value: opt.value,
-                description: opt.description || ""
-            }))
+                description: opt.description || '',
+            })),
         }));
         context.hasChoices = context.choices.length > 0;
 
         // Requirements
         context.requirements = system?.requirements || {};
-        context.hasRequirements = !!(context.requirements.text || 
-            context.requirements.previousSteps?.length || 
-            context.requirements.excludedSteps?.length);
+        context.hasRequirements = !!(context.requirements.text || context.requirements.previousSteps?.length || context.requirements.excludedSteps?.length);
 
         return context;
     }
@@ -208,7 +205,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 specialization: talent.specialization || null,
                 uuid: talent.uuid || null,
                 description: item?.system?.description?.value || null,
-                hasItem: !!item
+                hasItem: !!item,
             });
         }
         return prepared;
@@ -236,7 +233,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 level: trait.level || null,
                 uuid: trait.uuid || null,
                 description: item?.system?.description?.value || null,
-                hasItem: !!item
+                hasItem: !!item,
             });
         }
         return prepared;
@@ -253,7 +250,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @private
      */
     _getStepLabel(step) {
-        if (!step) return "";
+        if (!step) return '';
         const key = step.charAt(0).toUpperCase() + step.slice(1);
         return game.i18n.localize(`RT.OriginPath.${key}`);
     }
@@ -266,16 +263,16 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      */
     _getCharacteristicLabel(key) {
         const labels = {
-            weaponSkill: "Weapon Skill",
-            ballisticSkill: "Ballistic Skill",
-            strength: "Strength",
-            toughness: "Toughness",
-            agility: "Agility",
-            intelligence: "Intelligence",
-            perception: "Perception",
-            willpower: "Willpower",
-            fellowship: "Fellowship",
-            influence: "Influence"
+            weaponSkill: 'Weapon Skill',
+            ballisticSkill: 'Ballistic Skill',
+            strength: 'Strength',
+            toughness: 'Toughness',
+            agility: 'Agility',
+            intelligence: 'Intelligence',
+            perception: 'Perception',
+            willpower: 'Willpower',
+            fellowship: 'Fellowship',
+            influence: 'Influence',
         };
         return labels[key] || key;
     }
@@ -288,16 +285,16 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      */
     _getCharacteristicShort(key) {
         const shorts = {
-            weaponSkill: "WS",
-            ballisticSkill: "BS",
-            strength: "S",
-            toughness: "T",
-            agility: "Ag",
-            intelligence: "Int",
-            perception: "Per",
-            willpower: "WP",
-            fellowship: "Fel",
-            influence: "Inf"
+            weaponSkill: 'WS',
+            ballisticSkill: 'BS',
+            strength: 'S',
+            toughness: 'T',
+            agility: 'Ag',
+            intelligence: 'Int',
+            perception: 'Per',
+            willpower: 'WP',
+            fellowship: 'Fel',
+            influence: 'Inf',
         };
         return shorts[key] || key.substring(0, 3).toUpperCase();
     }
@@ -310,9 +307,9 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      */
     _getTrainingLabel(level) {
         const labels = {
-            trained: "Trained",
-            plus10: "+10",
-            plus20: "+20"
+            trained: 'Trained',
+            plus10: '+10',
+            plus20: '+20',
         };
         return labels[level] || level;
     }
@@ -325,11 +322,11 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      */
     _getChoiceTypeLabel(type) {
         const labels = {
-            talent: "Talent",
-            skill: "Skill",
-            characteristic: "Characteristic",
-            equipment: "Equipment",
-            trait: "Trait"
+            talent: 'Talent',
+            skill: 'Skill',
+            characteristic: 'Characteristic',
+            equipment: 'Equipment',
+            trait: 'Trait',
         };
         return labels[type] || type;
     }
@@ -380,7 +377,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 item.sheet.render(true);
             }
         } catch (e) {
-            ui.notifications.warn(game.i18n.localize("WH40K.OriginPath.ItemNotFound"));
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
         }
     }
 
@@ -396,13 +393,13 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      */
     static async show(origin, options = {}) {
         const dialog = new OriginDetailDialog(origin, options);
-        
-        const result = new Promise(resolve => {
+
+        const result = new Promise((resolve) => {
             dialog._resolvePromise = resolve;
         });
 
         await dialog.render(true);
-        
+
         return result;
     }
 

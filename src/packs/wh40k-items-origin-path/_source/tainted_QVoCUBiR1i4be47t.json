@@ -1,109 +1,107 @@
 {
-  "name": "Tainted",
-  "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/biohazard.svg",
-  "system": {
-    "identifier": "tainted",
-    "step": "lureOfTheVoid",
-    "stepIndex": 3,
-    "description": {
-      "value": "<h2>Tainted</h2><blockquote><p><em>\"You are vile in the eyes of the holy, declared tainted by your twisted form or marked by your accursed bloodline or your strange demeanour and heretical beliefs.\"</em></p></blockquote><p>Few look more closely than is needed to condemn you, fearing the contagion of evil and the judgment of the God-Emperor's appointed servants. But despite the excoriation by the witless fools who have turned their hands against you, your soul burns for greatness.</p><p>You now search relentlessly for the place where you might attain even a small fraction of what would have been your rightful victories were your life not so blighted by fate, and the power to avenge yourself on those who would see you suffer.</p>"
-    },
-    "requirements": {
-      "text": "Origin Path: Lure of the Void",
-      "previousSteps": [],
-      "excludedSteps": []
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "aptitudes": [],
-      "equipment": [],
-      "specialAbilities": [],
-      "choices": [
-        {
-          "type": "talent",
-          "label": "Choose one tainted origin",
-          "options": [
-            {
-              "label": "Mutant: Roll once on Mutations table (or spend 200xp to select)",
-              "value": "mutant",
-              "description": "You must roll once on Table 14-3: Mutations. If you choose, you may spend 200 xp to select one result from the table (must be a result of lower than 76-00) instead of rolling randomly.",
-              "grants": {
-                "talents": [
-                  {
-                    "name": "Mutant (Tainted)",
-                    "specialization": "",
-                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.TA00000000000001"
-                  }
-                ]
-              }
+    "name": "Tainted",
+    "type": "originPath",
+    "img": "modules/game-icons-net/whitetransparent/biohazard.svg",
+    "system": {
+        "identifier": "tainted",
+        "step": "lureOfTheVoid",
+        "stepIndex": 3,
+        "description": {
+            "value": "<h2>Tainted</h2><blockquote><p><em>\"You are vile in the eyes of the holy, declared tainted by your twisted form or marked by your accursed bloodline or your strange demeanour and heretical beliefs.\"</em></p></blockquote><p>Few look more closely than is needed to condemn you, fearing the contagion of evil and the judgment of the God-Emperor's appointed servants. But despite the excoriation by the witless fools who have turned their hands against you, your soul burns for greatness.</p><p>You now search relentlessly for the place where you might attain even a small fraction of what would have been your rightful victories were your life not so blighted by fate, and the power to avenge yourself on those who would see you suffer.</p>"
+        },
+        "requirements": {
+            "text": "Origin Path: Lure of the Void",
+            "previousSteps": [],
+            "excludedSteps": []
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "aptitudes": [],
+            "equipment": [],
+            "specialAbilities": [],
+            "choices": [
+                {
+                    "type": "talent",
+                    "label": "Choose one tainted origin",
+                    "options": [
+                        {
+                            "label": "Mutant: Roll once on Mutations table (or spend 200xp to select)",
+                            "value": "mutant",
+                            "description": "You must roll once on Table 14-3: Mutations. If you choose, you may spend 200 xp to select one result from the table (must be a result of lower than 76-00) instead of rolling randomly.",
+                            "grants": {
+                                "talents": [
+                                    {
+                                        "name": "Mutant (Tainted)",
+                                        "specialization": "",
+                                        "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.TA00000000000001"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "label": "Insane: +3 Toughness, −3 Fellowship or −1 Fate, Peer (The Insane), 2d10 Insanity",
+                            "value": "insane",
+                            "description": "You suffer your choice of either −3 Fellowship or −1 Fate point. You gain +3 Toughness, the Peer (The Insane) Talent, and suffer 2d10 Insanity Points.",
+                            "grants": {
+                                "talents": [
+                                    {
+                                        "name": "Insane (Tainted)",
+                                        "specialization": "",
+                                        "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.TA00000000000002"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "label": "Deviant Philosophy: +3 Willpower, Enemy (Ecclesiarchy)",
+                            "value": "deviant",
+                            "description": "You gain +3 Willpower and the Enemy (Ecclesiarchy) Talent.",
+                            "grants": {
+                                "talents": [
+                                    {
+                                        "name": "Deviant Philosophy (Tainted)",
+                                        "specialization": "",
+                                        "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.TA00000000000003"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "count": 1
+                }
+            ]
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
             },
-            {
-              "label": "Insane: +3 Toughness, −3 Fellowship or −1 Fate, Peer (The Insane), 2d10 Insanity",
-              "value": "insane",
-              "description": "You suffer your choice of either −3 Fellowship or −1 Fate point. You gain +3 Toughness, the Peer (The Insane) Talent, and suffer 2d10 Insanity Points.",
-              "grants": {
-                "talents": [
-                  {
-                    "name": "Insane (Tainted)",
-                    "specialization": "",
-                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.TA00000000000002"
-                  }
-                ]
-              }
-            },
-            {
-              "label": "Deviant Philosophy: +3 Willpower, Enemy (Ecclesiarchy)",
-              "value": "deviant",
-              "description": "You gain +3 Willpower and the Enemy (Ecclesiarchy) Talent.",
-              "grants": {
-                "talents": [
-                  {
-                    "name": "Deviant Philosophy (Tainted)",
-                    "specialization": "",
-                    "uuid": "Compendium.wh40k-rpg.wh40k-items-talents.TA00000000000003"
-                  }
-                ]
-              }
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
             }
-          ],
-          "count": 1
-        }
-      ]
+        },
+        "effectText": "",
+        "notes": "",
+        "source": {
+            "book": "Rogue Trader Core Rulebook",
+            "page": "30",
+            "custom": ""
+        },
+        "selectedChoices": {},
+        "activeModifiers": [],
+        "positions": [1]
     },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "effectText": "",
-    "notes": "",
-    "source": {
-      "book": "Rogue Trader Core Rulebook",
-      "page": "30",
-      "custom": ""
-    },
-    "selectedChoices": {},
-    "activeModifiers": [],
-    "positions": [
-      1
-    ]
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "QVoCUBiR1i4be47t"
+    "effects": [],
+    "flags": {},
+    "_id": "QVoCUBiR1i4be47t"
 }

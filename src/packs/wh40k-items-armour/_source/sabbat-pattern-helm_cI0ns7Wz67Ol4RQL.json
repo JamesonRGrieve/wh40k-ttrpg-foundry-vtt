@@ -1,33 +1,31 @@
 {
-  "name": "Sabbat-pattern Helm",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "power",
-    "weight": 2.5,
-    "availability": "extremely-rare",
-    "notes": "Standard helmet of the Sisters of Battle. Provides a Rebreather and Good Craftsmanship Photo-visor. Also provides +20 to Opposed Willpower Tests to Resist the effects of Psychic Techniques.",
-    "source": "RT: Faith and Coin",
-    "description": {
-      "value": "<p>Standard helmet of the Sisters of Battle. Provides a Rebreather and Good Craftsmanship Photo-visor. Also provides +20 to Opposed Willpower Tests to Resist the effects of Psychic Techniques.</p>"
+    "name": "Sabbat-pattern Helm",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "power",
+        "weight": 2.5,
+        "availability": "extremely-rare",
+        "notes": "Standard helmet of the Sisters of Battle. Provides a Rebreather and Good Craftsmanship Photo-visor. Also provides +20 to Opposed Willpower Tests to Resist the effects of Psychic Techniques.",
+        "source": "RT: Faith and Coin",
+        "description": {
+            "value": "<p>Standard helmet of the Sisters of Battle. Provides a Rebreather and Good Craftsmanship Photo-visor. Also provides +20 to Opposed Willpower Tests to Resist the effects of Psychic Techniques.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["head"],
+        "armourPoints": {
+            "head": 5,
+            "body": 5,
+            "leftArm": 5,
+            "rightArm": 5,
+            "leftLeg": 5,
+            "rightLeg": 5
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "head"
-    ],
-    "armourPoints": {
-      "head": 5,
-      "body": 5,
-      "leftArm": 5,
-      "rightArm": 5,
-      "leftLeg": 5,
-      "rightLeg": 5
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "cI0ns7Wz67Ol4RQL"
+    "effects": [],
+    "flags": {},
+    "_id": "cI0ns7Wz67Ol4RQL"
 }

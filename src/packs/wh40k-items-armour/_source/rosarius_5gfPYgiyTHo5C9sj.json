@@ -1,33 +1,31 @@
 {
-  "name": "Rosarius",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "void",
-    "weight": 0.6,
-    "availability": "extremely-rare",
-    "notes": "Allies who can see living character using this gain +10 to Fear and Pinning Tests, lost if wearer dies or suffers critical damage. Only available to Ministorum, Sororitas, or Inquisitors without significant justification. [AP: 50%]",
-    "source": "DH 2E: Enemies Within",
-    "description": {
-      "value": "<p>Allies who can see living character using this gain +10 to Fear and Pinning Tests, lost if wearer dies or suffers critical damage. Only available to Ministorum, Sororitas, or Inquisitors without significant justification.</p>"
+    "name": "Rosarius",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "void",
+        "weight": 0.6,
+        "availability": "extremely-rare",
+        "notes": "Allies who can see living character using this gain +10 to Fear and Pinning Tests, lost if wearer dies or suffers critical damage. Only available to Ministorum, Sororitas, or Inquisitors without significant justification. [AP: 50%]",
+        "source": "DH 2E: Enemies Within",
+        "description": {
+            "value": "<p>Allies who can see living character using this gain +10 to Fear and Pinning Tests, lost if wearer dies or suffers critical damage. Only available to Ministorum, Sororitas, or Inquisitors without significant justification.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["all"],
+        "armourPoints": {
+            "head": 0,
+            "body": 0,
+            "leftArm": 0,
+            "rightArm": 0,
+            "leftLeg": 0,
+            "rightLeg": 0
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "all"
-    ],
-    "armourPoints": {
-      "head": 0,
-      "body": 0,
-      "leftArm": 0,
-      "rightArm": 0,
-      "leftLeg": 0,
-      "rightLeg": 0
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "5gfPYgiyTHo5C9sj"
+    "effects": [],
+    "flags": {},
+    "_id": "5gfPYgiyTHo5C9sj"
 }

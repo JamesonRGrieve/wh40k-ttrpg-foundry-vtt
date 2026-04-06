@@ -1,37 +1,31 @@
 {
-  "name": "Armoured Bodyglove",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "flak",
-    "weight": 5,
-    "availability": "rare",
-    "notes": null,
-    "source": "Dark Heresy 2E: Core",
-    "description": {
-      "value": ""
+    "name": "Armoured Bodyglove",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "flak",
+        "weight": 5,
+        "availability": "rare",
+        "notes": null,
+        "source": "Dark Heresy 2E: Core",
+        "description": {
+            "value": ""
+        },
+        "modificationSlots": 2,
+        "coverage": ["leftArm", "rightArm", "body", "leftLeg", "rightLeg"],
+        "armourPoints": {
+            "head": 2,
+            "body": 2,
+            "leftArm": 2,
+            "rightArm": 2,
+            "leftLeg": 2,
+            "rightLeg": 2
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "leftArm",
-      "rightArm",
-      "body",
-      "leftLeg",
-      "rightLeg"
-    ],
-    "armourPoints": {
-      "head": 2,
-      "body": 2,
-      "leftArm": 2,
-      "rightArm": 2,
-      "leftLeg": 2,
-      "rightLeg": 2
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "Z8mFSPR205zFCEIp"
+    "effects": [],
+    "flags": {},
+    "_id": "Z8mFSPR205zFCEIp"
 }

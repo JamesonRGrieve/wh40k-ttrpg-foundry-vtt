@@ -1,31 +1,29 @@
 {
-  "name": "Jovian-pattern Landing Bay",
-  "type": "shipWeapon",
-  "img": "icons/svg/energy.svg",
-  "system": {
-    "type": "Landing Bay",
-    "hullType": [
-      "cruiser"
-    ],
-    "damage": "-",
-    "strength": 2,
-    "range": "-",
-    "availability": "rare",
-    "notes": "Must mount on Port/Starboard. Holds up to 6 squadrons although only 2 can be prepared to launch at any one time.",
-    "source": "RT: BF Koronus",
-    "description": {
-      "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Must mount on Port/Starboard. Holds up to 6 squadrons although only 2 can be prepared to launch at any one time.</p>"
+    "name": "Jovian-pattern Landing Bay",
+    "type": "shipWeapon",
+    "img": "icons/svg/energy.svg",
+    "system": {
+        "type": "Landing Bay",
+        "hullType": ["cruiser"],
+        "damage": "-",
+        "strength": 2,
+        "range": "-",
+        "availability": "rare",
+        "notes": "Must mount on Port/Starboard. Holds up to 6 squadrons although only 2 can be prepared to launch at any one time.",
+        "source": "RT: BF Koronus",
+        "description": {
+            "value": "<p><b>Damage:</b> -</p><p><b>Notes:</b> Must mount on Port/Starboard. Holds up to 6 squadrons although only 2 can be prepared to launch at any one time.</p>"
+        },
+        "location": "Dorsal",
+        "weaponType": "macrobattery",
+        "power": 1,
+        "space": 6,
+        "shipPoints": 2,
+        "crit": "-",
+        "special": [],
+        "identifier": "jovian-pattern-landing-bay"
     },
-    "location": "Dorsal",
-    "weaponType": "macrobattery",
-    "power": 1,
-    "space": 6,
-    "shipPoints": 2,
-    "crit": "-",
-    "special": [],
-    "identifier": "jovian-pattern-landing-bay"
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "6Z6YqPyr6BCsDhC6"
+    "effects": [],
+    "flags": {},
+    "_id": "6Z6YqPyr6BCsDhC6"
 }

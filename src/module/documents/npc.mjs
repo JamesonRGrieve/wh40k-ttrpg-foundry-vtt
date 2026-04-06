@@ -1,7 +1,6 @@
 import { WH40KAcolyte } from './acolyte.mjs';
 
 export class WH40KNPC extends WH40KAcolyte {
-
     get faction() {
         return this.system.faction;
     }
@@ -17,5 +16,4 @@ export class WH40KNPC extends WH40KAcolyte {
     get threatLevel() {
         return this.system.threatLevel;
     }
-
 }

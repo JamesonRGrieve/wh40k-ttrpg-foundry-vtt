@@ -1,28 +1,26 @@
 {
-  "name": "Customisation: Remnants of Mutation",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "Choose One Mutation of: Animal Hybrid, Bestial, Winged, Boneless, Eye-Stalks, Centauroid, Flaming Skull, Grossly Fat, Slayer Limb, Additional Limb, Tail, Magnificent Horns, or Tentacle. When next gaining a mutation, gain this one, the armour adapts to it.",
-    "availability": "Special",
-    "source": "Black Crusade: Core",
-    "description": {
-      "value": "<p>Choose One Mutation of: Animal Hybrid, Bestial, Winged, Boneless, Eye-Stalks, Centauroid, Flaming Skull, Grossly Fat, Slayer Limb, Additional Limb, Tail, Magnificent Horns, or Tentacle. When next gaining a mutation, gain this one, the armour adapts to it.</p>"
+    "name": "Customisation: Remnants of Mutation",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "Choose One Mutation of: Animal Hybrid, Bestial, Winged, Boneless, Eye-Stalks, Centauroid, Flaming Skull, Grossly Fat, Slayer Limb, Additional Limb, Tail, Magnificent Horns, or Tentacle. When next gaining a mutation, gain this one, the armour adapts to it.",
+        "availability": "Special",
+        "source": "Black Crusade: Core",
+        "description": {
+            "value": "<p>Choose One Mutation of: Animal Hybrid, Bestial, Winged, Boneless, Eye-Stalks, Centauroid, Flaming Skull, Grossly Fat, Slayer Limb, Additional Limb, Tail, Magnificent Horns, or Tentacle. When next gaining a mutation, gain this one, the armour adapts to it.</p>"
+        },
+        "modifiers": {
+            "armourPoints": 0,
+            "maxAgility": 0,
+            "weight": 0
+        },
+        "restrictions": {
+            "armourTypes": ["power"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 0,
-      "maxAgility": 0,
-      "weight": 0
-    },
-    "restrictions": {
-      "armourTypes": [
-        "power"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "xK4kxQxzqHCLJFTw"
+    "effects": [],
+    "flags": {},
+    "_id": "xK4kxQxzqHCLJFTw"
 }

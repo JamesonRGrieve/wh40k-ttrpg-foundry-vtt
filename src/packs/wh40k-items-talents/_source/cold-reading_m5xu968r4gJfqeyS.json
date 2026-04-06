@@ -1,50 +1,50 @@
 {
-  "name": "Cold Reading",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "social",
-    "source": "RT: Hostile Acquisitions",
-    "description": {
-      "value": "<p>Prior to making a Commerce, Barter, or Charm Test, the character can make a Blather Test. If successful they hook the target into giving vital information, a +0 Scrutiny Test reveals the importance of the information gathered. If successful in this scheme, they gain +5 * Perception Bonus to their next Commerce, Barter, or Charm Test against the target and has ascertained information about them that will be useful in whatever Pitch, Negotiation, or Diplomacy they are performing.</p>"
-    },
-    "tier": 1,
-    "benefit": "<p>Prior to making a Commerce, Barter, or Charm Test, the character can make a Blather Test. If successful they hook the target into giving vital information, a +0 Scrutiny Test reveals the importance of the information gathered. If successful in this scheme, they gain +5 * Perception Bonus to their next Commerce, Barter, or Charm Test against the target and has ascertained information about them that will be useful in whatever Pitch, Negotiation, or Diplomacy they are performing.</p>",
-    "aptitudes": [],
-    "prerequisites": {
-      "text": "Drusian Charlatan Alternate Advance, 500xp",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "identifier": "coldReading",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {},
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Information Extraction",
-          "description": "<p>Before Commerce, Barter, or Charm Test, make a Blather Test. If successful, gain +5 × Perception Bonus to next test against that target.</p>"
+    "name": "Cold Reading",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "social",
+        "source": "RT: Hostile Acquisitions",
+        "description": {
+            "value": "<p>Prior to making a Commerce, Barter, or Charm Test, the character can make a Blather Test. If successful they hook the target into giving vital information, a +0 Scrutiny Test reveals the importance of the information gathered. If successful in this scheme, they gain +5 * Perception Bonus to their next Commerce, Barter, or Charm Test against the target and has ascertained information about them that will be useful in whatever Pitch, Negotiation, or Diplomacy they are performing.</p>"
+        },
+        "tier": 1,
+        "benefit": "<p>Prior to making a Commerce, Barter, or Charm Test, the character can make a Blather Test. If successful they hook the target into giving vital information, a +0 Scrutiny Test reveals the importance of the information gathered. If successful in this scheme, they gain +5 * Perception Bonus to their next Commerce, Barter, or Charm Test against the target and has ascertained information about them that will be useful in whatever Pitch, Negotiation, or Diplomacy they are performing.</p>",
+        "aptitudes": [],
+        "prerequisites": {
+            "text": "Drusian Charlatan Alternate Advance, 500xp",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "identifier": "coldReading",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {},
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Information Extraction",
+                    "description": "<p>Before Commerce, Barter, or Charm Test, make a Blather Test. If successful, gain +5 × Perception Bonus to next test against that target.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "m5xu968r4gJfqeyS"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "m5xu968r4gJfqeyS"
 }

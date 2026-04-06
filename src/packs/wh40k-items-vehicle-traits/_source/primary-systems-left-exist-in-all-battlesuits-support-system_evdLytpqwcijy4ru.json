@@ -1,24 +1,24 @@
 {
-  "name": "Primary Systems (Left) exist in all Battlesuits. \nSupport Systems (Middle) attach to Battlesuit Hardpoints and are optional components. They are considered Extremely Rare for Acquisition.\nSignature Systems (Right) are special, experimental technologies given to trusted commanders. They are considered Unique for Acquisition.\nAll Systems can be damaged or destroyed, and will so longer providing functionality. Damaged systems can be repaired, Destroyed systems need to be replaced.",
-  "type": "vehicleTrait",
-  "img": "icons/svg/aura.svg",
-  "system": {
-    "descriptionText": "",
-    "description": {
-      "value": ""
+    "name": "Primary Systems (Left) exist in all Battlesuits. \nSupport Systems (Middle) attach to Battlesuit Hardpoints and are optional components. They are considered Extremely Rare for Acquisition.\nSignature Systems (Right) are special, experimental technologies given to trusted commanders. They are considered Unique for Acquisition.\nAll Systems can be damaged or destroyed, and will so longer providing functionality. Damaged systems can be repaired, Destroyed systems need to be replaced.",
+    "type": "vehicleTrait",
+    "img": "icons/svg/aura.svg",
+    "system": {
+        "descriptionText": "",
+        "description": {
+            "value": ""
+        },
+        "modifiers": {
+            "speed": 0,
+            "manoeuvrability": 0,
+            "armour": 0,
+            "integrity": 0
+        },
+        "identifier": "",
+        "hasLevel": false,
+        "level": null,
+        "notes": ""
     },
-    "modifiers": {
-      "speed": 0,
-      "manoeuvrability": 0,
-      "armour": 0,
-      "integrity": 0
-    },
-    "identifier": "",
-    "hasLevel": false,
-    "level": null,
-    "notes": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "evdLytpqwcijy4ru"
+    "effects": [],
+    "flags": {},
+    "_id": "evdLytpqwcijy4ru"
 }

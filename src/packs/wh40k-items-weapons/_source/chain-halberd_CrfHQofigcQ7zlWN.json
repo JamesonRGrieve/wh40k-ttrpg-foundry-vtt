@@ -1,63 +1,61 @@
 {
-  "name": "Chain Halberd",
-  "type": "weapon",
-  "img": "systems/wh40k-rpg/assets/icons/weapons/melee-chain.svg",
-  "system": {
-    "identifier": "chain-halberd",
-    "class": "melee",
-    "type": "chain",
-    "twoHanded": true,
-    "melee": true,
-    "attack": {
-      "type": "melee",
-      "characteristic": "weaponSkill",
-      "modifier": 0,
-      "range": {
-        "value": 0,
-        "units": "m",
-        "special": ""
-      },
-      "rateOfFire": {
-        "single": false,
-        "semi": 0,
-        "full": 0
-      }
+    "name": "Chain Halberd",
+    "type": "weapon",
+    "img": "systems/wh40k-rpg/assets/icons/weapons/melee-chain.svg",
+    "system": {
+        "identifier": "chain-halberd",
+        "class": "melee",
+        "type": "chain",
+        "twoHanded": true,
+        "melee": true,
+        "attack": {
+            "type": "melee",
+            "characteristic": "weaponSkill",
+            "modifier": 0,
+            "range": {
+                "value": 0,
+                "units": "m",
+                "special": ""
+            },
+            "rateOfFire": {
+                "single": false,
+                "semi": 0,
+                "full": 0
+            }
+        },
+        "damage": {
+            "formula": "1d10",
+            "type": "rending",
+            "bonus": 3,
+            "penetration": 3
+        },
+        "special": ["tearing"],
+        "clip": {
+            "max": 0,
+            "value": 0,
+            "type": ""
+        },
+        "reload": "-",
+        "weight": 8,
+        "availability": "rare",
+        "craftsmanship": "common",
+        "quantity": 1,
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "equipped": false,
+        "stowed": false,
+        "container": "",
+        "description": {
+            "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Two Handed Weapon</p>"
+        },
+        "modifications": [],
+        "notes": "Two Handed Weapon",
+        "source": "BC: Core Rulebook",
+        "requiredTraining": ""
     },
-    "damage": {
-      "formula": "1d10",
-      "type": "rending",
-      "bonus": 3,
-      "penetration": 3
-    },
-    "special": [
-      "tearing"
-    ],
-    "clip": {
-      "max": 0,
-      "value": 0,
-      "type": ""
-    },
-    "reload": "-",
-    "weight": 8,
-    "availability": "rare",
-    "craftsmanship": "common",
-    "quantity": 1,
-    "cost": {
-      "value": 0,
-      "currency": "throne"
-    },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
-    "description": {
-      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Two Handed Weapon</p>"
-    },
-    "modifications": [],
-    "notes": "Two Handed Weapon",
-    "source": "BC: Core Rulebook",
-    "requiredTraining": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "CrfHQofigcQ7zlWN"
+    "effects": [],
+    "flags": {},
+    "_id": "CrfHQofigcQ7zlWN"
 }

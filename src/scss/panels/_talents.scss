@@ -4,53 +4,49 @@
 
 .wh40k-panel-talents-table,
 .wh40k-panel-traits-table {
-  .wh40k-panel-body {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-sm;
-  }
+    .wh40k-panel-body {
+        display: flex;
+        flex-direction: column;
+        gap: $wh40k-space-sm;
+    }
 }
 
 // Table Containers
 .wh40k-talents-table,
 .wh40k-traits-table {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-height: 60px;
-  
-  // Empty state when no items
-  &:empty {
-    min-height: 100px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  // Dropzone styling when empty or dragging
-  &[data-drop-zone] {
-    position: relative;
-    transition: all 0.3s ease;
-    
-    &.drop-valid {
-      background: linear-gradient(135deg, 
-        rgba($wh40k-accent-talents, 0.08) 0%, 
-        rgba($wh40k-accent-talents, 0.02) 100%);
-      border: 2px dashed rgba($wh40k-accent-talents, 0.5);
-      border-radius: 6px;
-      padding: $wh40k-space-sm;
-      min-height: 100px;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 60px;
+
+    // Empty state when no items
+    &:empty {
+        min-height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    
-    &.drop-invalid {
-      background: linear-gradient(135deg, 
-        rgba(139, 0, 0, 0.05) 0%, 
-        transparent 100%);
-      border: 2px dashed rgba(139, 0, 0, 0.3);
-      border-radius: 6px;
-      padding: $wh40k-space-sm;
+
+    // Dropzone styling when empty or dragging
+    &[data-drop-zone] {
+        position: relative;
+        transition: all 0.3s ease;
+
+        &.drop-valid {
+            background: linear-gradient(135deg, rgba($wh40k-accent-talents, 0.08) 0%, rgba($wh40k-accent-talents, 0.02) 100%);
+            border: 2px dashed rgba($wh40k-accent-talents, 0.5);
+            border-radius: 6px;
+            padding: $wh40k-space-sm;
+            min-height: 100px;
+        }
+
+        &.drop-invalid {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.05) 0%, transparent 100%);
+            border: 2px dashed rgba(139, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: $wh40k-space-sm;
+        }
     }
-  }
 }
 
 // ============================================
@@ -60,498 +56,496 @@
 // maximum space to talent names when not interacting
 
 .wh40k-tp_row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 6px;
-  background: var(--rt-panel-bg-solid);
-  border: 1px solid var(--rt-border-color-light);
-  border-left: 3px solid $wh40k-accent-talents;
-  border-radius: 4px;
-  min-height: 28px;
-  transition: border-color 0.15s ease;
-  // Explicitly prevent dragging
-  -webkit-user-drag: none;
-  user-select: none;
-  
-  &:hover {
-    border-color: var(--rt-border-color);
-    
-    .wh40k-tp_actions {
-      opacity: 1;
-      pointer-events: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 6px;
+    background: var(--rt-panel-bg-solid);
+    border: 1px solid var(--rt-border-color-light);
+    border-left: 3px solid $wh40k-accent-talents;
+    border-radius: 4px;
+    min-height: 28px;
+    transition: border-color 0.15s ease;
+    // Explicitly prevent dragging
+    -webkit-user-drag: none;
+    user-select: none;
+
+    &:hover {
+        border-color: var(--rt-border-color);
+
+        .wh40k-tp_actions {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .wh40k-tp_meta {
+            opacity: 0;
+        }
     }
-    
-    .wh40k-tp_meta {
-      opacity: 0;
-    }
-  }
 }
 
 .wh40k-tp_icon {
-  width: 22px;
-  height: 22px;
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 3px;
-  object-fit: cover;
-  flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 3px;
+    object-fit: cover;
+    flex-shrink: 0;
 }
 
 .wh40k-tp_name {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
-  text-align: left;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--rt-text-dark);
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  
-  &:hover {
-    color: $wh40k-accent-talents;
-  }
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+        color: $wh40k-accent-talents;
+    }
 }
 
 .wh40k-tp_granted {
-  margin-left: 4px;
-  font-size: 0.6rem;
-  color: $wh40k-color-gold;
-  cursor: help;
+    margin-left: 4px;
+    font-size: 0.6rem;
+    color: $wh40k-color-gold;
+    cursor: help;
 }
 
 .wh40k-tp_meta {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  flex-shrink: 0;
-  font-size: 0.6rem;
-  color: var(--rt-text-muted);
-  transition: opacity 0.1s ease;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-shrink: 0;
+    font-size: 0.6rem;
+    color: var(--rt-text-muted);
+    transition: opacity 0.1s ease;
 }
 
 .wh40k-tp_tier {
-  padding: 1px 4px;
-  background: rgba($wh40k-accent-talents, 0.15);
-  border: 1px solid rgba($wh40k-accent-talents, 0.3);
-  border-radius: 3px;
-  font-weight: 700;
-  color: $wh40k-accent-talents;
-  font-size: 0.55rem;
+    padding: 1px 4px;
+    background: rgba($wh40k-accent-talents, 0.15);
+    border: 1px solid rgba($wh40k-accent-talents, 0.3);
+    border-radius: 3px;
+    font-weight: 700;
+    color: $wh40k-accent-talents;
+    font-size: 0.55rem;
 }
 
 .wh40k-tp_category {
-  i {
-    font-size: 0.6rem;
-  }
+    i {
+        font-size: 0.6rem;
+    }
 }
 
 .wh40k-tp_rank {
-  color: $wh40k-accent-talents;
-  font-weight: 700;
+    color: $wh40k-accent-talents;
+    font-weight: 700;
 }
 
 // Overlay actions - positioned absolute over the meta area
 .wh40k-tp_actions {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 1px;
-  align-items: center;
-  padding: 2px 4px;
-  background: linear-gradient(90deg, transparent 0%, var(--rt-panel-bg-solid) 20%);
-  border-radius: 3px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.1s ease;
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 1px;
+    align-items: center;
+    padding: 2px 4px;
+    background: linear-gradient(90deg, transparent 0%, var(--rt-panel-bg-solid) 20%);
+    border-radius: 3px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s ease;
 }
 
 .wh40k-tp_btn {
-  background: none;
-  border: none;
-  color: var(--rt-text-muted);
-  cursor: pointer;
-  padding: 2px 5px;
-  border-radius: 3px;
-  transition: all 0.1s ease;
-  font-size: 0.7rem;
-  
-  &:hover {
-    background: rgba($wh40k-color-gold, 0.2);
-    color: $wh40k-color-gold;
-  }
-  
-  &.wh40k-tp_btn--active {
-    color: $wh40k-color-gold;
-  }
-  
-  &.wh40k-tp_btn--danger:hover {
-    color: $wh40k-color-crimson;
-    background: rgba($wh40k-color-crimson, 0.15);
-  }
+    background: none;
+    border: none;
+    color: var(--rt-text-muted);
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 3px;
+    transition: all 0.1s ease;
+    font-size: 0.7rem;
+
+    &:hover {
+        background: rgba($wh40k-color-gold, 0.2);
+        color: $wh40k-color-gold;
+    }
+
+    &.wh40k-tp_btn--active {
+        color: $wh40k-color-gold;
+    }
+
+    &.wh40k-tp_btn--danger:hover {
+        color: $wh40k-color-crimson;
+        background: rgba($wh40k-color-crimson, 0.15);
+    }
 }
 
 // Trait rows - keep existing styling with drag support
 .wh40k-trait-row {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-sm;
-  padding: 6px $wh40k-space-sm;
-  background: var(--rt-panel-bg-solid);
-  border: 1px solid var(--rt-border-color-light);
-  border-left: 3px solid $wh40k-accent-equipment;
-  border-radius: 4px;
-  overflow: hidden;
-  transition: all 0.2s ease;
-  min-height: 40px;
-  cursor: grab;
-  
-  &:hover {
-    background: var(--rt-panel-bg);
-    border-color: var(--rt-border-color);
-    box-shadow: 0 1px 3px var(--rt-shadow-soft);
-  }
-  
-  &:active {
-    cursor: grabbing;
-  }
-  
-  &.dragging {
-    opacity: 0.4;
-    cursor: grabbing;
-  }
-  
-  .wh40k-row-name:hover {
-    color: $wh40k-accent-equipment;
-  }
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-sm;
+    padding: 6px $wh40k-space-sm;
+    background: var(--rt-panel-bg-solid);
+    border: 1px solid var(--rt-border-color-light);
+    border-left: 3px solid $wh40k-accent-equipment;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    min-height: 40px;
+    cursor: grab;
+
+    &:hover {
+        background: var(--rt-panel-bg);
+        border-color: var(--rt-border-color);
+        box-shadow: 0 1px 3px var(--rt-shadow-soft);
+    }
+
+    &:active {
+        cursor: grabbing;
+    }
+
+    &.dragging {
+        opacity: 0.4;
+        cursor: grabbing;
+    }
+
+    .wh40k-row-name:hover {
+        color: $wh40k-accent-equipment;
+    }
 }
 
 // Shared row components (used by traits)
 .wh40k-row-icon {
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 3px;
-  object-fit: cover;
-  flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 3px;
+    object-fit: cover;
+    flex-shrink: 0;
 }
 
 .wh40k-row-icon-inline {
-  font-size: 1rem;
-  color: var(--rt-text-muted);
-  flex-shrink: 0;
-  width: 20px;
-  text-align: center;
+    font-size: 1rem;
+    color: var(--rt-text-muted);
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
 }
 
 // Trait row main content
 .wh40k-trait-row .wh40k-row-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .wh40k-trait-row .wh40k-row-name {
-  background: transparent;
-  border: none;
-  padding: 0;
-  text-align: left;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--rt-text-dark);
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  
-  &:hover {
-    color: $wh40k-accent-equipment;
-  }
+    background: transparent;
+    border: none;
+    padding: 0;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+
+    &:hover {
+        color: $wh40k-accent-equipment;
+    }
 }
 
 .wh40k-trait-row .wh40k-row-meta {
-  display: flex;
-  gap: $wh40k-space-sm;
-  flex-wrap: wrap;
-  font-size: 0.7rem;
-  color: var(--rt-text-muted);
-  align-items: center;
-  line-height: 1.2;
+    display: flex;
+    gap: $wh40k-space-sm;
+    flex-wrap: wrap;
+    font-size: 0.7rem;
+    color: var(--rt-text-muted);
+    align-items: center;
+    line-height: 1.2;
 }
 
 .wh40k-meta-item {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  white-space: nowrap;
-  
-  i {
-    font-size: 0.7rem;
-    flex-shrink: 0;
-  }
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+
+    i {
+        font-size: 0.7rem;
+        flex-shrink: 0;
+    }
 }
 
 // Trait row actions (keep visible, not hover-reveal)
 .wh40k-trait-row .wh40k-row-actions {
-  display: flex;
-  gap: 2px;
-  align-items: center;
-  margin-left: auto;
-  flex-shrink: 0;
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    margin-left: auto;
+    flex-shrink: 0;
 }
 
 .wh40k-action-btn {
-  background: none;
-  border: none;
-  color: var(--rt-text-muted);
-  cursor: pointer;
-  padding: 4px 6px;
-  border-radius: 3px;
-  transition: all 0.2s ease;
-  font-size: 0.85rem;
-  
-  &:hover {
-    background: rgba($wh40k-color-gold, 0.1);
-    color: $wh40k-color-gold;
-  }
+    background: none;
+    border: none;
+    color: var(--rt-text-muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
 
-  &.active {
-    color: $wh40k-color-gold;
-  }
-  
-  &.wh40k-btn-danger:hover {
-    color: $wh40k-color-crimson;
-    background: rgba($wh40k-color-crimson, 0.1);
-  }
+    &:hover {
+        background: rgba($wh40k-color-gold, 0.1);
+        color: $wh40k-color-gold;
+    }
+
+    &.active {
+        color: $wh40k-color-gold;
+    }
+
+    &.wh40k-btn-danger:hover {
+        color: $wh40k-color-crimson;
+        background: rgba($wh40k-color-crimson, 0.1);
+    }
 }
 
 // Level Stepper (for traits)
 .wh40k-level-stepper {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 6px;
-  background: var(--rt-panel-bg-translucent);
-  border: 1px solid var(--rt-border-color-light);
-  border-radius: 4px;
-  flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    background: var(--rt-panel-bg-translucent);
+    border: 1px solid var(--rt-border-color-light);
+    border-radius: 4px;
+    flex-shrink: 0;
 }
 
 .wh40k-stepper-btn {
-  background: transparent;
-  border: none;
-  color: var(--rt-text-muted);
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 2px;
-  transition: all 0.15s ease;
-  font-size: 0.7rem;
-  
-  &:hover {
-    color: var(--rt-text-dark);
-    background: var(--rt-panel-bg);
-  }
+    background: transparent;
+    border: none;
+    color: var(--rt-text-muted);
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 2px;
+    transition: all 0.15s ease;
+    font-size: 0.7rem;
+
+    &:hover {
+        color: var(--rt-text-dark);
+        background: var(--rt-panel-bg);
+    }
 }
 
 .wh40k-level-display {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--rt-text-dark);
-  min-width: 20px;
-  text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    min-width: 20px;
+    text-align: center;
 }
 
 // Expanded Details View
 .wh40k-row-expanded {
-  padding: $wh40k-space-sm;
-  padding-top: 0;
-  background: var(--rt-panel-bg-translucent);
-  border-top: 1px solid var(--rt-border-color-light);
-  animation: expandDown 0.2s ease;
+    padding: $wh40k-space-sm;
+    padding-top: 0;
+    background: var(--rt-panel-bg-translucent);
+    border-top: 1px solid var(--rt-border-color-light);
+    animation: expandDown 0.2s ease;
 }
 
 @keyframes expandDown {
-  from {
-    opacity: 0;
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    max-height: 500px;
-  }
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
 }
 
 .wh40k-detail-row {
-  display: flex;
-  gap: $wh40k-space-sm;
-  padding: 4px 0;
-  font-size: 0.8rem;
-  
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--rt-border-color-light);
-  }
+    display: flex;
+    gap: $wh40k-space-sm;
+    padding: 4px 0;
+    font-size: 0.8rem;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid var(--rt-border-color-light);
+    }
 }
 
 .wh40k-detail-label {
-  font-weight: 600;
-  color: var(--rt-text-secondary);
-  min-width: 100px;
-  flex-shrink: 0;
+    font-weight: 600;
+    color: var(--rt-text-secondary);
+    min-width: 100px;
+    flex-shrink: 0;
 }
 
 .wh40k-detail-value {
-  color: var(--rt-text-dark);
-  flex: 1;
+    color: var(--rt-text-dark);
+    flex: 1;
 }
 
 .wh40k-detail-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
 }
 
 .wh40k-detail-benefit {
-  flex-direction: column;
-  align-items: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .wh40k-detail-content {
-  width: 100%;
-  padding: $wh40k-space-xs;
-  background: var(--rt-panel-bg);
-  border-radius: 3px;
-  font-size: 0.75rem;
-  line-height: 1.4;
-  color: var(--rt-text-dark);
-  
-  p {
-    margin: 0 0 0.5em 0;
-    
-    &:last-child {
-      margin-bottom: 0;
+    width: 100%;
+    padding: $wh40k-space-xs;
+    background: var(--rt-panel-bg);
+    border-radius: 3px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--rt-text-dark);
+
+    p {
+        margin: 0 0 0.5em 0;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
-  }
 }
 
 // Trait Grouping
 .wh40k-traits-grouped {
-  display: flex;
-  flex-direction: column;
-  gap: $wh40k-space-md;
+    display: flex;
+    flex-direction: column;
+    gap: $wh40k-space-md;
 }
 
 .wh40k-trait-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  
-  // Ensure proper stacking context
-  position: relative;
-  z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    // Ensure proper stacking context
+    position: relative;
+    z-index: 1;
 }
 
 .wh40k-group-header {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-xs;
-  padding: 4px $wh40k-space-sm;
-  background: var(--rt-panel-bg-translucent);
-  border-left: 3px solid $wh40k-accent-equipment;
-  border-radius: 3px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--rt-text-secondary);
-  position: sticky; // Make headers sticky during scroll
-  top: 0;
-  z-index: 2;
-  
-  i {
-    font-size: 0.8rem;
-    flex-shrink: 0;
-  }
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-xs;
+    padding: 4px $wh40k-space-sm;
+    background: var(--rt-panel-bg-translucent);
+    border-left: 3px solid $wh40k-accent-equipment;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rt-text-secondary);
+    position: sticky; // Make headers sticky during scroll
+    top: 0;
+    z-index: 2;
+
+    i {
+        font-size: 0.8rem;
+        flex-shrink: 0;
+    }
 }
 
 .wh40k-group-title {
-  flex: 1;
-  min-width: 0; // Allow text truncation if needed
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    flex: 1;
+    min-width: 0; // Allow text truncation if needed
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .wh40k-count-badge {
-  background: var(--rt-panel-bg);
-  border: 1px solid var(--rt-border-color-light);
-  padding: 2px 6px;
-  border-radius: 10px;
-  font-size: 0.65rem;
-  font-weight: 600;
-  min-width: 20px;
-  text-align: center;
+    background: var(--rt-panel-bg);
+    border: 1px solid var(--rt-border-color-light);
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
 }
 
 // Category Color Variations
 .wh40k-group-header.wh40k-trait-creature {
-  border-left-color: #c0504d;
+    border-left-color: #c0504d;
 }
 
 .wh40k-group-header.wh40k-trait-elite {
-  border-left-color: #9bbb59;
+    border-left-color: #9bbb59;
 }
 
 .wh40k-group-header.wh40k-trait-unique {
-  border-left-color: #8064a2;
+    border-left-color: #8064a2;
 }
 
 .wh40k-group-header.wh40k-trait-origin {
-  border-left-color: #4bacc6;
+    border-left-color: #4bacc6;
 }
 
 // Badge Styles
 .wh40k-badge-aptitude {
-  display: inline-block;
-  padding: 2px 6px;
-  background: linear-gradient(135deg, 
-    rgba($wh40k-accent-talents, 0.15) 0%, 
-    rgba($wh40k-accent-talents, 0.08) 100%);
-  border: 1px solid rgba($wh40k-accent-talents, 0.3);
-  border-radius: 3px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--rt-text-dark);
-  text-transform: capitalize;
+    display: inline-block;
+    padding: 2px 6px;
+    background: linear-gradient(135deg, rgba($wh40k-accent-talents, 0.15) 0%, rgba($wh40k-accent-talents, 0.08) 100%);
+    border: 1px solid rgba($wh40k-accent-talents, 0.3);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--rt-text-dark);
+    text-transform: capitalize;
 }
 
 // Empty State
 .wh40k-empty-state {
-  text-align: center;
-  padding: $wh40k-space-lg;
-  color: var(--rt-text-muted);
-  
-  i {
-    font-size: 2rem;
-    margin-bottom: $wh40k-space-sm;
-    opacity: 0.5;
-  }
-  
-  p {
-    margin: 0;
-    font-size: 0.9rem;
-  }
+    text-align: center;
+    padding: $wh40k-space-lg;
+    color: var(--rt-text-muted);
+
+    i {
+        font-size: 2rem;
+        margin-bottom: $wh40k-space-sm;
+        opacity: 0.5;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
 }
 
 // Dropzone
@@ -567,36 +561,36 @@
 
 // Ensure proper layout on narrower sheets
 @media (max-width: 800px) {
-  .wh40k-talent-row,
-  .wh40k-trait-row {
-    flex-wrap: nowrap; // Never wrap to multiple lines
-    
-    .wh40k-row-main {
-      min-width: 150px; // Ensure some minimum space for name
+    .wh40k-talent-row,
+    .wh40k-trait-row {
+        flex-wrap: nowrap; // Never wrap to multiple lines
+
+        .wh40k-row-main {
+            min-width: 150px; // Ensure some minimum space for name
+        }
+
+        .wh40k-row-meta {
+            font-size: 0.65rem; // Slightly smaller on narrow
+        }
     }
-    
-    .wh40k-row-meta {
-      font-size: 0.65rem; // Slightly smaller on narrow
+
+    .wh40k-action-btn {
+        padding: 3px 4px; // Tighter padding
+        font-size: 0.75rem;
     }
-  }
-  
-  .wh40k-action-btn {
-    padding: 3px 4px; // Tighter padding
-    font-size: 0.75rem;
-  }
 }
 
 // Extra narrow - hide meta items if needed
 @media (max-width: 600px) {
-  .wh40k-row-meta {
-    display: none; // Hide metadata on very narrow
-  }
+    .wh40k-row-meta {
+        display: none; // Hide metadata on very narrow
+    }
 }
 
 // ============================================
 // Layout Fixes & Improvements Summary
 // ============================================
-// 
+//
 // 1. Added min-height to rows for consistency
 // 2. Added overflow: hidden to rt-row-main
 // 3. Added width: 100% to rt-row-name for ellipsis
@@ -607,7 +601,7 @@
 // 8. Ensured all flex items have proper min-width: 0
 // 9. Added line-height controls to prevent extra space
 // 10. Improved z-index stacking for groups
-// 
-// All changes maintain Imperial Gothic theme and 
+//
+// All changes maintain Imperial Gothic theme and
 // follow the dnd5e V13 architecture pattern.
 // ============================================

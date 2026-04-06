@@ -1,41 +1,41 @@
 {
-  "name": "Amasec",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "consumable",
-    "weight": 1,
-    "availability": "scarce",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 50,
-      "currency": "throne"
+    "name": "Amasec",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "consumable",
+        "weight": 1,
+        "availability": "scarce",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 50,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<h3>Requirements</h3><p>Availability may vary with Quality\nCost is per Bottle</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 50 T</p>",
+            "chat": "",
+            "summary": "Space Distilled Wine"
+        },
+        "source": {
+            "book": "Rogue Trader Core",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "",
+        "duration": "",
+        "notes": "",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<h3>Requirements</h3><p>Availability may vary with Quality\nCost is per Bottle</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 50 T</p>",
-      "chat": "",
-      "summary": "Space Distilled Wine"
-    },
-    "source": {
-      "book": "Rogue Trader Core",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "",
-    "duration": "",
-    "notes": "",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "kXeb2iJuLZjy86nk"
+    "effects": [],
+    "flags": {},
+    "_id": "kXeb2iJuLZjy86nk"
 }

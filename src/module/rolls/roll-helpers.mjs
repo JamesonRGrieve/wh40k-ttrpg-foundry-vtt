@@ -23,8 +23,8 @@ export function getDegree(a, b) {
 }
 
 export function getOpposedDegrees(dos, dof, opposedDos, opposedDof) {
-    if(dos > 0) {
-        if(opposedDos > 0) {
+    if (dos > 0) {
+        if (opposedDos > 0) {
             return dos - opposedDos;
         } else {
             return dos + opposedDof;

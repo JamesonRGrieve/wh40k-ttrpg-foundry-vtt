@@ -21,11 +21,11 @@ export class WH40KTour extends Tour {
                     resolve(el);
                     obs.disconnect();
                 });
-            })
+            });
 
             mutationObserver.observe(document.body, {
                 childList: true,
-                subtree: true
+                subtree: true,
             });
         });
     }
@@ -37,23 +37,21 @@ export class WH40KTour extends Tour {
 
     async _postStep() {
         await super._postStep();
-        if (this.stepIndex < 0 || !this.hasNext)
-            return;
+        if (this.stepIndex < 0 || !this.hasNext) return;
 
-        if (!this.currentStep.action)
-            return;
+        if (!this.currentStep.action) return;
 
-        if(this.triggerReset) {
+        if (this.triggerReset) {
             this.triggerReset = false;
             return;
         }
         let target = this.currentStep.target ? this.currentStep.target : this.currentStep.selector;
         switch (this.currentStep.action) {
-            case "click":
+            case 'click':
                 document.querySelector(target).click();
                 break;
-            case "scrollTo":
-                document.querySelector(target).scrollIntoView({ block: "start", inline: "nearest" });
+            case 'scrollTo':
+                document.querySelector(target).scrollIntoView({ block: 'start', inline: 'nearest' });
                 break;
         }
     }
@@ -62,8 +60,7 @@ export class WH40KTour extends Tour {
      * Detect when a reset is triggered and stop the actions in _postStep
      */
     async reset() {
-        if(this.status != "completed")
-            this.triggerReset = true;
+        if (this.status != 'completed') this.triggerReset = true;
         await super.reset();
     }
 }

@@ -1,63 +1,59 @@
 {
-  "name": "Cold Hearted",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "category": "social",
-    "source": "Only War Core",
-    "description": {
-      "value": "<p>Character is immune to Seduction and Charm Tests have -10 against them. Gain one Insanity Point on gaining this Talent.\nWhen in a Social Conflict, character gains +20 to Opposed Tests where the opponents are trying to Charm them.\nTalent was previously known as Chem Geld in Prior editions.</p>"
-    },
-    "tier": 1,
-    "benefit": "<p>Character is immune to Seduction and Charm Tests have -10 against them. Gain one Insanity Point on gaining this Talent.\nWhen in a Social Conflict, character gains +20 to Opposed Tests where the opponents are trying to Charm them.\nTalent was previously known as Chem Geld in Prior editions.</p>",
-    "aptitudes": [
-      "Willpower",
-      "Defence",
-      "Unaligned"
-    ],
-    "prerequisites": {
-      "text": "None",
-      "characteristics": {},
-      "skills": [],
-      "talents": []
-    },
-    "cost": 300,
-    "isPassive": true,
-    "identifier": "coldHearted",
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "insanity": 1
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [
-          {
-            "key": "fellowship",
-            "value": 20,
-            "condition": "In Social Conflicts when opponents try to Charm you (Opposed Test)",
-            "icon": "fa-solid fa-shield-halved"
-          }
-        ],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Immune to Seduction",
-          "description": "<p>Immune to Seduction. Charm Tests against you have -10. Gain 1 Insanity Point when taking this talent.</p>"
+    "name": "Cold Hearted",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "category": "social",
+        "source": "Only War Core",
+        "description": {
+            "value": "<p>Character is immune to Seduction and Charm Tests have -10 against them. Gain one Insanity Point on gaining this Talent.\nWhen in a Social Conflict, character gains +20 to Opposed Tests where the opponents are trying to Charm them.\nTalent was previously known as Chem Geld in Prior editions.</p>"
+        },
+        "tier": 1,
+        "benefit": "<p>Character is immune to Seduction and Charm Tests have -10 against them. Gain one Insanity Point on gaining this Talent.\nWhen in a Social Conflict, character gains +20 to Opposed Tests where the opponents are trying to Charm them.\nTalent was previously known as Chem Geld in Prior editions.</p>",
+        "aptitudes": ["Willpower", "Defence", "Unaligned"],
+        "prerequisites": {
+            "text": "None",
+            "characteristics": {},
+            "skills": [],
+            "talents": []
+        },
+        "cost": 300,
+        "isPassive": true,
+        "identifier": "coldHearted",
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "insanity": 1
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [
+                    {
+                        "key": "fellowship",
+                        "value": 20,
+                        "condition": "In Social Conflicts when opponents try to Charm you (Opposed Test)",
+                        "icon": "fa-solid fa-shield-halved"
+                    }
+                ],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Immune to Seduction",
+                    "description": "<p>Immune to Seduction. Charm Tests against you have -10. Gain 1 Insanity Point when taking this talent.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "vPn7DWHMVoQBSZte"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "vPn7DWHMVoQBSZte"
 }

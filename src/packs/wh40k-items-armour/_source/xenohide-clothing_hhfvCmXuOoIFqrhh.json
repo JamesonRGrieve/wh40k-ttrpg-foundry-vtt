@@ -1,33 +1,31 @@
 {
-  "name": "Xenohide Clothing",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "xenos",
-    "weight": 1,
-    "availability": "rare",
-    "notes": "Plentiful Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.",
-    "source": "RT: Tau Character Guide",
-    "description": {
-      "value": "<p>Plentiful Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.</p>"
+    "name": "Xenohide Clothing",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "xenos",
+        "weight": 1,
+        "availability": "rare",
+        "notes": "Plentiful Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.",
+        "source": "RT: Tau Character Guide",
+        "description": {
+            "value": "<p>Plentiful Availability if acquired from Dark Eldar Settlement. Likely Human Wearable.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["body"],
+        "armourPoints": {
+            "head": 3,
+            "body": 3,
+            "leftArm": 3,
+            "rightArm": 3,
+            "leftLeg": 3,
+            "rightLeg": 3
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "body"
-    ],
-    "armourPoints": {
-      "head": 3,
-      "body": 3,
-      "leftArm": 3,
-      "rightArm": 3,
-      "leftLeg": 3,
-      "rightLeg": 3
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "hhfvCmXuOoIFqrhh"
+    "effects": [],
+    "flags": {},
+    "_id": "hhfvCmXuOoIFqrhh"
 }

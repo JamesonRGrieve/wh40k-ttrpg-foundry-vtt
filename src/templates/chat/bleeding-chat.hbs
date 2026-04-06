@@ -1,24 +1,26 @@
-{{!-- Rogue Trader Bleeding Card - Modern Design --}}
+{{! Rogue Trader Bleeding Card - Modern Design }}
 <div class="rt-chat">
     <div class="rt-roll-card">
-        {{!-- Header --}}
+        {{! Header }}
         <div class="rt-roll-card__header">
             <div class="rt-roll-card__actor">{{actor.name}}</div>
             <h2 class="rt-roll-card__title">Bleeding!</h2>
             <div class="rt-roll-card__subtitle">Critical Condition</div>
         </div>
-        
-        {{!-- Body --}}
+
+        {{! Body }}
         <div class="rt-roll-card__body">
             <div class="rt-roll-card__row">
                 <span class="rt-roll-card__label">Fatigue</span>
                 <span class="rt-roll-card__value">{{system.fatigue.value}} / {{system.fatigue.max}}</span>
             </div>
-            
+
             <div class="rt-roll-card__text">
-                <p>Once per round as a Free Action, the character (or another who can reach them) can attempt a <strong>Difficult (–10) Medicae</strong> test to remove this condition.</p>
+                <p>Once per round as a Free Action, the character (or another who can reach them) can attempt a
+                    <strong>Difficult (–10) Medicae</strong>
+                    test to remove this condition.</p>
             </div>
-            
+
             <div class="rt-roll-card__damage">
                 <div class="rt-roll-card__damage-header">
                     <span class="rt-roll-card__damage-title">Fatigue</span>
@@ -26,12 +28,14 @@
                 <div class="rt-roll-card__damage-value">+1</div>
                 <div class="rt-roll-card__damage-type">Blood Loss</div>
             </div>
-            
+
             <div class="rt-roll-card__controls">
-                <button class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__apply-damage"
-                     data-uuid="{{actor.uuid}}"
-                     data-damage="0"
-                     data-fatigue="1">
+                <button
+                    class="rt-roll-card__btn rt-roll-card__btn--damage roll-control__apply-damage"
+                    data-uuid="{{actor.uuid}}"
+                    data-damage="0"
+                    data-fatigue="1"
+                >
                     <span class="material-icons">api</span>
                     <span>Apply Fatigue</span>
                 </button>

@@ -1,76 +1,72 @@
 {
-  "name": "Infused Knowledge",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "identifier": "infusedKnowledge",
-    "category": "knowledge",
-    "source": "Only War Core",
-    "description": "<p>Your mind has been infused with vast stores of knowledge, granting you access to information across many fields of study.</p>",
-    "tier": 3,
-    "benefit": "<p>Character counts as having all Common Lore and Scholastic Lore Skills at Rank 1 (Basic/Known), they also add One Degree of Success to any successful Common or Scholastic Lore Tests. If later purchasing Lore Skill advances, they must still start at rank 1.</p>",
-    "aptitudes": [
-      "Intelligence",
-      "Knowledge",
-      "Tzeentch"
-    ],
-    "prerequisites": {
-      "text": "Intelligence 40, Lore(any one)",
-      "characteristics": {
-        "intelligence": 40
-      },
-      "skills": {},
-      "talents": []
-    },
-    "cost": 900,
-    "isPassive": true,
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {
-        "attack": 0,
-        "damage": 0,
-        "penetration": 0,
-        "defense": 0,
-        "initiative": 0,
-        "speed": 0
-      },
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Universal Lore Access",
-          "description": "<p>You count as having all Common Lore and Scholastic Lore skills at Rank 1 (Known/Trained). You add +1 Degree of Success to any successful Common Lore or Scholastic Lore test. If later purchasing Lore skill advances, you must still start at rank 1.</p>"
+    "name": "Infused Knowledge",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "identifier": "infusedKnowledge",
+        "category": "knowledge",
+        "source": "Only War Core",
+        "description": "<p>Your mind has been infused with vast stores of knowledge, granting you access to information across many fields of study.</p>",
+        "tier": 3,
+        "benefit": "<p>Character counts as having all Common Lore and Scholastic Lore Skills at Rank 1 (Basic/Known), they also add One Degree of Success to any successful Common or Scholastic Lore Tests. If later purchasing Lore Skill advances, they must still start at rank 1.</p>",
+        "aptitudes": ["Intelligence", "Knowledge", "Tzeentch"],
+        "prerequisites": {
+            "text": "Intelligence 40, Lore(any one)",
+            "characteristics": {
+                "intelligence": 40
+            },
+            "skills": {},
+            "talents": []
+        },
+        "cost": 900,
+        "isPassive": true,
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {
+                "attack": 0,
+                "damage": 0,
+                "penetration": 0,
+                "defense": 0,
+                "initiative": 0,
+                "speed": 0
+            },
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Universal Lore Access",
+                    "description": "<p>You count as having all Common Lore and Scholastic Lore skills at Rank 1 (Known/Trained). You add +1 Degree of Success to any successful Common Lore or Scholastic Lore test. If later purchasing Lore skill advances, you must still start at rank 1.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "BMLdA7wkzU4GbZSW"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "BMLdA7wkzU4GbZSW"
 }

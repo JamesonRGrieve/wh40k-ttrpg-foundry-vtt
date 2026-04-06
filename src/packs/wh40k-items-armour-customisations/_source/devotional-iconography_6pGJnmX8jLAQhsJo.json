@@ -1,28 +1,26 @@
 {
-  "name": "Devotional Iconography",
-  "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
-  "system": {
-    "effect": "Gain +10 to Command Tests with those faithful to the Imperium, but -10 to Fellowship with those who are not.",
-    "availability": "common",
-    "source": "DH 2E: Enemies Within",
-    "description": {
-      "value": "<p>Gain +10 to Command Tests with those faithful to the Imperium, but -10 to Fellowship with those who are not.</p>"
+    "name": "Devotional Iconography",
+    "type": "armourModification",
+    "img": "icons/svg/upgrade.svg",
+    "system": {
+        "effect": "Gain +10 to Command Tests with those faithful to the Imperium, but -10 to Fellowship with those who are not.",
+        "availability": "common",
+        "source": "DH 2E: Enemies Within",
+        "description": {
+            "value": "<p>Gain +10 to Command Tests with those faithful to the Imperium, but -10 to Fellowship with those who are not.</p>"
+        },
+        "modifiers": {
+            "armourPoints": 0,
+            "maxAgility": 0,
+            "weight": 1
+        },
+        "restrictions": {
+            "armourTypes": ["any"]
+        },
+        "addedProperties": [],
+        "removedProperties": []
     },
-    "modifiers": {
-      "armourPoints": 0,
-      "maxAgility": 0,
-      "weight": 1
-    },
-    "restrictions": {
-      "armourTypes": [
-        "any"
-      ]
-    },
-    "addedProperties": [],
-    "removedProperties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "6pGJnmX8jLAQhsJo"
+    "effects": [],
+    "flags": {},
+    "_id": "6pGJnmX8jLAQhsJo"
 }

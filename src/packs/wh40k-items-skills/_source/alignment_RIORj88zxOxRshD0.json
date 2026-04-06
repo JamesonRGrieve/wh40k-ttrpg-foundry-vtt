@@ -1,24 +1,24 @@
 {
-  "name": "Alignment",
-  "type": "skill",
-  "img": "icons/svg/book.svg",
-  "system": {
-    "characteristic": "",
-    "descriptor": "",
-    "uses": null,
-    "useTime": null,
-    "description": {
-      "value": ""
+    "name": "Alignment",
+    "type": "skill",
+    "img": "icons/svg/book.svg",
+    "system": {
+        "characteristic": "",
+        "descriptor": "",
+        "uses": null,
+        "useTime": null,
+        "description": {
+            "value": ""
+        },
+        "rollConfig": {
+            "characteristic": null
+        },
+        "isBasic": true,
+        "skillType": "basic",
+        "aptitudes": [],
+        "source": ""
     },
-    "rollConfig": {
-      "characteristic": null
-    },
-    "isBasic": true,
-    "skillType": "basic",
-    "aptitudes": [],
-    "source": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "RIORj88zxOxRshD0"
+    "effects": [],
+    "flags": {},
+    "_id": "RIORj88zxOxRshD0"
 }

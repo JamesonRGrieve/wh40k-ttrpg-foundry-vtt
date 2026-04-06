@@ -1,41 +1,41 @@
 {
-  "name": "Skull of Brantor",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "luxury",
-    "weight": 3,
-    "availability": "average",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 0,
-      "currency": "throne"
+    "name": "Skull of Brantor",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "luxury",
+        "weight": 3,
+        "availability": "average",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>Master-Crafted Relic Servo-Skull of the Deathwatch. Uses Regular Servo Skull template but with WS 30, T 30, and +20 Awareness, Concealment, and Silent Move. Is equipped with an Auspex and Astartes Signum.</p>\n<h3>Requirements</h3><p>Servo Skull built from a Space Marine.\nWeight only applies if being carried.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 35 R</p>",
+            "chat": "",
+            "summary": "Master-Crafted Relic Servo-Skull of the Deathwatch. Uses Regular Servo Skull template but with WS 30, T 30, and +20 Awareness, Concealment, and Silent Move. Is equipped with an Auspex and Astartes Sig"
+        },
+        "source": {
+            "book": "DW: Rites of Battle",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "Master-Crafted Relic Servo-Skull of the Deathwatch. Uses Regular Servo Skull template but with WS 30, T 30, and +20 Awareness, Concealment, and Silent Move. Is equipped with an Auspex and Astartes Signum.",
+        "duration": "",
+        "notes": "35 R",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>Master-Crafted Relic Servo-Skull of the Deathwatch. Uses Regular Servo Skull template but with WS 30, T 30, and +20 Awareness, Concealment, and Silent Move. Is equipped with an Auspex and Astartes Signum.</p>\n<h3>Requirements</h3><p>Servo Skull built from a Space Marine.\nWeight only applies if being carried.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 35 R</p>",
-      "chat": "",
-      "summary": "Master-Crafted Relic Servo-Skull of the Deathwatch. Uses Regular Servo Skull template but with WS 30, T 30, and +20 Awareness, Concealment, and Silent Move. Is equipped with an Auspex and Astartes Sig"
-    },
-    "source": {
-      "book": "DW: Rites of Battle",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "Master-Crafted Relic Servo-Skull of the Deathwatch. Uses Regular Servo Skull template but with WS 30, T 30, and +20 Awareness, Concealment, and Silent Move. Is equipped with an Auspex and Astartes Signum.",
-    "duration": "",
-    "notes": "35 R",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "PGRWPzArTsVi3hyj"
+    "effects": [],
+    "flags": {},
+    "_id": "PGRWPzArTsVi3hyj"
 }

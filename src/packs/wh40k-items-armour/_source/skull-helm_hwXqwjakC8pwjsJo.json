@@ -1,33 +1,31 @@
 {
-  "name": "Skull Helm",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "power",
-    "weight": 4,
-    "availability": "Initiated",
-    "notes": "Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.",
-    "source": "DW: Rites of Battle",
-    "description": {
-      "value": "<p>Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.</p>"
+    "name": "Skull Helm",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "power",
+        "weight": 4,
+        "availability": "Initiated",
+        "notes": "Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.",
+        "source": "DW: Rites of Battle",
+        "description": {
+            "value": "<p>Gain +10 to Intimidate Tests, acts as regular Space Marine Helmet.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["head"],
+        "armourPoints": {
+            "head": 9,
+            "body": 9,
+            "leftArm": 9,
+            "rightArm": 9,
+            "leftLeg": 9,
+            "rightLeg": 9
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "head"
-    ],
-    "armourPoints": {
-      "head": 9,
-      "body": 9,
-      "leftArm": 9,
-      "rightArm": 9,
-      "leftLeg": 9,
-      "rightLeg": 9
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "hwXqwjakC8pwjsJo"
+    "effects": [],
+    "flags": {},
+    "_id": "hwXqwjakC8pwjsJo"
 }

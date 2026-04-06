@@ -7,128 +7,130 @@
 
 // Vital Display Container
 .wh40k-vital-display {
-  display: flex;
-  flex-direction: column;
-  gap: $wh40k-space-sm;
+    display: flex;
+    flex-direction: column;
+    gap: $wh40k-space-sm;
 }
 
 // Vital Tracker (Number Display with +/- buttons)
 .wh40k-vital-tracker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $wh40k-space-xs;
-  padding: $wh40k-space-xs 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-xs 0;
 }
 
 // Vital button extends the unified control button
 // NOTE: Use .wh40k-btn-control for new code; this maintains backwards compatibility
 .wh40k-vital-btn {
-  @extend .wh40k-btn-control;
-  
-  &.wh40k-btn-minus { 
-    @extend .wh40k-btn-control--minus;
-  }
-  
-  &.wh40k-btn-plus { 
-    @extend .wh40k-btn-control--plus;
-  }
+    @extend .wh40k-btn-control;
+
+    &.wh40k-btn-minus {
+        @extend .wh40k-btn-control--minus;
+    }
+
+    &.wh40k-btn-plus {
+        @extend .wh40k-btn-control--plus;
+    }
 }
 
 .wh40k-vital-current {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  min-width: 36px;
-  text-align: center;
-  font-family: var(--rt-font-display, 'Modesto Condensed', serif);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    min-width: 36px;
+    text-align: center;
+    font-family: var(--rt-font-display, 'Modesto Condensed', serif);
 }
 
 .wh40k-vital-sep {
-  font-size: 1.2rem;
-  color: var(--color-text-secondary);
-  font-weight: 400;
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    font-weight: 400;
 }
 
 .wh40k-vital-max {
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  font-weight: 600;
-  min-width: 28px;
-  text-align: center;
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    min-width: 28px;
+    text-align: center;
 }
 
 // Vital Progress Bar
 .wh40k-vital-bar {
-  height: 8px;
-  background: var(--color-bg-tertiary);
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
+    height: 8px;
+    background: var(--color-bg-tertiary);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
 }
 
 .wh40k-vital-bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.3s ease;
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
 }
 
 // Vital-specific bar colors
 .wh40k-wounds-fill {
-  background: linear-gradient(90deg, $wh40k-accent-combat, lighten($wh40k-accent-combat, 15%));
+    background: linear-gradient(90deg, $wh40k-accent-combat, lighten($wh40k-accent-combat, 15%));
 }
 
 .wh40k-fatigue-fill {
-  background: linear-gradient(90deg, $wh40k-color-gold-dark, $wh40k-color-gold);
+    background: linear-gradient(90deg, $wh40k-color-gold-dark, $wh40k-color-gold);
 }
 
 .wh40k-corruption-fill {
-  background: linear-gradient(90deg, darken($wh40k-color-success, 10%), $wh40k-color-success);
+    background: linear-gradient(90deg, darken($wh40k-color-success, 10%), $wh40k-color-success);
 }
 
 .wh40k-insanity-fill {
-  background: linear-gradient(90deg, darken(#9573bd, 15%), #9573bd);
+    background: linear-gradient(90deg, darken(#9573bd, 15%), #9573bd);
 }
 
 // Fate value special styling
 .wh40k-fate-value {
-  color: $wh40k-accent-gold !important;
+    color: $wh40k-accent-gold !important;
 }
 
 // Warning Messages
 .wh40k-vital-warning {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-xs;
-  padding: 6px $wh40k-space-sm;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  border-radius: 6px;
-  letter-spacing: 0.03em;
-  
-  i { font-size: 0.9em; }
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-xs;
+    padding: 6px $wh40k-space-sm;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+
+    i {
+        font-size: 0.9em;
+    }
 }
 
 .wh40k-critical-warning {
-  background: rgba($wh40k-accent-combat, 0.15);
-  color: $wh40k-accent-combat;
-  border: 1px solid rgba($wh40k-accent-combat, 0.3);
+    background: rgba($wh40k-accent-combat, 0.15);
+    color: $wh40k-accent-combat;
+    border: 1px solid rgba($wh40k-accent-combat, 0.3);
 }
 
 .wh40k-exhausted-warning {
-  background: rgba($wh40k-color-gold, 0.15);
-  color: $wh40k-color-gold-dark;
-  border: 1px solid rgba($wh40k-color-gold, 0.3);
+    background: rgba($wh40k-color-gold, 0.15);
+    color: $wh40k-color-gold-dark;
+    border: 1px solid rgba($wh40k-color-gold, 0.3);
 }
 
 // Modifier Display (for Corruption/Insanity)
 .wh40k-vital-modifier {
-  font-size: 0.75rem;
-  color: var(--color-text-tertiary);
-  text-align: center;
-  font-style: italic;
-  padding-top: 2px;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    text-align: center;
+    font-style: italic;
+    padding-top: 2px;
 }
 
 // ============================================
@@ -136,145 +138,147 @@
 // ============================================
 
 .wh40k-vital-expand-btn {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-bg-option);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  flex-shrink: 0;
-  margin-left: auto;
-  color: var(--color-text-secondary);
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-option);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--color-text-secondary);
 
-  &:hover {
-    background: var(--color-bg-tertiary);
-    border-color: var(--color-border-highlight);
-    color: var(--color-text-primary);
-  }
-  
-  i { font-size: 0.75rem; }
+    &:hover {
+        background: var(--color-bg-tertiary);
+        border-color: var(--color-border-highlight);
+        color: var(--color-text-primary);
+    }
+
+    i {
+        font-size: 0.75rem;
+    }
 }
 
 .wh40k-vital-edit-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $wh40k-space-md;
-  margin-bottom: $wh40k-space-sm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $wh40k-space-md;
+    margin-bottom: $wh40k-space-sm;
 }
 
 .wh40k-vital-edit-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .wh40k-edit-label {
-  font-size: var(--rt-text-tiny, 0.7rem);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 4px;
+    font-size: var(--rt-text-tiny, 0.7rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 // Vital input extends the unified numeric input
 // NOTE: Use .wh40k-input-numeric--styled for new code; this maintains backwards compatibility
 .wh40k-vital-input {
-  @extend .wh40k-input-numeric;
-  width: 100%; // Full width within grid cell
-  min-width: 50px; // Minimum readable size
-  max-width: 150px; // Don't get too wide
-  height: 36px;
-  font-size: 1rem;
-  font-weight: 600;
+    @extend .wh40k-input-numeric;
+    width: 100%; // Full width within grid cell
+    min-width: 50px; // Minimum readable size
+    max-width: 150px; // Don't get too wide
+    height: 36px;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 // Auto-calculation badge
 .wh40k-auto-badge {
-  font-size: var(--rt-text-micro, 0.65rem);
-  font-weight: 700;
-  padding: 2px 6px;
-  background: rgba($wh40k-accent-gold, 0.15);
-  color: $wh40k-accent-gold;
-  border-radius: 3px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+    font-size: var(--rt-text-micro, 0.65rem);
+    font-weight: 700;
+    padding: 2px 6px;
+    background: rgba($wh40k-accent-gold, 0.15);
+    color: $wh40k-accent-gold;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 // Info message
 .wh40k-vital-info {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-xs;
-  padding: $wh40k-space-xs $wh40k-space-sm;
-  background: rgba($wh40k-accent-gold, 0.08);
-  border-left: 3px solid rgba($wh40k-accent-gold, 0.4);
-  border-radius: 4px;
-  font-size: var(--rt-text-tiny, 0.7rem);
-  color: var(--color-text-secondary);
-  
-  i { 
-    color: $wh40k-accent-gold;
-    font-size: 0.9em;
-  }
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-xs $wh40k-space-sm;
+    background: rgba($wh40k-accent-gold, 0.08);
+    border-left: 3px solid rgba($wh40k-accent-gold, 0.4);
+    border-radius: 4px;
+    font-size: var(--rt-text-tiny, 0.7rem);
+    color: var(--color-text-secondary);
+
+    i {
+        color: $wh40k-accent-gold;
+        font-size: 0.9em;
+    }
 }
 
 // Subsections (Critical, Injuries, etc.)
 .wh40k-vital-subsection {
-  margin-top: $wh40k-space-md;
-  padding-top: $wh40k-space-sm;
-  border-top: 1px solid rgba(120, 46, 34, 0.2);
+    margin-top: $wh40k-space-md;
+    padding-top: $wh40k-space-sm;
+    border-top: 1px solid rgba(120, 46, 34, 0.2);
 }
 
 .wh40k-vital-subsection-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: $wh40k-space-xs;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $wh40k-space-xs;
 }
 
 .wh40k-subsection-title {
-  font-size: var(--rt-text-small, 0.75rem);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-text-secondary);
+    font-size: var(--rt-text-small, 0.75rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
 }
 
 .wh40k-subsection-meta {
-  font-size: var(--rt-text-tiny, 0.7rem);
-  color: var(--color-text-tertiary);
+    font-size: var(--rt-text-tiny, 0.7rem);
+    color: var(--color-text-tertiary);
 }
 
 // Empty state
 .wh40k-vital-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $wh40k-space-xs;
-  padding: $wh40k-space-md;
-  background: var(--color-bg-option);
-  border: 1px dashed var(--color-border-tertiary);
-  border-radius: 6px;
-  
-  i {
-    font-size: 1.5rem;
-    color: $wh40k-color-success;
-    opacity: 0.6;
-  }
-  
-  span {
-    font-size: 0.75rem;
-    color: var(--color-text-tertiary);
-    font-style: italic;
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-md;
+    background: var(--color-bg-option);
+    border: 1px dashed var(--color-border-tertiary);
+    border-radius: 6px;
+
+    i {
+        font-size: 1.5rem;
+        color: $wh40k-color-success;
+        opacity: 0.6;
+    }
+
+    span {
+        font-size: 0.75rem;
+        color: var(--color-text-tertiary);
+        font-style: italic;
+    }
 }
 
 // ============================================
@@ -282,11 +286,11 @@
 // ============================================
 
 .wh40k-vitals-panel .wh40k-panel-details {
-  margin-top: $wh40k-space-md;
-  padding: $wh40k-space-md;
-  background: var(--color-bg-secondary);
-  border-radius: 6px;
-  border: 1px solid var(--color-border-tertiary);
+    margin-top: $wh40k-space-md;
+    padding: $wh40k-space-md;
+    background: var(--color-bg-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--color-border-tertiary);
 }
 
 // ============================================
@@ -294,13 +298,13 @@
 // ============================================
 
 .wh40k-exhausted {
-  .wh40k-panel-header {
-    background: rgba(192, 128, 32, 0.15);
-  }
-  
-  .wh40k-panel-body {
-    border-left: 3px solid #c08020;
-  }
+    .wh40k-panel-header {
+        background: rgba(192, 128, 32, 0.15);
+    }
+
+    .wh40k-panel-body {
+        border-left: 3px solid #c08020;
+    }
 }
 
 // ============================================
@@ -308,41 +312,41 @@
 // ============================================
 
 .wh40k-checkbox-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .wh40k-checkbox-wrapper {
-  display: flex;
-  align-items: center;
-  gap: $wh40k-space-sm;
-  height: 36px;
-  padding: 0 $wh40k-space-sm;
-  background: var(--color-bg-option);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  
-  &:hover {
-    background: var(--color-bg-tertiary);
-    border-color: var(--color-border-highlight);
-  }
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-sm;
+    height: 36px;
+    padding: 0 $wh40k-space-sm;
+    background: var(--color-bg-option);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+        background: var(--color-bg-tertiary);
+        border-color: var(--color-border-highlight);
+    }
 }
 
 .wh40k-checkbox {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: $wh40k-color-success;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: $wh40k-color-success;
 }
 
 .wh40k-checkbox-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  user-select: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    user-select: none;
 }
 
 // ============================================
@@ -352,56 +356,64 @@
 
 // Button Press Animation (scale down and bounce back)
 .wh40k-btn-pressed {
-  animation: btn-press 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    animation: btn-press 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 @keyframes btn-press {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.85);
-  }
-  100% {
-    transform: scale(1);
-  }
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.85);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 // Button Shake Animation (when hitting limits)
 .wh40k-btn-shake {
-  animation: btn-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    animation: btn-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
 @keyframes btn-shake {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  10%, 30%, 50%, 70%, 90% {
-    transform: translateX(-4px);
-  }
-  20%, 40%, 60%, 80% {
-    transform: translateX(4px);
-  }
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-4px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(4px);
+    }
 }
 
 // Number Roll Animation (smooth number change)
 .wh40k-number-roll {
-  animation: number-roll 0.3s ease-out;
+    animation: number-roll 0.3s ease-out;
 }
 
 @keyframes number-roll {
-  0% {
-    transform: translateY(-10px);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translateY(5px);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
+    0% {
+        transform: translateY(-10px);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateY(5px);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 // Ensure progress bars have smooth transitions
@@ -410,6 +422,5 @@
 .wh40k-fatigue-bar-fill,
 .wh40k-corruption-bar-fill,
 .wh40k-insanity-bar-fill {
-  transition: width 0.3s ease;
+    transition: width 0.3s ease;
 }
-

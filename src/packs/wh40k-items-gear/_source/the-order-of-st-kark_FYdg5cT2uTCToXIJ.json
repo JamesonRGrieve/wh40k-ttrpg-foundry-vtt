@@ -1,41 +1,41 @@
 {
-  "name": "The Order of St. Kark",
-  "type": "gear",
-  "img": "icons/svg/backpack.svg",
-  "system": {
-    "category": "general",
-    "weight": 0,
-    "availability": "average",
-    "craftsmanship": "common",
-    "cost": {
-      "value": 0,
-      "currency": "throne"
+    "name": "The Order of St. Kark",
+    "type": "gear",
+    "img": "icons/svg/backpack.svg",
+    "system": {
+        "category": "general",
+        "weight": 0,
+        "availability": "average",
+        "craftsmanship": "common",
+        "cost": {
+            "value": 0,
+            "currency": "throne"
+        },
+        "quantity": 1,
+        "description": {
+            "value": "<p>+10 to all Intimidate Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Brass Medal in the shape of a Bolter Shell hanging from a crimson ribbon</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Awarded for Unhesitating Dedication to the maintenance of Discipline, such as a Commissar executing 2+ individuals to prevent a rout.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+            "chat": "",
+            "summary": "+10 to all Intimidate Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Brass Medal in the shape of a Bolter Shell hanging from a crimson ribbon"
+        },
+        "source": {
+            "book": "Only War Core",
+            "page": "",
+            "custom": ""
+        },
+        "equipped": false,
+        "inBackpack": false,
+        "container": "",
+        "consumable": false,
+        "uses": {
+            "value": 0,
+            "max": 0
+        },
+        "effect": "+10 to all Intimidate Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Brass Medal in the shape of a Bolter Shell hanging from a crimson ribbon",
+        "duration": "",
+        "notes": "-",
+        "identifier": ""
     },
-    "quantity": 1,
-    "description": {
-      "value": "<p>+10 to all Intimidate Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Brass Medal in the shape of a Bolter Shell hanging from a crimson ribbon</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Awarded for Unhesitating Dedication to the maintenance of Discipline, such as a Commissar executing 2+ individuals to prevent a rout.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
-      "chat": "",
-      "summary": "+10 to all Intimidate Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Brass Medal in the shape of a Bolter Shell hanging from a crimson ribbon"
-    },
-    "source": {
-      "book": "Only War Core",
-      "page": "",
-      "custom": ""
-    },
-    "equipped": false,
-    "inBackpack": false,
-    "container": "",
-    "consumable": false,
-    "uses": {
-      "value": 0,
-      "max": 0
-    },
-    "effect": "+10 to all Intimidate Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Brass Medal in the shape of a Bolter Shell hanging from a crimson ribbon",
-    "duration": "",
-    "notes": "-",
-    "identifier": ""
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "FYdg5cT2uTCToXIJ"
+    "effects": [],
+    "flags": {},
+    "_id": "FYdg5cT2uTCToXIJ"
 }

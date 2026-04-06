@@ -1,37 +1,31 @@
 {
-  "name": "Sanctified Vestments",
-  "type": "armour",
-  "img": "icons/svg/shield.svg",
-  "system": {
-    "type": "flak",
-    "weight": 12,
-    "availability": "rare",
-    "notes": "Worn by Priests of the Ministorum who desire to wade into battle in the name of the Emperor.",
-    "source": "OW: Shield of Humanity",
-    "description": {
-      "value": "<p>Worn by Priests of the Ministorum who desire to wade into battle in the name of the Emperor.</p>"
+    "name": "Sanctified Vestments",
+    "type": "armour",
+    "img": "icons/svg/shield.svg",
+    "system": {
+        "type": "flak",
+        "weight": 12,
+        "availability": "rare",
+        "notes": "Worn by Priests of the Ministorum who desire to wade into battle in the name of the Emperor.",
+        "source": "OW: Shield of Humanity",
+        "description": {
+            "value": "<p>Worn by Priests of the Ministorum who desire to wade into battle in the name of the Emperor.</p>"
+        },
+        "modificationSlots": 2,
+        "coverage": ["leftArm", "rightArm", "body", "leftLeg", "rightLeg"],
+        "armourPoints": {
+            "head": 5,
+            "body": 5,
+            "leftArm": 5,
+            "rightArm": 5,
+            "leftLeg": 5,
+            "rightLeg": 5
+        },
+        "modifications": [],
+        "maxAgility": null,
+        "properties": []
     },
-    "modificationSlots": 2,
-    "coverage": [
-      "leftArm",
-      "rightArm",
-      "body",
-      "leftLeg",
-      "rightLeg"
-    ],
-    "armourPoints": {
-      "head": 5,
-      "body": 5,
-      "leftArm": 5,
-      "rightArm": 5,
-      "leftLeg": 5,
-      "rightLeg": 5
-    },
-    "modifications": [],
-    "maxAgility": null,
-    "properties": []
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "BuVixXker7cqdC5D"
+    "effects": [],
+    "flags": {},
+    "_id": "BuVixXker7cqdC5D"
 }

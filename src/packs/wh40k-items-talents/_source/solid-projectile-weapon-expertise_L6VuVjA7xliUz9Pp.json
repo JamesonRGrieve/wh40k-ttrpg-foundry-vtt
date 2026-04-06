@@ -1,68 +1,65 @@
 {
-  "name": "Solid Projectile Weapon Expertise",
-  "type": "talent",
-  "img": "icons/svg/target.svg",
-  "system": {
-    "identifier": "solidProjectileWeaponExpertise",
-    "category": "combat",
-    "source": "OW: Hammer of the Emperor",
-    "description": "<p>The character has become an expert with solid projectile weapons, able to clear jams efficiently and waste less ammunition in the process.</p>",
-    "tier": 2,
-    "benefit": "<p>When Character clears a Jam from a Solid Projectile Weapon, they may also reload it as a Free Action as part of the Action to unjam it.\nAdditionally, clearing a Jam only loses one round from the weapon's current clip, instead of the entire clip.</p>",
-    "aptitudes": [
-      "Ballistic Skill",
-      "Finesse"
-    ],
-    "prerequisites": {
-      "text": "BS 35, Weapon Training (SP)",
-      "characteristics": {
-        "ballisticSkill": 35
-      },
-      "skills": [],
-      "talents": ["Weapon Training (Solid Projectile)"]
-    },
-    "cost": 600,
-    "isPassive": true,
-    "stackable": false,
-    "rank": 1,
-    "specialization": "",
-    "notes": "",
-    "rollConfig": {
-      "characteristic": "",
-      "skill": "",
-      "modifier": 0,
-      "description": ""
-    },
-    "modifiers": {
-      "characteristics": {},
-      "skills": {},
-      "combat": {},
-      "resources": {
-        "wounds": 0,
-        "fate": 0,
-        "insanity": 0,
-        "corruption": 0
-      },
-      "other": [],
-      "situational": {
-        "characteristics": [],
-        "skills": [],
-        "combat": []
-      }
-    },
-    "grants": {
-      "skills": [],
-      "talents": [],
-      "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Efficient Jam Clearing",
-          "description": "<p>When clearing a Jam from a Solid Projectile Weapon, reload it as a Free Action. Clearing a Jam only loses one round instead of the entire clip.</p>"
+    "name": "Solid Projectile Weapon Expertise",
+    "type": "talent",
+    "img": "icons/svg/target.svg",
+    "system": {
+        "identifier": "solidProjectileWeaponExpertise",
+        "category": "combat",
+        "source": "OW: Hammer of the Emperor",
+        "description": "<p>The character has become an expert with solid projectile weapons, able to clear jams efficiently and waste less ammunition in the process.</p>",
+        "tier": 2,
+        "benefit": "<p>When Character clears a Jam from a Solid Projectile Weapon, they may also reload it as a Free Action as part of the Action to unjam it.\nAdditionally, clearing a Jam only loses one round from the weapon's current clip, instead of the entire clip.</p>",
+        "aptitudes": ["Ballistic Skill", "Finesse"],
+        "prerequisites": {
+            "text": "BS 35, Weapon Training (SP)",
+            "characteristics": {
+                "ballisticSkill": 35
+            },
+            "skills": [],
+            "talents": ["Weapon Training (Solid Projectile)"]
+        },
+        "cost": 600,
+        "isPassive": true,
+        "stackable": false,
+        "rank": 1,
+        "specialization": "",
+        "notes": "",
+        "rollConfig": {
+            "characteristic": "",
+            "skill": "",
+            "modifier": 0,
+            "description": ""
+        },
+        "modifiers": {
+            "characteristics": {},
+            "skills": {},
+            "combat": {},
+            "resources": {
+                "wounds": 0,
+                "fate": 0,
+                "insanity": 0,
+                "corruption": 0
+            },
+            "other": [],
+            "situational": {
+                "characteristics": [],
+                "skills": [],
+                "combat": []
+            }
+        },
+        "grants": {
+            "skills": [],
+            "talents": [],
+            "traits": [],
+            "specialAbilities": [
+                {
+                    "name": "Efficient Jam Clearing",
+                    "description": "<p>When clearing a Jam from a Solid Projectile Weapon, reload it as a Free Action. Clearing a Jam only loses one round instead of the entire clip.</p>"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "effects": [],
-  "flags": {},
-  "_id": "L6VuVjA7xliUz9Pp"
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "L6VuVjA7xliUz9Pp"
 }

@@ -92,7 +92,7 @@
             background: linear-gradient(135deg, $wh40k-color-gold, darken($wh40k-color-gold, 10%));
             border-color: darken($wh40k-color-gold, 15%);
             box-shadow: 0 2px 8px rgba($wh40k-color-gold, 0.3);
-            
+
             i {
                 display: none;
             }
@@ -247,7 +247,7 @@
         &.wh40k-complete {
             background: rgba($wh40k-color-success, 0.9);
             color: white;
-            
+
             i {
                 color: white;
                 font-size: 0.9em;
@@ -268,12 +268,12 @@
 .wh40k-origin-empty-state {
     padding: $wh40k-space-xl;
     text-align: center;
-    
+
     .wh40k-empty-text {
         color: rgba(0, 0, 0, 0.4);
         font-style: italic;
         margin: 0;
-        
+
         i {
             color: $wh40k-color-gold;
         }

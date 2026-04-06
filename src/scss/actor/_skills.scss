@@ -34,7 +34,7 @@
 }
 
 .wh40k-skills-column::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 8px;
     right: 8px;
@@ -44,8 +44,6 @@
     opacity: 0.06;
     pointer-events: none;
 }
-
-
 
 .wh40k-skills-split {
     .wh40k-skills-header,
@@ -67,7 +65,7 @@
     .wh40k-skill-row {
         border-bottom: 1px solid var(--rt-border-color-light);
     }
-    
+
     .wh40k-skill-row:last-child {
         border-bottom: none;
     }
@@ -145,7 +143,7 @@
 }
 
 .wh40k-tooltip::before {
-    content: "";
+    content: '';
     position: absolute;
     bottom: 115%;
     left: 50%;
@@ -195,7 +193,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    
+
     &:hover .wh40k-portrait {
         border-color: var(--rt-gold, #d4af37);
         box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
@@ -265,7 +263,7 @@
     padding: 2px 5px;
     flex: 1;
     min-width: 120px;
-    
+
     &:focus {
         outline: none;
         border-bottom-color: var(--rt-gold, #d4af37);
@@ -291,4 +289,3 @@
     padding-top: 12px;
     border-top: 1px solid var(--rt-border-color-light);
 }
-
