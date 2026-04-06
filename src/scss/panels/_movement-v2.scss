@@ -3,23 +3,23 @@
 // ============================================
 // Sleek, game-like UI with gauges and animations
 
-.rt-panel-movement-full {
-  .rt-panel-header {
+.wh40k-panel-movement-full {
+  .wh40k-panel-header {
     background: linear-gradient(135deg, rgba(#3498db, 0.15) 0%, rgba(#2ecc71, 0.1) 100%);
     border-bottom: 2px solid rgba(#3498db, 0.3);
     
-    .rt-panel-title {
+    .wh40k-panel-title {
       i {
         color: #3498db;
       }
     }
   }
   
-  .rt-panel-body {
-    padding: $rt-space-md;
+  .wh40k-panel-body {
+    padding: $wh40k-space-md;
     display: flex;
     flex-direction: column;
-    gap: $rt-space-lg;
+    gap: $wh40k-space-lg;
     background: linear-gradient(180deg, rgba(#1a1a2e, 0.3) 0%, transparent 100%);
   }
 }
@@ -27,37 +27,37 @@
 // ============================================
 // Speed Hero Section - Gauge Display
 // ============================================
-.rt-speed-hero {
+.wh40k-speed-hero {
   display: flex;
   align-items: center;
-  gap: $rt-space-xl;
-  padding: $rt-space-md;
+  gap: $wh40k-space-xl;
+  padding: $wh40k-space-md;
   background: linear-gradient(135deg, rgba(#0a0a15, 0.6) 0%, rgba(#1a1a2e, 0.4) 100%);
   border-radius: 12px;
   border: 1px solid rgba(#3498db, 0.2);
 }
 
 // Circular Gauge
-.rt-speed-gauge {
+.wh40k-speed-gauge {
   position: relative;
   width: 110px;
   height: 110px;
   flex-shrink: 0;
 }
 
-.rt-gauge-ring {
+.wh40k-gauge-ring {
   width: 100%;
   height: 100%;
   transform: rotate(-90deg);
 }
 
-.rt-gauge-bg {
+.wh40k-gauge-bg {
   fill: none;
   stroke: rgba(#fff, 0.1);
   stroke-width: 8;
 }
 
-.rt-gauge-fill {
+.wh40k-gauge-fill {
   fill: none;
   stroke: url(#speedGradient);
   stroke-width: 8;
@@ -71,7 +71,7 @@
   stroke: #3498db;
 }
 
-.rt-gauge-center {
+.wh40k-gauge-center {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -82,7 +82,7 @@
   text-align: center;
 }
 
-.rt-gauge-value {
+.wh40k-gauge-value {
   font-size: 1.8rem;
   font-weight: 800;
   color: #fff;
@@ -91,14 +91,14 @@
   text-shadow: 0 0 20px rgba(#3498db, 0.8);
 }
 
-.rt-gauge-unit {
+.wh40k-gauge-unit {
   font-size: 0.6rem;
   color: rgba(#fff, 0.5);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-.rt-gauge-label {
+.wh40k-gauge-label {
   font-size: 0.7rem;
   font-weight: 700;
   color: #3498db;
@@ -108,21 +108,21 @@
 }
 
 // Speed Tiers (Stacked Bars)
-.rt-speed-tiers {
+.wh40k-speed-tiers {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.rt-speed-tier {
+.wh40k-speed-tier {
   display: grid;
   grid-template-columns: 1fr 50px 50px;
   align-items: center;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
 }
 
-.rt-tier-bar {
+.wh40k-tier-bar {
   height: 8px;
   background: rgba(#fff, 0.1);
   border-radius: 4px;
@@ -130,7 +130,7 @@
   position: relative;
 }
 
-.rt-tier-fill {
+.wh40k-tier-fill {
   height: 100%;
   border-radius: 4px;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -148,20 +148,20 @@
   }
 }
 
-.rt-tier-walk .rt-tier-fill { background: linear-gradient(90deg, #95a5a6, #7f8c8d); }
-.rt-tier-move .rt-tier-fill { background: linear-gradient(90deg, #3498db, #2980b9); }
-.rt-tier-charge .rt-tier-fill { background: linear-gradient(90deg, #e67e22, #d35400); }
-.rt-tier-run .rt-tier-fill { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+.wh40k-tier-walk .wh40k-tier-fill { background: linear-gradient(90deg, #95a5a6, #7f8c8d); }
+.wh40k-tier-move .wh40k-tier-fill { background: linear-gradient(90deg, #3498db, #2980b9); }
+.wh40k-tier-charge .wh40k-tier-fill { background: linear-gradient(90deg, #e67e22, #d35400); }
+.wh40k-tier-run .wh40k-tier-fill { background: linear-gradient(90deg, #e74c3c, #c0392b); }
 
-.rt-tier-value {
+.wh40k-tier-value {
   font-size: 0.9rem;
   font-weight: 700;
   color: #fff;
-  font-family: $rt-font-alt;
+  font-family: $wh40k-font-alt;
   text-align: right;
 }
 
-.rt-tier-label {
+.wh40k-tier-label {
   font-size: 0.65rem;
   font-weight: 600;
   color: rgba(#fff, 0.5);
@@ -172,16 +172,16 @@
 // ============================================
 // Physical Grid - Athletics & Carrying
 // ============================================
-.rt-physical-grid {
+.wh40k-physical-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
 }
 
-.rt-physical-column {
+.wh40k-physical-column {
   background: rgba(#0a0a15, 0.4);
   border-radius: 10px;
-  padding: $rt-space-md;
+  padding: $wh40k-space-md;
   border: 1px solid rgba(#fff, 0.08);
   transition: all 0.3s ease;
   
@@ -191,12 +191,12 @@
   }
 }
 
-.rt-column-header {
+.wh40k-column-header {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  margin-bottom: $rt-space-md;
-  padding-bottom: $rt-space-sm;
+  gap: $wh40k-space-sm;
+  margin-bottom: $wh40k-space-md;
+  padding-bottom: $wh40k-space-sm;
   border-bottom: 1px solid rgba(#fff, 0.1);
   
   i {
@@ -212,29 +212,29 @@
   }
 }
 
-.rt-athletics-col {
-  .rt-column-header i { color: #9b59b6; }
+.wh40k-athletics-col {
+  .wh40k-column-header i { color: #9b59b6; }
   border-top: 3px solid #9b59b6;
 }
 
-.rt-carrying-col {
-  .rt-column-header i { color: #27ae60; }
+.wh40k-carrying-col {
+  .wh40k-column-header i { color: #27ae60; }
   border-top: 3px solid #27ae60;
 }
 
 // Athletics Metrics
-.rt-metric-row {
+.wh40k-metric-row {
   display: flex;
-  gap: $rt-space-sm;
-  margin-bottom: $rt-space-sm;
+  gap: $wh40k-space-sm;
+  margin-bottom: $wh40k-space-sm;
 }
 
-.rt-metric {
+.wh40k-metric {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-sm;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-sm;
   background: rgba(#9b59b6, 0.1);
   border-radius: 6px;
   border: 1px solid rgba(#9b59b6, 0.2);
@@ -252,20 +252,20 @@
   }
 }
 
-.rt-metric-data {
+.wh40k-metric-data {
   display: flex;
   flex-direction: column;
 }
 
-.rt-metric-value {
+.wh40k-metric-value {
   font-size: 1rem;
   font-weight: 700;
   color: #fff;
-  font-family: $rt-font-alt;
+  font-family: $wh40k-font-alt;
   line-height: 1;
 }
 
-.rt-metric-label {
+.wh40k-metric-label {
   font-size: 0.6rem;
   color: rgba(#fff, 0.5);
   text-transform: uppercase;
@@ -273,19 +273,19 @@
 }
 
 // Carrying Metrics
-.rt-carry-metrics {
+.wh40k-carry-metrics {
   display: flex;
   justify-content: space-between;
-  gap: $rt-space-xs;
-  margin-bottom: $rt-space-md;
+  gap: $wh40k-space-xs;
+  margin-bottom: $wh40k-space-md;
 }
 
-.rt-carry-item {
+.wh40k-carry-item {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: $rt-space-sm $rt-space-xs;
+  padding: $wh40k-space-sm $wh40k-space-xs;
   background: linear-gradient(180deg, rgba(#27ae60, 0.15) 0%, rgba(#27ae60, 0.05) 100%);
   border-radius: 6px;
   border: 1px solid rgba(#27ae60, 0.2);
@@ -297,21 +297,21 @@
   }
 }
 
-.rt-carry-value {
+.wh40k-carry-value {
   font-size: 1.1rem;
   font-weight: 800;
   color: #fff;
-  font-family: $rt-font-alt;
+  font-family: $wh40k-font-alt;
   line-height: 1;
 }
 
-.rt-carry-unit {
+.wh40k-carry-unit {
   font-size: 0.55rem;
   color: rgba(#27ae60, 0.8);
   font-weight: 600;
 }
 
-.rt-carry-label {
+.wh40k-carry-label {
   font-size: 0.55rem;
   color: rgba(#fff, 0.4);
   text-transform: uppercase;
@@ -320,13 +320,13 @@
 }
 
 // Encumbrance Display
-.rt-encumbrance-display {
-  padding: $rt-space-sm;
+.wh40k-encumbrance-display {
+  padding: $wh40k-space-sm;
   background: rgba(#000, 0.3);
   border-radius: 6px;
 }
 
-.rt-enc-header {
+.wh40k-enc-header {
   display: flex;
   align-items: baseline;
   justify-content: center;
@@ -334,28 +334,28 @@
   margin-bottom: 6px;
 }
 
-.rt-enc-current {
+.wh40k-enc-current {
   font-size: 1.1rem;
   font-weight: 800;
   color: #2ecc71;
-  font-family: $rt-font-alt;
+  font-family: $wh40k-font-alt;
   
-  .rt-over & {
+  .wh40k-over & {
     color: #e74c3c;
   }
 }
 
-.rt-enc-separator {
+.wh40k-enc-separator {
   color: rgba(#fff, 0.3);
   font-size: 0.8rem;
 }
 
-.rt-enc-max {
+.wh40k-enc-max {
   font-size: 0.75rem;
   color: rgba(#fff, 0.5);
 }
 
-.rt-enc-track {
+.wh40k-enc-track {
   position: relative;
   height: 10px;
   background: rgba(#fff, 0.1);
@@ -363,7 +363,7 @@
   overflow: hidden;
 }
 
-.rt-enc-progress {
+.wh40k-enc-progress {
   height: 100%;
   background: linear-gradient(90deg, #27ae60 0%, #2ecc71 50%, #f1c40f 80%, #e74c3c 100%);
   background-size: 300% 100%;
@@ -372,12 +372,12 @@
   position: relative;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   
-  .rt-over & {
+  .wh40k-over & {
     animation: enc-pulse 1.5s ease-in-out infinite;
   }
 }
 
-.rt-enc-glow {
+.wh40k-enc-glow {
   position: absolute;
   top: 0;
   right: 0;
@@ -387,7 +387,7 @@
   border-radius: 0 5px 5px 0;
 }
 
-.rt-enc-markers {
+.wh40k-enc-markers {
   position: absolute;
   top: 0;
   left: 0;
@@ -396,7 +396,7 @@
   pointer-events: none;
 }
 
-.rt-enc-mark {
+.wh40k-enc-mark {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -404,7 +404,7 @@
   background: rgba(#fff, 0.2);
   transform: translateX(-50%);
   
-  &.rt-mark-danger {
+  &.wh40k-mark-danger {
     background: rgba(#e74c3c, 0.5);
   }
 }
@@ -422,11 +422,11 @@
 // Responsive
 // ============================================
 @media (max-width: 600px) {
-  .rt-speed-hero {
+  .wh40k-speed-hero {
     flex-direction: column;
   }
   
-  .rt-physical-grid {
+  .wh40k-physical-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -434,20 +434,20 @@
 // ============================================
 // Compact Movement Panel (Combat Tab)
 // ============================================
-.rt-panel-movement-compact {
-  .rt-panel-body {
-    padding: $rt-space-xs;  // Reduced for compactness
+.wh40k-panel-movement-compact {
+  .wh40k-panel-body {
+    padding: $wh40k-space-xs;  // Reduced for compactness
   }
 }
 
 // Modern compact grid layout (4 columns)
-.rt-movement-modern-compact {
+.wh40k-movement-modern-compact {
   display: grid;
   grid-template-columns: repeat(4, 1fr);  // 4 columns for compact horizontal layout
   gap: 4px;  // Tighter gap
 }
 
-.rt-move-modern-cell {
+.wh40k-move-modern-cell {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -455,31 +455,31 @@
   justify-content: center;
   padding: 6px 8px;  // More compact padding
   min-height: 40px;  // Reduced from auto for consistent height
-  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.04) 0%, rgba($rt-accent-gold, 0.01) 100%);
-  border: 1px solid rgba($rt-border-light, 0.5);
-  border-radius: $rt-radius-sm;
+  background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.04) 0%, rgba($wh40k-accent-gold, 0.01) 100%);
+  border: 1px solid rgba($wh40k-border-light, 0.5);
+  border-radius: $wh40k-radius-sm;
   transition: all 0.2s ease;
   overflow: hidden;
   
   &:hover {
-    background: linear-gradient(135deg, rgba($rt-accent-gold, 0.08) 0%, rgba($rt-accent-gold, 0.03) 100%);
-    border-color: rgba($rt-accent-gold, 0.3);
+    background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.08) 0%, rgba($wh40k-accent-gold, 0.03) 100%);
+    border-color: rgba($wh40k-accent-gold, 0.3);
     transform: translateY(-1px);
   }
 }
 
-.rt-move-modern-icon {
+.wh40k-move-modern-icon {
   font-size: 1rem;  // Slightly larger for better visibility
-  color: rgba($rt-accent-gold, 0.6);
+  color: rgba($wh40k-accent-gold, 0.6);
   margin-bottom: 2px;
   
-  .rt-move-modern-cell:hover & {
-    color: rgba($rt-accent-gold, 0.8);
+  .wh40k-move-modern-cell:hover & {
+    color: rgba($wh40k-accent-gold, 0.8);
     transform: scale(1.1);
   }
 }
 
-.rt-move-modern-content {
+.wh40k-move-modern-content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -487,107 +487,107 @@
   z-index: 1;
 }
 
-.rt-move-modern-label {
+.wh40k-move-modern-label {
   font-size: 0.5rem;  // Smaller label
   font-weight: 600;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   text-transform: uppercase;
   letter-spacing: 0.3px;
   line-height: 1;
 }
 
-.rt-move-modern-value {
+.wh40k-move-modern-value {
   font-size: 1.1rem;  // Slightly larger value for readability
   font-weight: 700;
-  color: $rt-text-primary;
-  font-family: $rt-font-alt;
+  color: $wh40k-text-primary;
+  font-family: $wh40k-font-alt;
   line-height: 1;
   
-  .rt-move-unit {
+  .wh40k-move-unit {
     font-size: 0.65rem;
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
     margin-left: 1px;
   }
 }
 
 // Background progress bar
-.rt-move-modern-bar {
+.wh40k-move-modern-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 2px;
   background: linear-gradient(90deg, 
-    rgba($rt-accent-gold, 0.3) 0%, 
-    rgba($rt-accent-gold, 0.6) 100%);
+    rgba($wh40k-accent-gold, 0.3) 0%, 
+    rgba($wh40k-accent-gold, 0.6) 100%);
   width: var(--move-percent, 0%);
   transition: width 0.3s ease;
 }
 
 // Movement type specific colors
-.rt-move-half .rt-move-modern-bar { 
+.wh40k-move-half .wh40k-move-modern-bar { 
   background: linear-gradient(90deg, rgba(#95a5a6, 0.4), rgba(#7f8c8d, 0.6)); 
 }
-.rt-move-full .rt-move-modern-bar { 
+.wh40k-move-full .wh40k-move-modern-bar { 
   background: linear-gradient(90deg, rgba(#3498db, 0.4), rgba(#2980b9, 0.6)); 
 }
-.rt-move-charge .rt-move-modern-bar { 
+.wh40k-move-charge .wh40k-move-modern-bar { 
   background: linear-gradient(90deg, rgba(#e67e22, 0.4), rgba(#d35400, 0.6)); 
 }
-.rt-move-run .rt-move-modern-bar { 
+.wh40k-move-run .wh40k-move-modern-bar { 
   background: linear-gradient(90deg, rgba(#e74c3c, 0.4), rgba(#c0392b, 0.6)); 
 }
 
 // Legacy compact styles (kept for backwards compatibility)
-.rt-movement-grid-compact {
+.wh40k-movement-grid-compact {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
 }
 
-.rt-move-cell-compact {
+.wh40k-move-cell-compact {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
-  padding: $rt-space-xs $rt-space-sm;
-  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.04) 0%, rgba($rt-accent-gold, 0.01) 100%);
-  border: 1px solid rgba($rt-border-light, 0.5);
-  border-radius: $rt-radius-sm;
+  gap: $wh40k-space-xs;
+  padding: $wh40k-space-xs $wh40k-space-sm;
+  background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.04) 0%, rgba($wh40k-accent-gold, 0.01) 100%);
+  border: 1px solid rgba($wh40k-border-light, 0.5);
+  border-radius: $wh40k-radius-sm;
   transition: all 0.2s ease;
   
   &:hover {
-    background: linear-gradient(135deg, rgba($rt-accent-gold, 0.08) 0%, rgba($rt-accent-gold, 0.03) 100%);
-    border-color: rgba($rt-accent-gold, 0.3);
+    background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.08) 0%, rgba($wh40k-accent-gold, 0.03) 100%);
+    border-color: rgba($wh40k-accent-gold, 0.3);
   }
 }
 
-.rt-move-icon-sm {
+.wh40k-move-icon-sm {
   font-size: 0.9rem;
-  color: rgba($rt-accent-gold, 0.6);
+  color: rgba($wh40k-accent-gold, 0.6);
   flex-shrink: 0;
 }
 
-.rt-move-info-compact {
+.wh40k-move-info-compact {
   display: flex;
   flex-direction: column;
   gap: 1px;
   flex: 1;
 }
 
-.rt-move-label-sm {
+.wh40k-move-label-sm {
   font-size: 0.65rem;
   font-weight: 600;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   text-transform: uppercase;
   letter-spacing: 0.3px;
   line-height: 1;
 }
 
-.rt-move-value-sm {
+.wh40k-move-value-sm {
   font-size: 0.9rem;
   font-weight: 700;
-  color: $rt-text-primary;
-  font-family: $rt-font-alt;
+  color: $wh40k-text-primary;
+  font-family: $wh40k-font-alt;
   line-height: 1.2;
 }
 

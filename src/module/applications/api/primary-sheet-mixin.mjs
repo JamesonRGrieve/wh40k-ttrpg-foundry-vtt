@@ -108,8 +108,8 @@ export default function PrimarySheetMixin(Base) {
                 const newToggle = document.createElement("slide-toggle");
                 newToggle.checked = this._mode === this.constructor.MODES.EDIT;
                 newToggle.classList.add("mode-slider");
-                newToggle.dataset.tooltip = "RT.SheetModeEdit";
-                newToggle.setAttribute("aria-label", game.i18n.localize("RT.SheetModeEdit"));
+                newToggle.dataset.tooltip = "WH40K.SheetModeEdit";
+                newToggle.setAttribute("aria-label", game.i18n.localize("WH40K.SheetModeEdit"));
                 newToggle.addEventListener("change", this._onChangeSheetMode.bind(this));
                 newToggle.addEventListener("dblclick", event => event.stopPropagation());
                 newToggle.addEventListener("pointerdown", event => event.stopPropagation());
@@ -280,7 +280,7 @@ export default function PrimarySheetMixin(Base) {
             const animClass = `rt-stat-${type}`;
             
             // Remove any existing animation classes
-            element.classList.remove("rt-stat-increase", "rt-stat-decrease", "rt-stat-changed", "rt-stat-critical", "rt-stat-success");
+            element.classList.remove("wh40k-stat-increase", "wh40k-stat-decrease", "wh40k-stat-changed", "wh40k-stat-critical", "wh40k-stat-success");
             
             // Force reflow to restart animation
             void element.offsetWidth;

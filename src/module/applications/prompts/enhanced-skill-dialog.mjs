@@ -34,7 +34,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: "form",
-        classes: ["rogue-trader", "dialog", "enhanced-skill-roll", "standard-form"],
+        classes: ["wh40k-rpg", "dialog", "enhanced-skill-roll", "standard-form"],
         actions: {
             selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty,
             toggleModifier: EnhancedSkillDialog.#onToggleModifier,
@@ -62,7 +62,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/prompt/enhanced-skill-roll.hbs"
+            template: "systems/wh40k-rpg/templates/prompt/enhanced-skill-roll.hbs"
         }
     };
 
@@ -314,7 +314,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     _getRecentRolls() {
-        const recent = game.user.getFlag("rogue-trader", "recentRolls") || [];
+        const recent = game.user.getFlag("wh40k-rpg", "recentRolls") || [];
         return recent.slice(0, 3); // Last 3 rolls
     }
 
@@ -326,7 +326,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     async _saveToRecentRolls(modifier) {
-        const recent = game.user.getFlag("rogue-trader", "recentRolls") || [];
+        const recent = game.user.getFlag("wh40k-rpg", "recentRolls") || [];
         recent.unshift({
             name: this.simpleSkillData.name || "Test",
             modifier,
@@ -335,7 +335,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
         // Keep only last 10
         const trimmed = recent.slice(0, 10);
-        await game.user.setFlag("rogue-trader", "recentRolls", trimmed);
+        await game.user.setFlag("wh40k-rpg", "recentRolls", trimmed);
     }
 
     /* -------------------------------------------- */

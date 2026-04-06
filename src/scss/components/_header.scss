@@ -1,4 +1,4 @@
-.rt-header {
+.wh40k-header {
     padding: 0;
     font-size: 12pt;
 
@@ -53,7 +53,7 @@
         &--build,
         &--complexion,
         &--hair {
-            @extend .rt-header__item-wrapper;
+            @extend .wh40k-header__item-wrapper;
         }
 
         &--span-2,
@@ -62,18 +62,18 @@
         &--careerpath,
         &--divination,
         &--elite {
-            @extend .rt-header__item-wrapper;
+            @extend .wh40k-header__item-wrapper;
             grid-column: span 2;
         }
 
         &--span-3,
         &--quirks {
-            @extend .rt-header__item-wrapper;
+            @extend .wh40k-header__item-wrapper;
             grid-column: span 3;
         }
 
         &--3-span-2 {
-            @extend .rt-header__item-wrapper;
+            @extend .wh40k-header__item-wrapper;
             grid-column: 3 / span 2;
         }
 
@@ -81,12 +81,12 @@
         &--mementos,
         &--superstition,
         &--notes {
-            @extend .rt-header__item-wrapper;
+            @extend .wh40k-header__item-wrapper;
             grid-column: span 4;
         }
 
         &--text-area {
-            @extend .rt-header__item-wrapper;
+            @extend .wh40k-header__item-wrapper;
             grid-column: span 4;
             grid-row: span 2;
             min-height: 150px;

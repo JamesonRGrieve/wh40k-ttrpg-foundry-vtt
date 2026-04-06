@@ -1,5 +1,5 @@
 /**
- * Shared Template Mixins for Rogue Trader
+ * Shared Template Mixins for WH40K RPG
  * These can be mixed into ItemDataModel or ActorDataModel classes.
  */
 export { default as DescriptionTemplate } from "./description-template.mjs";

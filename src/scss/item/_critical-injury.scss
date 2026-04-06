@@ -4,27 +4,27 @@
 // Critical Injury Sheet Styles
 // ============================================================================
 
-.rt-injury-sheet {
-  .rt-item-sheet__header {
+.wh40k-injury-sheet {
+  .wh40k-item-sheet__header {
     display: flex;
     align-items: center;
-    gap: $rt-space-md;
-    padding: $rt-space-md;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
     background: linear-gradient(135deg, 
-                rgba($rt-accent-red, 0.1) 0%, 
-                rgba($rt-accent-red, 0.05) 100%);
-    border-bottom: 2px solid rgba($rt-accent-red, 0.2);
+                rgba($wh40k-accent-red, 0.1) 0%, 
+                rgba($wh40k-accent-red, 0.05) 100%);
+    border-bottom: 2px solid rgba($wh40k-accent-red, 0.2);
   }
   
-  .rt-item-sheet__image-wrapper {
+  .wh40k-item-sheet__image-wrapper {
     position: relative;
     flex-shrink: 0;
   }
   
-  .rt-item-sheet__image {
+  .wh40k-item-sheet__image {
     width: 64px;
     height: 64px;
-    border: 2px solid rgba($rt-accent-red, 0.3);
+    border: 2px solid rgba($wh40k-accent-red, 0.3);
     border-radius: 8px;
     object-fit: cover;
     cursor: pointer;
@@ -32,28 +32,28 @@
     
     &:hover {
       transform: scale(1.05);
-      box-shadow: 0 2px 8px rgba($rt-accent-red, 0.3);
+      box-shadow: 0 2px 8px rgba($wh40k-accent-red, 0.3);
     }
   }
   
-  .rt-damage-icon {
+  .wh40k-damage-icon {
     position: absolute;
     bottom: 4px;
     right: 4px;
     font-size: 16px;
-    color: $rt-accent-red;
+    color: $wh40k-accent-red;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     pointer-events: none;
   }
   
-  .rt-item-sheet__title-area {
+  .wh40k-item-sheet__title-area {
     flex: 1;
     min-width: 0;
   }
   
-  .rt-item-sheet__name-input {
+  .wh40k-item-sheet__name-input {
     width: 100%;
-    padding: $rt-space-xs $rt-space-sm;
+    padding: $wh40k-space-xs $wh40k-space-sm;
     border: 1px solid transparent;
     border-radius: 4px;
     font-size: 16px;
@@ -63,14 +63,14 @@
     
     &:focus {
       outline: none;
-      border-color: $rt-accent-gold;
+      border-color: $wh40k-accent-gold;
       background: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.2);
+      box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
     }
   }
   
-  .rt-item-sheet__panel {
-    padding: $rt-space-md;
+  .wh40k-item-sheet__panel {
+    padding: $wh40k-space-md;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     
     &:last-child {
@@ -78,14 +78,14 @@
     }
   }
   
-  .rt-injury-badges {
+  .wh40k-injury-badges {
     display: flex;
-    gap: $rt-space-sm;
-    margin-top: $rt-space-sm;
+    gap: $wh40k-space-sm;
+    margin-top: $wh40k-space-sm;
     flex-wrap: wrap;
   }
   
-  .rt-badge {
+  .wh40k-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -128,25 +128,25 @@
     }
   }
   
-  .rt-injury-grid {
+  .wh40k-injury-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
     
-    .rt-field--checkbox {
+    .wh40k-field--checkbox {
       grid-column: 1 / -1;
     }
   }
   
-  .rt-field {
+  .wh40k-field {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     
     &__label {
       display: flex;
       align-items: center;
-      gap: $rt-space-xs;
+      gap: $wh40k-space-xs;
       font-size: 12px;
       font-weight: 600;
       color: #5a5a5a;
@@ -154,7 +154,7 @@
       letter-spacing: 0.5px;
       
       i {
-        color: $rt-accent-red;
+        color: $wh40k-accent-red;
       }
     }
     
@@ -168,8 +168,8 @@
       
       &:focus {
         outline: none;
-        border-color: $rt-accent-gold;
-        box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.2);
+        border-color: $wh40k-accent-gold;
+        box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
       }
     }
     
@@ -185,8 +185,8 @@
       
       &:focus {
         outline: none;
-        border-color: $rt-accent-gold;
-        box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.2);
+        border-color: $wh40k-accent-gold;
+        box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
       }
     }
     
@@ -194,7 +194,7 @@
       label {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
         cursor: pointer;
         
         input[type="checkbox"] {
@@ -211,12 +211,12 @@
     }
   }
   
-  .rt-source-panel {
+  .wh40k-source-panel {
     display: grid;
     grid-template-columns: 2fr 1fr 2fr;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
     
-    .rt-field__input--short {
+    .wh40k-field__input--short {
       max-width: 100px;
     }
   }
@@ -226,17 +226,17 @@
 // Chat Card Styles
 // ============================================================================
 
-.rt-injury-card {
+.wh40k-injury-card {
   margin: 0;
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   
-  .rt-card-header {
+  .wh40k-card-header {
     display: flex;
     align-items: center;
-    gap: $rt-space-md;
-    padding: $rt-space-md;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
     background: linear-gradient(135deg, 
                 rgba(#e74c3c, 0.15) 0%, 
                 rgba(#e74c3c, 0.05) 100%);
@@ -244,35 +244,35 @@
   }
   
   // Damage type specific themes
-  &--impact .rt-card-header {
+  &--impact .wh40k-card-header {
     background: linear-gradient(135deg, 
                 rgba(#795548, 0.2) 0%, 
                 rgba(#795548, 0.1) 100%);
     border-bottom-color: rgba(#795548, 0.3);
   }
   
-  &--rending .rt-card-header {
+  &--rending .wh40k-card-header {
     background: linear-gradient(135deg, 
                 rgba(#e74c3c, 0.2) 0%, 
                 rgba(#e74c3c, 0.1) 100%);
     border-bottom-color: rgba(#e74c3c, 0.3);
   }
   
-  &--explosive .rt-card-header {
+  &--explosive .wh40k-card-header {
     background: linear-gradient(135deg, 
                 rgba(#f39c12, 0.2) 0%, 
                 rgba(#f39c12, 0.1) 100%);
     border-bottom-color: rgba(#f39c12, 0.3);
   }
   
-  &--energy .rt-card-header {
+  &--energy .wh40k-card-header {
     background: linear-gradient(135deg, 
                 rgba(#3498db, 0.2) 0%, 
                 rgba(#3498db, 0.1) 100%);
     border-bottom-color: rgba(#3498db, 0.3);
   }
   
-  .rt-card-icon {
+  .wh40k-card-icon {
     width: 48px;
     height: 48px;
     object-fit: cover;
@@ -281,59 +281,59 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  .rt-card-title-area {
+  .wh40k-card-title-area {
     flex: 1;
   }
   
-  .rt-card-title {
-    margin: 0 0 $rt-space-xs 0;
+  .wh40k-card-title {
+    margin: 0 0 $wh40k-space-xs 0;
     font-size: 16px;
     font-weight: 700;
     color: #2c2417;
   }
   
-  .rt-card-badges {
+  .wh40k-card-badges {
     display: flex;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     flex-wrap: wrap;
   }
   
-  .rt-card-body {
-    padding: $rt-space-md;
+  .wh40k-card-body {
+    padding: $wh40k-space-md;
     background: #fff;
   }
   
-  .rt-injury-meta {
+  .wh40k-injury-meta {
     display: flex;
-    gap: $rt-space-md;
-    margin-bottom: $rt-space-md;
-    padding: $rt-space-sm;
+    gap: $wh40k-space-md;
+    margin-bottom: $wh40k-space-md;
+    padding: $wh40k-space-sm;
     background: rgba(0, 0, 0, 0.03);
     border-radius: 4px;
-    border-left: 3px solid $rt-accent-red;
+    border-left: 3px solid $wh40k-accent-red;
     
-    .rt-meta-item {
+    .wh40k-meta-item {
       display: flex;
       align-items: center;
-      gap: $rt-space-xs;
+      gap: $wh40k-space-xs;
       font-size: 13px;
       font-weight: 600;
       
       i {
-        color: $rt-accent-red;
+        color: $wh40k-accent-red;
       }
     }
   }
   
-  .rt-injury-effect {
-    padding: $rt-space-md;
+  .wh40k-injury-effect {
+    padding: $wh40k-space-md;
     background: rgba(#fef5e7, 0.5);
-    border-left: 3px solid $rt-accent-red;
+    border-left: 3px solid $wh40k-accent-red;
     border-radius: 4px;
     line-height: 1.6;
     
     p {
-      margin: 0 0 $rt-space-sm 0;
+      margin: 0 0 $wh40k-space-sm 0;
       
       &:last-child {
         margin-bottom: 0;
@@ -346,9 +346,9 @@
     }
   }
   
-  .rt-injury-notes {
-    margin-top: $rt-space-md;
-    padding: $rt-space-sm;
+  .wh40k-injury-notes {
+    margin-top: $wh40k-space-md;
+    padding: $wh40k-space-sm;
     background: rgba(0, 0, 0, 0.03);
     border-radius: 4px;
     font-size: 13px;
@@ -360,29 +360,29 @@
     }
   }
   
-  .rt-injury-description {
-    margin-top: $rt-space-md;
-    padding-top: $rt-space-md;
+  .wh40k-injury-description {
+    margin-top: $wh40k-space-md;
+    padding-top: $wh40k-space-md;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     font-size: 14px;
     line-height: 1.5;
   }
   
-  .rt-card-footer {
-    padding: $rt-space-sm $rt-space-md;
+  .wh40k-card-footer {
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: rgba(0, 0, 0, 0.03);
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
   
-  .rt-source-ref {
+  .wh40k-source-ref {
     display: inline-flex;
     align-items: center;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     font-size: 12px;
     color: #7a7a7a;
     
     i {
-      color: $rt-accent-gold;
+      color: $wh40k-accent-gold;
     }
   }
 }

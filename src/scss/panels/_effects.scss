@@ -3,8 +3,8 @@
  * Card-based design with clean layout
  */
 
-.rt-effects-panel {
-    .rt-badge {
+.wh40k-effects-panel {
+    .wh40k-badge {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -12,7 +12,7 @@
         height: 20px;
         padding: 0 6px;
         margin-left: 8px;
-        background: linear-gradient(135deg, $rt-accent-gold 0%, darken($rt-accent-gold, 10%) 100%);
+        background: linear-gradient(135deg, $wh40k-accent-gold 0%, darken($wh40k-accent-gold, 10%) 100%);
         color: #0a0a0f;
         border-radius: 10px;
         font-size: 0.7rem;
@@ -20,70 +20,70 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
-    .rt-panel-body {
-        padding: $rt-space-md;
+    .wh40k-panel-body {
+        padding: $wh40k-space-md;
     }
 }
 
-.rt-effects-list {
+.wh40k-effects-list {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-sm;
-    margin-bottom: $rt-space-md;
+    gap: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-md;
 }
 
-.rt-effect-card {
-    background: $rt-bg-paper-light;
-    border: 1px solid $rt-border-light;
-    border-left: 3px solid $rt-accent-gold;
+.wh40k-effect-card {
+    background: $wh40k-bg-paper-light;
+    border: 1px solid $wh40k-border-light;
+    border-left: 3px solid $wh40k-accent-gold;
     border-radius: 6px;
-    padding: $rt-space-sm;
+    padding: $wh40k-space-sm;
     transition: all 0.2s ease;
 
     &:hover {
         background: rgba(255, 255, 255, 0.8);
-        border-color: $rt-border-medium;
+        border-color: $wh40k-border-medium;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         transform: translateX(2px);
     }
 
-    &.rt-effect-disabled {
+    &.wh40k-effect-disabled {
         opacity: 0.5;
-        border-left-color: $rt-text-muted;
+        border-left-color: $wh40k-text-muted;
         
-        .rt-effect-icon {
+        .wh40k-effect-icon {
             filter: grayscale(100%);
         }
         
-        .rt-effect-name {
+        .wh40k-effect-name {
             text-decoration: line-through;
-            color: $rt-text-muted;
+            color: $wh40k-text-muted;
         }
     }
 }
 
-.rt-effect-card-header {
+.wh40k-effect-card-header {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
 }
 
-.rt-effect-icon {
+.wh40k-effect-icon {
     width: 36px;
     height: 36px;
     border-radius: 4px;
-    border: 1px solid $rt-border-medium;
+    border: 1px solid $wh40k-border-medium;
     object-fit: cover;
     flex-shrink: 0;
     background: rgba(0, 0, 0, 0.05);
 }
 
-.rt-effect-info {
+.wh40k-effect-info {
     flex: 1;
     min-width: 0;
 }
 
-.rt-effect-name {
+.wh40k-effect-name {
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-text-primary);
@@ -93,12 +93,12 @@
     margin-bottom: 2px;
 }
 
-.rt-effect-source {
+.wh40k-effect-source {
     display: flex;
     align-items: center;
     gap: 4px;
     font-size: 0.75rem;
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
     font-style: italic;
     
     i {
@@ -106,23 +106,23 @@
     }
 }
 
-.rt-effect-controls {
+.wh40k-effect-controls {
     display: flex;
     align-items: center;
     gap: 4px;
     flex-shrink: 0;
 }
 
-.rt-effect-btn {
+.wh40k-effect-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 28px;
     height: 28px;
     background: transparent;
-    border: 1px solid $rt-border-medium;
+    border: 1px solid $wh40k-border-medium;
     border-radius: 4px;
-    color: $rt-text-muted;
+    color: $wh40k-text-muted;
     cursor: pointer;
     transition: all 0.2s ease;
     
@@ -132,12 +132,12 @@
     
     &:hover {
         background: rgba(0, 0, 0, 0.05);
-        border-color: $rt-accent-gold;
-        color: $rt-accent-gold;
+        border-color: $wh40k-accent-gold;
+        color: $wh40k-accent-gold;
     }
 }
 
-.rt-effect-toggle {
+.wh40k-effect-toggle {
     &:hover {
         background: rgba(46, 204, 113, 0.1);
         border-color: #2ecc71;
@@ -145,7 +145,7 @@
     }
 }
 
-.rt-effect-edit {
+.wh40k-effect-edit {
     &:hover {
         background: rgba(52, 152, 219, 0.1);
         border-color: #3498db;
@@ -153,7 +153,7 @@
     }
 }
 
-.rt-effect-delete {
+.wh40k-effect-delete {
     &:hover {
         background: rgba(231, 76, 60, 0.1);
         border-color: #e74c3c;
@@ -161,19 +161,19 @@
     }
 }
 
-.rt-effect-changes {
+.wh40k-effect-changes {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    margin-top: $rt-space-sm;
-    padding-top: $rt-space-sm;
-    border-top: 1px solid $rt-border-light;
+    margin-top: $wh40k-space-sm;
+    padding-top: $wh40k-space-sm;
+    border-top: 1px solid $wh40k-border-light;
 }
 
-.rt-effect-change {
+.wh40k-effect-change {
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     padding: 4px 8px;
     background: rgba(0, 0, 0, 0.03);
     border-radius: 4px;
@@ -181,33 +181,33 @@
     font-family: 'Courier New', monospace;
 }
 
-.rt-change-key {
-    color: $rt-text-muted;
+.wh40k-change-key {
+    color: $wh40k-text-muted;
     font-weight: 500;
 }
 
-.rt-change-mode {
-    color: $rt-accent-gold;
+.wh40k-change-mode {
+    color: $wh40k-accent-gold;
     font-weight: 600;
 }
 
-.rt-change-value {
+.wh40k-change-value {
     color: var(--color-text-primary);
     font-weight: 700;
 }
 
-.rt-empty-state {
+.wh40k-empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: $rt-space-xl $rt-space-md;
-    color: $rt-text-muted;
+    padding: $wh40k-space-xl $wh40k-space-md;
+    color: $wh40k-text-muted;
     text-align: center;
 
     i {
         font-size: 2rem;
-        margin-bottom: $rt-space-sm;
+        margin-bottom: $wh40k-space-sm;
         opacity: 0.5;
     }
 
@@ -218,23 +218,23 @@
     }
 }
 
-.rt-panel-footer {
-    margin-top: $rt-space-md;
-    padding-top: $rt-space-md;
-    border-top: 1px solid $rt-border-light;
+.wh40k-panel-footer {
+    margin-top: $wh40k-space-md;
+    padding-top: $wh40k-space-md;
+    border-top: 1px solid $wh40k-border-light;
 }
 
-.rt-btn-create-effect {
+.wh40k-btn-create-effect {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $rt-space-xs;
-    padding: $rt-space-sm $rt-space-md;
-    background: linear-gradient(135deg, rgba($rt-accent-gold, 0.1) 0%, rgba($rt-accent-gold, 0.05) 100%);
-    border: 1px solid rgba($rt-accent-gold, 0.3);
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-sm $wh40k-space-md;
+    background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.1) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
+    border: 1px solid rgba($wh40k-accent-gold, 0.3);
     border-radius: 4px;
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -243,10 +243,10 @@
     transition: all 0.2s ease;
 
     &:hover {
-        background: linear-gradient(135deg, rgba($rt-accent-gold, 0.2) 0%, rgba($rt-accent-gold, 0.1) 100%);
-        border-color: $rt-accent-gold;
+        background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.2) 0%, rgba($wh40k-accent-gold, 0.1) 100%);
+        border-color: $wh40k-accent-gold;
         transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba($rt-accent-gold, 0.2);
+        box-shadow: 0 2px 8px rgba($wh40k-accent-gold, 0.2);
     }
 
     &:active {

@@ -4,12 +4,12 @@
 <div class="rt-effects-panel">
   <header class="rt-panel-header">
     <i class="fas fa-magic"></i>
-    <span>{{localize "RT.Effects.Label"}}</span>
+    <span>{{localize "WH40K.Effects.Label"}}</span>
     {{#unless item.isEmbedded}}
     <button type="button" 
             class="rt-btn-icon rt-btn-add" 
             data-action="createEffect" 
-            title="{{localize 'RT.Effects.Create'}}">
+            title="{{localize 'WH40K.Effects.Create'}}">
       <i class="fas fa-plus"></i>
     </button>
     {{/unless}}
@@ -40,7 +40,7 @@
                   class="rt-btn-icon" 
                   data-action="editEffect" 
                   data-effect-id="{{effect.id}}" 
-                  title="{{localize 'RT.Effects.Edit'}}">
+                  title="{{localize 'WH40K.Effects.Edit'}}">
             <i class="fas fa-edit"></i>
           </button>
           
@@ -49,7 +49,7 @@
                   class="rt-btn-icon" 
                   data-action="enableEffect" 
                   data-effect-id="{{effect.id}}" 
-                  title="{{localize 'RT.Effects.Enable'}}">
+                  title="{{localize 'WH40K.Effects.Enable'}}">
             <i class="fas fa-toggle-off"></i>
           </button>
           {{else}}
@@ -57,7 +57,7 @@
                   class="rt-btn-icon" 
                   data-action="disableEffect" 
                   data-effect-id="{{effect.id}}" 
-                  title="{{localize 'RT.Effects.Disable'}}">
+                  title="{{localize 'WH40K.Effects.Disable'}}">
             <i class="fas fa-toggle-on"></i>
           </button>
           {{/if}}
@@ -66,7 +66,7 @@
                   class="rt-btn-icon rt-btn-icon--danger" 
                   data-action="deleteEffect" 
                   data-effect-id="{{effect.id}}" 
-                  title="{{localize 'RT.Effects.Delete'}}">
+                  title="{{localize 'WH40K.Effects.Delete'}}">
             <i class="fas fa-trash"></i>
           </button>
         </div>
@@ -77,13 +77,13 @@
     {{else}}
     <div class="rt-empty-state">
       <i class="fas fa-magic"></i>
-      <p>{{localize "RT.Effects.None"}}</p>
+      <p>{{localize "WH40K.Effects.None"}}</p>
       {{#unless item.isEmbedded}}
       <button type="button" 
               class="rt-btn-secondary" 
               data-action="createEffect">
         <i class="fas fa-plus"></i>
-        {{localize "RT.Effects.CreateFirst"}}
+        {{localize "WH40K.Effects.CreateFirst"}}
       </button>
       {{/unless}}
     </div>

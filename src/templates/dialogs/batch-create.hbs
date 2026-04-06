@@ -2,20 +2,20 @@
 <div class="batch-create-content">
   {{!-- Name Pattern --}}
   <div class="form-group">
-    <label>{{localize "RT.NPC.BatchCreate.NamePattern"}}</label>
+    <label>{{localize "WH40K.NPC.BatchCreate.NamePattern"}}</label>
     <input type="text" name="namePattern" value="{{state.namePattern}}" placeholder="NPC {n}"/>
-    <p class="hint">{{localize "RT.NPC.BatchCreate.NamePatternHint"}}</p>
+    <p class="hint">{{localize "WH40K.NPC.BatchCreate.NamePatternHint"}}</p>
   </div>
 
   {{!-- Count --}}
   <div class="form-group">
-    <label>{{localize "RT.NPC.BatchCreate.Count"}}</label>
+    <label>{{localize "WH40K.NPC.BatchCreate.Count"}}</label>
     <input type="number" name="count" value="{{state.count}}" min="1" max="100"/>
   </div>
 
   {{!-- Threat Level --}}
   <div class="form-group slider-group">
-    <label>{{localize "RT.NPC.ThreatLevel"}}</label>
+    <label>{{localize "WH40K.NPC.ThreatLevel"}}</label>
     <div class="slider-with-value">
       <input type="range" name="threatLevel" value="{{state.threatLevel}}" min="1" max="30" step="1"/>
       <span class="threat-value">{{state.threatLevel}}</span>
@@ -26,7 +26,7 @@
   {{!-- Role & Type --}}
   <div class="form-group-row">
     <div class="form-group">
-      <label>{{localize "RT.NPC.Role"}}</label>
+      <label>{{localize "WH40K.NPC.Role"}}</label>
       <select name="role">
         {{#each roles}}
         <option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}}</option>
@@ -35,7 +35,7 @@
     </div>
 
     <div class="form-group">
-      <label>{{localize "RT.NPC.Type"}}</label>
+      <label>{{localize "WH40K.NPC.Type"}}</label>
       <select name="type">
         {{#each types}}
         <option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}}</option>
@@ -46,7 +46,7 @@
 
   {{!-- Equipment Preset --}}
   <div class="form-group">
-    <label>{{localize "RT.NPC.EquipmentPreset"}}</label>
+    <label>{{localize "WH40K.NPC.EquipmentPreset"}}</label>
     <select name="preset">
       {{#each presets}}
       <option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}} - {{description}}</option>
@@ -56,16 +56,16 @@
 
   {{!-- Faction --}}
   <div class="form-group">
-    <label>{{localize "RT.NPC.Faction"}}</label>
+    <label>{{localize "WH40K.NPC.Faction"}}</label>
     <input type="text" name="faction" value="{{state.faction}}" placeholder="Optional"/>
   </div>
 
   {{!-- Folder --}}
   {{#if folders.length}}
   <div class="form-group">
-    <label>{{localize "RT.NPC.BatchCreate.Folder"}}</label>
+    <label>{{localize "WH40K.NPC.BatchCreate.Folder"}}</label>
     <select name="folder">
-      <option value="">{{localize "RT.NPC.BatchCreate.NoFolder"}}</option>
+      <option value="">{{localize "WH40K.NPC.BatchCreate.NoFolder"}}</option>
       {{#each folders}}
       <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
       {{/each}}
@@ -75,25 +75,25 @@
 
   {{!-- Options --}}
   <fieldset class="batch-options">
-    <legend>{{localize "RT.NPC.BatchCreate.Options"}}</legend>
+    <legend>{{localize "WH40K.NPC.BatchCreate.Options"}}</legend>
     
     <div class="form-group checkbox">
       <label>
         <input type="checkbox" name="isHorde" {{#if state.isHorde}}checked{{/if}}/>
-        {{localize "RT.NPC.EnableHordeMode"}}
+        {{localize "WH40K.NPC.EnableHordeMode"}}
       </label>
     </div>
 
     <div class="form-group checkbox">
       <label>
         <input type="checkbox" name="randomize" {{#if state.randomize}}checked{{/if}}/>
-        {{localize "RT.NPC.BatchCreate.RandomizeStats"}}
+        {{localize "WH40K.NPC.BatchCreate.RandomizeStats"}}
       </label>
     </div>
 
     {{#if state.randomize}}
     <div class="form-group indent">
-      <label>{{localize "RT.NPC.BatchCreate.RandomizeAmount"}}</label>
+      <label>{{localize "WH40K.NPC.BatchCreate.RandomizeAmount"}}</label>
       <div class="slider-with-value">
         <input type="range" name="randomizeAmount" value="{{state.randomizeAmount}}" min="5" max="30" step="5"/>
         <span>±{{state.randomizeAmount}}%</span>
@@ -104,15 +104,15 @@
     <div class="form-group checkbox">
       <label>
         <input type="checkbox" name="openSheets" {{#if state.openSheets}}checked{{/if}}/>
-        {{localize "RT.NPC.BatchCreate.OpenSheets"}}
+        {{localize "WH40K.NPC.BatchCreate.OpenSheets"}}
       </label>
-      <p class="hint">{{localize "RT.NPC.BatchCreate.OpenSheetsHint"}}</p>
+      <p class="hint">{{localize "WH40K.NPC.BatchCreate.OpenSheetsHint"}}</p>
     </div>
   </fieldset>
 
   {{!-- Preview --}}
   <div class="batch-preview">
-    <h4>{{localize "RT.NPC.Preview"}}</h4>
+    <h4>{{localize "WH40K.NPC.Preview"}}</h4>
     <ul class="name-preview-list">
       {{#each previewNames}}
       <li>{{this}}</li>

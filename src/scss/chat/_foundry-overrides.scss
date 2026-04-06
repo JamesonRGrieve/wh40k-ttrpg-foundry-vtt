@@ -159,7 +159,7 @@ body.theme-dark {
 body.theme-dark {
   #chat-log {
     // Hit location / Initiative cards
-    .rt-hit-location-result {
+    .wh40k-hit-location-result {
       background: var(--rt-panel-bg-solid) !important;
       border-color: var(--rt-border-color) !important;
       
@@ -171,29 +171,29 @@ body.theme-dark {
         }
       }
       
-      .rt-roll-result {
+      .wh40k-roll-result {
         background: var(--rt-panel-bg) !important;
         color: var(--rt-text-dark) !important;
         border-color: var(--rt-border-color-strong) !important;
       }
       
-      .rt-location-name {
+      .wh40k-location-name {
         color: var(--rt-text-dark) !important;
       }
       
-      .rt-location-armour {
+      .wh40k-location-armour {
         color: var(--rt-text-muted) !important;
       }
     }
     
     // Roll cards
-    .rt-roll-card {
+    .wh40k-roll-card {
       background: var(--rt-panel-bg-solid) !important;
       border-color: var(--rt-gold) !important;
     }
     
     // Item cards
-    .rt-item-card {
+    .wh40k-item-card {
       background: var(--rt-panel-bg-solid) !important;
       border-color: var(--rt-bronze) !important;
     }

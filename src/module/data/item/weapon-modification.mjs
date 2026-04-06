@@ -77,7 +77,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     if ( this.restrictions.weaponTypes.size ) {
       parts.push(`Types: ${Array.from(this.restrictions.weaponTypes).join(", ")}`);
     }
-    return parts.join("; ") || game.i18n.localize("RT.Modification.NoRestrictions");
+    return parts.join("; ") || game.i18n.localize("WH40K.Modification.NoRestrictions");
   }
 
   /**

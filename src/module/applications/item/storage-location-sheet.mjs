@@ -22,7 +22,7 @@ export default class StorageLocationSheet extends ContainerItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-storage-location-sheet.hbs",
+            template: "systems/wh40k-rpg/templates/item/item-storage-location-sheet.hbs",
             scrollable: [".rt-tab-content"]
         }
     };

@@ -26,10 +26,10 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "npc-quick-create-{id}",
-    classes: ["rogue-trader", "npc-quick-create-dialog"],
+    classes: ["wh40k-rpg", "npc-quick-create-dialog"],
     tag: "form",
     window: {
-      title: "RT.NPC.QuickCreate",
+      title: "WH40K.NPC.QuickCreate",
       icon: "fa-solid fa-user-plus",
       minimizable: false,
       resizable: true,
@@ -55,7 +55,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
   /** @override */
   static PARTS = {
     form: {
-      template: "systems/rogue-trader/templates/dialogs/npc-quick-create.hbs"
+      template: "systems/wh40k-rpg/templates/dialogs/npc-quick-create.hbs"
     }
   };
 
@@ -202,7 +202,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
       
       // Buttons
       buttons: [
-        { type: "submit", icon: "fa-solid fa-plus", label: "RT.NPC.Create", cssClass: "primary" },
+        { type: "submit", icon: "fa-solid fa-plus", label: "WH40K.NPC.Create", cssClass: "primary" },
         { type: "button", action: "cancel", icon: "fa-solid fa-times", label: "Cancel" }
       ]
     };
@@ -215,11 +215,11 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
    * @private
    */
   _getTierDescription(threatLevel) {
-    if (threatLevel <= 5) return game.i18n.localize("RT.NPC.TierMinor");
-    if (threatLevel <= 10) return game.i18n.localize("RT.NPC.TierStandard");
-    if (threatLevel <= 15) return game.i18n.localize("RT.NPC.TierTough");
-    if (threatLevel <= 20) return game.i18n.localize("RT.NPC.TierElite");
-    return game.i18n.localize("RT.NPC.TierBoss");
+    if (threatLevel <= 5) return game.i18n.localize("WH40K.NPC.TierMinor");
+    if (threatLevel <= 10) return game.i18n.localize("WH40K.NPC.TierStandard");
+    if (threatLevel <= 15) return game.i18n.localize("WH40K.NPC.TierTough");
+    if (threatLevel <= 20) return game.i18n.localize("WH40K.NPC.TierElite");
+    return game.i18n.localize("WH40K.NPC.TierBoss");
   }
 
   /* -------------------------------------------- */

@@ -1,12 +1,12 @@
-import { ROGUE_TRADER } from '../config.mjs';
+import { WH40K } from '../config.mjs';
 
-export const RogueTrader = {};
+export const WH40K = {};
 
 // Merge the comprehensive config from config.mjs
-Object.assign(RogueTrader, ROGUE_TRADER);
+Object.assign(WH40K, WH40K);
 
-// Origin Path steps for Rogue Trader character creation
-RogueTrader.originPath = {
+// Origin Path steps for WH40K RPG character creation
+WH40K.originPath = {
     steps: [
         { key: 'homeWorld', label: 'Home World', choiceGroup: 'origin.home-world' },
         { key: 'birthright', label: 'Birthright', choiceGroup: 'origin.birthright' },
@@ -15,10 +15,10 @@ RogueTrader.originPath = {
         { key: 'motivation', label: 'Motivation', choiceGroup: 'origin.motivation' },
         { key: 'career', label: 'Career', choiceGroup: 'origin.career' }
     ],
-    compendium: 'rogue-trader.rt-items-origin-path'
+    compendium: 'wh40k-rpg.rt-items-origin-path'
 };
 
-RogueTrader.bio = {
+WH40K.bio = {
     primary: [],
     size: {
         4: 'Average (4)',
@@ -35,7 +35,7 @@ RogueTrader.bio = {
 };
 
 // Sizes object for selectOptions helper (matches bio.size structure)
-RogueTrader.sizes = {
+WH40K.sizes = {
     1: 'Minuscule (1)',
     2: 'Puny (2)',
     3: 'Scrawny (3)',
@@ -48,13 +48,13 @@ RogueTrader.sizes = {
     10: 'Titanic (10)',
 };
 
-RogueTrader.items = {
+WH40K.items = {
     availability: ['Ubiquitous', 'Abundant', 'Plentiful', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
     craftsmanship: ['Poor', 'Common', 'Good', 'Best'],
     vehicle_types: ['Walker', 'Wheeled', 'Tracked', 'Skimmer', 'Aircraft', 'Spacecraft']
 };
 
-RogueTrader.combat = {
+WH40K.combat = {
     las_fire_modes: ['Standard', 'Overcharge', 'Overload'],
     psychic_attacks: ['Psychic Bolt', 'Psychic Blast', 'Psychic Barrage', 'Psychic Storm'],
     damage_types: ['Energy', 'Impact', 'Rending', 'Explosive'],
@@ -94,20 +94,20 @@ RogueTrader.combat = {
 };
 
 // Ship-related configuration
-RogueTrader.ship = {
+WH40K.ship = {
     hullTypes: ['Transport', 'Raider', 'Frigate', 'Light Cruiser', 'Cruiser', 'Grand Cruiser', 'Battleship'],
     componentTypes: ['Essential', 'Supplemental', 'Weapon', 'Hull']
 };
 
-RogueTrader.ui = {
+WH40K.ui = {
     toggleExpanded: function (name) {
-        if (RogueTrader.ui.expanded.includes(name)) {
-            const index = RogueTrader.ui.expanded.indexOf(name);
+        if (WH40K.ui.expanded.includes(name)) {
+            const index = WH40K.ui.expanded.indexOf(name);
             if (index > -1) {
-                RogueTrader.ui.expanded.splice(index, 1);
+                WH40K.ui.expanded.splice(index, 1);
             }
         } else {
-            RogueTrader.ui.expanded.push(name);
+            WH40K.ui.expanded.push(name);
         }
     },
     expanded: [],

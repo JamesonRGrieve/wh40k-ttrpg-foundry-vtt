@@ -5,35 +5,35 @@
 
 // Biography Panel Form Fields Grid
 // ============================================
-.rt-biography-panel {
-  .rt-panel-header {
+.wh40k-biography-panel {
+  .wh40k-panel-header {
     background: linear-gradient(180deg, rgba(123, 90, 166, 0.15) 0%, transparent 100%);
     color: #9573bd;
   }
 }
 
-.rt-bio-fields-grid {
+.wh40k-bio-fields-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-top: 12px;
 }
 
-.rt-bio-field {
+.wh40k-bio-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
 
-  &.rt-bio-field--span-2 {
+  &.wh40k-bio-field--span-2 {
     grid-column: span 2;
   }
 
-  &.rt-bio-field--span-4,
-  &.rt-bio-field--full {
+  &.wh40k-bio-field--span-4,
+  &.wh40k-bio-field--full {
     grid-column: span 4;
   }
 
-  .rt-bio-label {
+  .wh40k-bio-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -41,7 +41,7 @@
     color: var(--color-text-secondary);
   }
 
-  .rt-bio-input {
+  .wh40k-bio-input {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
@@ -61,7 +61,7 @@
     }
   }
 
-  .rt-bio-textarea {
+  .wh40k-bio-textarea {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
@@ -89,14 +89,14 @@
 
 // Acquisitions Card System
 // ============================================
-.rt-acquisitions-list {
+.wh40k-acquisitions-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-top: 12px;
 }
 
-.rt-acquisition-card {
+.wh40k-acquisition-card {
   position: relative;
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-border-secondary);
@@ -111,13 +111,13 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
-  &.rt-acquisition-acquired {
-    border-color: rgba($rt-color-success, 0.5);
-    background: linear-gradient(135deg, rgba($rt-color-success, 0.15) 0%, rgba($rt-color-success, 0.05) 100%);
+  &.wh40k-acquisition-acquired {
+    border-color: rgba($wh40k-color-success, 0.5);
+    background: linear-gradient(135deg, rgba($wh40k-color-success, 0.15) 0%, rgba($wh40k-color-success, 0.05) 100%);
   }
 }
 
-.rt-acquisition-header {
+.wh40k-acquisition-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -125,7 +125,7 @@
   margin-bottom: 12px;
 }
 
-.rt-acquisition-name {
+.wh40k-acquisition-name {
   flex: 1;
   background: var(--color-bg-option);
   border: 1px solid var(--color-border-secondary);
@@ -148,7 +148,7 @@
   }
 }
 
-.rt-acquisition-check {
+.wh40k-acquisition-check {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -165,7 +165,7 @@
     cursor: pointer;
   }
 
-  .rt-check-label {
+  .wh40k-check-label {
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -178,24 +178,24 @@
     border-color: var(--color-border-highlight);
   }
 
-  input[type="checkbox"]:checked ~ .rt-check-label {
-    color: $rt-color-success;
+  input[type="checkbox"]:checked ~ .wh40k-check-label {
+    color: $wh40k-color-success;
   }
 }
 
-.rt-acquisition-stats {
+.wh40k-acquisition-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 12px;
 }
 
-.rt-acquisition-stat {
+.wh40k-acquisition-stat {
   display: flex;
   flex-direction: column;
   gap: 4px;
 
-  .rt-stat-label {
+  .wh40k-stat-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -203,7 +203,7 @@
     color: var(--color-text-secondary);
   }
 
-  .rt-stat-value {
+  .wh40k-stat-value {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
@@ -222,7 +222,7 @@
       color: var(--color-text-tertiary);
     }
 
-    &.rt-stat-number {
+    &.wh40k-stat-number {
       text-align: center;
       font-family: 'Modesto Condensed', serif;
       font-weight: 600;
@@ -230,8 +230,8 @@
   }
 }
 
-.rt-acquisition-notes {
-  .rt-notes-input {
+.wh40k-acquisition-notes {
+  .wh40k-notes-input {
     width: 100%;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-tertiary);
@@ -255,7 +255,7 @@
   }
 }
 
-.rt-acquisition-delete {
+.wh40k-acquisition-delete {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -264,10 +264,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba($rt-accent-combat, 0.2);
-  border: 1px solid rgba($rt-accent-combat, 0.3);
+  background: rgba($wh40k-accent-combat, 0.2);
+  border: 1px solid rgba($wh40k-accent-combat, 0.3);
   border-radius: 4px;
-  color: $rt-accent-combat;
+  color: $wh40k-accent-combat;
   cursor: pointer;
   opacity: 0;
   transition: all 0.2s ease;
@@ -277,38 +277,38 @@
   }
 
   &:hover {
-    background: rgba($rt-accent-combat, 0.4);
-    border-color: rgba($rt-accent-combat, 0.6);
-    color: lighten($rt-accent-combat, 20%);
+    background: rgba($wh40k-accent-combat, 0.4);
+    border-color: rgba($wh40k-accent-combat, 0.6);
+    color: lighten($wh40k-accent-combat, 20%);
   }
 }
 
-.rt-acquisition-card:hover .rt-acquisition-delete {
+.wh40k-acquisition-card:hover .wh40k-acquisition-delete {
   opacity: 1;
 }
 
 // Experience Panel
 // ============================================
-.rt-experience-panel {
-  .rt-panel-header {
+.wh40k-experience-panel {
+  .wh40k-panel-header {
     background: linear-gradient(180deg, rgba(192, 128, 32, 0.15) 0%, transparent 100%);
     color: #d09838;
   }
 }
 
-.rt-xp-tracker {
+.wh40k-xp-tracker {
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 8px 0;
 }
 
-.rt-xp-field {
+.wh40k-xp-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
 
-  .rt-xp-label {
+  .wh40k-xp-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -316,7 +316,7 @@
     color: var(--color-text-secondary);
   }
 
-  .rt-xp-input {
+  .wh40k-xp-input {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
@@ -331,25 +331,25 @@
     &:focus {
       outline: none;
       background: var(--color-bg-tertiary);
-      border-color: rgba($rt-color-gold, 0.5);
+      border-color: rgba($wh40k-color-gold, 0.5);
     }
 
-    &.rt-xp-spent {
-      color: $rt-color-gold;
+    &.wh40k-xp-spent {
+      color: $wh40k-color-gold;
     }
   }
 }
 
-.rt-xp-available {
+.wh40k-xp-available {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 12px;
-  background: linear-gradient(135deg, rgba($rt-color-gold, 0.15) 0%, rgba($rt-color-gold, 0.05) 100%);
-  border: 2px solid rgba($rt-color-gold, 0.3);
+  background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15) 0%, rgba($wh40k-color-gold, 0.05) 100%);
+  border: 2px solid rgba($wh40k-color-gold, 0.3);
   border-radius: 6px;
 
-  .rt-xp-label {
+  .wh40k-xp-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -357,59 +357,59 @@
     color: var(--color-text-secondary);
   }
 
-  .rt-xp-available-value {
+  .wh40k-xp-available-value {
     font-size: 1.8rem;
     font-weight: 700;
     font-family: 'Modesto Condensed', serif;
     text-align: center;
-    color: $rt-color-gold;
-    text-shadow: 0 0 8px rgba($rt-color-gold, 0.4);
+    color: $wh40k-color-gold;
+    text-shadow: 0 0 8px rgba($wh40k-color-gold, 0.4);
   }
 }
 
-.rt-xp-bar {
+.wh40k-xp-bar {
   height: 8px;
   background: var(--color-bg-tertiary);
   border-radius: 4px;
   overflow: hidden;
   position: relative;
 
-  .rt-xp-bar-fill {
+  .wh40k-xp-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, $rt-color-gold-dark 0%, $rt-color-gold 100%);
+    background: linear-gradient(90deg, $wh40k-color-gold-dark 0%, $wh40k-color-gold 100%);
     border-radius: 4px;
     transition: width 0.3s ease;
-    box-shadow: 0 0 8px rgba($rt-color-gold, 0.4);
+    box-shadow: 0 0 8px rgba($wh40k-color-gold, 0.4);
   }
 }
 
 // Profit Factor Panel
 // ============================================
-.rt-profit-panel {
-  .rt-panel-header {
+.wh40k-profit-panel {
+  .wh40k-panel-header {
     background: linear-gradient(180deg, rgba(60, 140, 208, 0.15) 0%, transparent 100%);
     color: #3c8cd0;
   }
 }
 
-.rt-profit-factor-display {
+.wh40k-profit-factor-display {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.rt-profit-main {
+.wh40k-profit-main {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.rt-profit-field {
+.wh40k-profit-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
 
-  .rt-profit-label {
+  .wh40k-profit-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -417,7 +417,7 @@
     color: var(--color-text-secondary);
   }
 
-  .rt-profit-input {
+  .wh40k-profit-input {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
@@ -436,8 +436,8 @@
     }
   }
 
-  &.rt-profit-current-field {
-    .rt-profit-input {
+  &.wh40k-profit-current-field {
+    .wh40k-profit-input {
       background: linear-gradient(135deg, rgba(60, 140, 208, 0.15) 0%, rgba(60, 140, 208, 0.05) 100%);
       border: 2px solid rgba(60, 140, 208, 0.3);
       color: #3c8cd0;
@@ -451,12 +451,12 @@
   }
 }
 
-.rt-profit-notes {
+.wh40k-profit-notes {
   display: flex;
   flex-direction: column;
   gap: 6px;
 
-  .rt-profit-label {
+  .wh40k-profit-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -464,7 +464,7 @@
     color: var(--color-text-secondary);
   }
 
-  .rt-profit-textarea {
+  .wh40k-profit-textarea {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
@@ -490,21 +490,21 @@
 
 // Psychic Powers Card System
 // ============================================
-.rt-psychic-powers-panel {
-  .rt-panel-header {
+.wh40k-psychic-powers-panel {
+  .wh40k-panel-header {
     background: linear-gradient(180deg, rgba(123, 90, 166, 0.15) 0%, transparent 100%);
     color: #9573bd;
   }
 }
 
-.rt-powers-list {
+.wh40k-powers-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 12px;
 }
 
-.rt-power-card {
+.wh40k-power-card {
   background: var(--color-bg-secondary);
   border: 1px solid rgba(123, 90, 166, 0.2);
   border-radius: 8px;
@@ -520,14 +520,14 @@
   }
 }
 
-.rt-power-header {
+.wh40k-power-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 8px;
 
-  .rt-power-name {
+  .wh40k-power-name {
     flex: 1;
     display: flex;
     align-items: center;
@@ -552,13 +552,13 @@
     }
   }
 
-  .rt-power-badges {
+  .wh40k-power-badges {
     display: flex;
     gap: 6px;
     flex-shrink: 0;
   }
 
-  .rt-power-badge {
+  .wh40k-power-badge {
     padding: 4px 10px;
     border-radius: 4px;
     font-size: 0.75rem;
@@ -567,13 +567,13 @@
     letter-spacing: 0.5px;
     white-space: nowrap;
 
-    &.rt-badge-discipline {
+    &.wh40k-badge-discipline {
       background: rgba(123, 90, 166, 0.2);
       border: 1px solid rgba(123, 90, 166, 0.3);
       color: #9573bd;
     }
 
-    &.rt-badge-sustained {
+    &.wh40k-badge-sustained {
       background: rgba(192, 128, 32, 0.2);
       border: 1px solid rgba(192, 128, 32, 0.3);
       color: #d09838;
@@ -581,13 +581,13 @@
   }
 }
 
-.rt-power-actions {
+.wh40k-power-actions {
   display: flex;
   gap: 6px;
   padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 
-  .rt-power-btn {
+  .wh40k-power-btn {
     flex: 1;
     padding: 8px;
     background: var(--color-bg-option);
@@ -610,31 +610,31 @@
       color: var(--color-text-primary);
     }
 
-    &.rt-power-roll {
+    &.wh40k-power-roll {
       &:hover {
         border-color: rgba(123, 90, 166, 0.5);
         color: #9573bd;
       }
     }
 
-    &.rt-power-damage {
+    &.wh40k-power-damage {
       &:hover {
-        border-color: rgba($rt-color-gold, 0.5);
-        color: $rt-color-gold;
+        border-color: rgba($wh40k-color-gold, 0.5);
+        color: $wh40k-color-gold;
       }
     }
 
-    &.rt-power-delete {
+    &.wh40k-power-delete {
       &:hover {
-        background: rgba($rt-accent-combat, 0.2);
-        border-color: rgba($rt-accent-combat, 0.4);
-        color: $rt-accent-combat;
+        background: rgba($wh40k-accent-combat, 0.2);
+        border-color: rgba($wh40k-accent-combat, 0.4);
+        color: $wh40k-accent-combat;
       }
     }
   }
 }
 
-.rt-power-description {
+.wh40k-power-description {
   margin-top: 12px;
   padding: 12px;
   background: var(--color-bg-option);
@@ -647,19 +647,19 @@
 
 // Panel Header Flex Layout
 // ============================================
-.rt-panel-header-flex {
+.wh40k-panel-header-flex {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 8px;
 
-  .rt-panel-header {
+  .wh40k-panel-header {
     margin-bottom: 0;
   }
 }
 
-.rt-add-item-btn {
+.wh40k-add-item-btn {
   padding: 8px 16px;
   background: var(--color-bg-option);
   border: 1px solid var(--color-border-secondary);
@@ -699,34 +699,34 @@ $pf-tier-notable: #d4a520;
 $pf-tier-mighty: #ff8c00;
 $pf-tier-legendary: #ff1493;
 
-.rt-panel-profit-v2 {
-  .rt-panel-header {
+.wh40k-panel-profit-v2 {
+  .wh40k-panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(180deg, rgba($rt-accent-dynasty, 0.15) 0%, transparent 100%);
+    background: linear-gradient(180deg, rgba($wh40k-accent-dynasty, 0.15) 0%, transparent 100%);
     
-    .rt-acquisition-btn {
+    .wh40k-acquisition-btn {
       background: var(--color-bg-option);
-      border: 1px solid rgba($rt-accent-dynasty, 0.3);
+      border: 1px solid rgba($wh40k-accent-dynasty, 0.3);
       border-radius: 6px;
       padding: 6px 12px;
-      color: $rt-accent-dynasty;
+      color: $wh40k-accent-dynasty;
       cursor: pointer;
       transition: all 0.2s ease;
       
       &:hover {
-        background: rgba($rt-accent-dynasty, 0.2);
-        border-color: rgba($rt-accent-dynasty, 0.6);
+        background: rgba($wh40k-accent-dynasty, 0.2);
+        border-color: rgba($wh40k-accent-dynasty, 0.6);
         transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba($rt-accent-dynasty, 0.3);
+        box-shadow: 0 2px 8px rgba($wh40k-accent-dynasty, 0.3);
       }
     }
   }
 }
 
 // Hero PF display with large value
-.rt-pf-hero {
+.wh40k-pf-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -734,30 +734,30 @@ $pf-tier-legendary: #ff1493;
   margin-bottom: 16px;
 }
 
-.rt-pf-value-display {
-  .rt-pf-value-input {
+.wh40k-pf-value-display {
+  .wh40k-pf-value-input {
     width: 100px;
     padding: 12px 16px;
-    border: 3px solid $rt-accent-dynasty;
+    border: 3px solid $wh40k-accent-dynasty;
     border-radius: 8px;
-    background: rgba($rt-accent-dynasty, 0.1);
+    background: rgba($wh40k-accent-dynasty, 0.1);
     font-family: 'Modesto Condensed', serif;
     font-size: 2.5rem;
     font-weight: 700;
     text-align: center;
-    color: $rt-accent-dynasty;
-    box-shadow: 0 0 20px rgba($rt-accent-dynasty, 0.2);
+    color: $wh40k-accent-dynasty;
+    box-shadow: 0 0 20px rgba($wh40k-accent-dynasty, 0.2);
     transition: all 0.2s ease;
     
     &:focus {
       outline: none;
-      background: rgba($rt-accent-dynasty, 0.2);
-      box-shadow: 0 0 30px rgba($rt-accent-dynasty, 0.4);
+      background: rgba($wh40k-accent-dynasty, 0.2);
+      box-shadow: 0 0 30px rgba($wh40k-accent-dynasty, 0.4);
     }
   }
 }
 
-.rt-pf-tier {
+.wh40k-pf-tier {
   padding: 4px 16px;
   border-radius: 12px;
   font-size: 0.85rem;
@@ -765,31 +765,31 @@ $pf-tier-legendary: #ff1493;
   text-transform: uppercase;
   letter-spacing: 1px;
   
-  &.rt-pf-tier--poor {
+  &.wh40k-pf-tier--poor {
     background: rgba($pf-tier-poor, 0.2);
     border: 1px solid rgba($pf-tier-poor, 0.4);
     color: $pf-tier-poor;
   }
   
-  &.rt-pf-tier--modest {
+  &.wh40k-pf-tier--modest {
     background: rgba($pf-tier-modest, 0.2);
     border: 1px solid rgba($pf-tier-modest, 0.4);
     color: $pf-tier-modest;
   }
   
-  &.rt-pf-tier--notable {
+  &.wh40k-pf-tier--notable {
     background: rgba($pf-tier-notable, 0.2);
     border: 1px solid rgba($pf-tier-notable, 0.4);
     color: $pf-tier-notable;
   }
   
-  &.rt-pf-tier--mighty {
+  &.wh40k-pf-tier--mighty {
     background: rgba($pf-tier-mighty, 0.2);
     border: 1px solid rgba($pf-tier-mighty, 0.4);
     color: $pf-tier-mighty;
   }
   
-  &.rt-pf-tier--legendary {
+  &.wh40k-pf-tier--legendary {
     background: rgba($pf-tier-legendary, 0.2);
     border: 1px solid rgba($pf-tier-legendary, 0.4);
     color: $pf-tier-legendary;
@@ -797,11 +797,11 @@ $pf-tier-legendary: #ff1493;
 }
 
 // Visual wealth gauge
-.rt-pf-gauge {
+.wh40k-pf-gauge {
   margin-bottom: 16px;
 }
 
-.rt-pf-gauge-track {
+.wh40k-pf-gauge-track {
   position: relative;
   height: 12px;
   background: linear-gradient(to right,
@@ -819,7 +819,7 @@ $pf-tier-legendary: #ff1493;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.rt-pf-gauge-fill {
+.wh40k-pf-gauge-fill {
   position: absolute;
   top: 0;
   left: 0;
@@ -829,7 +829,7 @@ $pf-tier-legendary: #ff1493;
   pointer-events: none;
 }
 
-.rt-pf-gauge-marker {
+.wh40k-pf-gauge-marker {
   position: absolute;
   top: -8px;
   transform: translateX(-50%);
@@ -845,27 +845,27 @@ $pf-tier-legendary: #ff1493;
   50% { transform: translateX(-50%) translateY(-2px); }
 }
 
-.rt-pf-gauge-labels {
+.wh40k-pf-gauge-labels {
   display: flex;
   justify-content: space-between;
   margin-top: 6px;
   
-  .rt-pf-tier-label {
+  .wh40k-pf-tier-label {
     font-size: 0.65rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.3px;
     
-    &.rt-pf-tier--poor { color: $pf-tier-poor; }
-    &.rt-pf-tier--modest { color: $pf-tier-modest; }
-    &.rt-pf-tier--notable { color: $pf-tier-notable; }
-    &.rt-pf-tier--mighty { color: $pf-tier-mighty; }
-    &.rt-pf-tier--legendary { color: $pf-tier-legendary; }
+    &.wh40k-pf-tier--poor { color: $pf-tier-poor; }
+    &.wh40k-pf-tier--modest { color: $pf-tier-modest; }
+    &.wh40k-pf-tier--notable { color: $pf-tier-notable; }
+    &.wh40k-pf-tier--mighty { color: $pf-tier-mighty; }
+    &.wh40k-pf-tier--legendary { color: $pf-tier-legendary; }
   }
 }
 
 // PF Breakdown section
-.rt-pf-breakdown {
+.wh40k-pf-breakdown {
   background: var(--color-bg-option);
   border: 1px solid var(--color-border-secondary);
   border-radius: 6px;
@@ -873,7 +873,7 @@ $pf-tier-legendary: #ff1493;
   margin-bottom: 12px;
 }
 
-.rt-pf-breakdown-row {
+.wh40k-pf-breakdown-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -883,31 +883,31 @@ $pf-tier-legendary: #ff1493;
     border-bottom: 1px solid var(--color-border-tertiary);
   }
   
-  &.rt-pf-breakdown-row--total {
+  &.wh40k-pf-breakdown-row--total {
     padding-top: 8px;
     margin-top: 4px;
-    border-top: 2px solid rgba($rt-accent-dynasty, 0.3);
+    border-top: 2px solid rgba($wh40k-accent-dynasty, 0.3);
     border-bottom: none;
     
-    .rt-pf-breakdown-label {
+    .wh40k-pf-breakdown-label {
       font-weight: 700;
-      color: $rt-accent-dynasty;
+      color: $wh40k-accent-dynasty;
     }
     
-    .rt-pf-breakdown-value {
+    .wh40k-pf-breakdown-value {
       font-size: 1.2rem;
       font-weight: 700;
-      color: $rt-accent-dynasty;
+      color: $wh40k-accent-dynasty;
     }
   }
 }
 
-.rt-pf-breakdown-label {
+.wh40k-pf-breakdown-label {
   font-size: 0.8rem;
   color: var(--color-text-secondary);
 }
 
-.rt-pf-breakdown-input {
+.wh40k-pf-breakdown-input {
   width: 60px;
   background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border-secondary);
@@ -920,31 +920,31 @@ $pf-tier-legendary: #ff1493;
   
   &:focus {
     outline: none;
-    border-color: rgba($rt-accent-dynasty, 0.5);
+    border-color: rgba($wh40k-accent-dynasty, 0.5);
   }
 }
 
-.rt-pf-breakdown-value {
+.wh40k-pf-breakdown-value {
   font-family: 'Modesto Condensed', serif;
   font-weight: 600;
 }
 
 // Misfortunes section
-.rt-pf-misfortunes {
+.wh40k-pf-misfortunes {
   margin-bottom: 12px;
   
-  .rt-field-label {
+  .wh40k-field-label {
     display: flex;
     align-items: center;
     gap: 6px;
     margin-bottom: 6px;
     
     i {
-      color: $rt-accent-combat;
+      color: $wh40k-accent-combat;
     }
   }
   
-  .rt-textarea {
+  .wh40k-textarea {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 6px;
@@ -955,25 +955,25 @@ $pf-tier-legendary: #ff1493;
     
     &:focus {
       outline: none;
-      border-color: rgba($rt-accent-dynasty, 0.4);
+      border-color: rgba($wh40k-accent-dynasty, 0.4);
     }
   }
 }
 
 // Acquisition reference quick guide
-.rt-pf-acquisition-ref {
-  background: linear-gradient(135deg, rgba($rt-accent-dynasty, 0.08) 0%, transparent 100%);
-  border: 1px solid rgba($rt-accent-dynasty, 0.2);
+.wh40k-pf-acquisition-ref {
+  background: linear-gradient(135deg, rgba($wh40k-accent-dynasty, 0.08) 0%, transparent 100%);
+  border: 1px solid rgba($wh40k-accent-dynasty, 0.2);
   border-radius: 6px;
   padding: 10px 12px;
 }
 
-.rt-pf-ref-header {
+.wh40k-pf-ref-header {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: $rt-accent-dynasty;
+  color: $wh40k-accent-dynasty;
   margin-bottom: 8px;
   
   i {
@@ -981,24 +981,24 @@ $pf-tier-legendary: #ff1493;
   }
 }
 
-.rt-pf-ref-grid {
+.wh40k-pf-ref-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 4px 12px;
 }
 
-.rt-pf-ref-item {
+.wh40k-pf-ref-item {
   font-size: 0.7rem;
   padding: 2px 6px;
   border-radius: 3px;
   
-  &.rt-pf-ref--positive {
-    color: $rt-color-success;
-    background: rgba($rt-color-success, 0.1);
+  &.wh40k-pf-ref--positive {
+    color: $wh40k-color-success;
+    background: rgba($wh40k-color-success, 0.1);
   }
   
-  &.rt-pf-ref--negative {
-    color: $rt-accent-combat;
-    background: rgba($rt-accent-combat, 0.1);
+  &.wh40k-pf-ref--negative {
+    color: $wh40k-accent-combat;
+    background: rgba($wh40k-accent-combat, 0.1);
   }
 }

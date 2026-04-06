@@ -20,10 +20,10 @@ export default class SkillGrantData extends BaseGrantData {
    * @type {object}
    */
   static TRAINING_LEVELS = {
-    known: { order: 0, label: "RT.Skill.Level.Known" },
-    trained: { order: 1, label: "RT.Skill.Level.Trained", bonus: 0 },
-    plus10: { order: 2, label: "RT.Skill.Level.Plus10", bonus: 10 },
-    plus20: { order: 3, label: "RT.Skill.Level.Plus20", bonus: 20 }
+    known: { order: 0, label: "WH40K.Skill.Level.Known" },
+    trained: { order: 1, label: "WH40K.Skill.Level.Trained", bonus: 0 },
+    plus10: { order: 2, label: "WH40K.Skill.Level.Plus10", bonus: 10 },
+    plus20: { order: 3, label: "WH40K.Skill.Level.Plus20", bonus: 20 }
   };
 
   /* -------------------------------------------- */

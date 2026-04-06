@@ -66,8 +66,8 @@ button {
     text-shadow: none;
 }
 
-.rt-field,
-.rt-textarea {
+.wh40k-field,
+.wh40k-textarea {
     border-bottom: $grid-border;
 
     &:last-child {
@@ -92,7 +92,7 @@ button {
     }
 }
 
-.rt-field {
+.wh40k-field {
     display: flex;
     flex-flow: row nowrap;
 
@@ -137,7 +137,7 @@ button {
     }
 }
 
-.rt-textarea {
+.wh40k-textarea {
     display: flex;
     flex-flow: row nowrap;
 

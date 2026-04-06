@@ -97,9 +97,9 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get statusLabel() {
-        if (this.overloaded) return game.i18n.localize('RT.ForceField.Overloaded');
-        if (this.activated) return game.i18n.localize('RT.ForceField.Active');
-        return game.i18n.localize('RT.ForceField.Inactive');
+        if (this.overloaded) return game.i18n.localize('WH40K.ForceField.Overloaded');
+        if (this.activated) return game.i18n.localize('WH40K.ForceField.Active');
+        return game.i18n.localize('WH40K.ForceField.Inactive');
     }
 
     /**
@@ -112,7 +112,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
     /**
      * Get craftsmanship-derived modifiers for force fields.
-     * Applies Rogue Trader force field craftsmanship rules:
+     * Applies WH40K RPG force field craftsmanship rules:
      *
      * FORCE FIELDS:
      * - Poor: Overload on 01-20
@@ -282,10 +282,10 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
         // Show roll to chat
         await roll.toMessage({
-            flavor: game.i18n.format('RT.ForceField.ProtectionRoll', {
+            flavor: game.i18n.format('WH40K.ForceField.ProtectionRoll', {
                 name: this.parent?.name || 'Force Field',
-                isProtected: isProtected ? game.i18n.localize('RT.ForceField.Protected') : game.i18n.localize('RT.ForceField.NotProtected'),
-                overloaded: overloaded ? ` (${game.i18n.localize('RT.ForceField.Overloaded')}!)` : '',
+                isProtected: isProtected ? game.i18n.localize('WH40K.ForceField.Protected') : game.i18n.localize('WH40K.ForceField.NotProtected'),
+                overloaded: overloaded ? ` (${game.i18n.localize('WH40K.ForceField.Overloaded')}!)` : '',
             }),
             speaker: options.speaker,
         });

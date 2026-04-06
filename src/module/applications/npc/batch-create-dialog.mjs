@@ -26,10 +26,10 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "batch-create-dialog-{id}",
-    classes: ["rogue-trader", "batch-create-dialog"],
+    classes: ["wh40k-rpg", "batch-create-dialog"],
     tag: "form",
     window: {
-      title: "RT.NPC.BatchCreate.Title",
+      title: "WH40K.NPC.BatchCreate.Title",
       icon: "fa-solid fa-users",
       minimizable: false,
       resizable: true,
@@ -55,7 +55,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
   /** @override */
   static PARTS = {
     form: {
-      template: "systems/rogue-trader/templates/dialogs/batch-create.hbs"
+      template: "systems/wh40k-rpg/templates/dialogs/batch-create.hbs"
     }
   };
 
@@ -151,7 +151,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
       previewNames,
       
       buttons: [
-        { type: "submit", icon: "fa-solid fa-plus", label: "RT.NPC.BatchCreate.Create", cssClass: "primary" },
+        { type: "submit", icon: "fa-solid fa-plus", label: "WH40K.NPC.BatchCreate.Create", cssClass: "primary" },
         { type: "button", action: "cancel", icon: "fa-solid fa-times", label: "Cancel" }
       ]
     };
@@ -247,7 +247,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     const actors = await this._createNPCs();
     
     if (actors.length > 0) {
-      ui.notifications.info(game.i18n.format("RT.NPC.BatchCreate.Success", { count: actors.length }));
+      ui.notifications.info(game.i18n.format("WH40K.NPC.BatchCreate.Success", { count: actors.length }));
       
       // Open sheets if requested (only first 5 to avoid overwhelming)
       if (this.#state.openSheets) {
@@ -260,7 +260,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
       this.#submitted = true;
       if (this.#resolve) this.#resolve(actors);
     } else {
-      ui.notifications.error(game.i18n.localize("RT.NPC.BatchCreate.Failed"));
+      ui.notifications.error(game.i18n.localize("WH40K.NPC.BatchCreate.Failed"));
       if (this.#resolve) this.#resolve([]);
     }
   }
@@ -451,7 +451,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     }
     
     if (actors.length > 0) {
-      ui.notifications.info(game.i18n.format("RT.NPC.BatchCreate.Success", { count: actors.length }));
+      ui.notifications.info(game.i18n.format("WH40K.NPC.BatchCreate.Success", { count: actors.length }));
     }
     
     return actors;

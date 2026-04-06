@@ -10,7 +10,7 @@ import ContainerItemSheet from './container-item-sheet.mjs';
 export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'item', 'armour'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'armour'],
         position: {
             width: 560,
             height: 580,
@@ -31,7 +31,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/rogue-trader/templates/item/item-armour-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-armour-sheet-v2.hbs',
             scrollable: ['.rt-tab-content'],
         },
     };
@@ -62,8 +62,8 @@ export default class ArmourSheet extends ContainerItemSheet {
         const context = await super._prepareContext(options);
 
         // Add armour-specific context
-        context.armourTypes = CONFIG.ROGUE_TRADER?.armourTypes || {};
-        context.bodyLocations = CONFIG.ROGUE_TRADER?.bodyLocations || {};
+        context.armourTypes = CONFIG.WH40K?.armourTypes || {};
+        context.bodyLocations = CONFIG.WH40K?.bodyLocations || {};
         context.availableProperties = this._getAvailableProperties();
         context.apSummary = this.item.system.apSummary;
         context.coverageLabel = this.item.system.coverageLabel;
@@ -197,12 +197,12 @@ export default class ArmourSheet extends ContainerItemSheet {
     static async #addModification(event, target) {
         // Check if slots available
         if (this.item.system.availableModSlots <= 0) {
-            ui.notifications.warn(game.i18n.localize('RT.Armour.NoSlotsAvailable'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
             return;
         }
 
         // Open compendium browser or item picker
-        ui.notifications.info(game.i18n.localize('RT.Armour.DragModification'));
+        ui.notifications.info(game.i18n.localize('WH40K.Armour.DragModification'));
     }
 
     /**

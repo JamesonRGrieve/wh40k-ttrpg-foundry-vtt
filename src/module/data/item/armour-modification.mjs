@@ -264,7 +264,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
     if ( this.restrictions.armourTypes.size ) {
       return `Types: ${Array.from(this.restrictions.armourTypes).join(", ")}`;
     }
-    return game.i18n.localize("RT.Modification.NoRestrictions");
+    return game.i18n.localize("WH40K.Modification.NoRestrictions");
   }
 
   /**
@@ -273,8 +273,8 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
    */
   get restrictionsLabelEnhanced() {
     const types = Array.from(this.restrictions.armourTypes);
-    if (!types.length) return game.i18n.localize("RT.Modification.NoRestrictions");
-    if (types.includes('any')) return game.i18n.localize("RT.Modification.AnyArmour");
+    if (!types.length) return game.i18n.localize("WH40K.Modification.NoRestrictions");
+    if (types.includes('any')) return game.i18n.localize("WH40K.Modification.AnyArmour");
     
     const labels = types.map(type => {
       const config = CONFIG.rt?.armourTypes?.[type];
@@ -311,7 +311,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
       parts.push(`${mods.weight >= 0 ? '+' : ''}${mods.weight}kg`);
     }
     
-    return parts.length ? parts.join(", ") : game.i18n.localize("RT.Modification.NoModifiers");
+    return parts.length ? parts.join(", ") : game.i18n.localize("WH40K.Modification.NoModifiers");
   }
 
   /**
@@ -324,10 +324,10 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
     const parts = [];
     
     if (added.length) {
-      parts.push(`+${added.length} ${game.i18n.localize("RT.Modification.Properties")}`);
+      parts.push(`+${added.length} ${game.i18n.localize("WH40K.Modification.Properties")}`);
     }
     if (removed.length) {
-      parts.push(`-${removed.length} ${game.i18n.localize("RT.Modification.Properties")}`);
+      parts.push(`-${removed.length} ${game.i18n.localize("WH40K.Modification.Properties")}`);
     }
     
     return parts.length ? parts.join(", ") : "";

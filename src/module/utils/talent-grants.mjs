@@ -11,8 +11,8 @@ import { GrantsProcessor, GRANT_MODE } from './grants-processor.mjs';
  * Process grants from a newly added talent.
  * Automatically creates granted items and applies skill training.
  * 
- * @param {RogueTraderItem} talent - The talent item that was added
- * @param {RogueTraderActor} actor - The actor receiving the talent
+ * @param {WH40KItem} talent - The talent item that was added
+ * @param {WH40KActor} actor - The actor receiving the talent
  * @param {number} [depth=0] - Current recursion depth (prevents infinite loops)
  * @returns {Promise<void>}
  */
@@ -39,8 +39,8 @@ export async function processTalentGrants(talent, actor, depth = 0) {
  * Handle removal of a talent that granted other items.
  * Optionally removes granted items if user confirms.
  * 
- * @param {RogueTraderItem} talent - The talent being removed
- * @param {RogueTraderActor} actor - The actor losing the talent
+ * @param {WH40KItem} talent - The talent being removed
+ * @param {WH40KActor} actor - The actor losing the talent
  * @returns {Promise<void>}
  */
 export async function handleTalentRemoval(talent, actor) {

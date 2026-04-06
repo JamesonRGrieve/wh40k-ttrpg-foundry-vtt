@@ -1,25 +1,25 @@
 /**
- * @file ApplicationV2Mixin - Rogue Trader V2 Application mixin
+ * @file ApplicationV2Mixin - WH40K RPG V2 Application mixin
  * Based on dnd5e's ApplicationV2Mixin pattern for Foundry V13+
  */
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
- * Mixin method for ApplicationV2-based Rogue Trader applications.
+ * Mixin method for ApplicationV2-based WH40K RPG applications.
  * @template {ApplicationV2} T
  * @param {typeof T} Base   Application class being extended.
- * @returns {typeof BaseApplicationRT}
+ * @returns {typeof BaseApplicationWH40K}
  * @mixin
  */
 export default function ApplicationV2Mixin(Base) {
-    class BaseApplicationRT extends HandlebarsApplicationMixin(Base) {
+    class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base) {
         /** @override */
         static DEFAULT_OPTIONS = {
             actions: {
-                toggleCollapsed: BaseApplicationRT.#toggleCollapsed
+                toggleCollapsed: BaseApplicationWH40K.#toggleCollapsed
             },
-            classes: ["rogue-trader"],
+            classes: ["wh40k-rpg"],
             window: {
                 subtitle: ""
             }
@@ -181,7 +181,7 @@ export default function ApplicationV2Mixin(Base) {
 
         /**
          * Handle toggling the collapsed state of collapsible sections.
-         * @this {BaseApplicationRT}
+         * @this {BaseApplicationWH40K}
          * @param {Event} event         Triggering click event.
          * @param {HTMLElement} target  Button that was clicked.
          */
@@ -195,5 +195,5 @@ export default function ApplicationV2Mixin(Base) {
             );
         }
     }
-    return BaseApplicationRT;
+    return BaseApplicationWH40K;
 }

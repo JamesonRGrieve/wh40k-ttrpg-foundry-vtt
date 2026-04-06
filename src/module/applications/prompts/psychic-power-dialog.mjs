@@ -35,7 +35,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/prompt/psychic-power-roll-prompt.hbs",
+            template: "systems/wh40k-rpg/templates/prompt/psychic-power-roll-prompt.hbs",
             scrollable: [""]
         }
     };

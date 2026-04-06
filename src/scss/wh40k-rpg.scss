@@ -55,7 +55,7 @@
 // Vehicle Sheet V2 - ApplicationV2 sheet (outside rt-wrapper)
 @import 'src/scss/actor/vehicle-sheet-v2';
 
-.rt-material {
+.wh40k-material {
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
@@ -71,7 +71,7 @@
     -webkit-font-smoothing: antialiased;
 }
 
-.rt-wrapper {
+.wh40k-wrapper {
     position: relative;
 
     @import 'src/scss/base/reset';
@@ -112,12 +112,12 @@
 }
 
 // Alias for rt-actor (same as dh-actor)
-.rt-actor {
+.wh40k-actor {
     // Inherits from the wrapper context
 }
 
 /* ================== Compendium Browser ================== */
-.rt-compendium-browser {
+.wh40k-compendium-browser {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -497,7 +497,7 @@
 // ============================================
 // This must come LAST to override all other styles
 
-.rogue-trader.sheet.actor {
+.wh40k-rpg.sheet.actor {
     // Window content should not scroll - children will
     .window-content {
         display: flex !important;
@@ -507,7 +507,7 @@
     }
 
     // The wrapper takes full height and doesn't scroll
-    .rt-wrapper {
+    .wh40k-wrapper {
         display: flex !important;
         flex-direction: column !important;
         flex: 1 1 auto !important;
@@ -517,8 +517,8 @@
     }
 
     // The form fills the wrapper and is a flex column layout
-    .rt-sheet,
-    .rt-actor {
+    .wh40k-sheet,
+    .wh40k-actor {
         display: flex !important;
         flex-direction: column !important;
         flex: 1 1 auto !important;
@@ -528,7 +528,7 @@
 
     // For ApplicationV2 PARTS: form is the layout container
     form.sheet-body,
-    .window-app.rogue-trader form {
+    .window-app.wh40k-rpg form {
         display: flex !important;
         flex-direction: column !important;
         flex: 1 1 auto !important;
@@ -542,15 +542,15 @@
     // ============================================
 
     // Header container - auto height, overflow for HUD dropdowns
-    .rt-character-header,
-    .rt-header {
+    .wh40k-character-header,
+    .wh40k-header {
         flex: 0 0 auto !important;
         overflow: visible !important;
         z-index: 10 !important;
     }
 
     // Main header layout - two columns
-    .rt-header-layout {
+    .wh40k-header-layout {
         display: flex !important;
         flex-direction: row !important;
         gap: 16px !important;
@@ -559,7 +559,7 @@
     }
 
     // LEFT: Bio section (portrait + fields)
-    .rt-header-bio {
+    .wh40k-header-bio {
         display: flex !important;
         flex-direction: row !important;
         gap: 10px !important;
@@ -569,14 +569,14 @@
         max-width: 280px !important;
     }
 
-    .rt-portrait-box {
+    .wh40k-portrait-box {
         width: 72px !important;
         height: 72px !important;
         flex-shrink: 0 !important;
         cursor: pointer !important;
     }
 
-    .rt-portrait-box .rt-portrait {
+    .wh40k-portrait-box .wh40k-portrait {
         width: 72px !important;
         height: 72px !important;
         object-fit: cover !important;
@@ -585,11 +585,11 @@
         transition: border-color 0.2s !important;
     }
 
-    .rt-portrait-box:hover .rt-portrait {
+    .wh40k-portrait-box:hover .wh40k-portrait {
         border-color: var(--rt-gold, #d4af37) !important;
     }
 
-    .rt-bio-fields {
+    .wh40k-bio-fields {
         display: flex !important;
         flex-direction: column !important;
         gap: 2px !important;
@@ -597,7 +597,7 @@
         min-width: 0 !important;
     }
 
-    .rt-bio-name {
+    .wh40k-bio-name {
         font-size: 1.1em !important;
         font-weight: bold !important;
         border: none !important;
@@ -609,32 +609,32 @@
         margin-bottom: 4px !important;
     }
 
-    .rt-bio-name:focus {
+    .wh40k-bio-name:focus {
         outline: none !important;
         border-bottom-color: var(--rt-gold, #d4af37) !important;
     }
 
-    .rt-bio-row {
+    .wh40k-bio-row {
         display: flex !important;
         align-items: baseline !important;
         gap: 6px !important;
         font-size: 0.8em !important;
     }
 
-    .rt-bio-label {
+    .wh40k-bio-label {
         font-weight: 600 !important;
         color: var(--rt-text-medium) !important;
         min-width: 40px !important;
     }
 
-    .rt-bio-value {
+    .wh40k-bio-value {
         color: var(--rt-text-dark) !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
     }
 
-    .rt-bio-input {
+    .wh40k-bio-input {
         flex: 1 !important;
         border: none !important;
         background: transparent !important;
@@ -644,13 +644,13 @@
         min-width: 50px !important;
     }
 
-    .rt-bio-input:focus {
+    .wh40k-bio-input:focus {
         outline: none !important;
         border-bottom-color: var(--rt-gold, #d4af37) !important;
     }
 
     // RIGHT: Characteristics HUD (V1 enhanced)
-    .rt-header-stats {
+    .wh40k-header-stats {
         flex: 1 !important;
         display: flex !important;
         justify-content: flex-end !important;
@@ -658,13 +658,13 @@
     }
 
     // Ensure stats bar displays properly in header
-    .rt-header-stats .rt-stats-bar {
+    .wh40k-header-stats .wh40k-stats-bar {
         flex-wrap: nowrap !important;
         overflow: visible !important;
     }
 
     // Navigation bar (tabs) - horizontal strip
-    nav.rt-navigation {
+    nav.wh40k-navigation {
         display: flex !important;
         flex-wrap: wrap !important;
         gap: 4px !important;
@@ -673,7 +673,7 @@
         flex: 0 0 auto !important;
     }
 
-    nav.rt-navigation .rt-nav-item {
+    nav.wh40k-navigation .wh40k-nav-item {
         padding: 6px 12px !important;
         border-radius: 4px !important;
         cursor: pointer !important;
@@ -682,22 +682,22 @@
         font-size: 0.85em !important;
     }
 
-    nav.rt-navigation {
+    nav.wh40k-navigation {
         display: flex !important;
         align-items: center !important;
     }
 
-    nav.rt-navigation .rt-nav-item:hover {
+    nav.wh40k-navigation .wh40k-nav-item:hover {
         background: rgba(255, 255, 255, 0.1) !important;
     }
 
-    nav.rt-navigation .rt-nav-item.active {
+    nav.wh40k-navigation .wh40k-nav-item.active {
         background: rgba(196, 135, 29, 0.3) !important;
         border-bottom: 2px solid #c4871d !important;
     }
 
     // Utility menu button in tabs
-    nav.rt-navigation .rt-utility-menu-btn {
+    nav.wh40k-navigation .wh40k-utility-menu-btn {
         margin-left: 10px !important;
         padding: 4px 6px !important;
         background: transparent !important;
@@ -721,7 +721,7 @@
     }
 
     // Utility menu dropdown
-    .rt-utility-menu {
+    .wh40k-utility-menu {
         background: rgba(40, 40, 40, 0.95) !important;
         border: 1px solid rgba(196, 135, 29, 0.5) !important;
         border-radius: 4px !important;
@@ -752,7 +752,7 @@
     }
 
     // Legacy rt-main-layout for compatibility
-    .rt-main-layout {
+    .wh40k-main-layout {
         display: grid !important;
         grid-template-columns: 160px minmax(0, 1fr) !important;
         grid-template-rows: minmax(0, 1fr) !important;
@@ -763,7 +763,7 @@
     }
 
     // The body scrolls and takes remaining space
-    .rt-body,
+    .wh40k-body,
     #tab-body {
         overflow-y: auto !important;
         overflow-x: hidden !important;
@@ -773,16 +773,16 @@
     }
 
     // Tabs should be block/flex, not 6-column grid
-    .rt-body .tab,
+    .wh40k-body .tab,
     #tab-body .tab,
-    .rt-body section.tab,
+    .wh40k-body section.tab,
     #tab-body section.tab {
         display: none !important;
     }
 
-    .rt-body .tab.active,
+    .wh40k-body .tab.active,
     #tab-body .tab.active,
-    .rt-body section.tab.active,
+    .wh40k-body section.tab.active,
     #tab-body section.tab.active {
         display: flex !important;
         flex-direction: column !important;
@@ -795,7 +795,7 @@
     // ============================================
     // V1 HUD styles for ApplicationV2 sheets
 
-    .rt-header-grid {
+    .wh40k-header-grid {
         display: grid !important;
         grid-template-columns: minmax(280px, 1fr) auto !important;
         grid-template-rows: auto !important;
@@ -804,21 +804,21 @@
         padding: 8px 12px 6px !important;
     }
 
-    .rt-header-left {
+    .wh40k-header-left {
         display: flex !important;
         flex-direction: column !important;
         gap: 8px !important;
     }
 
-    .rt-header-topline {
+    .wh40k-header-topline {
         display: grid !important;
         grid-template-columns: auto 1fr !important;
         gap: 10px !important;
         align-items: center !important;
     }
 
-    .rt-header__logo,
-    .rt-portrait-container {
+    .wh40k-header__logo,
+    .wh40k-portrait-container {
         width: 80px !important;
         height: 80px !important;
         border-radius: 6px !important;
@@ -828,15 +828,15 @@
         flex-shrink: 0 !important;
     }
 
-    .rt-header__logo-image,
-    .rt-portrait {
+    .wh40k-header__logo-image,
+    .wh40k-portrait {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
         cursor: pointer !important;
     }
 
-    .rt-header-info {
+    .wh40k-header-info {
         display: flex !important;
         flex-direction: column !important;
         gap: 5px !important;
@@ -844,14 +844,14 @@
         flex: 1 !important;
     }
 
-    .rt-header-row {
+    .wh40k-header-row {
         display: flex !important;
         align-items: baseline !important;
         gap: 10px !important;
         min-width: 0 !important;
     }
 
-    .rt-header-label {
+    .wh40k-header-label {
         font-size: 0.85em !important;
         font-weight: bold !important;
         text-transform: uppercase !important;
@@ -860,7 +860,7 @@
         flex-shrink: 0 !important;
     }
 
-    .rt-header-value {
+    .wh40k-header-value {
         font-size: 1em !important;
         color: var(--rt-text-dark, #333) !important;
         min-width: 0 !important;
@@ -869,7 +869,7 @@
         white-space: nowrap !important;
     }
 
-    .rt-header-input {
+    .wh40k-header-input {
         border: none !important;
         background: transparent !important;
         border-bottom: 1px solid var(--rt-border-color, #4a3728) !important;
@@ -879,19 +879,19 @@
         min-width: 80px !important;
     }
 
-    .rt-header-input:focus {
+    .wh40k-header-input:focus {
         outline: none !important;
         border-bottom-color: var(--rt-gold, #d4af37) !important;
         box-shadow: 0 1px 0 var(--rt-gold, #d4af37) !important;
     }
 
-    .rt-name-input {
+    .wh40k-name-input {
         font-size: 1.2em !important;
         font-weight: bold !important;
         max-width: 320px !important;
     }
 
-    .rt-header-right {
+    .wh40k-header-right {
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-end !important;
@@ -902,7 +902,7 @@
         max-width: 620px !important;
     }
 
-    .rt-hud-stack {
+    .wh40k-hud-stack {
         position: relative !important;
         display: flex !important;
         flex-direction: column !important;
@@ -910,7 +910,7 @@
         gap: 6px !important;
     }
 
-    .rt-characteristics-hud {
+    .wh40k-characteristics-hud {
         display: flex !important;
         flex-wrap: nowrap !important;
         justify-content: flex-end !important;
@@ -928,7 +928,7 @@
         z-index: 1 !important;
     }
 
-    .rt-char-hud-item {
+    .wh40k-char-hud-item {
         display: grid !important;
         grid-template-rows: auto auto auto auto !important;
         justify-items: center !important;
@@ -944,22 +944,22 @@
         transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
     }
 
-    .rt-char-hud-item:hover {
+    .wh40k-char-hud-item:hover {
         transform: translateY(-1px) !important;
         box-shadow: 0 4px 12px var(--rt-shadow-medium, rgba(0, 0, 0, 0.15)) !important;
     }
 
-    .rt-char-hud-item.rt-char-buffed {
+    .wh40k-char-hud-item.wh40k-char-buffed {
         border-color: rgba(74, 222, 128, 0.6) !important;
         box-shadow: 0 0 8px rgba(74, 222, 128, 0.3) !important;
     }
 
-    .rt-char-hud-item.rt-char-debuffed {
+    .wh40k-char-hud-item.wh40k-char-debuffed {
         border-color: rgba(239, 68, 68, 0.6) !important;
         box-shadow: 0 0 8px rgba(239, 68, 68, 0.3) !important;
     }
 
-    .rt-char-hud-name {
+    .wh40k-char-hud-name {
         background: none !important;
         border: none !important;
         padding: 0 !important;
@@ -975,11 +975,11 @@
         transition: color 0.15s ease !important;
     }
 
-    .rt-char-hud-name:hover {
+    .wh40k-char-hud-name:hover {
         color: var(--rt-gold, #d4af37) !important;
     }
 
-    .rt-char-hud-circle {
+    .wh40k-char-hud-circle {
         width: 48px !important;
         height: 48px !important;
         border-radius: 50% !important;
@@ -993,21 +993,21 @@
         box-shadow: inset 0 1px 2px var(--rt-text-shadow, rgba(0, 0, 0, 0.1)), 0 3px 8px var(--rt-shadow-soft, rgba(0, 0, 0, 0.15)) !important;
     }
 
-    .rt-char-hud-mod {
+    .wh40k-char-hud-mod {
         font-size: 1.2em !important;
         font-weight: 700 !important;
         color: var(--rt-text-dark, #1a1510) !important;
         text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) !important;
     }
 
-    .rt-char-hud-mod-label {
+    .wh40k-char-hud-mod-label {
         font-size: 0.55em !important;
         text-transform: uppercase !important;
         letter-spacing: 0.12em !important;
         color: var(--rt-text-muted, rgba(60, 50, 40, 0.75)) !important;
     }
 
-    .rt-char-hud-base {
+    .wh40k-char-hud-base {
         font-size: 0.65em !important;
         text-transform: uppercase !important;
         letter-spacing: 0.1em !important;
@@ -1015,7 +1015,7 @@
         text-align: center !important;
     }
 
-    .rt-char-hud-toggle {
+    .wh40k-char-hud-toggle {
         width: 18px !important;
         height: 18px !important;
         border-radius: 999px !important;
@@ -1030,14 +1030,14 @@
         z-index: 3 !important;
     }
 
-    .rt-char-hud-toggle-icon {
+    .wh40k-char-hud-toggle-icon {
         font-size: 0.7em !important;
         color: var(--rt-text-muted, #666) !important;
         display: inline-block !important;
         transition: transform 0.15s ease !important;
     }
 
-    .rt-char-hud-details {
+    .wh40k-char-hud-details {
         position: absolute !important;
         top: calc(100% + 6px) !important;
         left: 50% !important;
@@ -1058,21 +1058,21 @@
         }
     }
 
-    .rt-char-hud-field {
+    .wh40k-char-hud-field {
         display: grid !important;
         gap: 4px !important;
         text-align: left !important;
     }
 
-    .rt-char-hud-field-label {
+    .wh40k-char-hud-field-label {
         font-size: 0.6em !important;
         text-transform: uppercase !important;
         letter-spacing: 0.08em !important;
         color: var(--rt-text-muted, #666) !important;
     }
 
-    .rt-char-hud-details input,
-    .rt-char-hud-details select {
+    .wh40k-char-hud-details input,
+    .wh40k-char-hud-details select {
         width: 100% !important;
         border: 1px solid var(--rt-border-color-light, rgba(140, 120, 90, 0.3)) !important;
         border-radius: 4px !important;
@@ -1087,7 +1087,7 @@
 /* Sidebar Navigation Variant                   */
 /* -------------------------------------------- */
 
-.window-app.rogue-trader.sidebar-nav {
+.window-app.wh40k-rpg.sidebar-nav {
     // Sidebar variant uses grid layout with nav on left
     form.sheet-body {
         display: grid !important;
@@ -1097,7 +1097,7 @@
     }
 
     // Main layout container for sidebar + body
-    #main.rt-main-layout {
+    #main.wh40k-main-layout {
         display: grid !important;
         grid-template-columns: 120px 1fr !important;
         grid-template-rows: 1fr !important;
@@ -1108,7 +1108,7 @@
     }
 
     // Sidebar navigation - vertical
-    nav.rt-navigation.rt-sidebar-nav {
+    nav.wh40k-navigation.wh40k-sidebar-nav {
         display: flex !important;
         flex-direction: column !important;
         gap: 2px !important;
@@ -1120,7 +1120,7 @@
         max-width: 120px !important;
     }
 
-    nav.rt-sidebar-nav .rt-nav-item {
+    nav.wh40k-sidebar-nav .wh40k-nav-item {
         display: block !important;
         padding: 6px 8px !important;
         border-radius: 4px !important;
@@ -1132,17 +1132,17 @@
         white-space: nowrap !important;
     }
 
-    nav.rt-sidebar-nav .rt-nav-item:hover {
+    nav.wh40k-sidebar-nav .wh40k-nav-item:hover {
         background: rgba(255, 255, 255, 0.1) !important;
     }
 
-    nav.rt-sidebar-nav .rt-nav-item.active {
+    nav.wh40k-sidebar-nav .wh40k-nav-item.active {
         background: rgba(196, 135, 29, 0.3) !important;
         border-left: 3px solid #c4871d !important;
     }
 
     // Body takes remaining space in sidebar variant
-    .rt-body {
+    .wh40k-body {
         overflow-y: auto !important;
         min-height: 0 !important;
     }

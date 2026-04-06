@@ -10,7 +10,7 @@ import BaseItemSheet from './base-item-sheet.mjs';
 export default class ForceFieldSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'item', 'force-field'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'force-field'],
         position: {
             width: 540,
             height: 620,
@@ -22,7 +22,7 @@ export default class ForceFieldSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/rogue-trader/templates/item/item-force-field-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-force-field-sheet-v2.hbs',
             scrollable: ['.rt-tab-content'],
         },
     };

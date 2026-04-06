@@ -3,27 +3,27 @@
   {{!-- Input Section --}}
   <div class="parser-input-section">
     <div class="input-header">
-      <label>{{localize "RT.NPC.Import.PasteStatBlock"}}</label>
+      <label>{{localize "WH40K.NPC.Import.PasteStatBlock"}}</label>
       <button type="button" data-action="clearInput" class="icon-button" title="Clear">
         <i class="fa-solid fa-eraser"></i>
       </button>
     </div>
-    <textarea name="rawInput" rows="12" placeholder="{{localize "RT.NPC.Import.Placeholder"}}">{{rawInput}}</textarea>
-    <p class="hint">{{localize "RT.NPC.Import.Hint"}}</p>
+    <textarea name="rawInput" rows="12" placeholder="{{localize "WH40K.NPC.Import.Placeholder"}}">{{rawInput}}</textarea>
+    <p class="hint">{{localize "WH40K.NPC.Import.Hint"}}</p>
   </div>
 
   {{!-- Parse Button --}}
   <div class="parse-action">
     <button type="button" data-action="parse" class="secondary">
       <i class="fa-solid fa-magnifying-glass"></i>
-      {{localize "RT.NPC.Import.Parse"}}
+      {{localize "WH40K.NPC.Import.Parse"}}
     </button>
   </div>
 
   {{!-- Errors/Warnings/Info --}}
   {{#if hasErrors}}
   <div class="parse-messages errors">
-    <h4><i class="fa-solid fa-circle-exclamation"></i> {{localize "RT.NPC.Import.Errors"}}</h4>
+    <h4><i class="fa-solid fa-circle-exclamation"></i> {{localize "WH40K.NPC.Import.Errors"}}</h4>
     <ul>
       {{#each errors}}
       <li>{{this}}</li>
@@ -34,7 +34,7 @@
 
   {{#if hasWarnings}}
   <div class="parse-messages warnings">
-    <h4><i class="fa-solid fa-triangle-exclamation"></i> {{localize "RT.NPC.Import.Warnings"}}</h4>
+    <h4><i class="fa-solid fa-triangle-exclamation"></i> {{localize "WH40K.NPC.Import.Warnings"}}</h4>
     <ul>
       {{#each warnings}}
       <li>{{this}}</li>
@@ -45,7 +45,7 @@
 
   {{#if hasInfo}}
   <div class="parse-messages info">
-    <h4><i class="fa-solid fa-circle-info"></i> {{localize "RT.NPC.Import.Info"}}</h4>
+    <h4><i class="fa-solid fa-circle-info"></i> {{localize "WH40K.NPC.Import.Info"}}</h4>
     <ul>
       {{#each info}}
       <li>{{this}}</li>
@@ -57,25 +57,25 @@
   {{!-- Preview Section --}}
   {{#if hasParsed}}
   <div class="parser-preview-section">
-    <h3>{{localize "RT.NPC.Preview"}}</h3>
+    <h3>{{localize "WH40K.NPC.Preview"}}</h3>
     
     <div class="preview-grid">
       {{!-- Basic Info --}}
       <div class="preview-panel">
-        <h4>{{localize "RT.NPC.Identity"}}</h4>
+        <h4>{{localize "WH40K.NPC.Identity"}}</h4>
         <dl>
-          <dt>{{localize "RT.NPC.Name"}}</dt>
+          <dt>{{localize "WH40K.NPC.Name"}}</dt>
           <dd>{{parsedData.name}}</dd>
-          <dt>{{localize "RT.NPC.Type"}}</dt>
+          <dt>{{localize "WH40K.NPC.Type"}}</dt>
           <dd>{{parsedData.system.type}}</dd>
-          <dt>{{localize "RT.NPC.ThreatLevel"}}</dt>
+          <dt>{{localize "WH40K.NPC.ThreatLevel"}}</dt>
           <dd>{{parsedData.system.threatLevel}}</dd>
         </dl>
       </div>
 
       {{!-- Characteristics --}}
       <div class="preview-panel characteristics">
-        <h4>{{localize "RT.Characteristics.Label"}}</h4>
+        <h4>{{localize "WH40K.Characteristics.Label"}}</h4>
         <div class="char-grid">
           {{#each parsedData.system.characteristics as |char key|}}
           <div class="char-item">
@@ -88,12 +88,12 @@
 
       {{!-- Vitals --}}
       <div class="preview-panel preview-panel--skills">
-        <h4>{{localize "RT.Vitals.Label"}}</h4>
+        <h4>{{localize "WH40K.Vitals.Label"}}</h4>
         <dl>
-          <dt>{{localize "RT.Wounds.Label"}}</dt>
+          <dt>{{localize "WH40K.Wounds.Label"}}</dt>
           <dd>{{parsedData.system.wounds.max}}</dd>
           {{#if parsedData.system.armour}}
-          <dt>{{localize "RT.Armour.Label"}}</dt>
+          <dt>{{localize "WH40K.Armour.Label"}}</dt>
           <dd>{{parsedData.system.armour.total}}</dd>
           {{/if}}
         </dl>
@@ -102,7 +102,7 @@
       {{!-- Skills --}}
       {{#if parsedData}}
       <div class="preview-panel preview-panel--talents">
-        <h4><i class="fa-solid fa-list-check"></i> {{localize "RT.Skills"}}</h4>
+        <h4><i class="fa-solid fa-list-check"></i> {{localize "WH40K.Skills"}}</h4>
         <ul class="preview-list">
           {{#if hasPreviewSkills}}
             {{#each previewSkills as |skill|}}
@@ -118,7 +118,7 @@
       {{!-- Talents --}}
       {{#if parsedData}}
       <div class="preview-panel preview-panel--traits">
-        <h4><i class="fa-solid fa-star"></i> {{localize "RT.Talents"}}</h4>
+        <h4><i class="fa-solid fa-star"></i> {{localize "WH40K.Talents"}}</h4>
         <ul class="preview-list">
           {{#if hasPreviewTalents}}
             {{#each previewTalents as |item|}}
@@ -134,7 +134,7 @@
       {{!-- Traits --}}
       {{#if parsedData}}
       <div class="preview-panel preview-panel--weapons">
-        <h4><i class="fa-solid fa-dna"></i> {{localize "RT.Traits"}}</h4>
+        <h4><i class="fa-solid fa-dna"></i> {{localize "WH40K.Traits"}}</h4>
         <ul class="preview-list">
           {{#if hasPreviewTraits}}
             {{#each previewTraits as |item|}}
@@ -150,7 +150,7 @@
       {{!-- Weapons --}}
       {{#if parsedData}}
       <div class="preview-panel">
-        <h4><i class="fa-solid fa-gun"></i> {{localize "RT.Weapons"}}</h4>
+        <h4><i class="fa-solid fa-gun"></i> {{localize "WH40K.Weapons"}}</h4>
         <ul class="preview-list">
           {{#if hasPreviewWeapons}}
             {{#each previewWeapons as |weapon|}}

@@ -3,14 +3,14 @@
   {{!-- Header with Party Settings --}}
   <header class="encounter-header">
     <div class="party-config">
-      <h3><i class="fa-solid fa-users"></i> {{localize "RT.NPC.Encounter.PartySettings"}}</h3>
+      <h3><i class="fa-solid fa-users"></i> {{localize "WH40K.NPC.Encounter.PartySettings"}}</h3>
       <div class="party-fields">
         <div class="form-group">
-          <label>{{localize "RT.NPC.Encounter.PartySize"}}</label>
+          <label>{{localize "WH40K.NPC.Encounter.PartySize"}}</label>
           <input type="number" name="partyCount" value="{{party.count}}" min="1" max="10"/>
         </div>
         <div class="form-group">
-          <label>{{localize "RT.NPC.Encounter.PartyLevel"}}</label>
+          <label>{{localize "WH40K.NPC.Encounter.PartyLevel"}}</label>
           <input type="number" name="partyLevel" value="{{party.averageLevel}}" min="1" max="30"/>
         </div>
       </div>
@@ -22,8 +22,8 @@
     {{!-- NPC List --}}
     <section class="npc-list-section">
       <div class="section-header">
-        <h3><i class="fa-solid fa-skull"></i> {{localize "RT.NPC.Encounter.Enemies"}}</h3>
-        <button type="button" data-action="addNPC" class="icon-button" title="{{localize "RT.NPC.Encounter.AddNPC"}}">
+        <h3><i class="fa-solid fa-skull"></i> {{localize "WH40K.NPC.Encounter.Enemies"}}</h3>
+        <button type="button" data-action="addNPC" class="icon-button" title="{{localize "WH40K.NPC.Encounter.AddNPC"}}">
           <i class="fa-solid fa-plus"></i>
         </button>
       </div>
@@ -31,7 +31,7 @@
       {{!-- Drop Zone --}}
       <div class="encounter-drop-zone">
         <i class="fa-solid fa-hand-pointer"></i>
-        <span>{{localize "RT.NPC.Encounter.DropHere"}}</span>
+        <span>{{localize "WH40K.NPC.Encounter.DropHere"}}</span>
       </div>
 
       {{!-- NPC Table --}}
@@ -40,10 +40,10 @@
         <thead>
           <tr>
             <th class="img"></th>
-            <th class="name">{{localize "RT.NPC.Name"}}</th>
-            <th class="threat">{{localize "RT.NPC.ThreatLevel"}}</th>
-            <th class="count">{{localize "RT.NPC.Encounter.Count"}}</th>
-            <th class="total">{{localize "RT.NPC.Encounter.Total"}}</th>
+            <th class="name">{{localize "WH40K.NPC.Name"}}</th>
+            <th class="threat">{{localize "WH40K.NPC.ThreatLevel"}}</th>
+            <th class="count">{{localize "WH40K.NPC.Encounter.Count"}}</th>
+            <th class="total">{{localize "WH40K.NPC.Encounter.Total"}}</th>
             <th class="actions"></th>
           </tr>
         </thead>
@@ -77,7 +77,7 @@
         </tbody>
       </table>
       {{else}}
-      <p class="empty-message">{{localize "RT.NPC.Encounter.NoEnemies"}}</p>
+      <p class="empty-message">{{localize "WH40K.NPC.Encounter.NoEnemies"}}</p>
       {{/if}}
     </section>
 
@@ -85,37 +85,37 @@
     <aside class="encounter-metrics">
       {{!-- Difficulty Rating --}}
       <div class="metric-card difficulty" style="border-color: {{difficultyColor}};">
-        <h4>{{localize "RT.NPC.Encounter.Difficulty"}}</h4>
+        <h4>{{localize "WH40K.NPC.Encounter.Difficulty"}}</h4>
         <div class="difficulty-badge" style="background-color: {{difficultyColor}};">
           {{difficultyLabel}}
         </div>
-        <p class="ratio">{{localize "RT.NPC.Encounter.ThreatRatio"}}: {{threatRatio}}x</p>
+        <p class="ratio">{{localize "WH40K.NPC.Encounter.ThreatRatio"}}: {{threatRatio}}x</p>
       </div>
 
       {{!-- Threat Summary --}}
       <div class="metric-card threat-summary">
-        <h4>{{localize "RT.NPC.Encounter.ThreatSummary"}}</h4>
+        <h4>{{localize "WH40K.NPC.Encounter.ThreatSummary"}}</h4>
         <dl>
-          <dt>{{localize "RT.NPC.Encounter.EnemyThreat"}}</dt>
+          <dt>{{localize "WH40K.NPC.Encounter.EnemyThreat"}}</dt>
           <dd>{{totalThreat}}</dd>
-          <dt>{{localize "RT.NPC.Encounter.PartyThreat"}}</dt>
+          <dt>{{localize "WH40K.NPC.Encounter.PartyThreat"}}</dt>
           <dd>{{partyThreat}}</dd>
-          <dt>{{localize "RT.NPC.Encounter.TotalEnemies"}}</dt>
+          <dt>{{localize "WH40K.NPC.Encounter.TotalEnemies"}}</dt>
           <dd>{{totalNPCs}}</dd>
         </dl>
       </div>
 
       {{!-- Action Economy --}}
       <div class="metric-card action-economy">
-        <h4>{{localize "RT.NPC.Encounter.ActionEconomy"}}</h4>
+        <h4>{{localize "WH40K.NPC.Encounter.ActionEconomy"}}</h4>
         <div class="action-comparison">
           <div class="party-actions">
-            <span class="label">{{localize "RT.NPC.Encounter.Party"}}</span>
+            <span class="label">{{localize "WH40K.NPC.Encounter.Party"}}</span>
             <span class="value">{{actionEconomy.partyActions}}</span>
           </div>
           <span class="vs">vs</span>
           <div class="enemy-actions">
-            <span class="label">{{localize "RT.NPC.Encounter.Enemies"}}</span>
+            <span class="label">{{localize "WH40K.NPC.Encounter.Enemies"}}</span>
             <span class="value">{{actionEconomy.enemyActions}}</span>
           </div>
         </div>
@@ -126,7 +126,7 @@
 
       {{!-- Saved Templates --}}
       <div class="metric-card templates">
-        <h4>{{localize "RT.NPC.Encounter.Templates"}}</h4>
+        <h4>{{localize "WH40K.NPC.Encounter.Templates"}}</h4>
         {{#if hasTemplates}}
         <ul class="template-list">
           {{#each templates}}
@@ -138,7 +138,7 @@
           {{/each}}
         </ul>
         {{else}}
-        <p class="empty-message">{{localize "RT.NPC.Encounter.NoTemplates"}}</p>
+        <p class="empty-message">{{localize "WH40K.NPC.Encounter.NoTemplates"}}</p>
         {{/if}}
       </div>
     </aside>
@@ -148,15 +148,15 @@
   <footer class="encounter-footer">
     <button type="button" data-action="clearAll" class="secondary">
       <i class="fa-solid fa-broom"></i>
-      {{localize "RT.NPC.Encounter.ClearAll"}}
+      {{localize "WH40K.NPC.Encounter.ClearAll"}}
     </button>
     <button type="button" data-action="saveTemplate" class="secondary">
       <i class="fa-solid fa-floppy-disk"></i>
-      {{localize "RT.NPC.Encounter.SaveTemplate"}}
+      {{localize "WH40K.NPC.Encounter.SaveTemplate"}}
     </button>
-    <button type="button" data-action="deployToCombat" class="primary" {{#unless hasCombat}}title="{{localize "RT.NPC.Encounter.NoCombat"}}"{{/unless}}>
+    <button type="button" data-action="deployToCombat" class="primary" {{#unless hasCombat}}title="{{localize "WH40K.NPC.Encounter.NoCombat"}}"{{/unless}}>
       <i class="fa-solid fa-swords"></i>
-      {{localize "RT.NPC.Encounter.Deploy"}}
+      {{localize "WH40K.NPC.Encounter.Deploy"}}
     </button>
   </footer>
 </div>

@@ -8,7 +8,7 @@
 // Item Card Base
 // ============================================
 
-.rt-item-card {
+.wh40k-item-card {
   // Local vars inherit from global theme vars
   --rt-item-bg: var(--rt-panel-bg-solid);
   --rt-item-border: var(--rt-bronze);
@@ -39,7 +39,7 @@
 // Item Header
 // ============================================
 
-.rt-item-card__header {
+.wh40k-item-card__header {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -48,7 +48,7 @@
   border-bottom: 1px solid var(--rt-border-color);
 }
 
-.rt-item-card__image {
+.wh40k-item-card__image {
   width: 48px;
   height: 48px;
   border: 2px solid var(--rt-item-border);
@@ -58,12 +58,12 @@
   box-shadow: 0 2px 6px var(--rt-shadow-medium);
 }
 
-.rt-item-card__title-group {
+.wh40k-item-card__title-group {
   flex: 1;
   min-width: 0;
 }
 
-.rt-item-card__name {
+.wh40k-item-card__name {
   font-family: 'Cinzel', serif;
   font-size: 1.1rem;
   font-weight: 600;
@@ -73,7 +73,7 @@
   text-shadow: 0 1px 0 var(--rt-text-shadow);
 }
 
-.rt-item-card__type {
+.wh40k-item-card__type {
   font-size: 0.75rem;
   color: var(--rt-item-muted);
   text-transform: uppercase;
@@ -85,7 +85,7 @@
 // Item Body
 // ============================================
 
-.rt-item-card__body {
+.wh40k-item-card__body {
   padding: 12px;
 }
 
@@ -93,7 +93,7 @@
 // Divider
 // ============================================
 
-.rt-item-card__divider {
+.wh40k-item-card__divider {
   height: 1px;
   background: linear-gradient(
     90deg,
@@ -144,7 +144,7 @@
 // Field Display
 // ============================================
 
-.rt-item-card__field {
+.wh40k-item-card__field {
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -152,7 +152,7 @@
   font-size: 0.9rem;
 }
 
-.rt-item-card__label {
+.wh40k-item-card__label {
   font-weight: 600;
   color: var(--rt-item-border);
   flex-shrink: 0;
@@ -162,7 +162,7 @@
   }
 }
 
-.rt-item-card__value {
+.wh40k-item-card__value {
   color: var(--rt-item-text);
 }
 
@@ -170,7 +170,7 @@
 // Stats Grid (for weapons, armor, etc.)
 // ============================================
 
-.rt-item-card__stats {
+.wh40k-item-card__stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
@@ -181,7 +181,7 @@
   border: 1px solid var(--rt-border-color-light);
 }
 
-.rt-item-card__stat {
+.wh40k-item-card__stat {
   display: flex;
   align-items: baseline;
   gap: 6px;
@@ -192,7 +192,7 @@
   }
 }
 
-.rt-item-card__stat-name {
+.wh40k-item-card__stat-name {
   font-weight: 600;
   color: var(--rt-item-border);
   
@@ -201,7 +201,7 @@
   }
 }
 
-.rt-item-card__stat-value {
+.wh40k-item-card__stat-value {
   color: var(--rt-item-text);
 }
 
@@ -209,7 +209,7 @@
 // Section (Effect, Benefit, Description)
 // ============================================
 
-.rt-item-card__section {
+.wh40k-item-card__section {
   margin: 10px 0;
   padding: 10px;
   background: var(--rt-panel-bg);
@@ -217,7 +217,7 @@
   border: 1px solid var(--rt-border-color-light);
 }
 
-.rt-item-card__section-title {
+.wh40k-item-card__section-title {
   font-family: 'Cinzel', serif;
   font-size: 0.8rem;
   font-weight: 600;
@@ -229,7 +229,7 @@
   border-bottom: 1px solid var(--rt-border-color-light);
 }
 
-.rt-item-card__description {
+.wh40k-item-card__description {
   font-size: 0.9rem;
   line-height: 1.5;
   color: var(--rt-item-text);
@@ -247,13 +247,13 @@
 // Footer
 // ============================================
 
-.rt-item-card__footer {
+.wh40k-item-card__footer {
   padding: 8px 12px;
   border-top: 1px solid var(--rt-border-color-light);
   text-align: right;
 }
 
-.rt-item-card__source {
+.wh40k-item-card__source {
   font-size: 0.75rem;
   font-style: italic;
   color: var(--rt-item-muted);
@@ -263,7 +263,7 @@
 // Action Buttons
 // ============================================
 
-.rt-item-card__actions {
+.wh40k-item-card__actions {
   display: flex;
   gap: 8px;
   padding: 10px 12px;
@@ -272,7 +272,7 @@
   justify-content: center;
 }
 
-.rt-item-card__btn {
+.wh40k-item-card__btn {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -353,40 +353,40 @@
 // ============================================
 
 // Weapon Card
-.rt-item-card--weapon {
-  .rt-item-card__header {
+.wh40k-item-card--weapon {
+  .wh40k-item-card__header {
     background: linear-gradient(135deg, var(--rt-wounds-bg) 0%, transparent 100%);
     border-bottom-color: var(--rt-wounds-border);
   }
 }
 
 // Armour Card
-.rt-item-card--armour {
-  .rt-item-card__header {
+.wh40k-item-card--armour {
+  .wh40k-item-card__header {
     background: linear-gradient(135deg, var(--rt-skills-bg) 0%, transparent 100%);
     border-bottom-color: var(--rt-skills-border);
   }
 }
 
 // Talent Card
-.rt-item-card--talent {
-  .rt-item-card__header {
+.wh40k-item-card--talent {
+  .wh40k-item-card__header {
     background: linear-gradient(135deg, var(--rt-talents-bg) 0%, transparent 100%);
     border-bottom-color: var(--rt-talents-border);
   }
 }
 
 // Psychic Power Card
-.rt-item-card--power {
-  .rt-item-card__header {
+.wh40k-item-card--power {
+  .wh40k-item-card__header {
     background: linear-gradient(135deg, var(--rt-powers-bg) 0%, transparent 100%);
     border-bottom-color: var(--rt-powers-border);
   }
 }
 
 // Ship Component Card
-.rt-item-card--component {
-  .rt-item-card__header {
+.wh40k-item-card--component {
+  .wh40k-item-card__header {
     background: linear-gradient(135deg, var(--rt-equipment-bg) 0%, transparent 100%);
     border-bottom-color: var(--rt-equipment-border);
   }
@@ -396,7 +396,7 @@
 // Properties/Qualities Tags
 // ============================================
 
-.rt-item-card__properties {
+.wh40k-item-card__properties {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -404,7 +404,7 @@
   border-top: 1px solid var(--rt-border-color-light);
 }
 
-.rt-item-card__property-tag {
+.wh40k-item-card__property-tag {
   display: inline-block;
   padding: 3px 8px;
   font-size: 0.7rem;
@@ -421,13 +421,13 @@
 // Vocalize Card Enhancements
 // ============================================
 
-.rt-item-card--vocalize {
+.wh40k-item-card--vocalize {
   // Slightly different styling for vocalized items
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 // Placeholder image icon
-.rt-item-card__image--placeholder {
+.wh40k-item-card__image--placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -441,43 +441,43 @@
 }
 
 // Meta information in header
-.rt-item-card__meta {
+.wh40k-item-card__meta {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-top: 4px;
 }
 
-.rt-item-card__actor {
+.wh40k-item-card__actor {
   font-size: 0.7rem;
   color: var(--rt-item-muted);
   font-weight: 600;
 }
 
-.rt-item-card__separator {
+.wh40k-item-card__separator {
   font-size: 0.7rem;
   color: var(--rt-border-color);
 }
 
 // Quick stats row
-.rt-item-card__quick-stats {
+.wh40k-item-card__quick-stats {
   display: flex;
-  gap: $rt-space-md;
+  gap: $wh40k-space-md;
   flex-wrap: wrap;
-  margin-bottom: $rt-space-sm;
+  margin-bottom: $wh40k-space-sm;
 }
 
-.rt-quick-stat {
+.wh40k-quick-stat {
   display: flex;
   flex-direction: column;
   gap: 2px;
   padding: 6px 10px;
   background: var(--rt-accent-overlay);
-  border-radius: $rt-radius-sm;
+  border-radius: $wh40k-radius-sm;
   border: 1px solid var(--rt-border-color-light);
 }
 
-.rt-quick-stat__label {
+.wh40k-quick-stat__label {
   font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -485,35 +485,35 @@
   color: var(--rt-item-muted);
 }
 
-.rt-quick-stat__value {
+.wh40k-quick-stat__value {
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--rt-item-border);
-  font-family: $rt-font-alt;
+  font-family: $wh40k-font-alt;
 }
 
 // Property tags in vocalize
-.rt-property-tag {
+.wh40k-property-tag {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 4px 8px;
   font-size: 0.7rem;
   font-weight: 600;
-  background: linear-gradient(135deg, rgba($rt-accent-gold, 0.12), rgba($rt-accent-gold, 0.06));
-  border: 1px solid rgba($rt-accent-gold, 0.3);
-  border-radius: $rt-radius-sm;
+  background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.12), rgba($wh40k-accent-gold, 0.06));
+  border: 1px solid rgba($wh40k-accent-gold, 0.3);
+  border-radius: $wh40k-radius-sm;
   color: var(--rt-item-border);
   
   i {
     font-size: 0.75rem;
-    color: $rt-accent-gold;
+    color: $wh40k-accent-gold;
   }
 }
 
 // Section styling with icons
-.rt-item-card__section--effect {
-  .rt-item-card__section-title {
+.wh40k-item-card__section--effect {
+  .wh40k-item-card__section-title {
     color: #9b59b6;
     
     i {
@@ -521,16 +521,16 @@
     }
   }
   
-  .rt-item-card__effect-text {
-    padding: $rt-space-sm;
+  .wh40k-item-card__effect-text {
+    padding: $wh40k-space-sm;
     background: linear-gradient(135deg, rgba(#9b59b6, 0.08), transparent);
     border-left: 3px solid rgba(#9b59b6, 0.4);
-    border-radius: 0 $rt-radius-sm $rt-radius-sm 0;
+    border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
   }
 }
 
-.rt-item-card__section--benefit {
-  .rt-item-card__section-title {
+.wh40k-item-card__section--benefit {
+  .wh40k-item-card__section-title {
     color: #27ae60;
     
     i {
@@ -538,28 +538,28 @@
     }
   }
   
-  .rt-item-card__benefit-text {
-    padding: $rt-space-sm;
+  .wh40k-item-card__benefit-text {
+    padding: $wh40k-space-sm;
     background: linear-gradient(135deg, rgba(#27ae60, 0.08), transparent);
     border-left: 3px solid rgba(#27ae60, 0.4);
-    border-radius: 0 $rt-radius-sm $rt-radius-sm 0;
+    border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
   }
 }
 
 // Requirements bar
-.rt-item-card__requirements {
+.wh40k-item-card__requirements {
   display: flex;
   align-items: center;
-  gap: $rt-space-xs;
-  padding: $rt-space-sm;
-  margin-top: $rt-space-sm;
+  gap: $wh40k-space-xs;
+  padding: $wh40k-space-sm;
+  margin-top: $wh40k-space-sm;
   background: linear-gradient(135deg, rgba(#e67e22, 0.1), transparent);
   border-left: 3px solid rgba(#e67e22, 0.5);
-  border-radius: 0 $rt-radius-sm $rt-radius-sm 0;
+  border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
   font-size: 0.8rem;
 }
 
-.rt-requirements__label {
+.wh40k-requirements__label {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -571,12 +571,12 @@
   }
 }
 
-.rt-requirements__text {
+.wh40k-requirements__text {
   color: var(--rt-text-secondary);
 }
 
 // Footer with icon
-.rt-item-card__footer {
+.wh40k-item-card__footer {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -589,7 +589,7 @@
 }
 
 // "View Details" button styling
-.rt-item-card__btn--sheet {
+.wh40k-item-card__btn--sheet {
   flex: 1;
   justify-content: center;
   background: linear-gradient(135deg, var(--rt-item-border), var(--rt-item-accent));
@@ -607,7 +607,7 @@
 // Movement Chat Card
 // ============================================
 
-.rt-movement-card {
+.wh40k-movement-card {
   --rt-movement-bg: var(--rt-panel-bg-solid);
   --rt-movement-border: var(--rt-gold);
   --rt-movement-text: var(--rt-text-dark);
@@ -621,7 +621,7 @@
   color: var(--rt-movement-text);
   box-shadow: 0 4px 12px var(--rt-shadow-medium);
   
-  .rt-card-header {
+  .wh40k-card-header {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -630,7 +630,7 @@
     border-bottom: 1px solid var(--rt-border-color);
   }
   
-  .rt-card-icon-wrapper {
+  .wh40k-card-icon-wrapper {
     width: 40px;
     height: 40px;
     display: flex;
@@ -647,12 +647,12 @@
     }
   }
   
-  .rt-card-title-area {
+  .wh40k-card-title-area {
     flex: 1;
     min-width: 0;
   }
   
-  .rt-card-title {
+  .wh40k-card-title {
     font-family: 'Cinzel', serif;
     font-size: 1.1rem;
     font-weight: 600;
@@ -661,18 +661,18 @@
     line-height: 1.2;
   }
   
-  .rt-card-subtitle {
+  .wh40k-card-subtitle {
     font-size: 0.75rem;
     color: var(--rt-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
   
-  .rt-card-body {
+  .wh40k-card-body {
     padding: 12px;
   }
   
-  .rt-movement-display {
+  .wh40k-movement-display {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -680,12 +680,12 @@
     margin-bottom: 8px;
   }
   
-  .rt-movement-value {
+  .wh40k-movement-value {
     display: flex;
     align-items: baseline;
     gap: 4px;
     
-    .rt-movement-distance {
+    .wh40k-movement-distance {
       font-family: 'Modesto Condensed', serif;
       font-size: 2rem;
       font-weight: 700;
@@ -693,7 +693,7 @@
       color: var(--rt-gold-dark);
     }
     
-    .rt-movement-unit {
+    .wh40k-movement-unit {
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--rt-text-muted);
@@ -701,7 +701,7 @@
     }
   }
   
-  .rt-movement-type-badge {
+  .wh40k-movement-type-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -717,7 +717,7 @@
     }
   }
   
-  .rt-movement-description {
+  .wh40k-movement-description {
     padding: 8px 12px;
     background: rgba(138, 122, 106, 0.08);
     border-left: 3px solid rgba(138, 122, 106, 0.3);
@@ -729,8 +729,8 @@
   
   // Movement type specific styling
   &--half {
-    .rt-card-icon-wrapper i { color: #27ae60; }
-    .rt-movement-type-badge {
+    .wh40k-card-icon-wrapper i { color: #27ae60; }
+    .wh40k-movement-type-badge {
       background: rgba(#27ae60, 0.15);
       color: darken(#27ae60, 15%);
       border: 1px solid rgba(#27ae60, 0.3);
@@ -738,8 +738,8 @@
   }
   
   &--full {
-    .rt-card-icon-wrapper i { color: #2980b9; }
-    .rt-movement-type-badge {
+    .wh40k-card-icon-wrapper i { color: #2980b9; }
+    .wh40k-movement-type-badge {
       background: rgba(#2980b9, 0.15);
       color: darken(#2980b9, 15%);
       border: 1px solid rgba(#2980b9, 0.3);
@@ -747,8 +747,8 @@
   }
   
   &--charge {
-    .rt-card-icon-wrapper i { color: #e67e22; }
-    .rt-movement-type-badge {
+    .wh40k-card-icon-wrapper i { color: #e67e22; }
+    .wh40k-movement-type-badge {
       background: rgba(#e67e22, 0.15);
       color: darken(#e67e22, 15%);
       border: 1px solid rgba(#e67e22, 0.3);
@@ -756,8 +756,8 @@
   }
   
   &--run {
-    .rt-card-icon-wrapper i { color: #c0392b; }
-    .rt-movement-type-badge {
+    .wh40k-card-icon-wrapper i { color: #c0392b; }
+    .wh40k-movement-type-badge {
       background: rgba(#c0392b, 0.15);
       color: darken(#c0392b, 15%);
       border: 1px solid rgba(#c0392b, 0.3);

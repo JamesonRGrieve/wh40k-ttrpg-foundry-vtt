@@ -13,10 +13,10 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "origin-choice-dialog"],
+        classes: ["wh40k-rpg", "origin-choice-dialog"],
         tag: "form",
         window: {
-            title: "RT.OriginPath.MakeChoices",
+            title: "WH40K.OriginPath.MakeChoices",
             icon: "fa-solid fa-list-check",
             minimizable: false,
             resizable: true
@@ -41,7 +41,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/character-creation/origin-path-choice-dialog.hbs"
+            template: "systems/wh40k-rpg/templates/character-creation/origin-path-choice-dialog.hbs"
         }
     };
 

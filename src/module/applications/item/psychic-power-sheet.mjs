@@ -10,7 +10,7 @@ import BaseItemSheet from "./base-item-sheet.mjs";
 export default class PsychicPowerSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ["rogue-trader", "sheet", "item", "psychic-power"],
+        classes: ["wh40k-rpg", "sheet", "item", "psychic-power"],
         position: {
             width: 550,
             height: 500
@@ -22,7 +22,7 @@ export default class PsychicPowerSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: "systems/rogue-trader/templates/item/item-psychic-power-sheet-modern.hbs",
+            template: "systems/wh40k-rpg/templates/item/item-psychic-power-sheet-modern.hbs",
             scrollable: [".rt-tab-content"]
         }
     };

@@ -10,7 +10,7 @@
                 <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Upgrade Name" />
                 <div class="rt-item-title__type">
                     <i class="fas fa-level-up-alt"></i>
-                    <span>{{localize "RT.ShipUpgrade"}}</span>
+                    <span>{{localize "WH40K.ShipUpgrade"}}</span>
                 </div>
             </div>
         </header>
@@ -18,10 +18,10 @@
         <!-- Tab Navigation -->
         <nav class="rt-tabs" data-group="primary">
             <a class="rt-tab active" data-tab="details" data-group="primary">
-                <i class="fas fa-info-circle"></i> {{localize "RT.Item.Tabs.Details"}}
+                <i class="fas fa-info-circle"></i> {{localize "WH40K.Item.Tabs.Details"}}
             </a>
             <a class="rt-tab" data-tab="effects" data-group="primary">
-                <i class="fas fa-magic"></i> {{localize "RT.Item.Tabs.Effects"}}
+                <i class="fas fa-magic"></i> {{localize "WH40K.Item.Tabs.Effects"}}
             </a>
         </nav>
 
@@ -36,7 +36,7 @@
                     </div>
                     <div class="rt-panel__content">
                         <div class="form-group">
-                            <label>{{localize "RT.Availability"}}</label>
+                            <label>{{localize "WH40K.Availability"}}</label>
                             <select name="system.availability">
                                 {{selectOptions availabilities selected=system.availability}}
                             </select>
@@ -162,7 +162,7 @@
 
             <!-- Effects Tab -->
             <div class="tab" data-tab="effects" data-group="primary">
-                {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+                {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
             </div>
         </section>
     </form>

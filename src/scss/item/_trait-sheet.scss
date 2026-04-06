@@ -7,7 +7,7 @@
 // CONTAINER
 // ============================================
 
-.rt-trait-sheet {
+.wh40k-trait-sheet {
   --trait-color: var(--rt-traits-primary, #6a2090);
   --trait-bg: var(--rt-traits-bg, rgba(106, 32, 144, 0.1));
   --trait-border: var(--rt-traits-border, rgba(106, 32, 144, 0.3));
@@ -34,7 +34,7 @@
 // HEADER
 // ============================================
 
-.rt-trait-header {
+.wh40k-trait-header {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -64,7 +64,7 @@
       transform: scale(1.05);
       box-shadow: 0 4px 12px var(--rt-shadow-medium);
       
-      .rt-trait-header__image-overlay {
+      .wh40k-trait-header__image-overlay {
         opacity: 1;
       }
     }
@@ -124,7 +124,7 @@
 // STATS BAR
 // ============================================
 
-.rt-trait-stats {
+.wh40k-trait-stats {
   display: flex;
   flex-wrap: wrap;
   gap: 2px;
@@ -134,7 +134,7 @@
   flex-shrink: 0;
 }
 
-.rt-trait-stat {
+.wh40k-trait-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -175,13 +175,13 @@
   
   // Level/rating stat
   &--level {
-    .rt-trait-stat__icon { color: var(--trait-color); }
-    .rt-trait-stat__value { color: var(--trait-color); }
+    .wh40k-trait-stat__icon { color: var(--trait-color); }
+    .wh40k-trait-stat__value { color: var(--trait-color); }
   }
   
   // Category stat
   &--category {
-    .rt-trait-stat__icon { color: var(--rt-bronze); }
+    .wh40k-trait-stat__icon { color: var(--rt-bronze); }
   }
 }
 
@@ -189,7 +189,7 @@
 // BADGES
 // ============================================
 
-.rt-trait-badge {
+.wh40k-trait-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -230,7 +230,7 @@
 // CONTENT BODY (legacy - use rt-trait-content from _item-tabs.scss)
 // ============================================
 
-.rt-trait-body {
+.wh40k-trait-body {
   flex: 1;
   overflow-y: auto;
   padding: 12px;
@@ -241,7 +241,7 @@
 // SECTIONS
 // ============================================
 
-.rt-trait-section {
+.wh40k-trait-section {
   background: var(--rt-panel-bg);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 6px;
@@ -277,7 +277,7 @@
 }
 
 // Legacy support for old section title style
-.rt-section-title {
+.wh40k-section-title {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -300,13 +300,13 @@
 // PROPERTIES GRID
 // ============================================
 
-.rt-properties-grid {
+.wh40k-properties-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px;
 }
 
-.rt-property {
+.wh40k-property {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -317,14 +317,14 @@
   }
 }
 
-.rt-property-label {
+.wh40k-property-label {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--rt-text-muted);
   
-  .rt-field-hint {
+  .wh40k-field-hint {
     font-size: 0.7rem;
     font-weight: 400;
     text-transform: none;
@@ -335,8 +335,8 @@
   }
 }
 
-.rt-property-input,
-.rt-property-textarea {
+.wh40k-property-input,
+.wh40k-property-textarea {
   width: 100%;
   padding: 6px 10px;
   background: var(--rt-panel-bg-translucent);
@@ -364,7 +364,7 @@
   }
 }
 
-.rt-property-textarea {
+.wh40k-property-textarea {
   resize: vertical;
   min-height: 60px;
   font-family: 'Roboto', sans-serif;
@@ -374,13 +374,13 @@
 // REQUIREMENTS DISPLAY
 // ============================================
 
-.rt-requirements-display {
+.wh40k-requirements-display {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.rt-requirement-tag {
+.wh40k-requirement-tag {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -401,20 +401,20 @@
 // MODIFIERS DISPLAY
 // ============================================
 
-.rt-modifiers-display {
+.wh40k-modifiers-display {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px;
 }
 
-.rt-modifier-group {
+.wh40k-modifier-group {
   background: var(--rt-panel-bg-translucent);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 4px;
   padding: 10px;
 }
 
-.rt-modifier-group-title {
+.wh40k-modifier-group-title {
   margin: 0 0 8px 0;
   font-family: 'Cinzel', serif;
   font-size: 0.8rem;
@@ -424,13 +424,13 @@
   color: var(--rt-text-muted);
 }
 
-.rt-modifier-list {
+.wh40k-modifier-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.rt-modifier-item {
+.wh40k-modifier-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -439,13 +439,13 @@
   border-radius: 3px;
 }
 
-.rt-modifier-name {
+.wh40k-modifier-name {
   font-size: 0.8rem;
   color: var(--rt-text-dark);
   text-transform: capitalize;
 }
 
-.rt-modifier-value {
+.wh40k-modifier-value {
   font-family: 'Cinzel', serif;
   font-size: 0.85rem;
   font-weight: 700;
@@ -463,7 +463,7 @@
 // EMPTY STATE
 // ============================================
 
-.rt-empty-state {
+.wh40k-empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -482,7 +482,7 @@
     margin: 4px 0;
     font-size: 0.9rem;
     
-    &.rt-field-hint {
+    &.wh40k-field-hint {
       font-size: 0.75rem;
       opacity: 0.7;
     }
@@ -493,7 +493,7 @@
 // FIELD HINTS
 // ============================================
 
-.rt-field-hint {
+.wh40k-field-hint {
   font-size: 0.75rem;
   color: var(--rt-text-muted);
   font-style: italic;
@@ -508,7 +508,7 @@
 // EDITOR CONTAINER
 // ============================================
 
-.rt-editor-container {
+.wh40k-editor-container {
   border: 1px solid var(--rt-border-color-light);
   border-radius: 4px;
   overflow: hidden;

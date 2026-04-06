@@ -4,13 +4,13 @@
  */
 
 /**
- * Custom ContextMenu subclass for Rogue Trader styling.
+ * Custom ContextMenu subclass for WH40K RPG styling.
  * Uses Foundry V13's native ContextMenu with fixed positioning.
  */
-export class RTContextMenu extends foundry.applications.ux.ContextMenu {
+export class WH40KContextMenu extends foundry.applications.ux.ContextMenu {
     /** @override */
     _setPosition(html, target, options = {}) {
-        html.classList.add("rt-context-menu");
+        html.classList.add("wh40k-context-menu");
         return this._setFixedPosition(html, target, options);
     }
 
@@ -67,25 +67,25 @@ export default function ContextMenuMixin(Base) {
          */
         _createContextMenus() {
             // Characteristics context menu
-            new RTContextMenu(this.element, "[data-characteristic]", [], {
+            new WH40KContextMenu(this.element, "[data-characteristic]", [], {
                 onOpen: target => this._getCharacteristicContextOptions(target),
                 jQuery: false
             });
             
             // Skills context menu
-            new RTContextMenu(this.element, "[data-skill]", [], {
+            new WH40KContextMenu(this.element, "[data-skill]", [], {
                 onOpen: target => this._getSkillContextOptions(target),
                 jQuery: false
             });
             
             // Items context menu
-            new RTContextMenu(this.element, "[data-item-id]", [], {
+            new WH40KContextMenu(this.element, "[data-item-id]", [], {
                 onOpen: target => this._getItemContextOptions(target),
                 jQuery: false
             });
             
             // Fate points context menu
-            new RTContextMenu(this.element, "[data-fate-point]", [], {
+            new WH40KContextMenu(this.element, "[data-fate-point]", [], {
                 onOpen: () => this._getFatePointContextOptions(),
                 jQuery: false
             });
@@ -362,7 +362,7 @@ export default function ContextMenuMixin(Base) {
         
         async _postCharacteristicToChat(charKey, char) {
             // Create a simple chat message with characteristic info
-            const content = `<div class="rt-char-chat">
+            const content = `<div class="wh40k-char-chat">
                 <strong>${char.label || charKey}</strong>: ${char.total}
                 (Bonus: ${char.bonus})
             </div>`;

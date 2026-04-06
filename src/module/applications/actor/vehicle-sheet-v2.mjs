@@ -20,7 +20,7 @@ export default class VehicleSheetV2 extends BaseActorSheet {
 
   /** @override */
   static DEFAULT_OPTIONS = {
-    classes: ["rogue-trader", "sheet", "actor", "vehicle-v2"],
+    classes: ["wh40k-rpg", "sheet", "actor", "vehicle-v2"],
     position: {
       width: 1000,
       height: 800
@@ -54,34 +54,34 @@ export default class VehicleSheetV2 extends BaseActorSheet {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/rogue-trader/templates/actor/vehicle-v2/header.hbs"
+      template: "systems/wh40k-rpg/templates/actor/vehicle-v2/header.hbs"
     },
     tabs: {
-      template: "systems/rogue-trader/templates/actor/vehicle-v2/tabs.hbs"
+      template: "systems/wh40k-rpg/templates/actor/vehicle-v2/tabs.hbs"
     },
     overview: {
-      template: "systems/rogue-trader/templates/actor/vehicle-v2/tab-overview.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/actor/vehicle-v2/tab-overview.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     },
     combat: {
-      template: "systems/rogue-trader/templates/actor/vehicle-v2/tab-combat.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/actor/vehicle-v2/tab-combat.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     },
     crew: {
-      template: "systems/rogue-trader/templates/actor/vehicle-v2/tab-crew.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/actor/vehicle-v2/tab-crew.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     },
     components: {
-      template: "systems/rogue-trader/templates/actor/vehicle-v2/tab-components.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/actor/vehicle-v2/tab-components.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     },
     notes: {
-      template: "systems/rogue-trader/templates/actor/vehicle-v2/tab-notes.hbs",
-      container: { classes: ["rt-body"], id: "tab-body" },
+      template: "systems/wh40k-rpg/templates/actor/vehicle-v2/tab-notes.hbs",
+      container: { classes: ["wh40k-body"], id: "tab-body" },
       scrollable: [""]
     }
   };
@@ -90,11 +90,11 @@ export default class VehicleSheetV2 extends BaseActorSheet {
 
   /** @override */
   static TABS = [
-    { tab: "overview", label: "RT.Tabs.Overview", group: "primary", cssClass: "tab-overview" },
-    { tab: "combat", label: "RT.Tabs.Combat", group: "primary", cssClass: "tab-combat" },
-    { tab: "crew", label: "RT.Vehicle.Crew", group: "primary", cssClass: "tab-crew" },
-    { tab: "components", label: "RT.Vehicle.Components", group: "primary", cssClass: "tab-components" },
-    { tab: "notes", label: "RT.NPC.Notes", group: "primary", cssClass: "tab-notes" }
+    { tab: "overview", label: "WH40K.Tabs.Overview", group: "primary", cssClass: "tab-overview" },
+    { tab: "combat", label: "WH40K.Tabs.Combat", group: "primary", cssClass: "tab-combat" },
+    { tab: "crew", label: "WH40K.Vehicle.Crew", group: "primary", cssClass: "tab-crew" },
+    { tab: "components", label: "WH40K.Vehicle.Components", group: "primary", cssClass: "tab-components" },
+    { tab: "notes", label: "WH40K.NPC.Notes", group: "primary", cssClass: "tab-notes" }
   ];
 
   /* -------------------------------------------- */

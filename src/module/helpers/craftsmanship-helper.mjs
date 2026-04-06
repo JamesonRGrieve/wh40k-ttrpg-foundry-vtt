@@ -4,7 +4,7 @@
  * Centralized utility for applying craftsmanship modifiers and qualities
  * across all item types (weapons, armour, gear, force fields).
  *
- * Uses CONFIG.ROGUE_TRADER.craftsmanshipRules as single source of truth.
+ * Uses CONFIG.WH40K.craftsmanshipRules as single source of truth.
  */
 export default class CraftsmanshipHelper {
     /**
@@ -26,10 +26,10 @@ export default class CraftsmanshipHelper {
      */
     static getModifiers(item) {
         const craftsmanship = item.craftsmanship ?? 'common';
-        const rules = CONFIG.ROGUE_TRADER.craftsmanshipRules;
+        const rules = CONFIG.WH40K.craftsmanshipRules;
 
         if (!rules) {
-            console.warn('RogueTrader | craftsmanshipRules not found in CONFIG');
+            console.warn('WH40K | craftsmanshipRules not found in CONFIG');
             return {};
         }
 
@@ -77,7 +77,7 @@ export default class CraftsmanshipHelper {
      */
     static getWeaponQualities(weapon) {
         const craftsmanship = weapon.craftsmanship ?? 'common';
-        const rules = CONFIG.ROGUE_TRADER.craftsmanshipRules?.weapon;
+        const rules = CONFIG.WH40K.craftsmanshipRules?.weapon;
 
         if (!rules) return new Set();
 
@@ -102,7 +102,7 @@ export default class CraftsmanshipHelper {
      */
     static getRemoveQualities(weapon) {
         const craftsmanship = weapon.craftsmanship ?? 'common';
-        const rules = CONFIG.ROGUE_TRADER.craftsmanshipRules?.weapon;
+        const rules = CONFIG.WH40K.craftsmanshipRules?.weapon;
 
         if (!rules) return new Set();
 
@@ -184,7 +184,7 @@ export default class CraftsmanshipHelper {
      */
     static getForceFieldOverloadRange(forceField) {
         const craftsmanship = forceField.craftsmanship ?? 'common';
-        const rules = CONFIG.ROGUE_TRADER.craftsmanshipRules?.forceField;
+        const rules = CONFIG.WH40K.craftsmanshipRules?.forceField;
 
         if (!rules) return [1, 10]; // Default to common
 

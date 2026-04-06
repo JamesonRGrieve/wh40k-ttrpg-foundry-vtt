@@ -4,17 +4,17 @@
   <nav class="export-format-tabs">
     <button type="button" class="format-tab {{#eq format "text"}}active{{/eq}}" data-format="text">
       <i class="fa-solid fa-file-lines"></i>
-      {{localize "RT.NPC.Export.TextFormat"}}
+      {{localize "WH40K.NPC.Export.TextFormat"}}
     </button>
     <button type="button" class="format-tab {{#eq format "json"}}active{{/eq}}" data-format="json">
       <i class="fa-solid fa-file-code"></i>
-      {{localize "RT.NPC.Export.JSONFormat"}}
+      {{localize "WH40K.NPC.Export.JSONFormat"}}
     </button>
   </nav>
 
   {{!-- Export Preview --}}
   <div class="export-preview">
-    <label>{{localize "RT.NPC.Export.Preview"}}</label>
+    <label>{{localize "WH40K.NPC.Export.Preview"}}</label>
     {{#eq format "text"}}
     <pre class="export-content text-content">{{textContent}}</pre>
     {{else}}

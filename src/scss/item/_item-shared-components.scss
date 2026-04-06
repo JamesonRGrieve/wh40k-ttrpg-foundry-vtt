@@ -9,7 +9,7 @@
 // Compact stat display with icon, value, and label
 // Usage: <div class="rt-stat-pill rt-stat-pill--positive">...</div>
 
-.rt-stat-pill {
+.wh40k-stat-pill {
     display: inline-flex;
     align-items: center;
     gap: var(--rt-item-spacing-xs);
@@ -38,19 +38,19 @@
 
     // Color variants
     &--positive {
-        .rt-stat-pill__value {
+        .wh40k-stat-pill__value {
             color: var(--rt-stat-positive);
         }
-        .rt-stat-pill__icon {
+        .wh40k-stat-pill__icon {
             color: var(--rt-stat-positive);
         }
     }
 
     &--negative {
-        .rt-stat-pill__value {
+        .wh40k-stat-pill__value {
             color: var(--rt-stat-negative);
         }
-        .rt-stat-pill__icon {
+        .wh40k-stat-pill__icon {
             color: var(--rt-stat-negative);
         }
     }
@@ -72,7 +72,7 @@
 // ────────────────────────────────────────────
 // Horizontal bar of stat pills
 
-.rt-stat-bar {
+.wh40k-stat-bar {
     display: flex;
     flex-wrap: wrap;
     gap: var(--rt-item-spacing-sm);
@@ -86,14 +86,14 @@
 // ────────────────────────────────────────────
 // Meta badges for type, category, tier, etc.
 
-.rt-badge-row {
+.wh40k-badge-row {
     display: flex;
     flex-wrap: wrap;
     gap: var(--rt-item-spacing-xs);
     align-items: center;
 }
 
-.rt-badge {
+.wh40k-badge {
     display: inline-flex;
     align-items: center;
     gap: var(--rt-item-spacing-xs);
@@ -165,7 +165,7 @@
 // ────────────────────────────────────────────
 // Click-to-expand content panel
 
-.rt-expandable {
+.wh40k-expandable {
     cursor: pointer;
     user-select: none;
     display: inline-flex;
@@ -193,7 +193,7 @@
     }
 }
 
-.rt-expansion-panel {
+.wh40k-expansion-panel {
     display: none;
     padding: var(--rt-item-spacing-sm) var(--rt-item-spacing-md);
     margin-top: var(--rt-item-spacing-xs);
@@ -223,7 +223,7 @@
 // Button Component
 // ────────────────────────────────────────────
 
-.rt-btn {
+.wh40k-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -301,7 +301,7 @@
 // Empty State Component
 // ────────────────────────────────────────────
 
-.rt-empty-state {
+.wh40k-empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -334,13 +334,13 @@
 // Tag List Component
 // ────────────────────────────────────────────
 
-.rt-tag-list {
+.wh40k-tag-list {
     display: flex;
     flex-wrap: wrap;
     gap: var(--rt-item-spacing-xs);
 }
 
-.rt-tag {
+.wh40k-tag {
     display: inline-flex;
     align-items: center;
     gap: var(--rt-item-spacing-xs);
@@ -385,14 +385,14 @@
 // Property Tags (for armour, weapon, etc.)
 // ────────────────────────────────────────────
 
-.rt-property-tags {
+.wh40k-property-tags {
     display: flex;
     flex-wrap: wrap;
     gap: var(--rt-item-spacing-xs);
     margin-bottom: var(--rt-item-spacing-sm);
 }
 
-.rt-property-tag {
+.wh40k-property-tag {
     display: inline-flex;
     align-items: center;
     gap: var(--rt-item-spacing-xs);
@@ -429,7 +429,7 @@
     }
 }
 
-.rt-property-detail {
+.wh40k-property-detail {
     padding: var(--rt-item-spacing-sm);
     margin-bottom: var(--rt-item-spacing-sm);
     background: rgba(0, 0, 0, 0.2);
@@ -464,7 +464,7 @@
 // Modifier Row Component
 // ────────────────────────────────────────────
 
-.rt-modifier-row {
+.wh40k-modifier-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -527,14 +527,14 @@
 // Quality Tags Component
 // ────────────────────────────────────────────
 
-.rt-quality-tags {
+.wh40k-quality-tags {
     display: flex;
     flex-wrap: wrap;
     gap: var(--rt-item-spacing-xs);
     align-items: center;
 }
 
-.rt-quality-tag {
+.wh40k-quality-tag {
     display: inline-flex;
     align-items: center;
     gap: var(--rt-item-spacing-xs);
@@ -603,11 +603,11 @@
     }
 }
 
-.rt-quality-expansions {
+.wh40k-quality-expansions {
     margin-top: var(--rt-item-spacing-md);
 }
 
-.rt-quality-description {
+.wh40k-quality-description {
     font-size: var(--rt-item-font-size-sm);
     color: var(--color-text-secondary);
     line-height: 1.5;

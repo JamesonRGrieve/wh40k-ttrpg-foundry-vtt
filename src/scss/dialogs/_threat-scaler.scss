@@ -10,27 +10,27 @@
     overflow: visible;
   }
   
-  .rt-threat-scaler-form {
+  .wh40k-threat-scaler-form {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-lg;
-    padding: $rt-space-md;
+    gap: $wh40k-space-lg;
+    padding: $wh40k-space-md;
     max-height: 85vh;
     overflow-y: auto;
 
     // Header
-    .rt-scaler-header {
+    .wh40k-scaler-header {
       border-bottom: 2px solid var(--color-border-secondary);
-      padding-bottom: $rt-space-md;
+      padding-bottom: $wh40k-space-md;
     }
 
-    .rt-scaler-npc-info {
+    .wh40k-scaler-npc-info {
       display: flex;
       align-items: center;
-      gap: $rt-space-md;
+      gap: $wh40k-space-md;
     }
 
-    .rt-scaler-npc-portrait {
+    .wh40k-scaler-npc-portrait {
       width: 80px;
       height: 80px;
       border-radius: 8px;
@@ -38,13 +38,13 @@
       object-fit: cover;
     }
 
-    .rt-scaler-npc-identity h3 {
+    .wh40k-scaler-npc-identity h3 {
       margin: 0 0 6px 0;
       font-size: 1.4rem;
       color: var(--color-text-light-primary);
     }
 
-    .rt-scaler-current-threat {
+    .wh40k-scaler-current-threat {
       font-size: 0.9rem;
       color: var(--color-text-light-secondary);
 
@@ -54,7 +54,7 @@
       }
     }
 
-    .rt-threat-tier-badge {
+    .wh40k-threat-tier-badge {
       display: inline-block;
       padding: 2px 8px;
       border-radius: 8px;
@@ -67,7 +67,7 @@
     }
 
     // Slider Section
-    .rt-scaler-slider-section {
+    .wh40k-scaler-slider-section {
       label {
         display: block;
         font-size: 0.85rem;
@@ -79,12 +79,12 @@
       }
     }
 
-    .rt-slider-container {
+    .wh40k-slider-container {
       position: relative;
       padding: 20px 0 40px 0;
     }
 
-    .rt-threat-slider {
+    .wh40k-threat-slider {
       width: 100%;
       height: 12px;
       -webkit-appearance: none;
@@ -106,7 +106,7 @@
         height: 24px;
         border-radius: 50%;
         background: white;
-        border: 3px solid $rt-accent-gold;
+        border: 3px solid $wh40k-accent-gold;
         cursor: pointer;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 
@@ -120,7 +120,7 @@
         height: 24px;
         border-radius: 50%;
         background: white;
-        border: 3px solid $rt-accent-gold;
+        border: 3px solid $wh40k-accent-gold;
         cursor: pointer;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 
@@ -130,7 +130,7 @@
       }
     }
 
-    .rt-slider-marks {
+    .wh40k-slider-marks {
       position: absolute;
       top: 0;
       left: 0;
@@ -139,21 +139,21 @@
       pointer-events: none;
     }
 
-    .rt-slider-mark {
+    .wh40k-slider-mark {
       position: absolute;
       transform: translateX(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
 
-      .rt-mark-tick {
+      .wh40k-mark-tick {
         width: 2px;
         height: 16px;
         background: rgba(255, 255, 255, 0.5);
         margin-bottom: 4px;
       }
 
-      .rt-mark-label {
+      .wh40k-mark-label {
         font-size: 0.65rem;
         color: var(--color-text-light-secondary);
         text-align: center;
@@ -164,21 +164,21 @@
       }
     }
 
-    .rt-slider-value-display {
+    .wh40k-slider-value-display {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: $rt-space-md;
-      margin-top: $rt-space-lg;
+      gap: $wh40k-space-md;
+      margin-top: $wh40k-space-lg;
     }
 
-    .rt-new-threat-value {
+    .wh40k-new-threat-value {
       font-size: 3rem;
       font-weight: 700;
       color: var(--color-text-light-primary);
     }
 
-    .rt-new-threat-tier {
+    .wh40k-new-threat-tier {
       padding: 6px 16px;
       border-radius: 12px;
       font-size: 0.9rem;
@@ -188,14 +188,14 @@
       letter-spacing: 0.5px;
     }
 
-    .rt-quick-presets {
+    .wh40k-quick-presets {
       display: flex;
       gap: 8px;
       justify-content: center;
-      margin-top: $rt-space-md;
+      margin-top: $wh40k-space-md;
     }
 
-    .rt-preset-btn {
+    .wh40k-preset-btn {
       padding: 8px 16px;
       background: var(--color-bg-tertiary);
       border: 1px solid var(--color-border-secondary);
@@ -208,25 +208,25 @@
 
       &:hover {
         background: rgba(139, 0, 0, 0.2);
-        border-color: $rt-accent-gold;
-        box-shadow: 0 1px 3px $rt-shadow-sm;
+        border-color: $wh40k-accent-gold;
+        box-shadow: 0 1px 3px $wh40k-shadow-sm;
       }
 
       i {
         margin-right: 4px;
       }
 
-      &.rt-preset-reset {
+      &.wh40k-preset-reset {
         background: rgba(139, 0, 0, 0.1);
-        border-color: $rt-accent-gold;
-        color: $rt-accent-gold;
+        border-color: $wh40k-accent-gold;
+        color: $wh40k-accent-gold;
       }
     }
 
     // Scaling Options
-    .rt-scaler-options {
+    .wh40k-scaler-options {
       h4 {
-        margin: 0 0 $rt-space-sm 0;
+        margin: 0 0 $wh40k-space-sm 0;
         font-size: 0.9rem;
         text-transform: uppercase;
         color: var(--color-text-light-secondary);
@@ -234,13 +234,13 @@
       }
     }
 
-    .rt-options-grid {
+    .wh40k-options-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: $rt-space-sm;
+      gap: $wh40k-space-sm;
     }
 
-    .rt-checkbox-label {
+    .wh40k-checkbox-label {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -253,7 +253,7 @@
 
       &:hover {
         background: rgba(139, 0, 0, 0.1);
-        border-color: $rt-accent-gold;
+        border-color: $wh40k-accent-gold;
       }
 
       input[type="checkbox"] {
@@ -269,9 +269,9 @@
     }
 
     // Preview Section
-    .rt-scaler-preview {
+    .wh40k-scaler-preview {
       h4 {
-        margin: 0 0 $rt-space-md 0;
+        margin: 0 0 $wh40k-space-md 0;
         font-size: 0.9rem;
         text-transform: uppercase;
         color: var(--color-text-light-secondary);
@@ -279,31 +279,31 @@
       }
     }
 
-    .rt-warning-banner {
+    .wh40k-warning-banner {
       display: flex;
       align-items: center;
-      gap: $rt-space-sm;
-      padding: $rt-space-sm $rt-space-md;
+      gap: $wh40k-space-sm;
+      padding: $wh40k-space-sm $wh40k-space-md;
       background: rgba(255, 152, 0, 0.2);
       border: 1px solid #ff9800;
       border-radius: 4px;
       color: #ff9800;
       font-weight: 600;
-      margin-bottom: $rt-space-md;
+      margin-bottom: $wh40k-space-md;
 
       i {
         font-size: 1.2rem;
       }
     }
 
-    .rt-preview-tabs {
+    .wh40k-preview-tabs {
       display: flex;
       gap: 4px;
       border-bottom: 2px solid var(--color-border-secondary);
-      margin-bottom: $rt-space-md;
+      margin-bottom: $wh40k-space-md;
     }
 
-    .rt-preview-tab {
+    .wh40k-preview-tab {
       padding: 8px 16px;
       background: transparent;
       border: none;
@@ -321,12 +321,12 @@
       }
 
       &.active {
-        color: $rt-accent-gold;
-        border-bottom-color: $rt-accent-gold;
+        color: $wh40k-accent-gold;
+        border-bottom-color: $wh40k-accent-gold;
       }
     }
 
-    .rt-preview-section {
+    .wh40k-preview-section {
       display: none;
 
       &.active {
@@ -334,7 +334,7 @@
       }
     }
 
-    .rt-comparison-table {
+    .wh40k-comparison-table {
       width: 100%;
       border-collapse: collapse;
       display: block;
@@ -380,21 +380,21 @@
         }
       }
 
-      .rt-stat-name {
+      .wh40k-stat-name {
         font-weight: 700;
-        color: $rt-accent-gold;
+        color: $wh40k-accent-gold;
       }
 
-      .rt-stat-current {
+      .wh40k-stat-current {
         color: var(--color-text-light-secondary);
       }
 
-      .rt-stat-arrow {
+      .wh40k-stat-arrow {
         text-align: center;
         color: var(--color-text-light-secondary);
       }
 
-      .rt-stat-new {
+      .wh40k-stat-new {
         font-weight: 700;
 
         &.increased {
@@ -406,7 +406,7 @@
         }
       }
 
-      .rt-stat-change {
+      .wh40k-stat-change {
         font-weight: 700;
         text-align: right;
 
@@ -423,34 +423,34 @@
         }
       }
 
-      .rt-change-percent {
+      .wh40k-change-percent {
         font-size: 0.75rem;
         font-weight: 400;
         margin-left: 4px;
       }
     }
 
-    .rt-combat-changes {
+    .wh40k-combat-changes {
       display: flex;
       flex-direction: column;
-      gap: $rt-space-md;
+      gap: $wh40k-space-md;
     }
 
-    .rt-change-row {
+    .wh40k-change-row {
       display: flex;
       align-items: center;
-      gap: $rt-space-md;
-      padding: $rt-space-sm;
+      gap: $wh40k-space-md;
+      padding: $wh40k-space-sm;
       background: var(--color-bg-tertiary);
       border-radius: 4px;
 
-      .rt-change-label {
+      .wh40k-change-label {
         font-weight: 600;
         color: var(--color-text-light-secondary);
         min-width: 80px;
       }
 
-      .rt-change-current {
+      .wh40k-change-current {
         font-weight: 700;
         color: var(--color-text-light-primary);
       }
@@ -459,12 +459,12 @@
         color: var(--color-text-light-secondary);
       }
 
-      .rt-change-new {
+      .wh40k-change-new {
         font-weight: 700;
         color: var(--color-text-light-primary);
       }
 
-      .rt-change-diff {
+      .wh40k-change-diff {
         font-weight: 700;
         margin-left: auto;
 
@@ -478,8 +478,8 @@
       }
     }
 
-    .rt-preview-note {
-      padding: $rt-space-md;
+    .wh40k-preview-note {
+      padding: $wh40k-space-md;
       background: var(--color-bg-tertiary);
       border-radius: 4px;
       color: var(--color-text-light-secondary);
@@ -488,16 +488,16 @@
     }
 
     // Footer
-    .rt-scaler-footer {
+    .wh40k-scaler-footer {
       display: flex;
       justify-content: flex-end;
-      gap: $rt-space-sm;
-      padding-top: $rt-space-md;
+      gap: $wh40k-space-sm;
+      padding-top: $wh40k-space-md;
       border-top: 2px solid var(--color-border-secondary);
       flex-wrap: wrap;
 
-      .rt-btn-secondary,
-      .rt-btn-primary {
+      .wh40k-btn-secondary,
+      .wh40k-btn-primary {
         display: flex;
         align-items: center;
         gap: 6px;
@@ -514,7 +514,7 @@
         }
       }
 
-      .rt-btn-secondary {
+      .wh40k-btn-secondary {
         background: var(--color-bg-tertiary);
         border: 1px solid var(--color-border-secondary);
         color: var(--color-text-light-primary);
@@ -525,14 +525,14 @@
         }
       }
 
-      .rt-btn-primary {
-        background: $rt-accent-gold;
-        border: 1px solid $rt-accent-gold;
+      .wh40k-btn-primary {
+        background: $wh40k-accent-gold;
+        border: 1px solid $wh40k-accent-gold;
         color: #000;
 
         &:hover {
-          background: $rt-color-gold-light;
-          border-color: $rt-color-gold-light;
+          background: $wh40k-color-gold-light;
+          border-color: $wh40k-color-gold-light;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
       }

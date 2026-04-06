@@ -6,7 +6,7 @@ import { roll1d100 } from '../rolls/roll-helpers.mjs';
 
 export async function handleBleeding(actor) {
     const context = {
-        template: 'systems/rogue-trader/templates/chat/bleeding-chat.hbs',
+        template: 'systems/wh40k-rpg/templates/chat/bleeding-chat.hbs',
         actor: actor
     }
     await sendActiveEffectMessage(context);
@@ -14,7 +14,7 @@ export async function handleBleeding(actor) {
 
 export async function handleOnFire(actor) {
     const context = {
-        template: 'systems/rogue-trader/templates/chat/burning-chat.hbs',
+        template: 'systems/wh40k-rpg/templates/chat/burning-chat.hbs',
         actor: actor,
         roll: await roll1d100(),
         target: actor.characteristics.willpower.total
@@ -166,7 +166,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
                 { key: "system.combat.defense", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
                 { key: "system.combat.attack", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
             ],
-            flags: { "rogue-trader": { nature: "harmful" } }
+            flags: { "wh40k-rpg": { nature: "harmful" } }
         },
         prone: {
             name: "Prone",
@@ -174,7 +174,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
             changes: [
                 { key: "system.combat.defense", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
             ],
-            flags: { "rogue-trader": { nature: "harmful" } }
+            flags: { "wh40k-rpg": { nature: "harmful" } }
         },
         blinded: {
             name: "Blinded",
@@ -183,7 +183,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
                 { key: "system.characteristics.ballisticSkill.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
                 { key: "system.characteristics.weaponSkill.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 }
             ],
-            flags: { "rogue-trader": { nature: "harmful" } }
+            flags: { "wh40k-rpg": { nature: "harmful" } }
         },
         deafened: {
             name: "Deafened",
@@ -191,7 +191,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
             changes: [
                 { key: "system.characteristics.perception.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
             ],
-            flags: { "rogue-trader": { nature: "harmful" } }
+            flags: { "wh40k-rpg": { nature: "harmful" } }
         },
         grappled: {
             name: "Grappled",
@@ -200,7 +200,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
                 { key: "system.characteristics.weaponSkill.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
                 { key: "system.characteristics.agility.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }
             ],
-            flags: { "rogue-trader": { nature: "harmful" } }
+            flags: { "wh40k-rpg": { nature: "harmful" } }
         },
         inspired: {
             name: "Inspired",
@@ -209,7 +209,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
                 { key: "system.characteristics.willpower.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
                 { key: "system.characteristics.fellowship.modifier", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }
             ],
-            flags: { "rogue-trader": { nature: "beneficial" } }
+            flags: { "wh40k-rpg": { nature: "beneficial" } }
         },
         blessed: {
             name: "Blessed",
@@ -217,7 +217,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
             changes: [
                 { key: "system.combat.defense", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }
             ],
-            flags: { "rogue-trader": { nature: "beneficial" } }
+            flags: { "wh40k-rpg": { nature: "beneficial" } }
         }
     };
 

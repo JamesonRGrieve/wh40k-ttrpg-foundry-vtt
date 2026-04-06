@@ -64,7 +64,7 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
         required: true,
         initial: "npc",
         choices: ["npc", "vehicle", "ship"],
-        label: "RT.NPC.PrimaryUse"
+        label: "WH40K.NPC.PrimaryUse"
       }),
       
       role: new StringField({
@@ -246,11 +246,11 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
    * @type {string}
    */
   get threatDescription() {
-    if (this.threatLevel <= 5) return game.i18n.localize("RT.Threat.Low");
-    if (this.threatLevel <= 10) return game.i18n.localize("RT.Threat.Moderate");
-    if (this.threatLevel <= 15) return game.i18n.localize("RT.Threat.Dangerous");
-    if (this.threatLevel <= 20) return game.i18n.localize("RT.Threat.Deadly");
-    return game.i18n.localize("RT.Threat.Apocalyptic");
+    if (this.threatLevel <= 5) return game.i18n.localize("WH40K.Threat.Low");
+    if (this.threatLevel <= 10) return game.i18n.localize("WH40K.Threat.Moderate");
+    if (this.threatLevel <= 15) return game.i18n.localize("WH40K.Threat.Dangerous");
+    if (this.threatLevel <= 20) return game.i18n.localize("WH40K.Threat.Deadly");
+    return game.i18n.localize("WH40K.Threat.Apocalyptic");
   }
 
   /**
@@ -670,11 +670,11 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
    * @returns {Promise<Actor>}
    */
   async toggleFavoriteSkill(skillKey) {
-    const favorites = [...(this.parent.getFlag("rogue-trader", "favoriteSkills") || [])];
+    const favorites = [...(this.parent.getFlag("wh40k-rpg", "favoriteSkills") || [])];
     const index = favorites.indexOf(skillKey);
     if (index >= 0) favorites.splice(index, 1);
     else favorites.push(skillKey);
-    return this.parent.setFlag("rogue-trader", "favoriteSkills", favorites);
+    return this.parent.setFlag("wh40k-rpg", "favoriteSkills", favorites);
   }
 
   /**
@@ -683,11 +683,11 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
    * @returns {Promise<Actor>}
    */
   async toggleFavoriteTalent(itemId) {
-    const favorites = [...(this.parent.getFlag("rogue-trader", "favoriteTalents") || [])];
+    const favorites = [...(this.parent.getFlag("wh40k-rpg", "favoriteTalents") || [])];
     const index = favorites.indexOf(itemId);
     if (index >= 0) favorites.splice(index, 1);
     else favorites.push(itemId);
-    return this.parent.setFlag("rogue-trader", "favoriteTalents", favorites);
+    return this.parent.setFlag("wh40k-rpg", "favoriteTalents", favorites);
   }
 
   /**
@@ -695,7 +695,7 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
    * @type {Array<string>}
    */
   get favoriteSkills() {
-    return this.parent.getFlag("rogue-trader", "favoriteSkills") || [];
+    return this.parent.getFlag("wh40k-rpg", "favoriteSkills") || [];
   }
 
   /**
@@ -703,7 +703,7 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
    * @type {Array<string>}
    */
   get favoriteTalents() {
-    return this.parent.getFlag("rogue-trader", "favoriteTalents") || [];
+    return this.parent.getFlag("wh40k-rpg", "favoriteTalents") || [];
   }
 
   /* -------------------------------------------- */

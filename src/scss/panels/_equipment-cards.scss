@@ -4,19 +4,19 @@
 // Sleek, modern, single-line layout for equipment items
 
 // Equipment Table Container
-.rt-equipment-table {
+.wh40k-equipment-table {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin-bottom: $rt-space-sm;
+  margin-bottom: $wh40k-space-sm;
 }
 
 // Equipment Row (Single Line)
-.rt-equip-row {
+.wh40k-equip-row {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-xs $rt-space-sm;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-xs $wh40k-space-sm;
   background: var(--rt-panel-bg-solid);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 4px;
@@ -37,33 +37,33 @@
 }
 
 // Row State Variants
-.rt-equip-equipped {
+.wh40k-equip-equipped {
   border-left: 3px solid var(--rt-success-primary);
   background: var(--rt-success-bg);
 }
 
-.rt-equip-active {
+.wh40k-equip-active {
   border-left: 3px solid var(--rt-fate-primary);
   background: var(--rt-fate-bg);
   
-  .rt-equip-icon {
+  .wh40k-equip-icon {
     box-shadow: 0 0 8px var(--rt-fate-primary);
   }
 }
 
-.rt-equip-overloaded {
+.wh40k-equip-overloaded {
   border-left: 3px solid var(--rt-danger-primary);
   background: var(--rt-danger-bg);
   opacity: 0.8;
 }
 
-.rt-equip-stowed {
+.wh40k-equip-stowed {
   opacity: 0.65;
   border-left: 3px solid var(--rt-text-subtle);
 }
 
 // Icon (Small)
-.rt-equip-icon {
+.wh40k-equip-icon {
   width: 28px;
   height: 28px;
   border-radius: 4px;
@@ -73,7 +73,7 @@
 }
 
 // Name Button
-.rt-equip-name {
+.wh40k-equip-name {
   flex: 1;
   min-width: 0;
   text-align: left;
@@ -95,7 +95,7 @@
 }
 
 // Meta Info (Type, Location, etc.)
-.rt-equip-meta {
+.wh40k-equip-meta {
   font-size: 0.7rem;
   color: var(--rt-text-muted);
   text-transform: uppercase;
@@ -104,7 +104,7 @@
 }
 
 // Status Badge (Active, Offline, etc.)
-.rt-equip-status {
+.wh40k-equip-status {
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--rt-text-muted);
@@ -117,26 +117,26 @@
     font-size: 0.85em;
   }
   
-  .rt-status-active {
+  .wh40k-status-active {
     color: var(--rt-fate-primary);
   }
   
-  .rt-status-danger {
+  .wh40k-status-danger {
     color: var(--rt-danger-primary);
   }
   
-  .rt-status-offline {
+  .wh40k-status-offline {
     color: var(--rt-text-subtle);
   }
 }
 
 // Stat Display (AP, Weight, etc.)
-.rt-equip-stat {
+.wh40k-equip-stat {
   font-size: 0.75rem;
   color: var(--rt-text-dark);
   flex-shrink: 0;
   
-  .rt-stat-l {
+  .wh40k-stat-l {
     color: var(--rt-text-muted);
     font-weight: 500;
     margin-right: 2px;
@@ -149,7 +149,7 @@
 }
 
 // Actions Container
-.rt-equip-actions {
+.wh40k-equip-actions {
   display: flex;
   gap: 4px;
   margin-left: auto;
@@ -157,7 +157,7 @@
 }
 
 // Action Buttons (Small & Stylistic)
-.rt-equip-btn {
+.wh40k-equip-btn {
   width: 24px;
   height: 24px;
   padding: 0;
@@ -188,7 +188,7 @@
 }
 
 // Toggle Button (Equip/Activate)
-.rt-equip-toggle {
+.wh40k-equip-toggle {
   .fa-check-circle {
     color: var(--rt-success-primary);
   }
@@ -203,7 +203,7 @@
 }
 
 // Danger Button
-.rt-equip-danger {
+.wh40k-equip-danger {
   color: var(--rt-danger-primary);
   
   &:hover {
@@ -213,13 +213,13 @@
 }
 
 // Add Item Button (Compact)
-.rt-add-item-btn {
+.wh40k-add-item-btn {
   width: 100%;
-  padding: $rt-space-sm;
+  padding: $wh40k-space-sm;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   background: var(--rt-panel-bg-translucent);
   border: 1px dashed var(--rt-border-color-light);
   border-radius: 4px;
@@ -247,7 +247,7 @@
 // ============================================
 
 // Item Count Badge in Header
-.rt-item-count {
+.wh40k-item-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -264,19 +264,19 @@
 }
 
 // Equipment List Container
-.rt-equipment-list {
+.wh40k-equipment-list {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-sm;
-  margin-bottom: $rt-space-sm;
+  gap: $wh40k-space-sm;
+  margin-bottom: $wh40k-space-sm;
 }
 
 // Equipment Card
-.rt-equipment-card {
+.wh40k-equipment-card {
   background: var(--rt-panel-bg-solid);
   border: 1px solid var(--rt-border-color-light);
   border-radius: 8px;
-  padding: $rt-space-sm;
+  padding: $wh40k-space-sm;
   transition: all 0.2s ease;
   cursor: grab;
   
@@ -293,7 +293,7 @@
 }
 
 // Card States
-.rt-card-equipped {
+.wh40k-card-equipped {
   border-left: 4px solid var(--rt-success-primary);
   background: var(--rt-success-bg);
   
@@ -303,7 +303,7 @@
   }
 }
 
-.rt-card-active {
+.wh40k-card-active {
   border-left: 4px solid var(--rt-fate-primary);
   background: var(--rt-fate-bg);
   
@@ -312,12 +312,12 @@
     opacity: 0.95;
   }
   
-  .rt-card-icon {
+  .wh40k-card-icon {
     box-shadow: 0 0 8px var(--rt-fate-primary);
   }
 }
 
-.rt-card-overloaded {
+.wh40k-card-overloaded {
   border-left: 4px solid var(--rt-danger-primary);
   background: var(--rt-danger-bg);
   opacity: 0.7;
@@ -328,7 +328,7 @@
   }
 }
 
-.rt-card-stowed {
+.wh40k-card-stowed {
   opacity: 0.7;
   border-left: 4px solid var(--rt-text-muted);
   
@@ -338,14 +338,14 @@
 }
 
 // Card Header (Icon, Name, Action Button)
-.rt-card-header {
+.wh40k-card-header {
   display: flex;
   align-items: center;
-  gap: $rt-space-sm;
-  margin-bottom: $rt-space-xs;
+  gap: $wh40k-space-sm;
+  margin-bottom: $wh40k-space-xs;
 }
 
-.rt-card-icon {
+.wh40k-card-icon {
   width: 40px;
   height: 40px;
   border-radius: 6px;
@@ -354,7 +354,7 @@
   flex-shrink: 0;
 }
 
-.rt-card-info {
+.wh40k-card-info {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -362,7 +362,7 @@
   gap: 2px;
 }
 
-.rt-card-name {
+.wh40k-card-name {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--rt-text-dark);
@@ -376,7 +376,7 @@
   }
 }
 
-.rt-card-meta {
+.wh40k-card-meta {
   font-size: 0.7rem;
   color: var(--rt-text-muted);
   display: flex;
@@ -389,7 +389,7 @@
 }
 
 // Card Action Button (Equip/Activate)
-.rt-card-action {
+.wh40k-card-action {
   width: 32px;
   height: 32px;
   padding: 0;
@@ -436,13 +436,13 @@
     transition: transform 0.1s ease;
   }
 
-  &.rt-action-equip {
+  &.wh40k-action-equip {
     .fa-check-circle {
       color: var(--rt-success-primary);
     }
   }
 
-  &.rt-action-activate {
+  &.wh40k-action-activate {
     .fa-bolt {
       color: var(--rt-fate-primary);
     }
@@ -456,7 +456,7 @@
 }
 
 // Status Badges
-.rt-status-badge {
+.wh40k-status-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -474,37 +474,37 @@
   }
 }
 
-.rt-status-active {
+.wh40k-status-active {
   background: var(--rt-fate-bg);
   color: var(--rt-fate-primary);
 }
 
-.rt-status-overloaded {
+.wh40k-status-overloaded {
   background: var(--rt-danger-bg);
   color: var(--rt-danger-primary);
 }
 
 // Card Description
-.rt-card-description {
+.wh40k-card-description {
   font-size: 0.75rem;
   color: var(--rt-text-medium);
   line-height: 1.4;
-  margin-bottom: $rt-space-xs;
-  padding: $rt-space-xs;
+  margin-bottom: $wh40k-space-xs;
+  padding: $wh40k-space-xs;
   background: var(--rt-panel-bg-translucent);
   border-radius: 4px;
   font-style: italic;
 }
 
 // Card Stats (Badges for AP, Weight, etc.)
-.rt-card-stats {
+.wh40k-card-stats {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: $rt-space-xs;
+  margin-bottom: $wh40k-space-xs;
 }
 
-.rt-stat-badge {
+.wh40k-stat-badge {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -515,49 +515,49 @@
   font-size: 0.7rem;
 }
 
-.rt-stat-label {
+.wh40k-stat-label {
   color: var(--rt-text-muted);
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.05em;
 }
 
-.rt-stat-value {
+.wh40k-stat-value {
   color: var(--rt-text-dark);
   font-weight: 700;
 }
 
 // Special stat badges
-.rt-badge-ap {
+.wh40k-badge-ap {
   border-color: var(--rt-danger-border);
   background: var(--rt-danger-bg);
   
-  .rt-stat-value {
+  .wh40k-stat-value {
     color: var(--rt-danger-primary);
   }
 }
 
-.rt-badge-rating {
+.wh40k-badge-rating {
   border-color: var(--rt-fate-border);
   background: var(--rt-fate-bg);
   
-  .rt-stat-value {
+  .wh40k-stat-value {
     color: var(--rt-fate-primary);
   }
 }
 
 // Card Actions Row
-.rt-card-actions {
+.wh40k-card-actions {
   display: flex;
   gap: 4px;
-  padding-top: $rt-space-xs;
+  padding-top: $wh40k-space-xs;
   border-top: 1px solid var(--rt-border-color-light);
 }
 
-.rt-card-btn {
+.wh40k-card-btn {
   flex: 1;
   height: 28px;
-  padding: 0 $rt-space-xs;
+  padding: 0 $wh40k-space-xs;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -611,7 +611,7 @@
   }
 }
 
-.rt-btn-danger {
+.wh40k-btn-danger {
   color: var(--rt-danger-primary);
   
   &:hover {
@@ -621,13 +621,13 @@
 }
 
 // Add Item Button
-.rt-add-item-btn {
+.wh40k-add-item-btn {
   width: 100%;
-  padding: $rt-space-md;
+  padding: $wh40k-space-md;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $rt-space-xs;
+  gap: $wh40k-space-xs;
   background: var(--rt-panel-bg-translucent);
   border: 2px dashed var(--rt-border-color-light);
   border-radius: 8px;
@@ -654,12 +654,12 @@
 // Drag & Drop States
 // ============================================
 
-.rt-equipment-card.dragging {
+.wh40k-equipment-card.dragging {
   opacity: 0.5;
   transform: scale(0.95);
 }
 
-.rt-equipment-list.drag-over {
+.wh40k-equipment-list.drag-over {
   background: var(--rt-accent-overlay);
   border-radius: 8px;
 }
@@ -669,16 +669,16 @@
 // ============================================
 
 @media (max-width: 768px) {
-  .rt-card-stats {
-    .rt-stat-badge {
+  .wh40k-card-stats {
+    .wh40k-stat-badge {
       flex: 1 1 45%;
     }
   }
   
-  .rt-card-actions {
+  .wh40k-card-actions {
     flex-wrap: wrap;
     
-    .rt-card-btn {
+    .wh40k-card-btn {
       flex: 1 1 30%;
     }
   }

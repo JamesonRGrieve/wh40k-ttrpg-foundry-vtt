@@ -23,10 +23,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "stat-block-exporter-{id}",
-    classes: ["rogue-trader", "stat-block-exporter"],
+    classes: ["wh40k-rpg", "stat-block-exporter"],
     tag: "div",
     window: {
-      title: "RT.NPC.Export.Title",
+      title: "WH40K.NPC.Export.Title",
       icon: "fa-solid fa-file-export",
       minimizable: false,
       resizable: true,
@@ -49,7 +49,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
   /** @override */
   static PARTS = {
     content: {
-      template: "systems/rogue-trader/templates/dialogs/stat-block-exporter.hbs"
+      template: "systems/wh40k-rpg/templates/dialogs/stat-block-exporter.hbs"
     }
   };
 
@@ -86,7 +86,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
   /** @override */
   get title() {
-    return game.i18n.format("RT.NPC.Export.Title", { name: this.#actor?.name || "NPC" });
+    return game.i18n.format("WH40K.NPC.Export.Title", { name: this.#actor?.name || "NPC" });
   }
 
   /* -------------------------------------------- */
@@ -320,9 +320,9 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
       textContent,
       jsonContent,
       buttons: [
-        { action: "copyToClipboard", icon: "fa-solid fa-clipboard", label: "RT.NPC.Export.CopyToClipboard", cssClass: "primary" },
-        { action: "exportText", icon: "fa-solid fa-file-lines", label: "RT.NPC.Export.DownloadText" },
-        { action: "exportJson", icon: "fa-solid fa-file-code", label: "RT.NPC.Export.DownloadJSON" },
+        { action: "copyToClipboard", icon: "fa-solid fa-clipboard", label: "WH40K.NPC.Export.CopyToClipboard", cssClass: "primary" },
+        { action: "exportText", icon: "fa-solid fa-file-lines", label: "WH40K.NPC.Export.DownloadText" },
+        { action: "exportJson", icon: "fa-solid fa-file-code", label: "WH40K.NPC.Export.DownloadJSON" },
         { action: "close", icon: "fa-solid fa-times", label: "Close" }
       ]
     };
@@ -358,10 +358,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     
     try {
       await navigator.clipboard.writeText(content);
-      ui.notifications.info(game.i18n.localize("RT.NPC.Export.CopiedToClipboard"));
+      ui.notifications.info(game.i18n.localize("WH40K.NPC.Export.CopiedToClipboard"));
     } catch (err) {
       console.error("Failed to copy to clipboard:", err);
-      ui.notifications.error(game.i18n.localize("RT.NPC.Export.CopyFailed"));
+      ui.notifications.error(game.i18n.localize("WH40K.NPC.Export.CopyFailed"));
     }
   }
 
@@ -375,7 +375,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     const filename = `${this.#actor.name.slugify()}.json`;
     
     StatBlockExporter._downloadFile(content, filename, "application/json");
-    ui.notifications.info(game.i18n.format("RT.NPC.Export.Downloaded", { filename }));
+    ui.notifications.info(game.i18n.format("WH40K.NPC.Export.Downloaded", { filename }));
   }
 
   /**
@@ -388,7 +388,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     const filename = `${this.#actor.name.slugify()}.txt`;
     
     StatBlockExporter._downloadFile(content, filename, "text/plain");
-    ui.notifications.info(game.i18n.format("RT.NPC.Export.Downloaded", { filename }));
+    ui.notifications.info(game.i18n.format("WH40K.NPC.Export.Downloaded", { filename }));
   }
 
   /**
@@ -452,10 +452,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     
     try {
       await navigator.clipboard.writeText(content);
-      ui.notifications.info(game.i18n.localize("RT.NPC.Export.CopiedToClipboard"));
+      ui.notifications.info(game.i18n.localize("WH40K.NPC.Export.CopiedToClipboard"));
     } catch (err) {
       console.error("Failed to copy to clipboard:", err);
-      ui.notifications.error(game.i18n.localize("RT.NPC.Export.CopyFailed"));
+      ui.notifications.error(game.i18n.localize("WH40K.NPC.Export.CopyFailed"));
     }
   }
 }

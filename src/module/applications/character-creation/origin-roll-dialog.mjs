@@ -20,7 +20,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /** @override */
     static DEFAULT_OPTIONS = {
         id: "origin-roll-dialog-{rollType}",
-        classes: ["rogue-trader", "origin-roll-dialog"],
+        classes: ["wh40k-rpg", "origin-roll-dialog"],
         tag: "form",
         window: {
             title: "Roll Starting Stat",
@@ -49,7 +49,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/character-creation/origin-roll-dialog.hbs"
+            template: "systems/wh40k-rpg/templates/character-creation/origin-roll-dialog.hbs"
         }
     };
 
@@ -638,7 +638,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         };
 
         const html = await renderTemplate(
-            "systems/rogue-trader/templates/chat/origin-roll-card.hbs",
+            "systems/wh40k-rpg/templates/chat/origin-roll-card.hbs",
             templateData
         );
 

@@ -25,7 +25,7 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: "form",
-        classes: ["rogue-trader", "dialog", "simple-roll", "standard-form"],
+        classes: ["wh40k-rpg", "dialog", "simple-roll", "standard-form"],
         actions: {
             roll: SimpleRollDialog.#onRoll,
             cancel: SimpleRollDialog.#onCancel
@@ -44,7 +44,7 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/prompt/simple-roll-prompt.hbs",
+            template: "systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs",
             scrollable: [""]
         }
     };

@@ -4,56 +4,56 @@
     {{!-- Unified Header: Toolbar + Mode + Direction --}}
     <header class="builder-toolbar">
         <div class="toolbar-group">
-            <button type="button" class="toolbar-btn" data-action="randomize" data-tooltip="{{localize 'RT.OriginPath.RandomizeHint'}}">
+            <button type="button" class="toolbar-btn" data-action="randomize" data-tooltip="{{localize 'WH40K.OriginPath.RandomizeHint'}}">
                 <i class="fa-solid fa-dice"></i>
-                <span>{{localize "RT.OriginPath.Randomize"}}</span>
+                <span>{{localize "WH40K.OriginPath.Randomize"}}</span>
             </button>
-            <button type="button" class="toolbar-btn" data-action="reset" data-tooltip="{{localize 'RT.OriginPath.ResetHint'}}">
+            <button type="button" class="toolbar-btn" data-action="reset" data-tooltip="{{localize 'WH40K.OriginPath.ResetHint'}}">
                 <i class="fa-solid fa-rotate-left"></i>
-                <span>{{localize "RT.OriginPath.Reset"}}</span>
+                <span>{{localize "WH40K.OriginPath.Reset"}}</span>
             </button>
         </div>
 
         <div class="toolbar-center">
-            <h1 class="toolbar-title">{{localize "RT.OriginPath.YourJourney"}}</h1>
+            <h1 class="toolbar-title">{{localize "WH40K.OriginPath.YourJourney"}}</h1>
             
             {{!-- Mode and Direction Controls (inline with title) --}}
             <div class="toolbar-controls">
                 {{!-- Guided/Free Mode Toggle --}}
                 <div class="mode-toggle">
-                    <label class="mode-option {{#if guidedMode}}active{{/if}}" data-tooltip="{{localize 'RT.OriginPath.GuidedHint'}}">
+                    <label class="mode-option {{#if guidedMode}}active{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.GuidedHint'}}">
                         <input type="radio" name="mode" value="guided" {{#if guidedMode}}checked{{/if}} data-action="setMode">
                         <i class="fa-solid fa-route"></i>
-                        <span>{{localize "RT.OriginPath.Guided"}}</span>
+                        <span>{{localize "WH40K.OriginPath.Guided"}}</span>
                     </label>
-                    <label class="mode-option {{#unless guidedMode}}active{{/unless}}" data-tooltip="{{localize 'RT.OriginPath.FreeHint'}}">
+                    <label class="mode-option {{#unless guidedMode}}active{{/unless}}" data-tooltip="{{localize 'WH40K.OriginPath.FreeHint'}}">
                         <input type="radio" name="mode" value="free" {{#unless guidedMode}}checked{{/unless}} data-action="setMode">
                         <i class="fa-solid fa-unlock"></i>
-                        <span>{{localize "RT.OriginPath.Free"}}</span>
+                        <span>{{localize "WH40K.OriginPath.Free"}}</span>
                     </label>
                 </div>
 
                 {{!-- Direction Toggle --}}
                 <div class="direction-toggle">
-                    <label class="direction-option {{#if isBackward}}active{{/if}}" data-tooltip="{{localize 'RT.OriginPath.DirectionBackwardHint'}}">
+                    <label class="direction-option {{#if isBackward}}active{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.DirectionBackwardHint'}}">
                         <input type="radio" name="direction" value="backward" {{#if isBackward}}checked{{/if}} data-action="setDirection">
                         <i class="fa-solid fa-arrow-left"></i>
-                        <span>{{localize "RT.OriginPath.DirectionBackward"}}</span>
+                        <span>{{localize "WH40K.OriginPath.DirectionBackward"}}</span>
                     </label>
-                    <label class="direction-option {{#if isForward}}active{{/if}}" data-tooltip="{{localize 'RT.OriginPath.DirectionForwardHint'}}">
+                    <label class="direction-option {{#if isForward}}active{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.DirectionForwardHint'}}">
                         <input type="radio" name="direction" value="forward" {{#if isForward}}checked{{/if}} data-action="setDirection">
                         <i class="fa-solid fa-arrow-right"></i>
-                        <span>{{localize "RT.OriginPath.DirectionForward"}}</span>
+                        <span>{{localize "WH40K.OriginPath.DirectionForward"}}</span>
                     </label>
                 </div>
             </div>
         </div>
 
         <div class="toolbar-group">
-            <button type="button" class="toolbar-btn" data-action="export" data-tooltip="{{localize 'RT.OriginPath.ExportHint'}}">
+            <button type="button" class="toolbar-btn" data-action="export" data-tooltip="{{localize 'WH40K.OriginPath.ExportHint'}}">
                 <i class="fa-solid fa-download"></i>
             </button>
-            <button type="button" class="toolbar-btn" data-action="import" data-tooltip="{{localize 'RT.OriginPath.ImportHint'}}">
+            <button type="button" class="toolbar-btn" data-action="import" data-tooltip="{{localize 'WH40K.OriginPath.ImportHint'}}">
                 <i class="fa-solid fa-upload"></i>
             </button>
         </div>
@@ -84,7 +84,7 @@
             <div class="step-connector {{#if hasLineageSelection}}active{{/if}}"></div>
             <div class="step-nav-item lineage-step {{#if showLineage}}active{{/if}} {{#if hasLineageSelection}}complete{{/if}}" 
                  data-action="goToLineage"
-                 data-tooltip="{{localize 'RT.OriginPath.Lineage'}}{{#if hasLineageSelection}}: {{lineageSelection.name}}{{/if}}">
+                 data-tooltip="{{localize 'WH40K.OriginPath.Lineage'}}{{#if hasLineageSelection}}: {{lineageSelection.name}}{{/if}}">
                 <div class="step-number">
                     {{#if hasLineageSelection}}
                         <img src="{{lineageSelection.img}}" alt="{{lineageSelection.name}}" class="step-icon-img" />
@@ -92,7 +92,7 @@
                         <i class="fa-solid fa-crown"></i>
                     {{/if}}
                 </div>
-                <span class="step-label">{{localize "RT.OriginPath.Lineage"}}</span>
+                <span class="step-label">{{localize "WH40K.OriginPath.Lineage"}}</span>
             </div>
         {{/if}}
     </nav>
@@ -107,10 +107,10 @@
                 </div>
                 <div class="step-info">
                     {{#if currentStep.isLineage}}
-                        <h2>{{localize "RT.OriginPath.Lineage"}} <span class="optional-badge">{{localize "RT.OriginPath.Optional"}}</span></h2>
-                        <p>{{localize "RT.OriginPath.LineageDesc"}}</p>
+                        <h2>{{localize "WH40K.OriginPath.Lineage"}} <span class="optional-badge">{{localize "WH40K.OriginPath.Optional"}}</span></h2>
+                        <p>{{localize "WH40K.OriginPath.LineageDesc"}}</p>
                     {{else}}
-                        <h2>{{localize "RT.OriginPath.Step"}} {{add currentStep.index 1}}: {{currentStep.label}}</h2>
+                        <h2>{{localize "WH40K.OriginPath.Step"}} {{add currentStep.index 1}}: {{currentStep.label}}</h2>
                         <p>{{currentStep.description}}</p>
                     {{/if}}
                 </div>
@@ -134,10 +134,10 @@
                         {{#if origin.badges}}
                             <div class="card-badges">
                                 {{#if origin.hasChoices}}
-                                    <span class="card-badge choices">{{localize "RT.OriginPath.HasChoices"}}</span>
+                                    <span class="card-badge choices">{{localize "WH40K.OriginPath.HasChoices"}}</span>
                                 {{/if}}
                                 {{#if origin.isAdvanced}}
-                                    <span class="card-badge advanced">{{localize "RT.OriginPath.Advanced"}}</span>
+                                    <span class="card-badge advanced">{{localize "WH40K.OriginPath.Advanced"}}</span>
                                 {{/if}}
                                 {{#if origin.xpCost}}
                                     <span class="card-badge xp">{{origin.xpCost}} XP</span>
@@ -145,12 +145,12 @@
                             </div>
                         {{/if}}
                         {{!-- Preview button for detailed view --}}
-                        <button type="button" class="card-preview-btn" data-action="viewOriginCard" data-origin-id="{{origin.id}}" data-origin-uuid="{{origin.uuid}}" data-tooltip="{{localize 'RT.OriginPath.ViewDetails'}}">
+                        <button type="button" class="card-preview-btn" data-action="viewOriginCard" data-origin-id="{{origin.id}}" data-origin-uuid="{{origin.uuid}}" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
                 {{else}}
-                    <p class="no-origins">{{localize "RT.OriginPath.NoOriginsAvailable"}}</p>
+                    <p class="no-origins">{{localize "WH40K.OriginPath.NoOriginsAvailable"}}</p>
                 {{/each}}
             </div>
         </section>
@@ -165,11 +165,11 @@
                         <h3>{{selectedOrigin.name}}</h3>
                     </div>
                     <div class="selection-actions">
-                        <button type="button" class="toolbar-btn" data-action="viewOrigin" data-tooltip="{{localize 'RT.OriginPath.ViewDetails'}}">
+                        <button type="button" class="toolbar-btn" data-action="viewOrigin" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                         {{#unless selectedOrigin.isConfirmed}}
-                            <button type="button" class="toolbar-btn toolbar-btn--confirm" data-action="confirmSelection" data-tooltip="{{localize 'RT.OriginPath.ConfirmSelection'}}">
+                            <button type="button" class="toolbar-btn toolbar-btn--confirm" data-action="confirmSelection" data-tooltip="{{localize 'WH40K.OriginPath.ConfirmSelection'}}">
                                 <i class="fa-solid fa-check"></i>
                             </button>
                         {{/unless}}
@@ -181,13 +181,13 @@
                     <div class="selection-section">
                         <h4 class="section-title">
                             <i class="fa-solid fa-gift"></i>
-                            {{localize "RT.OriginPath.Grants"}}
+                            {{localize "WH40K.OriginPath.Grants"}}
                         </h4>
                         <div class="grants-list">
                             {{!-- Characteristics --}}
                             {{#if selectedOrigin.grants.hasCharacteristics}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "RT.Characteristics"}}</span>
+                                    <span class="category-label">{{localize "WH40K.Characteristics"}}</span>
                                     <div class="category-items">
                                         {{#each selectedOrigin.grants.characteristics as |char|}}
                                             <span class="grant-item characteristic {{#if char.positive}}positive{{else}}negative{{/if}}">
@@ -201,7 +201,7 @@
                             {{!-- Skills (clickable) --}}
                             {{#if selectedOrigin.grants.hasSkills}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "RT.Skills"}}</span>
+                                    <span class="category-label">{{localize "WH40K.Skills"}}</span>
                                     <div class="category-items">
                                         {{#each selectedOrigin.grants.skills as |skill|}}
                                             <div class="grant-tag skill-tag clickable" 
@@ -220,7 +220,7 @@
                             {{!-- Talents (clickable if they have uuid) --}}
                             {{#if selectedOrigin.grants.hasTalents}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "RT.Talents"}}</span>
+                                    <span class="category-label">{{localize "WH40K.Talents"}}</span>
                                     <div class="category-items">
                                         {{#each selectedOrigin.grants.talents as |talent|}}
                                             <div class="grant-tag talent-tag {{#if talent.hasItem}}clickable{{/if}}" 
@@ -238,7 +238,7 @@
                             {{!-- Traits (clickable if they have uuid) --}}
                             {{#if selectedOrigin.grants.hasTraits}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "RT.Traits"}}</span>
+                                    <span class="category-label">{{localize "WH40K.Traits"}}</span>
                                     <div class="category-items">
                                         {{#each selectedOrigin.grants.traits as |trait|}}
                                             <div class="grant-tag trait-tag {{#if trait.hasItem}}clickable{{/if}}"
@@ -256,7 +256,7 @@
                             {{!-- Equipment --}}
                             {{#if selectedOrigin.grants.hasEquipment}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "RT.Equipment"}}</span>
+                                    <span class="category-label">{{localize "WH40K.Equipment"}}</span>
                                     <div class="category-items">
                                         {{#each selectedOrigin.grants.equipment as |item|}}
                                             <div class="grant-tag equipment-tag">
@@ -276,7 +276,7 @@
                     <div class="selection-section choices-section">
                         <h4 class="section-title">
                             <i class="fa-solid fa-list-check"></i>
-                            {{localize "RT.OriginPath.ChoicesRequired"}}
+                            {{localize "WH40K.OriginPath.ChoicesRequired"}}
                         </h4>
                         {{#each selectedOrigin.choices as |choice|}}
                             <div class="choice-item {{#if choice.isComplete}}complete{{/if}}">
@@ -297,7 +297,7 @@
                                 {{/if}}
                                 <button type="button" class="choice-btn" data-action="editChoice" data-choice-label="{{choice.label}}">
                                     <i class="fa-solid fa-pen"></i>
-                                    {{#if choice.isComplete}}{{localize "RT.OriginPath.ChangeChoice"}}{{else}}{{localize "RT.OriginPath.MakeChoice"}}{{/if}}
+                                    {{#if choice.isComplete}}{{localize "WH40K.OriginPath.ChangeChoice"}}{{else}}{{localize "WH40K.OriginPath.MakeChoice"}}{{/if}}
                                 </button>
                             </div>
                         {{/each}}
@@ -309,13 +309,13 @@
                     <div class="selection-section rolls-section">
                         <h4 class="section-title">
                             <i class="fa-solid fa-dice"></i>
-                            {{localize "RT.OriginPath.StartingStats"}}
+                            {{localize "WH40K.OriginPath.StartingStats"}}
                         </h4>
                         {{#if selectedOrigin.rolls.wounds}}
                             <div class="roll-item {{#if selectedOrigin.rolls.wounds.hasValue}}has-value{{/if}}">
                                 <div class="roll-info">
                                     <div class="roll-label">
-                                        <i class="fa-solid fa-heart"></i> {{localize "RT.Wounds"}}
+                                        <i class="fa-solid fa-heart"></i> {{localize "WH40K.Wounds"}}
                                     </div>
                                     {{#if selectedOrigin.rolls.wounds.hasValue}}
                                         <div class="roll-result">{{selectedOrigin.rolls.wounds.value}} <span class="roll-breakdown">({{selectedOrigin.rolls.wounds.breakdown}})</span></div>
@@ -324,9 +324,9 @@
                                     {{/if}}
                                 </div>
                                 <div class="roll-actions">
-                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="wounds" data-tooltip="{{localize 'RT.OriginPath.RollTooltip'}}">
+                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="wounds" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
                                         <i class="fa-solid fa-dice"></i>
-                                        {{#if selectedOrigin.rolls.wounds.hasValue}}{{localize "RT.OriginPath.Reroll"}}{{else}}{{localize "RT.Roll"}}{{/if}}
+                                        {{#if selectedOrigin.rolls.wounds.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll"}}{{/if}}
                                     </button>
                                 </div>
                             </div>
@@ -335,7 +335,7 @@
                             <div class="roll-item {{#if selectedOrigin.rolls.fate.hasValue}}has-value{{/if}}">
                                 <div class="roll-info">
                                     <div class="roll-label">
-                                        <i class="fa-solid fa-star"></i> {{localize "RT.Fate"}}
+                                        <i class="fa-solid fa-star"></i> {{localize "WH40K.Fate"}}
                                     </div>
                                     {{#if selectedOrigin.rolls.fate.hasValue}}
                                         <div class="roll-result">{{selectedOrigin.rolls.fate.value}} <span class="roll-breakdown">({{selectedOrigin.rolls.fate.breakdown}})</span></div>
@@ -344,9 +344,9 @@
                                     {{/if}}
                                 </div>
                                 <div class="roll-actions">
-                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="fate" data-tooltip="{{localize 'RT.OriginPath.RollTooltip'}}">
+                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="fate" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
                                         <i class="fa-solid fa-dice"></i>
-                                        {{#if selectedOrigin.rolls.fate.hasValue}}{{localize "RT.OriginPath.Reroll"}}{{else}}{{localize "RT.Roll"}}{{/if}}
+                                        {{#if selectedOrigin.rolls.fate.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll"}}{{/if}}
                                     </button>
                                 </div>
                             </div>
@@ -356,16 +356,16 @@
 
                 {{!-- Confirm Selection Button --}}
                 <div class="selection-confirm">
-                    <button type="button" class="confirm-selection-btn" data-action="confirmSelection" data-tooltip="{{localize 'RT.OriginPath.ConfirmSelectionHint'}}">
+                    <button type="button" class="confirm-selection-btn" data-action="confirmSelection" data-tooltip="{{localize 'WH40K.OriginPath.ConfirmSelectionHint'}}">
                         <i class="fa-solid fa-check"></i>
-                        <span>{{localize "RT.OriginPath.ConfirmSelection"}}</span>
+                        <span>{{localize "WH40K.OriginPath.ConfirmSelection"}}</span>
                     </button>
                 </div>
             {{else}}
                 {{!-- Empty State --}}
                 <div class="selection-empty">
                     <i class="fa-solid fa-hand-pointer"></i>
-                    <p>{{localize "RT.OriginPath.SelectOriginPrompt"}}</p>
+                    <p>{{localize "WH40K.OriginPath.SelectOriginPrompt"}}</p>
                 </div>
             {{/if}}
         </aside>
@@ -376,13 +376,13 @@
         <div class="preview-header">
             <h3>
                 <i class="fa-solid fa-eye"></i>
-                {{localize "RT.OriginPath.TotalBonuses"}}
+                {{localize "WH40K.OriginPath.TotalBonuses"}}
             </h3>
         </div>
         <div class="preview-grid">
             {{#if preview.characteristics.length}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "RT.Characteristics"}}</div>
+                    <div class="category-title">{{localize "WH40K.Characteristics"}}</div>
                     <div class="category-items">
                         {{#each preview.characteristics as |char|}}
                             <span class="preview-item {{#if (gt char.value 0)}}positive{{else}}negative{{/if}} {{#if char.fromChoice}}from-choice{{/if}}">
@@ -394,7 +394,7 @@
             {{/if}}
             {{#if preview.skills.length}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "RT.Skills"}}</div>
+                    <div class="category-title">{{localize "WH40K.Skills"}}</div>
                     <div class="category-items">
                         {{#each preview.skills as |skill|}}
                             <div class="grant-tag skill-tag {{#if skill.uuid}}clickable{{/if}} {{#if skill.fromChoice}}from-choice{{/if}}"
@@ -410,7 +410,7 @@
             {{/if}}
             {{#if preview.talents.length}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "RT.Talents"}}</div>
+                    <div class="category-title">{{localize "WH40K.Talents"}}</div>
                     <div class="category-items">
                         {{#each preview.talents as |talent|}}
                             <div class="grant-tag talent-tag {{#if talent.uuid}}clickable{{/if}} {{#if talent.fromChoice}}from-choice{{/if}}"
@@ -426,7 +426,7 @@
             {{/if}}
             {{#if preview.wounds}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "RT.Wounds"}}</div>
+                    <div class="category-title">{{localize "WH40K.Wounds"}}</div>
                     <div class="category-items">
                         <div class="grant-tag positive">
                             <i class="fa-solid fa-heart"></i>
@@ -437,7 +437,7 @@
             {{/if}}
             {{#if preview.fate}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "RT.Fate"}}</div>
+                    <div class="category-title">{{localize "WH40K.Fate"}}</div>
                     <div class="category-items">
                         <div class="grant-tag positive">
                             <i class="fa-solid fa-star"></i>
@@ -454,20 +454,20 @@
         <div class="footer-status">
             <span class="status-item {{#if status.stepsComplete}}complete{{else}}pending{{/if}}">
                 <i class="fa-solid {{#if status.stepsComplete}}fa-check-circle{{else}}fa-circle-half-stroke{{/if}}"></i>
-                {{status.stepsCount}}/6 {{localize "RT.OriginPath.Steps"}}
+                {{status.stepsCount}}/6 {{localize "WH40K.OriginPath.Steps"}}
             </span>
             <span class="status-item {{#if status.choicesComplete}}complete{{else}}pending{{/if}}">
                 <i class="fa-solid {{#if status.choicesComplete}}fa-check-circle{{else}}fa-exclamation-triangle{{/if}}"></i>
                 {{#if status.choicesComplete}}
-                    {{localize "RT.OriginPath.AllChoicesComplete"}}
+                    {{localize "WH40K.OriginPath.AllChoicesComplete"}}
                 {{else}}
-                    {{status.pendingChoices}} {{localize "RT.OriginPath.ChoicesPending"}}
+                    {{status.pendingChoices}} {{localize "WH40K.OriginPath.ChoicesPending"}}
                 {{/if}}
             </span>
             {{#if status.pendingRolls}}
                 <span class="status-item warning">
                     <i class="fa-solid fa-dice"></i>
-                    {{status.pendingRolls}} {{localize "RT.OriginPath.RollsPending"}}
+                    {{status.pendingRolls}} {{localize "WH40K.OriginPath.RollsPending"}}
                 </span>
             {{/if}}
         </div>
@@ -476,7 +476,7 @@
             {{#if showLineage}}
                 <button type="button" class="skip-lineage-btn" data-action="skipLineage">
                     <i class="fa-solid fa-forward"></i>
-                    {{localize "RT.OriginPath.SkipLineage"}}
+                    {{localize "WH40K.OriginPath.SkipLineage"}}
                 </button>
             {{/if}}
             {{!-- Go to Lineage button when all 6 steps are complete but not on lineage step --}}
@@ -484,13 +484,13 @@
                 {{#unless showLineage}}
                     <button type="button" class="lineage-btn" data-action="goToLineage">
                         <i class="fa-solid fa-crown"></i>
-                        {{localize "RT.OriginPath.GoToLineage"}}
+                        {{localize "WH40K.OriginPath.GoToLineage"}}
                     </button>
                 {{/unless}}
             {{/if}}
             <button type="button" class="commit-btn" data-action="commit" {{#unless status.canCommit}}disabled{{/unless}}>
                 <i class="fa-solid fa-save"></i>
-                {{localize "RT.OriginPath.CommitToCharacter"}}
+                {{localize "WH40K.OriginPath.CommitToCharacter"}}
             </button>
         </div>
     </footer>

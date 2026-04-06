@@ -4,7 +4,7 @@
 
 import BaseActorSheet from "./base-actor-sheet.mjs";
 import { HandlebarManager } from "../../handlebars/handlebars-manager.mjs";
-import ROGUE_TRADER from "../../config.mjs";
+import WH40K from "../../config.mjs";
 
 /**
  * Actor sheet for Starship type actors.
@@ -32,34 +32,34 @@ export default class StarshipSheet extends BaseActorSheet {
     /** @override */
     static PARTS = {
         header: {
-            template: "systems/rogue-trader/templates/actor/starship/header.hbs"
+            template: "systems/wh40k-rpg/templates/actor/starship/header.hbs"
         },
         tabs: {
-            template: "systems/rogue-trader/templates/actor/starship/tabs.hbs"
+            template: "systems/wh40k-rpg/templates/actor/starship/tabs.hbs"
         },
         stats: {
-            template: "systems/rogue-trader/templates/actor/starship/tab-stats.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
+            template: "systems/wh40k-rpg/templates/actor/starship/tab-stats.hbs",
+            container: { classes: ["wh40k-body"], id: "tab-body" },
             scrollable: [""]
         },
         components: {
-            template: "systems/rogue-trader/templates/actor/starship/tab-components.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
+            template: "systems/wh40k-rpg/templates/actor/starship/tab-components.hbs",
+            container: { classes: ["wh40k-body"], id: "tab-body" },
             scrollable: [""]
         },
         weapons: {
-            template: "systems/rogue-trader/templates/actor/starship/tab-weapons.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
+            template: "systems/wh40k-rpg/templates/actor/starship/tab-weapons.hbs",
+            container: { classes: ["wh40k-body"], id: "tab-body" },
             scrollable: [""]
         },
         crew: {
-            template: "systems/rogue-trader/templates/actor/starship/tab-crew.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
+            template: "systems/wh40k-rpg/templates/actor/starship/tab-crew.hbs",
+            container: { classes: ["wh40k-body"], id: "tab-body" },
             scrollable: [""]
         },
         history: {
-            template: "systems/rogue-trader/templates/actor/starship/tab-history.hbs",
-            container: { classes: ["rt-body"], id: "tab-body" },
+            template: "systems/wh40k-rpg/templates/actor/starship/tab-history.hbs",
+            container: { classes: ["wh40k-body"], id: "tab-body" },
             scrollable: [""]
         }
     };
@@ -68,11 +68,11 @@ export default class StarshipSheet extends BaseActorSheet {
 
     /** @override */
     static TABS = [
-        { tab: "stats", label: "RT.Starship.Tabs.Stats", group: "primary", cssClass: "tab-stats" },
-        { tab: "components", label: "RT.Starship.Tabs.Components", group: "primary", cssClass: "tab-components" },
-        { tab: "weapons", label: "RT.Starship.Tabs.Weapons", group: "primary", cssClass: "tab-weapons" },
-        { tab: "crew", label: "RT.Starship.Tabs.Crew", group: "primary", cssClass: "tab-crew" },
-        { tab: "history", label: "RT.Starship.Tabs.History", group: "primary", cssClass: "tab-history" }
+        { tab: "stats", label: "WH40K.Starship.Tabs.Stats", group: "primary", cssClass: "tab-stats" },
+        { tab: "components", label: "WH40K.Starship.Tabs.Components", group: "primary", cssClass: "tab-components" },
+        { tab: "weapons", label: "WH40K.Starship.Tabs.Weapons", group: "primary", cssClass: "tab-weapons" },
+        { tab: "crew", label: "WH40K.Starship.Tabs.Crew", group: "primary", cssClass: "tab-crew" },
+        { tab: "history", label: "WH40K.Starship.Tabs.History", group: "primary", cssClass: "tab-history" }
     ];
 
     /* -------------------------------------------- */
@@ -89,7 +89,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /** @inheritDoc */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
-        context.dh = CONFIG.rt || ROGUE_TRADER;
+        context.dh = CONFIG.rt || WH40K;
 
         // Prepare ship-specific data
         this._prepareShipData(context);
@@ -186,7 +186,7 @@ export default class StarshipSheet extends BaseActorSheet {
         };
 
         const html = await renderTemplate(
-            "systems/rogue-trader/templates/chat/ship-weapon-chat.hbs",
+            "systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs",
             cardData
         );
 

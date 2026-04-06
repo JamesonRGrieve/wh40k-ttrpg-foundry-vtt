@@ -26,10 +26,10 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "npc-threat-scaler-{id}",
-    classes: ["rogue-trader", "npc-threat-scaler-dialog"],
+    classes: ["wh40k-rpg", "npc-threat-scaler-dialog"],
     tag: "form",
     window: {
-      title: "RT.NPC.ScaleThreat",
+      title: "WH40K.NPC.ScaleThreat",
       icon: "fa-solid fa-chart-line",
       minimizable: false,
       resizable: true,
@@ -57,7 +57,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
   /** @override */
   static PARTS = {
     form: {
-      template: "systems/rogue-trader/templates/dialogs/threat-scaler.hbs"
+      template: "systems/wh40k-rpg/templates/dialogs/threat-scaler.hbs"
     }
   };
 
@@ -122,7 +122,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
   /** @override */
   get title() {
-    return game.i18n.format("RT.NPC.ScaleThreatTitle", { name: this.#actor?.name || "NPC" });
+    return game.i18n.format("WH40K.NPC.ScaleThreatTitle", { name: this.#actor?.name || "NPC" });
   }
 
   /* -------------------------------------------- */
@@ -393,7 +393,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
       
       const direction = newThreat > currentThreat ? "up" : "down";
       ui.notifications.info(
-        game.i18n.format("RT.NPC.ScaledThreat", {
+        game.i18n.format("WH40K.NPC.ScaledThreat", {
           name: this.#actor.name,
           from: currentThreat,
           to: newThreat

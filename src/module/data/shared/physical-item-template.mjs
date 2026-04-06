@@ -19,15 +19,15 @@ export default class PhysicalItemTemplate extends SystemDataModel {
       availability: new fields.StringField({
         required: true,
         initial: "common",
-        choices: () => Object.keys(CONFIG.ROGUE_TRADER?.availabilities ?? {}).length 
-          ? Object.keys(CONFIG.ROGUE_TRADER.availabilities)
+        choices: () => Object.keys(CONFIG.WH40K?.availabilities ?? {}).length 
+          ? Object.keys(CONFIG.WH40K.availabilities)
           : ["ubiquitous", "abundant", "plentiful", "common", "average", "scarce", "rare", "very-rare", "extremely-rare", "near-unique", "unique"]
       }),
       craftsmanship: new fields.StringField({
         required: true,
         initial: "common",
-        choices: () => Object.keys(CONFIG.ROGUE_TRADER?.craftsmanships ?? {}).length
-          ? Object.keys(CONFIG.ROGUE_TRADER.craftsmanships)
+        choices: () => Object.keys(CONFIG.WH40K?.craftsmanships ?? {}).length
+          ? Object.keys(CONFIG.WH40K.craftsmanships)
           : ["poor", "common", "good", "best"]
       }),
       quantity: new fields.NumberField({ 

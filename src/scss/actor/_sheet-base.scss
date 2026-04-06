@@ -4,7 +4,7 @@
 
 // Theme-adaptive styles using CSS custom properties
 
-.rogue-trader.sheet.actor .window-content {
+.wh40k-rpg.sheet.actor .window-content {
     background: var(--rt-sheet-bg) !important;
     background-color: var(--rt-sheet-bg-alt) !important;
     // ApplicationV2: ensure window-content uses flex to allow child scrolling
@@ -13,7 +13,7 @@
     overflow: hidden;
 }
 
-.rt-sheet {
+.wh40k-sheet {
     font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
     background: var(--rt-sheet-bg) !important;
     position: relative;
@@ -24,7 +24,7 @@
     min-height: 0;
     overflow: hidden;
 
-    .rt-panel {
+    .wh40k-panel {
         background: var(--rt-panel-bg);
         border: 1px solid var(--rt-border-color);
         border-radius: 10px;
@@ -33,7 +33,7 @@
         overflow: visible;
     }
 
-    .rt-panel-header {
+    .wh40k-panel-header {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -42,7 +42,7 @@
         border-bottom: 1px solid var(--rt-border-color);
     }
 
-    .rt-panel-title {
+    .wh40k-panel-title {
         flex: 1;
         font-family: 'Modesto Condensed', serif;
         font-size: 1rem;
@@ -51,33 +51,33 @@
         letter-spacing: 0.02em;
     }
 
-    .rt-panel-title i {
+    .wh40k-panel-title i {
         color: var(--rt-gold);
     }
 
-.rt-panel-body {
+.wh40k-panel-body {
     background: var(--rt-panel-body-bg);
     padding: 10px 12px;
     overflow: visible;
 }
 
-.rt-sheet > * {
+.wh40k-sheet > * {
     position: relative;
     z-index: 6;
 }
 
-.rt-wrapper .rt-sheet {
+.wh40k-wrapper .wh40k-sheet {
     background: var(--rt-sheet-bg) !important;
     position: relative;
     overflow: hidden;
 }
 
-.rt-wrapper .rt-sheet > * {
+.wh40k-wrapper .wh40k-sheet > * {
     position: relative;
     z-index: 1;
 }
 
-.rt-panel-details {
+.wh40k-panel-details {
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px dashed var(--rt-border-color-light);
@@ -99,7 +99,7 @@
     }
 }
 
-.rt-panel-toggle {
+.wh40k-panel-toggle {
     width: 24px;
     height: 24px;
     border-radius: 6px;
@@ -111,18 +111,18 @@
     cursor: pointer;
 }
 
-.rt-panel-toggle-icon {
+.wh40k-panel-toggle-icon {
     font-size: 0.7em;
     color: var(--rt-text-medium);
     transition: transform 0.15s ease;
 }
 
-.rt-panel-toggle-icon.active {
+.wh40k-panel-toggle-icon.active {
     transform: rotate(180deg);
 }
 
 // Corruption/Insanity header alignment + full-width toggle
-.rt-panel-header-toggle {
+.wh40k-panel-header-toggle {
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -131,7 +131,7 @@
     user-select: none;
 }
 
-.rt-panel-header-toggle .rt-panel-title {
+.wh40k-panel-header-toggle .wh40k-panel-title {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -139,19 +139,19 @@
     white-space: nowrap;
 }
 
-.rt-panel-header-toggle .rt-degree-badge {
+.wh40k-panel-header-toggle .wh40k-degree-badge {
     margin-left: auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
-.rt-panel-header-toggle .rt-vitals-meta {
+.wh40k-panel-header-toggle .wh40k-vitals-meta {
     margin-left: auto;
     white-space: nowrap;
 }
 
-.rt-vitals-panel .rt-panel-header .rt-vitals-meta {
+.wh40k-vitals-panel .wh40k-panel-header .wh40k-vitals-meta {
     margin-left: auto;
     white-space: nowrap;
 }
@@ -161,35 +161,35 @@
 // ============================================
 
 // Panel color definitions
-$rt-panel-wounds: rgb(139, 0, 0);
-$rt-panel-fatigue: rgb(160, 120, 24);
-$rt-panel-fate: rgb(212, 165, 32);
-$rt-panel-corruption: rgb(168, 32, 32);
-$rt-panel-insanity: rgb(106, 32, 144);
-$rt-panel-movement: rgb(42, 122, 154);
+$wh40k-panel-wounds: rgb(139, 0, 0);
+$wh40k-panel-fatigue: rgb(160, 120, 24);
+$wh40k-panel-fate: rgb(212, 165, 32);
+$wh40k-panel-corruption: rgb(168, 32, 32);
+$wh40k-panel-insanity: rgb(106, 32, 144);
+$wh40k-panel-movement: rgb(42, 122, 154);
 
-.rt-wounds-panel { @include rt-panel-tint($rt-panel-wounds); }
-.rt-fatigue-panel { @include rt-panel-tint($rt-panel-fatigue); }
-.rt-fate-panel { @include rt-panel-tint($rt-panel-fate); }
-.rt-panel-corruption { @include rt-panel-tint($rt-panel-corruption, 0.8, 0.14); }
-.rt-panel-insanity { @include rt-panel-tint($rt-panel-insanity, 0.75, 0.14); }
-.rt-panel-movement { @include rt-panel-tint($rt-panel-movement); }
-.rt-panel-bonuses { @include rt-panel-tint($rt-panel-fatigue, 0.65, 0.1); }
+.wh40k-wounds-panel { @include rt-panel-tint($wh40k-panel-wounds); }
+.wh40k-fatigue-panel { @include rt-panel-tint($wh40k-panel-fatigue); }
+.wh40k-fate-panel { @include rt-panel-tint($wh40k-panel-fate); }
+.wh40k-panel-corruption { @include rt-panel-tint($wh40k-panel-corruption, 0.8, 0.14); }
+.wh40k-panel-insanity { @include rt-panel-tint($wh40k-panel-insanity, 0.75, 0.14); }
+.wh40k-panel-movement { @include rt-panel-tint($wh40k-panel-movement); }
+.wh40k-panel-bonuses { @include rt-panel-tint($wh40k-panel-fatigue, 0.65, 0.1); }
 
-.rt-effects-panel {
-    border-left: 3px solid rgba($rt-panel-movement, 0.65);
+.wh40k-effects-panel {
+    border-left: 3px solid rgba($wh40k-panel-movement, 0.65);
 
-    .rt-panel-header {
-        background: linear-gradient(180deg, rgba($rt-panel-movement, 0.12), transparent);
+    .wh40k-panel-header {
+        background: linear-gradient(180deg, rgba($wh40k-panel-movement, 0.12), transparent);
     }
 }
 
-.rt-panel > :is(.rt-vitals-body, .rt-effects-list, .rt-ability-list, .rt-specialist-entries, .rt-table--border) {
+.wh40k-panel > :is(.wh40k-vitals-body, .wh40k-effects-list, .wh40k-ability-list, .wh40k-specialist-entries, .wh40k-table--border) {
     background: var(--rt-panel-bg-translucent);
     padding: 10px 12px;
     }
 
-    .rt-specialist-group {
+    .wh40k-specialist-group {
         background: var(--rt-panel-bg-solid);
         border: 1px solid var(--rt-border-accent);
         border-radius: 8px;
@@ -214,7 +214,7 @@ $rt-panel-movement: rgb(42, 122, 154);
         }
     }
 
-    .rt-panel__header {
+    .wh40k-panel__header {
         font-size: 1em;
         text-transform: uppercase;
         letter-spacing: 0.08em;
@@ -223,13 +223,13 @@ $rt-panel-movement: rgb(42, 122, 154);
 }
 
 // Character Header - Support both dh- and rt- prefixes
-.rt-character-header {
+.wh40k-character-header {
     grid-column: span 6;
     position: relative;
     z-index: 5;
     overflow: visible;
     
-    .rt-header__info {
+    .wh40k-header__info {
         display: grid;
         grid-template-columns: minmax(280px, 1fr) auto;
         grid-template-rows: auto;
@@ -239,7 +239,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     }
     
     // Single column layout (when HUD is commented out)
-    .rt-header-single-column {
+    .wh40k-header-single-column {
         display: flex !important;
         flex-direction: column !important;
         gap: 10px !important;
@@ -249,7 +249,7 @@ $rt-panel-movement: rgb(42, 122, 154);
 }
 
 // Support both class naming conventions
-.rt-wrapper {
+.wh40k-wrapper {
     width: 100%;
     height: 100%;
     display: flex;
@@ -258,17 +258,17 @@ $rt-panel-movement: rgb(42, 122, 154);
     min-height: 0;
 }
 
-.rt-actor {
+.wh40k-actor {
     display: contents;
 }
 
-.rt-header {
+.wh40k-header {
     grid-column: span 6;
     position: relative;
     z-index: 5;
 }
 
-.rt-header__logo {
+.wh40k-header__logo {
     width: 80px;
     height: 80px;
     border-radius: 6px;
@@ -277,13 +277,13 @@ $rt-panel-movement: rgb(42, 122, 154);
     box-shadow: 0 2px 8px var(--rt-shadow-medium);
 }
 
-.rt-header__logo-image {
+.wh40k-header__logo-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.rt-header-grid {
+.wh40k-header-grid {
     display: grid;
     grid-template-columns: minmax(280px, 1fr) auto;
     grid-template-rows: auto;
@@ -292,26 +292,26 @@ $rt-panel-movement: rgb(42, 122, 154);
     padding: 8px 12px 6px;
 }
 
-.rt-header-left {
+.wh40k-header-left {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.rt-header-topline {
+.wh40k-header-topline {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 10px;
     align-items: center;
 }
 
-.rt-header-bio {
+.wh40k-header-bio {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.rt-header-bio-input {
+.wh40k-header-bio-input {
     border: 1px solid var(--rt-border-color-light);
     border-radius: 6px;
     padding: 6px 8px;
@@ -328,7 +328,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     }
 }
 
-.rt-header-right {
+.wh40k-header-right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -343,14 +343,14 @@ $rt-panel-movement: rgb(42, 122, 154);
 // Purity Seal Status Pip (Header)
 // ============================================
 
-.rt-header-seal {
+.wh40k-header-seal {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 8px;
 }
 
-.rt-purity-seal-pip {
+.wh40k-purity-seal-pip {
     position: relative;
     display: flex;
     align-items: center;
@@ -373,7 +373,7 @@ $rt-panel-movement: rgb(42, 122, 154);
         opacity: 0.9;
     }
 
-    .rt-seal-pip-value {
+    .wh40k-seal-pip-value {
         position: relative;
         z-index: 1;
         font-size: 1rem;
@@ -389,7 +389,7 @@ $rt-panel-movement: rgb(42, 122, 154);
 }
 
 // Cracked seal state (60+ corruption)
-.rt-purity-seal-pip.rt-seal-cracked {
+.wh40k-purity-seal-pip.wh40k-seal-cracked {
     background: linear-gradient(135deg, rgba(255, 140, 0, 0.2) 0%, rgba(184, 134, 11, 0.15) 100%);
     border-color: var(--rt-fatigue-primary, #ff8c00);
     box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3), inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -400,14 +400,14 @@ $rt-panel-movement: rgb(42, 122, 154);
         animation: seal-shake-pip 3s ease-in-out infinite;
     }
 
-    .rt-seal-pip-value {
+    .wh40k-seal-pip-value {
         color: var(--rt-corruption-primary, #8b0000);
         text-shadow: 0 1px 2px rgba(255, 140, 0, 0.6);
     }
 }
 
 // Burning seal state (90+ corruption)
-.rt-purity-seal-pip.rt-seal-burning {
+.wh40k-purity-seal-pip.wh40k-seal-burning {
     background: linear-gradient(135deg, rgba(139, 0, 0, 0.3) 0%, rgba(139, 0, 0, 0.2) 100%);
     border-color: var(--rt-corruption-primary, #8b0000);
     box-shadow: 0 2px 12px rgba(139, 0, 0, 0.6), inset 0 1px 2px rgba(255, 0, 0, 0.2);
@@ -418,7 +418,7 @@ $rt-panel-movement: rgb(42, 122, 154);
         animation: seal-burn-pip 1.5s ease-in-out infinite;
     }
 
-    .rt-seal-pip-value {
+    .wh40k-seal-pip-value {
         color: var(--rt-corruption-primary, #8b0000);
         text-shadow: 0 0 4px rgba(255, 0, 0, 0.8);
         animation: text-flicker 0.5s ease-in-out infinite;
@@ -458,7 +458,7 @@ $rt-panel-movement: rgb(42, 122, 154);
 }
 
 
-.rt-hud-stack {
+.wh40k-hud-stack {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -466,7 +466,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     gap: 6px;
 }
 
-.rt-characteristics-hud {
+.wh40k-characteristics-hud {
     display: flex;
     flex-wrap: nowrap;
     justify-content: flex-end;
@@ -484,7 +484,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     z-index: 1;
 }
 
-.rt-characteristics-hud::before {
+.wh40k-characteristics-hud::before {
     content: "";
     position: absolute;
     left: 12px;
@@ -496,7 +496,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     pointer-events: none;
 }
 
-.rt-char-hud-item {
+.wh40k-char-hud-item {
     display: grid;
     grid-template-rows: auto auto auto auto;
     justify-items: center;
@@ -534,13 +534,13 @@ $rt-panel-movement: rgb(42, 122, 154);
     }
 
     // Buff state (positive modifier)
-    &.rt-char-buffed {
+    &.wh40k-char-buffed {
         border-color: rgba(74, 222, 128, 0.6);
         box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 2px 6px var(--rt-shadow-soft), 0 0 8px rgba(74, 222, 128, 0.3);
     }
 
     // Debuff state (negative modifier)
-    &.rt-char-debuffed {
+    &.wh40k-char-debuffed {
         border-color: rgba(239, 68, 68, 0.6);
         box-shadow: inset 0 1px 0 var(--rt-text-shadow), 0 2px 6px var(--rt-shadow-soft), 0 0 8px rgba(239, 68, 68, 0.3);
     }
@@ -551,7 +551,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     }
 }
 
-.rt-char-hud-name {
+.wh40k-char-hud-name {
     background: none;
     border: none;
     padding: 0;
@@ -587,7 +587,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     100% { transform: scale(1); }
 }
 
-.rt-char-hud-circle {
+.wh40k-char-hud-circle {
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -601,7 +601,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     box-shadow: inset 0 1px 2px var(--rt-text-shadow), 0 3px 8px var(--rt-shadow-soft);
 }
 
-.rt-char-hud-mod {
+.wh40k-char-hud-mod {
     font-size: 1.2em;
     font-weight: 700;
     color: var(--rt-text-dark);
@@ -621,7 +621,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     100% { color: var(--rt-text-dark); text-shadow: 0 1px 0 var(--rt-text-shadow); }
 }
 
-.rt-char-hud-base {
+.wh40k-char-hud-base {
     font-size: 0.65em;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -641,7 +641,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     100% { color: var(--rt-text-muted); }
 }
 
-.rt-char-hud-toggle {
+.wh40k-char-hud-toggle {
     width: 18px;
     height: 18px;
     border-radius: 999px;
@@ -657,18 +657,18 @@ $rt-panel-movement: rgb(42, 122, 154);
     z-index: 3;
 }
 
-.rt-char-hud-toggle-icon {
+.wh40k-char-hud-toggle-icon {
     font-size: 0.7em;
     color: var(--rt-text-muted);
     display: inline-block;
     transition: transform 0.15s ease;
 }
 
-.rt-char-hud-toggle-icon.active {
+.wh40k-char-hud-toggle-icon.active {
     transform: rotate(180deg);
 }
 
-.rt-char-hud-details {
+.wh40k-char-hud-details {
     position: absolute;
     top: calc(100% + 6px);
     left: 50%;
@@ -689,21 +689,21 @@ $rt-panel-movement: rgb(42, 122, 154);
     }
 }
 
-.rt-char-hud-field {
+.wh40k-char-hud-field {
     display: grid;
     gap: 4px;
     text-align: left;
 }
 
-.rt-char-hud-field-label {
+.wh40k-char-hud-field-label {
     font-size: 0.6em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--rt-text-muted);
 }
 
-.rt-char-hud-details input,
-.rt-char-hud-details select {
+.wh40k-char-hud-details input,
+.wh40k-char-hud-details select {
     width: 100%;
     border: 1px solid var(--rt-border-color-light);
     border-radius: 4px;
@@ -713,7 +713,7 @@ $rt-panel-movement: rgb(42, 122, 154);
     font-size: 0.8em;
 }
 
-.rt-char-hud-mod-label {
+.wh40k-char-hud-mod-label {
     font-size: 0.55em;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -722,67 +722,67 @@ $rt-panel-movement: rgb(42, 122, 154);
 
 // Responsive sizing for characteristics HUD
 @media (max-width: 1200px) {
-    .rt-characteristics-hud {
+    .wh40k-characteristics-hud {
         gap: 4px;
         padding: 4px 6px;
     }
 
-    .rt-char-hud-item {
+    .wh40k-char-hud-item {
         padding: 4px;
     }
 
-    .rt-char-hud-circle {
+    .wh40k-char-hud-circle {
         width: 42px;
         height: 42px;
     }
 
-    .rt-char-hud-mod {
+    .wh40k-char-hud-mod {
         font-size: 1.1em;
     }
 
-    .rt-char-hud-name {
+    .wh40k-char-hud-name {
         font-size: 0.7em;
     }
 
-    .rt-char-hud-base {
+    .wh40k-char-hud-base {
         font-size: 0.6em;
     }
 }
 
 @media (max-width: 900px) {
-    .rt-characteristics-hud {
+    .wh40k-characteristics-hud {
         gap: 3px;
         padding: 3px 4px;
     }
 
-    .rt-char-hud-item {
+    .wh40k-char-hud-item {
         padding: 3px;
         gap: 2px;
     }
 
-    .rt-char-hud-circle {
+    .wh40k-char-hud-circle {
         width: 36px;
         height: 36px;
     }
 
-    .rt-char-hud-mod {
+    .wh40k-char-hud-mod {
         font-size: 1em;
     }
 
-    .rt-char-hud-mod-label {
+    .wh40k-char-hud-mod-label {
         font-size: 0.45em;
     }
 
-    .rt-char-hud-name {
+    .wh40k-char-hud-name {
         font-size: 0.65em;
         letter-spacing: 0.08em;
     }
 
-    .rt-char-hud-base {
+    .wh40k-char-hud-base {
         font-size: 0.55em;
     }
 
-    .rt-char-hud-toggle {
+    .wh40k-char-hud-toggle {
         width: 14px;
         height: 14px;
     }
@@ -790,17 +790,17 @@ $rt-panel-movement: rgb(42, 122, 154);
 
 // Accessibility - reduced motion
 @media (prefers-reduced-motion: reduce) {
-    .rt-char-hud-item,
-    .rt-char-hud-name,
-    .rt-char-hud-mod,
-    .rt-char-hud-base,
-    .rt-char-hud-toggle-icon {
+    .wh40k-char-hud-item,
+    .wh40k-char-hud-name,
+    .wh40k-char-hud-mod,
+    .wh40k-char-hud-base,
+    .wh40k-char-hud-toggle-icon {
         animation: none !important;
         transition: none !important;
     }
 
-    .rt-char-hud-name:hover,
-    .rt-char-hud-item:hover {
+    .wh40k-char-hud-name:hover,
+    .wh40k-char-hud-item:hover {
         transform: none !important;
     }
 }

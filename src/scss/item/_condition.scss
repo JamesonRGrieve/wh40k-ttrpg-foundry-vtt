@@ -4,15 +4,15 @@
 // Condition Sheet Styles
 // ============================================================================
 
-.rt-condition-sheet {
-  .rt-item-sheet__header {
+.wh40k-condition-sheet {
+  .wh40k-item-sheet__header {
     position: relative;
     background: linear-gradient(135deg, 
                 rgba(138, 122, 106, 0.1) 0%, 
                 rgba(138, 122, 106, 0.05) 100%);
   }
   
-  .rt-nature-icon {
+  .wh40k-nature-icon {
     position: absolute;
     bottom: 4px;
     right: 4px;
@@ -20,14 +20,14 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
   
-  .rt-condition-badges {
+  .wh40k-condition-badges {
     display: flex;
-    gap: $rt-space-sm;
-    margin-top: $rt-space-sm;
+    gap: $wh40k-space-sm;
+    margin-top: $wh40k-space-sm;
     flex-wrap: wrap;
   }
   
-  .rt-badge {
+  .wh40k-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -98,25 +98,25 @@
     }
   }
   
-  .rt-condition-grid {
+  .wh40k-condition-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
     
-    .rt-field--checkbox {
+    .wh40k-field--checkbox {
       grid-column: 1 / -1;
     }
   }
   
-  .rt-field {
+  .wh40k-field {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     
     &__label {
       display: flex;
       align-items: center;
-      gap: $rt-space-xs;
+      gap: $wh40k-space-xs;
       font-size: 12px;
       font-weight: 600;
       color: #5a5a5a;
@@ -140,8 +140,8 @@
       
       &:focus {
         outline: none;
-        border-color: $rt-accent-gold;
-        box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.1);
+        border-color: $wh40k-accent-gold;
+        box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
       }
     }
     
@@ -158,8 +158,8 @@
       
       &:focus {
         outline: none;
-        border-color: $rt-accent-gold;
-        box-shadow: 0 0 0 2px rgba($rt-accent-gold, 0.1);
+        border-color: $wh40k-accent-gold;
+        box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
       }
     }
   }
@@ -169,7 +169,7 @@
 // Condition Chat Card Styles
 // ============================================================================
 
-.rt-condition-card {
+.wh40k-condition-card {
   font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
   border-radius: 8px;
   overflow: hidden;
@@ -178,7 +178,7 @@
   
   // Nature-based header themes
   &--beneficial {
-    .rt-card-header {
+    .wh40k-card-header {
       background: linear-gradient(135deg, 
                   rgba(#2ecc71, 0.9) 0%, 
                   rgba(#27ae60, 0.95) 100%);
@@ -187,7 +187,7 @@
   }
   
   &--harmful {
-    .rt-card-header {
+    .wh40k-card-header {
       background: linear-gradient(135deg, 
                   rgba(#e74c3c, 0.9) 0%, 
                   rgba(#c0392b, 0.95) 100%);
@@ -196,7 +196,7 @@
   }
   
   &--neutral {
-    .rt-card-header {
+    .wh40k-card-header {
       background: linear-gradient(135deg, 
                   rgba(#95a5a6, 0.9) 0%, 
                   rgba(#7f8c8d, 0.95) 100%);
@@ -204,15 +204,15 @@
     }
   }
   
-  .rt-card-header {
+  .wh40k-card-header {
     display: flex;
     align-items: center;
-    gap: $rt-space-md;
-    padding: $rt-space-md;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
   
-  .rt-card-icon {
+  .wh40k-card-icon {
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -221,18 +221,18 @@
     object-fit: cover;
   }
   
-  .rt-card-title-area {
+  .wh40k-card-title-area {
     flex: 1;
   }
   
-  .rt-card-title {
+  .wh40k-card-title {
     margin: 0 0 4px 0;
     font-size: 18px;
     font-weight: 700;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
   
-  .rt-card-subtitle {
+  .wh40k-card-subtitle {
     font-size: 12px;
     opacity: 0.9;
     font-weight: 500;
@@ -240,13 +240,13 @@
     letter-spacing: 0.5px;
   }
   
-  .rt-card-badges {
+  .wh40k-card-badges {
     display: flex;
-    gap: $rt-space-xs;
-    margin-top: $rt-space-xs;
+    gap: $wh40k-space-xs;
+    margin-top: $wh40k-space-xs;
     flex-wrap: wrap;
     
-    .rt-badge {
+    .wh40k-badge {
       background: rgba(255, 255, 255, 0.25);
       color: white;
       border: 1px solid rgba(255, 255, 255, 0.3);
@@ -255,29 +255,29 @@
     }
   }
   
-  .rt-card-body {
-    padding: $rt-space-md;
+  .wh40k-card-body {
+    padding: $wh40k-space-md;
     background: #f4f1e8;
   }
   
-  .rt-condition-meta {
+  .wh40k-condition-meta {
     display: flex;
-    gap: $rt-space-md;
-    margin-bottom: $rt-space-md;
-    padding-bottom: $rt-space-sm;
+    gap: $wh40k-space-md;
+    margin-bottom: $wh40k-space-md;
+    padding-bottom: $wh40k-space-sm;
     border-bottom: 1px solid #d4c5a6;
   }
   
-  .rt-meta-item {
+  .wh40k-meta-item {
     display: inline-flex;
     align-items: center;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     font-size: 12px;
     font-weight: 600;
     color: #5a5a5a;
     
     i {
-      color: $rt-accent-gold;
+      color: $wh40k-accent-gold;
     }
     
     &--applies {
@@ -297,12 +297,12 @@
     }
   }
   
-  .rt-condition-effect,
-  .rt-condition-removal {
-    margin-bottom: $rt-space-md;
+  .wh40k-condition-effect,
+  .wh40k-condition-removal {
+    margin-bottom: $wh40k-space-md;
     
     h4 {
-      margin: 0 0 $rt-space-xs 0;
+      margin: 0 0 $wh40k-space-xs 0;
       font-size: 13px;
       font-weight: 700;
       color: #2c2417;
@@ -318,23 +318,23 @@
     }
   }
   
-  .rt-condition-effect {
-    background: rgba($rt-accent-gold, 0.08);
-    padding: $rt-space-sm $rt-space-md;
-    border-left: 3px solid $rt-accent-gold;
+  .wh40k-condition-effect {
+    background: rgba($wh40k-accent-gold, 0.08);
+    padding: $wh40k-space-sm $wh40k-space-md;
+    border-left: 3px solid $wh40k-accent-gold;
     border-radius: 4px;
   }
   
-  .rt-condition-removal {
+  .wh40k-condition-removal {
     background: rgba(#3498db, 0.05);
-    padding: $rt-space-sm $rt-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
     border-left: 3px solid #3498db;
     border-radius: 4px;
   }
   
-  .rt-condition-notes {
-    margin-top: $rt-space-md;
-    padding: $rt-space-sm $rt-space-md;
+  .wh40k-condition-notes {
+    margin-top: $wh40k-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: rgba(#95a5a6, 0.1);
     border-radius: 4px;
     font-size: 12px;
@@ -342,21 +342,21 @@
     color: #5a5a5a;
   }
   
-  .rt-card-footer {
-    padding: $rt-space-sm $rt-space-md;
+  .wh40k-card-footer {
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: rgba(#2c2417, 0.05);
     border-top: 1px solid #d4c5a6;
   }
   
-  .rt-source-ref {
+  .wh40k-source-ref {
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
+    gap: $wh40k-space-xs;
     font-size: 11px;
     color: #7a7a7a;
     
     i {
-      color: $rt-accent-gold;
+      color: $wh40k-accent-gold;
     }
   }
 }

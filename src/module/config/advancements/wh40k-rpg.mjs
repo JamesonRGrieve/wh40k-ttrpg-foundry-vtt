@@ -1,8 +1,8 @@
 /**
- * Rogue Trader Career Advancement Configuration
+ * WH40K RPG Career Advancement Configuration
  * 
- * Defines characteristic costs and rank advancements for the Rogue Trader career.
- * Data sourced from Rogue Trader Core Rulebook.
+ * Defines characteristic costs and rank advancements for the WH40K RPG career.
+ * Data sourced from WH40K RPG Core Rulebook.
  */
 
 /**
@@ -39,15 +39,15 @@ export const RANK_1_ADVANCES = [
   { name: 'Command', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Commerce', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Charm', cost: 100, type: 'skill', prerequisites: [] },
-  { name: 'Ciphers', cost: 100, type: 'skill', specialization: 'Rogue Trader', prerequisites: [] },
+  { name: 'Ciphers', cost: 100, type: 'skill', specialization: 'WH40K RPG', prerequisites: [] },
   { name: 'Common Lore', cost: 100, type: 'skill', specialization: 'Imperium', prerequisites: [] },
-  { name: 'Common Lore', cost: 100, type: 'skill', specialization: 'Rogue Traders', prerequisites: [] },
+  { name: 'Common Lore', cost: 100, type: 'skill', specialization: 'WH40K RPGs', prerequisites: [] },
   { name: 'Dodge', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Evaluate', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Literacy', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Pilot', cost: 100, type: 'skill', specialization: 'Space Craft', prerequisites: [] },
   { name: 'Scholastic Lore', cost: 100, type: 'skill', specialization: 'Astromancy', prerequisites: [] },
-  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'Rogue Trader', prerequisites: [] },
+  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'WH40K RPG', prerequisites: [] },
   { name: 'Speak Language', cost: 100, type: 'skill', specialization: 'Trader\'s Cant', prerequisites: [] },
 
   // Talents
@@ -97,7 +97,7 @@ export const RANK_1_ADVANCES = [
  */
 export const CAREER_INFO = {
   key: 'rogueTrader',
-  name: 'RT.Career.RogueTrader',
-  description: 'RT.Career.RogueTraderDesc',
+  name: 'WH40K.Career.WH40K',
+  description: 'WH40K.Career.WH40KDesc',
   ranks: ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4', 'Rank 5', 'Rank 6', 'Rank 7', 'Rank 8']
 };

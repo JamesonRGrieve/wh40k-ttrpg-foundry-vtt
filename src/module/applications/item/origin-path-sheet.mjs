@@ -12,7 +12,7 @@ import BaseItemSheet from './base-item-sheet.mjs';
 export default class OriginPathSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'item', 'origin-path-sheet'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'origin-path-sheet'],
         position: {
             width: 700,
             height: 600,
@@ -26,7 +26,7 @@ export default class OriginPathSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         content: {
-            template: 'systems/rogue-trader/templates/item/item-origin-path-sheet.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-origin-path-sheet.hbs',
             scrollable: [''],
         },
     };

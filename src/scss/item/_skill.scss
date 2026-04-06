@@ -3,14 +3,14 @@
 // ============================================
 // Imperial Gothic themed skill sheet with proper visual hierarchy
 
-.rt-skill-sheet {
+.wh40k-skill-sheet {
   // Header customization with skill-specific accent
-  .rt-item-header {
+  .wh40k-item-header {
     background: linear-gradient(135deg, rgba(#2980b9, 0.1) 0%, rgba(#3498db, 0.08) 100%);
     border-bottom: 2px solid rgba(#2980b9, 0.3);
   }
 
-  .rt-meta-badge--skill {
+  .wh40k-meta-badge--skill {
     background: linear-gradient(135deg, rgba(#2980b9, 0.15), rgba(#3498db, 0.12));
     border-color: rgba(#2980b9, 0.4);
     color: #3498db;
@@ -21,13 +21,13 @@
   }
 
   // Skill type badges
-  .rt-skill-type-badge {
+  .wh40k-skill-type-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
-    border-radius: $rt-radius-sm;
-    font-size: $rt-font-size-xs;
+    border-radius: $wh40k-radius-sm;
+    font-size: $wh40k-font-size-xs;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -65,32 +65,32 @@
   }
 
   // Characteristic badge
-  .rt-char-badge {
+  .wh40k-char-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
-    border-radius: $rt-radius-sm;
-    font-size: $rt-font-size-xs;
+    border-radius: $wh40k-radius-sm;
+    font-size: $wh40k-font-size-xs;
     font-weight: 600;
     text-transform: uppercase;
-    background: linear-gradient(135deg, rgba($rt-color-gold, 0.15), rgba($rt-color-gold, 0.08));
-    border: 1px solid rgba($rt-color-gold, 0.4);
-    color: $rt-color-gold;
+    background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.08));
+    border: 1px solid rgba($wh40k-color-gold, 0.4);
+    color: $wh40k-color-gold;
     
     i {
-      color: $rt-color-gold;
+      color: $wh40k-color-gold;
     }
   }
 
   // Descriptor badge (optional tag)
-  .rt-descriptor-badge {
+  .wh40k-descriptor-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     padding: 3px 8px;
-    border-radius: $rt-radius-sm;
-    font-size: $rt-font-size-2xs;
+    border-radius: $wh40k-radius-sm;
+    font-size: $wh40k-font-size-2xs;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.3px;
@@ -100,30 +100,30 @@
   }
 
   // Header badges row
-  .rt-skill-badges {
+  .wh40k-skill-badges {
     display: flex;
     flex-wrap: wrap;
-    gap: $rt-space-xs;
-    margin-top: $rt-space-xs;
+    gap: $wh40k-space-xs;
+    margin-top: $wh40k-space-xs;
   }
 }
 
 // Properties Panel
-.rt-skill-properties {
+.wh40k-skill-properties {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: $rt-radius-md;
-  padding: $rt-space-md;
+  border-radius: $wh40k-radius-md;
+  padding: $wh40k-space-md;
   
-  .rt-section-title {
+  .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding-bottom: $rt-space-sm;
-    margin-bottom: $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding-bottom: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-md;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-family: $rt-font-heading;
-    font-size: $rt-font-size-md;
+    font-family: $wh40k-font-heading;
+    font-size: $wh40k-font-size-md;
     color: var(--rt-text-light);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -133,39 +133,39 @@
     }
   }
   
-  .rt-properties-grid {
+  .wh40k-properties-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
     
     @media (max-width: 600px) {
       grid-template-columns: 1fr;
     }
   }
   
-  .rt-property {
+  .wh40k-property {
     display: flex;
     flex-direction: column;
     gap: 4px;
     
     label {
-      font-size: $rt-font-size-xs;
+      font-size: $wh40k-font-size-xs;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: var(--rt-text-muted);
     }
     
-    .rt-property-value {
-      font-size: $rt-font-size-sm;
+    .wh40k-property-value {
+      font-size: $wh40k-font-size-sm;
       color: var(--rt-text-light);
       padding: 6px 10px;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: $rt-radius-sm;
-      font-family: $rt-font-ui;
+      border-radius: $wh40k-radius-sm;
+      font-family: $wh40k-font-ui;
       
-      &.rt-property-value--editable {
+      &.wh40k-property-value--editable {
         cursor: pointer;
         transition: all 0.2s ease;
         
@@ -178,13 +178,13 @@
     
     input,
     select {
-      font-size: $rt-font-size-sm;
+      font-size: $wh40k-font-size-sm;
       padding: 6px 10px;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: $rt-radius-sm;
+      border-radius: $wh40k-radius-sm;
       color: var(--rt-text-light);
-      font-family: $rt-font-ui;
+      font-family: $wh40k-font-ui;
       
       &:focus {
         outline: none;
@@ -195,19 +195,19 @@
   }
   
   // Aptitudes list (special styling)
-  .rt-aptitudes-list {
+  .wh40k-aptitudes-list {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     
-    .rt-aptitude-tag {
+    .wh40k-aptitude-tag {
       display: inline-flex;
       align-items: center;
       padding: 4px 10px;
       background: linear-gradient(135deg, rgba(#16a085, 0.15), rgba(#16a085, 0.08));
       border: 1px solid rgba(#16a085, 0.3);
-      border-radius: $rt-radius-sm;
-      font-size: $rt-font-size-2xs;
+      border-radius: $wh40k-radius-sm;
+      font-size: $wh40k-font-size-2xs;
       font-weight: 600;
       color: #16a085;
       text-transform: uppercase;
@@ -217,20 +217,20 @@
 }
 
 // Descriptor Panel
-.rt-skill-descriptor {
+.wh40k-skill-descriptor {
   background: linear-gradient(135deg, rgba(#3498db, 0.08) 0%, rgba(#2980b9, 0.05) 100%);
   border: 1px solid rgba(#3498db, 0.2);
   border-left: 3px solid #3498db;
-  border-radius: 0 $rt-radius-md $rt-radius-md 0;
-  padding: $rt-space-md;
+  border-radius: 0 $wh40k-radius-md $wh40k-radius-md 0;
+  padding: $wh40k-space-md;
   
-  .rt-section-title {
+  .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    margin-bottom: $rt-space-sm;
-    font-family: $rt-font-heading;
-    font-size: $rt-font-size-sm;
+    gap: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-sm;
+    font-family: $wh40k-font-heading;
+    font-size: $wh40k-font-size-sm;
     font-weight: 600;
     color: #3498db;
     text-transform: uppercase;
@@ -241,31 +241,31 @@
     }
   }
   
-  .rt-descriptor-text {
-    font-size: $rt-font-size-sm;
+  .wh40k-descriptor-text {
+    font-size: $wh40k-font-size-sm;
     line-height: 1.5;
     color: var(--rt-text-light);
-    font-family: $rt-font-body;
+    font-family: $wh40k-font-body;
     font-style: italic;
   }
 }
 
 // Uses & Rules Panel
-.rt-skill-uses {
+.wh40k-skill-uses {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: $rt-radius-md;
-  padding: $rt-space-md;
+  border-radius: $wh40k-radius-md;
+  padding: $wh40k-space-md;
   
-  .rt-section-title {
+  .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding-bottom: $rt-space-sm;
-    margin-bottom: $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding-bottom: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-md;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-family: $rt-font-heading;
-    font-size: $rt-font-size-md;
+    font-family: $wh40k-font-heading;
+    font-size: $wh40k-font-size-md;
     color: var(--rt-text-light);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -275,18 +275,18 @@
     }
   }
   
-  .rt-uses-content {
-    font-size: $rt-font-size-sm;
+  .wh40k-uses-content {
+    font-size: $wh40k-font-size-sm;
     line-height: 1.6;
     color: var(--rt-text-light);
     
     // ProseMirror editor styling
     .ProseMirror {
       min-height: 150px;
-      padding: $rt-space-sm;
+      padding: $wh40k-space-sm;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: $rt-radius-sm;
+      border-radius: $wh40k-radius-sm;
       
       &:focus {
         outline: none;
@@ -294,7 +294,7 @@
       }
       
       p {
-        margin-bottom: $rt-space-sm;
+        margin-bottom: $wh40k-space-sm;
         
         &:last-child {
           margin-bottom: 0;
@@ -302,12 +302,12 @@
       }
       
       ul, ol {
-        margin-left: $rt-space-lg;
-        margin-bottom: $rt-space-sm;
+        margin-left: $wh40k-space-lg;
+        margin-bottom: $wh40k-space-sm;
       }
       
       strong {
-        color: $rt-color-gold;
+        color: $wh40k-color-gold;
         font-weight: 700;
       }
       
@@ -319,21 +319,21 @@
 }
 
 // Difficulty Examples Table
-.rt-skill-difficulties {
+.wh40k-skill-difficulties {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: $rt-radius-md;
-  padding: $rt-space-md;
+  border-radius: $wh40k-radius-md;
+  padding: $wh40k-space-md;
   
-  .rt-section-title {
+  .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding-bottom: $rt-space-sm;
-    margin-bottom: $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding-bottom: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-md;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-family: $rt-font-heading;
-    font-size: $rt-font-size-md;
+    font-family: $wh40k-font-heading;
+    font-size: $wh40k-font-size-md;
     color: var(--rt-text-light);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -343,7 +343,7 @@
     }
   }
   
-  .rt-difficulties-table {
+  .wh40k-difficulties-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
@@ -352,9 +352,9 @@
       background: rgba(0, 0, 0, 0.4);
       
       th {
-        padding: $rt-space-sm;
+        padding: $wh40k-space-sm;
         text-align: left;
-        font-size: $rt-font-size-xs;
+        font-size: $wh40k-font-size-xs;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -362,11 +362,11 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         
         &:first-child {
-          border-radius: $rt-radius-sm 0 0 0;
+          border-radius: $wh40k-radius-sm 0 0 0;
         }
         
         &:last-child {
-          border-radius: 0 $rt-radius-sm 0 0;
+          border-radius: 0 $wh40k-radius-sm 0 0;
         }
       }
     }
@@ -383,30 +383,30 @@
           border-bottom: none;
           
           &:first-child {
-            border-radius: 0 0 0 $rt-radius-sm;
+            border-radius: 0 0 0 $wh40k-radius-sm;
           }
           
           &:last-child {
-            border-radius: 0 0 $rt-radius-sm 0;
+            border-radius: 0 0 $wh40k-radius-sm 0;
           }
         }
       }
       
       td {
-        padding: $rt-space-sm;
-        font-size: $rt-font-size-sm;
+        padding: $wh40k-space-sm;
+        font-size: $wh40k-font-size-sm;
         color: var(--rt-text-light);
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         
-        &.rt-difficulty-name {
+        &.wh40k-difficulty-name {
           font-weight: 600;
           color: #e67e22;
         }
         
-        &.rt-difficulty-modifier {
+        &.wh40k-difficulty-modifier {
           text-align: center;
           font-weight: 700;
-          font-family: $rt-font-ui;
+          font-family: $wh40k-font-ui;
           
           &.positive {
             color: #27ae60;
@@ -425,30 +425,30 @@
   }
   
   // Empty state
-  .rt-difficulties-empty {
-    padding: $rt-space-lg;
+  .wh40k-difficulties-empty {
+    padding: $wh40k-space-lg;
     text-align: center;
     color: var(--rt-text-muted);
-    font-size: $rt-font-size-sm;
+    font-size: $wh40k-font-size-sm;
     font-style: italic;
   }
 }
 
 // Special Rules Panel (optional)
-.rt-skill-special-rules {
+.wh40k-skill-special-rules {
   background: linear-gradient(135deg, rgba(#9b59b6, 0.08) 0%, rgba(#8e44ad, 0.05) 100%);
   border: 1px solid rgba(#9b59b6, 0.2);
   border-left: 3px solid #9b59b6;
-  border-radius: 0 $rt-radius-md $rt-radius-md 0;
-  padding: $rt-space-md;
+  border-radius: 0 $wh40k-radius-md $wh40k-radius-md 0;
+  padding: $wh40k-space-md;
   
-  .rt-section-title {
+  .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    margin-bottom: $rt-space-sm;
-    font-family: $rt-font-heading;
-    font-size: $rt-font-size-sm;
+    gap: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-sm;
+    font-family: $wh40k-font-heading;
+    font-size: $wh40k-font-size-sm;
     font-weight: 600;
     color: #9b59b6;
     text-transform: uppercase;
@@ -459,17 +459,17 @@
     }
   }
   
-  .rt-special-rules-content {
-    font-size: $rt-font-size-sm;
+  .wh40k-special-rules-content {
+    font-size: $wh40k-font-size-sm;
     line-height: 1.6;
     color: var(--rt-text-light);
     
     .ProseMirror {
       min-height: 80px;
-      padding: $rt-space-sm;
+      padding: $wh40k-space-sm;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: $rt-radius-sm;
+      border-radius: $wh40k-radius-sm;
       
       &:focus {
         outline: none;
@@ -480,21 +480,21 @@
 }
 
 // Specializations Panel (for specialist skills)
-.rt-skill-specializations {
+.wh40k-skill-specializations {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: $rt-radius-md;
-  padding: $rt-space-md;
+  border-radius: $wh40k-radius-md;
+  padding: $wh40k-space-md;
   
-  .rt-section-title {
+  .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding-bottom: $rt-space-sm;
-    margin-bottom: $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding-bottom: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-md;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-family: $rt-font-heading;
-    font-size: $rt-font-size-md;
+    font-family: $wh40k-font-heading;
+    font-size: $wh40k-font-size-md;
     color: var(--rt-text-light);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -504,38 +504,38 @@
     }
   }
   
-  .rt-specializations-list {
+  .wh40k-specializations-list {
     display: flex;
     flex-wrap: wrap;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
     
-    .rt-specialization-tag {
+    .wh40k-specialization-tag {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 6px 12px;
       background: linear-gradient(135deg, rgba(#9b59b6, 0.15), rgba(#9b59b6, 0.08));
       border: 1px solid rgba(#9b59b6, 0.3);
-      border-radius: $rt-radius-sm;
-      font-size: $rt-font-size-sm;
+      border-radius: $wh40k-radius-sm;
+      font-size: $wh40k-font-size-sm;
       font-weight: 500;
       color: #9b59b6;
       
       i {
-        font-size: $rt-font-size-xs;
+        font-size: $wh40k-font-size-xs;
       }
     }
   }
   
-  .rt-specializations-input {
+  .wh40k-specializations-input {
     width: 100%;
-    padding: $rt-space-sm;
+    padding: $wh40k-space-sm;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: $rt-radius-sm;
+    border-radius: $wh40k-radius-sm;
     color: var(--rt-text-light);
-    font-size: $rt-font-size-sm;
-    font-family: $rt-font-ui;
+    font-size: $wh40k-font-size-sm;
+    font-family: $wh40k-font-ui;
     
     &:focus {
       outline: none;
@@ -551,21 +551,21 @@
 }
 
 // Roll Config Panel (advanced settings)
-.rt-skill-roll-config {
+.wh40k-skill-roll-config {
   background: rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: $rt-radius-md;
-  padding: $rt-space-md;
+  border-radius: $wh40k-radius-md;
+  padding: $wh40k-space-md;
   
-  .rt-section-title {
+  .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
-    padding-bottom: $rt-space-sm;
-    margin-bottom: $rt-space-md;
+    gap: $wh40k-space-sm;
+    padding-bottom: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-md;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    font-family: $rt-font-heading;
-    font-size: $rt-font-size-sm;
+    font-family: $wh40k-font-heading;
+    font-size: $wh40k-font-size-sm;
     color: var(--rt-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.8px;
@@ -575,23 +575,23 @@
     }
   }
   
-  .rt-config-grid {
+  .wh40k-config-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
     
     @media (max-width: 600px) {
       grid-template-columns: 1fr;
     }
   }
   
-  .rt-config-field {
+  .wh40k-config-field {
     display: flex;
     flex-direction: column;
     gap: 4px;
     
     label {
-      font-size: $rt-font-size-2xs;
+      font-size: $wh40k-font-size-2xs;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -602,10 +602,10 @@
       padding: 6px 10px;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: $rt-radius-sm;
+      border-radius: $wh40k-radius-sm;
       color: var(--rt-text-light);
-      font-size: $rt-font-size-sm;
-      font-family: $rt-font-ui;
+      font-size: $wh40k-font-size-sm;
+      font-family: $wh40k-font-ui;
       text-align: center;
       
       &:focus {
@@ -624,10 +624,10 @@
 }
 
 // Body layout spacing
-.rt-skill-sheet .rt-item-body {
+.wh40k-skill-sheet .wh40k-item-body {
   display: flex;
   flex-direction: column;
-  gap: $rt-space-md;
-  padding: $rt-space-md;
+  gap: $wh40k-space-md;
+  padding: $wh40k-space-md;
   overflow-y: auto;
 }

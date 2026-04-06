@@ -7,56 +7,56 @@
 // ----------------------------------------
 // ORIGIN PANEL BASE
 // ----------------------------------------
-.rt-origin-panel-modern {
-    .rt-panel-header {
+.wh40k-origin-panel-modern {
+    .wh40k-panel-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: $rt-space-md;
-        padding: $rt-space-md;
-        background: linear-gradient(135deg, rgba($rt-color-gold, 0.08), rgba($rt-color-gold, 0.03));
-        border-bottom: 2px solid rgba($rt-color-gold, 0.2);
+        gap: $wh40k-space-md;
+        padding: $wh40k-space-md;
+        background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.08), rgba($wh40k-color-gold, 0.03));
+        border-bottom: 2px solid rgba($wh40k-color-gold, 0.2);
     }
 
-    .rt-origin-header-left {
+    .wh40k-origin-header-left {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
         flex: 1;
     }
 
-    .rt-panel-title {
+    .wh40k-panel-title {
         font-family: var(--rt-font-heading, 'Modesto Condensed', serif);
-        font-size: $rt-font-size-lg;
+        font-size: $wh40k-font-size-lg;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: $rt-color-gold;
+        color: $wh40k-color-gold;
     }
 
-    .rt-origin-progress-badge {
+    .wh40k-origin-progress-badge {
         display: inline-flex;
         align-items: center;
         gap: 4px;
         padding: 4px 10px;
-        background: rgba($rt-color-gold, 0.1);
-        border: 1px solid rgba($rt-color-gold, 0.3);
-        border-radius: $rt-radius-lg;
-        font-size: $rt-font-size-xs;
+        background: rgba($wh40k-color-gold, 0.1);
+        border: 1px solid rgba($wh40k-color-gold, 0.3);
+        border-radius: $wh40k-radius-lg;
+        font-size: $wh40k-font-size-xs;
         font-weight: 700;
-        color: $rt-color-gold;
+        color: $wh40k-color-gold;
 
-        &.rt-complete {
-            background: rgba($rt-color-success, 0.15);
-            border-color: rgba($rt-color-success, 0.4);
-            color: darken($rt-color-success, 10%);
+        &.wh40k-complete {
+            background: rgba($wh40k-color-success, 0.15);
+            border-color: rgba($wh40k-color-success, 0.4);
+            color: darken($wh40k-color-success, 10%);
 
             i {
-                color: $rt-color-success;
+                color: $wh40k-color-success;
             }
         }
 
-        .rt-progress-text {
+        .wh40k-progress-text {
             font-family: var(--rt-font-numeric, 'Roboto Mono', monospace);
         }
 
@@ -69,29 +69,29 @@
 // ----------------------------------------
 // VISUAL STEP INDICATORS
 // ----------------------------------------
-.rt-origin-steps-visual {
+.wh40k-origin-steps-visual {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0;
-    padding: $rt-space-lg $rt-space-sm;
+    padding: $wh40k-space-lg $wh40k-space-sm;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), transparent);
-    border-radius: $rt-radius-md;
+    border-radius: $wh40k-radius-md;
 }
 
-.rt-origin-step-node {
+.wh40k-origin-step-node {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 6px;
     cursor: pointer;
-    transition: transform $rt-transition-fast;
+    transition: transform $wh40k-transition-fast;
 
-    &.rt-filled {
-        .rt-step-circle {
-            background: linear-gradient(135deg, $rt-color-gold, darken($rt-color-gold, 10%));
-            border-color: darken($rt-color-gold, 15%);
-            box-shadow: 0 2px 8px rgba($rt-color-gold, 0.3);
+    &.wh40k-filled {
+        .wh40k-step-circle {
+            background: linear-gradient(135deg, $wh40k-color-gold, darken($wh40k-color-gold, 10%));
+            border-color: darken($wh40k-color-gold, 15%);
+            box-shadow: 0 2px 8px rgba($wh40k-color-gold, 0.3);
             
             i {
                 display: none;
@@ -103,8 +103,8 @@
         }
     }
 
-    &.rt-empty {
-        .rt-step-circle {
+    &.wh40k-empty {
+        .wh40k-step-circle {
             background: rgba(0, 0, 0, 0.05);
             border-color: rgba(0, 0, 0, 0.15);
 
@@ -115,7 +115,7 @@
     }
 }
 
-.rt-step-circle {
+.wh40k-step-circle {
     position: relative;
     width: 56px;
     height: 56px;
@@ -125,10 +125,10 @@
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.5);
-    transition: all $rt-transition-base;
+    transition: all $wh40k-transition-base;
     overflow: hidden;
 
-    .rt-step-img {
+    .wh40k-step-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -137,12 +137,12 @@
 
     i {
         font-size: 1.5rem;
-        transition: color $rt-transition-fast;
+        transition: color $wh40k-transition-fast;
     }
 }
 
-.rt-step-label {
-    font-size: $rt-font-size-xs;
+.wh40k-step-label {
+    font-size: $wh40k-font-size-xs;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -152,7 +152,7 @@
     line-height: 1.2;
 }
 
-.rt-step-connector {
+.wh40k-step-connector {
     flex: 1;
     height: 3px;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
@@ -161,38 +161,38 @@
     margin-bottom: 20px; // Offset by half the label height to align with circles
     border-radius: 2px;
 
-    &.rt-active {
-        background: linear-gradient(90deg, rgba($rt-color-gold, 0.6), rgba($rt-color-gold, 0.3));
+    &.wh40k-active {
+        background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.6), rgba($wh40k-color-gold, 0.3));
     }
 }
 
 // ----------------------------------------
 // ORIGIN PATH BUILDER BUTTON (PROMINENT CTA)
 // ----------------------------------------
-.rt-origin-builder-cta {
-    margin-top: $rt-space-md;
-    padding: 0 $rt-space-sm;
+.wh40k-origin-builder-cta {
+    margin-top: $wh40k-space-md;
+    padding: 0 $wh40k-space-sm;
 }
 
-.rt-btn-origin-builder {
+.wh40k-btn-origin-builder {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
     width: 100%;
-    padding: $rt-space-md $rt-space-lg;
-    background: linear-gradient(135deg, $rt-color-gold, darken($rt-color-gold, 8%));
-    border: 2px solid darken($rt-color-gold, 15%);
-    border-radius: $rt-radius-md;
+    padding: $wh40k-space-md $wh40k-space-lg;
+    background: linear-gradient(135deg, $wh40k-color-gold, darken($wh40k-color-gold, 8%));
+    border: 2px solid darken($wh40k-color-gold, 15%);
+    border-radius: $wh40k-radius-md;
     color: rgba(0, 0, 0, 0.9);
     font-family: var(--rt-font-heading, 'Modesto Condensed', serif);
-    font-size: $rt-font-size-lg;
+    font-size: $wh40k-font-size-lg;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba($rt-color-gold, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transition: all $rt-transition-base;
+    box-shadow: 0 4px 12px rgba($wh40k-color-gold, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all $wh40k-transition-base;
     position: relative;
     overflow: hidden;
 
@@ -208,10 +208,10 @@
     }
 
     &:hover {
-        background: linear-gradient(135deg, lighten($rt-color-gold, 5%), $rt-color-gold);
-        border-color: darken($rt-color-gold, 10%);
+        background: linear-gradient(135deg, lighten($wh40k-color-gold, 5%), $wh40k-color-gold);
+        border-color: darken($wh40k-color-gold, 10%);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba($rt-color-gold, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        box-shadow: 0 6px 20px rgba($wh40k-color-gold, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 
         &::before {
             left: 100%;
@@ -220,7 +220,7 @@
 
     &:active {
         transform: translateY(0);
-        box-shadow: 0 2px 8px rgba($rt-color-gold, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 8px rgba($wh40k-color-gold, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
 
     i {
@@ -228,24 +228,24 @@
         color: rgba(0, 0, 0, 0.8);
     }
 
-    .rt-btn-text {
+    .wh40k-btn-text {
         flex: 1;
         text-align: center;
     }
 
-    .rt-builder-badge {
+    .wh40k-builder-badge {
         display: inline-flex;
         align-items: center;
         gap: 4px;
         padding: 4px 10px;
-        border-radius: $rt-radius-md;
-        font-size: $rt-font-size-xs;
+        border-radius: $wh40k-radius-md;
+        font-size: $wh40k-font-size-xs;
         font-weight: 700;
         font-family: var(--rt-font-numeric, 'Roboto Mono', monospace);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
-        &.rt-complete {
-            background: rgba($rt-color-success, 0.9);
+        &.wh40k-complete {
+            background: rgba($wh40k-color-success, 0.9);
             color: white;
             
             i {
@@ -254,7 +254,7 @@
             }
         }
 
-        &.rt-incomplete {
+        &.wh40k-incomplete {
             background: rgba(0, 0, 0, 0.3);
             color: rgba(255, 255, 255, 0.95);
             border: 1px solid rgba(0, 0, 0, 0.4);
@@ -265,17 +265,17 @@
 // ----------------------------------------
 // EMPTY STATE MESSAGE
 // ----------------------------------------
-.rt-origin-empty-state {
-    padding: $rt-space-xl;
+.wh40k-origin-empty-state {
+    padding: $wh40k-space-xl;
     text-align: center;
     
-    .rt-empty-text {
+    .wh40k-empty-text {
         color: rgba(0, 0, 0, 0.4);
         font-style: italic;
         margin: 0;
         
         i {
-            color: $rt-color-gold;
+            color: $wh40k-color-gold;
         }
     }
 }
@@ -283,44 +283,44 @@
 // ----------------------------------------
 // ACCUMULATED BONUSES (COLLAPSIBLE)
 // ----------------------------------------
-.rt-origin-bonuses-modern {
+.wh40k-origin-bonuses-modern {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
-    padding-top: $rt-space-md;
-    margin-top: $rt-space-md;
+    padding-top: $wh40k-space-md;
+    margin-top: $wh40k-space-md;
 
     &.collapsed {
-        .rt-bonuses-content {
+        .wh40k-bonuses-content {
             max-height: 0;
             opacity: 0;
             padding: 0;
         }
 
-        .rt-bonuses-toggle .rt-toggle-icon {
+        .wh40k-bonuses-toggle .wh40k-toggle-icon {
             transform: rotate(-90deg);
         }
     }
 }
 
-.rt-bonuses-toggle {
+.wh40k-bonuses-toggle {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
     width: 100%;
-    padding: $rt-space-sm $rt-space-md;
-    background: linear-gradient(135deg, rgba($rt-color-gold, 0.08), rgba($rt-color-gold, 0.03));
-    border: 1px solid rgba($rt-color-gold, 0.2);
-    border-radius: $rt-radius-md;
-    font-size: $rt-font-size-sm;
+    padding: $wh40k-space-sm $wh40k-space-md;
+    background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.08), rgba($wh40k-color-gold, 0.03));
+    border: 1px solid rgba($wh40k-color-gold, 0.2);
+    border-radius: $wh40k-radius-md;
+    font-size: $wh40k-font-size-sm;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $rt-color-gold;
+    color: $wh40k-color-gold;
     cursor: pointer;
-    transition: all $rt-transition-fast;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
-        background: linear-gradient(135deg, rgba($rt-color-gold, 0.12), rgba($rt-color-gold, 0.06));
-        border-color: rgba($rt-color-gold, 0.3);
+        background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.12), rgba($wh40k-color-gold, 0.06));
+        border-color: rgba($wh40k-color-gold, 0.3);
     }
 
     i:first-child {
@@ -331,45 +331,45 @@
         flex: 1;
     }
 
-    .rt-toggle-icon {
+    .wh40k-toggle-icon {
         font-size: 0.8em;
-        transition: transform $rt-transition-fast;
+        transition: transform $wh40k-transition-fast;
     }
 }
 
-.rt-bonuses-content {
+.wh40k-bonuses-content {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-md;
-    padding: $rt-space-md;
-    margin-top: $rt-space-sm;
-    border-radius: $rt-radius-md;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-md;
+    margin-top: $wh40k-space-sm;
+    border-radius: $wh40k-radius-md;
     max-height: 800px;
     opacity: 1;
     overflow: hidden;
-    transition: all $rt-transition-base;
+    transition: all $wh40k-transition-base;
 }
 
 // Bonus group styling
-.rt-bonus-group {
+.wh40k-bonus-group {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
 }
 
-.rt-bonus-category-label {
+.wh40k-bonus-category-label {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: $rt-font-size-xs;
+    font-size: $wh40k-font-size-xs;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--rt-gold, $rt-color-gold);
+    color: var(--rt-gold, $wh40k-color-gold);
 
     i {
         font-size: 0.9em;
-        color: var(--rt-gold, rgba($rt-color-gold, 0.7));
+        color: var(--rt-gold, rgba($wh40k-color-gold, 0.7));
         opacity: 0.7;
     }
 }
@@ -377,41 +377,41 @@
 // ----------------------------------------
 // CHARACTERISTIC CHIPS
 // ----------------------------------------
-.rt-bonus-chips {
+.wh40k-bonus-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
 }
 
-.rt-char-chip {
+.wh40k-char-chip {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
-    border-radius: $rt-radius-lg;
-    font-size: $rt-font-size-xs;
+    border-radius: $wh40k-radius-lg;
+    font-size: $wh40k-font-size-xs;
     font-weight: 700;
     font-family: var(--rt-font-numeric, 'Roboto Mono', monospace);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 
-    &.rt-positive {
+    &.wh40k-positive {
         background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(76, 175, 80, 0.15));
         border: 1px solid rgba(76, 175, 80, 0.4);
         color: #81c784;
     }
 
-    &.rt-negative {
+    &.wh40k-negative {
         background: linear-gradient(135deg, rgba(231, 76, 60, 0.25), rgba(231, 76, 60, 0.15));
         border: 1px solid rgba(231, 76, 60, 0.4);
         color: #e57373;
     }
 
-    .rt-chip-stat {
+    .wh40k-chip-stat {
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
 
-    .rt-chip-value {
+    .wh40k-chip-value {
         font-weight: 900;
     }
 }
@@ -419,41 +419,41 @@
 // ----------------------------------------
 // BONUS TAGS (Skills, Talents, Traits)
 // ----------------------------------------
-.rt-bonus-tags {
+.wh40k-bonus-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
 }
 
-.rt-bonus-tag {
+.wh40k-bonus-tag {
     display: inline-flex;
     align-items: center;
     padding: 4px 10px;
-    border-radius: $rt-radius-md;
-    font-size: $rt-font-size-xs;
+    border-radius: $wh40k-radius-md;
+    font-size: $wh40k-font-size-xs;
     font-weight: 600;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(0, 0, 0, 0.3);
     color: var(--rt-text-light, rgba(255, 255, 255, 0.9));
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-    transition: all $rt-transition-fast;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: rgba(0, 0, 0, 0.3);
-        border-color: var(--rt-gold, $rt-color-gold);
+        border-color: var(--rt-gold, $wh40k-color-gold);
         transform: translateY(-1px);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
 
-    &.rt-tag-skill {
+    &.wh40k-tag-skill {
         border-left: 3px solid #3498db;
     }
 
-    &.rt-tag-talent {
+    &.wh40k-tag-talent {
         border-left: 3px solid #f39c12;
     }
 
-    &.rt-tag-trait {
+    &.wh40k-tag-trait {
         border-left: 3px solid #9b59b6;
     }
 }
@@ -462,12 +462,12 @@
 // RESPONSIVE ADJUSTMENTS
 // ----------------------------------------
 @media (max-width: 900px) {
-    .rt-origin-steps-visual {
-        padding: $rt-space-md $rt-space-xs;
+    .wh40k-origin-steps-visual {
+        padding: $wh40k-space-md $wh40k-space-xs;
     }
 
-    .rt-origin-step-node {
-        .rt-step-circle {
+    .wh40k-origin-step-node {
+        .wh40k-step-circle {
             width: 44px;
             height: 44px;
 
@@ -476,29 +476,29 @@
             }
         }
 
-        .rt-step-label {
+        .wh40k-step-label {
             font-size: 0.65rem;
             max-width: 50px;
         }
     }
 
-    .rt-step-connector {
+    .wh40k-step-connector {
         top: -16px;
         height: 2px;
     }
 }
 
 @media (max-width: 600px) {
-    .rt-origin-step-label {
+    .wh40k-origin-step-label {
         display: none;
     }
 
-    .rt-origin-steps-visual {
+    .wh40k-origin-steps-visual {
         gap: 4px;
     }
 
-    .rt-bonus-chips,
-    .rt-bonus-tags {
+    .wh40k-bonus-chips,
+    .wh40k-bonus-tags {
         gap: 4px;
     }
 }

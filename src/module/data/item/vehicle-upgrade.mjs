@@ -24,7 +24,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(
         required: true,
         initial: "standard",
         choices: ["standard", "integral", "custom"],
-        label: "RT.VehicleUpgrade.Type"
+        label: "WH40K.VehicleUpgrade.Type"
       }),
       
       // Allowed vehicles (Any, Ground Only, etc.)
@@ -32,7 +32,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(
         required: false,
         initial: "any",
         blank: true,
-        label: "RT.VehicleUpgrade.AllowedVehicles"
+        label: "WH40K.VehicleUpgrade.AllowedVehicles"
       }),
       
       // Installation difficulty modifier
@@ -40,7 +40,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(
         required: true,
         initial: 0,
         integer: true,
-        label: "RT.VehicleUpgrade.Difficulty"
+        label: "WH40K.VehicleUpgrade.Difficulty"
       }),
       
       // Plain text description
@@ -50,7 +50,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(
       availability: new fields.StringField({
         required: true,
         initial: "common",
-        label: "RT.Availability"
+        label: "WH40K.Availability"
       }),
       
       // Source book reference
@@ -62,7 +62,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(
         initial: 0,
         min: 0,
         integer: true,
-        label: "RT.VehicleUpgrade.InstallCost"
+        label: "WH40K.VehicleUpgrade.InstallCost"
       }),
       
       // Stat modifiers

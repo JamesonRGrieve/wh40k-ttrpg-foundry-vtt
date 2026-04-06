@@ -29,10 +29,10 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /** @override */
     static DEFAULT_OPTIONS = {
         id: 'stat-block-parser-{id}',
-        classes: ['rogue-trader', 'stat-block-parser'],
+        classes: ['wh40k-rpg', 'stat-block-parser'],
         tag: 'form',
         window: {
-            title: 'RT.NPC.Import.Title',
+            title: 'WH40K.NPC.Import.Title',
             icon: 'fa-solid fa-file-import',
             minimizable: false,
             resizable: true,
@@ -59,7 +59,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /** @override */
     static PARTS = {
         form: {
-            template: 'systems/rogue-trader/templates/dialogs/stat-block-parser.hbs',
+            template: 'systems/wh40k-rpg/templates/dialogs/stat-block-parser.hbs',
         },
     };
 
@@ -240,8 +240,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             hasInfo: this.#info.length > 0,
             canImport: this.#parsedData !== null && this.#errors.length === 0,
             buttons: [
-                { type: 'button', action: 'parse', icon: 'fa-solid fa-magnifying-glass', label: 'RT.NPC.Import.Parse', cssClass: 'secondary' },
-                { type: 'submit', icon: 'fa-solid fa-file-import', label: 'RT.NPC.Import.Import', cssClass: 'primary', disabled: !this.#parsedData },
+                { type: 'button', action: 'parse', icon: 'fa-solid fa-magnifying-glass', label: 'WH40K.NPC.Import.Parse', cssClass: 'secondary' },
+                { type: 'submit', icon: 'fa-solid fa-file-import', label: 'WH40K.NPC.Import.Import', cssClass: 'primary', disabled: !this.#parsedData },
                 { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
             ],
         };
@@ -1099,7 +1099,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                     await this.#targetActor.createEmbeddedDocuments('Item', this.#parsedData.items);
                 }
 
-                ui.notifications.info(game.i18n.format('RT.NPC.Import.Success', { name: this.#targetActor.name }));
+                ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: this.#targetActor.name }));
                 this.#targetActor.sheet.render(true);
 
                 this.#submitted = true;
@@ -1121,14 +1121,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 await actor.createEmbeddedDocuments('Item', this.#parsedData.items);
             }
 
-            ui.notifications.info(game.i18n.format('RT.NPC.Import.Success', { name: actor.name }));
+            ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: actor.name }));
             actor.sheet.render(true);
 
             this.#submitted = true;
             if (this.#resolve) this.#resolve(actor);
         } catch (err) {
             console.error('Failed to import NPC:', err);
-            ui.notifications.error(game.i18n.localize('RT.NPC.Import.Failed'));
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.Import.Failed'));
             if (this.#resolve) this.#resolve(null);
         }
     }

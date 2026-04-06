@@ -32,10 +32,10 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "characteristic-setup-{id}",
-    classes: ["rogue-trader", "characteristic-setup-dialog"],
+    classes: ["wh40k-rpg", "characteristic-setup-dialog"],
     tag: "div",
     window: {
-      title: "RT.CharacteristicSetup.Title",
+      title: "WH40K.CharacteristicSetup.Title",
       icon: "fa-solid fa-dice-d20",
       minimizable: false,
       resizable: false,
@@ -57,7 +57,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
   /** @override */
   static PARTS = {
     content: {
-      template: "systems/rogue-trader/templates/dialogs/characteristic-setup.hbs"
+      template: "systems/wh40k-rpg/templates/dialogs/characteristic-setup.hbs"
     }
   };
 
@@ -132,7 +132,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
   /** @override */
   get title() {
-    return game.i18n.localize("RT.CharacteristicSetup.Title");
+    return game.i18n.localize("WH40K.CharacteristicSetup.Title");
   }
 
   /* -------------------------------------------- */
@@ -598,7 +598,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     );
     
     if (!allAssigned) {
-      ui.notifications.warn(game.i18n.localize("RT.CharacteristicSetup.NotAllAssigned"));
+      ui.notifications.warn(game.i18n.localize("WH40K.CharacteristicSetup.NotAllAssigned"));
       return;
     }
     
@@ -628,7 +628,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     this.#applied = true;
     this.#resolve?.(true);
     
-    ui.notifications.info(game.i18n.localize("RT.CharacteristicSetup.Applied"));
+    ui.notifications.info(game.i18n.localize("WH40K.CharacteristicSetup.Applied"));
     await this.close();
   }
 

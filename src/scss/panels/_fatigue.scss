@@ -3,29 +3,29 @@
 // ============================================
 // Complete overhaul with auto-calc transparency, manual override, and rest button
 
-.rt-fatigue-panel-v2 {
+.wh40k-fatigue-panel-v2 {
   // Base panel styling inherits from rt-panel
 
   // ============================================
   // Main Display Area
   // ============================================
 
-  .rt-fatigue-display {
+  .wh40k-fatigue-display {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
   }
 
-  .rt-fatigue-tracker {
+  .wh40k-fatigue-tracker {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $rt-space-md;
-    padding: $rt-space-sm 0;
+    gap: $wh40k-space-md;
+    padding: $wh40k-space-sm 0;
   }
 
   // +/- Control Buttons
-  .rt-fatigue-btn {
+  .wh40k-fatigue-btn {
     width: 36px;
     height: 36px;
     padding: 0;
@@ -58,7 +58,7 @@
     }
   }
 
-  .rt-fatigue-minus {
+  .wh40k-fatigue-minus {
     color: var(--rt-success-primary);
     &:hover {
       border-color: var(--rt-success-primary);
@@ -66,7 +66,7 @@
     }
   }
 
-  .rt-fatigue-plus {
+  .wh40k-fatigue-plus {
     color: var(--rt-fatigue-secondary);
     &:hover {
       border-color: var(--rt-fatigue-secondary);
@@ -75,14 +75,14 @@
   }
 
   // Current/Max Value Display
-  .rt-fatigue-value {
+  .wh40k-fatigue-value {
     display: flex;
     align-items: baseline;
     gap: 6px;
     font-family: 'Modesto Condensed', serif;
   }
 
-  .rt-fatigue-current {
+  .wh40k-fatigue-current {
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--rt-text-dark);
@@ -90,13 +90,13 @@
     transition: all 0.3s ease;
   }
 
-  .rt-fatigue-sep {
+  .wh40k-fatigue-sep {
     font-size: 1.5rem;
     color: var(--rt-text-subtle);
     font-weight: 400;
   }
 
-  .rt-fatigue-max {
+  .wh40k-fatigue-max {
     font-size: 1.3rem;
     color: var(--rt-text-muted);
     font-weight: 600;
@@ -106,12 +106,12 @@
   // Auto-Calc Badge
   // ============================================
 
-  .rt-fatigue-auto-badge {
+  .wh40k-fatigue-auto-badge {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $rt-space-xs;
-    padding: $rt-space-xs $rt-space-sm;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-xs $wh40k-space-sm;
     background: var(--rt-success-bg);
     border: 1px solid rgba(74, 143, 92, 0.3);
     border-radius: 6px;
@@ -129,13 +129,13 @@
   // Progress Bar with Blue → Orange Gradient
   // ============================================
 
-  .rt-fatigue-bar-container {
+  .wh40k-fatigue-bar-container {
     display: flex;
     align-items: center;
-    gap: $rt-space-sm;
+    gap: $wh40k-space-sm;
   }
 
-  .rt-fatigue-bar {
+  .wh40k-fatigue-bar {
     flex: 1;
     height: 12px;
     background: var(--rt-border-accent);
@@ -146,7 +146,7 @@
   }
 
   // Threshold Markers
-  .rt-threshold-marker {
+  .wh40k-threshold-marker {
     position: absolute;
     top: -2px;
     height: 16px;
@@ -156,14 +156,14 @@
     pointer-events: none;
     z-index: 2;
 
-    .rt-threshold-line {
+    .wh40k-threshold-line {
       width: 2px;
       height: 100%;
       background: var(--rt-skills-border);
       border-radius: 1px;
     }
 
-    .rt-threshold-label {
+    .wh40k-threshold-label {
       position: absolute;
       top: -18px;
       font-size: 9px;
@@ -176,7 +176,7 @@
     }
   }
 
-  .rt-fatigue-bar-fill {
+  .wh40k-fatigue-bar-fill {
     height: 100%;
     width: var(--fatigue-percent, 0%);
     border-radius: 6px;
@@ -196,7 +196,7 @@
     box-shadow: 0 0 10px rgba(192, 128, 32, 0.3);
   }
 
-  .rt-fatigue-percent {
+  .wh40k-fatigue-percent {
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--rt-text-muted);
@@ -209,24 +209,24 @@
   // Alert Messages
   // ============================================
 
-  .rt-fatigue-alert {
+  .wh40k-fatigue-alert {
     display: flex;
     align-items: center;
-    gap: $rt-space-xs;
-    padding: $rt-space-sm;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-sm;
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     border-radius: 6px;
     letter-spacing: 0.03em;
-    margin-top: $rt-space-xs;
+    margin-top: $wh40k-space-xs;
 
     i {
       font-size: 1.2em;
     }
   }
 
-  .rt-alert-exhausted {
+  .wh40k-alert-exhausted {
     background: var(--rt-fatigue-bg);
     color: var(--rt-fatigue-primary);
     border: 2px solid var(--rt-fatigue-border);
@@ -243,13 +243,13 @@
   }
 
   // Panel state modifier for exhausted
-  &.rt-exhausted {
-    .rt-panel-header {
+  &.wh40k-exhausted {
+    .wh40k-panel-header {
       background: var(--rt-fatigue-bg);
       border-bottom: 2px solid var(--rt-fatigue-secondary);
     }
 
-    .rt-fatigue-current {
+    .wh40k-fatigue-current {
       color: var(--rt-fatigue-secondary);
       animation: pulse-scale 1.5s ease-in-out infinite;
     }
@@ -268,19 +268,19 @@
   // Quick Action Buttons
   // ============================================
 
-  .rt-fatigue-actions {
+  .wh40k-fatigue-actions {
     display: flex;
-    gap: $rt-space-sm;
-    margin-top: $rt-space-xs;
+    gap: $wh40k-space-sm;
+    margin-top: $wh40k-space-xs;
   }
 
-  .rt-fatigue-action-btn {
+  .wh40k-fatigue-action-btn {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: $rt-space-sm $rt-space-md;
+    padding: $wh40k-space-sm $wh40k-space-md;
     background: var(--rt-panel-bg-solid);
     border: 2px solid var(--rt-border-color-light);
     border-radius: 8px;
@@ -307,7 +307,7 @@
     }
   }
 
-  .rt-rest-btn {
+  .wh40k-rest-btn {
     border-color: rgba(74, 143, 92, 0.4);
     color: var(--rt-success-primary);
 
@@ -321,7 +321,7 @@
     }
   }
 
-  .rt-clear-btn {
+  .wh40k-clear-btn {
     border-color: var(--rt-fatigue-border);
     color: var(--rt-fatigue-primary);
 
@@ -339,25 +339,25 @@
   // Edit Mode Sections
   // ============================================
 
-  .rt-fatigue-edit-section {
-    padding: $rt-space-md;
+  .wh40k-fatigue-edit-section {
+    padding: $wh40k-space-md;
     background: var(--rt-panel-bg-translucent);
     border: 1px solid var(--rt-border-color-light);
     border-radius: 8px;
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
 
     &:last-child {
       margin-bottom: 0;
     }
   }
 
-  .rt-fatigue-edit-header {
+  .wh40k-fatigue-edit-header {
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--rt-text-medium);
-    margin-bottom: $rt-space-sm;
+    margin-bottom: $wh40k-space-sm;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -371,18 +371,18 @@
   // Auto/Manual Mode Toggle
   // ============================================
 
-  .rt-mode-toggle {
+  .wh40k-mode-toggle {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $rt-space-sm;
-    margin-bottom: $rt-space-sm;
+    gap: $wh40k-space-sm;
+    margin-bottom: $wh40k-space-sm;
   }
 
-  .rt-mode-option {
+  .wh40k-mode-option {
     position: relative;
     display: flex;
     align-items: center;
-    padding: $rt-space-sm;
+    padding: $wh40k-space-sm;
     background: var(--rt-panel-bg);
     border: 2px solid var(--rt-border-color-light);
     border-radius: 8px;
@@ -394,20 +394,20 @@
       border-color: var(--rt-border-color);
     }
 
-    &.rt-mode-active {
+    &.wh40k-mode-active {
       background: var(--rt-success-bg);
       border-color: var(--rt-success-primary);
       box-shadow: 0 0 0 2px rgba(74, 143, 92, 0.2);
     }
   }
 
-  .rt-mode-radio {
+  .wh40k-mode-radio {
     position: absolute;
     opacity: 0;
     pointer-events: none;
   }
 
-  .rt-mode-label {
+  .wh40k-mode-label {
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -432,11 +432,11 @@
     }
   }
 
-  .rt-fatigue-formula {
+  .wh40k-fatigue-formula {
     display: flex;
     align-items: flex-start;
-    gap: $rt-space-xs;
-    padding: $rt-space-sm;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-sm;
     background: var(--rt-success-bg);
     border-left: 3px solid rgba(74, 143, 92, 0.4);
     border-radius: 4px;
@@ -460,19 +460,19 @@
   // Value Editor
   // ============================================
 
-  .rt-fatigue-edit-grid {
+  .wh40k-fatigue-edit-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $rt-space-md;
+    gap: $wh40k-space-md;
   }
 
-  .rt-edit-field {
+  .wh40k-edit-field {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .rt-edit-label {
+  .wh40k-edit-label {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -483,7 +483,7 @@
     gap: 6px;
   }
 
-  .rt-auto-tag {
+  .wh40k-auto-tag {
     font-size: 0.65rem;
     font-weight: 700;
     padding: 2px 6px;
@@ -494,10 +494,10 @@
     letter-spacing: 0.05em;
   }
 
-  .rt-edit-input {
+  .wh40k-edit-input {
     width: 100%;
     height: 40px;
-    padding: 0 $rt-space-sm;
+    padding: 0 $wh40k-space-sm;
     border: 2px solid var(--rt-border-color-light);
     border-radius: 6px;
     background: var(--rt-input-bg);
@@ -530,10 +530,10 @@
   // Info Box
   // ============================================
 
-  .rt-fatigue-info-box {
+  .wh40k-fatigue-info-box {
     display: flex;
-    gap: $rt-space-sm;
-    padding: $rt-space-sm;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm;
     background: var(--rt-fatigue-bg);
     border-left: 3px solid var(--rt-fatigue-border);
     border-radius: 4px;
@@ -546,7 +546,7 @@
     }
   }
 
-  .rt-info-content {
+  .wh40k-info-content {
     display: flex;
     flex-direction: column;
     gap: 6px;

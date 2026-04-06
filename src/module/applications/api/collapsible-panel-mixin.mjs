@@ -22,7 +22,7 @@ export default function CollapsiblePanelMixin(Base) {
          * @type {string}
          * @protected
          */
-        static PANEL_FLAG_SCOPE = "rogue-trader.panels";
+        static PANEL_FLAG_SCOPE = "wh40k-rpg.panels";
         
         /* -------------------------------------------- */
         
@@ -132,7 +132,7 @@ export default function CollapsiblePanelMixin(Base) {
             if (!game.user) return;
             
             const flagKey = this._getPanelFlagKey();
-            const savedStates = game.user.getFlag("rogue-trader", flagKey) || {};
+            const savedStates = game.user.getFlag("wh40k-rpg", flagKey) || {};
             
             // Merge with current states
             Object.entries(savedStates).forEach(([panelId, isExpanded]) => {
@@ -155,11 +155,11 @@ export default function CollapsiblePanelMixin(Base) {
             if (!game.user || !panelId) return;
             
             const flagKey = this._getPanelFlagKey();
-            const currentStates = game.user.getFlag("rogue-trader", flagKey) || {};
+            const currentStates = game.user.getFlag("wh40k-rpg", flagKey) || {};
             
             currentStates[panelId] = isExpanded;
             
-            await game.user.setFlag("rogue-trader", flagKey, currentStates);
+            await game.user.setFlag("wh40k-rpg", flagKey, currentStates);
         }
         
         /* -------------------------------------------- */

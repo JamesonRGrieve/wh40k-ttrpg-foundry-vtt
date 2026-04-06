@@ -1,5 +1,5 @@
 /**
- * Grant DataModels for the Rogue Trader system.
+ * Grant DataModels for the WH40K RPG system.
  * 
  * Grants represent things that can be given to an actor from items.
  * Following DND5E's Advancement pattern with apply/reverse/restore.

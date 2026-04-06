@@ -4,19 +4,19 @@
  */
 
 .combat-preset-dialog {
-  .rt-combat-preset-dialog {
+  .wh40k-combat-preset-dialog {
     display: flex;
     flex-direction: column;
-    gap: $rt-space-lg;
-    padding: $rt-space-md;
+    gap: $wh40k-space-lg;
+    padding: $wh40k-space-md;
 
     // Save Mode
-    .rt-panel--save-preset {
-      .rt-panel-header {
+    .wh40k-panel--save-preset {
+      .wh40k-panel-header {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
-        padding: $rt-space-md $rt-space-md $rt-space-sm;
+        gap: $wh40k-space-sm;
+        padding: $wh40k-space-md $wh40k-space-md $wh40k-space-sm;
         border-bottom: 2px solid var(--color-border-secondary);
 
         h3 {
@@ -26,24 +26,24 @@
         }
 
         i {
-          color: $rt-accent-gold;
+          color: $wh40k-accent-gold;
         }
       }
 
-      .rt-panel-body {
-        padding: $rt-space-md;
+      .wh40k-panel-body {
+        padding: $wh40k-space-md;
       }
 
-      .rt-npc-preview {
+      .wh40k-npc-preview {
         display: flex;
         align-items: center;
-        gap: $rt-space-md;
-        padding: $rt-space-md;
+        gap: $wh40k-space-md;
+        padding: $wh40k-space-md;
         background: var(--color-bg-secondary);
         border-radius: 8px;
-        margin-bottom: $rt-space-lg;
+        margin-bottom: $wh40k-space-lg;
 
-        .rt-token-image {
+        .wh40k-token-image {
           width: 60px;
           height: 60px;
           border-radius: 8px;
@@ -51,31 +51,31 @@
           object-fit: cover;
         }
 
-        .rt-npc-info {
+        .wh40k-npc-info {
           flex: 1;
 
           h4 {
-            margin: 0 0 $rt-space-sm 0;
+            margin: 0 0 $wh40k-space-sm 0;
             font-size: 1.2rem;
             color: var(--color-text-light-primary);
           }
 
-          .rt-npc-stats {
+          .wh40k-npc-stats {
             display: flex;
-            gap: $rt-space-sm;
+            gap: $wh40k-space-sm;
           }
         }
       }
 
-      .rt-form-group {
-        margin-bottom: $rt-space-md;
+      .wh40k-form-group {
+        margin-bottom: $wh40k-space-md;
 
-        .rt-label {
+        .wh40k-label {
           display: block;
           font-weight: 600;
           font-size: 0.9rem;
           color: var(--color-text-light-secondary);
-          margin-bottom: $rt-space-sm;
+          margin-bottom: $wh40k-space-sm;
           text-transform: uppercase;
           letter-spacing: 0.5px;
         }
@@ -83,7 +83,7 @@
         input,
         textarea {
           width: 100%;
-          padding: $rt-space-sm $rt-space-md;
+          padding: $wh40k-space-sm $wh40k-space-md;
           background: var(--color-bg-secondary);
           border: 2px solid var(--color-border-secondary);
           border-radius: 4px;
@@ -92,7 +92,7 @@
           transition: all 0.2s;
 
           &:focus {
-            border-color: $rt-accent-gold;
+            border-color: $wh40k-accent-gold;
             outline: none;
           }
         }
@@ -102,21 +102,21 @@
         }
       }
 
-      .rt-form-actions {
+      .wh40k-form-actions {
         display: flex;
         justify-content: flex-end;
-        padding-top: $rt-space-md;
+        padding-top: $wh40k-space-md;
         border-top: 2px solid var(--color-border-secondary);
       }
     }
 
     // Load Mode
-    .rt-panel--load-preset {
-      .rt-panel-header {
+    .wh40k-panel--load-preset {
+      .wh40k-panel-header {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
-        padding: $rt-space-md $rt-space-md $rt-space-sm;
+        gap: $wh40k-space-sm;
+        padding: $wh40k-space-md $wh40k-space-md $wh40k-space-sm;
         border-bottom: 2px solid var(--color-border-secondary);
 
         h3 {
@@ -126,33 +126,33 @@
         }
 
         i {
-          color: $rt-accent-gold;
+          color: $wh40k-accent-gold;
         }
       }
 
-      .rt-panel-body {
-        padding: $rt-space-md;
+      .wh40k-panel-body {
+        padding: $wh40k-space-md;
       }
 
-      .rt-warning {
+      .wh40k-warning {
         font-size: 0.9rem;
         color: #ff9800;
         font-weight: 600;
         margin: 4px 0 0 0;
       }
 
-      .rt-preset-list {
+      .wh40k-preset-list {
         display: flex;
         flex-direction: column;
-        gap: $rt-space-sm;
+        gap: $wh40k-space-sm;
         max-height: 400px;
         overflow-y: auto;
-        margin-bottom: $rt-space-md;
+        margin-bottom: $wh40k-space-md;
         padding: 2px; // Prevent box-shadow clip
       }
 
-      .rt-preset-item {
-        padding: $rt-space-md;
+      .wh40k-preset-item {
+        padding: $wh40k-space-md;
         background: var(--color-bg-secondary);
         border: 2px solid var(--color-border-secondary);
         border-radius: 8px;
@@ -161,64 +161,64 @@
 
         &:hover {
           background: var(--color-bg-tertiary);
-          border-color: $rt-accent-gold;
-          box-shadow: 0 2px 8px $rt-shadow-md;
+          border-color: $wh40k-accent-gold;
+          box-shadow: 0 2px 8px $wh40k-shadow-md;
         }
 
-        &.rt-preset-item--selected {
+        &.wh40k-preset-item--selected {
           background: rgba(139, 0, 0, 0.2);
-          border-color: $rt-accent-gold;
+          border-color: $wh40k-accent-gold;
           box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.3);
         }
 
-        .rt-preset-header {
+        .wh40k-preset-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: $rt-space-sm;
+          margin-bottom: $wh40k-space-sm;
 
-          .rt-preset-name {
+          .wh40k-preset-name {
             margin: 0;
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--color-text-light-primary);
           }
 
-          .rt-preset-date {
+          .wh40k-preset-date {
             font-size: 0.75rem;
             color: var(--color-text-light-secondary);
           }
         }
 
-        .rt-preset-description {
-          margin: 0 0 $rt-space-sm 0;
+        .wh40k-preset-description {
+          margin: 0 0 $wh40k-space-sm 0;
           font-size: 0.9rem;
           color: var(--color-text-light-secondary);
           font-style: italic;
         }
 
-        .rt-preset-stats {
+        .wh40k-preset-stats {
           display: flex;
-          gap: $rt-space-sm;
+          gap: $wh40k-space-sm;
           flex-wrap: wrap;
         }
       }
 
-      .rt-form-actions {
+      .wh40k-form-actions {
         display: flex;
         justify-content: flex-end;
-        padding-top: $rt-space-md;
+        padding-top: $wh40k-space-md;
         border-top: 2px solid var(--color-border-secondary);
       }
     }
 
     // Library Mode
-    .rt-panel--preset-library {
-      .rt-panel-header {
+    .wh40k-panel--preset-library {
+      .wh40k-panel-header {
         display: flex;
         align-items: center;
-        gap: $rt-space-sm;
-        padding: $rt-space-md;
+        gap: $wh40k-space-sm;
+        padding: $wh40k-space-md;
         border-bottom: 2px solid var(--color-border-secondary);
 
         h3 {
@@ -229,26 +229,26 @@
         }
 
         i {
-          color: $rt-accent-gold;
+          color: $wh40k-accent-gold;
         }
       }
 
-      .rt-panel-body {
-        padding: $rt-space-md;
+      .wh40k-panel-body {
+        padding: $wh40k-space-md;
       }
 
-      .rt-preset-library-list {
+      .wh40k-preset-library-list {
         display: flex;
         flex-direction: column;
-        gap: $rt-space-md;
+        gap: $wh40k-space-md;
         max-height: 500px;
         overflow-y: auto;
       }
 
-      .rt-preset-library-item {
+      .wh40k-preset-library-item {
         display: flex;
-        gap: $rt-space-md;
-        padding: $rt-space-md;
+        gap: $wh40k-space-md;
+        padding: $wh40k-space-md;
         background: var(--color-bg-secondary);
         border: 2px solid var(--color-border-secondary);
         border-radius: 8px;
@@ -256,55 +256,55 @@
 
         &:hover {
           background: var(--color-bg-tertiary);
-          box-shadow: 0 2px 8px $rt-shadow-md;
+          box-shadow: 0 2px 8px $wh40k-shadow-md;
         }
 
-        .rt-preset-content {
+        .wh40k-preset-content {
           flex: 1;
         }
 
-        .rt-preset-actions {
+        .wh40k-preset-actions {
           display: flex;
-          gap: $rt-space-sm;
+          gap: $wh40k-space-sm;
           align-items: flex-start;
         }
 
-        .rt-preset-header {
+        .wh40k-preset-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: $rt-space-sm;
+          margin-bottom: $wh40k-space-sm;
 
-          .rt-preset-name {
+          .wh40k-preset-name {
             margin: 0;
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--color-text-light-primary);
           }
 
-          .rt-preset-date {
+          .wh40k-preset-date {
             font-size: 0.75rem;
             color: var(--color-text-light-secondary);
           }
         }
 
-        .rt-preset-description {
-          margin: 0 0 $rt-space-sm 0;
+        .wh40k-preset-description {
+          margin: 0 0 $wh40k-space-sm 0;
           font-size: 0.9rem;
           color: var(--color-text-light-secondary);
           font-style: italic;
         }
 
-        .rt-preset-stats {
+        .wh40k-preset-stats {
           display: flex;
-          gap: $rt-space-sm;
+          gap: $wh40k-space-sm;
           flex-wrap: wrap;
         }
       }
     }
 
     // Common Elements
-    .rt-badge {
+    .wh40k-badge {
       padding: 4px 12px;
       border-radius: 4px;
       font-size: 0.75rem;
@@ -314,31 +314,31 @@
       color: var(--color-text-light-primary);
       border: 1px solid var(--color-border-secondary);
 
-      &.rt-badge--small {
+      &.wh40k-badge--small {
         padding: 2px 8px;
         font-size: 0.7rem;
       }
     }
 
-    .rt-empty-message {
+    .wh40k-empty-message {
       text-align: center;
-      padding: $rt-space-xl;
+      padding: $wh40k-space-xl;
       color: var(--color-text-light-secondary);
       font-style: italic;
 
       i {
         display: block;
         font-size: 2rem;
-        margin-bottom: $rt-space-md;
+        margin-bottom: $wh40k-space-md;
         color: var(--color-border-secondary);
       }
     }
 
-    .rt-btn {
+    .wh40k-btn {
       display: inline-flex;
       align-items: center;
-      gap: $rt-space-sm;
-      padding: $rt-space-sm $rt-space-lg;
+      gap: $wh40k-space-sm;
+      padding: $wh40k-space-sm $wh40k-space-lg;
       border-radius: 4px;
       font-size: 0.9rem;
       font-weight: 600;
@@ -355,20 +355,20 @@
         cursor: not-allowed;
       }
 
-      &.rt-btn--primary {
-        background: $rt-accent-gold;
-        border-color: $rt-accent-gold;
+      &.wh40k-btn--primary {
+        background: $wh40k-accent-gold;
+        border-color: $wh40k-accent-gold;
         color: #000;
 
         &:hover:not(:disabled) {
-          background: $rt-color-gold-light;
-          border-color: $rt-color-gold-light;
+          background: $wh40k-color-gold-light;
+          border-color: $wh40k-color-gold-light;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
       }
 
-      &.rt-btn--icon {
-        padding: $rt-space-sm;
+      &.wh40k-btn--icon {
+        padding: $wh40k-space-sm;
         background: transparent;
         border-color: var(--color-border-secondary);
         color: var(--color-text-light-primary);
@@ -379,10 +379,10 @@
 
         &:hover:not(:disabled) {
           background: var(--color-bg-tertiary);
-          border-color: $rt-accent-gold;
+          border-color: $wh40k-accent-gold;
         }
 
-        &.rt-btn--danger {
+        &.wh40k-btn--danger {
           border-color: #f44336;
           color: #f44336;
 

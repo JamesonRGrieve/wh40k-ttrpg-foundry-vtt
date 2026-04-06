@@ -2,11 +2,11 @@
 // Weapons Full Width Panel
 // ============================================
 
-.rt-weapons-fullwidth {
-  margin-top: $rt-space-md;
+.wh40k-weapons-fullwidth {
+  margin-top: $wh40k-space-md;
   
-  .rt-panel {
-    border-left: 4px solid $rt-accent-combat;
+  .wh40k-panel {
+    border-left: 4px solid $wh40k-accent-combat;
   }
 }
 
@@ -14,30 +14,30 @@
 // Skills Panel with T/+10/+20 Buttons (Specialist Style)
 // ============================================
 
-.rt-skills-panel {
-  padding: $rt-space-sm;
+.wh40k-skills-panel {
+  padding: $wh40k-space-sm;
   font-family: 'Modesto Condensed', serif;
 }
 
-.rt-skills-columns {
+.wh40k-skills-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $rt-space-lg;
+  gap: $wh40k-space-lg;
   position: relative;
 }
 
-.rt-skills-column {
+.wh40k-skills-column {
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
-.rt-skill-row {
+.wh40k-skill-row {
   display: grid;
   grid-template-columns: 1fr auto 40px;
-  gap: $rt-space-sm;
+  gap: $wh40k-space-sm;
   align-items: center;
-  padding: $rt-space-xs $rt-space-sm;
+  padding: $wh40k-space-xs $wh40k-space-sm;
   background: var(--color-bg-option);
   border: 1px solid var(--color-border-secondary);
   border-radius: 4px;
@@ -48,25 +48,25 @@
   }
 }
 
-.rt-skill-info {
+.wh40k-skill-info {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.rt-skill-name-wrapper {
+.wh40k-skill-name-wrapper {
   display: flex;
   align-items: center;
   gap: 4px;
   flex: 1;
 }
 
-.rt-skill-name {
+.wh40k-skill-name {
   background: none;
   border: none;
   padding: 0;
   color: var(--color-text-primary);
-  font-family: $rt-font-body;
+  font-family: $wh40k-font-body;
   font-size: 0.95rem;
   line-height: 1;
   text-align: left;
@@ -78,30 +78,30 @@
   flex: 1;
   
   &:hover {
-    color: $rt-accent-skills;
-    text-shadow: 0 0 8px rgba($rt-accent-skills, 0.3);
+    color: $wh40k-accent-skills;
+    text-shadow: 0 0 8px rgba($wh40k-accent-skills, 0.3);
   }
   
   &:active {
-    color: lighten($rt-accent-skills, 10%);
+    color: lighten($wh40k-accent-skills, 10%);
   }
   
-  .rt-skill-label {
+  .wh40k-skill-label {
     display: inline-flex;
     align-items: baseline;
     gap: 4px;
     line-height: 1;
-    font-family: $rt-font-body;
+    font-family: $wh40k-font-body;
   }
 
-  .rt-skill-char {
+  .wh40k-skill-char {
     font-size: 0.75rem;
-    color: $rt-text-muted;
-    font-family: $rt-font-ui;
+    color: $wh40k-text-muted;
+    font-family: $wh40k-font-ui;
   }
 }
 
-.rt-skill-roll {
+.wh40k-skill-roll {
   background: none;
   border: none;
   padding: 4px;
@@ -115,8 +115,8 @@
   border-radius: 3px;
   
   &:hover {
-    color: $rt-accent-skills;
-    background: rgba($rt-accent-skills, 0.1);
+    color: $wh40k-accent-skills;
+    background: rgba($wh40k-accent-skills, 0.1);
     transform: scale(1.1);
   }
   
@@ -125,7 +125,7 @@
   }
 }
 
-.rt-skill-icon {
+.wh40k-skill-icon {
   display: block;
   width: 16px;
   height: 16px;
@@ -138,7 +138,7 @@
 }
 
 // Use the same rt-spec-training class as specialist panel
-.rt-skill-row .rt-spec-training {
+.wh40k-skill-row .wh40k-spec-training {
   display: flex;
   gap: 2px;
   padding: 2px;
@@ -148,7 +148,7 @@
 }
 
 // Training indicators (display-only, not interactive)
-.rt-training-display {
+.wh40k-training-display {
   display: flex;
   gap: 2px;
   padding: 2px;
@@ -156,7 +156,7 @@
   border-radius: 4px;
   border: 1px solid var(--color-border-tertiary);
   
-  .rt-train-indicator {
+  .wh40k-train-indicator {
     background: rgba(255, 255, 255, 0.35);
     border: 1px solid rgba(120, 46, 34, 0.35);
     border-radius: 3px;
@@ -169,8 +169,8 @@
     opacity: 0.5;
     
     &.active {
-      background: rgba($rt-accent-skills, 0.25);
-      border-color: $rt-accent-skills;
+      background: rgba($wh40k-accent-skills, 0.25);
+      border-color: $wh40k-accent-skills;
       color: var(--color-text-primary);
       opacity: 1;
       font-weight: 700;
@@ -179,7 +179,7 @@
 }
 
 // Skills use the same rt-train-btn styling as specialist panel
-.rt-skill-row .rt-train-btn {
+.wh40k-skill-row .wh40k-train-btn {
   background: rgba(255, 255, 255, 0.35);
   border: 1px solid rgba(120, 46, 34, 0.35);
   border-radius: 3px;
@@ -222,7 +222,7 @@
   }
 }
 
-.rt-skill-total {
+.wh40k-skill-total {
   min-width: 34px;
   height: 26px;
   padding: 0 8px;
@@ -243,7 +243,7 @@
 }
 
 // No Results Message
-.rt-skills-columns .rt-no-results {
+.wh40k-skills-columns .wh40k-no-results {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -251,8 +251,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $rt-space-sm;
-  padding: $rt-space-lg;
+  gap: $wh40k-space-sm;
+  padding: $wh40k-space-lg;
   color: var(--color-text-tertiary);
   font-style: italic;
   text-align: center;
@@ -264,7 +264,7 @@
   }
 
   span {
-    font-size: $rt-font-size-base;
+    font-size: $wh40k-font-size-base;
   }
 }
 
@@ -272,11 +272,11 @@
 // Advanced Skills Visual Distinction
 // ============================================
 
-.rt-skill-row--advanced {
-  background: linear-gradient(90deg, rgba($rt-accent-skills, 0.08) 0%, rgba($rt-accent-skills, 0.03) 100%);
-  border-left: 2px solid rgba($rt-accent-skills, 0.5);
+.wh40k-skill-row--advanced {
+  background: linear-gradient(90deg, rgba($wh40k-accent-skills, 0.08) 0%, rgba($wh40k-accent-skills, 0.03) 100%);
+  border-left: 2px solid rgba($wh40k-accent-skills, 0.5);
   
-  .rt-skill-name {
+  .wh40k-skill-name {
     font-style: italic;
     
     &::before {
@@ -287,10 +287,10 @@
       font-weight: 700;
       padding: 1px 4px;
       margin-right: 4px;
-      background: rgba($rt-accent-skills, 0.15);
-      border: 1px solid rgba($rt-accent-skills, 0.4);
+      background: rgba($wh40k-accent-skills, 0.15);
+      border: 1px solid rgba($wh40k-accent-skills, 0.4);
       border-radius: 3px;
-      color: $rt-accent-skills;
+      color: $wh40k-accent-skills;
       vertical-align: middle;
       line-height: 1;
     }
@@ -298,31 +298,31 @@
 }
 
 // Favorite skill button
-.rt-skill-favorite {
+.wh40k-skill-favorite {
   background: none;
   border: none;
   padding: 2px 4px;
-  color: $rt-text-muted;
+  color: $wh40k-text-muted;
   cursor: pointer;
   font-size: 0.85rem;
   transition: all 0.2s ease;
   
   &:hover {
-    color: $rt-color-gold;
+    color: $wh40k-color-gold;
     transform: scale(1.1);
   }
   
   &.active {
-    color: $rt-color-gold;
+    color: $wh40k-color-gold;
     
     i {
-      filter: drop-shadow(0 0 2px rgba($rt-color-gold, 0.5));
+      filter: drop-shadow(0 0 2px rgba($wh40k-color-gold, 0.5));
     }
   }
 }
 
 // Locked advanced skill styling
-.rt-skill-row--locked {
+.wh40k-skill-row--locked {
   opacity: 0.5;
   position: relative;
   
@@ -330,7 +330,7 @@
     opacity: 0.65;
   }
   
-  .rt-skill-name {
+  .wh40k-skill-name {
     cursor: help;
     
     &::after {
@@ -339,24 +339,24 @@
       font-weight: 900;
       margin-left: 6px;
       font-size: 0.7rem;
-      color: $rt-text-muted;
+      color: $wh40k-text-muted;
       opacity: 0.7;
     }
   }
   
-  .rt-skill-roll,
-  .rt-skill-favorite {
+  .wh40k-skill-roll,
+  .wh40k-skill-favorite {
     pointer-events: none;
     opacity: 0.4;
   }
 }
 
 // Future: grey out if actor lacks appropriate talent/trait
-.rt-skill-row--unavailable {
+.wh40k-skill-row--unavailable {
     opacity: 0.5;
     filter: grayscale(0.5);
     
-    .rt-skill-name {
+    .wh40k-skill-name {
       cursor: not-allowed;
       
       &:hover {
@@ -364,7 +364,7 @@
       }
     }
     
-    .rt-train-btn {
+    .wh40k-train-btn {
       pointer-events: none;
       opacity: 0.6;
     }

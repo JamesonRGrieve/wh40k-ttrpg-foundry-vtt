@@ -3,11 +3,11 @@
     {{!-- Threat Selector --}}
     <div class="rt-panel preview-controls">
         <header class="rt-panel-header">
-            <h3><i class="fas fa-eye"></i> {{localize "RT.NPC.Template.PreviewSettings"}}</h3>
+            <h3><i class="fas fa-eye"></i> {{localize "WH40K.NPC.Template.PreviewSettings"}}</h3>
         </header>
         <div class="rt-panel-content">
             <div class="preview-threat-control">
-                <label>{{localize "RT.NPC.Template.PreviewAtThreat"}}</label>
+                <label>{{localize "WH40K.NPC.Template.PreviewAtThreat"}}</label>
                 <input type="range" min="1" max="30" value="{{previewThreat}}" 
                        class="threat-slider" data-action="updatePreview" />
                 <span class="threat-value">{{previewThreat}}</span>
@@ -15,7 +15,7 @@
             <div class="preview-actions">
                 <button type="button" class="rt-btn rt-btn-primary" data-action="createFromPreview">
                     <i class="fas fa-user-plus"></i>
-                    {{localize "RT.NPC.Template.CreateNPC"}}
+                    {{localize "WH40K.NPC.Template.CreateNPC"}}
                 </button>
             </div>
         </div>
@@ -24,12 +24,12 @@
     {{!-- Preview Stat Block --}}
     <div class="rt-panel preview-statblock">
         <header class="rt-panel-header">
-            <h3>{{item.name}} <span class="threat-badge">{{localize "RT.NPC.ThreatLevel"}} {{previewThreat}}</span></h3>
+            <h3>{{item.name}} <span class="threat-badge">{{localize "WH40K.NPC.ThreatLevel"}} {{previewThreat}}</span></h3>
         </header>
         <div class="rt-panel-content">
             {{!-- Characteristics Preview --}}
             <div class="preview-section">
-                <h4>{{localize "RT.Characteristics"}}</h4>
+                <h4>{{localize "WH40K.Characteristics"}}</h4>
                 <div class="preview-characteristics">
                     {{#each previewData.characteristics as |char key|}}
                     <div class="preview-char">
@@ -45,18 +45,18 @@
             
             {{!-- Vitals Preview --}}
             <div class="preview-section">
-                <h4>{{localize "RT.NPC.Template.VitalStats"}}</h4>
+                <h4>{{localize "WH40K.NPC.Template.VitalStats"}}</h4>
                 <div class="preview-vitals">
                     <div class="vital">
-                        <span class="vital-label">{{localize "RT.Wounds"}}</span>
+                        <span class="vital-label">{{localize "WH40K.Wounds"}}</span>
                         <span class="vital-value">{{previewData.wounds}}</span>
                     </div>
                     <div class="vital">
-                        <span class="vital-label">{{localize "RT.Movement"}}</span>
+                        <span class="vital-label">{{localize "WH40K.Movement"}}</span>
                         <span class="vital-value">{{previewData.movement}}</span>
                     </div>
                     <div class="vital">
-                        <span class="vital-label">{{localize "RT.NPC.Armour"}}</span>
+                        <span class="vital-label">{{localize "WH40K.NPC.Armour"}}</span>
                         <span class="vital-value">{{previewData.armour}}</span>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
             {{!-- Skills Preview --}}
             {{#if (gt previewData.skills.length 0)}}
             <div class="preview-section">
-                <h4>{{localize "RT.Skills"}}</h4>
+                <h4>{{localize "WH40K.Skills"}}</h4>
                 <div class="preview-skills">
                     {{#each previewData.skills as |skill|}}
                     <span class="skill-tag">{{skill.name}} {{skill.target}}</span>
@@ -77,7 +77,7 @@
             {{!-- Weapons Preview --}}
             {{#if (gt previewData.weapons.length 0)}}
             <div class="preview-section">
-                <h4>{{localize "RT.Weapons"}}</h4>
+                <h4>{{localize "WH40K.Weapons"}}</h4>
                 <div class="preview-weapons">
                     {{#each previewData.weapons as |weapon|}}
                     <div class="preview-weapon">
@@ -95,7 +95,7 @@
             {{!-- Talents & Traits Preview --}}
             {{#if (or (gt previewData.talents.length 0) (gt previewData.traits.length 0))}}
             <div class="preview-section">
-                <h4>{{localize "RT.NPC.Template.TalentsAndTraits"}}</h4>
+                <h4>{{localize "WH40K.NPC.Template.TalentsAndTraits"}}</h4>
                 <div class="preview-abilities">
                     {{#each previewData.talents as |talent|}}
                     <span class="ability-tag talent">{{talent.name}}</span>
@@ -110,7 +110,7 @@
             {{!-- Special Abilities Preview --}}
             {{#if previewData.specialAbilities}}
             <div class="preview-section">
-                <h4>{{localize "RT.NPC.Template.SpecialAbilities"}}</h4>
+                <h4>{{localize "WH40K.NPC.Template.SpecialAbilities"}}</h4>
                 <div class="preview-special-abilities">
                     {{{previewData.specialAbilities}}}
                 </div>

@@ -7,7 +7,7 @@
 /*  Panel Structure                             */
 /* -------------------------------------------- */
 
-.rt-collapsible-panel {
+.wh40k-collapsible-panel {
     border: 2px solid var(--color-border-dark, #3e3e3e);
     border-radius: 4px;
     margin-bottom: 12px;
@@ -25,7 +25,7 @@
 /*  Panel Header                                */
 /* -------------------------------------------- */
 
-.rt-panel-header-collapsible {
+.wh40k-panel-header-collapsible {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -52,7 +52,7 @@
     }
 }
 
-.rt-panel-title {
+.wh40k-panel-title {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -70,7 +70,7 @@
     }
 }
 
-.rt-panel-toggle-icon {
+.wh40k-panel-toggle-icon {
     font-size: 1.2em;
     color: var(--rt-bone, #e8dcc8);
     transition: transform 0.3s ease;
@@ -80,7 +80,7 @@
     }
 }
 
-.rt-panel-badge {
+.wh40k-panel-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -98,7 +98,7 @@
 /*  Panel Content                               */
 /* -------------------------------------------- */
 
-.rt-panel-content {
+.wh40k-panel-content {
     max-height: 2000px;
     overflow: hidden;
     transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
@@ -110,7 +110,7 @@
     }
 }
 
-.rt-panel-body {
+.wh40k-panel-body {
     padding: 12px;
 }
 
@@ -118,7 +118,7 @@
 /*  Panel Presets Bar                           */
 /* -------------------------------------------- */
 
-.rt-panel-presets {
+.wh40k-panel-presets {
     display: flex;
     gap: 4px;
     padding: 8px;
@@ -127,7 +127,7 @@
     flex-wrap: wrap;
 }
 
-.rt-preset-btn {
+.wh40k-preset-btn {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -168,7 +168,7 @@
 /*  Keyboard Shortcut Hints                     */
 /* -------------------------------------------- */
 
-.rt-panel-shortcut {
+.wh40k-panel-shortcut {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -189,31 +189,31 @@
 /* -------------------------------------------- */
 
 /* Collapsed state */
-.rt-collapsible-panel.collapsed {
-    .rt-panel-content {
+.wh40k-collapsible-panel.collapsed {
+    .wh40k-panel-content {
         max-height: 0;
         padding: 0;
         border-top: none;
     }
     
-    .rt-panel-toggle-icon {
+    .wh40k-panel-toggle-icon {
         transform: rotate(-90deg);
     }
 }
 
 /* Disabled state */
-.rt-collapsible-panel.disabled {
+.wh40k-collapsible-panel.disabled {
     opacity: 0.6;
     pointer-events: none;
     
-    .rt-panel-header-collapsible {
+    .wh40k-panel-header-collapsible {
         cursor: not-allowed;
     }
 }
 
 /* Loading state */
-.rt-collapsible-panel.loading {
-    .rt-panel-header-collapsible::after {
+.wh40k-collapsible-panel.loading {
+    .wh40k-panel-header-collapsible::after {
         content: "";
         display: inline-block;
         width: 16px;
@@ -237,26 +237,26 @@
 /* -------------------------------------------- */
 
 /* Compact variant */
-.rt-collapsible-panel.compact {
-    .rt-panel-header-collapsible {
+.wh40k-collapsible-panel.compact {
+    .wh40k-panel-header-collapsible {
         padding: 6px 10px;
     }
     
-    .rt-panel-title {
+    .wh40k-panel-title {
         font-size: 0.95em;
     }
     
-    .rt-panel-body {
+    .wh40k-panel-body {
         padding: 8px;
     }
 }
 
 /* Highlighted variant (important panels) */
-.rt-collapsible-panel.highlighted {
+.wh40k-collapsible-panel.highlighted {
     border-color: var(--rt-gold, #d4af37);
     box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
     
-    .rt-panel-header-collapsible {
+    .wh40k-panel-header-collapsible {
         background: linear-gradient(90deg, 
             var(--rt-bronze, #cd7f32) 0%, 
             var(--rt-gold, #d4af37) 100%
@@ -265,17 +265,17 @@
 }
 
 /* Warning variant */
-.rt-collapsible-panel.warning {
+.wh40k-collapsible-panel.warning {
     border-color: #ff9800;
     
-    .rt-panel-header-collapsible {
+    .wh40k-panel-header-collapsible {
         background: linear-gradient(90deg, 
             rgba(255, 152, 0, 0.3) 0%, 
             rgba(139, 0, 0, 0.3) 100%
         );
     }
     
-    .rt-panel-title i {
+    .wh40k-panel-title i {
         color: #ff9800;
         animation: pulse-warning 2s infinite;
     }
@@ -291,17 +291,17 @@
 }
 
 /* Danger variant */
-.rt-collapsible-panel.danger {
+.wh40k-collapsible-panel.danger {
     border-color: #dc143c;
     
-    .rt-panel-header-collapsible {
+    .wh40k-panel-header-collapsible {
         background: linear-gradient(90deg, 
             rgba(139, 0, 0, 0.5) 0%, 
             rgba(75, 0, 0, 0.5) 100%
         );
     }
     
-    .rt-panel-title i {
+    .wh40k-panel-title i {
         color: #dc143c;
     }
 }
@@ -310,11 +310,11 @@
 /*  Nested Panels                               */
 /* -------------------------------------------- */
 
-.rt-collapsible-panel .rt-collapsible-panel {
+.wh40k-collapsible-panel .wh40k-collapsible-panel {
     margin: 8px 0;
     border-width: 1px;
     
-    .rt-panel-header-collapsible {
+    .wh40k-panel-header-collapsible {
         padding: 6px 10px;
         font-size: 0.9em;
     }
@@ -336,28 +336,28 @@
     }
 }
 
-.rt-collapsible-panel {
+.wh40k-collapsible-panel {
     animation: panel-slide-in 0.3s ease-out;
 }
 
 /* Stagger animation for multiple panels */
-.rt-collapsible-panel:nth-child(1) { animation-delay: 0.05s; }
-.rt-collapsible-panel:nth-child(2) { animation-delay: 0.1s; }
-.rt-collapsible-panel:nth-child(3) { animation-delay: 0.15s; }
-.rt-collapsible-panel:nth-child(4) { animation-delay: 0.2s; }
-.rt-collapsible-panel:nth-child(5) { animation-delay: 0.25s; }
-.rt-collapsible-panel:nth-child(6) { animation-delay: 0.3s; }
-.rt-collapsible-panel:nth-child(7) { animation-delay: 0.35s; }
-.rt-collapsible-panel:nth-child(8) { animation-delay: 0.4s; }
-.rt-collapsible-panel:nth-child(9) { animation-delay: 0.45s; }
+.wh40k-collapsible-panel:nth-child(1) { animation-delay: 0.05s; }
+.wh40k-collapsible-panel:nth-child(2) { animation-delay: 0.1s; }
+.wh40k-collapsible-panel:nth-child(3) { animation-delay: 0.15s; }
+.wh40k-collapsible-panel:nth-child(4) { animation-delay: 0.2s; }
+.wh40k-collapsible-panel:nth-child(5) { animation-delay: 0.25s; }
+.wh40k-collapsible-panel:nth-child(6) { animation-delay: 0.3s; }
+.wh40k-collapsible-panel:nth-child(7) { animation-delay: 0.35s; }
+.wh40k-collapsible-panel:nth-child(8) { animation-delay: 0.4s; }
+.wh40k-collapsible-panel:nth-child(9) { animation-delay: 0.45s; }
 
 /* -------------------------------------------- */
 /*  Gothic 40K Theme Enhancements               */
 /* -------------------------------------------- */
 
 /* Rivets decoration */
-.rt-panel-header-collapsible::before,
-.rt-panel-header-collapsible::after {
+.wh40k-panel-header-collapsible::before,
+.wh40k-panel-header-collapsible::after {
     content: "•";
     position: absolute;
     top: 50%;
@@ -367,16 +367,16 @@
     opacity: 0.6;
 }
 
-.rt-panel-header-collapsible::before {
+.wh40k-panel-header-collapsible::before {
     left: 4px;
 }
 
-.rt-panel-header-collapsible::after {
+.wh40k-panel-header-collapsible::after {
     right: 4px;
 }
 
 /* Aquila ornament (for important panels) */
-.rt-collapsible-panel.important .rt-panel-title::before {
+.wh40k-collapsible-panel.important .wh40k-panel-title::before {
     content: "⚜";
     margin-right: 4px;
     color: var(--rt-gold, #d4af37);
@@ -384,7 +384,7 @@
 }
 
 /* Parchment texture background */
-.rt-panel-body {
+.wh40k-panel-body {
     background: 
         linear-gradient(rgba(244, 234, 213, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(244, 234, 213, 0.02) 1px, transparent 1px);
@@ -396,16 +396,16 @@
 /* -------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-    .rt-collapsible-panel,
-    .rt-panel-content,
-    .rt-panel-toggle-icon,
-    .rt-panel-header-collapsible,
-    .rt-preset-btn {
+    .wh40k-collapsible-panel,
+    .wh40k-panel-content,
+    .wh40k-panel-toggle-icon,
+    .wh40k-panel-header-collapsible,
+    .wh40k-preset-btn {
         animation: none !important;
         transition: none !important;
     }
     
-    .rt-panel-toggle-icon {
+    .wh40k-panel-toggle-icon {
         .collapsed & {
             transform: none;
         }
@@ -414,11 +414,11 @@
 
 /* High contrast mode */
 @media (prefers-contrast: high) {
-    .rt-collapsible-panel {
+    .wh40k-collapsible-panel {
         border-width: 3px;
     }
     
-    .rt-panel-header-collapsible {
+    .wh40k-panel-header-collapsible {
         border-bottom-width: 3px;
     }
 }
@@ -427,12 +427,12 @@
 /*  Focus States for Keyboard Navigation        */
 /* -------------------------------------------- */
 
-.rt-panel-header-collapsible:focus {
+.wh40k-panel-header-collapsible:focus {
     outline: 2px solid var(--rt-gold, #d4af37);
     outline-offset: 2px;
 }
 
-.rt-preset-btn:focus {
+.wh40k-preset-btn:focus {
     outline: 2px solid var(--rt-gold, #d4af37);
     outline-offset: 1px;
 }
@@ -442,16 +442,16 @@
 /* -------------------------------------------- */
 
 @media (max-width: 768px) {
-    .rt-panel-presets {
+    .wh40k-panel-presets {
         flex-direction: column;
     }
     
-    .rt-preset-btn {
+    .wh40k-preset-btn {
         width: 100%;
         justify-content: center;
     }
     
-    .rt-panel-shortcut {
+    .wh40k-panel-shortcut {
         display: none; // Hide keyboard shortcuts on mobile
     }
 }

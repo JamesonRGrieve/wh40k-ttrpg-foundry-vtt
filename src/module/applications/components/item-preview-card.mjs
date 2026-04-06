@@ -77,7 +77,7 @@ export function ItemPreviewMixin(Base) {
 
             // Create preview element
             const preview = document.createElement('div');
-            preview.classList.add('rt-item-preview', `rt-item-preview--${item.type}`);
+            preview.classList.add('wh40k-item-preview', `rt-item-preview--${item.type}`);
             preview.dataset.previewId = item.id;
             preview.innerHTML = previewHTML;
 
@@ -95,7 +95,7 @@ export function ItemPreviewMixin(Base) {
 
             // Animate in
             requestAnimationFrame(() => {
-                preview.classList.add('rt-item-preview--open');
+                preview.classList.add('wh40k-item-preview--open');
             });
         }
 
@@ -108,7 +108,7 @@ export function ItemPreviewMixin(Base) {
             const preview = this.element.querySelector(`[data-preview-id="${itemId}"]`);
             if (!preview) return;
 
-            preview.classList.remove('rt-item-preview--open');
+            preview.classList.remove('wh40k-item-preview--open');
             setTimeout(() => preview.remove(), 200); // Match CSS transition
 
             this.#openPreviews.delete(itemId);
@@ -160,19 +160,19 @@ export function ItemPreviewMixin(Base) {
             const actionsHTML = QuickActionsBar.renderActions(actions, false);
 
             return `
-                <div class="rt-item-preview-header">
-                    <div class="rt-item-preview-title">
-                        <img src="${item.img}" alt="${item.name}" class="rt-item-preview-icon" />
+                <div class="wh40k-item-preview-header">
+                    <div class="wh40k-item-preview-title">
+                        <img src="${item.img}" alt="${item.name}" class="wh40k-item-preview-icon" />
                         <span>${item.name}</span>
                     </div>
-                    <div class="rt-item-preview-actions">
+                    <div class="wh40k-item-preview-actions">
                         ${actionsHTML}
-                        <button type="button" class="rt-quick-action rt-quick-action--secondary" data-action="closeItemPreview" title="Collapse">
+                        <button type="button" class="wh40k-quick-action rt-quick-action--secondary" data-action="closeItemPreview" title="Collapse">
                             <i class="fa-solid fa-chevron-up"></i>
                         </button>
                     </div>
                 </div>
-                <div class="rt-item-preview-body">
+                <div class="wh40k-item-preview-body">
                     ${content}
                 </div>
             `;
@@ -190,35 +190,35 @@ export function ItemPreviewMixin(Base) {
             const stats = system.stats || {};
 
             return `
-                <div class="rt-weapon-preview-stats">
-                    <div class="rt-stat-pill">
+                <div class="wh40k-weapon-preview-stats">
+                    <div class="wh40k-stat-pill">
                         <i class="fa-solid fa-burst"></i>
-                        <span class="rt-stat-pill__label">Damage</span>
-                        <span class="rt-stat-pill__value">${damage.formula || 'N/A'}</span>
+                        <span class="wh40k-stat-pill__label">Damage</span>
+                        <span class="wh40k-stat-pill__value">${damage.formula || 'N/A'}</span>
                     </div>
-                    <div class="rt-stat-pill">
+                    <div class="wh40k-stat-pill">
                         <i class="fa-solid fa-shield"></i>
-                        <span class="rt-stat-pill__label">Pen</span>
-                        <span class="rt-stat-pill__value">${stats.penetration || 0}</span>
+                        <span class="wh40k-stat-pill__label">Pen</span>
+                        <span class="wh40k-stat-pill__value">${stats.penetration || 0}</span>
                     </div>
-                    <div class="rt-stat-pill">
+                    <div class="wh40k-stat-pill">
                         <i class="fa-solid fa-bullseye"></i>
-                        <span class="rt-stat-pill__label">Range</span>
-                        <span class="rt-stat-pill__value">${stats.range || 'N/A'}</span>
+                        <span class="wh40k-stat-pill__label">Range</span>
+                        <span class="wh40k-stat-pill__value">${stats.range || 'N/A'}</span>
                     </div>
-                    <div class="rt-stat-pill">
+                    <div class="wh40k-stat-pill">
                         <i class="fa-solid fa-gauge-high"></i>
-                        <span class="rt-stat-pill__label">RoF</span>
-                        <span class="rt-stat-pill__value">${stats.rof || 'N/A'}</span>
+                        <span class="wh40k-stat-pill__label">RoF</span>
+                        <span class="wh40k-stat-pill__value">${stats.rof || 'N/A'}</span>
                     </div>
-                    <div class="rt-stat-pill">
+                    <div class="wh40k-stat-pill">
                         <i class="fa-solid fa-box"></i>
-                        <span class="rt-stat-pill__label">Clip</span>
-                        <span class="rt-stat-pill__value">${system.clip?.current || 0}/${system.clip?.max || 0}</span>
+                        <span class="wh40k-stat-pill__label">Clip</span>
+                        <span class="wh40k-stat-pill__value">${system.clip?.current || 0}/${system.clip?.max || 0}</span>
                     </div>
                 </div>
                 ${this.#generateQualitiesHTML(system.qualities)}
-                ${system.description ? `<div class="rt-item-preview-description">${system.description}</div>` : ''}
+                ${system.description ? `<div class="wh40k-item-preview-description">${system.description}</div>` : ''}
             `;
         }
 
@@ -233,40 +233,40 @@ export function ItemPreviewMixin(Base) {
             const locations = system.locations || {};
 
             return `
-                <div class="rt-armour-preview-locations">
+                <div class="wh40k-armour-preview-locations">
                     ${
                         locations.head
-                            ? `<div class="rt-armour-location"><span class="rt-location-label">Head:</span> <strong>${locations.head}</strong></div>`
+                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">Head:</span> <strong>${locations.head}</strong></div>`
                             : ''
                     }
                     ${
                         locations.leftArm
-                            ? `<div class="rt-armour-location"><span class="rt-location-label">L Arm:</span> <strong>${locations.leftArm}</strong></div>`
+                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">L Arm:</span> <strong>${locations.leftArm}</strong></div>`
                             : ''
                     }
                     ${
                         locations.rightArm
-                            ? `<div class="rt-armour-location"><span class="rt-location-label">R Arm:</span> <strong>${locations.rightArm}</strong></div>`
+                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">R Arm:</span> <strong>${locations.rightArm}</strong></div>`
                             : ''
                     }
                     ${
                         locations.body
-                            ? `<div class="rt-armour-location"><span class="rt-location-label">Body:</span> <strong>${locations.body}</strong></div>`
+                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">Body:</span> <strong>${locations.body}</strong></div>`
                             : ''
                     }
                     ${
                         locations.leftLeg
-                            ? `<div class="rt-armour-location"><span class="rt-location-label">L Leg:</span> <strong>${locations.leftLeg}</strong></div>`
+                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">L Leg:</span> <strong>${locations.leftLeg}</strong></div>`
                             : ''
                     }
                     ${
                         locations.rightLeg
-                            ? `<div class="rt-armour-location"><span class="rt-location-label">R Leg:</span> <strong>${locations.rightLeg}</strong></div>`
+                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">R Leg:</span> <strong>${locations.rightLeg}</strong></div>`
                             : ''
                     }
                 </div>
                 ${this.#generateQualitiesHTML(system.properties)}
-                ${system.description ? `<div class="rt-item-preview-description">${system.description}</div>` : ''}
+                ${system.description ? `<div class="wh40k-item-preview-description">${system.description}</div>` : ''}
             `;
         }
 
@@ -284,7 +284,7 @@ export function ItemPreviewMixin(Base) {
             // Prerequisites
             if (system.prerequisites?.text) {
                 content += `
-                    <div class="rt-item-preview-prereqs">
+                    <div class="wh40k-item-preview-prereqs">
                         <strong>Prerequisites:</strong> ${system.prerequisites.text}
                     </div>
                 `;
@@ -292,7 +292,7 @@ export function ItemPreviewMixin(Base) {
 
             // Benefit
             if (system.benefit) {
-                content += `<div class="rt-item-preview-benefit">${system.benefit}</div>`;
+                content += `<div class="wh40k-item-preview-benefit">${system.benefit}</div>`;
             }
 
             // Modifiers
@@ -315,11 +315,11 @@ export function ItemPreviewMixin(Base) {
             let content = '';
 
             if (system.level) {
-                content += `<div class="rt-trait-level"><strong>Level:</strong> ${system.level}</div>`;
+                content += `<div class="wh40k-trait-level"><strong>Level:</strong> ${system.level}</div>`;
             }
 
             if (system.description) {
-                content += `<div class="rt-item-preview-description">${system.description}</div>`;
+                content += `<div class="wh40k-item-preview-description">${system.description}</div>`;
             }
 
             return content;
@@ -335,15 +335,15 @@ export function ItemPreviewMixin(Base) {
             const system = item.system;
 
             let content = `
-                <div class="rt-condition-preview-meta">
-                    ${system.nature ? `<span class="rt-badge rt-badge--${system.nature}">${system.nature}</span>` : ''}
-                    ${system.duration ? `<span class="rt-badge">Duration: ${system.duration}</span>` : ''}
-                    ${system.stacks > 1 ? `<span class="rt-badge">×${system.stacks}</span>` : ''}
+                <div class="wh40k-condition-preview-meta">
+                    ${system.nature ? `<span class="wh40k-badge rt-badge--${system.nature}">${system.nature}</span>` : ''}
+                    ${system.duration ? `<span class="wh40k-badge">Duration: ${system.duration}</span>` : ''}
+                    ${system.stacks > 1 ? `<span class="wh40k-badge">×${system.stacks}</span>` : ''}
                 </div>
             `;
 
             if (system.description) {
-                content += `<div class="rt-item-preview-description">${system.description}</div>`;
+                content += `<div class="wh40k-item-preview-description">${system.description}</div>`;
             }
 
             return content;
@@ -361,15 +361,15 @@ export function ItemPreviewMixin(Base) {
             let content = '';
 
             if (system.quantity) {
-                content += `<div class="rt-gear-quantity"><strong>Quantity:</strong> ${system.quantity}</div>`;
+                content += `<div class="wh40k-gear-quantity"><strong>Quantity:</strong> ${system.quantity}</div>`;
             }
 
             if (system.uses) {
-                content += `<div class="rt-gear-uses"><strong>Uses:</strong> ${system.uses.current}/${system.uses.max}</div>`;
+                content += `<div class="wh40k-gear-uses"><strong>Uses:</strong> ${system.uses.current}/${system.uses.max}</div>`;
             }
 
             if (system.description) {
-                content += `<div class="rt-item-preview-description">${system.description}</div>`;
+                content += `<div class="wh40k-item-preview-description">${system.description}</div>`;
             }
 
             return content;
@@ -387,19 +387,19 @@ export function ItemPreviewMixin(Base) {
             let content = '';
 
             if (system.cost) {
-                content += `<div class="rt-power-cost"><strong>Cost:</strong> ${system.cost}</div>`;
+                content += `<div class="wh40k-power-cost"><strong>Cost:</strong> ${system.cost}</div>`;
             }
 
             if (system.range) {
-                content += `<div class="rt-power-range"><strong>Range:</strong> ${system.range}</div>`;
+                content += `<div class="wh40k-power-range"><strong>Range:</strong> ${system.range}</div>`;
             }
 
             if (system.sustained !== undefined) {
-                content += `<div class="rt-power-sustained"><strong>Sustained:</strong> ${system.sustained ? 'Yes' : 'No'}</div>`;
+                content += `<div class="wh40k-power-sustained"><strong>Sustained:</strong> ${system.sustained ? 'Yes' : 'No'}</div>`;
             }
 
             if (system.description) {
-                content += `<div class="rt-item-preview-description">${system.description}</div>`;
+                content += `<div class="wh40k-item-preview-description">${system.description}</div>`;
             }
 
             return content;
@@ -415,10 +415,10 @@ export function ItemPreviewMixin(Base) {
             const system = item.system;
 
             if (system.description) {
-                return `<div class="rt-item-preview-description">${system.description}</div>`;
+                return `<div class="wh40k-item-preview-description">${system.description}</div>`;
             }
 
-            return '<div class="rt-item-preview-empty">No additional details available.</div>';
+            return '<div class="wh40k-item-preview-empty">No additional details available.</div>';
         }
 
         /**
@@ -444,12 +444,12 @@ export function ItemPreviewMixin(Base) {
             const tagsHTML = qualitiesArray
                 .map((q) => {
                     const name = typeof q === 'string' ? q : q.name || q;
-                    return `<span class="rt-badge">${name}</span>`;
+                    return `<span class="wh40k-badge">${name}</span>`;
                 })
                 .join('');
 
             return `
-                <div class="rt-item-preview-qualities">
+                <div class="wh40k-item-preview-qualities">
                     ${tagsHTML}
                 </div>
             `;
@@ -464,7 +464,7 @@ export function ItemPreviewMixin(Base) {
         #generateModifiersHTML(modifiers) {
             if (!modifiers) return '';
 
-            let content = '<div class="rt-item-preview-modifiers"><strong>Modifiers:</strong><ul>';
+            let content = '<div class="wh40k-item-preview-modifiers"><strong>Modifiers:</strong><ul>';
 
             if (modifiers.characteristics) {
                 for (const [char, value] of Object.entries(modifiers.characteristics)) {

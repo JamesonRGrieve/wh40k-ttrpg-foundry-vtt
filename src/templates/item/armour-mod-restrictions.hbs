@@ -4,13 +4,13 @@
         <header class="rt-panel-header">
             <h3>
                 <i class="fas fa-filter"></i>
-                {{localize "RT.Modification.Restrictions"}}
+                {{localize "WH40K.Modification.Restrictions"}}
             </h3>
         </header>
         
         <div class="rt-panel-body">
             <p class="rt-help-text">
-                {{localize "RT.Modification.RestrictionsHelp"}}
+                {{localize "WH40K.Modification.RestrictionsHelp"}}
             </p>
             
             <div class="rt-restriction-grid">
@@ -40,21 +40,21 @@
         <header class="rt-panel-header">
             <h3>
                 <i class="fas fa-book"></i>
-                {{localize "RT.Source.Book"}}
+                {{localize "WH40K.Source.Book"}}
             </h3>
         </header>
         
         <div class="rt-panel-body">
             <div class="rt-field-row">
                 <div class="rt-field">
-                    <label class="rt-field-label">{{localize "RT.Availability.Label"}}</label>
+                    <label class="rt-field-label">{{localize "WH40K.Availability.Label"}}</label>
                     <select name="system.availability" class="rt-field-select">
                         {{selectOptions dh.availabilities selected=system.availability labelAttr="label" blank=""}}
                     </select>
                 </div>
                 
                 <div class="rt-field">
-                    <label class="rt-field-label">{{localize "RT.Source.Book"}}</label>
+                    <label class="rt-field-label">{{localize "WH40K.Source.Book"}}</label>
                     <input type="text" 
                            name="system.source" 
                            value="{{system.source}}" 

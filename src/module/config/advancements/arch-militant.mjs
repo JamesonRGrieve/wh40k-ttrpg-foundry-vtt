@@ -2,7 +2,7 @@
  * Arch-Militant Career Advancement Configuration
  * 
  * Defines characteristic costs and rank advancements for the Arch-Militant career.
- * Data sourced from Rogue Trader Core Rulebook.
+ * Data sourced from WH40K RPG Core Rulebook.
  */
 
 /**
@@ -44,7 +44,7 @@ export const RANK_1_ADVANCES = [
   { name: 'Literacy', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Scholastic Lore', cost: 100, type: 'skill', specialization: 'Tactica Imperialis', prerequisites: [] },
   { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'Military', prerequisites: [] },
-  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'Rogue Trader', prerequisites: [] },
+  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'WH40K RPG', prerequisites: [] },
 
   // Talents (200 XP)
   { 
@@ -106,7 +106,7 @@ export const RANK_1_ADVANCES = [
  */
 export const CAREER_INFO = {
   key: 'archMilitant',
-  name: 'RT.Career.ArchMilitant',
-  description: 'RT.Career.ArchMilitantDesc',
+  name: 'WH40K.Career.ArchMilitant',
+  description: 'WH40K.Career.ArchMilitantDesc',
   ranks: ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4', 'Rank 5', 'Rank 6', 'Rank 7', 'Rank 8']
 };

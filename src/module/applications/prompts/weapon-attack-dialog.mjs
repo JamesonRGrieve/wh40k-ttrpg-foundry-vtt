@@ -35,7 +35,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/prompt/weapon-roll-prompt.hbs",
+            template: "systems/wh40k-rpg/templates/prompt/weapon-roll-prompt.hbs",
             scrollable: [""]
         }
     };

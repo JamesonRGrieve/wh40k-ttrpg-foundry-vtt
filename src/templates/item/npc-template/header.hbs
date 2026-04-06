@@ -1,17 +1,17 @@
 {{!-- NPC Template Sheet Header --}}
 <header class="rt-sheet-header npc-template-header">
     <div class="portrait-section">
-        <img src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-tooltip="{{localize 'RT.Sheet.ChangeImage'}}">
+        <img src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-tooltip="{{localize 'WH40K.Sheet.ChangeImage'}}">
     </div>
     
     <div class="header-details">
         <div class="name-row">
-            <input type="text" name="name" value="{{item.name}}" placeholder="{{localize 'RT.NPC.Template.Name'}}" />
+            <input type="text" name="name" value="{{item.name}}" placeholder="{{localize 'WH40K.NPC.Template.Name'}}" />
         </div>
         
         <div class="info-row">
             <div class="field-group">
-                <label>{{localize "RT.NPC.Category"}}</label>
+                <label>{{localize "WH40K.NPC.Category"}}</label>
                 <select name="system.category">
                     {{#each categories}}
                     <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
@@ -20,7 +20,7 @@
             </div>
             
             <div class="field-group">
-                <label>{{localize "RT.NPC.Role"}}</label>
+                <label>{{localize "WH40K.NPC.Role"}}</label>
                 <select name="system.role">
                     {{#each roles}}
                     <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>{{this.name}}</option>
@@ -29,20 +29,20 @@
             </div>
             
             <div class="field-group">
-                <label>{{localize "RT.NPC.ThreatLevel"}}</label>
+                <label>{{localize "WH40K.NPC.ThreatLevel"}}</label>
                 <input type="number" name="system.baseThreatLevel" value="{{system.baseThreatLevel}}" min="1" max="30" />
             </div>
         </div>
         
         <div class="faction-row">
             <div class="field-group">
-                <label>{{localize "RT.NPC.Faction"}}</label>
-                <input type="text" name="system.faction" value="{{system.faction}}" placeholder="{{localize 'RT.NPC.FactionPlaceholder'}}" />
+                <label>{{localize "WH40K.NPC.Faction"}}</label>
+                <input type="text" name="system.faction" value="{{system.faction}}" placeholder="{{localize 'WH40K.NPC.FactionPlaceholder'}}" />
             </div>
             
             <div class="field-group">
-                <label>{{localize "RT.NPC.Subfaction"}}</label>
-                <input type="text" name="system.subfaction" value="{{system.subfaction}}" placeholder="{{localize 'RT.NPC.SubfactionPlaceholder'}}" />
+                <label>{{localize "WH40K.NPC.Subfaction"}}</label>
+                <input type="text" name="system.subfaction" value="{{system.subfaction}}" placeholder="{{localize 'WH40K.NPC.SubfactionPlaceholder'}}" />
             </div>
         </div>
     </div>

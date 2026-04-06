@@ -8,9 +8,9 @@
 // TAB NAVIGATION BAR
 // ============================================
 
-.rt-talent-tabs,
-.rt-trait-tabs,
-.rt-origin-tabs {
+.wh40k-talent-tabs,
+.wh40k-trait-tabs,
+.wh40k-origin-tabs {
   display: flex;
   gap: 2px;
   padding: 0 12px;
@@ -19,9 +19,9 @@
   flex-shrink: 0;
 }
 
-.rt-talent-tab,
-.rt-trait-tab,
-.rt-origin-tab {
+.wh40k-talent-tab,
+.wh40k-trait-tab,
+.wh40k-origin-tab {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -51,17 +51,17 @@
 }
 
 // Item type specific active states
-.rt-talent-tab.active {
+.wh40k-talent-tab.active {
   color: var(--rt-talents-primary);
   background: var(--rt-talents-bg);
 }
 
-.rt-trait-tab.active {
+.wh40k-trait-tab.active {
   color: var(--rt-traits-primary);
   background: var(--rt-traits-bg);
 }
 
-.rt-origin-tab.active {
+.wh40k-origin-tab.active {
   color: var(--rt-dynasty-primary);
   background: var(--rt-dynasty-bg);
 }
@@ -70,9 +70,9 @@
 // TAB CONTENT CONTAINER
 // ============================================
 
-.rt-talent-content,
-.rt-trait-content,
-.rt-origin-content {
+.wh40k-talent-content,
+.wh40k-trait-content,
+.wh40k-origin-content {
   flex: 1;
   overflow-y: auto;
   padding: 12px;
@@ -101,9 +101,9 @@
 // TAB PANELS
 // ============================================
 
-.rt-talent-panel,
-.rt-trait-panel,
-.rt-origin-panel {
+.wh40k-talent-panel,
+.wh40k-trait-panel,
+.wh40k-origin-panel {
   display: none;
   
   &.active {

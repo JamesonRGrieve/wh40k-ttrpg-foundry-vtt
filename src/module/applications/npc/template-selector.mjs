@@ -24,10 +24,10 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "template-selector-{id}",
-    classes: ["rogue-trader", "template-selector"],
+    classes: ["wh40k-rpg", "template-selector"],
     tag: "div",
     window: {
-      title: "RT.NPC.Template.SelectTitle",
+      title: "WH40K.NPC.Template.SelectTitle",
       icon: "fa-solid fa-file-lines",
       minimizable: false,
       resizable: true,
@@ -50,7 +50,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
   /** @override */
   static PARTS = {
     content: {
-      template: "systems/rogue-trader/templates/dialogs/template-selector.hbs"
+      template: "systems/wh40k-rpg/templates/dialogs/template-selector.hbs"
     }
   };
 
@@ -167,7 +167,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
       // Buttons
       buttons: [
-        { action: "create", icon: "fa-solid fa-plus", label: "RT.NPC.Template.CreateFromTemplate", cssClass: "primary", disabled: !selectedTemplate },
+        { action: "create", icon: "fa-solid fa-plus", label: "WH40K.NPC.Template.CreateFromTemplate", cssClass: "primary", disabled: !selectedTemplate },
         { action: "cancel", icon: "fa-solid fa-times", label: "Cancel" }
       ]
     };

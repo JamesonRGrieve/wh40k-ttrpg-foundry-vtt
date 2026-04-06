@@ -3,7 +3,7 @@
     {{!-- Weapons Section --}}
     <div class="rt-panel">
         <header class="rt-panel-header">
-            <h3><i class="fas fa-sword"></i> {{localize "RT.NPC.Template.Weapons"}}</h3>
+            <h3><i class="fas fa-sword"></i> {{localize "WH40K.NPC.Template.Weapons"}}</h3>
             <button type="button" class="rt-btn rt-btn-icon" data-action="addWeapon">
                 <i class="fas fa-plus"></i>
             </button>
@@ -12,18 +12,18 @@
             {{#if (gt system.weapons.length 0)}}
             <div class="weapons-list">
                 <div class="weapon-header">
-                    <span class="col-name">{{localize "RT.Name"}}</span>
-                    <span class="col-damage">{{localize "RT.Weapon.Damage"}}</span>
-                    <span class="col-pen">{{localize "RT.Weapon.Pen"}}</span>
-                    <span class="col-range">{{localize "RT.Weapon.Range"}}</span>
-                    <span class="col-rof">{{localize "RT.Weapon.RoF"}}</span>
-                    <span class="col-special">{{localize "RT.Weapon.Special"}}</span>
+                    <span class="col-name">{{localize "WH40K.Name"}}</span>
+                    <span class="col-damage">{{localize "WH40K.Weapon.Damage"}}</span>
+                    <span class="col-pen">{{localize "WH40K.Weapon.Pen"}}</span>
+                    <span class="col-range">{{localize "WH40K.Weapon.Range"}}</span>
+                    <span class="col-rof">{{localize "WH40K.Weapon.RoF"}}</span>
+                    <span class="col-special">{{localize "WH40K.Weapon.Special"}}</span>
                     <span class="col-actions"></span>
                 </div>
                 {{#each system.weapons as |weapon idx|}}
                 <div class="weapon-row" data-index="{{idx}}">
                     <input type="text" name="system.weapons.{{idx}}.name" 
-                           value="{{weapon.name}}" class="col-name" placeholder="{{localize 'RT.Weapon.Name'}}" />
+                           value="{{weapon.name}}" class="col-name" placeholder="{{localize 'WH40K.Weapon.Name'}}" />
                     <input type="text" name="system.weapons.{{idx}}.damage" 
                            value="{{weapon.damage}}" class="col-damage" placeholder="1d10+3" />
                     <input type="number" name="system.weapons.{{idx}}.pen" 
@@ -33,7 +33,7 @@
                     <input type="text" name="system.weapons.{{idx}}.rof" 
                            value="{{weapon.rof}}" class="col-rof" placeholder="S/-/-" />
                     <input type="text" name="system.weapons.{{idx}}.special" 
-                           value="{{weapon.special}}" class="col-special" placeholder="{{localize 'RT.Weapon.SpecialPlaceholder'}}" />
+                           value="{{weapon.special}}" class="col-special" placeholder="{{localize 'WH40K.Weapon.SpecialPlaceholder'}}" />
                     <div class="col-actions">
                         <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" 
                                 data-action="removeWeapon" data-index="{{idx}}">
@@ -44,7 +44,7 @@
                 {{/each}}
             </div>
             {{else}}
-            <p class="empty-message">{{localize "RT.NPC.Template.NoWeapons"}}</p>
+            <p class="empty-message">{{localize "WH40K.NPC.Template.NoWeapons"}}</p>
             {{/if}}
         </div>
     </div>
@@ -52,18 +52,18 @@
     {{!-- Armour Section --}}
     <div class="rt-panel">
         <header class="rt-panel-header">
-            <h3><i class="fas fa-shield-alt"></i> {{localize "RT.NPC.Template.Armour"}}</h3>
+            <h3><i class="fas fa-shield-alt"></i> {{localize "WH40K.NPC.Template.Armour"}}</h3>
         </header>
         <div class="rt-panel-content">
             <div class="armour-simple">
-                <label>{{localize "RT.NPC.Template.BaseArmour"}}</label>
+                <label>{{localize "WH40K.NPC.Template.BaseArmour"}}</label>
                 <input type="number" name="system.baseArmour" value="{{system.baseArmour}}" min="0" />
             </div>
             
             <div class="armour-notes">
-                <label>{{localize "RT.NPC.Template.ArmourNotes"}}</label>
+                <label>{{localize "WH40K.NPC.Template.ArmourNotes"}}</label>
                 <input type="text" name="system.armourNotes" value="{{system.armourNotes}}" 
-                       placeholder="{{localize 'RT.NPC.Template.ArmourNotesPlaceholder'}}" />
+                       placeholder="{{localize 'WH40K.NPC.Template.ArmourNotesPlaceholder'}}" />
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
     {{!-- Equipment Section --}}
     <div class="rt-panel">
         <header class="rt-panel-header">
-            <h3><i class="fas fa-backpack"></i> {{localize "RT.NPC.Template.Equipment"}}</h3>
+            <h3><i class="fas fa-backpack"></i> {{localize "WH40K.NPC.Template.Equipment"}}</h3>
             <button type="button" class="rt-btn rt-btn-icon" data-action="addEquipment">
                 <i class="fas fa-plus"></i>
             </button>
@@ -82,7 +82,7 @@
                 {{#each system.equipment as |item idx|}}
                 <div class="equipment-row" data-index="{{idx}}">
                     <input type="text" name="system.equipment.{{idx}}.name" 
-                           value="{{item.name}}" placeholder="{{localize 'RT.Item.Name'}}" />
+                           value="{{item.name}}" placeholder="{{localize 'WH40K.Item.Name'}}" />
                     <input type="number" name="system.equipment.{{idx}}.quantity" 
                            value="{{item.quantity}}" min="1" class="quantity" />
                     <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" 
@@ -93,7 +93,7 @@
                 {{/each}}
             </div>
             {{else}}
-            <p class="empty-message">{{localize "RT.NPC.Template.NoEquipment"}}</p>
+            <p class="empty-message">{{localize "WH40K.NPC.Template.NoEquipment"}}</p>
             {{/if}}
         </div>
     </div>

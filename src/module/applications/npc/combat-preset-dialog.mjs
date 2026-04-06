@@ -36,10 +36,10 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "combat-preset-dialog-{id}",
-    classes: ["rogue-trader", "combat-preset-dialog"],
+    classes: ["wh40k-rpg", "combat-preset-dialog"],
     tag: "div",
     window: {
-      title: "RT.NPC.CombatPresets",
+      title: "WH40K.NPC.CombatPresets",
       icon: "fa-solid fa-bookmark"
     },
     position: {
@@ -59,7 +59,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
   /** @override */
   static PARTS = {
     form: {
-      template: "systems/rogue-trader/templates/dialogs/combat-preset.hbs"
+      template: "systems/wh40k-rpg/templates/dialogs/combat-preset.hbs"
     }
   };
 
@@ -79,7 +79,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
   /**
    * Create a new CombatPresetDialog.
-   * @param {RogueTraderNPC} npc - The NPC actor (optional for library mode).
+   * @param {WH40KNPC} npc - The NPC actor (optional for library mode).
    * @param {string} mode - The dialog mode ("library", "save", "load").
    * @param {Object} options - Application options.
    */
@@ -105,7 +105,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
   /**
    * Save a preset from an NPC.
-   * @param {RogueTraderNPC} npc - The NPC actor.
+   * @param {WH40KNPC} npc - The NPC actor.
    * @returns {Promise<CombatPresetDialog>}
    */
   static async savePreset(npc) {
@@ -116,7 +116,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
   /**
    * Load a preset onto an NPC.
-   * @param {RogueTraderNPC} npc - The NPC actor.
+   * @param {WH40KNPC} npc - The NPC actor.
    * @returns {Promise<CombatPresetDialog>}
    */
   static async loadPreset(npc) {
@@ -134,7 +134,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
    * @returns {Array<Object>} Array of preset objects.
    */
   static getPresets() {
-    return game.settings.get("rogue-trader", this.SETTING_KEY) || [];
+    return game.settings.get("wh40k-rpg", this.SETTING_KEY) || [];
   }
 
   /**
@@ -149,7 +149,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
       id: foundry.utils.randomID(),
       createdAt: Date.now()
     });
-    await game.settings.set("rogue-trader", this.SETTING_KEY, presets);
+    await game.settings.set("wh40k-rpg", this.SETTING_KEY, presets);
   }
 
   /**
@@ -163,7 +163,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     const index = presets.findIndex(p => p.id === id);
     if (index >= 0) {
       presets[index] = { ...presets[index], ...updates };
-      await game.settings.set("rogue-trader", this.SETTING_KEY, presets);
+      await game.settings.set("wh40k-rpg", this.SETTING_KEY, presets);
     }
   }
 
@@ -175,7 +175,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
   static async deletePresetById(id) {
     const presets = this.getPresets();
     const filtered = presets.filter(p => p.id !== id);
-    await game.settings.set("rogue-trader", this.SETTING_KEY, filtered);
+    await game.settings.set("wh40k-rpg", this.SETTING_KEY, filtered);
   }
 
   /**
@@ -194,7 +194,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
   /**
    * Create a preset from an NPC.
-   * @param {RogueTraderNPC} npc - The NPC actor.
+   * @param {WH40KNPC} npc - The NPC actor.
    * @param {string} name - The preset name.
    * @param {string} description - The preset description.
    * @returns {Object} The preset data.
@@ -222,7 +222,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
   /**
    * Apply a preset to an NPC.
-   * @param {RogueTraderNPC} npc - The NPC actor.
+   * @param {WH40KNPC} npc - The NPC actor.
    * @param {Object} preset - The preset data.
    * @returns {Promise<void>}
    */

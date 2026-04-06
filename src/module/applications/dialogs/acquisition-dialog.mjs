@@ -1,6 +1,6 @@
 /**
  * @file AcquisitionDialog - Profit Factor test dialog for acquiring items
- * ApplicationV2 dialog for Rogue Trader acquisition tests
+ * ApplicationV2 dialog for WH40K RPG acquisition tests
  * 
  * Features:
  * - Auto-calculate availability modifiers
@@ -24,10 +24,10 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /** @override */
     static DEFAULT_OPTIONS = {
         id: "acquisition-dialog-{id}",
-        classes: ["rogue-trader", "acquisition-dialog"],
+        classes: ["wh40k-rpg", "acquisition-dialog"],
         tag: "form",
         window: {
-            title: "RT.Acquisition.Title",
+            title: "WH40K.Acquisition.Title",
             icon: "fa-solid fa-coins",
             minimizable: false,
             resizable: false
@@ -52,7 +52,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /** @override */
     static PARTS = {
         form: {
-            template: "systems/rogue-trader/templates/dialogs/acquisition-dialog.hbs"
+            template: "systems/wh40k-rpg/templates/dialogs/acquisition-dialog.hbs"
         }
     };
 
@@ -227,7 +227,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getRecentAcquisitions() {
-        const history = this.actor.getFlag("rogue-trader", "acquisitionHistory") || [];
+        const history = this.actor.getFlag("wh40k-rpg", "acquisitionHistory") || [];
         return history.slice(-5).reverse(); // Last 5, most recent first
     }
 
@@ -355,13 +355,13 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _logAcquisition(data) {
-        const history = this.actor.getFlag("rogue-trader", "acquisitionHistory") || [];
+        const history = this.actor.getFlag("wh40k-rpg", "acquisitionHistory") || [];
         history.push(data);
         
         // Keep last 20
         if (history.length > 20) history.shift();
         
-        await this.actor.setFlag("rogue-trader", "acquisitionHistory", history);
+        await this.actor.setFlag("wh40k-rpg", "acquisitionHistory", history);
     }
 
     /* -------------------------------------------- */
@@ -373,7 +373,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      */
     async _createAcquisitionMessage(data) {
         const content = await renderTemplate(
-            "systems/rogue-trader/templates/chat/acquisition-test.hbs",
+            "systems/wh40k-rpg/templates/chat/acquisition-test.hbs",
             {
                 actor: this.actor,
                 item: data.item,

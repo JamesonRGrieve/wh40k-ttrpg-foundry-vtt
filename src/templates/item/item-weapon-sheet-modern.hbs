@@ -192,8 +192,8 @@
         <div class="rt-iconic-stat rt-iconic-stat--quality rt-iconic-stat--small"
              data-action="openQuality"
              data-identifier="{{identifier}}"
-             data-rt-tooltip="quality"
-             data-rt-tooltip-data="{{@root.prepareQualityTooltip identifier level}}">
+             data-wh40k-tooltip="quality"
+             data-wh40k-tooltip-data="{{@root.prepareQualityTooltip identifier level}}">
           <div class="rt-iconic-stat__shape">
             <i class="fa-solid fa-star"></i>
           </div>
@@ -623,7 +623,7 @@
           <i class="fa-solid fa-chevron-down rt-section__toggle"></i>
         </header>
         <div class="rt-section__body" data-section-content="effects">
-          {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+          {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
         </div>
       </section>
       {{/if}}

@@ -1,12 +1,12 @@
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs';
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.mjs';
-import { RogueTraderBaseActor } from './base-actor.mjs';
+import { WH40KBaseActor } from './base-actor.mjs';
 import { ForceFieldData } from '../rolls/force-field-data.mjs';
 import { SimpleSkillData } from '../rolls/action-data.mjs';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.mjs';
 import { DHBasicActionManager } from '../actions/basic-action-manager.mjs';
 import { SYSTEM_ID } from '../constants.mjs';
-import { RogueTraderSettings } from '../rogue-trader-settings.mjs';
+import { WH40KSettings } from '../wh40k-rpg-settings.mjs';
 import { D100Roll } from '../dice/_module.mjs';
 
 const SKILL_ALIASES = {
@@ -17,9 +17,9 @@ const SKILL_ALIASES = {
  * Actor document for Character (Acolyte) actors.
  * Handles roll methods, actions, and API surface.
  * Data preparation is handled by the CharacterData DataModel.
- * @extends {RogueTraderBaseActor}
+ * @extends {WH40KBaseActor}
  */
-export class RogueTraderAcolyte extends RogueTraderBaseActor {
+export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
     /*  Getters                                     */
     /* -------------------------------------------- */
@@ -384,7 +384,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                     ui.notifications.warn('Actor must have weapon equipped!');
                     return;
                 }
-                if (game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simpleAttackRolls)) {
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     if (item.isRanged) {
                         await this.rollCharacteristic('ballisticSkill', item.name);
                     } else {
@@ -395,7 +395,7 @@ export class RogueTraderAcolyte extends RogueTraderBaseActor {
                 }
                 return;
             case 'psychicPower':
-                if (game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.simplePsychicRolls)) {
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
                     await this.rollCharacteristic('willpower', item.name);
                 } else {
                     await DHTargetedActionManager.performPsychicAttack(this, null, item);

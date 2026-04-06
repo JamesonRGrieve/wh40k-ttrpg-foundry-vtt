@@ -96,9 +96,9 @@ export default class AmmunitionData extends ItemDataModel.mixin(
    * @type {string}
    */
   get weaponTypesLabel() {
-    if ( !this.weaponTypes || !this.weaponTypes.size ) return game.i18n.localize("RT.Ammunition.AllWeapons");
+    if ( !this.weaponTypes || !this.weaponTypes.size ) return game.i18n.localize("WH40K.Ammunition.AllWeapons");
     return Array.from(this.weaponTypes).map(t => {
-      const label = CONFIG.ROGUE_TRADER?.weaponTypes?.[t]?.label;
+      const label = CONFIG.WH40K?.weaponTypes?.[t]?.label;
       return label ? game.i18n.localize(label) : t;
     }).join(", ");
   }

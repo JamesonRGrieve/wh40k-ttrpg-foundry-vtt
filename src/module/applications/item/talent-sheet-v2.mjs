@@ -22,7 +22,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'item', 'talent-sheet-v2'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'talent-sheet-v2'],
         actions: {
             ...super.DEFAULT_OPTIONS?.actions,
             rollTalent: TalentSheetV2.#rollTalent,
@@ -46,7 +46,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/rogue-trader/templates/item/talent-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/talent-sheet-v2.hbs',
             scrollable: ['.rt-talent-content'],
         },
     };
@@ -55,10 +55,10 @@ export default class TalentSheetV2 extends BaseItemSheet {
 
     /** @override */
     static TABS = [
-        { tab: 'overview', group: 'primary', label: 'RT.Tabs.Overview' },
-        { tab: 'effects', group: 'primary', label: 'RT.Tabs.Effects' },
-        { tab: 'properties', group: 'primary', label: 'RT.Tabs.Properties' },
-        { tab: 'description', group: 'primary', label: 'RT.Tabs.Description' },
+        { tab: 'overview', group: 'primary', label: 'WH40K.Tabs.Overview' },
+        { tab: 'effects', group: 'primary', label: 'WH40K.Tabs.Effects' },
+        { tab: 'properties', group: 'primary', label: 'WH40K.Tabs.Properties' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
     ];
 
     /* -------------------------------------------- */

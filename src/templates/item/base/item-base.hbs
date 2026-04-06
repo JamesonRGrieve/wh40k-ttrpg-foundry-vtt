@@ -4,7 +4,7 @@
   <form autocomplete="off">
     
     {{!-- HEADER: Image + Name + Badges (Class, Type, Craftsmanship) --}}
-    {{> systems/rogue-trader/templates/item/panel/item-header-physical.hbs}}
+    {{> systems/wh40k-rpg/templates/item/panel/item-header-physical.hbs}}
     
     {{!-- STAT BAR: Quick-reference metrics --}}
     {{> @partial-block name="stats"}}
@@ -40,7 +40,7 @@
       {{!-- PROPERTIES TAB --}}
       <div class="rt-item-panel" data-tab="properties" data-group="primary">
         {{!-- Acquisition Section (Weight, Availability, Craftsmanship) --}}
-        {{> systems/rogue-trader/templates/item/panel/acquisition-panel.hbs}}
+        {{> systems/wh40k-rpg/templates/item/panel/acquisition-panel.hbs}}
         
         {{!-- Type-specific properties --}}
         {{> @partial-block name="properties-tab"}}
@@ -48,13 +48,13 @@
       
       {{!-- DESCRIPTION TAB --}}
       <div class="rt-item-panel" data-tab="description" data-group="primary">
-        {{> systems/rogue-trader/templates/item/panel/description-panel.hbs}}
-        {{> systems/rogue-trader/templates/item/panel/source-panel.hbs}}
+        {{> systems/wh40k-rpg/templates/item/panel/description-panel.hbs}}
+        {{> systems/wh40k-rpg/templates/item/panel/source-panel.hbs}}
       </div>
       
       {{!-- EFFECTS TAB --}}
       <div class="rt-item-panel" data-tab="effects" data-group="primary">
-        {{> systems/rogue-trader/templates/item/panel/active-effects-panel.hbs}}
+        {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
       </div>
       
     </section>

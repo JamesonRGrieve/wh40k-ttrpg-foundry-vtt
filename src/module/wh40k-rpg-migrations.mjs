@@ -1,10 +1,10 @@
-import { RogueTraderSettings } from './rogue-trader-settings.mjs';
+import { WH40KSettings } from './wh40k-rpg-settings.mjs';
 import { SYSTEM_ID } from './constants.mjs';
 
 export async function checkAndMigrateWorld() {
     const worldVersion = 185;
 
-    const currentVersion = game.settings.get(SYSTEM_ID, RogueTraderSettings.SETTINGS.worldVersion);
+    const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
     if (worldVersion !== currentVersion && game.user.isGM) {
         ui.notifications.info('Upgrading the world, please wait...');
 
@@ -32,7 +32,7 @@ export async function checkAndMigrateWorld() {
         // Display Release Notes
         await displayReleaseNotes(worldVersion);
 
-        game.settings.set(SYSTEM_ID, RogueTraderSettings.SETTINGS.worldVersion, worldVersion);
+        game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, worldVersion);
         ui.notifications.info('Upgrade complete!');
     }
 
@@ -254,11 +254,11 @@ export async function checkAndMigrateWorld() {
 
         // Remove deprecated loadout system flags (v185)
         if (currentVersion < 185) {
-            const flags = actor.flags?.['rogue-trader'];
+            const flags = actor.flags?.['wh40k-rpg'];
             if (flags?.equipmentViewMode !== undefined || flags?.equipmentPresets !== undefined) {
                 await actor.update({
-                    'flags.rogue-trader.-=equipmentViewMode': null,
-                    'flags.rogue-trader.-=equipmentPresets': null,
+                    'flags.wh40k-rpg.-=equipmentViewMode': null,
+                    'flags.wh40k-rpg.-=equipmentPresets': null,
                 });
             }
         }
@@ -352,7 +352,7 @@ export async function checkAndMigrateWorld() {
     }
 
     async function releaseNotes(data) {
-        const html = await renderTemplate('systems/rogue-trader/templates/prompt/release-notes-prompt.hbs', data);
+        const html = await renderTemplate('systems/wh40k-rpg/templates/prompt/release-notes-prompt.hbs', data);
         let dialog = new Dialog(
             {
                 title: 'Release Notes',

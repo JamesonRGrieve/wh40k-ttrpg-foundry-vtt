@@ -20,10 +20,10 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /** @override */
     static DEFAULT_OPTIONS = {
         id: 'roll-configuration-{id}',
-        classes: ['rogue-trader', 'roll-configuration-dialog'],
+        classes: ['wh40k-rpg', 'roll-configuration-dialog'],
         tag: 'form',
         window: {
-            title: 'RT.Roll.ConfigureRoll',
+            title: 'WH40K.Roll.ConfigureRoll',
             icon: 'fa-solid fa-dice-d20',
             minimizable: false,
             resizable: false,
@@ -49,7 +49,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /** @override */
     static PARTS = {
         form: {
-            template: 'systems/rogue-trader/templates/dialogs/roll-configuration.hbs',
+            template: 'systems/wh40k-rpg/templates/dialogs/roll-configuration.hbs',
         },
     };
 
@@ -58,23 +58,23 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /* -------------------------------------------- */
 
     /**
-     * Standard difficulty modifiers for Rogue Trader
+     * Standard difficulty modifiers for WH40K RPG
      * @type {Array<{label: string, value: number, key: string}>}
      */
     static DIFFICULTY_PRESETS = [
-        { key: 'trivial', label: 'RT.Difficulty.Trivial', value: 60 },
-        { key: 'elementary', label: 'RT.Difficulty.Elementary', value: 50 },
-        { key: 'easy', label: 'RT.Difficulty.Easy', value: 40 },
-        { key: 'routine', label: 'RT.Difficulty.Routine', value: 30 },
-        { key: 'ordinary', label: 'RT.Difficulty.Ordinary', value: 20 },
-        { key: 'challenging', label: 'RT.Difficulty.Challenging', value: 10 },
-        { key: 'difficult', label: 'RT.Difficulty.Difficult', value: 0 },
-        { key: 'hard', label: 'RT.Difficulty.Hard', value: -10 },
-        { key: 'veryHard', label: 'RT.Difficulty.VeryHard', value: -20 },
-        { key: 'arduous', label: 'RT.Difficulty.Arduous', value: -30 },
-        { key: 'punishing', label: 'RT.Difficulty.Punishing', value: -40 },
-        { key: 'hellish', label: 'RT.Difficulty.Hellish', value: -50 },
-        { key: 'infernal', label: 'RT.Difficulty.Infernal', value: -60 },
+        { key: 'trivial', label: 'WH40K.Difficulty.Trivial', value: 60 },
+        { key: 'elementary', label: 'WH40K.Difficulty.Elementary', value: 50 },
+        { key: 'easy', label: 'WH40K.Difficulty.Easy', value: 40 },
+        { key: 'routine', label: 'WH40K.Difficulty.Routine', value: 30 },
+        { key: 'ordinary', label: 'WH40K.Difficulty.Ordinary', value: 20 },
+        { key: 'challenging', label: 'WH40K.Difficulty.Challenging', value: 10 },
+        { key: 'difficult', label: 'WH40K.Difficulty.Difficult', value: 0 },
+        { key: 'hard', label: 'WH40K.Difficulty.Hard', value: -10 },
+        { key: 'veryHard', label: 'WH40K.Difficulty.VeryHard', value: -20 },
+        { key: 'arduous', label: 'WH40K.Difficulty.Arduous', value: -30 },
+        { key: 'punishing', label: 'WH40K.Difficulty.Punishing', value: -40 },
+        { key: 'hellish', label: 'WH40K.Difficulty.Hellish', value: -50 },
+        { key: 'infernal', label: 'WH40K.Difficulty.Infernal', value: -60 },
     ];
 
     /* -------------------------------------------- */
@@ -221,7 +221,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
             // Form buttons
             buttons: [
-                { type: 'submit', icon: 'fa-solid fa-dice-d20', label: 'RT.Roll.Roll', cssClass: 'primary' },
+                { type: 'submit', icon: 'fa-solid fa-dice-d20', label: 'WH40K.Roll.Roll', cssClass: 'primary' },
                 { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
             ],
         };

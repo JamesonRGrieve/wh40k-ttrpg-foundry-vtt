@@ -2,7 +2,7 @@
  * Explorator Career Advancement Configuration
  * 
  * Defines characteristic costs and rank advancements for the Explorator career.
- * Data sourced from Rogue Trader Core Rulebook.
+ * Data sourced from WH40K RPG Core Rulebook.
  */
 
 /**
@@ -44,7 +44,7 @@ export const RANK_1_ADVANCES = [
   { name: 'Literacy', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Logic', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Scholastic Lore', cost: 100, type: 'skill', specialization: 'Astromancy', prerequisites: [] },
-  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'Rogue Trader', prerequisites: [] },
+  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'WH40K RPG', prerequisites: [] },
   { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'Tech', prerequisites: [] },
   { name: 'Tech-Use', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Trade', cost: 100, type: 'skill', specialization: 'Armourer', prerequisites: [] },
@@ -90,7 +90,7 @@ export const RANK_1_ADVANCES = [
  */
 export const CAREER_INFO = {
   key: 'explorator',
-  name: 'RT.Career.Explorator',
-  description: 'RT.Career.ExploratorDesc',
+  name: 'WH40K.Career.Explorator',
+  description: 'WH40K.Career.ExploratorDesc',
   ranks: ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4', 'Rank 5', 'Rank 6', 'Rank 7', 'Rank 8']
 };

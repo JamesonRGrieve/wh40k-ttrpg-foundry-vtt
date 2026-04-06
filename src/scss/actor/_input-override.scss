@@ -3,7 +3,7 @@
 // ============================================
 // Uses theme-aware CSS custom properties
 
-.rt-sheet {
+.wh40k-sheet {
   // Base input styling
   input[type="text"],
   input[type="number"],
@@ -34,8 +34,8 @@
   }
 
   // Specific overrides for common classes
-  .rt-field__input,
-  .rt-header__input {
+  .wh40k-field__input,
+  .wh40k-header__input {
     background: var(--rt-input-bg);
     border: 1px solid var(--rt-border-color-light);
 
@@ -47,7 +47,7 @@
   }
 
   // Settings inputs
-  .rt-settings__input {
+  .wh40k-settings__input {
     background: var(--rt-input-bg);
     border: 1px solid var(--rt-border-color-light);
 
@@ -59,7 +59,7 @@
 
   // Table inputs
   .table-cell input,
-  .rt-table input {
+  .wh40k-table input {
     background: var(--rt-input-bg);
     border: 1px solid var(--rt-border-color-light);
 
@@ -71,7 +71,7 @@
 }
 
 // Characteristics inputs
-.rt-char-hud-field {
+.wh40k-char-hud-field {
   input,
   select {
     background: var(--rt-input-bg);
@@ -87,8 +87,8 @@
 }
 
 // Combat inputs
-.rt-combat-input,
-.rt-stat-input {
+.wh40k-combat-input,
+.wh40k-stat-input {
   background: var(--rt-input-bg);
   border: 1px solid var(--rt-border-color-light);
 
@@ -99,7 +99,7 @@
 }
 
 // Abilities tab inputs
-.rt-ability-input {
+.wh40k-ability-input {
   background: var(--rt-input-bg);
   border: 1px solid var(--rt-border-color-light);
 
@@ -110,7 +110,7 @@
 }
 
 // Grid inputs
-.rt-grid input {
+.wh40k-grid input {
   background: var(--rt-input-bg);
   border: 1px solid var(--rt-border-color-light);
 

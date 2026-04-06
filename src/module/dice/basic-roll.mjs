@@ -1,5 +1,5 @@
 /**
- * BasicRollRT - Extended Roll class for Rogue Trader VTT
+ * BasicRollRT - Extended Roll class for WH40K RPG VTT
  * Implements three-stage roll workflow: Configure → Evaluate → Post
  * Similar to dnd5e's modern roll architecture
  * @extends Roll
@@ -14,19 +14,19 @@ export default class BasicRollRT extends Roll {
      * Default flavor text for this roll type
      * @type {string}
      */
-    static defaultFlavor = "Rogue Trader Roll";
+    static defaultFlavor = "WH40K RPG Roll";
 
     /**
      * Default chat template for this roll type
      * @type {string}
      */
-    static chatTemplate = "systems/rogue-trader/templates/chat/simple-roll-chat.hbs";
+    static chatTemplate = "systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs";
 
     /**
      * V13: Define EVALUATION_TEMPLATE for dice tooltip
      * @type {string}
      */
-    static EVALUATION_TEMPLATE = "systems/rogue-trader/templates/chat/roll-tooltip.hbs";
+    static EVALUATION_TEMPLATE = "systems/wh40k-rpg/templates/chat/roll-tooltip.hbs";
 
     /* -------------------------------------------- */
     /*  Instance Properties                         */
@@ -73,7 +73,7 @@ export default class BasicRollRT extends Roll {
      */
     static async buildConfigure(config) {
         // Fire pre-roll hook - allows modules to modify or cancel the roll
-        const hookResult = Hooks.call("rogue-trader.preRoll", this, config);
+        const hookResult = Hooks.call("wh40k-rpg.preRoll", this, config);
         if (hookResult === false) return null;
 
         // Show configuration dialog if needed
@@ -86,7 +86,7 @@ export default class BasicRollRT extends Roll {
         }
 
         // Fire post-configuration hook
-        Hooks.callAll("rogue-trader.postRollConfiguration", this, config);
+        Hooks.callAll("wh40k-rpg.postRollConfiguration", this, config);
 
         return config;
     }
@@ -127,7 +127,7 @@ export default class BasicRollRT extends Roll {
         await roll.evaluate();
 
         // Fire post-evaluation hook
-        Hooks.callAll("rogue-trader.postRollEvaluate", roll, config);
+        Hooks.callAll("wh40k-rpg.postRollEvaluate", roll, config);
 
         return roll;
     }
@@ -151,7 +151,7 @@ export default class BasicRollRT extends Roll {
         const message = await ChatMessage.create(chatData);
 
         // Fire post-message hook
-        Hooks.callAll("rogue-trader.postRollPost", message, roll, config);
+        Hooks.callAll("wh40k-rpg.postRollPost", message, roll, config);
 
         return message;
     }
@@ -178,7 +178,7 @@ export default class BasicRollRT extends Roll {
             content: content,
             flavor: config.flavor || this.defaultFlavor,
             flags: {
-                "rogue-trader": {
+                "wh40k-rpg": {
                     rollType: this.name,
                     target: config.target,
                     ...config.flags

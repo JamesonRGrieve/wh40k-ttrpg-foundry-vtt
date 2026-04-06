@@ -22,25 +22,25 @@ export default class ResourceGrantData extends BaseGrantData {
    */
   static RESOURCES = {
     wounds: {
-      label: "RT.Resource.Wounds",
+      label: "WH40K.Resource.Wounds",
       valuePath: "system.wounds.value",
       maxPath: "system.wounds.max",
       affectsMax: true
     },
     fate: {
-      label: "RT.Resource.Fate",
+      label: "WH40K.Resource.Fate",
       valuePath: "system.fate.value",
       maxPath: "system.fate.max",
       affectsMax: true
     },
     corruption: {
-      label: "RT.Resource.Corruption",
+      label: "WH40K.Resource.Corruption",
       valuePath: "system.corruption.value",
       maxPath: null,
       affectsMax: false
     },
     insanity: {
-      label: "RT.Resource.Insanity",
+      label: "WH40K.Resource.Insanity",
       valuePath: "system.insanity.value",
       maxPath: null,
       affectsMax: false
@@ -268,7 +268,7 @@ export default class ResourceGrantData extends BaseGrantData {
   /**
    * Evaluate a resource formula.
    * @param {string} formula - The formula to evaluate
-   * @param {RogueTraderActor} actor - The actor for context
+   * @param {WH40KActor} actor - The actor for context
    * @returns {Promise<number>}
    * @private
    */

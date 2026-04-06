@@ -5,9 +5,9 @@
 
 /**
  * Check if an actor has the required weapon training for a weapon.
- * @param {RogueTraderActor} actor - The actor using the weapon
- * @param {RogueTraderItem} weapon - The weapon being used
- * @returns {{trained: boolean, talent: RogueTraderItem|null}} Training status and talent if found
+ * @param {WH40KActor} actor - The actor using the weapon
+ * @param {WH40KItem} weapon - The weapon being used
+ * @returns {{trained: boolean, talent: WH40KItem|null}} Training status and talent if found
  */
 export function checkWeaponTraining(actor, weapon) {
     if (!actor || !weapon) {
@@ -80,8 +80,8 @@ export function checkWeaponTraining(actor, weapon) {
  * Get the weapon training modifier for a weapon roll.
  * Returns -20 if untrained, 0 if trained.
  *
- * @param {RogueTraderActor} actor - The actor using the weapon
- * @param {RogueTraderItem} weapon - The weapon being used
+ * @param {WH40KActor} actor - The actor using the weapon
+ * @param {WH40KItem} weapon - The weapon being used
  * @returns {number} The modifier to apply (-20 or 0)
  */
 export function getWeaponTrainingModifier(actor, weapon) {
@@ -92,8 +92,8 @@ export function getWeaponTrainingModifier(actor, weapon) {
 /**
  * Get a human-readable description of weapon training status.
  *
- * @param {RogueTraderActor} actor - The actor using the weapon
- * @param {RogueTraderItem} weapon - The weapon being used
+ * @param {WH40KActor} actor - The actor using the weapon
+ * @param {WH40KItem} weapon - The weapon being used
  * @returns {string} Description of training status
  */
 export function getWeaponTrainingDescription(actor, weapon) {

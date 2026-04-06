@@ -2,7 +2,7 @@
  * Seneschal Career Advancement Configuration
  * 
  * Defines characteristic costs and rank advancements for the Seneschal career.
- * Data sourced from Rogue Trader Core Rulebook.
+ * Data sourced from WH40K RPG Core Rulebook.
  */
 
 /**
@@ -48,7 +48,7 @@ export const RANK_1_ADVANCES = [
   { name: 'Inquiry', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Literacy', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Performer', cost: 100, type: 'skill', specialization: 'Choose One', prerequisites: [] },
-  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'Rogue Traders', prerequisites: [] },
+  { name: 'Secret Tongue', cost: 100, type: 'skill', specialization: 'WH40K RPGs', prerequisites: [] },
   { name: 'Security', cost: 100, type: 'skill', prerequisites: [] },
   { name: 'Silent Move', cost: 100, type: 'skill', prerequisites: [] },
 
@@ -84,7 +84,7 @@ export const RANK_1_ADVANCES = [
  */
 export const CAREER_INFO = {
   key: 'seneschal',
-  name: 'RT.Career.Seneschal',
-  description: 'RT.Career.SeneschalDesc',
+  name: 'WH40K.Career.Seneschal',
+  description: 'WH40K.Career.SeneschalDesc',
   ranks: ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4', 'Rank 5', 'Rank 6', 'Rank 7', 'Rank 8']
 };

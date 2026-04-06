@@ -10,7 +10,7 @@ import BaseItemSheet from './base-item-sheet.mjs';
 export default class WeaponQualitySheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['rogue-trader', 'sheet', 'item', 'weapon-quality'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'weapon-quality'],
         position: {
             width: 550,
             height: 500,
@@ -22,7 +22,7 @@ export default class WeaponQualitySheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/rogue-trader/templates/item/item-weapon-quality-sheet.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-weapon-quality-sheet.hbs',
             scrollable: ['.rt-tab-content'],
         },
     };

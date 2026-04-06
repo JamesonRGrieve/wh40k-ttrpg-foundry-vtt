@@ -3,11 +3,11 @@
  * Shows all active modifiers affecting the character
  */
 
-.rt-panel--modifiers {
+.wh40k-panel--modifiers {
     margin-bottom: 16px;
 }
 
-.rt-modifier-count {
+.wh40k-modifier-count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -22,20 +22,20 @@
 }
 
 /* Modifiers List */
-.rt-modifiers-list {
+.wh40k-modifiers-list {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
 /* Modifier Group */
-.rt-modifier-group {
+.wh40k-modifier-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.rt-modifier-group-header {
+.wh40k-modifier-group-header {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -55,7 +55,7 @@
 }
 
 /* Modifier Item */
-.rt-modifier-item {
+.wh40k-modifier-item {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -74,11 +74,11 @@
     &--condition {
         border-left-color: rgba(245, 158, 11, 0.6);
 
-        &.rt-modifier-item--harmful {
+        &.wh40k-modifier-item--harmful {
             border-left-color: rgba(239, 68, 68, 0.6);
         }
 
-        &.rt-modifier-item--beneficial {
+        &.wh40k-modifier-item--beneficial {
             border-left-color: rgba(34, 197, 94, 0.6);
         }
     }
@@ -103,13 +103,13 @@
     &--inactive {
         opacity: 0.5;
 
-        .rt-modifier-item-name {
+        .wh40k-modifier-item-name {
             text-decoration: line-through;
         }
     }
 }
 
-.rt-modifier-item-icon {
+.wh40k-modifier-item-icon {
     flex-shrink: 0;
     width: 40px;
     height: 40px;
@@ -124,7 +124,7 @@
     }
 }
 
-.rt-modifier-item-content {
+.wh40k-modifier-item-content {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -132,7 +132,7 @@
     min-width: 0; // Allow text truncation
 }
 
-.rt-modifier-item-name {
+.wh40k-modifier-item-name {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -151,7 +151,7 @@
     }
 }
 
-.rt-modifier-stacks {
+.wh40k-modifier-stacks {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -163,19 +163,19 @@
     color: #f59e0b;
 }
 
-.rt-modifier-item-description {
+.wh40k-modifier-item-description {
     font-size: 0.9em;
     color: var(--rt-text-secondary, rgba(255, 255, 255, 0.7));
     line-height: 1.4;
 }
 
-.rt-modifier-item-duration {
+.wh40k-modifier-item-duration {
     font-size: 0.85em;
     color: var(--rt-text-disabled, rgba(255, 255, 255, 0.5));
     font-style: italic;
 }
 
-.rt-modifier-item-toggle {
+.wh40k-modifier-item-toggle {
     flex-shrink: 0;
     width: 36px;
     height: 36px;
@@ -200,13 +200,13 @@
     }
 
     // Active toggle
-    .rt-modifier-item:not(.rt-modifier-item--inactive) & {
+    .wh40k-modifier-item:not(.wh40k-modifier-item--inactive) & {
         color: #4ade80;
     }
 }
 
 /* Empty State */
-.rt-modifiers-empty {
+.wh40k-modifiers-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -229,26 +229,26 @@
 }
 
 /* Collapsed State */
-.rt-panel--modifiers.rt-panel--collapsed {
-    .rt-panel-body {
+.wh40k-panel--modifiers.wh40k-panel--collapsed {
+    .wh40k-panel-body {
         display: none;
     }
 }
 
 /* Mobile Responsive */
 @media (max-width: 600px) {
-    .rt-modifier-item {
+    .wh40k-modifier-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
     }
 
-    .rt-modifier-item-icon {
+    .wh40k-modifier-item-icon {
         width: 32px;
         height: 32px;
     }
 
-    .rt-modifier-item-toggle {
+    .wh40k-modifier-item-toggle {
         align-self: flex-end;
         margin-top: -32px;
     }

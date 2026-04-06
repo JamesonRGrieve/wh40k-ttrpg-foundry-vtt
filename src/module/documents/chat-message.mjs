@@ -1,5 +1,5 @@
 /**
- * Extended ChatMessage class for Rogue Trader VTT
+ * Extended ChatMessage class for WH40K RPG VTT
  * Provides custom rendering, interactive action buttons, and DoS/DoF display
  * @extends ChatMessage
  */
@@ -22,7 +22,7 @@ export class ChatMessageRT extends ChatMessage {
      * @type {boolean}
      */
     get isItemCard() {
-        return !!this.getFlag("rogue-trader", "itemCard");
+        return !!this.getFlag("wh40k-rpg", "itemCard");
     }
 
     /**
@@ -30,7 +30,7 @@ export class ChatMessageRT extends ChatMessage {
      * @type {boolean}
      */
     get isTargetedRoll() {
-        return this.isRoll && this.getFlag("rogue-trader", "target") !== undefined;
+        return this.isRoll && this.getFlag("wh40k-rpg", "target") !== undefined;
     }
 
     /**
@@ -38,7 +38,7 @@ export class ChatMessageRT extends ChatMessage {
      * @type {string|null}
      */
     get itemUuid() {
-        return this.getFlag("rogue-trader", "item.uuid") ?? null;
+        return this.getFlag("wh40k-rpg", "item.uuid") ?? null;
     }
 
     /* -------------------------------------------- */
@@ -53,7 +53,7 @@ export class ChatMessageRT extends ChatMessage {
         if (!this.isRoll || !this.rolls?.length) return null;
 
         const roll = this.rolls[0];
-        const target = this.getFlag("rogue-trader", "target");
+        const target = this.getFlag("wh40k-rpg", "target");
 
         if (target === undefined || target === null) return null;
 
@@ -76,13 +76,13 @@ export class ChatMessageRT extends ChatMessage {
     async rollDamage() {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
-            ui.notifications.warn("RT.Chat.NoItemFound", { localize: true });
+            ui.notifications.warn("WH40K.Chat.NoItemFound", { localize: true });
             return;
         }
 
         const item = await fromUuid(itemUuid);
         if (!item) {
-            ui.notifications.warn("RT.Chat.ItemNotFound", { localize: true });
+            ui.notifications.warn("WH40K.Chat.ItemNotFound", { localize: true });
             return;
         }
 
@@ -111,7 +111,7 @@ export class ChatMessageRT extends ChatMessage {
         const targets = game.user.targets;
 
         if (targets.size === 0) {
-            ui.notifications.warn("RT.Chat.NoTokensTargeted", { localize: true });
+            ui.notifications.warn("WH40K.Chat.NoTokensTargeted", { localize: true });
             return;
         }
 
@@ -137,13 +137,13 @@ export class ChatMessageRT extends ChatMessage {
     async useItem() {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
-            ui.notifications.warn("RT.Chat.NoItemFound", { localize: true });
+            ui.notifications.warn("WH40K.Chat.NoItemFound", { localize: true });
             return;
         }
 
         const item = await fromUuid(itemUuid);
         if (!item) {
-            ui.notifications.warn("RT.Chat.ItemNotFound", { localize: true });
+            ui.notifications.warn("WH40K.Chat.ItemNotFound", { localize: true });
             return;
         }
 
@@ -251,7 +251,7 @@ export class ChatMessageRT extends ChatMessage {
 
         // Create degree badge
         const badge = document.createElement("span");
-        badge.className = `rt-degree-badge ${success ? "rt-degree-badge--success" : "rt-degree-badge--failure"}`;
+        badge.className = `rt-degree-badge ${success ? "wh40k-degree-badge--success" : "wh40k-degree-badge--failure"}`;
         badge.textContent = `${degrees} ${success ? "DoS" : "DoF"}`;
         
         diceTotal.appendChild(badge);
@@ -273,7 +273,7 @@ export class ChatMessageRT extends ChatMessage {
         if (sender.querySelector(".rt-message-portrait")) return;
 
         const portrait = document.createElement("img");
-        portrait.className = "rt-message-portrait";
+        portrait.className = "wh40k-message-portrait";
         portrait.src = actor.img;
         portrait.alt = actor.name;
         

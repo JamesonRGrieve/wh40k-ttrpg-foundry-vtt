@@ -9,7 +9,7 @@ const GAME_ICONS_CDN = 'https://cdn.jsdelivr.net/gh/game-icons/icons@master';
 
 /**
  * Icon categories mapped to game-icons.net folder paths
- * These are the most commonly used categories for Rogue Trader
+ * These are the most commonly used categories for WH40K RPG
  */
 export const ICON_CATEGORIES = {
   // Weapons & Combat
