@@ -157,7 +157,7 @@
                 <small>Roll equal to or under this to be protected</small>
               </label>
               <div class="wh40k-field-with-unit">
-                <input type="number" name="system.protectionRating" value="{{system.protectionRating}}" 
+                <input type="number" name="system.protectionRating" value="{{source.protectionRating}}" 
                        data-dtype="Number" min="0" max="100" />
                 <span class="wh40k-field-unit">%</span>
               </div>
@@ -168,7 +168,7 @@
                 <small>Roll this or higher on hit to overload</small>
               </label>
               <div class="wh40k-field-with-unit">
-                <input type="number" name="system.overloadThreshold" value="{{system.overloadThreshold}}" 
+                <input type="number" name="system.overloadThreshold" value="{{source.overloadThreshold}}" 
                        data-dtype="Number" min="0" max="100" />
                 <span class="wh40k-field-unit">+</span>
               </div>
@@ -179,7 +179,7 @@
               Overload Duration
               <small>How long does the field stay disabled?</small>
             </label>
-            <input type="text" name="system.overloadDuration" value="{{system.overloadDuration}}" 
+            <input type="text" name="system.overloadDuration" value="{{source.overloadDuration}}" 
                    placeholder="1d5 rounds" />
           </div>
         </div>
@@ -195,12 +195,12 @@
           <div class="wh40k-field-row">
             <div class="wh40k-field">
               <label>Weight (kg)</label>
-              <input type="number" name="system.weight" value="{{system.weight}}" 
+              <input type="number" name="system.weight" value="{{source.weight}}" 
                      data-dtype="Number" min="0" step="0.1" />
             </div>
             <div class="wh40k-field">
               <label>Cost (Thrones)</label>
-              <input type="number" name="system.cost.value" value="{{system.cost.value}}" 
+              <input type="number" name="system.cost.value" value="{{source.cost.value}}" 
                      data-dtype="Number" min="0" />
             </div>
           </div>
@@ -287,7 +287,7 @@
           <h3>Source</h3>
         </div>
         <div class="wh40k-forcefield-section__body">
-          <input type="text" name="system.source" value="{{system.source}}" 
+          <input type="text" name="system.source" value="{{source.source}}" 
                  placeholder="Rogue Trader Core Rulebook, pg. 123" />
         </div>
       </div>

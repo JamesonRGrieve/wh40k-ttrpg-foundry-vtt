@@ -251,40 +251,30 @@ export default function EnhancedDragDropMixin(Base) {
         async _showSplitDialog(item) {
             const quantity = item.system.quantity || 1;
 
-            return new Promise((resolve) => {
-                new Dialog({
-                    title: `Split ${item.name}`,
-                    content: `
-                        <form class="wh40k-split-dialog">
-                            <div class="form-group">
-                                <label>Quantity to move (max ${quantity})</label>
-                                <input type="number" name="quantity" min="1" max="${quantity}" value="1" autofocus />
-                            </div>
-                            <p class="hint">The remaining ${quantity - 1} will stay in the original stack.</p>
-                        </form>
-                    `,
-                    buttons: {
-                        split: {
-                            icon: '<i class="fas fa-split"></i>',
-                            label: 'Split',
-                            callback: (html) => {
-                                const qty = parseInt(html.find('[name="quantity"]').val());
-                                if (qty > 0 && qty <= quantity) {
-                                    resolve({ quantity: qty });
-                                } else {
-                                    ui.notifications.warn('Invalid quantity');
-                                    resolve(null);
-                                }
-                            },
-                        },
-                        cancel: {
-                            icon: '<i class="fas fa-times"></i>',
-                            label: 'Cancel',
-                            callback: () => resolve(null),
-                        },
+            return foundry.applications.api.DialogV2.prompt({
+                window: { title: `Split ${item.name}` },
+                content: `
+                    <form class="wh40k-split-dialog">
+                        <div class="form-group">
+                            <label>Quantity to move (max ${quantity})</label>
+                            <input type="number" name="quantity" min="1" max="${quantity}" value="1" autofocus />
+                        </div>
+                        <p class="hint">The remaining ${quantity - 1} will stay in the original stack.</p>
+                    </form>
+                `,
+                ok: {
+                    icon: 'fas fa-split',
+                    label: 'Split',
+                    callback: (event, button, dialog) => {
+                        const qty = parseInt(dialog.querySelector('[name="quantity"]').value);
+                        if (qty > 0 && qty <= quantity) {
+                            return { quantity: qty };
+                        }
+                        ui.notifications.warn('Invalid quantity');
+                        return null;
                     },
-                    default: 'split',
-                }).render(true);
+                },
+                rejectClose: false,
             });
         }
 

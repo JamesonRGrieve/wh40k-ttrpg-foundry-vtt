@@ -111,7 +111,7 @@ export class AssignDamageData {
             await this._createCriticalInjuryItem();
         }
 
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', this);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', this);
         const chatData = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),

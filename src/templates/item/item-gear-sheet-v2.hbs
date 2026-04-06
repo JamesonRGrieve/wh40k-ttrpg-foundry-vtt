@@ -224,19 +224,19 @@
               <div class="wh40k-gear-section__body">
                 <div class="wh40k-field">
                   <label>Quantity</label>
-                  <input type="number" name="system.quantity" value="{{system.quantity}}" 
+                  <input type="number" name="system.quantity" value="{{source.quantity}}" 
                          data-dtype="Number" min="1" />
                 </div>
                 
                 <div class="wh40k-field">
                   <label>Weight per Unit (kg)</label>
-                  <input type="number" name="system.weight" value="{{system.weight}}" 
+                  <input type="number" name="system.weight" value="{{source.weight}}" 
                          data-dtype="Number" min="0" step="0.1" />
                 </div>
                 
                 <div class="wh40k-field">
                   <label>Total Weight</label>
-                  <input type="text" value="{{system.effectiveTotalWeight}} kg" disabled />
+                  <input type="text" value="{{source.effectiveTotalWeight}} kg" disabled />
                 </div>
               </div>
             </div>
@@ -250,7 +250,7 @@
               <div class="wh40k-gear-section__body">
                 <div class="wh40k-field">
                   <label>Cost (Thrones)</label>
-                  <input type="number" name="system.cost.value" value="{{system.cost.value}}" 
+                  <input type="number" name="system.cost.value" value="{{source.cost.value}}" 
                          data-dtype="Number" min="0" />
                 </div>
               </div>
@@ -272,7 +272,7 @@
                 {{#if system.consumable}}
                 <div class="wh40k-field" style="margin-top: 8px;">
                   <label>Maximum Uses</label>
-                  <input type="number" name="system.uses.max" value="{{system.uses.max}}" 
+                  <input type="number" name="system.uses.max" value="{{source.uses.max}}" 
                          data-dtype="Number" min="0" />
                 </div>
                 {{/if}}
@@ -313,19 +313,19 @@
             <div class="wh40k-field-row">
               <div class="wh40k-field">
                 <label>Current Uses</label>
-                <input type="number" name="system.uses.value" value="{{system.uses.value}}" 
+                <input type="number" name="system.uses.value" value="{{source.uses.value}}" 
                        data-dtype="Number" min="0" max="{{system.uses.max}}" />
               </div>
               <div class="wh40k-field">
                 <label>Maximum Uses</label>
-                <input type="number" name="system.uses.max" value="{{system.uses.max}}" 
+                <input type="number" name="system.uses.max" value="{{source.uses.max}}" 
                        data-dtype="Number" min="0" />
               </div>
             </div>
             
             <div class="wh40k-field">
               <label>Duration / Recovery</label>
-              <input type="text" name="system.duration" value="{{system.duration}}" 
+              <input type="text" name="system.duration" value="{{source.duration}}" 
                      placeholder="e.g., 1 hour, 1d6 rounds, permanent" />
             </div>
             
@@ -390,7 +390,7 @@
             <h3>Source</h3>
           </div>
           <div class="wh40k-gear-section__body">
-            <input type="text" name="system.source" value="{{system.source}}" 
+            <input type="text" name="system.source" value="{{source.source}}" 
                    placeholder="e.g., Rogue Trader Core Rulebook pg. 123" />
           </div>
         </div>

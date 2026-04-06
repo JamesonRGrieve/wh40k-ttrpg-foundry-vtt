@@ -637,7 +637,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             timestamp: new Date(this.rollResult.timestamp).toLocaleTimeString(),
         };
 
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/origin-roll-card.hbs', templateData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/origin-roll-card.hbs', templateData);
 
         return ChatMessage.create({
             content: html,

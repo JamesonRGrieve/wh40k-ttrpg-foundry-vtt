@@ -1536,7 +1536,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const chatData = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: await renderTemplate('systems/wh40k-rpg/templates/chat/combat-action-card.hbs', {
+            content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/combat-action-card.hbs', {
                 name: game.i18n.localize(actionConfig.label),
                 actor: this.actor.name,
                 actionType: actionConfig.type,
@@ -1576,7 +1576,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const chatData = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: await renderTemplate('systems/wh40k-rpg/templates/chat/movement-card.hbs', {
+            content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/movement-card.hbs', {
                 actor: this.actor.name,
                 movementType: movementType,
                 movementLabel: movement.label,

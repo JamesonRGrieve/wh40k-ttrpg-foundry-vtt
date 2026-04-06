@@ -282,7 +282,7 @@
           <div class="wh40k-form-grid wh40k-form-grid--2col">
             {{!-- Damage Formula --}}
             <div class="wh40k-float-field">
-              <input type="text" name="system.damage.formula" value="{{system.damage.formula}}" 
+              <input type="text" name="system.damage.formula" value="{{source.damage.formula}}" 
                      placeholder=" " id="damage-formula" 
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -292,7 +292,7 @@
             
             {{!-- Damage Bonus --}}
             <div class="wh40k-float-field wh40k-float-field--narrow">
-              <input type="number" name="system.damage.bonus" value="{{system.damage.bonus}}" 
+              <input type="number" name="system.damage.bonus" value="{{source.damage.bonus}}" 
                      placeholder=" " id="damage-bonus"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -302,7 +302,7 @@
             
             {{!-- Penetration --}}
             <div class="wh40k-float-field wh40k-float-field--narrow">
-              <input type="number" name="system.damage.penetration" value="{{system.damage.penetration}}" 
+              <input type="number" name="system.damage.penetration" value="{{source.damage.penetration}}" 
                      placeholder=" " id="penetration"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -315,7 +315,7 @@
               <select name="system.damage.type" id="damage-type"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions damageTypes selected=system.damage.type labelAttr="label"}}
+                {{selectOptions damageTypes selected=source.damage.type labelAttr="label"}}
               </select>
               <label for="damage-type">Damage Type</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -326,7 +326,7 @@
               <select name="system.class" id="weapon-class"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions weaponClasses selected=system.class labelAttr="label"}}
+                {{selectOptions weaponClasses selected=source.class labelAttr="label"}}
               </select>
               <label for="weapon-class">Weapon Class</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -337,7 +337,7 @@
               <select name="system.type" id="weapon-type"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions weaponTypes selected=system.type labelAttr="label"}}
+                {{selectOptions weaponTypes selected=source.type labelAttr="label"}}
               </select>
               <label for="weapon-type">Weapon Type</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -374,7 +374,7 @@
           <div class="wh40k-form-grid wh40k-form-grid--2col">
             {{!-- Range --}}
             <div class="wh40k-float-field">
-              <input type="number" name="system.attack.range.value" value="{{system.attack.range.value}}" 
+              <input type="number" name="system.attack.range.value" value="{{source.attack.range.value}}" 
                      placeholder=" " id="range-value"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -384,7 +384,7 @@
             
             {{!-- Special Range --}}
             <div class="wh40k-float-field">
-              <input type="text" name="system.attack.range.special" value="{{system.attack.range.special}}" 
+              <input type="text" name="system.attack.range.special" value="{{source.attack.range.special}}" 
                      placeholder=" " id="range-special"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -401,7 +401,7 @@
               <span>Single (S)</span>
             </label>
             <div class="wh40k-float-field wh40k-float-field--narrow">
-              <input type="number" name="system.attack.rateOfFire.semi" value="{{system.attack.rateOfFire.semi}}" 
+              <input type="number" name="system.attack.rateOfFire.semi" value="{{source.attack.rateOfFire.semi}}" 
                      min="0" placeholder=" " id="rof-semi"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -409,7 +409,7 @@
               <span class="wh40k-float-field__bar"></span>
             </div>
             <div class="wh40k-float-field wh40k-float-field--narrow">
-              <input type="number" name="system.attack.rateOfFire.full" value="{{system.attack.rateOfFire.full}}" 
+              <input type="number" name="system.attack.rateOfFire.full" value="{{source.attack.rateOfFire.full}}" 
                      min="0" placeholder=" " id="rof-full"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -433,7 +433,7 @@
           <div class="wh40k-form-grid wh40k-form-grid--3col">
             {{!-- Current --}}
             <div class="wh40k-float-field wh40k-float-field--narrow">
-              <input type="number" name="system.clip.value" value="{{system.clip.value}}" 
+              <input type="number" name="system.clip.value" value="{{source.clip.value}}" 
                      min="0" placeholder=" " id="clip-current"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -443,7 +443,7 @@
             
             {{!-- Max --}}
             <div class="wh40k-float-field wh40k-float-field--narrow">
-              <input type="number" name="system.clip.max" value="{{system.clip.max}}" 
+              <input type="number" name="system.clip.max" value="{{source.clip.max}}" 
                      min="0" placeholder=" " id="clip-max"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -456,7 +456,7 @@
               <select name="system.reload" id="reload-time"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions reloadTimes selected=system.reload labelAttr="label"}}
+                {{selectOptions reloadTimes selected=source.reload labelAttr="label"}}
               </select>
               <label for="reload-time">Reload</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -489,7 +489,7 @@
               <select name="system.availability" id="availability"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions availabilities selected=system.availability labelAttr="label"}}
+                {{selectOptions availabilities selected=source.availability labelAttr="label"}}
               </select>
               <label for="availability">Availability</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -500,7 +500,7 @@
               <select name="system.craftsmanship" id="craftsmanship"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions craftsmanships selected=system.craftsmanship labelAttr="label"}}
+                {{selectOptions craftsmanships selected=source.craftsmanship labelAttr="label"}}
               </select>
               <label for="craftsmanship">Craftsmanship</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -508,7 +508,7 @@
             
             {{!-- Weight --}}
             <div class="wh40k-float-field wh40k-float-field--narrow">
-              <input type="number" name="system.weight" value="{{system.weight}}" 
+              <input type="number" name="system.weight" value="{{source.weight}}" 
                      step="0.1" min="0" placeholder=" " id="weight"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
@@ -518,7 +518,7 @@
             
             {{!-- Source --}}
             <div class="wh40k-float-field">
-              <input type="text" name="system.source" value="{{system.source}}" 
+              <input type="text" name="system.source" value="{{source.source}}" 
                      placeholder=" " id="source"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />

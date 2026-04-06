@@ -38,21 +38,21 @@
                         <div class="form-group">
                             <label>{{localize "WH40K.ShipWeapon.Type"}}</label>
                             <select name="system.weaponType">
-                                {{selectOptions weaponTypes selected=system.weaponType}}
+                                {{selectOptions weaponTypes selected=source.weaponType}}
                             </select>
                         </div>
                         
                         <div class="form-group">
                             <label>{{localize "WH40K.ShipLocation"}}</label>
                             <select name="system.location">
-                                {{selectOptions locations selected=system.location}}
+                                {{selectOptions locations selected=source.location}}
                             </select>
                         </div>
                         
                         <div class="form-group">
                             <label>{{localize "WH40K.HullType"}}</label>
                             <select name="system.hullType" multiple>
-                                {{selectOptions hullTypes selected=system.hullType}}
+                                {{selectOptions hullTypes selected=source.hullType}}
                             </select>
                             <p class="hint">Hold Ctrl/Cmd to select multiple hull types</p>
                         </div>
@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label>{{localize "WH40K.Availability"}}</label>
                             <select name="system.availability">
-                                {{selectOptions availabilities selected=system.availability}}
+                                {{selectOptions availabilities selected=source.availability}}
                             </select>
                         </div>
                     </div>
@@ -75,22 +75,22 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Strength</label>
-                                <input type="number" name="system.strength" value="{{system.strength}}" />
+                                <input type="number" name="system.strength" value="{{source.strength}}" />
                             </div>
                             <div class="form-group">
                                 <label>Damage</label>
-                                <input type="text" name="system.damage" value="{{system.damage}}" placeholder="1d10+2" />
+                                <input type="text" name="system.damage" value="{{source.damage}}" placeholder="1d10+2" />
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Crit Rating</label>
-                                <input type="number" name="system.crit" value="{{system.crit}}" />
+                                <input type="number" name="system.crit" value="{{source.crit}}" />
                             </div>
                             <div class="form-group">
                                 <label>Range (VU)</label>
-                                <input type="number" name="system.range" value="{{system.range}}" />
+                                <input type="number" name="system.range" value="{{source.range}}" />
                             </div>
                         </div>
                     </div>
@@ -105,15 +105,15 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Power</label>
-                                <input type="number" name="system.power" value="{{system.power}}" />
+                                <input type="number" name="system.power" value="{{source.power}}" />
                             </div>
                             <div class="form-group">
                                 <label>Space</label>
-                                <input type="number" name="system.space" value="{{system.space}}" />
+                                <input type="number" name="system.space" value="{{source.space}}" />
                             </div>
                             <div class="form-group">
                                 <label>Ship Points</label>
-                                <input type="number" name="system.shipPoints" value="{{system.shipPoints}}" />
+                                <input type="number" name="system.shipPoints" value="{{source.shipPoints}}" />
                             </div>
                         </div>
                     </div>

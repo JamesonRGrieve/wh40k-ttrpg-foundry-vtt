@@ -143,7 +143,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         };
 
         // Render chat template
-        const content = await renderTemplate('systems/wh40k-rpg/templates/chat/trait-card.hbs', templateData);
+        const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/trait-card.hbs', templateData);
 
         // Prepare chat message data
         const chatData = {

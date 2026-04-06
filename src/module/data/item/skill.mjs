@@ -172,7 +172,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
         const messageData = {
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             speaker: ChatMessage.getSpeaker(),
-            content: await renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', { skill: this.parent }),
+            content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', { skill: this.parent }),
             flags: {
                 'wh40k-rpg': {
                     skillId: this.parent.id,

@@ -6,35 +6,35 @@
     <div class="wh40k-field__wrapper">
         <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Size"}}</span>
         <select class="wh40k-field__input" name="system.size">
-            {{selectOptions dh.vehicleSizes selected=actor.system.size labelAttr="label" valueAttr="@key"}}
+            {{selectOptions dh.vehicleSizes selected=source.size labelAttr="label" valueAttr="@key"}}
         </select>
         <small class="wh40k-field__hint">{{system.sizeLabel}} ({{system.sizeDescriptor}})</small>
     </div>
     <div class="wh40k-field__wrapper">
         <span class="wh40k-field__header">{{localize "WH40K.Vehicle.SizeDescriptor"}}</span>
-        <input type="text" class="wh40k-field__input" name="system.sizeDescriptor" value="{{system.sizeDescriptor}}" placeholder="e.g., 20m" />
+        <input type="text" class="wh40k-field__input" name="system.sizeDescriptor" value="{{source.sizeDescriptor}}" placeholder="e.g., 20m" />
     </div>
     <div class="wh40k-field__wrapper">
         <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Cruising"}}</span>
         <div class="wh40k-input-with-unit">
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.cruising" value="{{system.speed.cruising}}" />
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.cruising" value="{{source.speed.cruising}}" />
             <span class="wh40k-unit">kph</span>
         </div>
     </div>
     <div class="wh40k-field__wrapper">
         <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Tactical"}}</span>
         <div class="wh40k-input-with-unit">
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.tactical" value="{{system.speed.tactical}}" />
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.tactical" value="{{source.speed.tactical}}" />
             <span class="wh40k-unit">m</span>
         </div>
     </div>
     <div class="wh40k-field__wrapper">
         <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Manoeuverability"}}</span>
-        <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.manoeuverability" value="{{system.manoeuverability}}" />
+        <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.manoeuverability" value="{{source.manoeuverability}}" />
     </div>
     <div class="wh40k-field__wrapper wh40k-field__full">
         <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Notes"}}</span>
-        <input type="text" class="wh40k-field__input" name="system.speed.notes" value="{{system.speed.notes}}" placeholder="Speed modifiers, special rules..." />
+        <input type="text" class="wh40k-field__input" name="system.speed.notes" value="{{source.speed.notes}}" placeholder="Speed modifiers, special rules..." />
     </div>
     <div class="wh40k-movement-summary">
         <strong>{{localize "WH40K.Vehicle.Speed.Summary"}}:</strong>
