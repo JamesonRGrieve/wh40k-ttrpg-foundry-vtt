@@ -19,7 +19,8 @@
  * @returns {*} Extended class with expandable tooltip support
  */
 export default function ExpandableTooltipMixin(Base) {
-    return class ExpandableTooltip extends Base {
+    // eslint-disable-next-line no-shadow -- class must match function name for private field access
+    return class ExpandableTooltipMixin extends Base {
         /**
          * Storage for currently open expandable panels
          * @type {Set<string>}
