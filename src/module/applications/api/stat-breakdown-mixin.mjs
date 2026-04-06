@@ -17,7 +17,8 @@
  * @returns {*} Extended class with stat breakdown support
  */
 export default function StatBreakdownMixin(Base) {
-    return class StatBreakdown extends Base {
+    // eslint-disable-next-line no-shadow -- class must match function name for private field access
+    return class StatBreakdownMixin extends Base {
         /**
          * Currently open breakdown popover
          * @type {HTMLElement|null}
