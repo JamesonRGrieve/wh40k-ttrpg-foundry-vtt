@@ -633,7 +633,7 @@
     "license": "LICENSE.txt",
     "bugs": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues",
     "relationships": {
-        "requires": [
+        "recommends": [
             {
                 "id": "game-icons-net",
                 "type": "module",

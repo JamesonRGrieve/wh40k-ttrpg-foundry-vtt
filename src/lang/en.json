@@ -49,14 +49,32 @@
             "weaponQuality": "Weapon Quality"
         }
     },
-    "RT": {
+    "WH40K": {
         "Confirm": "Confirm",
         "Cancel": "Cancel",
         "Close": "Close",
         "Delete": "Delete",
         "Yes": "Yes",
         "No": "No",
-        "Roll": "Roll",
+        "Roll": {
+            "ConfigureRoll": "Configure Roll",
+            "Roll": "Roll",
+            "BaseTarget": "Base Target",
+            "Modifier": "Modifier",
+            "FinalTarget": "Final Target",
+            "Difficulty": "Difficulty",
+            "CustomModifier": "Custom Modifier",
+            "CustomModifierHint": "Additional situational modifiers",
+            "RollMode": "Roll Mode",
+            "SituationalModifiers": "Situational Bonuses",
+            "SituationalTotal": "Situational Total",
+            "Success": "Success",
+            "Failure": "Failure",
+            "CriticalSuccess": "Critical Success!",
+            "CriticalFailure": "Critical Failure!",
+            "DegreesOfSuccess": "Degrees of Success",
+            "DegreesOfFailure": "Degrees of Failure"
+        },
         "CharacteristicSetup": {
             "Title": "Characteristic Setup",
             "Instructions": "Enter your dice rolls in the bank, then drag them to assign to characteristics.",
@@ -99,13 +117,47 @@
         },
         "Characteristics": "Characteristics",
         "CharacteristicModifiers": "Characteristic Modifiers",
-        "Skills": "Skills",
+        "Skills": {
+            "Header": "Skills",
+            "SpecialistHeader": "Specialist Skills",
+            "Skill": "Skill",
+            "Specialization": "Specialization",
+            "Characteristic": "Char",
+            "Training": "Training",
+            "Untrained": "Untrained",
+            "Basic": "Basic",
+            "Trained": "Trained",
+            "Plus10": "+10",
+            "Plus20": "+20",
+            "Bonus": "Bonus",
+            "Total": "Total",
+            "AddSpecialization": "Add",
+            "NoSpecializations": "Click \"Add\" to create a {0} specialization",
+            "RollSkillTitle": "Roll {0}",
+            "AddSpecializationTitle": "Add {0} specialization"
+        },
         "SkillsGranted": "Skills Granted",
         "Talents": "Talents",
         "TalentsGranted": "Talents Granted",
         "Traits": "Traits",
         "TraitsGranted": "Traits Granted",
-        "Equipment": "Equipment",
+        "Equipment": {
+            "ProtectionMatrix": "Protection Matrix",
+            "Containers": "Containers",
+            "OnPerson": "Carried on Person",
+            "Items": "items",
+            "LiftingCapacity": "Lifting Capacity",
+            "Equipped": "Equipped",
+            "Armour": "Armour",
+            "ForceFields": "Force Fields",
+            "Cybernetics": "Cybernetics",
+            "Gear": "Gear",
+            "NoEquippedItems": "No items currently equipped",
+            "Equip": "Equip",
+            "Unequip": "Unequip",
+            "StowInBackpack": "Stow in Backpack",
+            "RemoveFromBackpack": "Remove from Backpack"
+        },
         "EquipmentGranted": "Equipment Granted",
         "Aptitudes": "Aptitudes",
         "AptitudesGranted": "Aptitudes Granted",
@@ -120,7 +172,26 @@
         "Current": "Current",
         "New": "New",
         "Change": "Change",
-        "Armour": "Armour",
+        "Armour": {
+            "Sheet": "Armour Sheet",
+            "Protection": "Protection",
+            "Properties": "Properties",
+            "Modifications": "Modifications",
+            "Coverage": "Coverage",
+            "ArmourPoints": "Armour Points",
+            "MaxAgility": "Max Agility",
+            "NoSlotsAvailable": "No modification slots available",
+            "DragModification": "Drag an armour modification here to install it",
+            "Worn": "Worn",
+            "Stowed": "Stowed",
+            "ProtectionLevel": {
+                "None": "No Protection",
+                "Light": "Light Protection",
+                "Medium": "Medium Protection",
+                "Heavy": "Heavy Protection",
+                "Power": "Power Protection"
+            }
+        },
         "Movement": "Movement",
         "MOVEMENT": {
             "Label": "Movement",
@@ -173,23 +244,6 @@
             "Gear": "Gear",
             "Advances": "Advances",
             "Ship": "Ship & Role"
-        },
-        "Equipment": {
-            "ProtectionMatrix": "Protection Matrix",
-            "Containers": "Containers",
-            "OnPerson": "Carried on Person",
-            "Items": "items",
-            "LiftingCapacity": "Lifting Capacity",
-            "Equipped": "Equipped",
-            "Armour": "Armour",
-            "ForceFields": "Force Fields",
-            "Cybernetics": "Cybernetics",
-            "Gear": "Gear",
-            "NoEquippedItems": "No items currently equipped",
-            "Equip": "Equip",
-            "Unequip": "Unequip",
-            "StowInBackpack": "Stow in Backpack",
-            "RemoveFromBackpack": "Remove from Backpack"
         },
         "Combat": {
             "Title": "Combat",
@@ -314,7 +368,6 @@
             "PlayerCharacter": "Player Character Sheet",
             "PlayerCharacterSidebar": "Player Character Sheet (Sidebar)",
             "NPC": "NPC Sheet",
-
             "Vehicle": "Vehicle Sheet",
             "Starship": "Starship Sheet",
             "Item": "Item Sheet",
@@ -467,8 +520,7 @@
             "GoBack": "Go Back",
             "ChangeSelection": "Change Selection",
             "ChangeSelectionWarning": "Changing this selection will reset the following steps: {steps}. Do you want to continue?",
-            "NoPreviewedOrigin": "Please select an origin first",
-            "ViewDetails": "View Details",
+            "NoPreviewedOrigin": "No origin selected to confirm",
             "Lineage": "Lineage",
             "LineageDesc": "Noble bloodlines may grant additional abilities and connections. This step is optional.",
             "SkipLineage": "Skip Lineage",
@@ -492,8 +544,7 @@
             "Choose": "Choose",
             "Remaining": "remaining",
             "ConfirmSelection": "Confirm Selection",
-            "ConfirmSelectionHint": "Lock in this choice and advance to the next step",
-            "NoPreviewedOrigin": "No origin selected to confirm"
+            "ConfirmSelectionHint": "Lock in this choice and advance to the next step"
         },
         "Biography": {
             "Header": "Biography",
@@ -598,12 +649,12 @@
             "WeightTotal": "Weight (Total)",
             "WeightCurrent": "Weight (Current)",
             "ArmourHeader": "Armour by Location",
-            "ArmourHead": "Head (1\u201310)",
-            "ArmourRightArm": "RA (11\u201320)",
-            "ArmourLeftArm": "LA (21\u201330)",
-            "ArmourBody": "Body (31\u201370)",
-            "ArmourRightLeg": "RL (71\u201385)",
-            "ArmourLeftLeg": "LL (86\u2013100)",
+            "ArmourHead": "Head (1–10)",
+            "ArmourRightArm": "RA (11–20)",
+            "ArmourLeftArm": "LA (21–30)",
+            "ArmourBody": "Body (31–70)",
+            "ArmourRightLeg": "RL (71–85)",
+            "ArmourLeftLeg": "LL (86–100)",
             "HealthHeader": "Combat Trackers",
             "WoundsTotal": "Wounds (Total)",
             "WoundsCurrent": "Wounds (Current)",
@@ -618,25 +669,6 @@
             "AcquisitionAcquired": "Acquired",
             "AcquisitionNotes": "Notes",
             "MutationsHeader": "Mutations"
-        },
-        "Skills": {
-            "Header": "Skills",
-            "SpecialistHeader": "Specialist Skills",
-            "Skill": "Skill",
-            "Specialization": "Specialization",
-            "Characteristic": "Char",
-            "Training": "Training",
-            "Untrained": "Untrained",
-            "Basic": "Basic",
-            "Trained": "Trained",
-            "Plus10": "+10",
-            "Plus20": "+20",
-            "Bonus": "Bonus",
-            "Total": "Total",
-            "AddSpecialization": "Add",
-            "NoSpecializations": "Click \"Add\" to create a {0} specialization",
-            "RollSkillTitle": "Roll {0}",
-            "AddSpecializationTitle": "Add {0} specialization"
         },
         "Items": {
             "Weapon": "Weapon",
@@ -801,23 +833,10 @@
             "GrandCruiser": "Grand Cruiser"
         },
         "Availability": {
-            "Ubiquitous": "Ubiquitous",
-            "Abundant": "Abundant",
-            "Plentiful": "Plentiful",
-            "Common": "Common",
-            "Average": "Average",
-            "Scarce": "Scarce",
-            "Rare": "Rare",
-            "VeryRare": "Very Rare",
-            "ExtremelyRare": "Extremely Rare",
-            "NearUnique": "Near Unique",
-            "Unique": "Unique"
+            "Label": "Availability"
         },
         "Item": {
-            "Tabs": {
-                "Details": "Details",
-                "Effects": "Effects"
-            }
+            "Properties": "Item Properties"
         },
         "NPC": {
             "Name": "Name",
@@ -1084,18 +1103,18 @@
         },
         "Vehicle": {
             "Name": "Vehicle Name",
-            "Type": "Type",
+            "Type": "Vehicle Type",
+            "Class": "Vehicle Class",
+            "Size": "Size Category",
+            "SizeDescriptor": "Size Description",
+            "Armour": "Armour",
+            "Integrity": "Structural Integrity",
+            "Movement": "Movement",
+            "Manoeuverability": "Manoeuverability",
             "Crew": "Crew",
-            "Tabs": {
-                "Stats": "Stats",
-                "Weapons": "Weapons",
-                "Traits": "Traits"
-            },
-            "Upgrades": {
-                "Header": "Vehicle Upgrades",
-                "Name": "Upgrade",
-                "Effect": "Effect"
-            }
+            "Passengers": "Passenger Capacity",
+            "Weapons": "Mounted Weapons",
+            "SpecialRules": "Special Rules & Traits"
         },
         "Theme": {
             "Switched": "Theme switched to {theme} mode"
@@ -1104,25 +1123,6 @@
             "NoItemFound": "No item found on this chat card.",
             "ItemNotFound": "The item could not be found. It may have been deleted.",
             "NoTokensTargeted": "No tokens are currently targeted. Target one or more tokens to apply damage."
-        },
-        "Roll": {
-            "ConfigureRoll": "Configure Roll",
-            "Roll": "Roll",
-            "BaseTarget": "Base Target",
-            "Modifier": "Modifier",
-            "FinalTarget": "Final Target",
-            "Difficulty": "Difficulty",
-            "CustomModifier": "Custom Modifier",
-            "CustomModifierHint": "Additional situational modifiers",
-            "RollMode": "Roll Mode",
-            "SituationalModifiers": "Situational Bonuses",
-            "SituationalTotal": "Situational Total",
-            "Success": "Success",
-            "Failure": "Failure",
-            "CriticalSuccess": "Critical Success!",
-            "CriticalFailure": "Critical Failure!",
-            "DegreesOfSuccess": "Degrees of Success",
-            "DegreesOfFailure": "Degrees of Failure"
         },
         "Difficulty": {
             "Trivial": "Trivial",
@@ -1172,26 +1172,6 @@
             "AgilityBonusDesc": "Enhanced mobility systems provide Agility bonus",
             "StrengthBonus": "Strength Bonus",
             "StrengthBonusDesc": "Power assistance provides Strength bonus"
-        },
-        "Armour": {
-            "Sheet": "Armour Sheet",
-            "Protection": "Protection",
-            "Properties": "Properties",
-            "Modifications": "Modifications",
-            "Coverage": "Coverage",
-            "ArmourPoints": "Armour Points",
-            "MaxAgility": "Max Agility",
-            "NoSlotsAvailable": "No modification slots available",
-            "DragModification": "Drag an armour modification here to install it",
-            "Worn": "Worn",
-            "Stowed": "Stowed",
-            "ProtectionLevel": {
-                "None": "No Protection",
-                "Light": "Light Protection",
-                "Medium": "Medium Protection",
-                "Heavy": "Heavy Protection",
-                "Power": "Power Protection"
-            }
         },
         "Coverage": {
             "All": "All Locations",
@@ -1265,9 +1245,6 @@
             "ConsumableSettings": "Consumable Settings",
             "NamePlaceholder": "Gear Name"
         },
-        "Item": {
-            "Properties": "Item Properties"
-        },
         "Details": "Details",
         "Quantity": "Quantity",
         "Cost": "Cost",
@@ -1280,9 +1257,6 @@
             "Book": "Book",
             "Page": "Page",
             "Custom": "Custom"
-        },
-        "Availability": {
-            "Label": "Availability"
         },
         "Craftsmanship": {
             "Label": "Craftsmanship",
@@ -1444,243 +1418,215 @@
             "SPDesc": "Special property. See weapon description for details.",
             "CleansingFire": "Cleansing Fire",
             "CleansingFireDesc": "Purifying flames that deal additional damage to unholy targets."
+        },
+        "Weapon": {
+            "TwoHanded": "Two-Handed",
+            "OneHanded": "One-Handed",
+            "CanMelee": "Can Melee",
+            "Equipped": "Equipped",
+            "Stowed": "Stowed",
+            "Jams": "Jams",
+            "NeverJams": "Never Jams"
+        },
+        "Reload": {
+            "Free": "Free Action",
+            "Half": "Half Action",
+            "Full": "Full Action",
+            "2Full": "2 Full Actions",
+            "3Full": "3 Full Actions",
+            "Title": "Reload Weapon",
+            "AlreadyFull": "Weapon is already fully loaded",
+            "NotUsesAmmo": "Weapon does not use ammunition",
+            "InvalidWeapon": "Invalid weapon",
+            "OutOfTurn": "Reload Out of Turn",
+            "OutOfTurnWarning": "It is not your turn. Reload anyway? This will not track action economy.",
+            "RequiresAction": "Reload requires: {cost}",
+            "CustomisedBonus": "Customised quality halves reload time",
+            "ActionCost": "Action Cost",
+            "ActionsSpent": "Actions Spent",
+            "AmmunitionStatus": "Ammunition Status"
+        },
+        "WeaponClass": {
+            "Melee": "Melee",
+            "Pistol": "Pistol",
+            "Basic": "Basic",
+            "Heavy": "Heavy",
+            "Thrown": "Thrown",
+            "Exotic": "Exotic",
+            "Chain": "Chain",
+            "Power": "Power",
+            "Shock": "Shock",
+            "Force": "Force"
+        },
+        "WeaponType": {
+            "Primitive": "Primitive",
+            "Las": "Las",
+            "SolidProjectile": "SP",
+            "Bolt": "Bolt",
+            "Melta": "Melta",
+            "Plasma": "Plasma",
+            "Flame": "Flame",
+            "Launcher": "Launcher",
+            "Explosive": "Explosive",
+            "Power": "Power",
+            "Chain": "Chain",
+            "Shock": "Shock",
+            "Force": "Force",
+            "Exotic": "Exotic",
+            "Xenos": "Xenos"
+        },
+        "VehicleType": {
+            "Vehicle": "Vehicle",
+            "Walker": "Walker",
+            "Flyer": "Flyer",
+            "Skimmer": "Skimmer",
+            "Bike": "Bike",
+            "Tank": "Tank"
+        },
+        "VehicleClass": {
+            "Ground": "Ground Vehicle",
+            "Air": "Air Vehicle",
+            "Water": "Water Vehicle",
+            "Space": "Space Vehicle",
+            "Walker": "Walker"
+        },
+        "VehicleUpgradeType": {
+            "Standard": "Standard",
+            "Integral": "Integral",
+            "Custom": "Custom"
+        },
+        "VehicleStat": {
+            "Speed": "Speed",
+            "Manoeuvrability": "Manoeuvrability",
+            "Armour": "Armour",
+            "Integrity": "Integrity"
+        },
+        "VehicleUpgrade": {
+            "Type": "Upgrade Type",
+            "AllowedVehicles": "Allowed Vehicles",
+            "Difficulty": "Installation Difficulty",
+            "InstallCost": "Installation Cost"
+        },
+        "Advancement": {
+            "Title": "Character Advancement",
+            "TitleWithCareer": "{career} Advancement",
+            "XPAvailable": "XP Available",
+            "XPUsed": "XP Used",
+            "Tab": {
+                "Characteristics": "Characteristics",
+                "Skills": "Skills",
+                "Talents": "Talents"
+            },
+            "Tier": {
+                "Simple": "Simple",
+                "Intermediate": "Intermediate",
+                "Trained": "Trained",
+                "Expert": "Expert"
+            },
+            "Maxed": "Maxed",
+            "Owned": "Owned",
+            "CannotAfford": "Not enough XP",
+            "RequiresPrereq": "Requires prerequisite",
+            "NoSkillsAvailable": "No skills available at this rank",
+            "NoTalentsAvailable": "No talents available at this rank",
+            "NoCareerTitle": "No Career Selected",
+            "NoCareerMessage": "You must complete your Origin Path and select a career before you can purchase advancements.",
+            "NoCareerHint": "Open the Biography tab and use the Origin Path Builder",
+            "ViewInCompendium": "View in Compendium",
+            "ItemNotFound": "Could not find {name} in compendiums",
+            "Purchased": "Purchased {name} for {cost} XP",
+            "PurchasedCharacteristic": "Purchased {char} ({tier}) for {cost} XP",
+            "Prereq": {
+                "Characteristic": "Requires {char} {required}+ (current: {current})",
+                "SkillMissing": "Requires {skill} skill",
+                "SkillLevel": "Requires {skill} at {level}",
+                "TalentMissing": "Requires {talent} talent"
+            },
+            "Error": {
+                "MaxedOut": "This characteristic is already at maximum",
+                "CannotAfford": "Not enough XP to purchase this advancement",
+                "PrerequisitesNotMet": "Prerequisites not met: {reasons}",
+                "InsufficientXP": "Not enough XP (cost: {cost}, available: {available})",
+                "TransactionFailed": "Failed to spend XP"
+            }
+        },
+        "Career": {
+            "WH40KRPG": "WH40K RPG",
+            "RogueTraderDesc": "A scion of a powerful dynasty, holder of a sacred Warrant of Trade.",
+            "ArchMilitant": "Arch-Militant",
+            "ArchMilitantDesc": "A warrior born, trained in the arts of war and destruction.",
+            "Astropath": "Astropath Transcendent",
+            "AstropathDesc": "A soul-bound psyker who transmits messages across the void.",
+            "Explorator": "Explorator",
+            "ExploratorDesc": "A Tech-Priest of Mars, seeker of lost knowledge.",
+            "Missionary": "Missionary",
+            "MissionaryDesc": "A zealous servant of the Imperial Creed.",
+            "Navigator": "Navigator",
+            "NavigatorDesc": "A mutant noble who guides ships through the Warp.",
+            "Seneschal": "Seneschal",
+            "SeneschalDesc": "A master of trade, diplomacy, and information.",
+            "VoidMaster": "Void-Master",
+            "VoidMasterDesc": "A seasoned spacefarer and ship commander."
+        },
+        "Combat.Action": {
+            "StandardAttack": "Standard Attack",
+            "StandardAttackDesc": "Make one melee or ranged attack.",
+            "CalledShot": "Called Shot",
+            "CalledShotDesc": "Attack a specific location on your target with a –20 to WS or BS.",
+            "AllOutAttack": "All Out Attack",
+            "AllOutAttackDesc": "+20 to WS, cannot Dodge or Parry.",
+            "GuardedAttack": "Guarded Attack",
+            "GuardedAttackDesc": "–10 WS, +10 to Parry and Dodge.",
+            "Charge": "Charge",
+            "ChargeDesc": "Must move 4 metres, +10 to WS.",
+            "SemiAutoBurst": "Semi-Auto Burst",
+            "SemiAutoBurstDesc": "+10 to BS, additional hit for every two degrees of success.",
+            "FullAutoBurst": "Full Auto Burst",
+            "FullAutoBurstDesc": "+20 to BS, additional hit for every degree of success.",
+            "SuppressingFire": "Suppressing Fire",
+            "SuppressingFireDesc": "Force opponents to take cover, –20 to BS.",
+            "Overwatch": "Overwatch",
+            "OverwatchDesc": "Shoot targets coming into a set kill zone, –20 to BS.",
+            "MultipleAttacks": "Multiple Attacks",
+            "MultipleAttacksDesc": "Attack more than once in the same round—requires two weapons or a talent.",
+            "Move": "Move",
+            "MoveDesc": "Move up to your movement as a Half Action or twice your movement as a Full Action.",
+            "Run": "Run",
+            "RunDesc": "Move triple, enemies –20 BS and +20 WS.",
+            "Disengage": "Disengage",
+            "DisengageDesc": "Break off from melee and move.",
+            "JumpLeap": "Jump/Leap",
+            "JumpLeapDesc": "Jump vertically or leap horizontally.",
+            "TacticalAdvance": "Tactical Advance",
+            "TacticalAdvanceDesc": "Move from cover to cover.",
+            "StandMount": "Stand/Mount",
+            "StandMountDesc": "Stand up or mount a riding animal.",
+            "Dodge": "Dodge",
+            "DodgeDesc": "Test Dodge to negate a hit.",
+            "Parry": "Parry",
+            "ParryDesc": "Test Weapon Skill to negate a hit.",
+            "Aim": "Aim",
+            "AimDesc": "+10 bonus to hit as a Half Action or +20 to hit as a Full Action on your next attack.",
+            "Ready": "Ready",
+            "ReadyDesc": "Ready a weapon or item.",
+            "Reload": "Reload",
+            "ReloadDesc": "Reload a ranged weapon.",
+            "Delay": "Delay",
+            "DelayDesc": "Before your next Turn take any Half Action.",
+            "Feint": "Feint",
+            "FeintDesc": "Opposed WS Test, if you win, your next attack cannot be Dodged or Parried.",
+            "Grapple": "Grapple",
+            "GrappleDesc": "Affect a Grappled opponent or escape from a Grapple.",
+            "DefensiveStance": "Defensive Stance",
+            "DefensiveStanceDesc": "Gain an additional Reaction, opponents suffer –20 to WS.",
+            "BraceHeavy": "Brace Heavy Weapon",
+            "BraceHeavyDesc": "Prepare to fire a heavy weapon.",
+            "KnockDown": "Knock Down",
+            "KnockDownDesc": "Try and knock an opponent to the ground.",
+            "Stun": "Stun",
+            "StunDesc": "Try to Stun an opponent.",
+            "Manoeuvre": "Manoeuvre",
+            "ManoeuvreDesc": "Opposed WS Test, if you win, move enemy 1 metre."
         }
-    },
-
-    "WH40K.Weapon": {
-        "TwoHanded": "Two-Handed",
-        "OneHanded": "One-Handed",
-        "CanMelee": "Can Melee",
-        "Equipped": "Equipped",
-        "Stowed": "Stowed",
-        "Jams": "Jams",
-        "NeverJams": "Never Jams"
-    },
-
-    "WH40K.Reload": {
-        "Free": "Free Action",
-        "Half": "Half Action",
-        "Full": "Full Action",
-        "2Full": "2 Full Actions",
-        "3Full": "3 Full Actions",
-        "Title": "Reload Weapon",
-        "AlreadyFull": "Weapon is already fully loaded",
-        "NotUsesAmmo": "Weapon does not use ammunition",
-        "InvalidWeapon": "Invalid weapon",
-        "OutOfTurn": "Reload Out of Turn",
-        "OutOfTurnWarning": "It is not your turn. Reload anyway? This will not track action economy.",
-        "RequiresAction": "Reload requires: {cost}",
-        "CustomisedBonus": "Customised quality halves reload time",
-        "ActionCost": "Action Cost",
-        "ActionsSpent": "Actions Spent",
-        "AmmunitionStatus": "Ammunition Status"
-    },
-
-    "WH40K.WeaponClass": {
-        "Melee": "Melee",
-        "Pistol": "Pistol",
-        "Basic": "Basic",
-        "Heavy": "Heavy",
-        "Thrown": "Thrown",
-        "Exotic": "Exotic",
-        "Chain": "Chain",
-        "Power": "Power",
-        "Shock": "Shock",
-        "Force": "Force"
-    },
-
-    "WH40K.WeaponType": {
-        "Primitive": "Primitive",
-        "Las": "Las",
-        "SolidProjectile": "SP",
-        "Bolt": "Bolt",
-        "Melta": "Melta",
-        "Plasma": "Plasma",
-        "Flame": "Flame",
-        "Launcher": "Launcher",
-        "Explosive": "Explosive",
-        "Power": "Power",
-        "Chain": "Chain",
-        "Shock": "Shock",
-        "Force": "Force",
-        "Exotic": "Exotic",
-        "Xenos": "Xenos"
-    },
-
-    "WH40K.Vehicle": {
-        "Name": "Vehicle Name",
-        "Type": "Vehicle Type",
-        "Class": "Vehicle Class",
-        "Size": "Size Category",
-        "SizeDescriptor": "Size Description",
-        "Armour": "Armour",
-        "Integrity": "Structural Integrity",
-        "Movement": "Movement",
-        "Manoeuverability": "Manoeuverability",
-        "Crew": "Crew",
-        "Passengers": "Passenger Capacity",
-        "Weapons": "Mounted Weapons",
-        "SpecialRules": "Special Rules & Traits"
-    },
-
-    "WH40K.VehicleType": {
-        "Vehicle": "Vehicle",
-        "Walker": "Walker",
-        "Flyer": "Flyer",
-        "Skimmer": "Skimmer",
-        "Bike": "Bike",
-        "Tank": "Tank"
-    },
-
-    "WH40K.VehicleClass": {
-        "Ground": "Ground Vehicle",
-        "Air": "Air Vehicle",
-        "Water": "Water Vehicle",
-        "Space": "Space Vehicle",
-        "Walker": "Walker"
-    },
-
-    "WH40K.VehicleUpgradeType": {
-        "Standard": "Standard",
-        "Integral": "Integral",
-        "Custom": "Custom"
-    },
-
-    "WH40K.VehicleStat": {
-        "Speed": "Speed",
-        "Manoeuvrability": "Manoeuvrability",
-        "Armour": "Armour",
-        "Integrity": "Integrity"
-    },
-
-    "WH40K.VehicleUpgrade": {
-        "Type": "Upgrade Type",
-        "AllowedVehicles": "Allowed Vehicles",
-        "Difficulty": "Installation Difficulty",
-        "InstallCost": "Installation Cost"
-    },
-
-    "WH40K.Advancement": {
-        "Title": "Character Advancement",
-        "TitleWithCareer": "{career} Advancement",
-        "XPAvailable": "XP Available",
-        "XPUsed": "XP Used",
-        "Tab": {
-            "Characteristics": "Characteristics",
-            "Skills": "Skills",
-            "Talents": "Talents"
-        },
-        "Tier": {
-            "Simple": "Simple",
-            "Intermediate": "Intermediate",
-            "Trained": "Trained",
-            "Expert": "Expert"
-        },
-        "Maxed": "Maxed",
-        "Owned": "Owned",
-        "CannotAfford": "Not enough XP",
-        "RequiresPrereq": "Requires prerequisite",
-        "NoSkillsAvailable": "No skills available at this rank",
-        "NoTalentsAvailable": "No talents available at this rank",
-        "NoCareerTitle": "No Career Selected",
-        "NoCareerMessage": "You must complete your Origin Path and select a career before you can purchase advancements.",
-        "NoCareerHint": "Open the Biography tab and use the Origin Path Builder",
-        "ViewInCompendium": "View in Compendium",
-        "ItemNotFound": "Could not find {name} in compendiums",
-        "Purchased": "Purchased {name} for {cost} XP",
-        "PurchasedCharacteristic": "Purchased {char} ({tier}) for {cost} XP",
-        "Prereq": {
-            "Characteristic": "Requires {char} {required}+ (current: {current})",
-            "SkillMissing": "Requires {skill} skill",
-            "SkillLevel": "Requires {skill} at {level}",
-            "TalentMissing": "Requires {talent} talent"
-        },
-        "Error": {
-            "MaxedOut": "This characteristic is already at maximum",
-            "CannotAfford": "Not enough XP to purchase this advancement",
-            "PrerequisitesNotMet": "Prerequisites not met: {reasons}",
-            "InsufficientXP": "Not enough XP (cost: {cost}, available: {available})",
-            "TransactionFailed": "Failed to spend XP"
-        }
-    },
-
-    "WH40K.Career": {
-        "WH40KRPG": "WH40K RPG",
-        "RogueTraderDesc": "A scion of a powerful dynasty, holder of a sacred Warrant of Trade.",
-        "ArchMilitant": "Arch-Militant",
-        "ArchMilitantDesc": "A warrior born, trained in the arts of war and destruction.",
-        "Astropath": "Astropath Transcendent",
-        "AstropathDesc": "A soul-bound psyker who transmits messages across the void.",
-        "Explorator": "Explorator",
-        "ExploratorDesc": "A Tech-Priest of Mars, seeker of lost knowledge.",
-        "Missionary": "Missionary",
-        "MissionaryDesc": "A zealous servant of the Imperial Creed.",
-        "Navigator": "Navigator",
-        "NavigatorDesc": "A mutant noble who guides ships through the Warp.",
-        "Seneschal": "Seneschal",
-        "SeneschalDesc": "A master of trade, diplomacy, and information.",
-        "VoidMaster": "Void-Master",
-        "VoidMasterDesc": "A seasoned spacefarer and ship commander."
-    },
-
-    "WH40K.Combat.Action": {
-        "StandardAttack": "Standard Attack",
-        "StandardAttackDesc": "Make one melee or ranged attack.",
-        "CalledShot": "Called Shot",
-        "CalledShotDesc": "Attack a specific location on your target with a –20 to WS or BS.",
-        "AllOutAttack": "All Out Attack",
-        "AllOutAttackDesc": "+20 to WS, cannot Dodge or Parry.",
-        "GuardedAttack": "Guarded Attack",
-        "GuardedAttackDesc": "–10 WS, +10 to Parry and Dodge.",
-        "Charge": "Charge",
-        "ChargeDesc": "Must move 4 metres, +10 to WS.",
-        "SemiAutoBurst": "Semi-Auto Burst",
-        "SemiAutoBurstDesc": "+10 to BS, additional hit for every two degrees of success.",
-        "FullAutoBurst": "Full Auto Burst",
-        "FullAutoBurstDesc": "+20 to BS, additional hit for every degree of success.",
-        "SuppressingFire": "Suppressing Fire",
-        "SuppressingFireDesc": "Force opponents to take cover, –20 to BS.",
-        "Overwatch": "Overwatch",
-        "OverwatchDesc": "Shoot targets coming into a set kill zone, –20 to BS.",
-        "MultipleAttacks": "Multiple Attacks",
-        "MultipleAttacksDesc": "Attack more than once in the same round—requires two weapons or a talent.",
-        "Move": "Move",
-        "MoveDesc": "Move up to your movement as a Half Action or twice your movement as a Full Action.",
-        "Run": "Run",
-        "RunDesc": "Move triple, enemies –20 BS and +20 WS.",
-        "Disengage": "Disengage",
-        "DisengageDesc": "Break off from melee and move.",
-        "JumpLeap": "Jump/Leap",
-        "JumpLeapDesc": "Jump vertically or leap horizontally.",
-        "TacticalAdvance": "Tactical Advance",
-        "TacticalAdvanceDesc": "Move from cover to cover.",
-        "StandMount": "Stand/Mount",
-        "StandMountDesc": "Stand up or mount a riding animal.",
-        "Dodge": "Dodge",
-        "DodgeDesc": "Test Dodge to negate a hit.",
-        "Parry": "Parry",
-        "ParryDesc": "Test Weapon Skill to negate a hit.",
-        "Aim": "Aim",
-        "AimDesc": "+10 bonus to hit as a Half Action or +20 to hit as a Full Action on your next attack.",
-        "Ready": "Ready",
-        "ReadyDesc": "Ready a weapon or item.",
-        "Reload": "Reload",
-        "ReloadDesc": "Reload a ranged weapon.",
-        "Delay": "Delay",
-        "DelayDesc": "Before your next Turn take any Half Action.",
-        "Feint": "Feint",
-        "FeintDesc": "Opposed WS Test, if you win, your next attack cannot be Dodged or Parried.",
-        "Grapple": "Grapple",
-        "GrappleDesc": "Affect a Grappled opponent or escape from a Grapple.",
-        "DefensiveStance": "Defensive Stance",
-        "DefensiveStanceDesc": "Gain an additional Reaction, opponents suffer –20 to WS.",
-        "BraceHeavy": "Brace Heavy Weapon",
-        "BraceHeavyDesc": "Prepare to fire a heavy weapon.",
-        "KnockDown": "Knock Down",
-        "KnockDownDesc": "Try and knock an opponent to the ground.",
-        "Stun": "Stun",
-        "StunDesc": "Try to Stun an opponent.",
-        "Manoeuvre": "Manoeuvre",
-        "ManoeuvreDesc": "Opposed WS Test, if you win, move enemy 1 metre."
     }
 }
