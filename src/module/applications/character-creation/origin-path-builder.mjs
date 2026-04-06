@@ -1061,7 +1061,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _calculateStatus() {
-        let stepsCount = this.selections.size;
+        const stepsCount = this.selections.size;
         let pendingChoices = 0;
         let pendingRolls = 0;
 

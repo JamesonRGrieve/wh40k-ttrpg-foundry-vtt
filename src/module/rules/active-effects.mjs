@@ -30,7 +30,7 @@ export async function handleOnFire(actor) {
 
 export async function sendActiveEffectMessage(activeContext) {
     const html = await renderTemplate(activeContext.template, activeContext);
-    let chatData = {
+    const chatData = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,

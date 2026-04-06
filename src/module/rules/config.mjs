@@ -119,7 +119,7 @@ export function toggleUIExpanded(name) {
 
 export function fieldMatch(val1, val2) {
     if (!val1 || !val2) return false;
-    let one = val1.replace(/\s/g, '');
-    let two = val2.replace(/\s/g, '');
+    const one = val1.replace(/\s/g, '');
+    const two = val2.replace(/\s/g, '');
     return one.toUpperCase() === two.toUpperCase();
 }

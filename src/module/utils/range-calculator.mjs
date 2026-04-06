@@ -257,7 +257,7 @@ export function formatRangeDisplay(rangeInfo) {
     const { label, modifier, modifiedBy, isMeltaRange, description } = rangeInfo;
 
     // Format modifier text with sign
-    let modifierText = modifier === 0 ? '±0' : modifier > 0 ? `+${modifier}` : `${modifier}`;
+    const modifierText = modifier === 0 ? '±0' : modifier > 0 ? `+${modifier}` : `${modifier}`;
 
     // CSS class for styling
     let modifierClass = 'wh40k-range-modifier';

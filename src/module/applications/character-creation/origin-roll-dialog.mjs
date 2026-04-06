@@ -286,7 +286,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const is1d5 = /1d5/.test(formula);
         const is1d10 = /1d10/.test(formula);
 
-        let instructionText = is1d5
+        const instructionText = is1d5
             ? 'Roll 1d10 and enter the result (it will be divided by 2, rounded up for 1d5):'
             : is1d10
             ? 'Roll 1d10 and enter the result:'
@@ -332,7 +332,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         // Calculate static components
         let staticTotal = 0;
-        let breakdownParts = [];
+        const breakdownParts = [];
 
         // Handle TB multiplier
         const tbMatch = formula.match(/(\d+)xTB/i);
@@ -393,7 +393,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const conditions = [...formula.matchAll(conditionRegex)];
 
         // Build options description
-        let optionsText = conditions
+        const optionsText = conditions
             .map((match) => {
                 const [, min, max, outcome] = match;
                 return `${min}-${max} → ${outcome} Fate Points`;
@@ -508,7 +508,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         // Parse formula: e.g., "2xTB+1d5+2"
         // Replace TB with actual value
-        let diceFormula = formula.replace(/(\d+)xTB/gi, (match, multiplier) => {
+        const diceFormula = formula.replace(/(\d+)xTB/gi, (match, multiplier) => {
             const value = parseInt(multiplier) * tb;
             return value.toString();
         });

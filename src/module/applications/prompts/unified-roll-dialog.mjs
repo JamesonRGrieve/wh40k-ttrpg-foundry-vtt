@@ -306,8 +306,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Situational modifiers with toggle state
         const situationalModifiers = (this._cachedSituationalModifiers || []).map((m) => ({
             ...m,
-            active: this._situationalModifiers[m.key + '_' + m.source] ?? false,
-            toggleKey: m.key + '_' + m.source,
+            active: this._situationalModifiers[`${m.key}_${m.source}`] ?? false,
+            toggleKey: `${m.key}_${m.source}`,
             valueLabel: m.value >= 0 ? `+${m.value}` : `${m.value}`,
         }));
         const hasSituationalModifiers = situationalModifiers.length > 0;
@@ -326,7 +326,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const actorImg = actor?.img || '';
 
         // Roll name
-        let rollName = isForceField ? rollData.forceField?.name || 'Force Field' : rollData.name || rollData.nameOverride || 'Test';
+        const rollName = isForceField ? rollData.forceField?.name || 'Force Field' : rollData.name || rollData.nameOverride || 'Test';
         const rollSubtitle = isForceField ? 'Force Field Activation' : rollData.type || rollData.action || '';
 
         return {
@@ -680,7 +680,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     _calculateSituationalModifiers() {
         let total = 0;
         for (const mod of this._cachedSituationalModifiers || []) {
-            const toggleKey = mod.key + '_' + mod.source;
+            const toggleKey = `${mod.key}_${mod.source}`;
             if (this._situationalModifiers[toggleKey]) total += mod.value;
         }
         return total;

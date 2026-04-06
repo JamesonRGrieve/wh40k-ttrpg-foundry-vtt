@@ -55,15 +55,13 @@ export class ActionData {
         if (this.rollData.isFeint) {
             if (!this.rollData.success) {
                 this.addEffect('Feint', `The character fails to feint against the target!`);
+            } else if (this.rollData.targetActor) {
+                this.addEffect('Feint', `The next melee Standard Attack action against that same target during this turn cannot be Evaded!`);
             } else {
-                if (this.rollData.targetActor) {
-                    this.addEffect('Feint', `The next melee Standard Attack action against that same target during this turn cannot be Evaded!`);
-                } else {
-                    this.addEffect(
-                        'Feint',
-                        `Compare to targets Weapon Skill check. If the character wins, his next melee Standard Attack action against that same target during this turn cannot be Evaded.`,
-                    );
-                }
+                this.addEffect(
+                    'Feint',
+                    `Compare to targets Weapon Skill check. If the character wins, his next melee Standard Attack action against that same target during this turn cannot be Evaded.`,
+                );
             }
         }
 
@@ -83,15 +81,13 @@ export class ActionData {
                 } else {
                     this.addEffect('Knock Down', `The character fails to knock down the target and in the failure knocks themselves prone instead!`);
                 }
+            } else if (this.rollData.success) {
+                this.addEffect(
+                    'Knock Down',
+                    `Compare to targets Strength check. If the attacker wins, the target is knocked Prone and must use a Stand action in his turn to regain his feet. If the attacker succeeds by two or more degrees of success, he can choose to inflict 1d5–3+SB Impact damage and one level of Fatigue on the target. If the target wins the test, he keeps his footing. If the target wins by two or more degrees of success, the attacker is knocked Prone instead.`,
+                );
             } else {
-                if (this.rollData.success) {
-                    this.addEffect(
-                        'Knock Down',
-                        `Compare to targets Strength check. If the attacker wins, the target is knocked Prone and must use a Stand action in his turn to regain his feet. If the attacker succeeds by two or more degrees of success, he can choose to inflict 1d5–3+SB Impact damage and one level of Fatigue on the target. If the target wins the test, he keeps his footing. If the target wins by two or more degrees of success, the attacker is knocked Prone instead.`,
-                    );
-                } else {
-                    this.addEffect('Knock Down', `The character fails to knock down the target!`);
-                }
+                this.addEffect('Knock Down', `The character fails to knock down the target!`);
             }
         }
     }
@@ -101,14 +97,14 @@ export class ActionData {
             this.rollData.roll = await roll1d100();
         }
         // else: roll was already set by the unified dialog with manual total
-        let rollTotal = this.rollData.roll.total;
+        const rollTotal = this.rollData.roll.total;
         const target = this.rollData.modifiedTarget;
         this.rollData.success = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
     }
 
     async calculateSuccessOrFailure() {
         await this._calculateHit();
-        let actionItem = this.rollData.weapon ?? this.rollData.power;
+        const actionItem = this.rollData.weapon ?? this.rollData.power;
 
         // Action Item
         if (actionItem) {

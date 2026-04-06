@@ -101,7 +101,7 @@ Enable Debug with: game.rt.debug = true
         const consolePrefix = 'WH40K RPG | ';
         game.rt = {
             debug: false,
-            log: (s, o) => (!!game.rt.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
+            log: (s, o) => (game.rt.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
             warn: (s, o) => console.warn(`${consolePrefix}${s}`, o),
             error: (s, o) => console.error(`${consolePrefix}${s}`, o),
             rollItemMacro,
@@ -486,7 +486,6 @@ Enable Debug with: game.rt.debug = true
                 createSkillMacro(data, slot);
                 return false;
             default:
-                return;
         }
     }
 

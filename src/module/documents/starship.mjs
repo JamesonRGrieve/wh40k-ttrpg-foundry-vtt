@@ -3,7 +3,7 @@ import { WH40KBaseActor } from './base-actor.mjs';
 export class WH40KStarship extends WH40KBaseActor {
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
-        let initData = {
+        const initData = {
             'token.bar1': { attribute: 'hullIntegrity' },
             'token.bar2': { attribute: 'crew.morale' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,

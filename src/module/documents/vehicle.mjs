@@ -4,7 +4,7 @@ import { DHTargetedActionManager } from '../actions/targeted-action-manager.mjs'
 export class WH40KVehicle extends WH40KBaseActor {
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
-        let initData = {
+        const initData = {
             'token.bar1': { attribute: 'integrity' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,

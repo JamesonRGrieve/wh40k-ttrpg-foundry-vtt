@@ -4,7 +4,7 @@ import { RollData } from '../rolls/roll-data.mjs';
  * @param rollData {RollData}
  */
 export function calculateAimBonus(rollData) {
-    let actionItem = rollData.weapon ?? rollData.power;
+    const actionItem = rollData.weapon ?? rollData.power;
 }
 
 export function aimModifiers() {
