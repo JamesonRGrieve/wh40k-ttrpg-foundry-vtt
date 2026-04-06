@@ -18,7 +18,7 @@ export class TargetedActionManager {
                         title: 'Attack',
                         icon: 'fas fa-swords',
                         visible: true,
-                        onClick: async () => DHTargetedActionManager.performWeaponAttack(),
+                        onClick: async () => this.performWeaponAttack(),
                         button: true,
                         order: toolOrder,
                     };

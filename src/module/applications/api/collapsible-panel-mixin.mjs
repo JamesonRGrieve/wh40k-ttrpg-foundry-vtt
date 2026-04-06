@@ -364,7 +364,9 @@ export default function CollapsiblePanelMixin(Base) {
                 content.style.maxHeight = `${startHeight}px`;
 
                 // Wait for animation
-                await new Promise((resolve) => setTimeout(resolve, 300));
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 300);
+                });
 
                 // Clean up
                 content.style.maxHeight = '';
@@ -383,7 +385,9 @@ export default function CollapsiblePanelMixin(Base) {
                 content.style.maxHeight = '0px';
 
                 // Wait for animation
-                await new Promise((resolve) => setTimeout(resolve, 300));
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 300);
+                });
 
                 // Add collapsed class
                 panel.classList.add('collapsed');

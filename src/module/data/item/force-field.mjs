@@ -214,19 +214,6 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     get headerLabels() {
         return {
             protection: `${this.protectionRating}%`,
-            overload: this.overloadRangeLabel,
-            status: this.statusLabel,
-        };
-    }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get headerLabels() {
-        return {
-            protection: `${this.protectionRating}%`,
             overload: `${this.overloadThreshold}+`,
             status: this.statusLabel,
         };
