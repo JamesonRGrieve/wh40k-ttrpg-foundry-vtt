@@ -1,12 +1,12 @@
 /**
- * @file DarkHeresySheet - Dark Heresy 2e character sheet
- * Extends the base AcolyteSheet with DH2e-specific header fields
+ * @file DarkHeresy2Sheet - Dark Heresy 2e character sheet
+ * Extends the base CharacterSheet with DH2e-specific header fields
  * (Home World, Background, Role, Elite Advance, Divination).
  */
 
 import CharacterSheet from './character-sheet.mjs';
 
-export default class DarkHeresySheet extends CharacterSheet {
+export default class DarkHeresy2Sheet extends CharacterSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
         ...super.DEFAULT_OPTIONS,

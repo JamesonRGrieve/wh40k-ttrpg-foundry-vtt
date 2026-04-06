@@ -8,9 +8,9 @@ import * as dataModels from './data/_module.mjs';
 import * as dice from './dice/_module.mjs';
 
 // Import V2 Actor Sheets (ApplicationV2-based)
-import CharacterSheet from './applications/actor/character-sheet.mjs';
 import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.mjs';
-import DarkHeresySheet from './applications/actor/dark-heresy-sheet.mjs';
+import DarkHeresy1Sheet from './applications/actor/dark-heresy-1-sheet.mjs';
+import DarkHeresy2Sheet from './applications/actor/dark-heresy-sheet.mjs';
 import RogueTraderSheet from './applications/actor/rogue-trader-sheet.mjs';
 import BlackCrusadeSheet from './applications/actor/black-crusade-sheet.mjs';
 import OnlyWarSheet from './applications/actor/only-war-sheet.mjs';
@@ -232,10 +232,15 @@ export class HooksManager {
 
         // Unregister core V1 actor sheet and register V2 actor sheets
         DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresySheet, {
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2Sheet, {
             types: ['character'],
             makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy',
+            label: 'WH40K.Sheet.DarkHeresy2',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1Sheet, {
+            types: ['character'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.DarkHeresy1',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderSheet, {
             types: ['character'],
