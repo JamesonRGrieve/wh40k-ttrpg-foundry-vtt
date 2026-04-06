@@ -506,6 +506,7 @@ export class HooksManager {
                 createSkillMacro(data, slot);
                 return false;
             default:
+                return true;
         }
     }
 
@@ -534,7 +535,7 @@ export class HooksManager {
      */
     static getActorSheetClass(actor, sheetData) {
         // Only handle npcV2 actors
-        if (actor.type !== 'npcV2') return;
+        if (actor.type !== 'npcV2') return null;
 
         // Check primaryUse field
         const primaryUse = actor.system?.primaryUse;
