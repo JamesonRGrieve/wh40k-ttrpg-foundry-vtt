@@ -1,0 +1,30 @@
+{
+  "name": "Guard",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Hired muscle to guard an area or individual. Ability and Disposition improve with better \"craftsmanship\"",
+    "cost": "Paid Weekly",
+    "effects": "Average",
+    "notes": "75 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 75 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "klXnIztMytP4xUrS"
+}

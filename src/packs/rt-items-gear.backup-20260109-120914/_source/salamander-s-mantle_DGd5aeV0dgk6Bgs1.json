@@ -1,0 +1,30 @@
+{
+  "name": "Salamander's Mantle",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "2kg",
+    "availability": "Variant of the Adamantine Mantle. Negates two points of Armour Penetration of any incoming attack. Wearer gains +10 to Opposed Weapon Skill Tests to Feint. When taking the Defensive Stance Action, foes suffer an additional -10 on Weapon Skill Tests to attach the wearer. Wearer cannot be set on fire, and never needs to make Agility Tests to avoid being set on fire.",
+    "cost": "Salamander's Chapter Only.",
+    "effects": "Respected",
+    "notes": "20 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Respected</p><p><b>Notes:</b> 20 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DGd5aeV0dgk6Bgs1"
+}

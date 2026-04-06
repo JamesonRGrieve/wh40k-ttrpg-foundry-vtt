@@ -1,0 +1,28 @@
+{
+  "name": "Soul's Nemesis",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Dark Eldar (Innate)",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p>The inevitable decay of the Dark Eldar's soul from She Who Thirsts, and the knowledge that they will eventually be little more than husks bound in eternal agony leaves little room for any mortal threats, fears, or dangers.\nAll Dark Eldar gain the effects of the Jaded and Dark Soul Talents.</p>"
+    },
+    "benefit": "<p>The inevitable decay of the Dark Eldar's soul from She Who Thirsts, and the knowledge that they will eventually be little more than husks bound in eternal agony leaves little room for any mortal threats, fears, or dangers.\nAll Dark Eldar gain the effects of the Jaded and Dark Soul Talents.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DXX0ud4WT1VBSc51"
+}

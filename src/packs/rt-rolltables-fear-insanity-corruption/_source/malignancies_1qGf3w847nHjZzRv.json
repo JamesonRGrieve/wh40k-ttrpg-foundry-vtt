@@ -1,0 +1,277 @@
+{
+  "name": "Malignancies",
+  "img": "icons/svg/d20.svg",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "yO04b42sm8E96ris",
+      "type": 0,
+      "text": "<p><b>Palsy</b>: Character suffers from numerous tics, tremors, and shakes. Reduce Ahility by 1d10.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        10
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "nzq8012l4tM3wx9q",
+      "type": 0,
+      "text": "<p><b>Dark-Hearted</b>: The character grows more cruel and callous. Reduce Fellowship by 1d10</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        11,
+        15
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DYwLfWEsu3jmTc17",
+      "type": 0,
+      "text": "<p><b>Ill-Fortuned</b>: When using a fate point roll a d10 on a 7 or above. It does nothing, but is still lost.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        16,
+        20
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "gOqtdNrt0Q5AvNC8",
+      "type": 0,
+      "text": "<p><b>Skin Affliction</b>: The character is plagued by boils, scabs, and sores. -20 to all charm tests.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        21,
+        22
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "QmCWnDVjRviFTBLx",
+      "type": 0,
+      "text": "<p><b>Night Eyes</b>: Light is uncomfortable to the character. -10 to all tests made while in bright light.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        23,
+        25
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "fHvZZWrEwDpng3BR",
+      "type": 0,
+      "text": "<p><b>Morbid</b>: The character struggles to concentrate due to grim visions and gloomy trains of thought. Reduce Intelligence by 1d10.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        26,
+        30
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "cHJVIeE9c1H2lxPo",
+      "type": 0,
+      "text": "<p><b>Witch-Mark</b>: The Character develops a minor deformity or mutation that is easily hideable, but obviously tainted. Some fanatics may take issue with this.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        31,
+        33
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "v8ul1eBkQReCUJSR",
+      "type": 0,
+      "text": "<p><b>Fell Obsession</b>: Character gains the \"Obsession\" Mental Disorder. However its focus is something sinister, such as collecting bones, scarification, or torture.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        34,
+        45
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "LQrVLV4qrqf2RS2v",
+      "type": 0,
+      "text": "<p><b>Hatred</b>: The character develops an irrational hatred to a particular group or class. They will never side or aid this group unless forced to, begrudgedly</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        46,
+        50
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "8e4nEoD4P06xIpRc",
+      "type": 0,
+      "text": "<p><b>Irrational Nausea</b>: Character is sickened at the sight of something normally innocuous, such as prayer, books, or bare flesh, and must pass a Toughness test of take -10 to all tests while in its presence.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        51,
+        55
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "zuPqqBBpaiczR5Zv",
+      "type": 0,
+      "text": "<p><b>Wasted Frame</b>: Character becomes sickenly pale, as their muscles wither away. Reduce Strength by 1d10</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        56,
+        60
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "tDMqjZXPbWj0gIGs",
+      "type": 0,
+      "text": "<p><b>Night Terrors</b>: Character is plagued by daemonic nightmares, gains the \"Horrific Nightmares\" Mental Disorder.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        61,
+        63
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "oOciFOwIMBgowBy0",
+      "type": 0,
+      "text": "<p><b>Poor Health</b>: The Character suffers from strange illnesses and invisible pains. Reduce Toughness by 1d10</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        64,
+        70
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "8AvpbEQoEvs1hr3Q",
+      "type": 0,
+      "text": "<p><b>Distrustful</b>: The character is irrationally distrustful of others, -10 to Fellowship tests made with strangers.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        71,
+        75
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "p2en928HZ73VPI1B",
+      "type": 0,
+      "text": "<p><b>Malign Sight</b>: The character's vision tarnishes if they try to focus. Reduce Perception by 1d10</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        76,
+        80
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "xI3OtoBdlTmzAfQH",
+      "type": 0,
+      "text": "<p><b>Ashen Taste</b>: The character finds food and drink disgusting, and can barely stomach eating. Double negative effects of Fatigue.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        81,
+        83
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "KH8QQv56r3T6PtaQ",
+      "type": 0,
+      "text": "<p><b>Bloodlust</b>: Character has an underlying murderous bloodlust. If wounded in combat, must test Willpower to not kill enemies outright, even if not intending to.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        84,
+        90
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "pE3B9nRHLFwdac3t",
+      "type": 0,
+      "text": "<p><b>Blackouts</b>: The Character suffers inexplicable blackouts. What occurs in these, and when they occur is up to the GM.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        91,
+        93
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "58lzHoPbeidHEwjp",
+      "type": 0,
+      "text": "<p><b>Strange Addiction</b>: The Character gains an addiction in the form of a \"Minor Compulsion\" Mental Disorder for something freakish if found out, such as consuming blood, tears, or rose petals.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        94,
+        0
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    }
+  ],
+  "flags": {},
+  "_id": "1qGf3w847nHjZzRv"
+}

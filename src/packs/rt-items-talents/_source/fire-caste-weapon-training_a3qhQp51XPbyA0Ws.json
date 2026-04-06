@@ -1,0 +1,63 @@
+{
+  "name": "Fire Caste Weapon Training",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "fireCasteWeaponTraining",
+    "category": "combat",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p>The Explorer is proficient with all Tau Weaponry, and can wield them without penalty.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>The Explorer is proficient with all Tau Weaponry, and can wield them without penalty.</p>",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Finesse"
+    ],
+    "prerequisites": {
+      "text": "Tau",
+      "characteristics": {},
+      "skills": {},
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Tau Weapon Proficiency",
+          "description": "<p>You are trained in all Tau weaponry and can use them without penalty.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a3qhQp51XPbyA0Ws"
+}

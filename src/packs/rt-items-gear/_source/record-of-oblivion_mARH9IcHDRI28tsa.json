@@ -1,0 +1,41 @@
+{
+  "name": "Record of Oblivion",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "luxury",
+    "weight": 2,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Master Crafted Relic Data-Tome of the Guardians of the Covenant Chapter. Whilst bearing this relic the character can re-roll any failed Willpower Test.</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 15 R</p>",
+      "chat": "",
+      "summary": "Master Crafted Relic Data-Tome of the Guardians of the Covenant Chapter. Whilst bearing this relic the character can re-roll any failed Willpower Test."
+    },
+    "source": {
+      "book": "DW: Honour the Chapter",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Master Crafted Relic Data-Tome of the Guardians of the Covenant Chapter. Whilst bearing this relic the character can re-roll any failed Willpower Test.",
+    "duration": "",
+    "notes": "15 R",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "mARH9IcHDRI28tsa"
+}

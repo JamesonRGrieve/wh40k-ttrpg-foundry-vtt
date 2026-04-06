@@ -1,0 +1,30 @@
+{
+  "name": "Aquila Magnificus",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "25kg",
+    "availability": "10 metre tall homing beacon implanted into the ground and covered with symbols of the Imperium and Adeptus Ministorum. To alert passing ministorum ships to the location of people to be reintegrated into the Imperial Faith. Common lasts 5 years, Good and Best last 2x and 3x as long.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qyYAgkAt9PmoMLn4"
+}

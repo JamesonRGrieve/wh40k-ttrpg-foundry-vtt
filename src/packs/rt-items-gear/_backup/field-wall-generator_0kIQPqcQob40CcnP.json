@@ -1,0 +1,30 @@
+{
+  "name": "Field Wall Generator",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "18kg",
+    "availability": "Requires two or more generators, place and activated or deactivated as a Full Action, which also activates any linked generators. Generates a wall of force 1.5m high and up to 8m long between linked generators in a line, acts as cover. If a Wall Section Overloads, only the section between two generators shuts down, the rest are unaffected.",
+    "cost": "Cover is Force Field with Prot Rating of 65%",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0kIQPqcQob40CcnP"
+}

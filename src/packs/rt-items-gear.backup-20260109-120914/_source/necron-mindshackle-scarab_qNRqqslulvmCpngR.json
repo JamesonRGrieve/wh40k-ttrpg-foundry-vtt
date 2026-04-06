@@ -1,0 +1,30 @@
+{
+  "name": "Necron Mindshackle Scarab",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "Once activated if it damages a character they must make -10 toughness test. If failed in 1d5 Rounds scarabs burrow into their brain and take control. Control is either subtle (-20 Willpower test to resist, 3 DoF+ become aware of presence), or overt (+0 Willpower Test or completely fall under control). Overt use causes burnout of scarabs after 1d10 minutes, causing 1d10 fatigue to victim.",
+    "cost": "Once Set, waits until receiving commands from Necron controller (infinite range).  Use Canoptek Locust statblock with 10 Wounds and No Psychic Plague. Always Best Quality.",
+    "effects": "Unique",
+    "notes": "-",
+    "source": "BC: Tome of Fate",
+    "description": {
+      "value": "<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qNRqqslulvmCpngR"
+}

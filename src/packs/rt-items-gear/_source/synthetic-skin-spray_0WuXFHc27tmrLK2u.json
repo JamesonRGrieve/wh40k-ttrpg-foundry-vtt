@@ -1,0 +1,41 @@
+{
+  "name": "Synthetic Skin Spray",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "consumable",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A Thin foam sprayed over burned or bleeding flesh wounds. Used as a Full Action to immediately stop Blood Loss.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 50 T</p>",
+      "chat": "",
+      "summary": "A Thin foam sprayed over burned or bleeding flesh wounds. Used as a Full Action to immediately stop Blood Loss."
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "A Thin foam sprayed over burned or bleeding flesh wounds. Used as a Full Action to immediately stop Blood Loss.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0WuXFHc27tmrLK2u"
+}

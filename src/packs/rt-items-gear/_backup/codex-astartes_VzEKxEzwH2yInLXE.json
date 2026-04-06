@@ -1,0 +1,30 @@
+{
+  "name": "Codex Astartes",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "0.5kg",
+    "availability": "Text considered Sacred to many Space Marine Chapters, may take the form of Hand-Copied Tomes, ornate Data Slates, and so on. Contains the Wisdom of the Ultramarine's Primarch, Robute Guilliman on the ways of battle. Many Ultramarines or their descendant chapters rarely pass a day without studying it.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VzEKxEzwH2yInLXE"
+}

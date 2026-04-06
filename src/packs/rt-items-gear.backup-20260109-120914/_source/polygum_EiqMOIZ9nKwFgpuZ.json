@@ -1,0 +1,30 @@
+{
+  "name": "Polygum",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "-",
+    "availability": "A Universally useful, rubbery material that can be stretched into various shapes used as Weather sealent form Tarps, Ponchos, and Slings, hold machine parts together if properly blessed, and if the user has the Medicae Skill Staunch a Bleeding Wound without a test although such a use causes it to crumble soon after.",
+    "cost": "Found in the verdant forests of Ganf Magna, and is its most notable export.\nComes in Small cylindrical wood containers.",
+    "effects": "Very Rare",
+    "notes": "75 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 75 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EiqMOIZ9nKwFgpuZ"
+}

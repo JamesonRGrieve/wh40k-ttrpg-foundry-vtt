@@ -1,0 +1,30 @@
+{
+  "name": "Targeting Monocle",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing",
+    "weight": "0.02kg",
+    "availability": "A subtle monocole that can either be a Motion Predictor, Photo Sight, Preysense Sight, or Telescopic Sight (determined when acquired). Requires -30 Scrutiny Test to notice monocole is special. Must be linked to weapon (such as via vox connection) and counts as weapon's sight.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MmTk1VJrOjzMwmQI"
+}

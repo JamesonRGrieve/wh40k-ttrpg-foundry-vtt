@@ -1,0 +1,30 @@
+{
+  "name": "Signal Jammer",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "2kg",
+    "availability": "Overpowers local vox communicatio. Basic methods emit obvious jamming signals, superior versions dampen communication less noticably.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "u0QwQCYuTPfBkc9q"
+}

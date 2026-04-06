@@ -1,0 +1,69 @@
+{
+  "name": "The One to Redeem Them (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/coins.svg",
+  "system": {
+    "identifier": "the-one-to-redeem-them-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "32"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Your family's shame is an outrage you have struggled beneath your whole life. Perhaps inspired by noble ancestors predating the fall from grace, or simply infuriated by the state of the family reputation and resources, you set forth to bring your inheritance back from the brink.\"</em></p></blockquote><p>You seek to return your clan to the glory it knew long ago. With no others to challenge your claim, you have taken control and pushed onwards to achieve something worthy of your ancestors, stopping at nothing to regain their wealth and redeem their honour.</p><p>Your determination to restore your family's fortunes has made you exceptionally skilled in matters of commerce and trade.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain Commerce as a trained Skill, and receive a bonus +50 Achievement Points when completing any objective for an Endeavour. However, in spite of your efforts, your family's resources are still not what they once were, reducing your starting Profit Factor by 1.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Disgraced lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": -1
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Commerce and +50 Endeavour AP, but -1 Profit Factor.",
+    "grants": {
+      "skills": [
+        {
+          "name": "Commerce",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Drive to Redeem",
+          "description": "<p>Your relentless pursuit of redemption for your family name makes you exceptionally motivated. You gain a bonus +50 Achievement Points whenever you complete any objective during an Endeavour. This represents your singular focus on restoring your family's wealth and reputation.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000012"
+}

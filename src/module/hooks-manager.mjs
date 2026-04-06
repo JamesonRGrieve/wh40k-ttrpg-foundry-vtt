@@ -12,6 +12,9 @@ import CharacterSheet from './applications/actor/character-sheet.mjs';
 import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.mjs';
 import DarkHeresySheet from './applications/actor/dark-heresy-sheet.mjs';
 import RogueTraderSheet from './applications/actor/rogue-trader-sheet.mjs';
+import BlackCrusadeSheet from './applications/actor/black-crusade-sheet.mjs';
+import OnlyWarSheet from './applications/actor/only-war-sheet.mjs';
+import DeathwatchSheet from './applications/actor/deathwatch-sheet.mjs';
 import NPCSheetV2 from './applications/actor/npc-sheet-v2.mjs';
 import VehicleSheet from './applications/actor/vehicle-sheet.mjs';
 import StarshipSheet from './applications/actor/starship-sheet.mjs';
@@ -238,6 +241,21 @@ export class HooksManager {
             types: ['character'],
             makeDefault: false,
             label: 'WH40K.Sheet.RogueTrader',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadeSheet, {
+            types: ['character'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.BlackCrusade',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarSheet, {
+            types: ['character'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.OnlyWar',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchSheet, {
+            types: ['character'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.Deathwatch',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, CharacterSheetSidebar, {
             types: ['character'],

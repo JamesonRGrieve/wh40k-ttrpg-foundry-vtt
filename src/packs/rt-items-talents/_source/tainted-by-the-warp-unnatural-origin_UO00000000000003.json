@@ -1,0 +1,89 @@
+{
+  "name": "Tainted by the Warp (Unnatural Origin)",
+  "type": "talent",
+  "img": "icons/svg/terror.svg",
+  "system": {
+    "identifier": "tainted-by-the-warp-unnatural-origin",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "18-19"
+    },
+    "description": {
+      "value": "<p><strong>Tainted by the Warp:</strong> The Warp has touched you—whether through exposure to the Immaterium, proximity to psykers, or darker circumstances. You sense things others cannot, but the price is corruption of body and soul.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Choose +3 Perception or +3 Willpower, suffer -3 Fellowship. Gain Dark Soul and Jaded talents, Forbidden Lore (Warp) as untrained skill, and 1d10 Corruption Points. Optional: Pay +300 XP for Favoured by the Warp talent and +1d10 Corruption.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Unnatural Origin (200 XP)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 200,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {
+        "fellowship": -3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Costs 200 XP. Choose +3 Per or WP. Gain 1d10 Corruption. Optional +300 XP for Favoured by the Warp + 1d10 more Corruption.",
+    "grants": {
+      "skills": [
+        {
+          "name": "Forbidden Lore",
+          "specialization": "Warp",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Dark Soul",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.UOSAYwEb4x3AyrQ4"
+        },
+        {
+          "name": "Jaded",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.ldTw7wC9T3dPeOig"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Characteristic Choice",
+          "description": "<p>Choose +3 Perception or +3 Willpower.</p>"
+        },
+        {
+          "name": "Warp Taint",
+          "description": "<p>Gain 1d10 Corruption Points from your exposure to the Warp.</p>"
+        },
+        {
+          "name": "Optional: Favoured by the Warp",
+          "description": "<p>Pay an additional 300 XP to gain the Favoured by the Warp talent, but also gain an additional 1d10 Corruption Points.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UO00000000000003"
+}

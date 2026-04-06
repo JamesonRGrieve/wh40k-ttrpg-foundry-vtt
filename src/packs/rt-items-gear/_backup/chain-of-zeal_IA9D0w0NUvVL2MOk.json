@@ -1,0 +1,30 @@
+{
+  "name": "Chain of Zeal",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "3kg",
+    "availability": "Master-Crafted Relic Devotional Chains of the Black Templars. Secured to the weapon of the wearer and welded to their gauntlets, such that their weapon is chained to the gauntlet. To bearer is forbidden from removing their gauntlets such that they are always armed. +10 to Fear and Pinning Tests, +1 to effective rank for Black Templars Solo Mode Abilities.",
+    "cost": "Must be attached to weapon of val 20 or less. Must be requisitioned alongside weapon for each subsequent mission. If forcibly removed relic counts as lost until it can be reaffixed.",
+    "effects": "Distinguished",
+    "notes": "20 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 20 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IA9D0w0NUvVL2MOk"
+}

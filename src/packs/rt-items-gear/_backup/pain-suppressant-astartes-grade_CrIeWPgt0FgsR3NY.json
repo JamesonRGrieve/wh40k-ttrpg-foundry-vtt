@@ -1,0 +1,30 @@
+{
+  "name": "Pain Suppressant (Astartes-Grade)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Allows character to ignore Critical Effects for 1d10 Rounds. Power Armour injectors of these by default which can be refilled with +10 Tech-Use Test.",
+    "cost": "Astartes Grade Drugs require +10 Medicae Test if adminstered to humans, failing administers anyway but also causes 1d5 Fatigue and 1 Round of Stun.",
+    "effects": "Initiated",
+    "notes": "10 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CrIeWPgt0FgsR3NY"
+}

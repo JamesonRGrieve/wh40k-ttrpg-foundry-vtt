@@ -1,0 +1,529 @@
+{
+  "name": "Mutations",
+  "img": "icons/svg/d20.svg",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "elUmt5XpuM7m60Px",
+      "type": 0,
+      "text": "<p><b>Hellspawn</b>: The Mutant's body and soul are saturated by the warp, reaching Pseudo-Daemonhood. Gain Daemonic, Fear  (2), and From Beyond Traits. Most mortal creatures will take issue with this.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        0,
+        0
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "NgUVFTu9myxI8EwW",
+      "type": 0,
+      "text": "<p><b>Bestial Hide</b>: Character's skin becomes toughened and thick with scales, fur, or chitin. \nGain Natural Armour (2) Trait</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        6
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "sQEclO2WrdeHoQXk",
+      "type": 0,
+      "text": "<p><b>Unnatural Arms</b>: Twisted appendages appear from the character's spine or torso.\nGain Multiple Arms (Corruption Bonus) Trait</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        7,
+        11
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Et8wJWBEdm00wuQl",
+      "type": 0,
+      "text": "<p><b>Sightless Orbs</b>: The Character's eyes become sightless windows into an afflicted soul.\nGain the Blind and Unnatural Senses (Corruption Bonus x 10) Traits.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        12,
+        17
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "n3LwooWK0jWFIezM",
+      "type": 0,
+      "text": "<p><b>Swollen Brute</b>: Character becomes bloated, their muscles expanded and form corpulent.\nGain +10 Strength and Toughness, but reduce Agility Bonus by 1 for purposes of movement.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        18,
+        25
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "7ABA7vM6mTaL3q8x",
+      "type": 0,
+      "text": "<p><b>Deathsight</b>: The Character's mind twists, their eyes showing them the possible fates of anyone they see whether they want to see them or not. Once per session they may increase the damage of one attack they make by their Corruption Bonus, but gain 1 Corruption when doing so.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        26,
+        30
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "ORNQpZly4sNUhGVt",
+      "type": 0,
+      "text": "<p><b>Cursed Fleshmetal</b>: The Character's Armour and Cybernetics fuse with them and regenerate as if they were living tissue. Removing them requires a +0 Medicae Test, if failed suffer 1d5 Rending Damage to random limb that ignores armour. Can make +10 Toughness Test to repair merged items as one would with a Tech-Use Test, but gains 1 Corruption when doing so.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        31,
+        36
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "tVlHF0krUQA513nw",
+      "type": 0,
+      "text": "<p><b>Razor Fangs</b>: Character's Teeth grow longer, turning into fangs. \nGains an Unarmed Attack dealing 1d5+Corruption Bonus Rending damage with PEN 2. Permenantly reduce Fellowship by 1d5.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        37,
+        43
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "lS7eMufGCdsauqj0",
+      "type": 0,
+      "text": "<p><b>Excessive Legs</b>: Character grows extra legs to support an extended, centauroid like form.\nGain Quadruped Trait with a number of legs equal to Half Corruption Bonus (round up).</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        44,
+        49
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "RK5vU5HVnI7mrGXi",
+      "type": 0,
+      "text": "<p><b>Wings</b>: Character gains feathered or leathery wings that erupt painfully from their spine. \nGain the Flyer (Corruption Bonus x 2) Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        50,
+        54
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "dxKFQK8Hmzqvju9l",
+      "type": 0,
+      "text": "<p><b>Serpentine Tail</b>: Character's legs wither and fuse as their spine elongates into a serpantine tail that supports their body.\nGain Crawler Trait and gain an unarmed tail attack dealing 1d10 I Damage with Pen 0.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        55,
+        60
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "8MMJt1tYwtuAmR2B",
+      "type": 0,
+      "text": "<p><b>Vile Deformity</b>: Gain a Vile, obviously warp-tainted deformity. Be it writhing tentacles, skinless flesh, thousands of eyes, etc. gain Fear (1) Trait. </p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        56,
+        59
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "22KTR76RXt6nSXyJ",
+      "type": 0,
+      "text": "<p><b>Aberration</b>: Become an animal hybrid. Increase Strength and Agility by 10, reduce Intelligence by 1d10, and Fellowship by 10.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        60,
+        63
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "5qg7XpY8R1uucHnj",
+      "type": 0,
+      "text": "<p><b>Searing Blood</b>: Characters blood now flows with searing acids that somehow leave them unharmed. Whenever they suffer Blood Loss, this foul liquid flows out, dealing 1d5 + Corruption Bonus Energy Damage with Pen 0 to all other cahracters within 1d5 metres.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        61,
+        69
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "ouGhwhTzek06kL3T",
+      "type": 0,
+      "text": "<p><b>Degenerate Mind</b>: The Mind is warped beyond humanity. Reduce Intelligence and Fellowship by 1d10.  Roll a d10: 1-3 gain Frenzy Trait, 4-7 gain Fearless Talent, 8-0 gain From Beyond Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        64,
+        67
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "ZP1EWA3XLPUCraMf",
+      "type": 0,
+      "text": "<p><b>Ravaged Body</b>: The Mutant's Body is remade by the warp. Roll 1d5 times on this table (rerolling repeat outcomes), Mutations show the obvious touch of the warp. A rather unpleasent experience.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        68,
+        71
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "IVY9417ZzzScGIr4",
+      "type": 0,
+      "text": "<p><b>Witch-Curse</b>: A Maddening rune appears somewhere on the character's body, marking them as Chaos Touched. \nGain Psyker Trait, or add 1 to existing Psy Rating and learn one Psychic Power that costs 100xp or less for free. Whenever attempting to use this power, gain 1d5 Corruption Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        70,
+        77
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "ZqJJw6KssMgBplnJ",
+      "type": 0,
+      "text": "<p><b>Clawed/Fanged</b>: Gain Razor Claws, a Fanged Maw, or some other Natural Weapon. Gain Natural Weapons Trait, doing either Impact or Rending Damage.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        72,
+        74
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "ILIBEKJBt00pi0Fg",
+      "type": 0,
+      "text": "<p><b>Necrophage</b>: Gain +10 to Toughness, and the Regeneration Trait. But can only eat copious amounts of Raw Meat or Starve</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        75,
+        78
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "779vqf0GbOsi6lP1",
+      "type": 0,
+      "text": "<p><b>Bone-Blades</b>: The Character's Bones grow into long spurs that sprout from their flesh at their command. \nGain Unarmed attack dealing 1d10 + Corruption Bonus damage, Pen 0. when making an attack with this must make +0 Toughness Test or suffer Blood Loss.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        78,
+        84
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "6PGBPgZmwnnB3NhP",
+      "type": 0,
+      "text": "<p><b>Corrupted Flesh</b>: The Mutant's internals and organs are replaced by horrifying ichor, maggot-ridden filth, or the like. Whenever taking critical damage, gain Fear (2) for that round.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        79,
+        81
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "gt2HsUOqE8AiuoXY",
+      "type": 0,
+      "text": "<p><b>Venomous</b>: Natural Attacks become Toxic, gain Toxic Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        82,
+        85
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "acqXc1WPV8WTr7TH",
+      "type": 0,
+      "text": "<p><b>Cannibalistic Urge</b>: Blood and marrow is as wine and bread to the character, normal food does nothing to sate them. Once per session, character can remove 1d5 damage by consuming human flesh, gaining 1 Corruption Point when they do so.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        85,
+        89
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "cae923LjyXJW2O6k",
+      "type": 0,
+      "text": "<p><b>Hideous Strength</b>: Gain Unnatural Strength Trait</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        86,
+        89
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Ach9QG8gmswExHQ2",
+      "type": 0,
+      "text": "<p><b>Multiple Appendages</b>: Sprout a set of additional functional limbs in the shape of arms, tenticles, tails, etc. Gain Ambidextrous and Two-Weapon Wielder Talents, and gain +10 on Climb and Grapple Tests.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        90,
+        91
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "qIy7g2z3MZ4l5l2m",
+      "type": 0,
+      "text": "<p><b>Corrupted Flesh</b>: The character's blood is replaced with something horrific, be it insects, worms, or other flittering creatures that spill fourth at the slightest cut. Whenever the character suffers damage, they gain the Fear (1) Trait for 1d5 rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        90,
+        92
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "yM9a4BWfsLpGpHun",
+      "type": 0,
+      "text": "<p><b>Worm</b>: The mutant's Lower Limbs fuse into that of a worm or snake. Gain +5 Wounds and the Crawler Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        92,
+        93
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "AkUw55tPsOJj1yV7",
+      "type": 0,
+      "text": "<p><b>I Will Not Die!</b>: The warp touches the character to twist fortune in their favour but at the price of their soul. \nCan no longer burn Fate Point to survive lethal injuries, instead, whenever character would die, they instead gain 1d10+5 Corruption Points and survive by the narrowest margins.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        93,
+        94
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "iJ8JgaxUJnksEEhE",
+      "type": 0,
+      "text": "<p><b>Nightmarish</b>: The Mutant is so utterly warped enemies flee at their presence, gain Fear (3) Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        94,
+        94
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "2MsXBoq2HnTR551F",
+      "type": 0,
+      "text": "<p><b>Malleable</b>: The Mutant possess sickening liquidity, able to stretch or flatten themselves. Gain +10 Agility, +20 to Climb and Grappling Tests, and may fit through spaces one quarter its body dimensions.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        95,
+        95
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "XObbEiB4d3biStne",
+      "type": 0,
+      "text": "<p><b>Warp Gaze</b>: The eyes of the character now burn all they see in dispair. Character gains 20m ranged attack with Spray Quality that deals 1d10 + Corruption Bonus damage with Pen 0. Each time attack is used, gain 1d5 Corruption Points. Those struck with attack make +0 Fear (1) Test.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        95,
+        97
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Jb2sOu3DoIvEIz2b",
+      "type": 0,
+      "text": "<p><b>Winged</b>: Sprout a set of wings capable of supporting Flight. Gain Flyer (ABx2) Trait.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        96,
+        96
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "yxcoqZ4rQfxTO8J8",
+      "type": 0,
+      "text": "<p><b>Corpulant</b>: The Mutant becomes huge and bloated, gain +5 Wounds and Unnatural Toughness Trait, may no longer take the run action.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        97,
+        97
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "R71D29Gv94HZhr7a",
+      "type": 0,
+      "text": "<p><b>Shadowkin</b>: The Mutant is only tenously tied to reality. Gain Phase Trait, decrease Strength and Toughness by 10.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        98,
+        98
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "RSEhg2RHOheI4uMY",
+      "type": 0,
+      "text": "<p><b>Warp Regeneration</b>: The flesh of the character sews itself back together from even the worst of injuries, whether the character desires it or not. Whenever character suffers damage, they make a +0 Toughness Test, if successful they gain Regeneration (Corruption Bonus) for 1 round, and 1d5 Corruption Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        98,
+        99
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "e0wrqDuypaaE2xDQ",
+      "type": 0,
+      "text": "<p><b>Corrosive Bile</b>: May Vomit bile, flesh-eating grubs, or something equally horrible in close combat. As a Full Action, Test BS to make 1d10+2 R/E, Tearing Attack. Cannot be parried, but can be dodged.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        99,
+        99
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "MiGWlaEP74jrjYBy",
+      "type": 0,
+      "text": "<p><b>The Warp Made Manifest</b>: The warp overtakes the character, they are reshaped, moulded, becoming one with unreality to the horror of those around them.\nGain Daemonic (Corruption Bonus), Fear (2), From Beyond, and Warp Instability Traits. \nCan use Willpower characteristic in place of any other characteristic for any test they must take.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        100,
+        100
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    }
+  ],
+  "flags": {},
+  "_id": "K0EfTrcmGH6lJYAi"
+}

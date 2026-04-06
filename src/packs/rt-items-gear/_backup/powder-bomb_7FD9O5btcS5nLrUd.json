@@ -1,0 +1,30 @@
+{
+  "name": "Powder Bomb",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "1.5kg",
+    "availability": "When ignited, creates a 30m radius explosion of white powder that inflames the eyes, nose, and throat, inducing nausia for several hours. Lasts for 2d10 rounds, a strong wind clears it in 1 round. Treat as a Thrown Weapon with 10m range and Smoke Quality, those within must make +0 Tougness Test or gain 1 Fatigue.",
+    "cost": "One use.",
+    "effects": "Scarce",
+    "notes": "17 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 17 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7FD9O5btcS5nLrUd"
+}

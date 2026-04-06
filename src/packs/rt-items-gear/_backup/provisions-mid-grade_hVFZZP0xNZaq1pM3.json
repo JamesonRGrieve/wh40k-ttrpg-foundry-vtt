@@ -1,0 +1,30 @@
+{
+  "name": "Provisions: Mid Grade",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Single Meal of Food Paste, Grox Meat, a Round of Amasec, etc. Generally of some taste, and with no long term health problems.",
+    "cost": "Cost of service may vary with location and the honesty/charitability of those that offer it.",
+    "effects": "Common",
+    "notes": "5 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hVFZZP0xNZaq1pM3"
+}

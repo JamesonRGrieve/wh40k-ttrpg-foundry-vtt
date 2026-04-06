@@ -1,0 +1,30 @@
+{
+  "name": "Transportation: Low Grade",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Single Trip from one place to another on a planet, Aboard a Dust Dog, Sub-level convyer, Silt Barge, etc. Neither safe nor fast.",
+    "cost": "Cost of service may vary with location and the honesty/charitability of those that offer it.",
+    "effects": "Plentiful",
+    "notes": "5 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 5 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AEFXZDjV9xHMisrB"
+}

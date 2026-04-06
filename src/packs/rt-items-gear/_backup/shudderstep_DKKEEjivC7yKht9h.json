@@ -1,0 +1,30 @@
+{
+  "name": "Shudderstep",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "xenos",
+    "weight": "0.1kg",
+    "availability": "Scarce Availability if acquired from Dark Eldar Settlement. When consumed, use gains \"Unnatural Speed\" Trait for duration. Afterwards gain 1 Fatigue and make +0 Toughness Test or pass out for 1d10+5 minutes. Lasts 50+2d10 Minutes, causes 1d5 Corruption. Can only use one Eldar Drug at a time.",
+    "cost": "Non-Eldar make -20 Toughness Test or are stunned for 1d5 Rounds, if 4+ DoF also take 1d10 Damage (ignore armour+toughness). Eldar make test if taking multiple Eldar drugs.",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "RT: The Soul Reaver",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DKKEEjivC7yKht9h"
+}

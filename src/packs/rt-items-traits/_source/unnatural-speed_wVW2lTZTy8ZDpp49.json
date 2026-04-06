@@ -1,0 +1,28 @@
+{
+  "name": "Unnatural Speed",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Double Agility Bonus when determining movement speed (after modifiers from other traits, such as size).</p>"
+    },
+    "benefit": "<p>Double Agility Bonus when determining movement speed (after modifiers from other traits, such as size).</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wVW2lTZTy8ZDpp49"
+}

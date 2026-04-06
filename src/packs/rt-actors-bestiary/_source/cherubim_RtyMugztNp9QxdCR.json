@@ -1,0 +1,83 @@
+{
+  "name": "Cherubim",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "10",
+      "bs": "10",
+      "s": "16",
+      "t": "20",
+      "ag": "28",
+      "int": "16",
+      "per": "27",
+      "wp": "22",
+      "fel": "10"
+    },
+    "wounds": "3",
+    "armourPoints": "2 + 1 all",
+    "move": "2/4/6/12\nFlyer 5",
+    "size": "Scr (-10)",
+    "weapons": [
+      {
+        "name": "Balled Fist",
+        "range": null,
+        "rof": null,
+        "damage": "1d5-3",
+        "pen": "0",
+        "clip": null,
+        "reload": null,
+        "qualities": "Primitive"
+      },
+      {
+        "name": "Gear/\nOther",
+        "range": "Commands: This is a Cyber Familiar, its will is bonded to its master. It can perform simple pre-programmed tasks it understands, such as \"Lay out my Vestments\", \"Copy that tract\", \"Hold aloft this scroll\", \"Fetch this item from my study\", etc.\n\nProgrammed Instinct: Will never attack unless ordered to, will fleed if startled/injured. If left idle will perch in high places and occasionally steal small objects.",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Talents/\nTraits",
+        "range": "Descriptions",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Flyer (5)",
+        "range": "Has a flying speed of 5. Can hover.",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Machine (1)",
+        "range": "Provides 1 AP to all locations",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "Ag: Concealment +10\nInt: \nPer: Awareness\nFel:\nChoice: Performer(Singer) +20 or Trade(Copyist, Tailor, or Valet) +10",
+    "training": "Basic(), Pistol(), Melee(), Heavy(), Flame(), Thrown(), Exotic()",
+    "description": {
+      "value": "<p><b>Skills:</b> Ag: Concealment +10\nInt: \nPer: Awareness\nFel:\nChoice: Performer(Singer) +20 or Trade(Copyist, Tailor, or Valet) +10</p><p><b>Training:</b> Basic(), Pistol(), Melee(), Heavy(), Flame(), Thrown(), Exotic()</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "RtyMugztNp9QxdCR"
+}

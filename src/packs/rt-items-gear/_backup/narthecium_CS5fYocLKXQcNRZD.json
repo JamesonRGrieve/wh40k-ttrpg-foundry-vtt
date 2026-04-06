@@ -1,0 +1,30 @@
+{
+  "name": "Narthecium",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "3kg",
+    "availability": "Arm/Wrist Mounted, has three auto-injectors and a saw for cutting through armour. Provides all benefits of Good-Craftsmanship Medikit, user can administer a dose of drugs from one of the injectors as a Free Action. Each injector can store a different drug. Saw can be used in melee: Profile (1d10+1 R, Pen 2, Tearing, Unwieldy).",
+    "cost": "Medical saw can be used as melee weapon, but shouldn\u2019t be.\nGood Quality Medikit: +20 to Medicae, even if use doesn't possess Medicae Skill",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CS5fYocLKXQcNRZD"
+}

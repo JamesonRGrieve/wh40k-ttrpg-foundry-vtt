@@ -1,0 +1,18 @@
+{
+  "name": "Necron Wep",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "necron-wep",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 18</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>18</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "k4wx14HZiyzmIM9L"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Penthrift Dreadfuls",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Tome",
+    "weight": "-",
+    "availability": "Space Cheap Magazines. Filled with violence, fanciful tales, and so on. Couched in moral tales to avoid censorship.\nWise Ordo Inquisitors may keep an eye on such things to make sure no dangerous truths start to be slipped in them.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "1 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 1 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sRL9UX5mtUWuc3Ys"
+}

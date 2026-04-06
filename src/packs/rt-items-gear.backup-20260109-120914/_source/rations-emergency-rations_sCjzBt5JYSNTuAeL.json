@@ -1,0 +1,30 @@
+{
+  "name": "Rations: Emergency Rations",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Consumable",
+    "weight": "1kg",
+    "availability": "Stored in tnaks or aircraft in individual packs for when a unit is waiting relief or rescue. Daily packs can be stretched to a week of sustenance if one is desperate.",
+    "cost": "One day's worth of food for one person",
+    "effects": "Average",
+    "notes": "10 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 10 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sCjzBt5JYSNTuAeL"
+}

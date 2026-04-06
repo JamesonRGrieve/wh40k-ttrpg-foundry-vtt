@@ -1,0 +1,24 @@
+{
+  "name": "Insulated",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Armour",
+    "effect": "Do not need to make Toughness Tests due to Hot Temperatures/Environments, within reason.\nDecrease Armour Availability by 1 (Rare-->Very Rare)",
+    "weight": "+1kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Do not need to make Toughness Tests due to Hot Temperatures/Environments, within reason.\nDecrease Armour Availability by 1 (Rare-->Very Rare)</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Zz9AvZmlCsAM0VYd"
+}

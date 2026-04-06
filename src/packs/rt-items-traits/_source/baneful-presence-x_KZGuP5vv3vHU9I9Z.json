@@ -1,0 +1,28 @@
+{
+  "name": "Baneful Presence (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>All characters suffer a -10 penalty to Willpower Tests whilst within X metres of this creature.</p>"
+    },
+    "benefit": "<p>All characters suffer a -10 penalty to Willpower Tests whilst within X metres of this creature.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KZGuP5vv3vHU9I9Z"
+}

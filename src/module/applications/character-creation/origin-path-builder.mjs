@@ -270,7 +270,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (this.allOrigins.length > 0 && this.lineageOrigins.length > 0) return;
 
         // Find origin path compendium
-        const pack = game.packs.find((p) => p.metadata.name === 'wh40k-items-origin-path');
+        const pack = game.packs.find((p) => p.metadata.name === 'rt-items-origin-path');
         if (!pack) {
             console.warn('Origin path compendium not found');
             return;
@@ -986,7 +986,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _findSkillUuid(skillName, specialization = null) {
         try {
-            const skillPack = game.packs.find((p) => p.metadata.name === 'wh40k-items-skills');
+            const skillPack = game.packs.find((p) => p.metadata.name === 'rt-items-skills');
             if (!skillPack) return null;
 
             const index = skillPack.index;

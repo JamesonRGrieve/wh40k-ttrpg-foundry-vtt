@@ -1,0 +1,54 @@
+{
+  "name": "Sabre Gun Platform",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": "N/A",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 12,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 10,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 8,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": "Gunner"
+    },
+    "passengers": 0,
+    "manoeuverability": 14,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Turret, one of: Twin-Linked Heavy Bolter, 2x Twin-Linked Heavy Stubbers, Twin-Linked Lascannons, Twin-Linked Autocannon</p>\n<p>---</p>\n<p>Twin-linked heavy bolter (150m; –/–/6; 1D10+8 X; Pen 5; Clip 240; Reload Full; Tearing, Twin-Linked)</p>\n<p>Twin-linked heavy stubbers (100m ; –/–/8; 1d10+4 I; Pen 3; Clip 300; Reload 2 Full, Twin-Linked) (2x Heavy stubbers must fire at same target)</p>\n<p>Twin-linked lascannon (300m; S/–/–; 5d10+10 E; Pen 10; Clip 80; Reload 2 Full; Proven [3], Twin-Linked)</p>\n<p>Twin-linked autocannon (300m; S/3/–; 3d10+8 I; Pen 6; Clip 120; Reload 2 Full; Ogryn-Proof,</p>\n<p>Reliable, Twin-Linked)</p>",
+    "specialRules": "<p>Traits: Anti-Air (Rudimentary), Immobile, Open-Topped, Rugged.</p>\n<p>Immobile Gun Platform, can't move on its own.</p>",
+    "traitsText": "Traits: Anti-Air (Rudimentary), Immobile, Open-Topped, Rugged.\nImmobile Gun Platform, can't move on its own.",
+    "availability": "average",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "NimjndIu5Oyf5Ld2"
+}

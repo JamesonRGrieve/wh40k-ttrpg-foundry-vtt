@@ -1,0 +1,571 @@
+{
+  "name": "Psychic Phenomena",
+  "img": "icons/svg/d20.svg",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "Yv6CI7LhfVosXrpT",
+      "type": 0,
+      "text": "<p><b>Dark Foreboding</b>: A Faint breeze blows past the pskyer and those near them. Everyone gets the feeling that somewhere, somehow, something unfortunate just happened.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        3
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "352c0xGABINfMRV6",
+      "type": 0,
+      "text": "<p><b>Oo-err…</b>: The Weirdboy has a really bad feeling about something.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        1,
+        5
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "OhrGOHePCehr4Feh",
+      "type": 0,
+      "text": "<p><b>Warp Echo</b>: For a few seconds, all nearby noises cause echoes regardless of surroundings</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        4,
+        5
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Z2nA5HxVIo0ZP6Dr",
+      "type": 0,
+      "text": "<p><b>Unholy Stench</b>: The air around the pskyer is permeated with a bizarre, foul smell.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        6,
+        8
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "BFOLb7YDId6f98w0",
+      "type": 0,
+      "text": "<p><b>Funny Noises</b>: For a few seconds, strangely echoing sounds within 1d100 metres of the Wierdboy fill the air that are decidedly unnatural and unmistakably emanating from the Weirdboy.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        6,
+        10
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "KJS7sZhWkGJBhVVQ",
+      "type": 0,
+      "text": "<p><b>Mind Warp</b>: The psyker suffers 1 Insanity Point as they from the swelling of their phobias, suspicions, and hatreds in a wave of negative emotion.\nAlt: The psyker suffers a -5 penalty to all Willpower Tests until the start of their next turn, their fears, suspicions, and hatreds briefly surging inside of them.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        9,
+        11
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "pi6sVsfXekcEZGlv",
+      "type": 0,
+      "text": "<p><b>Movin' Stuff</b>: All loose objects within 1d100 metres of the Weirdboy that weigh 1kg or less float or are flung about by 1d10 metres in random directions, although it is too light to be of any real harm.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        11,
+        15
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "MGF8g3kQOm4YzYwW",
+      "type": 0,
+      "text": "<p><b>Hoarfrost</b>: Everything in 3d10 (16) Metres of the Psyker is covered in a thin frost as the temperature of the surroundings drops for an instant.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        12,
+        14
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "nNXz59a1EG9Vvf82",
+      "type": 0,
+      "text": "<p><b>Aura of Taint</b>: All animals within 1d100 (50) metres of the Psyker are spooked and agitated. Characters with the Psyniscience Skill pinpoint the psyker as the cause.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        15,
+        17
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "wBSGWCpbn06KscTM",
+      "type": 0,
+      "text": "<p><b>Bizarre Growth</b>: 1d5+2 clusters of various coloured mushrooms, each one metre wide and tall burst out of the ground within 25 metres of the weird boy. Providing 1 AP to anyone taking cover behind them. For some reason, the mushrooms all have the Weirdboy'z face on them.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        16,
+        20
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "o9jMFuJfdcpIKCUC",
+      "type": 0,
+      "text": "<p><b>Memory Worm</b>: Everyone in Line of Sight of the Psyker forget something trivial.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        18,
+        20
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "bt1Q8kW8Nfrz9ZlT",
+      "type": 0,
+      "text": "<p><b>Spoilage</b>: All Food and Drink in 5d10 (28) Metres of the Psyker goes bad.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        21,
+        23
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "K67nG2ALQBporhi6",
+      "type": 0,
+      "text": "<p><b>Ded Smelly</b>: Green Smoke pours out of the Weirdboy'z ears, nose, and mouth, preventing them from speaking for the next round. The Smoke imposes -20 on Awareness Tests based on sight or smell. It stings the eyes and fills the nostrils with rot-smell.\nNote: This smoke may or may not spread out to cover a wider area (10 metres, by smoke grenade rules)</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        21,
+        25
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "5kmyUImazobKv1pb",
+      "type": 0,
+      "text": "<p><b>Haunting Breeze</b>: A wind whips up around the Psyker blowing light objects around and putting out fires within 3d10 metres.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        24,
+        26
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "QkasgPZiMJOUf0Vd",
+      "type": 0,
+      "text": "<p><b>An Odd Feeling</b>: The Weirdboy has an emotional overload of many different conflicting sensations and feelings unfamiliar to them, causing 1d5 Insanity in the confusion.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        26,
+        30
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "OBhXQ2PTfwn28T45",
+      "type": 0,
+      "text": "<p><b>Veil of Darkness</b>: For the rest of the round, an area 3d10 (16) metres around the psyker is plunged into darkness.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        27,
+        29
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "hzBvRwdkcSMQSWuH",
+      "type": 0,
+      "text": "<p><b>Distorted Reflections</b>: Mirrors and other reflective surfaces within 5d10 (30) metres of the psyker distort or shatter.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        30,
+        32
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "29OOxTqBoEfgAZTM",
+      "type": 0,
+      "text": "<p><b>Sparkly and Glowy</b>: Bizzare flashing lights fill the air within 10 metres of the Weirdboy, imposing a penalty on Weapon Skill and Ballistic Skill Tests equal to twice the Weirdboy'z Psy Rating.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        31,
+        35
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "FQqqvcBW4eXO9hyi",
+      "type": 0,
+      "text": "<p><b>Breath Leech</b>: The psyker and everyone else within 3d10 (16) metres cannot make Run or Charge Actions for one round, becoming short of breath.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        33,
+        35
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "gZw4JUhPkVEjtfJt",
+      "type": 0,
+      "text": "<p><b>Daemonic Mask</b>: For the rest of the round, the psyker takes on a daemonic appearance, gaining Fear(1). However also suffers 1 Corruption Point.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        36,
+        38
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "nlkLQDpi1xvHG5Rr",
+      "type": 0,
+      "text": "<p><b>Sleepy… So Sleepy</b>: The Weirdboy gains 1d5+Psy Rating levels of Fatigue. If they are rendered unconcious, they gain 1d5 Insanity Points from bizarre dreams.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        36,
+        40
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "kYr5BZ2799x9BjgW",
+      "type": 0,
+      "text": "<p><b>Unnatural Decay</b>: All plant life in 3d10 (16) metres of the psyker withers and dies.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        39,
+        41
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "wXHXp4h0uXd53xuE",
+      "type": 0,
+      "text": "<p><b>All Gone Dark</b>: For the remainder of the round, an area 3d10m around the Weirdboy is plunged into complete darkness.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        41,
+        45
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "eTYGM87mzHUVOzxR",
+      "type": 0,
+      "text": "<p><b>Spectral Gale</b>: Violent Winds erupt, causing the psyker and everyone in 4d10 (22) metres of them to make a +30 Agility or Strength Test or be knocked to the ground prone.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        42,
+        44
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "Rpjcc9VjCPNIHrsA",
+      "type": 0,
+      "text": "<p><b>Bloody Tears</b>: Within 3d10 (16) metres of the psyker, blood weeps from stone and wood surfaces, while pictures or statues appear to cry blood.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        45,
+        47
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "dDegU4VNyuzv4G9Q",
+      "type": 0,
+      "text": "<p><b>Angry and Loud</b>: All living creatures within 30 metres of the Weirdboy except themselves make +0 Willpower Test or enter a Frenzy. Orks automatically fail the test. The Weirdboy instead gains 1d5 Insanity Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        46,
+        50
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "AkbkzzGfxMOiOEMY",
+      "type": 0,
+      "text": "<p><b>The Earth Protests</b>: The psyker and everyone within 5d10 (28) metres of them make a +10 Agility Test or are knocked down prone as the ground shakes suddenly.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        48,
+        50
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "m2aKmDIls2OW3FRN",
+      "type": 0,
+      "text": "<p><b>Psy Discharge</b>: Static Electricity fills the air within 5d10 (28) metres of the psyker, causing hairs to stand on end and unprotected electronics to short out. The Psyker is illuminated by strange light. Effects may be similar to minor Haywire results.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        51,
+        53
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "OD0DMld5l2pfBzGK",
+      "type": 0,
+      "text": "<p><b>Dizzy and Bewildered</b>: The Weirdboy is knocked prone and stunned for 1d5 Rounds. Any creature within 10 metres of the Weirdboy must make +0 Perception Test or suffers same effect.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        51,
+        55
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "c13841g7BLwycXEj",
+      "type": 0,
+      "text": "<p><b>Warp Ghosts</b>: Everyone except the psyker within 3d10 (16) metres must test against Fear(1) as ghostly apparitions fill the air and howl in pain.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        54,
+        56
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "XnvDRkRbQ1wpRteJ",
+      "type": 0,
+      "text": "<p><b>Gork's Shout</b>: All living creatures in the area make +0 Toughness Test or are deafend for 1d10 Rounds from a massive all consuming roar. Orks that pass the test join in the roar, and immediately recover from the effects of Fear and Pinning.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        56,
+        60
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "GVBEiMhp84nDcpyV",
+      "type": 0,
+      "text": "<p><b>Falling Upwards</b>: Everything including the Psyker within 2d10 (10) Metres rises 1d10 metres into the air as gravity briefly ceases. It all crashes down after a few seconds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        57,
+        59
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "cnryEtBdbLkzHZgl",
+      "type": 0,
+      "text": "<p><b>Banshee Howl</b>: A Painful, glass shatteringly loud ring sounds out, every mortal creature that can hear it, including the psyker make a +0 Toughness Test or are Deafened for 1d10 Rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        60,
+        62
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "bXyBZyYTvZaPMWuX",
+      "type": 0,
+      "text": "<p><b>Mork's Cunnin'</b>: The Weirdboy suffers 1d10-INT Insanity from a barrage of ideas filling their head. Once within the next 24 hours, they may reroll a single failed Intelligence Test.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        61,
+        65
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "1RyRLxkY2Ocj0BCS",
+      "type": 0,
+      "text": "<p><b>The Furies</b>: The Psyker is slammed into the ground, taking 1d5 damage that ignores non-warding armour (but is reduced by toughness), and must test against Fear(2) as unseen horrors assail them.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        63,
+        65
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "0i7rZkCiOV5boc1I",
+      "type": 0,
+      "text": "<p><b>Shadow of the Warp</b>: The Psyker and everyone in 1d100 (50) Metres Briefly Glimpses the warp, and must make a -10 Willpower Test or gain 1d5 Insanity Points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        66,
+        68
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "mRSSlQXOQ9atvOUX",
+      "type": 0,
+      "text": "<p><b>Fire and Thunder</b>: All flammable objects within 30 metres of the Weirdboy immidately catch fire, all creatures in the same area make -10 Agility Test or also catch fire. Green embers and flames fill the area with a thunderous roar.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        66,
+        70
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "KwyUqxRZUdDX847p",
+      "type": 0,
+      "text": "<p><b>Tech Scorn</b>: Unwarded technology in 5d10 (28) metres malfunction for a moment, all ranged weapons jam, characters with Cybernetics make +10 Toughness Test or take 1d5 Rending Damage that ignores Toughness and Armour.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        69,
+        71
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "tHZ2zzGGB2v2Xf9G",
+      "type": 0,
+      "text": "<p><b>Manifest Violence</b>: All creatures within 50 metres of the Weirdboy are attacked by green spectral hands that deal 1d10+4 Impact Damage. These attacks can be parried or dodged as with normal melee attacks.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        71,
+        75
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DcuRqk72AwFQTyLR",
+      "type": 0,
+      "text": "<p><b>Warp Madness</b>: All Creatures except the Psyker within 2d10 (10) metres make -10 Willpower Test or gain 1d5 Corruption Points and become frenzied for a round.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [
+        72,
+        74
+      ],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    }
+  ],
+  "flags": {},
+  "_id": "r3Xm6lywOnZP3WHd"
+}

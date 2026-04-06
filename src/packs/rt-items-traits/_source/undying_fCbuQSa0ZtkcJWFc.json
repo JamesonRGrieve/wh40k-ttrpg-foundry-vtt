@@ -1,0 +1,28 @@
+{
+  "name": "Undying",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Creature cannot be harmed by disease, poison, or toxic effects. It does not need to breathe and can survive unaided in a vacuum</p>"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "benefit": "<p>Creature cannot be harmed by disease, poison, or toxic effects. It does not need to breathe and can survive unaided in a vacuum</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fCbuQSa0ZtkcJWFc"
+}

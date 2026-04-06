@@ -1,0 +1,54 @@
+{
+  "name": "Hades Breaching Drill",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": "10m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 30,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 16,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 16,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -15,
+      "tactical": 25,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": "Driver"
+    },
+    "passengers": 0,
+    "manoeuverability": 20,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Fixed: Front Facing Rotary Power Cutters/Melta Cutters (Melee, 3d10+20 R, Pen 16, Concussive (2), Felling (4), Tearing, Unwieldy</p>",
+    "specialRules": "<p>Traits: Opened Topped, Ponderous, Reinforced Armour, Tracked Vehicle,</p>\n<p>Special Trait: Burrower (6)</p>\n<p>Special Rules: Can only Attack by the Ram! Action. However uses its Drill to determine Damage to the opponent, taking no damage itself. Has Burrower Trait, allowing it to move underground, leaving a semi-stable tunnel behind it that infantry can move through unhindered. Can attack from underground by digging up, suprising enemies.</p>",
+    "traitsText": "Traits: Opened Topped, Ponderous, Reinforced Armour, Tracked Vehicle,\nSpecial Trait: Burrower (6)\nSpecial Rules: Can only Attack by the Ram! Action. However uses its Drill to determine Damage to the opponent, taking no damage itself. Has Burrower Trait, allowing it to move underground, leaving a semi-stable tunnel behind it that infantry can move through unhindered. Can attack from underground by digging up, suprising enemies.",
+    "availability": "scarce",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Pl6QBWYGh4Obnlpf"
+}

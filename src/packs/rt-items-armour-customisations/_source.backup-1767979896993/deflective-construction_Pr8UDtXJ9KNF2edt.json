@@ -1,0 +1,24 @@
+{
+  "name": "Deflective Construction",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Any Non-Primitive Armour",
+    "effect": "Gives +2 AP vs Explosive or Rending damage",
+    "weight": "+1kg",
+    "availability": "scarce",
+    "source": "RT: Hostile Acq.",
+    "description": {
+      "value": "<p>Gives +2 AP vs Explosive or Rending damage</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Pr8UDtXJ9KNF2edt"
+}

@@ -1,0 +1,77 @@
+{
+  "name": "Decadent (Product of Upbringing)",
+  "type": "talent",
+  "img": "icons/svg/temple.svg",
+  "system": {
+    "identifier": "decadent-product-of-upbringing",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "25"
+    },
+    "description": {
+      "value": "<p><strong>Decadent:</strong> You were born into the upper echelons of nobility and want for nothing. The decadent lifestyle you lead would be the envy of most, and scandal follows you like a faithful hound.</p><p>You are envied by many and reviled by the rest, but you dismiss their opinions as nothing more than the petty sniping of the bitter and envious.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Gain +3 Willpower. Gain the Decadence Talent and a +5 bonus to Charm Tests. However, gain 1d5 Corruption Points from your life of excess.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "A Product of Upbringing Origin (150 XP)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 150,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {
+        "willpower": 3
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": 5,
+            "condition": "Always",
+            "icon": "fa-smile"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "notes": "Costs 150 XP from starting experience. Gain 1d5 Corruption Points.",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Decadence",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.8rzBqEoffSgKTAp3"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Life of Excess",
+          "description": "<p>Gain 1d5 Corruption Points from your decadent lifestyle.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PU00000000000003"
+}

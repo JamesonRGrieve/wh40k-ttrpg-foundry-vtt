@@ -1,0 +1,71 @@
+{
+  "name": "Fierce Loyalty",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "fierceLoyalty",
+    "category": "combat",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When Comrade is not in Cohesion or within 10 metres of another player character and engaged in melee with an enemy, Character becomes Frenzied, gaining +10 Strength and +10 Toughness until Comrade is safe or dead. If dead, Character becomes Inconsolable for hours.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>When Comrade is not in Cohesion or within 10 metres of another player character and engaged in melee with an enemy, Character becomes Frenzied, gaining +10 Strength and +10 Toughness until Comrade is safe or dead. If dead, Character becomes Inconsolable for hours.</p>",
+    "aptitudes": [
+      "Strength",
+      "Fellowship"
+    ],
+    "prerequisites": {
+      "text": "Ogryn Specialty",
+      "characteristics": {},
+      "skills": {},
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "strength",
+            "value": 10,
+            "condition": "When Comrade is isolated and in melee combat",
+            "icon": "fa-solid fa-handshake"
+          },
+          {
+            "key": "toughness",
+            "value": 10,
+            "condition": "When Comrade is isolated and in melee combat",
+            "icon": "fa-solid fa-handshake"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cc0iaso3HszVYruE"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Interface Port",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "A Data port that allows connecting to machines via a cable. Gives +10 to Common Lore, Inquiry, or Tech-Use Tests while connected to relevent devices that might provide that.",
+    "cost": null,
+    "effects": "Rare",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1aIk6JwD5upa0Mdo"
+}

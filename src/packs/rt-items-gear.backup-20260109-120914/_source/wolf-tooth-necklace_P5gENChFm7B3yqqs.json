@@ -1,0 +1,30 @@
+{
+  "name": "Wolf Tooth Necklace",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Grants the Frenzy Talent whilst worn.",
+    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Soace Wolves",
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "P5gENChFm7B3yqqs"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Natural Armour (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Naturally has X AP on all locations even without armour, stacks with Worn Armour but not Machine Trait Armour.</p>"
+    },
+    "benefit": "<p>Naturally has X AP on all locations even without armour, stacks with Worn Armour but not Machine Trait Armour.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3IKxeRvWtdssP7zP"
+}

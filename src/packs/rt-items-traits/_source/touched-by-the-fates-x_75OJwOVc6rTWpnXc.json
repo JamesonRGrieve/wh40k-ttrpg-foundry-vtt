@@ -1,0 +1,28 @@
+{
+  "name": "Touched by the Fates (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "NPC of Importance",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>NPC Talent, NPC gains X Fate/Infamy Points that they can spend or burn as a player would. They can also perform Righteous Fury/Zealous Hatred.\nNote: Such NPCs should be of significance or power, if saving time by not using Critical damage for regular enemies, these ones should take it.</p>"
+    },
+    "benefit": "<p>NPC Talent, NPC gains X Fate/Infamy Points that they can spend or burn as a player would. They can also perform Righteous Fury/Zealous Hatred.\nNote: Such NPCs should be of significance or power, if saving time by not using Critical damage for regular enemies, these ones should take it.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "75OJwOVc6rTWpnXc"
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Heavy Bolter (Godwyn-De'az) [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/heavy-bolter.svg",
+  "system": {
+    "identifier": "heavy-bolter-godwyn-deaz-best",
+    "class": "heavy",
+    "type": "bolt",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 140,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 6
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 8,
+      "penetration": 5
+    },
+    "special": [
+      "reliable",
+      "tearing"
+    ],
+    "clip": {
+      "max": 80,
+      "value": 80,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 35,
+    "availability": "near-unique",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> Reliable, Tearing</p><p><b>Note:</b> Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.</p>"
+    },
+    "modifications": [],
+    "notes": "Commonly used by the Sisters of Battle, those not of their order may be viewed with suspicion for trying to acquire these.",
+    "source": "DH2: Enemies Within",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "65ae13deef2270ae"
+}

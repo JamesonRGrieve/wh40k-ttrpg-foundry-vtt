@@ -1,0 +1,28 @@
+{
+  "name": "Knave of Pistols",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "unique",
+    "requirements": "Metallican Gunslinger Alternative Advance (Innate)",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>The Character is notoriously proud of their skill with pistol, and eschew other ranged weapons. With this trait, can no longer acquire new Basic or Heavy Weapon Training Talents, and can only take Exotic Training Talents for pistol weapons. \nSuffer -10 to on Ballistic Tests with ranged weapons that are not pistols.</p>"
+    },
+    "benefit": "<p>The Character is notoriously proud of their skill with pistol, and eschew other ranged weapons. With this trait, can no longer acquire new Basic or Heavy Weapon Training Talents, and can only take Exotic Training Talents for pistol weapons. \nSuffer -10 to on Ballistic Tests with ranged weapons that are not pistols.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tq2p1azXSs7Qayrv"
+}

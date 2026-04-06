@@ -1,0 +1,82 @@
+{
+  "name": "False-Man (Unnatural Origin)",
+  "type": "talent",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "identifier": "false-man-unnatural-origin",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "18-19"
+    },
+    "description": {
+      "value": "<p><strong>False-Man:</strong> You are a gene-crafted creation, built for purposes unknown—perhaps a failed experiment or a heretical masterwork. Your body is optimized beyond normal human limits, but your mind bears scars from the process.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>Gain Ambidextrous, Autosanguine, and Chem-Geld talents. Increase two characteristics by +3 and reduce one by -3. Gain 2d10 Insanity Points or lose 1 Fate Point.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Unnatural Origin (300 XP)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Costs 300 XP. Choose 2 characteristics for +3, 1 for -3. Choose 2d10 Insanity OR lose 1 Fate.",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Ambidextrous",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.uG4R9ADGyaJ8F0Ni"
+        },
+        {
+          "name": "Autosanguine",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.VnK6TaiB6EtMyXtl"
+        },
+        {
+          "name": "Chem-Geld",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.sL4iIZrk0JRVATU4"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Gene-Crafted Body",
+          "description": "<p>Choose two characteristics to increase by +3 and one characteristic to reduce by -3.</p>"
+        },
+        {
+          "name": "Consequence of Creation",
+          "description": "<p>Choose one: Gain 2d10 Insanity Points OR lose 1 Fate Point.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "UO00000000000002"
+}

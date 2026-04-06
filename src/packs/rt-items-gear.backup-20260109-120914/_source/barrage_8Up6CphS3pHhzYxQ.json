@@ -1,0 +1,30 @@
+{
+  "name": "Barrage",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Grants User Unnatural Perception (x2), Unnatural Strength (x2), and Unnatural Strength (x2) for 1d5 rounds, for each round under the effects of the drug, permenantly lose 1 point of Perception, Strength, and Toughness.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8Up6CphS3pHhzYxQ"
+}

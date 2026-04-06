@@ -167,9 +167,9 @@
     },
     "packs": [
         {
-            "name": "wh40k-actors-bestiary",
+            "name": "rt-actors-bestiary",
             "label": "Bestiary",
-            "path": "packs/wh40k-actors-bestiary",
+            "path": "packs/rt-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
             "ownership": {
@@ -179,9 +179,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-actors-ships",
+            "name": "rt-actors-ships",
             "label": "Starships",
-            "path": "packs/wh40k-actors-ships",
+            "path": "packs/rt-actors-ships",
             "system": "wh40k-rpg",
             "type": "Actor",
             "ownership": {
@@ -191,9 +191,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-actors-vehicles",
+            "name": "rt-actors-vehicles",
             "label": "Vehicles",
-            "path": "packs/wh40k-actors-vehicles",
+            "path": "packs/rt-actors-vehicles",
             "system": "wh40k-rpg",
             "type": "Actor",
             "ownership": {
@@ -203,9 +203,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-ammo",
+            "name": "rt-items-ammo",
             "label": "Ammunition",
-            "path": "packs/wh40k-items-ammo",
+            "path": "packs/rt-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -215,9 +215,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-armour",
+            "name": "rt-items-armour",
             "label": "Armour",
-            "path": "packs/wh40k-items-armour",
+            "path": "packs/rt-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -227,9 +227,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-armour-customisations",
+            "name": "rt-items-armour-customisations",
             "label": "Armour Customisations",
-            "path": "packs/wh40k-items-armour-customisations",
+            "path": "packs/rt-items-armour-customisations",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -239,9 +239,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-conditions",
+            "name": "rt-items-conditions",
             "label": "Conditions",
-            "path": "packs/wh40k-items-conditions",
+            "path": "packs/rt-items-conditions",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -251,9 +251,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-critical-injuries",
+            "name": "rt-items-critical-injuries",
             "label": "Critical Injuries",
-            "path": "packs/wh40k-items-critical-injuries",
+            "path": "packs/rt-items-critical-injuries",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -263,9 +263,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-gear",
+            "name": "rt-items-gear",
             "label": "Gear",
-            "path": "packs/wh40k-items-gear",
+            "path": "packs/rt-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -275,9 +275,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-navigator-powers",
+            "name": "rt-items-navigator-powers",
             "label": "Navigator Powers",
-            "path": "packs/wh40k-items-navigator-powers",
+            "path": "packs/rt-items-navigator-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -287,9 +287,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-orders",
+            "name": "rt-items-orders",
             "label": "Ship Orders",
-            "path": "packs/wh40k-items-orders",
+            "path": "packs/rt-items-orders",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -299,9 +299,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-origin-path",
+            "name": "rt-items-origin-path",
             "label": "Origin Path",
-            "path": "packs/wh40k-items-origin-path",
+            "path": "packs/rt-items-origin-path",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -311,9 +311,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-psychic-powers",
+            "name": "rt-items-psychic-powers",
             "label": "Psychic Powers",
-            "path": "packs/wh40k-items-psychic-powers",
+            "path": "packs/rt-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -323,9 +323,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-rituals",
+            "name": "rt-items-rituals",
             "label": "Rituals",
-            "path": "packs/wh40k-items-rituals",
+            "path": "packs/rt-items-rituals",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -335,9 +335,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-ship-components",
+            "name": "rt-items-ship-components",
             "label": "Ship Components",
-            "path": "packs/wh40k-items-ship-components",
+            "path": "packs/rt-items-ship-components",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -347,9 +347,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-ship-roles",
+            "name": "rt-items-ship-roles",
             "label": "Ship Roles",
-            "path": "packs/wh40k-items-ship-roles",
+            "path": "packs/rt-items-ship-roles",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -359,9 +359,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-ship-upgrades",
+            "name": "rt-items-ship-upgrades",
             "label": "Ship Upgrades",
-            "path": "packs/wh40k-items-ship-upgrades",
+            "path": "packs/rt-items-ship-upgrades",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -371,9 +371,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-ship-weapons",
+            "name": "rt-items-ship-weapons",
             "label": "Ship Weapons",
-            "path": "packs/wh40k-items-ship-weapons",
+            "path": "packs/rt-items-ship-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -383,9 +383,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-skills",
+            "name": "rt-items-skills",
             "label": "Skills",
-            "path": "packs/wh40k-items-skills",
+            "path": "packs/rt-items-skills",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -395,9 +395,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-talents",
+            "name": "rt-items-talents",
             "label": "Talents",
-            "path": "packs/wh40k-items-talents",
+            "path": "packs/rt-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -407,9 +407,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-traits",
+            "name": "rt-items-traits",
             "label": "Traits",
-            "path": "packs/wh40k-items-traits",
+            "path": "packs/rt-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -419,9 +419,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-vehicle-traits",
+            "name": "rt-items-vehicle-traits",
             "label": "Vehicle Traits",
-            "path": "packs/wh40k-items-vehicle-traits",
+            "path": "packs/rt-items-vehicle-traits",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -431,9 +431,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-vehicle-upgrades",
+            "name": "rt-items-vehicle-upgrades",
             "label": "Vehicle Upgrades",
-            "path": "packs/wh40k-items-vehicle-upgrades",
+            "path": "packs/rt-items-vehicle-upgrades",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -443,9 +443,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-weapon-qualities",
+            "name": "rt-items-weapon-qualities",
             "label": "Weapon Qualities",
-            "path": "packs/wh40k-items-weapon-qualities",
+            "path": "packs/rt-items-weapon-qualities",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -455,9 +455,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-items-weapons",
+            "name": "rt-items-weapons",
             "label": "Weapons",
-            "path": "packs/wh40k-items-weapons",
+            "path": "packs/rt-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -467,9 +467,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-journals-character-actions",
+            "name": "rt-journals-character-actions",
             "label": "Character Actions",
-            "path": "packs/wh40k-journals-character-actions",
+            "path": "packs/rt-journals-character-actions",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -479,9 +479,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-journals-character-creation",
+            "name": "rt-journals-character-creation",
             "label": "Character Creation",
-            "path": "packs/wh40k-journals-character-creation",
+            "path": "packs/rt-journals-character-creation",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -491,9 +491,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-journals-colonies",
+            "name": "rt-journals-colonies",
             "label": "Colonies",
-            "path": "packs/wh40k-journals-colonies",
+            "path": "packs/rt-journals-colonies",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -503,9 +503,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-journals-fear-insanity-corruption",
+            "name": "rt-journals-fear-insanity-corruption",
             "label": "Fear, Insanity & Corruption",
-            "path": "packs/wh40k-journals-fear-insanity-corruption",
+            "path": "packs/rt-journals-fear-insanity-corruption",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -515,9 +515,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-journals-ship-vehicle-actions",
+            "name": "rt-journals-ship-vehicle-actions",
             "label": "Ship & Vehicle Actions",
-            "path": "packs/wh40k-journals-ship-vehicle-actions",
+            "path": "packs/rt-journals-ship-vehicle-actions",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -527,9 +527,9 @@
             "flags": {}
         },
         {
-            "name": "wh40k-rolltables-fear-insanity-corruption",
+            "name": "rt-rolltables-fear-insanity-corruption",
             "label": "Fear & Corruption Tables",
-            "path": "packs/wh40k-rolltables-fear-insanity-corruption",
+            "path": "packs/rt-rolltables-fear-insanity-corruption",
             "system": "wh40k-rpg",
             "type": "RollTable",
             "ownership": {
@@ -538,9 +538,9 @@
             }
         },
         {
-            "name": "wh40k-rolltables-psychic",
+            "name": "rt-rolltables-psychic",
             "label": "Psychic Phenomena Tables",
-            "path": "packs/wh40k-rolltables-psychic",
+            "path": "packs/rt-rolltables-psychic",
             "system": "wh40k-rpg",
             "type": "RollTable",
             "ownership": {
@@ -554,19 +554,19 @@
             "name": "Actors",
             "color": "#8B0000",
             "sorting": "a",
-            "packs": ["wh40k-actors-bestiary", "wh40k-actors-ships", "wh40k-actors-vehicles"]
+            "packs": ["rt-actors-bestiary", "rt-actors-ships", "rt-actors-vehicles"]
         },
         {
             "name": "Equipment",
             "color": "#8B4513",
             "sorting": "a",
             "packs": [
-                "wh40k-items-ammo",
-                "wh40k-items-armour",
-                "wh40k-items-armour-customisations",
-                "wh40k-items-gear",
-                "wh40k-items-weapons",
-                "wh40k-items-weapon-qualities"
+                "rt-items-ammo",
+                "rt-items-armour",
+                "rt-items-armour-customisations",
+                "rt-items-gear",
+                "rt-items-weapons",
+                "rt-items-weapon-qualities"
             ]
         },
         {
@@ -574,32 +574,32 @@
             "color": "#2F4F4F",
             "sorting": "a",
             "packs": [
-                "wh40k-items-skills",
-                "wh40k-items-talents",
-                "wh40k-items-traits",
-                "wh40k-items-origin-path",
-                "wh40k-items-conditions",
-                "wh40k-items-critical-injuries"
+                "rt-items-skills",
+                "rt-items-talents",
+                "rt-items-traits",
+                "rt-items-origin-path",
+                "rt-items-conditions",
+                "rt-items-critical-injuries"
             ]
         },
         {
             "name": "Powers & Abilities",
             "color": "#4B0082",
             "sorting": "a",
-            "packs": ["wh40k-items-psychic-powers", "wh40k-items-navigator-powers", "wh40k-items-rituals"]
+            "packs": ["rt-items-psychic-powers", "rt-items-navigator-powers", "rt-items-rituals"]
         },
         {
             "name": "Ships & Vehicles",
             "color": "#191970",
             "sorting": "a",
             "packs": [
-                "wh40k-items-ship-components",
-                "wh40k-items-ship-roles",
-                "wh40k-items-ship-upgrades",
-                "wh40k-items-ship-weapons",
-                "wh40k-items-vehicle-traits",
-                "wh40k-items-vehicle-upgrades",
-                "wh40k-items-orders"
+                "rt-items-ship-components",
+                "rt-items-ship-roles",
+                "rt-items-ship-upgrades",
+                "rt-items-ship-weapons",
+                "rt-items-vehicle-traits",
+                "rt-items-vehicle-upgrades",
+                "rt-items-orders"
             ]
         },
         {
@@ -607,18 +607,18 @@
             "color": "#556B2F",
             "sorting": "a",
             "packs": [
-                "wh40k-journals-character-actions",
-                "wh40k-journals-character-creation",
-                "wh40k-journals-colonies",
-                "wh40k-journals-fear-insanity-corruption",
-                "wh40k-journals-ship-vehicle-actions"
+                "rt-journals-character-actions",
+                "rt-journals-character-creation",
+                "rt-journals-colonies",
+                "rt-journals-fear-insanity-corruption",
+                "rt-journals-ship-vehicle-actions"
             ]
         },
         {
             "name": "Roll Tables",
             "color": "#800080",
             "sorting": "a",
-            "packs": ["wh40k-rolltables-fear-insanity-corruption", "wh40k-rolltables-psychic"]
+            "packs": ["rt-rolltables-fear-insanity-corruption", "rt-rolltables-psychic"]
         }
     ],
     "grid": {

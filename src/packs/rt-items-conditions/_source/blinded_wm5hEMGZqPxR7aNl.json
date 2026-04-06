@@ -1,0 +1,40 @@
+{
+  "name": "Blinded",
+  "type": "condition",
+  "img": "icons/svg/blind.svg",
+  "system": {
+    "identifier": "blinded",
+    "nature": "harmful",
+    "effect": "<p>A blinded character automatically fails all Tests based on sight (Awareness, ranged attacks, etc.). All melee attacks suffer a -30 penalty. Movement is reduced to Half Move rate.</p>",
+    "removal": "<p>Removed when sight is restored through medical attention, psychic powers, or when the blinding effect ends.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>A blinded character automatically fails all Tests based on sight (Awareness, ranged attacks, etc.). All melee attacks suffer a -30 penalty. Movement is reduced to Half Move rate.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "249",
+        "custom": ""
+      }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "2.0"
+    }
+  },
+  "_id": "wm5hEMGZqPxR7aNl"
+}

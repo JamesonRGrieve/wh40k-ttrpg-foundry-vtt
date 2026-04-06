@@ -1,0 +1,30 @@
+{
+  "name": "Tau Blacksun Filter",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Worn",
+    "weight": "0.5kg",
+    "availability": "Character gains Dark Sight Trait and is immune to photon flash Grenades or similar devices.",
+    "cost": "Xenotech. +20 to Acquisition Tests for this item if acquired through Friendly Tau Settlement.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Tau Character Guide",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Uskbvb3iuY3Bmjvz"
+}

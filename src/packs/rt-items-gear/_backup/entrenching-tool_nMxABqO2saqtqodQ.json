@@ -1,0 +1,30 @@
+{
+  "name": "Entrenching Tool",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "2kg",
+    "availability": "Small Folding Spade, effective at digging trenches, shoring mounts, or hitting people.\nFunctions as Primitive Melee Weapon (1d5+3 R, Pen 0, Primitive (8), Unwieldy)",
+    "cost": null,
+    "effects": "Plentiful",
+    "notes": "15 T",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 15 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nMxABqO2saqtqodQ"
+}

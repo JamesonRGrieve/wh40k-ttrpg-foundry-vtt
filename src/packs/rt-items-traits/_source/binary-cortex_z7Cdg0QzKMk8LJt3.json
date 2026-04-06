@@ -1,0 +1,28 @@
+{
+  "name": "Binary Cortex",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "elite",
+    "requirements": "Elite Advance, Willing Tech-Priest to undergo procedure, Good standing with Mechanicus.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>A Willing Tech-Priests Brain is surgically added to character's body and connected to their own. It has no influence over physical actions and cannot perform physical actions on its own, it can however share senses with host. It can perform any Non-Physical Skill or Ability check using its own characteristics freely, and may assist the Character in performing a skill both have. If performing a test on its own, it can pass information to host character as a Free Action, allowing the character to use the information as if they had made and passed the test. Brain can receive Cybernetics as long as they only affect the brain itself. Brain is effectively its own mini-character, and may have differing opinions to character.</p>"
+    },
+    "benefit": "<p>A Willing Tech-Priests Brain is surgically added to character's body and connected to their own. It has no influence over physical actions and cannot perform physical actions on its own, it can however share senses with host. It can perform any Non-Physical Skill or Ability check using its own characteristics freely, and may assist the Character in performing a skill both have. If performing a test on its own, it can pass information to host character as a Free Action, allowing the character to use the information as if they had made and passed the test. Brain can receive Cybernetics as long as they only affect the brain itself. Brain is effectively its own mini-character, and may have differing opinions to character.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "z7Cdg0QzKMk8LJt3"
+}

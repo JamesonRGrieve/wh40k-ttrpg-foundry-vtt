@@ -1,0 +1,30 @@
+{
+  "name": "Cartograph",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "1kg",
+    "availability": "Grants +5 to Navigation(Surface) Tests, Good Craftsmanship gives +10.\nHelps with knowing where you are, Poor versions may simply be a set of maps on a data-slate, more advanced can be multi-level orbital uplinks that provide exact locations.",
+    "cost": "Astartes Versions start at +10",
+    "effects": "Rare / Initiated",
+    "notes": "5 R",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 5 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bj4qMJteZ79D56xR"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Portable Gravity Adjustment Panels",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "50kg+",
+    "availability": "1x1 metre panel whose effect extends 10 metres above panel. Can manipulate gravity between 0.1x and 10x Terra's Gravity, and remotely activated either individually or 10 at a time. Once activated, takes 1 round to take effect and creates audible whining sound.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "-",
+    "source": "RT: Stars of Inquity",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tUaIhYTtk0ncAvXj"
+}

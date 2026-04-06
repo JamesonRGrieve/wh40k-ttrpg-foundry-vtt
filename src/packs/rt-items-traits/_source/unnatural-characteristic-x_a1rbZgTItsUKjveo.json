@@ -1,0 +1,28 @@
+{
+  "name": "Unnatural Characteristic (+X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Add X to the relevent characteristic bonus. Gain a bomus number of Degrees of Success on any successful characteristic that has the Unnatural Characteristic Trait equal to half of X. Examples: Unnatural Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception,Willpower, and Fellowship.</p>"
+    },
+    "benefit": "<p>Add X to the relevent characteristic bonus. Gain a bomus number of Degrees of Success on any successful characteristic that has the Unnatural Characteristic Trait equal to half of X. Examples: Unnatural Weapon Skill, Ballistic Skill, Strength, Toughness, Agility, Intelligence, Perception,Willpower, and Fellowship.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "a1rbZgTItsUKjveo"
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Leery of Outsiders (Frontier World)",
+  "type": "talent",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "identifier": "leery-of-outsiders-frontier-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "10"
+    },
+    "description": {
+      "value": "<p><strong>Leery of Outsiders:</strong> Frontier world characters are suspicious by nature. Because of this outlook, frontier world characters suffer a −10 penalty on all Fellowship Tests when dealing with someone they have not previously met (exactly when to apply this check is up to the GM).</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You suffer a −10 penalty to Fellowship Tests when dealing with strangers.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Frontier World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "condition": "When dealing with strangers",
+            "modifier": -10,
+            "type": "Fellowship Test"
+          }
+        ]
+      }
+    },
+    "notes": "−10 to Fellowship Tests with strangers",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FR00000000000002"
+}

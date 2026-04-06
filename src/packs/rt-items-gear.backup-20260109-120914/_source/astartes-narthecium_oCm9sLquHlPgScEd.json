@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Narthecium",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "5kg",
+    "availability": "Provides +20 to Medicae Tests made on Space Marine Patients, raises threshold the patient is considered Lightly Wounded to 3x Toughness Bonus and doubles the damage healed by First Aid. Holds up to 10 doses of any one drug which must be acquired seperately.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "10 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 10 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oCm9sLquHlPgScEd"
+}

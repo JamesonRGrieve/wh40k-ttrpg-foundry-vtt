@@ -1,0 +1,30 @@
+{
+  "name": "Mech-Implants: Respirator Unit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Replaces the Lower face and Neck, purifies air supply. +20 to Resist toxic gases. Also has a Vox-Synthesiser that transmits voice.",
+    "cost": "Gained only through \"Mechanicus Implants\" Trait, cannot be removed.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Z4XjvTfpayG3BAye"
+}

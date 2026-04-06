@@ -1,0 +1,41 @@
+{
+  "name": "Upgrade: Implants",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>The Cyber-Familiar gains any one regular Cybernetic that would be appropriate.</p>\n<h3>Requirements</h3><p>Costs twice that of a normal implant with same Availability.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> Varies T</p>",
+      "chat": "",
+      "summary": "The Cyber-Familiar gains any one regular Cybernetic that would be appropriate."
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "The Cyber-Familiar gains any one regular Cybernetic that would be appropriate.",
+    "duration": "",
+    "notes": "Varies T",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "feHry5EqvVkWZ30H"
+}

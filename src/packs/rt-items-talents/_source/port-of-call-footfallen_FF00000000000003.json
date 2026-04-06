@@ -1,0 +1,63 @@
+{
+  "name": "Port of Call (Footfallen)",
+  "type": "talent",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "identifier": "port-of-call-footfallen",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "11"
+    },
+    "description": {
+      "value": "<p><strong>Port of Call:</strong> Because many of the settlements Footfallen call home have numerous factions, and even species, they tend to pick up the different types of postures and body languages of thousands of travellers that cross their paths. As such, all Footfallen characters begin with the Polyglot Talent.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Polyglot talent.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Footfallen Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Polyglot talent",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Polyglot",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.hjhDOeGFWm01RLyt"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FF00000000000003"
+}

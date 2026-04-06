@@ -1,0 +1,41 @@
+{
+  "name": "Grav Repulsors",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "hullType": [
+      "all"
+    ],
+    "effect": "Can push away slow moving objects that would otherwise collide with the ship. Whenever this ship would take damage from Asteroids, Space Debris, Torpedos, Bombers, or Ramming, reduce damage by 1 per point of power allocated (max 3). For torpedos it applies this per torpedo, for all other damage it is applied to combined damage.",
+    "availability": "near-unique",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Can push away slow moving objects that would otherwise collide with the ship. Whenever this ship would take damage from Asteroids, Space Debris, Torpedos, Bombers, or Ramming, reduce damage by 1 per point of power allocated (max 3). For torpedos it applies this per torpedo, for all other damage it is applied to combined damage.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "xenotech",
+    "essential": false,
+    "power": {
+      "used": 0,
+      "generated": 0
+    },
+    "space": 0,
+    "shipPoints": 3,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "grav-repulsors"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Hn7CbQilK1YF5jCn"
+}

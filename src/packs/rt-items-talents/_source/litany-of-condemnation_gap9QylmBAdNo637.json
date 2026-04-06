@@ -1,0 +1,57 @@
+{
+  "name": "Litany of Condemnation",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character scores an additional three Degrees of Success whenever suceeding on a Command Test while using the Terrify Special Use to counteract the presence of Daemons, Mutants, and the Unnatural Effects of the Warp.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Character scores an additional three Degrees of Success whenever suceeding on a Command Test while using the Terrify Special Use to counteract the presence of Daemons, Mutants, and the Unnatural Effects of the Warp.</p>",
+    "aptitudes": [
+      "Willpower",
+      "Social"
+    ],
+    "prerequisites": {
+      "text": "WP 40, Scholastic Lore (Imperial Creed) +10.",
+      "characteristics": {
+        "willpower": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "litanyOfCondemnation",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "intimidate",
+            "value": 10,
+            "condition": "When condemning heretics or xenos",
+            "icon": "fa-solid fa-cross"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gap9QylmBAdNo637"
+}

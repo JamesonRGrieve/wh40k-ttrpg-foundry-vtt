@@ -1,0 +1,41 @@
+{
+  "name": "Cameleoline Tarpaulin",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>5 Square Metre sheet of colour shifting fabric that can hide a vehicle or other decently sized object under it. Grants +30 to Concealment for that object.</p>\n<h3>Requirements</h3><p>\"Worn\" by the vehicle</p>\n<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 5 R</p>",
+      "chat": "",
+      "summary": "5 Square Metre sheet of colour shifting fabric that can hide a vehicle or other decently sized object under it. Grants +30 to Concealment for that object."
+    },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "5 Square Metre sheet of colour shifting fabric that can hide a vehicle or other decently sized object under it. Grants +30 to Concealment for that object.",
+    "duration": "",
+    "notes": "5 R",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CIzDHKKjZNIHEpe9"
+}

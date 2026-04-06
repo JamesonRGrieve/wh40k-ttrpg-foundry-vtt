@@ -1,0 +1,30 @@
+{
+  "name": "Weapon Bracing",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Character with this can spend Full Action connecting Pistol or Basic weapon to bracing mounts on their arm, allowing them to fire without penalty. Gives +20 to WS Tests to resist being disarmed. Weapons may need to be modified (such as moving grip and trigger) to work properly.",
+    "cost": "Might not be practical for all weapons.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nQZiHtCcBQrfAbcE"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Eternal Hatred",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "xenos",
+    "weight": "-",
+    "availability": "Lasts 2d5 Rounds, all Melee Attacks gain Vengeful (7)\nIf under affects of another Eldar Drug, must make -20 Toughness Test. If failed drug has no effect and suffer 1d10 Energy Damage ignoring armour and Toughness, and gain 1d5 Corruption.",
+    "cost": null,
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2V3XlP60FQ64bVxF"
+}

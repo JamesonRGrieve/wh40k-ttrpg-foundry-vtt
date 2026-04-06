@@ -1,0 +1,54 @@
+{
+  "name": "Griffon Heavy Mortar",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 5,
+    "sizeDescriptor": "15m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 30,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 18,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 16,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 70,
+      "notes": ""
+    },
+    "crew": {
+      "required": 4,
+      "notes": "Commander, Driver, Gunner, Loader"
+    },
+    "passengers": 0,
+    "manoeuverability": 40,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Fixed: Front Facing Heavy Mortar (300m;S/–/–; Clip 1; Reload Half; Indirect [3], Reliable)</p>\n<p>Can fire one of: Heavy Frag Shell, Heavy Minefield Shell, Infernus Shell, or Siege Shell</p>\n<p>Hull, one of: Front Facing Heavy Bolter, Heavy Flamer</p>\n<p>Pintle (Optional), one of: Heavy Stubber, Storm Bolter</p>\n<p>---</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>\n<p>Heavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)</p>\n<p>Storm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)</p>\n<p>Heavy Frag Shell (3d10 X, Pen 5, Concussive (3), Blast(8))</p>\n<p>Heavy Minefield Shell (2d10X, Pen 1, Blast (1)) Represents damage of single mine</p>\n<p>- Creates 1d10m Diameter Minefield, good for 10 hits or until cleared by minesweeper</p>\n<p>Infernus Shell  (2d10+4 E, Pen 2, Blast (8), Flame)</p>\n<p>Siege Shell (2d10+6 X, Pen 10, Concussive(2), Blast(3)), Does 4d10+6 Pen 20 to Buildings.</p>",
+    "specialRules": "<p>Traits: Open-Topped, Tracked Vehicle</p>\n<p>Can be loaded with different shells, on deployment, doesn't have to just stick to one type.</p>",
+    "traitsText": "Traits: Open-Topped, Tracked Vehicle\nCan be loaded with different shells, on deployment, doesn't have to just stick to one type.",
+    "availability": "rare",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "YpqyxTNAMzSvOJbD"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Infantry Gear: Mess Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "0.5kg",
+    "availability": "Contains a Spork, Knife, and Collapsible mug inside a Clamshell container that doubles as the tray. Meals are often placed in the container, tightly closed, and dropped into an open fire to cook.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Plentiful",
+    "notes": "5 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 5 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vW2kx1C9vhH9vxdw"
+}

@@ -1,0 +1,131 @@
+{
+  "name": "Navigator",
+  "type": "originPath",
+  "img": "modules/game-icons-net/whitetransparent/third-eye.svg",
+  "system": {
+    "identifier": "navigator",
+    "step": "career",
+    "stepIndex": 6,
+    "description": {
+      "value": "<h2>Navigator</h2><p>Navigators are mutant psykers who possess the legendary Warp Eye, a third eye that allows them to perceive the currents of the Immaterium and guide ships safely through the Warp. They are members of ancient Navigator Houses who jealously guard their bloodlines, for their unique mutation is both their greatest blessing and their darkest curse. Without Navigators, humanity's galactic empire would crumble, as interstellar travel would take centuries instead of weeks.</p><h3>Starting Skills</h3><p>Common Lore (Navis Nobilite) (Int), Forbidden Lore (Navigators, Warp) (Int), Literacy (Int), Navigation (Stellar, Warp) (Int), Psyniscience (Per), Scholastic Lore (Astromancy) (Int), Speak Language (High Gothic, Low Gothic) (Int)</p><h3>Starting Talents</h3><p>Navigator, Pistol Weapon Training (Universal), Warp Eye</p><h3>Starting Gear</h3><p>Best-craftsmanship hellpistol or good-craftsmanship hand cannon, best-craftsmanship metal staff, best-craftsmanship xeno-mesh armour, Emperor's tarot deck, silk headscarf, Nobilite robes, charm, micro-bead.</p><h3>Special Abilities</h3><p><strong>Warp Eye:</strong> All Navigators begin with the Lidless Stare Navigator power as detailed in Chapter VII: Navigator Powers and may either select one additional power or improve an existing power. As the Navigator develops, he may select more powers or improve existing powers by selecting the Navigator Power Advance.</p><p><strong>The Boons of Lineage:</strong> A Navigator hails from a lineage of a particular type that grants him a number of advantages and quirks. The Lineages which a Navigator may hail from are Nomadic Houses, Magisterial Houses, Shrouded Houses, or Renegade Houses. The details and effects of each of these lineages may be found on pages 176 to 178 in Chapter VII: Navigator Powers.</p><p><strong>Navigator Mutations:</strong> The Navigator begins play with a number of Navigator Mutations determined by the nature of his Lineage.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Career",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Common Lore",
+          "specialization": "Navis Nobilite",
+          "level": "trained"
+        },
+        {
+          "name": "Forbidden Lore",
+          "specialization": "Navigators",
+          "level": "trained"
+        },
+        {
+          "name": "Forbidden Lore",
+          "specialization": "Warp",
+          "level": "trained"
+        },
+        {
+          "name": "Literacy",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Navigation",
+          "specialization": "Stellar",
+          "level": "trained"
+        },
+        {
+          "name": "Navigation",
+          "specialization": "Warp",
+          "level": "trained"
+        },
+        {
+          "name": "Psyniscience",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Scholastic Lore",
+          "specialization": "Astromancy",
+          "level": "trained"
+        },
+        {
+          "name": "Speak Language",
+          "specialization": "High Gothic",
+          "level": "trained"
+        },
+        {
+          "name": "Speak Language",
+          "specialization": "Low Gothic",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Navigator",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.liZDH1Rwc0jTW6cb"
+        },
+        {
+          "name": "Pistol Weapon Training (Universal)",
+          "specialization": "Universal",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.o76kP0Y85FTEcS7G"
+        },
+        {
+          "name": "Warp Eye (Navigator)",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.CA00000000000006"
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [],
+      "choices": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "65",
+      "custom": ""
+    },
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": [
+      7
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ckUATOFoyuffMRxV"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Winged Skull",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Medal",
+    "weight": "-",
+    "availability": "+10 to all Command Tests\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Skull flanked by wings accompanied with a stencil on the officer's shoulder guards.",
+    "cost": "Distinguished Service Medal: Awarded to a character whose incredible leadership brought their troops to victory.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qMKTsXgJiftaiDWR"
+}

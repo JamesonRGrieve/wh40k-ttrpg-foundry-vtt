@@ -1,0 +1,68 @@
+{
+  "name": "Ship-Bound Fighter (Battlefleet)",
+  "type": "talent",
+  "img": "icons/svg/anchor.svg",
+  "system": {
+    "identifier": "ship-bound-fighter-battlefleet",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "13"
+    },
+    "description": {
+      "value": "<p><strong>Ship-Bound Fighter:</strong> Living and training on a spacecraft is vastly different than living and training on the ground. Because of the close-in nature of ships, Battlefleet characters are unaccustomed to fighting in open spaces or on the \"dirtside\" of planets. While they are on a planet they suffer a −2 penalty to Initiative Tests and double the Ballistic Skill penalty for firing weapons at Long Range or greater. These penalties don't apply to the character if they are inside a tunnel or other confined space.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>While planetside (in open spaces), you suffer −2 to Initiative Tests and double the penalty for Long Range shots.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Battlefleet Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "condition": "Planetside (open spaces) - Initiative",
+            "modifier": -2,
+            "type": "Initiative Test"
+          },
+          {
+            "condition": "Planetside (open spaces) - Long Range shots",
+            "modifier": 0,
+            "type": "Double BS penalty"
+          }
+        ]
+      }
+    },
+    "notes": "−2 Initiative and double Long Range penalty planetside (unless in confined space)",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BF00000000000003"
+}

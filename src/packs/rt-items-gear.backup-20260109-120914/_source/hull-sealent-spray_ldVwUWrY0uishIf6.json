@@ -1,0 +1,30 @@
+{
+  "name": "Hull Sealent Spray",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "-",
+    "availability": "Spray onto vents and bulkheads to seal, cover up to 20 10cm^2 holes.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "-",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ldVwUWrY0uishIf6"
+}

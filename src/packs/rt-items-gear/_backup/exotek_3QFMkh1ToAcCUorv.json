@@ -1,0 +1,30 @@
+{
+  "name": "Exotek",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": " Can be useful for identifying the purpose of mysterious alien artefacts, repairing xenos devices or weapons, or modifying them to more comfortable human use, such as working with Imperial Power sources and ammo, or adding missing mechanisms like triggers.",
+    "cost": "Someone experienced with Xenotechnology, or Archoetechnology that may employ xenos elements. Often specialising in particular alien species be they living or dead.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3QFMkh1ToAcCUorv"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Ork 'Eavy Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "xenos",
+    "weight": 8,
+    "availability": "very-rare",
+    "notes": "For Orks, Scarce. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>For Orks, Scarce. Can't normally be worn by humans, although Orks can't normally wear human armour either without major refitting.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 4,
+      "body": 4,
+      "leftArm": 4,
+      "rightArm": 4,
+      "leftLeg": 4,
+      "rightLeg": 4
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zyNDMufMJ711yLlQ"
+}

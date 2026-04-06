@@ -1,0 +1,30 @@
+{
+  "name": "Upgrade: Cortex - Skill",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Adds one Basic Skill to the Cyber Familiar of choice. Must be appropriate to the familiar (Cyber-Mastiffs are unlikely to have the Deceive Skill)",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "1000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 1000 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QHxVOazGLBoWE1Hv"
+}

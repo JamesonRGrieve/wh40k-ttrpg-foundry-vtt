@@ -1,0 +1,18 @@
+{
+  "name": "Unwieldy",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "unwieldy",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 67</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>67</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2W79zloCiYCvXreW"
+}

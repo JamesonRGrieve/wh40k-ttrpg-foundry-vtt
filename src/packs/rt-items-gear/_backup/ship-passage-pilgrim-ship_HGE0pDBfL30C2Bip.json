@@ -1,0 +1,30 @@
+{
+  "name": "Ship Passage: Pilgrim Ship",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "Passage aboard a Void Craft, to another planet or star system. Those vessels dedicated to taking the failful to and from planets of spiritual note, to retract the steps of favoured saints. Often crowded affairs. Most are medium sized. They take a mix of people and cargo and follow fixed routes.",
+    "cost": "Most well developed planets have easily locatable docks with indicated destinations and rates. For a specific location or more questionable cargo, more negotiation might be needed",
+    "effects": "Rare",
+    "notes": "850 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 850 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HGE0pDBfL30C2Bip"
+}

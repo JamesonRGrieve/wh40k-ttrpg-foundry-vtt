@@ -1,0 +1,42 @@
+{
+  "name": "Power Ram",
+  "type": "shipComponent",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "hullType": [
+      "light-cruiser",
+      "cruiser"
+    ],
+    "effect": "Increases ship's ramming damage by 1d10. Component can't be damaged or destroyed except via a Critical Hit.",
+    "availability": "rare",
+    "source": "RT: BF Koronus",
+    "description": {
+      "value": "<p>Increases ship's ramming damage by 1d10. Component can't be damaged or destroyed except via a Critical Hit.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "detection": 0,
+      "armour": 0,
+      "hullIntegrity": 0,
+      "turretRating": 0,
+      "voidShields": 0,
+      "morale": 0,
+      "crewRating": 0
+    },
+    "componentType": "augment",
+    "essential": false,
+    "power": {
+      "used": 2,
+      "generated": 0
+    },
+    "space": 0,
+    "shipPoints": 2,
+    "condition": "functional",
+    "notes": "",
+    "identifier": "power-ram"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ILO2muTSnFsaQ7ea"
+}

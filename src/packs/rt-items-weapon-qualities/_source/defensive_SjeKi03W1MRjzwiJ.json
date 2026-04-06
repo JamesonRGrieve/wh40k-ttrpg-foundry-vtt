@@ -1,0 +1,18 @@
+{
+  "name": "Defensive",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "defensive",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 25</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>25</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SjeKi03W1MRjzwiJ"
+}

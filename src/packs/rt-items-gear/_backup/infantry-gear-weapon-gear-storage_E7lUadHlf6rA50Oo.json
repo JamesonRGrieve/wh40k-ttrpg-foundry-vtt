@@ -1,0 +1,30 @@
+{
+  "name": "Infantry Gear: Weapon / Gear Storage",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Infantry Gear",
+    "weight": "1kg",
+    "availability": "Light weight storage packs for ammunition, sidearms, and grenades. Often take the form of Hip Packs, Holsters, Bandoliers, and Vests. Worn over armour for quick access. Can hold up to 15kg of Small Items. Varies between regiments.",
+    "cost": "Part of the Standard Kit of all Guardsmen. Total Weight: ~32kg, Total Cost: 185 Thrones.\nHB: Get it all at once acquisition at Scarce Availability",
+    "effects": "Common",
+    "notes": "5 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 5 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "E7lUadHlf6rA50Oo"
+}

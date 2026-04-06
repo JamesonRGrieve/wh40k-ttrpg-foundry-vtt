@@ -1,0 +1,41 @@
+{
+  "name": "Slam",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "drugs",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Gain Unnatural Toughness (x2) and Unnatural Strength (x2) for 1d5 Rounds. Afterwards permenantly reduce Strength and Toughness by 1d5.</p>\n<h3>Requirements</h3><p>Common Availability in Hive Volg</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 100 T</p>",
+      "chat": "",
+      "summary": "Gain Unnatural Toughness (x2) and Unnatural Strength (x2) for 1d5 Rounds. Afterwards permenantly reduce Strength and Toughness by 1d5."
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Gain Unnatural Toughness (x2) and Unnatural Strength (x2) for 1d5 Rounds. Afterwards permenantly reduce Strength and Toughness by 1d5.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "F2L2Ze17gpFmFOP4"
+}

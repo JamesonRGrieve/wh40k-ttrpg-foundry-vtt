@@ -1,0 +1,54 @@
+{
+  "name": "Tarantula Sentry Gun (Hadd-Pattern)",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": "N/A",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 12,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 10,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 10,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 0,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": "None (Remote Controlled)"
+    },
+    "passengers": 0,
+    "manoeuverability": 12,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Turret, one of: Twin-Linked Heavy Bolter, Twin-Linked Lascannon, Twin-Linked Multi-Lasers, Twin-Linked Plasma Cannons, or Twin-Linked Multi-Meltas</p>\n<p>---</p>\n<p>Twin-linked lascannon (300m; S/–/–; 5d10+10 E; Pen 10; Clip 80; Reload 2 Full; Proven [3], Twin-Linked)</p>\n<p>Twin-linked heavy bolter (150m; –/–/6; 1D10+8 X; Pen 5; Clip 240; Reload Full; Tearing, Twin-Linked)</p>\n<p>Twin-linked multi-lasers (150m; –/–/5; 1D10+10 E; Pen 2; Clip 120; Reload 2 Full; Reliable, Twin-Linked)</p>\n<p>Twin-linked plasma cannons (120m; S/–/–; 2d10+10 E; Pen 8; Clip 48; Reload 5 Full; Blast [1], Maximal, Overheat, Twin-Linked)</p>\n<p>Twin-linked multi-meltas (60m; S/–/–; 2d10+16 E; Pen 12; Clip 24; Reload Full; Blast [1], Melta, Twin-Linked)</p>",
+    "specialRules": "<p>Traits: Immobile, Enclosed</p>\n<p>Special Rules: Has Preysense Sight (Ignore Penalties and +20 Perception in Darkness) and Targeter (Reduce Test Difficulty by 1 step). Controller uses 1kg device and requires Trained Tech-Use. Has operating range of 200m, reduced by 1m+ walls and bad weather. Split Actions between self and control device.</p>",
+    "traitsText": "Traits: Immobile, Enclosed\nSpecial Rules: Has Preysense Sight (Ignore Penalties and +20 Perception in Darkness) and Targeter (Reduce Test Difficulty by 1 step). Controller uses 1kg device and requires Trained Tech-Use. Has operating range of 200m, reduced by 1m+ walls and bad weather. Split Actions between self and control device.",
+    "availability": "veryrare",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "7UV3tNjW5YvM1pnp"
+}

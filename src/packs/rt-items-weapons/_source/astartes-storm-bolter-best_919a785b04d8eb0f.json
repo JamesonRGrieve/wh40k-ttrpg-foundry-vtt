@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Storm Bolter [Best Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
+  "system": {
+    "identifier": "astartes-storm-bolter-best",
+    "class": "basic",
+    "type": "bolt",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 2,
+        "full": 4
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 5
+    },
+    "special": [
+      "sm-wep",
+      "storm",
+      "tearing"
+    ],
+    "clip": {
+      "max": 60,
+      "value": 60,
+      "type": ""
+    },
+    "reload": "2-full",
+    "weight": 26,
+    "availability": "average",
+    "craftsmanship": "best",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Storm, Tearing</p><p><b>Note:</b> Space Marines Only, not easily acquirable.</p>"
+    },
+    "modifications": [],
+    "notes": "Space Marines Only, not easily acquirable.",
+    "source": "DW: Core Rulebook",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "919a785b04d8eb0f"
+}

@@ -1,0 +1,63 @@
+{
+  "name": "My Great-Grandfather Built This Colony (Lineage)",
+  "type": "talent",
+  "img": "icons/svg/statue.svg",
+  "system": {
+    "identifier": "my-great-grandfather-built-this-colony-lineage",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "30"
+    },
+    "description": {
+      "value": "<blockquote><p><em>\"Your connections and the legacy you have inherited reach many places, and you have learned of those places well, lending authority to your presence and swaying those who might otherwise have cause to doubt you.\"</em></p></blockquote><p>Your ancestors laid the foundations for your present prosperity, and you take advantage of that whenever the opportunity arises. When your own reputation does not open doors for you, that of your forebears will.</p><p>Your family name is recognized across multiple sectors, and you have cultivated relationships that span worlds and systems.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Peer talent for one group of your choice, representing the wide-ranging connections your family has cultivated. In addition, your starting Profit Factor increases by 1.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "A Long and Glorious History lineage",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 350,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0,
+        "profitFactor": 1
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants one Peer talent and +1 Profit Factor.",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Colonial Legacy",
+          "description": "<p>Choose one Peer talent from: Academics, Adeptus Mechanicus, Administratum, Astropaths, Ecclesiarchy, Government, Imperial Guard, Imperial Navy, Mercantile, Military, Navigators, Nobility, Rogue Traders, or Underworld. Your family's legacy grants you connections in this group.</p>"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LN00000000000002"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Geist",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "For Psykers, +2 Psy Rating for 1d5+1 minutes, but may not use powers at fettered level for duration and +10 to Psychic Phenomena Rolls. For Non-Psykers, causes immediate Psychic Phenomena.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BmsmLqtmXiDrmnbT"
+}

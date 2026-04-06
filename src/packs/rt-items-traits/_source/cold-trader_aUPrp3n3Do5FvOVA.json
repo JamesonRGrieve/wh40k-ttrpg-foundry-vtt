@@ -1,0 +1,28 @@
+{
+  "name": "Cold Trader",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "unique",
+    "requirements": "Cold Trade Broker Alternate Advance (Innate)",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>When character gains this Trait, they choose whether they will either deal with Xenos in a friendly manner, or to pillage them and their culture. If they choose the friendly option they gain Peer(Xenos) talent for the xenos species they deal with, however they also gain Enemy(Inquisition) as the Ordo Xenos is quite opposed to cooperation with the alien. If they choose to pillage, they gain Enemy(Xenos) for any xenos they associate with, as well as Hatred(Xenos) for any xenos they deal with.</p>"
+    },
+    "benefit": "<p>When character gains this Trait, they choose whether they will either deal with Xenos in a friendly manner, or to pillage them and their culture. If they choose the friendly option they gain Peer(Xenos) talent for the xenos species they deal with, however they also gain Enemy(Inquisition) as the Ordo Xenos is quite opposed to cooperation with the alien. If they choose to pillage, they gain Enemy(Xenos) for any xenos they associate with, as well as Hatred(Xenos) for any xenos they deal with.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aUPrp3n3Do5FvOVA"
+}

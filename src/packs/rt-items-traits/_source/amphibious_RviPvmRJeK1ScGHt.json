@@ -1,0 +1,28 @@
+{
+  "name": "Amphibious",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Creature can breath some non-air substance such as water, ammonia, carbon-dioxide, etc, in addition to air.</p>"
+    },
+    "benefit": "<p>Creature can breath some non-air substance such as water, ammonia, carbon-dioxide, etc, in addition to air.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RviPvmRJeK1ScGHt"
+}

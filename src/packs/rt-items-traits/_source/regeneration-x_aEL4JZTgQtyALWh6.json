@@ -1,0 +1,28 @@
+{
+  "name": "Regeneration (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Each round at the start of its turn, this creature makes a Toughness Test to remove X points of damage. It loses this trait when slain.</p>"
+    },
+    "benefit": "<p>Each round at the start of its turn, this creature makes a Toughness Test to remove X points of damage. It loses this trait when slain.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aEL4JZTgQtyALWh6"
+}

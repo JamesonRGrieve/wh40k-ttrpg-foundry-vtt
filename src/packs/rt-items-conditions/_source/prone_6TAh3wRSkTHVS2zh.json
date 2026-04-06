@@ -1,0 +1,40 @@
+{
+  "name": "Prone",
+  "type": "condition",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "prone",
+    "nature": "harmful",
+    "effect": "<p>Melee attacks against prone targets gain +10. Ranged attacks against prone targets suffer -10. Dodging while prone suffers -20 penalty.</p>",
+    "removal": "<p>Removed by standing up as a Half Action.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "both",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>Melee attacks against prone targets gain +10. Ranged attacks against prone targets suffer -10. Dodging while prone suffers -20 penalty.</p>",
+      "source": {
+        "book": "Rogue Trader Core",
+        "page": "249",
+        "custom": ""
+      }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "2.0"
+    }
+  },
+  "_id": "6TAh3wRSkTHVS2zh"
+}

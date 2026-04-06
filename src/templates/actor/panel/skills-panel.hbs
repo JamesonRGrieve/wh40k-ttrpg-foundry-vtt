@@ -28,9 +28,15 @@
                     </div>
                 </div>
                 <div class="wh40k-spec-training wh40k-training-display">
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
+                    {{#if @root.editable}}
+                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">T</button>
+                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">+10</button>
+                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">+20</button>
+                    {{else}}
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}">T</span>
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}">+10</span>
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}">+20</span>
+                    {{/if}}
                 </div>
                 <div class="wh40k-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
@@ -66,9 +72,15 @@
                     </div>
                 </div>
                 <div class="wh40k-spec-training wh40k-training-display">
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
+                    {{#if @root.editable}}
+                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">T</button>
+                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">+10</button>
+                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">+20</button>
+                    {{else}}
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}">T</span>
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}">+10</span>
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}">+20</span>
+                    {{/if}}
                 </div>
                 <div class="wh40k-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>

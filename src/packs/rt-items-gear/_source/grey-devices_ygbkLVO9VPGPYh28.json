@@ -1,0 +1,41 @@
+{
+  "name": "Grey Devices",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 3,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Brushed Metal Boxes that take power to operate, emitting chiming noises to unknown factors. They have no clear purpose, but act strangely. Some consider them heretical, some consider them entertaining enough to make gambling games around.</p>\n<h3>Requirements</h3><p>-30 to Tests to find one if a Tech-Priest or accompanied by one. Tech-Heresy?\nHB: Does even stranger things if you plug it into something.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 500 T</p>",
+      "chat": "",
+      "summary": "Brushed Metal Boxes that take power to operate, emitting chiming noises to unknown factors. They have no clear purpose, but act strangely. Some consider them heretical, some consider them entertaining"
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Brushed Metal Boxes that take power to operate, emitting chiming noises to unknown factors. They have no clear purpose, but act strangely. Some consider them heretical, some consider them entertaining enough to make gambling games around.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ygbkLVO9VPGPYh28"
+}

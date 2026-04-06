@@ -1,0 +1,30 @@
+{
+  "name": "Holo-Spectus",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "6kg",
+    "availability": "A Pistol like mechanism with a Fist-Sized top that can be fired with a +0 Tech-Use Test. If successful the top can go up to 600m, typically straight up. Displays surroundings from vantage point. Provides +20 to Navigate (Surface), Survival (Tracking), and Scrutiny Tests. Can stay airborne for up to 5 hours before needing recharge. Can return to its base at any time, does so within one turn.",
+    "cost": "Device provides 3D Holographic display of area when active, can see Kilometres in all directions, turn with the user, and zoom/highlight selected locations",
+    "effects": "Very Rare",
+    "notes": "-",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "L1kw7iDDgmuCYGuh"
+}

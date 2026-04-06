@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000uudtrv",
+  "name": "Energy Critical - Head",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_energy_head_consolidated",
+    "damageType": "energy",
+    "bodyPart": "head",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>A grazing blow to the head disorientates the target. He suffers a -10 penalty to all tests (except Toughness tests) for 1 round.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The blast of energy dazzles the target. He is Blinded for 1 round.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The attack cooks off the target's ear, leaving him with a partially burned stump of cartilage. He is Deafened for [[1d5]] hours (or until he receives medical attention).</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The energy attack burns away all of the hairs on the target's head, as well as leaving him reeling from the injury. The target suffers 2 levels of Fatigue and the target is Blinded for [[1d5]] rounds.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>A blast of energy envelops the target's head, burning his face and hair, crisping his skin, and causing him to scream like a stuck grox. In addition to losing all hair on his scalp and face, he is Blinded for [[1d10]] rounds and Stunned for 1 round. Permanently reduce the target's Fellowship characteristic by 1.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The attack cooks the target's face, melting his features and damaging his eyes. The target suffers [[1d5]] levels of Fatigue and is Blinded for [[1d10]] hours. Permanently reduce his Fellowship and Perception characteristics by [[1d5]].</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>In a gruesome display, the flesh is burned from the target's head, exposing charred bone and muscle underneath. The target suffers [[1d10]] levels of Fatigue. He is Blinded permanently. Roll [[1d10]]; this is the target's new Fellowship characteristic value. If his Fellowship value is already 10 or lower, this can be skipped as no one would notice any difference in his behaviour and demeanour.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The target's head is destroyed in a conflagration of fiery death. He does not survive.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>Superheated by the attack, the target's brain explodes, tearing apart his skull and sending flaming chunks of meat flying at those nearby. The target is very, very dead.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>Superheated by the attack, the target's brain explodes, tearing apart his skull and sending flaming chunks of meat flying at those nearby. The target is very, very dead. The target's entire body catches fire and runs off headless [[2d10]] metres in a random direction (use the Scatter Diagram on page 230). Anything flammable it passes, including characters, must make a Challenging (+0) Agility test or catch fire (see page 243).</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Energy Damage to Head (Severity 10)</strong></p><p>Superheated by the attack, the target's brain explodes, tearing apart his skull and sending flaming chunks of meat flying at those nearby. The target is very, very dead. The target's entire body catches fire and runs off headless [[2d10]] metres in a random direction (use the Scatter Diagram on page 230). Anything flammable it passes, including characters, must make a Challenging (+0) Agility test or catch fire (see page 243).</p>",
+      "chat": "",
+      "summary": "Energy Head injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

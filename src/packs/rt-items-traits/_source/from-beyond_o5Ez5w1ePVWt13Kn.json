@@ -1,0 +1,28 @@
+{
+  "name": "From Beyond",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>The Creature has a mind incomprehensible to mortals. It is immune to Fear, Pinning, Insanity, and Psychic Powers that would cloud, control, or delude its mind. It can no longer gain insanity points.</p>"
+    },
+    "benefit": "<p>The Creature has a mind incomprehensible to mortals. It is immune to Fear, Pinning, Insanity, and Psychic Powers that would cloud, control, or delude its mind. It can no longer gain insanity points.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "o5Ez5w1ePVWt13Kn"
+}

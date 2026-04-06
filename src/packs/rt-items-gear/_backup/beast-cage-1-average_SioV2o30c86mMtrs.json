@@ -1,0 +1,30 @@
+{
+  "name": "Beast Cage 1 (Average)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Structure",
+    "weight": "50kg",
+    "availability": "Holds a beast of appropriate size. Poor Craftsmanship may break at inopportune time, Common uses sturdy Metal Bars, Good uses Shock Generators and Adamantium Bars, Best uses Stasis fields to freeze creature in time making them invulneable to harm until deactivated.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SioV2o30c86mMtrs"
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Light Power Armour (Guard)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "power",
+    "weight": 40,
+    "availability": "near-unique",
+    "notes": "Gives +1 Unnatural Strength and Perception. Environmentally sealed as long as helmet is worn.\n(Use OW Unnatural Characteristics)",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Gives +1 Unnatural Strength and Perception. Environmentally sealed as long as helmet is worn.\n(Use OW Unnatural Characteristics)</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 7,
+      "body": 7,
+      "leftArm": 7,
+      "rightArm": 7,
+      "leftLeg": 7,
+      "rightLeg": 7
+    },
+    "modifications": [],
+    "maxAgility": 40,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H0nT1dMVgTOTqnXH"
+}

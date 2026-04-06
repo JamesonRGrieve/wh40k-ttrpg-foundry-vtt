@@ -1,0 +1,54 @@
+{
+  "name": "Sentinel Walker",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "walker",
+    "size": 4,
+    "sizeDescriptor": "8m",
+    "faction": "",
+    "subfaction": "",
+    "type": "walker",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 20,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 20,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 20,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 10,
+      "tactical": 45,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": "Driver"
+    },
+    "passengers": 0,
+    "manoeuverability": 16,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>One of: Multi-laser (Front, Range 250m, Heavy, -/-/10, 3d10+3 E, Pen 4, Clip 100, Reload 3 Full).</p>\n<p>Autocannon (Front, Range 300m, Heavy S/2/5, 4d10+5 I, Pen 4, Clip 60, Reload 2 Full),</p>\n<p>Power Lifter (Front, Melee, 2d10+10, Pen 2, Unwieldy)</p>",
+    "specialRules": "<p>Walkers ignore penalties for moving through difficult terrain. This Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action.</p>",
+    "traitsText": "Walkers ignore penalties for moving through difficult terrain. This Vehicle is open-topped, enemies may target the crew and passengers of the vehicle by using a Called Shot Action.",
+    "availability": "average",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "x6Uk6oLrChKWUGWD"
+}

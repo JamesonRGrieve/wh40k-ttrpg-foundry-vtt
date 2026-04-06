@@ -1,0 +1,30 @@
+{
+  "name": "The Glorious Standard",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "-",
+    "availability": "Relic Mastercrafted Standard of the Deathwatch. Whils the Standard is held aloft, all Battle Brothers that can draw a line of sight to it can enter Squad Mode as a Free Action without a Test, and gain +10 to all Willpower Tests.",
+    "cost": null,
+    "effects": "Hero",
+    "notes": "40 R",
+    "source": "DW: First Founding",
+    "description": {
+      "value": "<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 40 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vj84HRLEo8GMiNyW"
+}

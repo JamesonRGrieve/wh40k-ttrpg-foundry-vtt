@@ -1,0 +1,30 @@
+{
+  "name": "Servitor (Combat)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Familiar",
+    "weight": "-",
+    "availability": "Lobotomised, Augmented Human that performs combat tasks (see Rogue Trader: Core, Page 374)",
+    "cost": null,
+    "effects": "Rare / Distinguished",
+    "notes": "20 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare / Distinguished</p><p><b>Notes:</b> 20 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uwE2cEFZ8Eogs126"
+}

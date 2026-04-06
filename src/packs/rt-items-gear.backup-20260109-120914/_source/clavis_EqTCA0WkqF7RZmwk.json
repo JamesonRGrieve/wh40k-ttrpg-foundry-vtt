@@ -1,0 +1,30 @@
+{
+  "name": "Clavis",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "Silvered Vambrace provided to Deathwatch Keepers, strange Archeotech device that bypasses nearly all Imperial Locks, Seals, or Automated Defence Systems. If a roll is required, such as a Security Test, the wearer counts as Having the Security Skill if they do not, and adds +30 to all Security Tests to bypass or open such locks/seals/etc. Medicae Tests on wearer also have +10.",
+    "cost": "Deathwatch Keepers Only",
+    "effects": "Distinguished",
+    "notes": "-",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EqTCA0WkqF7RZmwk"
+}

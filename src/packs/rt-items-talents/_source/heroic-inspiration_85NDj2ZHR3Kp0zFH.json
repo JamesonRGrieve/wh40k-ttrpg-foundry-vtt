@@ -1,0 +1,57 @@
+{
+  "name": "Heroic Inspiration",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Once per Turn, the character can use the Inspire Special Use of the Command Skill as a Half Action instead of as a Full Action.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Once per Turn, the character can use the Inspire Special Use of the Command Skill as a Half Action instead of as a Full Action.</p>",
+    "aptitudes": [
+      "Leadership",
+      "Social"
+    ],
+    "prerequisites": {
+      "text": "Fellowship 35, Command",
+      "characteristics": {
+        "fellowship": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "heroicInspiration",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "command",
+            "value": 10,
+            "condition": "When inspiring allies before or during combat",
+            "icon": "fa-solid fa-flag"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "85NDj2ZHR3Kp0zFH"
+}

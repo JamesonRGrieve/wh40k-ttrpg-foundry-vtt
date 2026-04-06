@@ -1,0 +1,54 @@
+{
+  "name": "Manticore Rocket Battery",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 6,
+    "sizeDescriptor": "16m",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 30,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 18,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 16,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 40,
+      "notes": ""
+    },
+    "crew": {
+      "required": 4,
+      "notes": "Commander, Driver, Gunner, Loader"
+    },
+    "passengers": 0,
+    "manoeuverability": 40,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Turret: Multiple Rocket Launcher (4000m; S/2/4; Clip 4; Indirect (4)), Loaded with                    one of: 4x Manticore Missile, 4x Storm Eagle Missile, or 4x Sky Eagle Missile</p>\n<p>Hull, one of: Front Facing Heavy Bolter, Heavy Flamer</p>\n<p>Pintle (Optional), one of: Heavy Stubber, Storm Bolter</p>\n<p>---</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>\n<p>Heavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)</p>\n<p>Storm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)</p>\n<p>Manticore Missile (4d10+12 X Damage, Pen 12, Blast(15+1d10), Concussive(5))</p>\n<p>Storm Eagle Missile (6d10 X Damage, Pen 4, Blast(10), Concussive(6)),</p>\n<p>- scatter 1d5 hits 2d10 metres from hit location</p>\n<p>Sky Eagle Missile (4d10+12 X Damage, Pen 12, Proven (4)),</p>\n<p>- can't fire indirect, -30 if used vs ground targets, gain Anti-Air (Advanced)</p>",
+    "specialRules": "<p>Trait: Enclosed, Tracked Vehicle, Anti-Air (Advanced) (only if using Sky Eagle Rocket)</p>\n<p>Special Rules: Can only use one type of missile for all four rockets. Loading a rocket into the manticore requires a separate vehicle to lift them, such as a Trojan Support Vehicle. Each Rocket takes 3 Minutes to load/unload. If the Manticore jams on firing, all remaining rockets must be removed before being replaced.</p>",
+    "traitsText": "Trait: Enclosed, Tracked Vehicle, Anti-Air (Advanced) (only if using Sky Eagle Rocket)\nSpecial Rules: Can only use one type of missile for all four rockets. Loading a rocket into the manticore requires a separate vehicle to lift them, such as a Trojan Support Vehicle. Each Rocket takes 3 Minutes to load/unload. If the Manticore jams on firing, all remaining rockets must be removed before being replaced.",
+    "availability": "veryrare",
+    "source": "OW: Shield of Humanity"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "NOugOvrn5o5uhXQq"
+}

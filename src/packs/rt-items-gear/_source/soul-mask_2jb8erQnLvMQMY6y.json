@@ -1,0 +1,41 @@
+{
+  "name": "Soul Mask",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "clothing",
+    "weight": 3,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 200,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Large, Ornate Tribal Mask soaked in beast's blood or sometimes ritually murdered rivals.</p>\n<h3>Requirements</h3><p>Can fetch a high price to those that appreciate \"primitive art\"</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 200 T</p>",
+      "chat": "",
+      "summary": "Large, Ornate Tribal Mask soaked in beast's blood or sometimes ritually murdered rivals."
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Large, Ornate Tribal Mask soaked in beast's blood or sometimes ritually murdered rivals.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2jb8erQnLvMQMY6y"
+}

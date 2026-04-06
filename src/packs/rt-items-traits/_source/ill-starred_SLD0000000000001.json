@@ -1,0 +1,54 @@
+{
+  "name": "Ill-Starred",
+  "type": "trait",
+  "img": "modules/game-icons-net/whitetransparent/cursed-star.svg",
+  "system": {
+    "identifier": "ill-starred",
+    "category": "origin",
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "32"
+    },
+    "description": {
+      "value": "<h2>Ill-Starred</h2><p>Your reputation as a castaway precedes you, and the void born whisper that your ill-luck will follow you wherever you go.</p><p>You suffer −5 on Fellowship Tests when interacting with the void born, Rogue Traders, and other voidfarers who are not personal friends, if they have heard of your background and reputation.</p><p>Additionally, whenever you spend a Fate Point to recover Wounds, you may re-roll the dice if you wish but must accept the second result even if it is worse.</p>"
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "benefit": "<p>−5 Fellowship with voidfarers; re-roll Fate Point healing (must accept second result)</p>",
+    "level": 1,
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "description": "−5 to Fellowship Tests with void born, Rogue Traders, and voidfarers"
+          }
+        ],
+        "combat": []
+      }
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "kind": "origin"
+    }
+  },
+  "_id": "SLD0000000000001"
+}

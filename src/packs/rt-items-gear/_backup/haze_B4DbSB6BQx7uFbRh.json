@@ -1,0 +1,30 @@
+{
+  "name": "Haze",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "When inhaled or ingested causes 1d5 damage to Intelligence, Perception, and Willpower (non permenant, roll seperately) for several hours. Afterwards, user is irritable and sensitive to light and loud noises for 1d5 hours.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -20 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Rare",
+    "notes": "-",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "B4DbSB6BQx7uFbRh"
+}

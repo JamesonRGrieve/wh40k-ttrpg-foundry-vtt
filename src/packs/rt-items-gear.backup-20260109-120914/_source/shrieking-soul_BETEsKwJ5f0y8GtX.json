@@ -1,0 +1,30 @@
+{
+  "name": "Shrieking Soul",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "A Character with this ignores effects of Fatigue, Stunning, Critical damage that does not cause Death, Limb Loss, or Blindness, and the non-damaging effects fire effects. Each time Character kills someone trinket consumes any soul they had, up to six. Once per session as Full Action, character can release stored soul energy as Psychic Attack of Num of Souls * 1d10 metre radius shockwave. All not dedicated to Slaanesh make -20 Willpower Test or are stunned for 1d5 Rounds and suffer 1d10 Permenant Willpower Damage.",
+    "cost": "Must have Mark of Slaanesh to use. Heretical",
+    "effects": "Near Unique",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Near Unique</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BETEsKwJ5f0y8GtX"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Signum Link",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "+0.5kg",
+    "availability": "Can be combined with an Astartes Signum, which at least one member of the squad must have. Characters with a Signum Link can then benefit from Ganging Up on an opponent regardless of whether they are engaged in melee or using ranged attacks on the target. With the benefits applying both to Weapon Skill and Ballistic Skill. Only works in Squad Mode.",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "20 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 20 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n9Uwpe8OmTYXyZAq"
+}

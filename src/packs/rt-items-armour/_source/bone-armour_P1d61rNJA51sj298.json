@@ -1,0 +1,37 @@
+{
+  "name": "Bone Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "primitive",
+    "weight": 12,
+    "availability": "average",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 2,
+      "body": 2,
+      "leftArm": 2,
+      "rightArm": 2,
+      "leftLeg": 2,
+      "rightLeg": 2
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "P1d61rNJA51sj298"
+}

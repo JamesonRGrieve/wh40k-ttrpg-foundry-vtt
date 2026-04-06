@@ -1,0 +1,54 @@
+{
+  "name": "Leman Russ Demolisher",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "ground",
+    "size": 4,
+    "sizeDescriptor": "10m",
+    "faction": "",
+    "subfaction": "",
+    "type": "tank",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 40,
+        "descriptor": ""
+      },
+      "side": {
+        "value": 35,
+        "descriptor": ""
+      },
+      "rear": {
+        "value": 22,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": -15,
+      "tactical": 28,
+      "notes": ""
+    },
+    "crew": {
+      "required": 5,
+      "notes": "Commander, Driver, Turret Gunner, Loader, 2 Add. Gunners"
+    },
+    "passengers": 0,
+    "manoeuverability": 60,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 0,
+      "value": 0,
+      "critical": 0
+    },
+    "weapons": "<p>Turret Gunner: Demolisher Cannon (Turret, 50m, S/-/-, 4d10+20 X, Pen 10, Pen 10, Clip 2, Rld  Full, Blast(10), Concussive(3))</p>\n<p>Hull, one of: Front Facing, Heavy Bolter/Lascannon/Heavy Flamer</p>\n<p>Sponson (Optional): one of: 2x Heavy Bolter/2x Heavy Flamer/2x Plasma Cannon</p>\n<p>Pintle (Optional): one of: Facing All, Heavy Stubber/Storm Bolter</p>\n<p>---</p>\n<p>Heavy Bolter (150m, -/-/6, 1d10+8 X, Pen 5, Clip 60, Rld Full, Tearing)</p>\n<p>Lascannon (300m, S/-/-, 5d10+10 E, Pen 10, Clip 30, Rld 2 Full, Proven(3))</p>\n<p>Heavy Flamer (30m, S/-/-, 1d10+5 E, Pen 4, Clip 20, Rld 2 Full, Flame, Spray)</p>\n<p>Plasma Cannon(120m, S/-/-, 2d10+10 E, Pen 8, Clip 32, Rld 5 Full, Blast (1), Maximal, Overheat)</p>\n<p>Heavy Stubber(100m, -/-/8, 1d10+4 I, Pen 3, Clip 80, Rld 2 Full)</p>\n<p>Storm Bolter(90m, S/2/4, 1d10+4, Pen 4, Clip 60, Rld Full, Storm, Tearing)</p>",
+    "specialRules": "<p>Vehicle Traits: Enclosed, Reinforced Armour, Ponderous, Tracked Vehicle</p>\n<p>Summary: Halve Damage from non-Righteous Fury, Can't use Floor It! Action and Moving Tactical Speed req Full Action.</p>\n<p>+10 to Difficult Terrain Tests, halve Critical roll that determines if Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.</p>",
+    "traitsText": "Vehicle Traits: Enclosed, Reinforced Armour, Ponderous, Tracked Vehicle\nSummary: Halve Damage from non-Righteous Fury, Can't use Floor It! Action and Moving Tactical Speed req Full Action.\n+10 to Difficult Terrain Tests, halve Critical roll that determines if Tactical Speed is halved (rounded down). Critical Damage to motive systems takes twice as long.",
+    "availability": "veryrare",
+    "source": "Only War Core"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "zebcgu9KWCrTNjUk"
+}

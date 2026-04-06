@@ -1,0 +1,28 @@
+{
+  "name": "Customisation: Chain Bandoliers",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "effect": "Non Power-Field melee attacks that hit the wearer's body must test as if damaged by a power weapon.",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Non Power-Field melee attacks that hit the wearer's body must test as if damaged by a power weapon.</p>"
+    },
+    "modifiers": {
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 1
+    },
+    "restrictions": {
+      "armourTypes": [
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SMu2IyAaUz21wOYx"
+}

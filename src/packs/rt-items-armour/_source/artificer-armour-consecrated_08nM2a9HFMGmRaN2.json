@@ -1,0 +1,33 @@
+{
+  "name": "Artificer Armour (Consecrated)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "power",
+    "weight": 75,
+    "availability": "near-unique",
+    "notes": "Legendary Armour, in addition to benefits of normal Artificer Armour (see those notes), Armour is also Warded, and grants +20 to Opposed Willpower Tests to resist Psychic Techniques, and Unarmed Attacks have the Sanctified Quality.",
+    "source": "RT: Faith and Coin",
+    "description": {
+      "value": "<p>Legendary Armour, in addition to benefits of normal Artificer Armour (see those notes), Armour is also Warded, and grants +20 to Opposed Willpower Tests to resist Psychic Techniques, and Unarmed Attacks have the Sanctified Quality.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 10,
+      "body": 10,
+      "leftArm": 10,
+      "rightArm": 10,
+      "leftLeg": 10,
+      "rightLeg": 10
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "08nM2a9HFMGmRaN2"
+}

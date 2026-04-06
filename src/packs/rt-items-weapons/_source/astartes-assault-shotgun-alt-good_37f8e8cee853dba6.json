@@ -1,0 +1,65 @@
+{
+  "name": "Astartes Assault Shotgun (alt.) [Good Quality]",
+  "type": "weapon",
+  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "system": {
+    "identifier": "astartes-assault-shotgun-alt-good",
+    "class": "basic",
+    "type": "solid-projectile",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 30,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 5
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 10,
+      "penetration": 4
+    },
+    "special": [
+      "sm-wep",
+      "reliable",
+      "scatter"
+    ],
+    "clip": {
+      "max": 20,
+      "value": 20,
+      "type": ""
+    },
+    "reload": "full",
+    "weight": 10,
+    "availability": "very-rare",
+    "craftsmanship": "good",
+    "quantity": 1,
+    "cost": {
+      "value": 11,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Special:</b> SM Wep, Reliable, Scatter</p><p><b>Note:</b> Space Marines Only, not easily acquirable. </p>"
+    },
+    "modifications": [],
+    "notes": "Space Marines Only, not easily acquirable. ",
+    "source": "DW: Errata",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "37f8e8cee853dba6"
+}

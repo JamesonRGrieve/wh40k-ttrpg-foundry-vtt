@@ -36,6 +36,25 @@
                     <span class="wh40k-char-total" title="Current total">{{this.total}}</span>
                 </summary>
                 <div class="wh40k-char-controls">
+                    {{#if @root.editable}}
+                    <label class="wh40k-char-field">
+                        <span class="wh40k-char-field-label">Base</span>
+                        <input
+                            type="number"
+                            name="system.characteristics.{{name}}.base"
+                            data-dtype="Number"
+                            value="{{this.base}}"
+                            min="0"
+                            max="100"
+                            title="Base characteristic value (from character creation)"
+                        />
+                    </label>
+                    {{else}}
+                    <label class="wh40k-char-field">
+                        <span class="wh40k-char-field-label">Base</span>
+                        <span class="wh40k-char-field-value">{{this.base}}</span>
+                    </label>
+                    {{/if}}
                     <label class="wh40k-char-field">
                         <span class="wh40k-char-field-label">Advances</span>
                         <select name="system.characteristics.{{name}}.advance" title="Characteristic advancement level">
@@ -47,6 +66,7 @@
                             {{option "5" this.advance "Expert (+25)"}}
                         </select>
                     </label>
+                    {{#if @root.editable}}
                     <label class="wh40k-char-field">
                         <span class="wh40k-char-field-label">Unnatural</span>
                         <select name="system.characteristics.{{name}}.unnatural" class="wh40k-unnatural-select" data-dtype="Number" title="Unnatural characteristic multiplier">
@@ -56,6 +76,7 @@
                             <option value="4" {{#if (eq this.unnatural 4)}}selected{{/if}}>×4</option>
                         </select>
                     </label>
+                    {{/if}}
                     <label class="wh40k-char-field">
                         <span class="wh40k-char-field-label">Modifier</span>
                         <input

@@ -1,0 +1,30 @@
+{
+  "name": "Hound's Teeth Gauntlet",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "exotic",
+    "weight": "?",
+    "availability": "A Misshapen set of huge Flesh Hound fangs arranged around a skeletal brass glove. Not a weapon, but rather a way to focus the warp to track a target. Grants +30 to Navigate, Psyniscience Tests, and the Tracking Special use of Survival Skill. Each time character uses item and makes such a test, they gain 1d5 Corruption, +1 per Degree of Success on test. Acts as a Sword in Melee combat with Tainted and Unwieldy Qualities. May also cause those touched to frenzy or cause excessively bleeding wounds. Excessive use may bring those very same Flesh Hounds down upon the character for abusing their power. ",
+    "cost": "Daemonic Remnants whose mere presence is a danger to all around it. To contain this relic  must locate whoever the current wielder is. Often linked to high profile assassinations.",
+    "effects": "Special",
+    "notes": "-",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ANvHPDbm0AOrZKOW"
+}

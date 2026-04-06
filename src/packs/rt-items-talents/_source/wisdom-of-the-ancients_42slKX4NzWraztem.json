@@ -1,0 +1,70 @@
+{
+  "name": "Wisdom of the Ancients",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Character can spend an Infamy Point to gain insight on a situation or ask the GM a question about an immdiate situation the character faces which they GM should answer helpfully. The question can be anything the character may legimiately know through stories heard or their own experiences. For example: \"Where are the Navigator's Quarters aboard an Imperial Cruiser usually Located?\"</p>"
+    },
+    "tier": 2,
+    "benefit": "<p>Character can spend an Infamy Point to gain insight on a situation or ask the GM a question about an immdiate situation the character faces which they GM should answer helpfully. The question can be anything the character may legimiately know through stories heard or their own experiences. For example: \"Where are the Navigator's Quarters aboard an Imperial Cruiser usually Located?\"</p>",
+    "aptitudes": [
+      "Tzeentch"
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Intelligence 40",
+      "characteristics": {
+        "int": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true,
+    "identifier": "wisdomOfTheAncients",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "skills": [
+          {
+            "key": "scholarlyLore",
+            "value": 10,
+            "condition": "When recalling ancient knowledge",
+            "icon": "fa-solid fa-book"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "42slKX4NzWraztem"
+}

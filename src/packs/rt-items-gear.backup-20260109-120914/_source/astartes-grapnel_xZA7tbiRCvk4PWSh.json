@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Grapnel",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Astartes",
+    "weight": "-",
+    "availability": "Fires hooked/magnetic grapple attached to 100m of wire. Can climb or use powered winch.\nUsually fired from Bolt Pistol. Can act as a crude Projectile weapon (1d10 + 2 R, Pen 2)",
+    "cost": null,
+    "effects": "Initiated",
+    "notes": "3 R",
+    "source": "DW: Rites of Battle",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> 3 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xZA7tbiRCvk4PWSh"
+}

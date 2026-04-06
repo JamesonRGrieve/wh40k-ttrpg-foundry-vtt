@@ -1,0 +1,30 @@
+{
+  "name": "Accordion Wire",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "0.5kg",
+    "availability": "Space Barbed Wire, make -20 Acrobatics Test to cross or suffer 1d5 Rending Damage, +1 per Degree of Failiure.",
+    "cost": null,
+    "effects": "Common",
+    "notes": "-",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p6dULGK8YFjwzC3T"
+}

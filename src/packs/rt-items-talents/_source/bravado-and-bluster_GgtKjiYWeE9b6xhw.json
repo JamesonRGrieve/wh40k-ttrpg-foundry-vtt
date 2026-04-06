@@ -1,0 +1,64 @@
+{
+  "name": "Bravado and Bluster",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>The Character gains +10 to Charm, Deceive, and Intimidate Tests per Comrade that assists them in these Tests.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>The Character gains +10 to Charm, Deceive, and Intimidate Tests per Comrade that assists them in these Tests.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Fixer Advanced Specialty (500xp)",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "bravadoAndBluster",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": 10,
+            "condition": "Per Comrade assisting (cumulative)",
+            "icon": "fa-solid fa-users"
+          },
+          {
+            "key": "deceive",
+            "value": 10,
+            "condition": "Per Comrade assisting (cumulative)",
+            "icon": "fa-solid fa-users"
+          },
+          {
+            "key": "intimidate",
+            "value": 10,
+            "condition": "Per Comrade assisting (cumulative)",
+            "icon": "fa-solid fa-users"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GgtKjiYWeE9b6xhw"
+}

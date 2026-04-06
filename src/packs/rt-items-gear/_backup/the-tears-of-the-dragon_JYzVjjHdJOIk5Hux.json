@@ -1,0 +1,30 @@
+{
+  "name": "The Tears of the Dragon",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Misc",
+    "weight": "-",
+    "availability": "A Memetic Virus rarely used on Elite Skitarri. Once infected the subject falls into a deathy feaver and is confronted with pre-programmed visions of great horror and torment. Those that survive must make a -10 Willpower Test, if failed they gain 1d10+10 Insanity Points, if passed they gain the Fearless Talent but permenantly lose 1d10 Fellowship.",
+    "cost": null,
+    "effects": "Very Rare",
+    "notes": "6000 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 6000 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JYzVjjHdJOIk5Hux"
+}

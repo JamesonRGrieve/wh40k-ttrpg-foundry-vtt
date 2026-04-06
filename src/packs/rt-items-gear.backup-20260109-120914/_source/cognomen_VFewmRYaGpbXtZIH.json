@@ -1,0 +1,30 @@
+{
+  "name": "Cognomen",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "-",
+    "availability": "A Hive-City Citizen's Identity Card, used for Tracking, Taxing, and Identifiyng Citizens. Roughly the size and shap of a playing card of blank iron-grey. Has a Symbol of the Issuing Hive/Guild/Etc that the citizen serves. Its loss could mean the loss of identity, right to work, and even to be fed and housed. Stolen and Fabricated ID's are therefore very valuable.",
+    "cost": null,
+    "effects": "Plentiful",
+    "notes": "Varies T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> Varies T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VFewmRYaGpbXtZIH"
+}

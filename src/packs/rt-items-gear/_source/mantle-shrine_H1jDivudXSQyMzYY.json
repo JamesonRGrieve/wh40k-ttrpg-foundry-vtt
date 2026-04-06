@@ -1,0 +1,41 @@
+{
+  "name": "Mantle Shrine",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 1,
+    "availability": "abundant",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 30,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Small portable Shrines to one saint or another. Unfolds ot hold candles, an incense burner, and tack for papers. For the ruthless it is known as often being the place the poor store their few valuables.</p>\n<p><b>Effect:</b> Abundant</p><p><b>Notes:</b> 30 T</p>",
+      "chat": "",
+      "summary": "Small portable Shrines to one saint or another. Unfolds ot hold candles, an incense burner, and tack for papers. For the ruthless it is known as often being the place the poor store their few valuable"
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Small portable Shrines to one saint or another. Unfolds ot hold candles, an incense burner, and tack for papers. For the ruthless it is known as often being the place the poor store their few valuables.",
+    "duration": "",
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "H1jDivudXSQyMzYY"
+}

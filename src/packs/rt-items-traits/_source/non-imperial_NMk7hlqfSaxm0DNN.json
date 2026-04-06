@@ -1,0 +1,28 @@
+{
+  "name": "Non-Imperial",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "Xenos Character (innate)",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Character is not human, and so has -10 to Common Lore, Forbidden Lore, and Scholastic Lore tests relating to the Imperium of Man.</p>"
+    },
+    "benefit": "<p>Character is not human, and so has -10 to Common Lore, Forbidden Lore, and Scholastic Lore tests relating to the Imperium of Man.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NMk7hlqfSaxm0DNN"
+}

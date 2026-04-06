@@ -1,0 +1,76 @@
+{
+  "_id": "0000000000pvlhra",
+  "name": "Explosive Critical - Leg",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_leg_consolidated",
+    "damageType": "explosive",
+    "bodyPart": "leg",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>A glancing blast sends the character backwards one metre. The target must make a Challenging (+0) Toughness test or be knocked Prone.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The force of the explosion takes the target's feet out from under him. He is knocked Prone and cannot use any Movement action except for the Half Move action for [[1d5]] rounds.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The concussion causes the target's leg to fracture. The target suffers [[2d10]] Agility damage.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The explosion sends the target spinning through the air. He is flung [[1d5]] metres away in a random direction using the Scatter Diagram. It takes the target a Full Action to regain his feet, and his Movement is reduced by half (rounding up) for [[1d10]] rounds.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>Explosive force removes part of the target's foot and scatters the ragged remnants over a wide area. The target must make a Difficult (-10) Toughness test or suffer [[1d5]] levels of Fatigue. Permanently reduce his Agility characteristic by 1d5.</p>",
+        "permanent": false
+      },
+      "6": {
+        "text": "<p>The concussive force of the blast shatters the target's leg bones and splits apart flesh. The target suffers [[1d10]] levels of Fatigue. The leg is Useless until he receives medical attention. The target must make a Challenging (+0) Toughness test; if he fails, he suffers the Lost Foot condition (see page 198).</p>",
+        "permanent": false
+      },
+      "7": {
+        "text": "<p>The explosion reduces the target's leg into a hunk of smoking meat. The target must immediately make a Challenging (+0) Toughness test or die from shock. If he survives, he suffers [[1d10]] levels of Fatigue, is Stunned for [[1d10]] rounds, and suffers Blood Loss. He now suffers the Lost Leg condition (see page 198).</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The blast tears the leg from the body in a geyser of gore, sending him crashing to the ground, blood pumping from the ragged stump. This grievous wound is instantly fatal.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The leg explodes in an eruption of blood, killing the target immediately and sending tiny fragments of bone, clothing, and armour hurtling off in all directions. Each target within 2 metres suffers a single hit for 1d10+2 Impact damage to a randomly determined Hit Location.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The leg explodes in an eruption of blood, killing the target immediately and sending tiny fragments of bone, clothing, and armour hurtling off in all directions. Each target within 2 metres suffers a single hit for 1d10+2 Impact damage to a randomly determined Hit Location. If the target is carrying any ammunition it detonates, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target within [[1d10]] metres (in addition to the hit noted above). If the target is carrying any grenades or missiles, these detonate immediately with their normal effects.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "<p><strong>Explosive Damage to Leg (Severity 10)</strong></p><p>The leg explodes in an eruption of blood, killing the target immediately and sending tiny fragments of bone, clothing, and armour hurtling off in all directions. Each target within 2 metres suffers a single hit for 1d10+2 Impact damage to a randomly determined Hit Location. If the target is carrying any ammunition it detonates, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each target within [[1d10]] metres (in addition to the hit noted above). If the target is carrying any grenades or missiles, these detonate immediately with their normal effects.</p>",
+      "chat": "",
+      "summary": "Explosive Leg injury"
+    },
+    "source": {
+      "book": "Rogue Trader Core Rulebook",
+      "page": "254-257",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": false,
+      "consolidated": true,
+      "version": "2.0",
+      "migrationDate": "2026-01-21T23:52:42.157Z"
+    }
+  }
+}

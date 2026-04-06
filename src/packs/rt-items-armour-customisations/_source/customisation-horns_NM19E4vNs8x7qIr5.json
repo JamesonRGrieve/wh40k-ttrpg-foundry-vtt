@@ -1,0 +1,28 @@
+{
+  "name": "Customisation: Horns",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "effect": "Wearer cannot be parried whilst charging",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Wearer cannot be parried whilst charging</p>"
+    },
+    "modifiers": {
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 0.5
+    },
+    "restrictions": {
+      "armourTypes": [
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "NM19E4vNs8x7qIr5"
+}

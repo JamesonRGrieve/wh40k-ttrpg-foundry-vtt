@@ -1,0 +1,30 @@
+{
+  "name": "Icon of Silence",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "6kg",
+    "availability": "A Device attached to a sturdy backpack or held in one hand. When activatedw ith a Half Action all sound within 10m x Character's Willpower Bonus is silenced, damage from Sonic weapons is halved. Those not Slaanesh Aligned must make +10 Willpower Test each turn or suffer -10 to all tests from the disconcerting silence.",
+    "cost": "Must be Dedicated to Slaanesh to use. Heretical\nThe Silence doesn't help Stealth Tests as the field creates a lot of light at its edge.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7guzUXPkIjKlDIej"
+}

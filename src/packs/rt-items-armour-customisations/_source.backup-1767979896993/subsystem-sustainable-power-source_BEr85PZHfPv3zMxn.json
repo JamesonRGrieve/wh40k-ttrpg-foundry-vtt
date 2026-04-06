@@ -1,0 +1,24 @@
+{
+  "name": "Subsystem: Sustainable Power Source",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Power Armour, Legion/Astartes Power Armour",
+    "effect": "Suit of armour does not need to be recharged.\nLoyalist Astartes Suits have this by default.",
+    "weight": "0kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Suit of armour does not need to be recharged.\nLoyalist Astartes Suits have this by default.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "BEr85PZHfPv3zMxn"
+}

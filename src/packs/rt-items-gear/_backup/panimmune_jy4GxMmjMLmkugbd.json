@@ -1,0 +1,30 @@
+{
+  "name": "Panimmune",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "Applied by a needle to the neck. For 1d5+1 hours gain +30 to Carouse and Toughness Tests to resist Toxins and Diseases. Afterwards gain 1  Fatigue unless taking another dose. Each time another dose is taken without 8 hours of rest between, make Toughness Test or sufffer -10 to Strength and Toughness Tests for 1 hour and take 1d5 Permenant Willpower Damage.",
+    "cost": null,
+    "effects": "Average",
+    "notes": "40 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 40 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jy4GxMmjMLmkugbd"
+}

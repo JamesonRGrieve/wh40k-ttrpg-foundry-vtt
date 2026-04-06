@@ -1,0 +1,18 @@
+{
+  "name": "Crippling",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "crippling",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 17</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>17</p>"
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D7i4R1KuLlXo9QIv"
+}

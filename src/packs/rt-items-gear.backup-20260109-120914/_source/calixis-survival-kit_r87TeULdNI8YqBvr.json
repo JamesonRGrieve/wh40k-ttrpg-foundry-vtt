@@ -1,0 +1,30 @@
+{
+  "name": "Calixis Survival Kit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "-",
+    "availability": "Provides +10 to Survival Tests. Includes: 2 Razor Blades, Igniter, flexible Wire Saw, 14 Fishing Hooks, 5 Fishing Lures, 25m of Fishing Line, 1 Large Hook, 10m of brass-wire snare, 1 Torch, one Calibrated Compass with a world-specific guide page, 4 Stimm doses, 6 Antibiotic tablets, 20 water purifying tablets, 2 flexi bags, 1m of adhesive tape, 3m of Spinlin Cord, 1/2m of stronger tape...",
+    "cost": " ...3m of sewing thread, 3 sewing needles, 1 surgical needle, 8 safety fasteners, 1m^2 of foil, 1 Quill, ink, 2 sheets of tough paper, and a mirror finished case to hold it all and act as a signal.",
+    "effects": "Average",
+    "notes": "120 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Average</p><p><b>Notes:</b> 120 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r87TeULdNI8YqBvr"
+}

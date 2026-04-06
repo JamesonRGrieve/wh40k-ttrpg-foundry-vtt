@@ -1,0 +1,30 @@
+{
+  "name": "Spark Rocks",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Device",
+    "weight": "1kg",
+    "availability": "White-Crysalline rocks that when struck together create sparks, works when wet. Useful for lightning tinder, torches, fires, etc.",
+    "cost": "Comes in a set of 2",
+    "effects": "Common",
+    "notes": "2 T",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p><b>Effect:</b> Common</p><p><b>Notes:</b> 2 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "u6GzhNXhmFNvsPU1"
+}

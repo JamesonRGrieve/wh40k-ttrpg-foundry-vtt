@@ -1,0 +1,54 @@
+{
+  "name": "Drop Pod",
+  "type": "vehicle",
+  "img": "icons/svg/car.svg",
+  "system": {
+    "vehicleClass": "space",
+    "size": 4,
+    "sizeDescriptor": "100 AU's",
+    "faction": "",
+    "subfaction": "",
+    "type": "vehicle",
+    "threatLevel": 0,
+    "armour": {
+      "front": {
+        "value": 10,
+        "descriptor": "Enormous (+20)"
+      },
+      "side": {
+        "value": 0,
+        "descriptor": "All 24"
+      },
+      "rear": {
+        "value": 0,
+        "descriptor": ""
+      }
+    },
+    "speed": {
+      "cruising": 0,
+      "tactical": 2500,
+      "notes": ""
+    },
+    "crew": {
+      "required": 1,
+      "notes": "None"
+    },
+    "passengers": 0,
+    "manoeuverability": 30,
+    "carryingCapacity": 0,
+    "integrity": {
+      "max": 10,
+      "value": 10,
+      "critical": 0
+    },
+    "weapons": "<p>Automated: Storm Bolter (Facing All, 90m, Basic, -/-/6, 1d10+5, Pen 4, Clip 120, Reload Full, Storm, Tearing). Can only be used after drop pod lands, targets and fires on its own, controlled by drop pod's machine spirit.</p>",
+    "specialRules": "<p>Drop Pods are launched from a starship with Drop Pod bays, travelling downwards to the target. They cannot make Manoeuvres, but if at least 500km above surface can change destination by up to 25km of original destination. All attacks targetting a drop pod have -30 due to its speed. When landing pick destination then scatter 2d10 metres in a random direction and land, after landing Drop Pod cannot move and must be recovered. Those inside who are not in Power Armour or Drop Cocoons are turned into a fine paste on landing.</p>",
+    "traitsText": "Drop Pods are launched from a starship with Drop Pod bays, travelling downwards to the target. They cannot make Manoeuvres, but if at least 500km above surface can change destination by up to 25km of original destination. All attacks targetting a drop pod have -30 due to its speed. When landing pick destination then scatter 2d10 metres in a random direction and land, after landing Drop Pod cannot move and must be recovered. Those inside who are not in Power Armour or Drop Cocoons are turned into a fine paste on landing.",
+    "availability": "extremelyrare",
+    "source": "RT: Into the Storm"
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "xUQlcT8CJmJZ8nBV"
+}

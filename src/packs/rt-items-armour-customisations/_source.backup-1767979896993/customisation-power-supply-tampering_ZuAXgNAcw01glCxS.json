@@ -1,0 +1,24 @@
+{
+  "name": "Customisation: Power Supply Tampering",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Power Armour",
+    "effect": "Can connect any Pistol/Basic Las or Pistol Melta, Plasma, or Flame Weapon to the armour's power supply. The weapon no longer needs reloading and has infinite ammo as long as the armour is powered. Weapon cannot benefit from Quick Draw Talent.",
+    "weight": "+0.5kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Can connect any Pistol/Basic Las or Pistol Melta, Plasma, or Flame Weapon to the armour's power supply. The weapon no longer needs reloading and has infinite ammo as long as the armour is powered. Weapon cannot benefit from Quick Draw Talent.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZuAXgNAcw01glCxS"
+}

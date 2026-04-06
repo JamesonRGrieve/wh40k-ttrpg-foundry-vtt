@@ -1,0 +1,24 @@
+{
+  "name": "Customisation: Chain Loinguard",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "armourTypes": "Power Armour",
+    "effect": "Reduces Leg and Right Leg Critical Effect Rolls by 2.",
+    "weight": "+1kg",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Reduces Leg and Right Leg Critical Effect Rolls by 2.</p>"
+    },
+    "armourModifier": 0,
+    "maxDexBonus": 0,
+    "modifiers": {
+      "characteristics": {},
+      "skills": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yD5Ro11feJ5ttMIY"
+}

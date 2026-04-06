@@ -1,0 +1,30 @@
+{
+  "name": "Blue Fire",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Drug",
+    "weight": "-",
+    "availability": "[Addictive] Lasts 1d10 Rounds, allows user to reroll any Focus Power Tests made during this time. However even Fettered Powers can trigger Psychic Phenomena as if Unfettered. User must also make -10 Willpower Test or gain 1 Corruption Point (source: failiure) when using power.",
+    "cost": "Taking more than one dose within 24 hours forces a cumulative -10 Toughness Test. If failing, drug does nothing and further doses also do nothing for next 24 hours.",
+    "effects": "Extremely Rare",
+    "notes": "-",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Extremely Rare</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1GeA30qzUKCFKTUW"
+}

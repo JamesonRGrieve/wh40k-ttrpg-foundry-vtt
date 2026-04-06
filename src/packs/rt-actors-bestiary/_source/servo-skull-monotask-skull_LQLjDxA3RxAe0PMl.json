@@ -1,0 +1,113 @@
+{
+  "name": "Servo Skull - Monotask Skull",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "15",
+      "bs": "-",
+      "s": "10",
+      "t": "20",
+      "ag": "30",
+      "int": "15",
+      "per": "35",
+      "wp": "20",
+      "fel": "-"
+    },
+    "wounds": "4",
+    "armourPoints": "2 + 1 all",
+    "move": "Flyer 6",
+    "size": "puny -20",
+    "weapons": [
+      {
+        "name": "Unarmed",
+        "range": null,
+        "rof": null,
+        "damage": "1d10-3 I",
+        "pen": "0",
+        "clip": null,
+        "reload": null,
+        "qualities": "Primitive"
+      },
+      {
+        "name": "Gear/\nOther",
+        "range": "Monotask: Some examples of the task a Monotask skull is designed for:\n- Auger: Inbuilt Auger and Vox-System to relay findings\n- Courier: Acts as Messenger, maps of local area, and ID scanner, can carry physical message, or holographic recording\n- Illuminator: Fitted with a powerful lamp pack, glow globe, or even a Brazier\n- Loud Hailer: Can replay amplified recorded messages or act as mouthpiece.\n- Medicae Skull: Has inbuilt Medkit and Medicae +20 Skill\n- Utility: Has a Multi-Tool, can perform maintenance, and act as a second pair of hands.\nCommands: Can perform basic Cyber-Familiar Commands as wel as those relating to its designated task.\n\nProgrammed Instincts: Will not attack or defend itself unless ordered to, and will attempt to remove itself from harm if threatened. Returns to its Master or Base of operations if interfered with or damaged.",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Talents/\nTraits",
+        "range": "Descriptions",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Fearless",
+        "range": "Immune to Fear",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Dark Sight",
+        "range": "No penalty to vision-based tests in darkness",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Flyer 6",
+        "range": " Has a Flying Speed of 6, can hover",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Machine 1",
+        "range": "Provides 1 AP to all locations",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Skull",
+        "range": "Can only be hit in the head location, as it is just a head.",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: | T: | Ag: Concealment +10, Dodge +10, Silent Move +20\nInt:\nPer: Awareness +20\nFel:",
+    "training": "Basic(), Pistol(), Melee(), Heavy(), Flame(), Thrown(), Exotic()",
+    "description": {
+      "value": "<p><b>Skills:</b> S: | T: | Ag: Concealment +10, Dodge +10, Silent Move +20\nInt:\nPer: Awareness +20\nFel:</p><p><b>Training:</b> Basic(), Pistol(), Melee(), Heavy(), Flame(), Thrown(), Exotic()</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "LQLjDxA3RxAe0PMl"
+}

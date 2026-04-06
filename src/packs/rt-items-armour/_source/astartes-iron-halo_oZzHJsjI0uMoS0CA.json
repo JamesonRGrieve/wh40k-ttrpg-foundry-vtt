@@ -1,0 +1,33 @@
+{
+  "name": "Astartes Iron Halo",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "void",
+    "weight": 0.5,
+    "availability": "Hero",
+    "notes": "Always Master-Crafted [AP: 50%]",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Always Master-Crafted</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oZzHJsjI0uMoS0CA"
+}

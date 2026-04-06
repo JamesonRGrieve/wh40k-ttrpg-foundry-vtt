@@ -1,0 +1,57 @@
+{
+  "name": "Ears to the Ground",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character has learned where to make discreet inquiries to get involved within black markget trades, and gains +20 to Commerce Tests to Trade or Barter Excess Gear. \nAdditionally, they gain +10 to Deceive Tests to avoid or deflect notice about such dealings.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Character has learned where to make discreet inquiries to get involved within black markget trades, and gains +20 to Commerce Tests to Trade or Barter Excess Gear. \nAdditionally, they gain +10 to Deceive Tests to avoid or deflect notice about such dealings.</p>",
+    "aptitudes": [
+      "Perception",
+      "Social"
+    ],
+    "prerequisites": {
+      "text": "Commerce, Perception 30",
+      "characteristics": {
+        "perception": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "earsToTheGround",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "inquiry",
+            "value": 20,
+            "condition": "In familiar territory or among known contacts",
+            "icon": "fa-solid fa-ear-listen"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "68M7C6CGItW6NGsP"
+}

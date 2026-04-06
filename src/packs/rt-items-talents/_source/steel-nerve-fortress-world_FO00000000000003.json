@@ -1,0 +1,63 @@
+{
+  "name": "Steel Nerve (Fortress World)",
+  "type": "talent",
+  "img": "icons/svg/shield-alt.svg",
+  "system": {
+    "identifier": "steel-nerve-fortress-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "12"
+    },
+    "description": {
+      "value": "<p><strong>Steel Nerve:</strong> Every day denizens of fortress worlds train with live ammunition and explosives, and are comfortable around weapon's fire. Fortress world characters gain the Nerves of Steel Talent.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You gain the Nerves of Steel talent.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Fortress World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "notes": "Grants Nerves of Steel talent",
+    "grants": {
+      "skills": [],
+      "talents": [
+        {
+          "name": "Nerves of Steel",
+          "specialization": "",
+          "uuid": "Compendium.rogue-trader.rt-items-talents.RJGpJOUfz0Bpj2Xe"
+        }
+      ],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FO00000000000003"
+}

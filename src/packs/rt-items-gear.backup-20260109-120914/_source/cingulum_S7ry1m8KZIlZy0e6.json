@@ -1,0 +1,30 @@
+{
+  "name": "Cingulum",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "-",
+    "availability": "A Belt formed of studded straps of leather or similar material from which hang accolades of valour. Can be: Adamantine Inlays (+3 to Parry Tests), Honour Bells (+3 to WS on first attack roll during combat), or Marks of Leadership (+3 to tests to regain Cohesion or prevent Cohesion Damage).",
+    "cost": "Deathwatch Initiate may start with one appropriate Chapter Trapping.\nChapter: Ultramarines",
+    "effects": "Initiated",
+    "notes": "-",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Initiated</p><p><b>Notes:</b> -</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "S7ry1m8KZIlZy0e6"
+}

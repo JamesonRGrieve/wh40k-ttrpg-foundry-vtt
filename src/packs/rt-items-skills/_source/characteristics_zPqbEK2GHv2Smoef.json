@@ -1,0 +1,24 @@
+{
+  "name": "Characteristics",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "",
+    "descriptor": "",
+    "uses": null,
+    "useTime": null,
+    "description": {
+      "value": ""
+    },
+    "rollConfig": {
+      "characteristic": null
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [],
+    "source": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zPqbEK2GHv2Smoef"
+}

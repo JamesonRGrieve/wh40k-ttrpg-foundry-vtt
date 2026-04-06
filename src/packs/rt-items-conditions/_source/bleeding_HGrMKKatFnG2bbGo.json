@@ -1,0 +1,40 @@
+{
+  "name": "Bleeding",
+  "type": "condition",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "bleeding",
+    "nature": "harmful",
+    "effect": "<p>A bleeding character loses 1 Wound at the start of each of their turns. This damage ignores armour and Toughness Bonus.</p>",
+    "removal": "<p>Removed by a successful Medicae Test as a Full Action, or by the application of appropriate medical supplies or abilities.</p>",
+    "stackable": true,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>A bleeding character loses 1 Wound at the start of each of their turns. This damage ignores armour and Toughness Bonus.</p>",
+      "source": {
+        "book": "",
+        "page": "",
+        "custom": "Common Houserule"
+      }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {
+    "rt": {
+      "generated": true,
+      "version": "2.0"
+    }
+  },
+  "_id": "HGrMKKatFnG2bbGo"
+}

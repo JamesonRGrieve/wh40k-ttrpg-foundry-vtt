@@ -1,0 +1,68 @@
+{
+  "name": "Xenos Interaction (Frontier World)",
+  "type": "talent",
+  "img": "icons/svg/alien.svg",
+  "system": {
+    "identifier": "xenos-interaction-frontier-world",
+    "category": "origin",
+    "source": {
+      "book": "Into the Storm",
+      "page": "10"
+    },
+    "description": {
+      "value": "<p><strong>Xenos Interaction:</strong> It's a common occurrence for humans on frontier worlds to interact and trade with xenos. Because of this interaction, Frontier World characters are immune to Fear when caused by a xenos with a Fear (2) or Fear (1). If the Fear Test difficulty is 3 or higher, however, it affects the character as normal. Of course, this outlook often puts them at odds with members of the Ecclesiarchy and as such they suffer a −5 penalty to all Interaction Tests when dealing with members of the Imperial Cult.</p>"
+    },
+    "tier": 0,
+    "benefit": "<p>You are immune to Fear (1) and Fear (2) from xenos sources. You suffer −5 to Interaction Tests with members of the Imperial Cult.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "Frontier World Origin",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": [
+          {
+            "condition": "Fear Tests from xenos (Fear 1-2)",
+            "modifier": 0,
+            "type": "Immune"
+          },
+          {
+            "condition": "Interaction Tests with Imperial Cult",
+            "modifier": -5,
+            "type": "Fellowship Test"
+          }
+        ]
+      }
+    },
+    "notes": "Immune to Fear (1-2) from xenos, −5 to Interaction Tests with Imperial Cult",
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FR00000000000004"
+}

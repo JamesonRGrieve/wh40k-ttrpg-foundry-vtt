@@ -1,0 +1,30 @@
+{
+  "name": "Bionic Limb",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "Replaces an Arm, +2 Toughness Bonus to limb location. Poor versions have -10 WS and BS Tests, Good has +10 to Agility Tests requiring delicate movement (Such as Tech-Use Tests for repairing small circuitry) and Strength Tests using the arm.",
+    "cost": "Damage works as normal, although inappropriate effects like bleeding just render limb useless",
+    "effects": "Scarce / Initiated",
+    "notes": "1000 T\n15 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 1000 T\n15 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1OFqV661jw0ovY7l"
+}

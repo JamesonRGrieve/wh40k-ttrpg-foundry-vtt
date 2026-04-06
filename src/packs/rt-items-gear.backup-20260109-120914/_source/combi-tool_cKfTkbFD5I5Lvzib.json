@@ -1,0 +1,30 @@
+{
+  "name": "Combi-Tool",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Tool - Handheld",
+    "weight": "1kg",
+    "availability": "+10 to Tech-use tests when used.",
+    "cost": null,
+    "effects": "Rare / Initiated",
+    "notes": "200 T\n15 R",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 200 T\n15 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cKfTkbFD5I5Lvzib"
+}

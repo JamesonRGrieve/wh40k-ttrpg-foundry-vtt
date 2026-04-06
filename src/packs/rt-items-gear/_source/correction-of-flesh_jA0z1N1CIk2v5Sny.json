@@ -1,0 +1,41 @@
+{
+  "name": "Correction of Flesh",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "luxury",
+    "weight": 6,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Master Crafted Relic Astartes Narthecium of the Red Scorpions Chapter. Grants +30 to Medicae Tests to treat Space Marines and Humans. User can re-roll failed Medicae Tests and heal one additional wound with each use of First Aid. Also grants regular Astartes Narthecium benefits.</p>\n<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 35 R</p>",
+      "chat": "",
+      "summary": "Master Crafted Relic Astartes Narthecium of the Red Scorpions Chapter. Grants +30 to Medicae Tests to treat Space Marines and Humans. User can re-roll failed Medicae Tests and heal one additional woun"
+    },
+    "source": {
+      "book": "DW: Honour the Chapter",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Master Crafted Relic Astartes Narthecium of the Red Scorpions Chapter. Grants +30 to Medicae Tests to treat Space Marines and Humans. User can re-roll failed Medicae Tests and heal one additional wound with each use of First Aid. Also grants regular Astartes Narthecium benefits.",
+    "duration": "",
+    "notes": "35 R",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "jA0z1N1CIk2v5Sny"
+}

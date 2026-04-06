@@ -1,0 +1,28 @@
+{
+  "name": "Amorphous",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "requirements": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Creatures can squeeze and expand their body, not possessing a defined shape. They Can change their size by one step up or down, they determine movement rate using half their Agility Bonus.</p>"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "other": []
+    },
+    "isPassive": true,
+    "isRollable": false,
+    "benefit": "<p>Creatures can squeeze and expand their body, not possessing a defined shape. They Can change their size by one step up or down, they determine movement rate using half their Agility Bonus.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IGOT2ZFSF8NllMyD"
+}

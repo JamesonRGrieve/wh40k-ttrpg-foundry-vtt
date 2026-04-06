@@ -1,0 +1,30 @@
+{
+  "name": "Accommodation: High Grade",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Service",
+    "weight": "-",
+    "availability": "A Single Night's Accomodation in a Grand Hall or Luxurious Quarters, a place safe, warm, and comfortable.",
+    "cost": "Cost of service may vary with location and the honesty/charitability of those that offer it.",
+    "effects": "Scarce",
+    "notes": "100 T",
+    "source": "Dark Heresy: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pnJJ78KJDSrzLs82"
+}

@@ -1,0 +1,37 @@
+{
+  "name": "Mesh-Weave Clothing",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "mesh",
+    "weight": 1,
+    "availability": "extremely-rare",
+    "notes": "Virtually Undetectable as armour, looks like finely crafted clothing. Often deemed heretical due to inclusion of xenos craftsmanship.",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Virtually Undetectable as armour, looks like finely crafted clothing. Often deemed heretical due to inclusion of xenos craftsmanship.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 3,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "5eZx2kZRuQuYb3Ji"
+}

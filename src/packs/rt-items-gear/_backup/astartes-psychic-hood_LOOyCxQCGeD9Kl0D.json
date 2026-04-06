@@ -1,0 +1,30 @@
+{
+  "name": "Astartes Psychic Hood",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Clothing (Astartes)",
+    "weight": "15kg",
+    "availability": "Can use Reaction to nullfy a psychic technique used by another psyker up to Character's Willpower Characteristic Metres away. This should be declared prior to the focus power test of the enemy being made. The Wearer makes their own Focus Power Test, every Degree of Success imposes -10 on the enemies Focus Power Test. Can alternatively make Focus Power Test to nullify effect of a power on self. Hood also grants +5 to all Focus Power Tests, including the options provided by this gear item.",
+    "cost": null,
+    "effects": "Distinguished",
+    "notes": "25 R",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LOOyCxQCGeD9Kl0D"
+}

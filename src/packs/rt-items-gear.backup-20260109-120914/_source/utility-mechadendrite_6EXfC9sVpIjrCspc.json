@@ -1,0 +1,30 @@
+{
+  "name": "Utility Mechadendrite",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "type": "Cybernetic",
+    "weight": "-",
+    "availability": "+10 to Tech-Use, has six injectors of Sacred Ungents. Can blast censer chaff as Half Action once every 15 minutes, causes -5 to WS tests for  living creatures in 2 metres for one Round. +10 to detect user by smell unless censor is deactivated. Counts as Mono-knife",
+    "cost": "Legally, limited to members of the Adeptus Mechanicus, requires relevent Mechadendrite Use Talent and Cyber-Mantle. May not have more Mechadendrites than Toughness Bonus",
+    "effects": "Very Rare",
+    "notes": "500 T",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> 500 T</p>"
+    },
+    "consumable": false,
+    "charges": {
+      "max": 0,
+      "value": 0
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6EXfC9sVpIjrCspc"
+}
