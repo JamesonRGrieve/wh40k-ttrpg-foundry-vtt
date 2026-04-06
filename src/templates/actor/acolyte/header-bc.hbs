@@ -1,0 +1,74 @@
+{{!-- Black Crusade Character Sheet Header --}}
+{{!-- Two-column layout: Left (portrait + bio) | Right (characteristics HUD) --}}
+<div class="wh40k-header wh40k-grid-col-6 wh40k-panel wh40k-character-header">
+    <div class="wh40k-header__info wh40k-header-grid">
+        <div class="wh40k-header-left">
+            <div class="wh40k-header-topline">
+                <div class="wh40k-header__logo wh40k-portrait-container">
+                    <img class="wh40k-header__logo-image wh40k-portrait" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+                </div>
+                <div class="wh40k-header-info">
+                    <div class="wh40k-header-row wh40k-name-row">
+                        <span class="wh40k-header-label">{{localize "WH40K.Character.Name"}}</span>
+                        <input class="wh40k-header-input wh40k-name-input" name="name" type="text" value="{{actor.name}}" />
+                    </div>
+                    <div class="wh40k-header-row wh40k-player-row">
+                        <span class="wh40k-header-label">{{localize "WH40K.Character.Player"}}</span>
+                        <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Home World</span>
+                        <input class="wh40k-header-input" name="system.originPath.homeWorld" type="text" value="{{system.originPath.homeWorld}}" placeholder="Home World" />
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Archetype</span>
+                        <input class="wh40k-header-input" name="system.originPath.role" type="text" value="{{system.originPath.role}}" placeholder="Archetype" />
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Pride</span>
+                        <input class="wh40k-header-input" name="system.originPath.background" type="text" value="{{system.originPath.background}}" placeholder="Pride" />
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Disgrace</span>
+                        <input class="wh40k-header-input" name="system.originPath.trialsAndTravails" type="text" value="{{system.originPath.trialsAndTravails}}" placeholder="Disgrace" />
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Motivation</span>
+                        <input class="wh40k-header-input" name="system.originPath.motivation" type="text" value="{{system.originPath.motivation}}" placeholder="Motivation" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wh40k-header-right">
+            <div class="wh40k-hud-stack">
+                {{!-- Characteristics HUD --}}
+                <div class="wh40k-characteristics-hud">
+                    {{#each actor.characteristics as |characteristic name|}}
+                        {{#unless (eq name "influence")}}
+                        <div class="wh40k-char-hud-item {{#if (gt this.modifier 0)}}wh40k-char-buffed{{/if}}{{#if (lt this.modifier 0)}}wh40k-char-debuffed{{/if}}"
+                             data-advance="{{this.advance}}"
+                             style="--advance-progress: {{divide this.advance 5}};">
+                            <button
+                                class="wh40k-char-hud-name roll-characteristic actor-drag"
+                                type="button"
+                                data-action="roll"
+                                data-roll-type="characteristic"
+                                data-roll-target="{{name}}"
+                                data-item-type="characteristic"
+                                data-item-id="{{name}}"
+                                data-characteristic="{{name}}"
+                                title="{{this.label}}"
+                            >{{this.short}}</button>
+                            <div class="wh40k-char-hud-circle" title="{{this.label}}">
+                                <span class="wh40k-char-hud-mod">{{this.bonus}}</span>
+                                <span class="wh40k-char-hud-mod-label">MOD</span>
+                            </div>
+                            <div class="wh40k-char-hud-base">Total {{this.total}}</div>
+                        </div>
+                        {{/unless}}
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

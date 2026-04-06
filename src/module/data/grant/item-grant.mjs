@@ -335,11 +335,11 @@ export default class ItemGrantData extends BaseGrantData {
 
         // Determine which pack to search based on expected item type
         const packIds = [
-            'wh40k-rpg.wh40k-items-talents',
-            'wh40k-rpg.wh40k-items-traits',
-            'wh40k-rpg.wh40k-items-weapons',
-            'wh40k-rpg.wh40k-items-armour',
-            'wh40k-rpg.wh40k-items-gear',
+            'wh40k-rpg.rt-items-talents',
+            'wh40k-rpg.rt-items-traits',
+            'wh40k-rpg.rt-items-weapons',
+            'wh40k-rpg.rt-items-armour',
+            'wh40k-rpg.rt-items-gear',
         ];
 
         for (const packId of packIds) {

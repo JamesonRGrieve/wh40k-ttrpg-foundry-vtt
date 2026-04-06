@@ -66,6 +66,8 @@ export default class CharacterSheet extends BaseActorSheet {
             'clearSkillsSearch': CharacterSheet.#clearSkillsSearch,
             'toggleFavoriteSkill': CharacterSheet.#toggleFavoriteSkill,
             'toggleFavoriteSpecialistSkill': CharacterSheet.#toggleFavoriteSpecialistSkill,
+            'cycleSkillTraining': CharacterSheet.#cycleSkillTraining,
+            'cycleSpecialistTraining': CharacterSheet.#cycleSpecialistTraining,
 
             // Talents actions
             'toggleFavoriteTalent': CharacterSheet.#toggleFavoriteTalent,
@@ -2554,6 +2556,92 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
+     * Cycle a skill's training level: untrained → trained → +10 → +20 → untrained.
+     * Right-click cycles backwards.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #cycleSkillTraining(event, target) {
+        event.preventDefault();
+        const skillKey = target.dataset.skill;
+        if (!skillKey) return;
+
+        const skill = this.actor.system.skills?.[skillKey];
+        if (!skill) return;
+
+        // Determine current level
+        let level = 0;
+        if (skill.plus20) level = 3;
+        else if (skill.plus10) level = 2;
+        else if (skill.trained) level = 1;
+
+        // Cycle: shift-click goes backwards
+        if (event.shiftKey) {
+            level = level <= 0 ? 3 : level - 1;
+        } else {
+            level = level >= 3 ? 0 : level + 1;
+        }
+
+        // Update flags
+        const update = {
+            [`system.skills.${skillKey}.trained`]: level >= 1,
+            [`system.skills.${skillKey}.plus10`]: level >= 2,
+            [`system.skills.${skillKey}.plus20`]: level >= 3,
+        };
+        await this.actor.update(update);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Cycle a specialist skill entry's training level.
+     * Shift-click cycles backwards.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #cycleSpecialistTraining(event, target) {
+        event.preventDefault();
+        const row = target.closest('[data-skill]');
+        const skillKey = row?.dataset.skill;
+        const entryIndex = parseInt(row?.dataset.index, 10);
+        if (!skillKey || isNaN(entryIndex)) return;
+
+        const skill = this.actor.system.skills?.[skillKey];
+        if (!skill) return;
+
+        const entries = Array.isArray(skill.entries) ? [...skill.entries] : skill.entries ? Object.values(skill.entries) : [];
+        const entry = entries[entryIndex];
+        if (!entry) return;
+
+        // Determine current level
+        let level = 0;
+        if (entry.plus20) level = 3;
+        else if (entry.plus10) level = 2;
+        else if (entry.trained) level = 1;
+
+        // Cycle
+        if (event.shiftKey) {
+            level = level <= 0 ? 3 : level - 1;
+        } else {
+            level = level >= 3 ? 0 : level + 1;
+        }
+
+        // Update entry
+        entries[entryIndex] = {
+            ...entry,
+            trained: level >= 1,
+            plus10: level >= 2,
+            plus20: level >= 3,
+        };
+
+        await this.actor.update({ [`system.skills.${skillKey}.entries`]: entries });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Toggle favorite status for a specialist skill entry.
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
@@ -3063,7 +3151,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 const table =
                     game.tables.getName('Psychic Phenomena') ||
                     (await game.packs
-                        .get('wh40k-rpg.wh40k-rolltables-psychic')
+                        .get('wh40k-rpg.rt-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs) => docs.find((d) => d.name.includes('Phenomena'))));
 
@@ -3103,7 +3191,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 const table =
                     game.tables.getName('Perils of the Warp') ||
                     (await game.packs
-                        .get('wh40k-rpg.wh40k-rolltables-psychic')
+                        .get('wh40k-rpg.rt-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs) => docs.find((d) => d.name.includes('Perils'))));
 

@@ -38,7 +38,7 @@ const __dirname = path.dirname(__filename);
 // CONFIGURATION
 // ============================================================================
 
-const PACK_SOURCE_DIR = path.join(__dirname, '..', 'packs', 'wh40k-items-weapons', '_source');
+const PACK_SOURCE_DIR = path.join(__dirname, '..', 'packs', 'rt-items-weapons', '_source');
 const BACKUP_DIR = path.join(__dirname, '..', '..', 'backups', `weapons-${Date.now()}`);
 const REPORT_PATH = path.join(__dirname, '..', '..', 'WEAPON_CLEANUP_REPORT.md');
 
