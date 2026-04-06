@@ -547,78 +547,294 @@
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
             }
+        },
+        {
+            "name": "dh2-actors-bestiary",
+            "label": "DH2e Bestiary",
+            "path": "packs/dh2-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-armour",
+            "label": "DH2e Armour",
+            "path": "packs/dh2-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-backgrounds",
+            "label": "DH2e Backgrounds",
+            "path": "packs/dh2-items-backgrounds",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-conditions",
+            "label": "DH2e Conditions",
+            "path": "packs/dh2-items-conditions",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-critical-injuries",
+            "label": "DH2e Critical Injuries",
+            "path": "packs/dh2-items-critical-injuries",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-gear",
+            "label": "DH2e Gear",
+            "path": "packs/dh2-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-psychic-powers",
+            "label": "DH2e Psychic Powers",
+            "path": "packs/dh2-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-skills",
+            "label": "DH2e Skills",
+            "path": "packs/dh2-items-skills",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-talents",
+            "label": "DH2e Talents",
+            "path": "packs/dh2-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-traits",
+            "label": "DH2e Traits",
+            "path": "packs/dh2-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-items-weapons",
+            "label": "DH2e Weapons",
+            "path": "packs/dh2-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-journals-character-creation",
+            "label": "DH2e Character Creation",
+            "path": "packs/dh2-journals-character-creation",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-rolltables-psychic",
+            "label": "DH2e Psychic Phenomena & Perils",
+            "path": "packs/dh2-rolltables-psychic",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            }
         }
     ],
     "packFolders": [
         {
-            "name": "Actors",
+            "name": "Rogue Trader",
             "color": "#8B0000",
             "sorting": "a",
-            "packs": ["rt-actors-bestiary", "rt-actors-ships", "rt-actors-vehicles"]
-        },
-        {
-            "name": "Equipment",
-            "color": "#8B4513",
-            "sorting": "a",
-            "packs": [
-                "rt-items-ammo",
-                "rt-items-armour",
-                "rt-items-armour-customisations",
-                "rt-items-gear",
-                "rt-items-weapons",
-                "rt-items-weapon-qualities"
+            "folders": [
+                {
+                    "name": "Actors",
+                    "color": "#8B0000",
+                    "sorting": "a",
+                    "packs": ["rt-actors-bestiary", "rt-actors-ships", "rt-actors-vehicles"]
+                },
+                {
+                    "name": "Equipment",
+                    "color": "#8B4513",
+                    "sorting": "a",
+                    "packs": [
+                        "rt-items-ammo",
+                        "rt-items-armour",
+                        "rt-items-armour-customisations",
+                        "rt-items-gear",
+                        "rt-items-weapons",
+                        "rt-items-weapon-qualities"
+                    ]
+                },
+                {
+                    "name": "Character Features",
+                    "color": "#2F4F4F",
+                    "sorting": "a",
+                    "packs": [
+                        "rt-items-skills",
+                        "rt-items-talents",
+                        "rt-items-traits",
+                        "rt-items-origin-path",
+                        "rt-items-conditions",
+                        "rt-items-critical-injuries"
+                    ]
+                },
+                {
+                    "name": "Powers & Abilities",
+                    "color": "#4B0082",
+                    "sorting": "a",
+                    "packs": ["rt-items-psychic-powers", "rt-items-navigator-powers", "rt-items-rituals"]
+                },
+                {
+                    "name": "Ships & Vehicles",
+                    "color": "#191970",
+                    "sorting": "a",
+                    "packs": [
+                        "rt-items-ship-components",
+                        "rt-items-ship-roles",
+                        "rt-items-ship-upgrades",
+                        "rt-items-ship-weapons",
+                        "rt-items-vehicle-traits",
+                        "rt-items-vehicle-upgrades",
+                        "rt-items-orders"
+                    ]
+                },
+                {
+                    "name": "Journals & Rules",
+                    "color": "#556B2F",
+                    "sorting": "a",
+                    "packs": [
+                        "rt-journals-character-actions",
+                        "rt-journals-character-creation",
+                        "rt-journals-colonies",
+                        "rt-journals-fear-insanity-corruption",
+                        "rt-journals-ship-vehicle-actions"
+                    ]
+                },
+                {
+                    "name": "Roll Tables",
+                    "color": "#800080",
+                    "sorting": "a",
+                    "packs": ["rt-rolltables-fear-insanity-corruption", "rt-rolltables-psychic"]
+                }
             ]
         },
         {
-            "name": "Character Features",
-            "color": "#2F4F4F",
+            "name": "Dark Heresy 2e",
+            "color": "#1a1a2e",
             "sorting": "a",
-            "packs": [
-                "rt-items-skills",
-                "rt-items-talents",
-                "rt-items-traits",
-                "rt-items-origin-path",
-                "rt-items-conditions",
-                "rt-items-critical-injuries"
+            "folders": [
+                {
+                    "name": "Actors",
+                    "color": "#8B0000",
+                    "sorting": "a",
+                    "packs": ["dh2-actors-bestiary"]
+                },
+                {
+                    "name": "Equipment",
+                    "color": "#8B4513",
+                    "sorting": "a",
+                    "packs": [
+                        "dh2-items-armour",
+                        "dh2-items-gear",
+                        "dh2-items-weapons"
+                    ]
+                },
+                {
+                    "name": "Character Features",
+                    "color": "#2F4F4F",
+                    "sorting": "a",
+                    "packs": [
+                        "dh2-items-skills",
+                        "dh2-items-talents",
+                        "dh2-items-traits",
+                        "dh2-items-backgrounds",
+                        "dh2-items-conditions",
+                        "dh2-items-critical-injuries"
+                    ]
+                },
+                {
+                    "name": "Powers & Abilities",
+                    "color": "#4B0082",
+                    "sorting": "a",
+                    "packs": ["dh2-items-psychic-powers"]
+                },
+                {
+                    "name": "Journals & Rules",
+                    "color": "#556B2F",
+                    "sorting": "a",
+                    "packs": ["dh2-journals-character-creation"]
+                },
+                {
+                    "name": "Roll Tables",
+                    "color": "#800080",
+                    "sorting": "a",
+                    "packs": ["dh2-rolltables-psychic"]
+                }
             ]
-        },
-        {
-            "name": "Powers & Abilities",
-            "color": "#4B0082",
-            "sorting": "a",
-            "packs": ["rt-items-psychic-powers", "rt-items-navigator-powers", "rt-items-rituals"]
-        },
-        {
-            "name": "Ships & Vehicles",
-            "color": "#191970",
-            "sorting": "a",
-            "packs": [
-                "rt-items-ship-components",
-                "rt-items-ship-roles",
-                "rt-items-ship-upgrades",
-                "rt-items-ship-weapons",
-                "rt-items-vehicle-traits",
-                "rt-items-vehicle-upgrades",
-                "rt-items-orders"
-            ]
-        },
-        {
-            "name": "Journals & Rules",
-            "color": "#556B2F",
-            "sorting": "a",
-            "packs": [
-                "rt-journals-character-actions",
-                "rt-journals-character-creation",
-                "rt-journals-colonies",
-                "rt-journals-fear-insanity-corruption",
-                "rt-journals-ship-vehicle-actions"
-            ]
-        },
-        {
-            "name": "Roll Tables",
-            "color": "#800080",
-            "sorting": "a",
-            "packs": ["rt-rolltables-fear-insanity-corruption", "rt-rolltables-psychic"]
         }
     ],
     "grid": {
