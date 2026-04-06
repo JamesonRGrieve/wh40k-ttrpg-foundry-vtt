@@ -1,18 +1,18 @@
 /**
- * @file AcolyteSheetSidebar - Variant character sheet with sidebar navigation
+ * @file CharacterSheetSidebar - Variant character sheet with sidebar navigation
  * This is an alternative layout with tabs on the left side
  */
 
-import AcolyteSheet from './acolyte-sheet.mjs';
+import CharacterSheet from './character-sheet.mjs';
 
 /**
  * Acolyte sheet variant with sidebar navigation instead of horizontal tabs.
- * Extends the base AcolyteSheet and overrides layout-specific options.
+ * Extends the base CharacterSheet and overrides layout-specific options.
  */
-export default class AcolyteSheetSidebar extends AcolyteSheet {
+export default class CharacterSheetSidebar extends CharacterSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        ...AcolyteSheet.DEFAULT_OPTIONS,
+        ...CharacterSheet.DEFAULT_OPTIONS,
         classes: ['acolyte', 'sidebar-nav'],
         // Tab configuration for sidebar layout
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],

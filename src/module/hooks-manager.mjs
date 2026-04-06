@@ -8,11 +8,12 @@ import * as dataModels from './data/_module.mjs';
 import * as dice from './dice/_module.mjs';
 
 // Import V2 Actor Sheets (ApplicationV2-based)
-import AcolyteSheet from './applications/actor/acolyte-sheet.mjs';
-import AcolyteSheetSidebar from './applications/actor/acolyte-sheet-sidebar.mjs';
+import CharacterSheet from './applications/actor/character-sheet.mjs';
+import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.mjs';
+import DarkHeresySheet from './applications/actor/dark-heresy-sheet.mjs';
+import RogueTraderSheet from './applications/actor/rogue-trader-sheet.mjs';
 import NPCSheetV2 from './applications/actor/npc-sheet-v2.mjs';
 import VehicleSheet from './applications/actor/vehicle-sheet.mjs';
-import VehicleSheetV2 from './applications/actor/vehicle-sheet-v2.mjs';
 import StarshipSheet from './applications/actor/starship-sheet.mjs';
 
 // Import V2 Item Sheets (ApplicationV2-based)
@@ -228,12 +229,17 @@ export class HooksManager {
 
         // Unregister core V1 actor sheet and register V2 actor sheets
         DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheet, {
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresySheet, {
             types: ['character'],
             makeDefault: true,
-            label: 'WH40K.Sheet.PlayerCharacter',
+            label: 'WH40K.Sheet.DarkHeresy',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheetSidebar, {
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderSheet, {
+            types: ['character'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.RogueTrader',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, CharacterSheetSidebar, {
             types: ['character'],
             makeDefault: false,
             label: 'WH40K.Sheet.PlayerCharacterSidebar',
@@ -243,7 +249,7 @@ export class HooksManager {
             makeDefault: true,
             label: 'WH40K.Sheet.NPC',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheetV2, {
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
             types: ['vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.Vehicle',
@@ -512,8 +518,8 @@ export class HooksManager {
 
         // Auto-select vehicle sheet for vehicle/ship NPCs
         if (primaryUse === 'vehicle' || primaryUse === 'ship') {
-            // Find VehicleSheetV2 in registered sheets
-            const vehicleSheet = Object.values(sheetData).find((s) => s.id === 'wh40k-rpg.VehicleSheetV2');
+            // Find VehicleSheet in registered sheets
+            const vehicleSheet = Object.values(sheetData).find((s) => s.id === 'wh40k-rpg.VehicleSheet');
             if (vehicleSheet) {
                 return vehicleSheet.id;
             }
