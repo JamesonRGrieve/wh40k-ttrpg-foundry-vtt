@@ -397,10 +397,11 @@ export class Hit {
                 case 'haywire':
                     this.addEffect(special.name, `Everything within ${special.level * -10}m suffers the Haywire Field at strength [[1d10]]!`);
                     break;
-                case 'indirect':
+                case 'indirect': {
                     const bs = sourceActor.getCharacteristicFuzzy('ballisticSkill').bonus;
                     this.addEffect(special.name, `The attack deviates [[ 1d10 - ${bs}]]m (minimum of 0m) off course to the ${scatterDirection()}!`);
                     break;
+                }
                 case 'shocking':
                     this.addEffect(
                         special.name,

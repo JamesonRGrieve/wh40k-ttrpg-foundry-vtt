@@ -36,7 +36,7 @@ export class BasicActionManager {
                 title: 'Assign Damage',
                 icon: 'fas fa-shield',
                 visible: true,
-                onClick: async () => DHBasicActionManager.assignDamageTool(),
+                onClick: async () => this.assignDamageTool(),
                 button: true,
                 order: toolOrder,
             };
@@ -183,7 +183,7 @@ export class BasicActionManager {
         let targetActor;
         if (targetUuid) {
             targetActor = await fromUuid(targetUuid);
-            if (targetActor.actor != undefined) {
+            if (targetActor.actor !== undefined) {
                 targetActor = targetActor.actor;
             }
         } else {

@@ -60,7 +60,7 @@ export class WH40KTour extends Tour {
      * Detect when a reset is triggered and stop the actions in _postStep
      */
     async reset() {
-        if (this.status != 'completed') this.triggerReset = true;
+        if (this.status !== 'completed') this.triggerReset = true;
         await super.reset();
     }
 }

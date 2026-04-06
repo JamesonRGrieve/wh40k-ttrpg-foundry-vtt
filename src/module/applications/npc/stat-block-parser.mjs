@@ -866,9 +866,9 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         if (damagePenMatch) {
             damage = damagePenMatch[1];
         }
-        const penMatch = details.match(/Pen\s*(\d+)/i);
-        if (penMatch) {
-            pen = parseInt(penMatch[1], 10);
+        const penFallbackMatch = details.match(/Pen\s*(\d+)/i);
+        if (penFallbackMatch) {
+            pen = parseInt(penFallbackMatch[1], 10);
         }
 
         const special = qualities.join(', ');

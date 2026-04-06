@@ -19,7 +19,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "no-shadow": ["error", { "builtinGlobals": true, "hoist": "all", "allow": ["event", "name", "location", "origin", "parent", "prompt", "toolbar", "status", "length", "top", "close", "open", "stop", "history", "confirm", "document", "innerWidth", "innerHeight", "TextEditor", "CharacterData"] }],
+    "no-shadow": ["error", { "builtinGlobals": true, "hoist": "all", "allow": ["event", "name", "location", "origin", "parent", "prompt", "toolbar", "status", "length", "top", "close", "open", "stop", "history", "confirm", "document", "innerWidth", "innerHeight", "TextEditor", "CharacterData", "source", "Navigator", "selection", "match"] }],
     "no-var": "error",
     "prefer-const": "warn",
     "no-unused-vars": ["warn", { "args": "none", "ignoreRestSiblings": true }],

@@ -87,16 +87,7 @@ export class HooksManager {
     }
 
     static init() {
-        console.log(`Loading WH40K RPG System
-______________  _________ 
-___  __ \__  / / /_|__  /
-__  / / /_  /_/ /____/ /
-_  /_/ /_  __  / _  __/ 
-/_____/ /_/ /_/  /____/ 
-
-"Only in death does duty end"
-Enable Debug with: game.rt.debug = true           
-`);
+        console.log('Loading WH40K RPG System v1.0.0');
 
         const consolePrefix = 'WH40K RPG | ';
         game.rt = {

@@ -19,7 +19,7 @@
  * @returns {*} Extended class with expandable tooltip support
  */
 export default function ExpandableTooltipMixin(Base) {
-    return class ExpandableTooltipMixin extends Base {
+    return class ExpandableTooltip extends Base {
         /**
          * Storage for currently open expandable panels
          * @type {Set<string>}
