@@ -394,7 +394,9 @@
             "ShipWeapon": "Ship Weapon Sheet",
             "ShipUpgrade": "Ship Upgrade Sheet",
             "NPCTemplate": "NPC Template Sheet",
-            "ChangeImage": "Change Image"
+            "ChangeImage": "Change Image",
+            "DarkHeresy": "Dark Heresy 2e Sheet",
+            "RogueTrader": "Rogue Trader Sheet"
         },
         "TalentCategory": {
             "General": "General",

@@ -1,5 +1,5 @@
-{{!-- Acolyte Sheet Header Part --}}
-{{!-- Two-column layout: Left (portrait + bio) | Right (characteristics HUD V1 Enhanced) --}}
+{{!-- Dark Heresy 2e Character Sheet Header --}}
+{{!-- Two-column layout: Left (portrait + bio) | Right (characteristics HUD) --}}
 <div class="wh40k-header wh40k-grid-col-6 wh40k-panel wh40k-character-header">
     <div class="wh40k-header__info wh40k-header-grid">
         <div class="wh40k-header-left">
@@ -17,23 +17,31 @@
                         <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
                     </div>
                     <div class="wh40k-header-row">
-                        <span class="wh40k-header-label">{{localize "WH40K.OriginPath.HomeWorld"}}</span>
+                        <span class="wh40k-header-label">Home World</span>
                         <input class="wh40k-header-input" name="system.originPath.homeWorld" type="text" value="{{system.originPath.homeWorld}}" placeholder="Home World" />
                     </div>
                     <div class="wh40k-header-row">
-                        <span class="wh40k-header-label">{{localize "WH40K.OriginPath.Career"}}</span>
-                        <input class="wh40k-header-input" name="system.originPath.career" type="text" value="{{system.originPath.career}}" placeholder="Career" />
+                        <span class="wh40k-header-label">Background</span>
+                        <input class="wh40k-header-input" name="system.originPath.background" type="text" value="{{system.originPath.background}}" placeholder="Background" />
                     </div>
                     <div class="wh40k-header-row">
-                        <span class="wh40k-header-label">{{localize "WH40K.Character.Rank"}}</span>
-                        <input class="wh40k-header-input wh40k-rank-input" name="system.rogueTrader.rank" type="text" value="{{system.rogueTrader.rank}}" placeholder="Rank" />
+                        <span class="wh40k-header-label">Role</span>
+                        <input class="wh40k-header-input" name="system.originPath.role" type="text" value="{{system.originPath.role}}" placeholder="Role" />
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Elite Advance</span>
+                        <input class="wh40k-header-input" name="system.originPath.elite" type="text" value="{{system.originPath.elite}}" placeholder="Elite Advance" />
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Divination</span>
+                        <input class="wh40k-header-input" name="system.originPath.divination" type="text" value="{{system.originPath.divination}}" placeholder="Divination" />
                     </div>
                 </div>
             </div>
         </div>
         <div class="wh40k-header-right">
             <div class="wh40k-hud-stack">
-                {{!-- Characteristics HUD V1 Enhanced --}}
+                {{!-- Characteristics HUD --}}
                 <div class="wh40k-characteristics-hud">
                     {{#each actor.characteristics as |characteristic name|}}
                         {{#unless (eq name "influence")}}
@@ -56,35 +64,6 @@
                                 <span class="wh40k-char-hud-mod-label">MOD</span>
                             </div>
                             <div class="wh40k-char-hud-base">Total {{this.total}}</div>
-<!--                            <label class="wh40k-char-hud-toggle" data-action="toggleSection" data-toggle="charhud_{{name}}" title="Edit {{this.label}}">-->
-<!--                                <span class="wh40k-char-hud-toggle-icon">v</span>-->
-<!--                            </label>-->
-<!--                            <div class="wh40k-char-hud-details charhud_{{name}}">-->
-<!--                                <label class="wh40k-char-hud-field">-->
-<!--                                    <span class="wh40k-char-hud-field-label">Base</span>-->
-<!--                                    <input type="number" name="system.characteristics.{{name}}.base" data-dtype="Number" value="{{this.base}}" />-->
-<!--                                </label>-->
-<!--                                <label class="wh40k-char-hud-field">-->
-<!--                                    <span class="wh40k-char-hud-field-label">Advances</span>-->
-<!--                                    <select name="system.characteristics.{{name}}.advance">-->
-<!--                                        {{option "0" this.advance "None"}}-->
-<!--                                        {{option "1" this.advance "Simple"}}-->
-<!--                                        {{option "2" this.advance "Intermediate"}}-->
-<!--                                        {{option "3" this.advance "Trained"}}-->
-<!--                                        {{option "4" this.advance "Proficient"}}-->
-<!--                                        {{option "5" this.advance "Expert"}}-->
-<!--                                    </select>-->
-<!--                                </label>-->
-<!--                                <label class="wh40k-char-hud-field">-->
-<!--                                    <span class="wh40k-char-hud-field-label">Unnatural</span>-->
-<!--                                    <select name="system.characteristics.{{name}}.unnatural" class="wh40k-unnatural-select" data-dtype="Number">-->
-<!--                                        <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>—</option>-->
-<!--                                        <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>-->
-<!--                                        <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>-->
-<!--                                        <option value="4" {{#if (eq this.unnatural 4)}}selected{{/if}}>×4</option>-->
-<!--                                    </select>-->
-<!--                                </label>-->
-<!--                            </div>-->
                         </div>
                         {{/unless}}
                     {{/each}}
