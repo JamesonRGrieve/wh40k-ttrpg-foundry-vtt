@@ -1,0 +1,21 @@
+{
+  "name": "Charm",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "fellowship",
+    "descriptor": "Charm is the art of making others like you and want to help you, whether through flattery, wit, or personal magnetism.",
+    "uses": "Uses: Persuading others to do favours, making a good impression, seduction, gathering information through friendly conversation.\nSpecial Use: Charm can be used as part of an Extended Test over several hours or days to build up trust and rapport with an NPC or group. Each Degree of Success adds to cumulative goodwill.",
+    "useTime": "Full Action or longer",
+    "description": {
+      "value": "<p>Charm is the art of making others like you and want to help you, whether through flattery, wit, or personal magnetism.</p>"
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": ["Fellowship", "Social"],
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tz5wMq2rAj8bFx4N"
+}

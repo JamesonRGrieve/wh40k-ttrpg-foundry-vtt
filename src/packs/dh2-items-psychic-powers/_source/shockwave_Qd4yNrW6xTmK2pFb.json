@@ -1,0 +1,24 @@
+{
+    "name": "Shockwave",
+    "type": "psychicPower",
+    "img": "icons/svg/eye.svg",
+    "system": {
+        "discipline": "Telekinesis",
+        "prerequisites": "Psy Rating 3",
+        "focusPower": "Half Action",
+        "action": "Half Action",
+        "range": "Self (area)",
+        "opposed": "No",
+        "sustained": "No",
+        "effect": "The psyker releases a powerful telekinetic shockwave in all directions. All creatures within Psy Rating x 3 metres must pass a Strength test or be knocked Prone and pushed 1d5 metres away from the psyker.",
+        "source": "DH2e Core",
+        "description": {
+            "value": "<p>The psyker releases a sudden burst of telekinetic force in all directions, hurling nearby creatures and objects away. All creatures within Psy Rating x 3 metres must pass a Strength test or be knocked Prone and pushed 1d5 metres directly away from the psyker. Creatures that strike solid objects during this forced movement may take additional Impact damage.</p>"
+        },
+        "focusTime": "Half Action",
+        "threshold": 10
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "Qd4yNrW6xTmK2pFb"
+}

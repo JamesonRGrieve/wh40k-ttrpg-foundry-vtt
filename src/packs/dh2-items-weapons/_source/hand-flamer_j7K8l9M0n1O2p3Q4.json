@@ -1,0 +1,64 @@
+{
+  "name": "Hand Flamer",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "hand-flamer",
+    "class": "pistol",
+    "type": "energy",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 2
+    },
+    "special": [
+      "flame",
+      "spray"
+    ],
+    "clip": {
+      "max": 2,
+      "value": 2,
+      "type": "promethium"
+    },
+    "reload": "2Full",
+    "weight": 3.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A compact flamer that projects a short burst of burning promethium. Limited by its small fuel reservoir, it is nevertheless devastating at close quarters and requires no skill to aim.</p>"
+    },
+    "modifications": [],
+    "notes": "",
+    "source": "DH2e Core",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "j7K8l9M0n1O2p3Q4"
+}

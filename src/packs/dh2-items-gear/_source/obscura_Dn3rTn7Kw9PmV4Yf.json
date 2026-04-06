@@ -1,0 +1,20 @@
+{
+  "name": "Obscura",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0,
+    "availability": "scarce",
+    "quantity": 1,
+    "cost": { "value": 50, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>An illegal narcotic that induces a dreamy, hallucinogenic state. Users experience vivid sensory hallucinations and a profound sense of euphoria. Under its effects, the user is largely oblivious to their surroundings. Lasts 1d5 hours. Extremely addictive and heavily punished under Imperial law.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Dn3rTn7Kw9PmV4Yf"
+}

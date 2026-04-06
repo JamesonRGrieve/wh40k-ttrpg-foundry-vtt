@@ -1,0 +1,24 @@
+{
+    "name": "Mind Probe",
+    "type": "psychicPower",
+    "img": "icons/svg/eye.svg",
+    "system": {
+        "discipline": "Telepathy",
+        "prerequisites": "Psy Rating 4",
+        "focusPower": "Full Action",
+        "action": "Full Action",
+        "range": "5 metres x Psy Rating",
+        "opposed": "Willpower",
+        "sustained": "Half Action",
+        "effect": "The psyker forces his way into the target's mind, reading their deep thoughts, memories, and secrets. For each round the power is sustained, the psyker may ask one question which the target must answer truthfully (from their own knowledge).",
+        "source": "DH2e Core",
+        "description": {
+            "value": "<p>The psyker forces his way into the mind of a single target, reading their surface thoughts and digging into their deeper memories. For each round the power is sustained, the psyker may ask one question which the target's mind must answer truthfully, drawing from the target's own knowledge and memories. The target is aware that their mind is being probed and may attempt a new Opposed Willpower test each round to eject the psyker.</p>"
+        },
+        "focusTime": "Full Action",
+        "threshold": 14
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "Lk2xMnR5wPtY7qHb"
+}

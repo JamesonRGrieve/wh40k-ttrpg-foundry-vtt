@@ -1,0 +1,99 @@
+{
+  "name": "Hive World",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "hive-world",
+    "step": "homeworld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Hive World</h2><p>Hive worlds are teeming, overcrowded planets dominated by immense city-structures called hive cities, each home to billions of souls. Life in the hive is a constant struggle — the underhive breeds gangers, criminals, and survivors, while the spires produce ambitious nobles and ruthless politicians. Hive worlders are sharp, perceptive, and quick on their feet, accustomed to navigating both physical dangers and social treachery.</p><h3>Homeworld Bonus</h3><p>+Agility, +Perception, –Willpower</p><h3>Homeworld Aptitude</h3><p>Perception</p><h3>Wounds</h3><p>8+1d5</p><h3>Fate Threshold</h3><p>2 (Emperor's Blessing 6+)</p><h3>Starting Skills</h3><p>Common Lore (Underworld) or Deceive</p><h3>Starting Talent</h3><p>Choose one: Weapon Training (choice)</p><h3>Homeworld Trait</h3><p><strong>Teeming Masses in Metal Mountains:</strong> A hive world character is accustomed to the press of humanity. They do not suffer penalties for operating in crowds and gain a +20 bonus to Navigate (Surface) Tests within enclosed or urban environments.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Homeworld",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "8+1d5",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 2,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Perception"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Teeming Masses in Metal Mountains",
+          "description": "A hive world character is accustomed to the press of humanity. They do not suffer penalties for operating in crowds and gain a +20 bonus to Navigate (Surface) Tests within enclosed or urban environments."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Common Lore",
+              "specialization": "Underworld"
+            },
+            {
+              "name": "Deceive",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Weapon Training (choice)",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "agility": 5,
+        "perception": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "name": "Willpower",
+          "value": -5
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Emperor's Blessing: On a roll of 6+ on 1d10, the character begins with an extra Fate Point.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2HvWrld00000004"
+}

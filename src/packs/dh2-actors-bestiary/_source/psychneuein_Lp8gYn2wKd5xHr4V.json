@@ -1,0 +1,53 @@
+{
+  "name": "Psychneuein",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "30",
+      "bs": "-",
+      "s": "20",
+      "t": "20",
+      "ag": "40",
+      "int": "15",
+      "per": "40",
+      "wp": "30",
+      "fel": "-"
+    },
+    "wounds": "8",
+    "armourPoints": "None",
+    "move": "2/4/6/12 (Flyer 8)",
+    "size": "Scrawny (-10)",
+    "weapons": [
+      {
+        "name": "Proboscis",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d10+2 R",
+        "pen": "0",
+        "clip": null,
+        "reload": null,
+        "qualities": "Natural Weapon, Toxic (1)"
+      },
+      {
+        "name": "Talents/\nTraits",
+        "range": "Fear (1), Flyer (8), Natural Weapons, Size (Scrawny), Warp Sense, Psy-Tracker (always aware of psychic activity within 1km). Psychneuein implant eggs in psykers — if a psyker is incapacitated, the Psychneuein attempts to implant larvae (opposed WP test). Larvae hatch in 1d5 days, killing the host.",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: | T: | Ag: Dodge +10\nInt:\nPer: Awareness +20, Psyniscience +20\nWP:\nFel:",
+    "training": "",
+    "description": {
+      "value": "<p>Psychneuein are Warp-spawned insectoid creatures that are drawn to psychic activity. They resemble enormous wasps or mosquitoes with translucent, iridescent wings and a long, barbed proboscis. They exist partially in the Warp and partially in realspace, allowing them to sense psychic emanations over vast distances.</p><p><b>Tactics:</b> Psychneuein hunt in swarms of 2d5, targeting psykers exclusively. They ignore non-psychic targets unless directly attacked. They dart in to sting with their proboscis, attempting to implant eggs in incapacitated psykers. They are fast and agile flyers, making them difficult to hit. Non-psykers are safe unless they interfere.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Lp8gYn2wKd5xHr4V"
+}

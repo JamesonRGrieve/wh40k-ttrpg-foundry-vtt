@@ -1,0 +1,33 @@
+{
+  "name": "Light Power Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "power",
+    "weight": 40,
+    "availability": "very-rare",
+    "notes": "+10 Strength. Wearer always counts as Braced.",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>A lighter variant of Imperial power armour, incorporating fibre bundles and servo-motors that augment the wearer's strength. Grants +10 Strength and the wearer always counts as Braced. Environmentally sealed when helmet is worn.</p>"
+    },
+    "modificationSlots": 0,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 7,
+      "body": 7,
+      "leftArm": 7,
+      "rightArm": 7,
+      "leftLeg": 7,
+      "rightLeg": 7
+    },
+    "modifications": [],
+    "maxAgility": 0,
+    "properties": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tv6nJqX8bWk3Pm1H"
+}

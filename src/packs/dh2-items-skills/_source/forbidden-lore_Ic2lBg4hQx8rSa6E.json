@@ -1,0 +1,21 @@
+{
+  "name": "Forbidden Lore",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "intelligence",
+    "descriptor": "Forbidden Lore covers knowledge of subjects that are dangerous, heretical, or proscribed within the Imperium. Possessing such knowledge is itself grounds for suspicion or execution. Each specialisation is a separate skill.",
+    "uses": "Uses: Recalling information about forbidden or dangerous subjects. Success reveals what the character knows; Degrees of Success determine how detailed and accurate the information is.\nPossessing Forbidden Lore is dangerous — displaying such knowledge openly can attract the attention of the Inquisition or other Imperial authorities.\nSpecialisations: Archaeotech, Chaos, Criminal Cartels, Daemonology, Heresy, Inquisition, Mutants, Psykers, The Warp, Xenos. Each specialisation must be taken separately as a distinct skill.",
+    "useTime": "Free Action",
+    "description": {
+      "value": "<p>Forbidden Lore covers knowledge of subjects that are dangerous, heretical, or proscribed within the Imperium. Possessing such knowledge is itself grounds for suspicion or execution. Each specialisation is a separate skill.</p>\n<p><strong>Specialisations:</strong> Archaeotech, Chaos, Criminal Cartels, Daemonology, Heresy, Inquisition, Mutants, Psykers, The Warp, Xenos</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": ["Intelligence", "Knowledge"],
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ic2lBg4hQx8rSa6E"
+}

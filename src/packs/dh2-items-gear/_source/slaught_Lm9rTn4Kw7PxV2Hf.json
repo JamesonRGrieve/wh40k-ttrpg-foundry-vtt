@@ -1,0 +1,20 @@
+{
+  "name": "Slaught",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0,
+    "availability": "scarce",
+    "quantity": 1,
+    "cost": { "value": 75, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>A powerful combat drug that heightens aggression and dulls pain. Grants +3 to Agility bonus for Initiative purposes and the user ignores Fatigue for 3d10 rounds. Side effects include paranoia and uncontrolled aggression; the user must pass a Willpower test when the drug wears off or gain 1d5 Insanity Points. Addictive.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Lm9rTn4Kw7PxV2Hf"
+}

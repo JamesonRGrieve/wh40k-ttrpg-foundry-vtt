@@ -1,0 +1,28 @@
+{
+  "name": "Auto-Stabilised",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The creature always counts as Braced for the purposes of firing heavy weapons and cannot be knocked Prone by any source.</p>"
+    },
+    "benefit": "<p>The creature always counts as Braced and cannot be knocked Prone.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "autoStabilised",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ym3jR8wFp5HcNv6Q"
+}

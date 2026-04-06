@@ -1,0 +1,24 @@
+{
+  "name": "Fear",
+  "type": "condition",
+  "img": "icons/svg/terror.svg",
+  "system": {
+    "identifier": "fear",
+    "nature": "harmful",
+    "effect": "<p>The character must pass a Willpower test modified by the Fear level or suffer its effects. Fear (1): &minus;10 WP test or suffer 1 level of Fatigue. Fear (2): &minus;20 WP test or flee for 1 Round and gain 1d5 Insanity Points. Fear (3): &minus;30 WP test or flee for 1d5 Rounds and gain 1d10 Insanity Points. Fear (4): automatic flee for 1d10 Rounds and gain 1d10+5 Insanity Points.</p>",
+    "removal": "<p>Fear effects end after their specified duration. Some talents (such as Nerves of Steel or Fearless) allow resistance or immunity.</p>",
+    "stackable": true,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": { "value": 0, "units": "permanent" },
+    "description": {
+      "value": "<p>The character is confronted by something terrifying. Fear has four levels (1&ndash;4), each requiring a Willpower test with increasing penalties:</p><ul><li><strong>Fear (1):</strong> Willpower test at &minus;10. Failure causes 1 level of Fatigue.</li><li><strong>Fear (2):</strong> Willpower test at &minus;20. Failure causes the character to flee for 1 Round and gain 1d5 Insanity Points.</li><li><strong>Fear (3):</strong> Willpower test at &minus;30. Failure causes the character to flee for 1d5 Rounds and gain 1d10 Insanity Points.</li><li><strong>Fear (4):</strong> No test permitted. The character flees for 1d10 Rounds and gains 1d10+5 Insanity Points.</li></ul>",
+      "source": { "book": "DH2e Core", "page": "", "custom": "" }
+    },
+    "modifiers": { "characteristics": {}, "skills": {}, "combat": {} },
+    "notes": "Set stacks to the Fear level (1-4). Characters with the Fearless talent are immune to Fear up to a certain level."
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "y2ydck2pfdn4pnem"
+}

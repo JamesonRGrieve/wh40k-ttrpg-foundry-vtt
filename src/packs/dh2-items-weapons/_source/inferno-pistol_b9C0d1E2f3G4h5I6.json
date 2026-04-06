@@ -1,0 +1,63 @@
+{
+  "name": "Inferno Pistol",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "inferno-pistol",
+    "class": "pistol",
+    "type": "energy",
+    "twoHanded": false,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 10,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 4,
+      "penetration": 12
+    },
+    "special": [
+      "melta"
+    ],
+    "clip": {
+      "max": 3,
+      "value": 3,
+      "type": "melta-canister"
+    },
+    "reload": "Full",
+    "weight": 3,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A miniaturised melta weapon in pistol form, firing a sub-molecular thermal blast that can reduce armour plate to slag. Extremely rare and devastatingly powerful at close range.</p>"
+    },
+    "modifications": [],
+    "notes": "",
+    "source": "DH2e Core",
+    "requiredTraining": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "b9C0d1E2f3G4h5I6"
+}

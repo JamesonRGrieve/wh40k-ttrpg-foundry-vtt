@@ -1,0 +1,73 @@
+{
+  "name": "PDF Trooper",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "25",
+      "bs": "25",
+      "s": "30",
+      "t": "30",
+      "ag": "25",
+      "int": "20",
+      "per": "25",
+      "wp": "25",
+      "fel": "20"
+    },
+    "wounds": "8",
+    "armourPoints": "Flak 3 body",
+    "move": "3/6/9/18",
+    "size": "Average",
+    "weapons": [
+      {
+        "name": "Autogun",
+        "range": "100m",
+        "rof": "S/3/10",
+        "damage": "1d10+3 I",
+        "pen": "0",
+        "clip": "30",
+        "reload": "Full",
+        "qualities": null
+      },
+      {
+        "name": "Knife",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d5+3 R",
+        "pen": "0",
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Gear/\nOther",
+        "range": "Flak Vest, 2 autogun clips (spare), uniform, micro-bead.",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Talents/\nTraits",
+        "range": "Weapon Training (Solid Projectile, Low-Tech)",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: | T: | Ag:\nInt: Common Lore (War)\nPer: Awareness\nWP:\nFel:",
+    "training": "Basic(SP), Melee(Low-Tech)",
+    "description": {
+      "value": "<p>Planetary Defence Force troopers are the first line of defence for Imperial worlds. Poorly equipped and minimally trained compared to the Imperial Guard, they are nonetheless numerous and serve as garrison forces and local militia.</p><p><b>Tactics:</b> PDF troopers fight defensively, relying on fortified positions and numerical advantage. Their morale is fragile — they break and run if outmatched or if casualties mount quickly. Officers must constantly rally them.</p>"
+    }
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Bm5xKr2jZa8wPn4F"
+}

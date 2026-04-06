@@ -1,0 +1,75 @@
+{
+  "_id": "k8t0trtwpga6iiqw",
+  "name": "Rending Critical - Body",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_rending_body",
+    "damageType": "rending",
+    "bodyPart": "body",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>A slashing blow tears a ragged line across the target's chest, ripping clothing and drawing blood. He suffers 1 level of Fatigue.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The rending attack opens a deep gash in the target's torso, causing blood to seep freely. He suffers 1 level of Fatigue and must make a Challenging (+0) Toughness test or suffer Blood Loss.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The blow carves a deep wound across the target's belly, causing intense pain. He is Stunned for 1 round, is knocked Prone, and suffers Blood Loss.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The attack opens a deep wound in the target's side, exposing muscle and rib. He suffers [[1d5]] levels of Fatigue, falls Prone, and suffers Blood Loss. He is Stunned for 1 round.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>The rending blow slashes open the target's abdomen, spilling loops of intestine. He suffers Blood Loss and [[1d5]] levels of Fatigue. He is Stunned for [[1d5]] rounds. Permanently reduce his Toughness characteristic by [[1d5]].</p>",
+        "permanent": true
+      },
+      "6": {
+        "text": "<p>The attack carves deep into the target's chest, nicking a lung and cracking ribs. He suffers Blood Loss and [[1d10]] levels of Fatigue, and is Stunned for [[1d5]] rounds. Permanently reduce his Toughness characteristic by [[1d5]].</p>",
+        "permanent": true
+      },
+      "7": {
+        "text": "<p>The devastating blow opens the target's torso from shoulder to hip, exposing organs and severing major blood vessels. He suffers Blood Loss and [[1d10]] levels of Fatigue. Permanently reduce his Toughness and Strength characteristics by [[1d10]] each. He must make a Hard (–20) Toughness test or die.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The attack eviscerates the target, spilling his innards across the ground in a steaming heap. He is slain instantly.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The blow cleaves the target nearly in two, splitting him open from neck to groin. He is slain instantly, collapsing in a spreading pool of blood and viscera.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The terrible blow bisects the target completely, sending the two halves of his body toppling apart in a torrent of blood. He is slain instantly. Each character within [[1d5]] metres must make a Challenging (+0) Agility test or suffer 1 level of Fatigue and a –10 penalty to all tests for 1 round from the shower of gore.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "",
+      "chat": "",
+      "summary": "Rending Body injury"
+    },
+    "source": {
+      "book": "Dark Heresy 2nd Edition Core Rulebook",
+      "page": "236-239",
+      "custom": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "dh2e": {
+      "generated": false,
+      "consolidated": true,
+      "version": "1.0"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Corruption",
+  "type": "condition",
+  "img": "icons/svg/acid.svg",
+  "system": {
+    "identifier": "corruption",
+    "nature": "harmful",
+    "effect": "<p>The character has accumulated Corruption Points from exposure to Warp taint. At certain thresholds, they must roll on the Mutation Table, potentially gaining physical or mental mutations.</p>",
+    "removal": "<p>Corruption Points are permanent and cannot be removed by normal means. Only the most extraordinary circumstances or divine intervention might reduce them.</p>",
+    "stackable": true,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": { "value": 0, "units": "permanent" },
+    "description": {
+      "value": "<p>The character's body and soul have been tainted by the Warp. Corruption is tracked as a point total. At certain thresholds, the character's corruption manifests physically or mentally:</p><ul><li><strong>0&ndash;29 Corruption Points:</strong> No significant effect.</li><li><strong>30&ndash;59 Corruption Points:</strong> The character gains a Minor Mutation or Malignancy.</li><li><strong>60&ndash;89 Corruption Points:</strong> The character gains a Severe Mutation or Malignancy.</li><li><strong>90&ndash;99 Corruption Points:</strong> The character gains a Major Mutation and is visibly tainted.</li><li><strong>100+ Corruption Points:</strong> The character is consumed by Chaos and becomes an NPC (or worse).</li></ul>",
+      "source": { "book": "DH2e Core", "page": "", "custom": "" }
+    },
+    "modifiers": { "characteristics": {}, "skills": {}, "combat": {} },
+    "notes": "Track total Corruption Points via stacks. Mutations and Malignancies are applied separately as needed."
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ovi1vqnhj64jqp6u"
+}

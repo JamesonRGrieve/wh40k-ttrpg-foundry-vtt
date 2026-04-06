@@ -1,0 +1,97 @@
+{
+  "name": "Adeptus Ministorum",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "adeptus-ministorum",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Adeptus Ministorum</h2><p>The Adeptus Ministorum, also known as the Ecclesiarchy, is the official state church of the Imperium, devoted to the worship of the God-Emperor. Its clergy range from humble parish priests to powerful cardinals, from fiery confessors to warrior-priests of the Frateris Militia. Those who serve the Ministorum are steeped in faith, rhetoric, and the ability to inspire or terrorise the masses in equal measure.</p><h3>Background Aptitudes</h3><p>Leadership, Social</p><h3>Starting Skills</h3><p>Charm, Common Lore (Ecclesiarchy), Linguistics (High Gothic)</p><h3>Starting Talent</h3><p>Weapon Training (Flame) or Weapon Training (Las)</p><h3>Background Bonus</h3><p><strong>Faith Is All:</strong> A Ministorum character counts as having the Peer (Ecclesiarchy) Talent. When spending a Fate Point, they may also inspire one ally within earshot to gain a +10 bonus to their next Test.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Charm",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore",
+          "specialization": "Ecclesiarchy",
+          "level": "trained"
+        },
+        {
+          "name": "Linguistics",
+          "specialization": "High Gothic",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Leadership",
+        "Social"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Faith Is All",
+          "description": "A Ministorum character counts as having the Peer (Ecclesiarchy) Talent. When spending a Fate Point, they may also inspire one ally within earshot to gain a +10 bonus to their next Test."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Weapon Training",
+              "specialization": "Flame"
+            },
+            {
+              "name": "Weapon Training",
+              "specialization": "Las"
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2MinBkg0000011"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Bleeding",
+  "type": "condition",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "bleeding",
+    "nature": "harmful",
+    "effect": "<p>The character loses 1 Wound per Round at the start of their Turn, ignoring Armour and Toughness Bonus. This continues until the Bleeding is stopped.</p>",
+    "removal": "<p>A successful Medicae test stops the Bleeding. The character may also attempt First Aid on themselves at a &minus;10 penalty.</p>",
+    "stackable": true,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": { "value": 0, "units": "permanent" },
+    "description": {
+      "value": "<p>The character is losing blood from an open wound. Each Round at the start of their Turn, they lose 1 Wound, ignoring Armour and Toughness Bonus. Multiple instances of Bleeding stack, increasing the Wounds lost per Round. Bleeding can be stopped with a successful Medicae test.</p>",
+      "source": { "book": "DH2e Core", "page": "", "custom": "" }
+    },
+    "modifiers": { "characteristics": {}, "skills": {}, "combat": {} },
+    "notes": "Multiple Bleeding conditions stack, each adding 1 additional Wound lost per Round."
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ffmap8beap8f59o9"
+}

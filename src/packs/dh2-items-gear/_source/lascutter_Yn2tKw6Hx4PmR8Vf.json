@@ -1,0 +1,20 @@
+{
+  "name": "Lascutter",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 8,
+    "availability": "average",
+    "quantity": 1,
+    "cost": { "value": 100, "currency": "throne" },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": { "value": "<p>A heavy cutting tool that projects a short, intense laser beam for slicing through metal, rock, and other hard materials. Used primarily in mining, construction, and shipboard repair. Can cut through up to 10cm of metal per round. In desperation it can be used as a weapon, but is unwieldy for combat.</p>" },
+    "notes": "",
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Yn2tKw6Hx4PmR8Vf"
+}

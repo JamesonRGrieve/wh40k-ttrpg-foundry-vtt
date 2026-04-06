@@ -1,0 +1,21 @@
+{
+  "name": "Psyniscience",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "perception",
+    "descriptor": "Psyniscience is the ability to detect the presence of psychic phenomena, Warp disturbances, and the use of psychic powers.",
+    "uses": "Uses: Detecting the use of psychic powers, sensing Warp entities and disturbances, identifying psychic phenomena, gauging the strength of psychic activity.\nPsyniscience can be used passively (the GM may call for a test when psychic phenomena occur nearby) or actively (a Full Action to concentrate and sense the surrounding area). Range and detail depend on Degrees of Success. Intense Warp activity may be detectable at great range, while subtle psychic effects require proximity and concentration.",
+    "useTime": "Free Action (passive) or Full Action (active)",
+    "description": {
+      "value": "<p>Psyniscience is the ability to detect the presence of psychic phenomena, Warp disturbances, and the use of psychic powers.</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": ["Perception", "Psyker"],
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Oi8rHm1nWd5xYg3K"
+}

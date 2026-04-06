@@ -1,0 +1,21 @@
+{
+  "name": "Parry",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "weaponSkill",
+    "descriptor": "Parry is the ability to deflect melee attacks using a weapon or shield.",
+    "uses": "Uses: Deflecting melee attacks.\nParry is a Reaction and can be used once per Round without penalty. Additional Parry attempts in the same Round suffer a cumulative -20 penalty. A successful Parry negates one hit; extra Degrees of Success negate additional hits from the same attack. A character must be wielding a melee weapon or shield to Parry. Parry cannot be used against ranged attacks unless the character has a special ability that permits it.",
+    "useTime": "Reaction",
+    "description": {
+      "value": "<p>Parry is the ability to deflect melee attacks using a weapon or shield.</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": ["Weapon Skill", "Defence"],
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Nh7qGl9mVc4wXf2J"
+}

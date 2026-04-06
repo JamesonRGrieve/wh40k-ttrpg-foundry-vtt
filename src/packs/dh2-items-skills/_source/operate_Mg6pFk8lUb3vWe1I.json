@@ -1,0 +1,21 @@
+{
+  "name": "Operate",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "agility",
+    "descriptor": "Operate covers the ability to pilot or drive vehicles, from ground cars to voidships. Each specialisation is a separate skill.",
+    "uses": "Uses: Piloting and driving vehicles, performing evasive manoeuvres, navigating difficult terrain or conditions.\nSurface: Ground vehicles including cars, walkers, tracks, and bikes.\nAeronautica: Aircraft and atmospheric craft including landers, fighters, and shuttles.\nVoidship: Void-capable vessels from system ships to warp-capable craft.\nSpecialisations: Surface, Aeronautica, Voidship. Each specialisation must be taken separately as a distinct skill.",
+    "useTime": "Half Action or Full Action",
+    "description": {
+      "value": "<p>Operate covers the ability to pilot or drive vehicles, from ground cars to voidships. Each specialisation is a separate skill.</p>\n<p><strong>Specialisations:</strong> Surface, Aeronautica, Voidship</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": ["Agility", "Fieldcraft"],
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Mg6pFk8lUb3vWe1I"
+}

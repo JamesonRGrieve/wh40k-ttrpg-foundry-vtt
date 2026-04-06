@@ -1,0 +1,24 @@
+{
+    "name": "Warp Perception",
+    "type": "psychicPower",
+    "img": "icons/svg/eye.svg",
+    "system": {
+        "discipline": "Divination",
+        "prerequisites": "Psy Rating 3",
+        "focusPower": "Half Action",
+        "action": "Half Action",
+        "range": "Self",
+        "opposed": "No",
+        "sustained": "Free Action",
+        "effect": "The psyker opens his third eye, gaining the ability to detect warp entities, psykers, and psychic phenomena within range. The psyker can detect the presence and approximate location of any warp-related creature or effect within Psy Rating x 10 metres.",
+        "source": "DH2e Core",
+        "description": {
+            "value": "<p>The psyker attunes his senses to the immaterium, perceiving the ebb and flow of warp energy in his surroundings. While sustained, the psyker can detect the presence of Daemons, psykers, psychic powers, and warp disturbances within Psy Rating x 10 metres. This power also reveals the approximate Psy Rating of detected psykers and the strength of warp anomalies.</p>"
+        },
+        "focusTime": "Half Action",
+        "threshold": 12
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "Tm3qKrY8wXnL5pFd"
+}

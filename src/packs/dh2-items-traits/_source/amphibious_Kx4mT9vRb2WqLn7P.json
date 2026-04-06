@@ -1,0 +1,28 @@
+{
+  "name": "Amphibious",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The creature is at home in water. It can breathe underwater and does not suffer any penalties for movement while submerged. If it also has the Hoverer or Flyer trait, it can use these abilities while underwater as well.</p>"
+    },
+    "benefit": "<p>The creature can breathe underwater and suffers no movement penalties while submerged.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "amphibious",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Kx4mT9vRb2WqLn7P"
+}

@@ -1,0 +1,24 @@
+{
+    "name": "Terrify",
+    "type": "psychicPower",
+    "img": "icons/svg/eye.svg",
+    "system": {
+        "discipline": "Telepathy",
+        "prerequisites": "Psy Rating 3",
+        "focusPower": "Half Action",
+        "action": "Half Action",
+        "range": "10 metres x Psy Rating",
+        "opposed": "Willpower",
+        "sustained": "No",
+        "effect": "The psyker projects an overwhelming aura of terror into the minds of his enemies. The target must make a Fear (2) test. For every 10 points by which the Focus Power test is passed, the Fear rating increases by 1.",
+        "source": "DH2e Core",
+        "description": {
+            "value": "<p>The psyker reaches into the minds of his enemies and amplifies their deepest fears, projecting a wave of absolute terror. The target must immediately make a Fear (2) test. For every 10 points by which the Focus Power test is passed, the Fear rating increases by 1, to a maximum of Fear (4). Targets that fail their Fear test react according to the standard Shock table.</p>"
+        },
+        "focusTime": "Half Action",
+        "threshold": 12
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "Tm6qKrY4wXnL2pFd"
+}

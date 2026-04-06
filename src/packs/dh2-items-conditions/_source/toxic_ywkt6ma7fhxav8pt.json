@@ -1,0 +1,24 @@
+{
+  "name": "Toxic",
+  "type": "condition",
+  "img": "icons/svg/poison.svg",
+  "system": {
+    "identifier": "toxic",
+    "nature": "harmful",
+    "effect": "<p>The character is suffering from a poison or toxin. The specific effects vary depending on the toxin, but commonly include characteristic penalties, ongoing damage, or Fatigue.</p>",
+    "removal": "<p>Depends on the toxin. Some wear off after a set duration. Others require a successful Toughness test, Medicae treatment, or a specific antidote.</p>",
+    "stackable": true,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": { "value": 0, "units": "permanent" },
+    "description": {
+      "value": "<p>The character is suffering from a poison, venom, or toxic substance. When first exposed, the character must pass a Toughness test (with modifiers depending on the toxin's potency) or suffer the toxin's effects. Effects vary by toxin type but commonly include: characteristic damage, ongoing Wound loss, levels of Fatigue, or other debilitating conditions. Some toxins have immediate effects while others build over time.</p>",
+      "source": { "book": "DH2e Core", "page": "", "custom": "" }
+    },
+    "modifiers": { "characteristics": {}, "skills": {}, "combat": {} },
+    "notes": "Specific effects depend on the toxin. Refer to the toxin's description for details."
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ywkt6ma7fhxav8pt"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Logic",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "intelligence",
+    "descriptor": "Logic reflects a character's ability to reason, analyse problems, solve puzzles, and apply deductive thinking.",
+    "uses": "Uses: Solving puzzles, analysing data, deductive reasoning, gambling, deciphering codes, processing complex information.\nSpecial Use: Ciphers: Logic can be used to create or break simple ciphers and codes. More complex encryption requires Forbidden Lore or Scholastic Lore.\nSpecial Use: Gambling: Opposed Logic tests determine the winner in games of strategy and chance.",
+    "useTime": "Full Action or longer",
+    "description": {
+      "value": "<p>Logic reflects a character's ability to reason, analyse problems, solve puzzles, and apply deductive thinking.</p>"
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": ["Intelligence", "Knowledge"],
+    "source": "DH2e Core"
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bv4eUz6aJq1kOt8X"
+}

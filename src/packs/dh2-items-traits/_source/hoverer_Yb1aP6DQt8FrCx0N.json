@@ -1,0 +1,28 @@
+{
+  "name": "Hoverer (X)",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The creature hovers above the ground at all times, floating a short distance above surfaces. Its Hoverer movement rate is X. While hovering, it ignores difficult terrain and can cross gaps and chasms as if they were solid ground. Unlike Flyers, Hoverers can take normal actions while moving. X represents the Hoverer movement rate.</p>"
+    },
+    "benefit": "<p>The creature hovers above the ground with a movement rate of X, ignoring difficult terrain and crossing gaps freely. Can take normal actions while moving. X is the Hoverer movement rate.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "hoverer",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Yb1aP6DQt8FrCx0N"
+}

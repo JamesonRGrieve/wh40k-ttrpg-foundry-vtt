@@ -1,0 +1,28 @@
+{
+  "name": "Stunned",
+  "type": "condition",
+  "img": "icons/svg/daze.svg",
+  "system": {
+    "identifier": "stunned",
+    "nature": "harmful",
+    "effect": "<p>The character cannot take actions and suffers &minus;20 to all tests. The condition lasts until the end of their next Turn unless otherwise specified.</p>",
+    "removal": "<p>The Stunned condition ends at the end of the character's next Turn unless the source specifies a longer duration.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": { "value": 1, "units": "rounds" },
+    "description": {
+      "value": "<p>The character is dazed and disoriented. They cannot take any actions and suffer &minus;20 to all tests. A Stunned character can still Dodge but at the &minus;20 penalty. The condition lasts until the end of the character's next Turn unless the source specifies otherwise. If a Stunned character is Stunned again, the duration extends by one additional Round.</p>",
+      "source": { "book": "DH2e Core", "page": "", "custom": "" }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": { "allTests": -20 }
+    },
+    "notes": ""
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yt97mauoc9zbmgs2"
+}

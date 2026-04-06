@@ -1,0 +1,24 @@
+{
+    "name": "Foreboding",
+    "type": "psychicPower",
+    "img": "icons/svg/eye.svg",
+    "system": {
+        "discipline": "Divination",
+        "prerequisites": "Psy Rating 2",
+        "focusPower": "Half Action",
+        "action": "Half Action",
+        "range": "Self",
+        "opposed": "No",
+        "sustained": "No",
+        "effect": "The psyker gains a momentary glimpse of the immediate future, granting a +10 bonus to his next test. The bonus must be used within the psyker's next turn or it is lost.",
+        "source": "DH2e Core",
+        "description": {
+            "value": "<p>The psyker briefly opens his mind to the near future, gaining a fleeting vision of events about to unfold. He gains a +10 bonus to his next test, which must be used on his next turn or the vision fades. For every 10 points by which the Focus Power test is passed, the bonus increases by +10.</p>"
+        },
+        "focusTime": "Half Action",
+        "threshold": 8
+    },
+    "effects": [],
+    "flags": {},
+    "_id": "Rt2mWxK5nYpL8qHd"
+}
